@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
@@ -36,8 +35,12 @@ public class ModuleChargeController {
 
     private PlanChargeApplication application;
 
+    // La table :
+
     @FXML
     private TableView<PlanificationBean> planificationTable;
+
+    // Les colonnes :
 
     @FXML
     private TableColumn<PlanificationBean, String> noTacheColumn;
@@ -59,6 +62,8 @@ public class ModuleChargeController {
     private TableColumn<PlanificationBean, String> ressourceColumn;
     @FXML
     private TableColumn<PlanificationBean, String> profilColumn;
+
+    // Les filtres :
 
     @FXML
     private TextField filtreGlobalField;
@@ -90,19 +95,18 @@ public class ModuleChargeController {
     @FXML
     private CheckComboBox<String> filtreProfilsField;
 
-/*
-    @FXML
-    private SplitPane splitPane;
-*/
+    // Les services métier :
 
     private PlanChargeService planChargeService = new PlanChargeService();
 
-    private ObservableList<PlanificationBean> lignesPlan;
+    // Les collections de données :
 
-    private ObservableList<String> codesImportancesLignesPlan;
-    private ObservableList<String> codesProjetsApplisLignesPlan;
-    private ObservableList<String> codesRessourcesLignesPlan;
-    private ObservableList<String> codesProfilsLignesPlan;
+    private ObservableList<PlanificationBean> lignesPlan = FXCollections.observableArrayList();
+
+    private ObservableList<String> codesImportancesLignesPlan = FXCollections.observableArrayList();
+    private ObservableList<String> codesProjetsApplisLignesPlan = FXCollections.observableArrayList();
+    private ObservableList<String> codesRessourcesLignesPlan = FXCollections.observableArrayList();
+    private ObservableList<String> codesProfilsLignesPlan = FXCollections.observableArrayList();
 
     public void setApplication(PlanChargeApplication application) {
         this.application = application;
@@ -190,25 +194,22 @@ public class ModuleChargeController {
 
     private void populePlan() {
 
-        lignesPlan = FXCollections.observableArrayList();
-
-        codesImportancesLignesPlan = FXCollections.observableArrayList();
-        codesProjetsApplisLignesPlan = FXCollections.observableArrayList();
-        codesRessourcesLignesPlan = FXCollections.observableArrayList();
-        codesProfilsLignesPlan = FXCollections.observableArrayList();
-
         lignesPlan.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
             codesImportancesLignesPlan.clear();
             codesImportancesLignesPlan.addAll(changeListener.getList().stream().map(planifBean -> planifBean.getTache().getImportance()).collect(Collectors.toSet()));
+            codesImportancesLignesPlan.sort(String::compareTo);
 
             codesProjetsApplisLignesPlan.clear();
             codesProjetsApplisLignesPlan.addAll(changeListener.getList().stream().map(planifBean -> planifBean.getTache().getProjetAppli()).collect(Collectors.toSet()));
+            codesProjetsApplisLignesPlan.sort(String::compareTo);
 
             codesRessourcesLignesPlan.clear();
             codesRessourcesLignesPlan.addAll(changeListener.getList().stream().map(planifBean -> planifBean.getTache().getRessource()).collect(Collectors.toSet()));
+            codesRessourcesLignesPlan.sort(String::compareTo);
 
             codesProfilsLignesPlan.clear();
             codesProfilsLignesPlan.addAll(changeListener.getList().stream().map(planifBean -> planifBean.getTache().getProfil()).collect(Collectors.toSet()));
+            codesProfilsLignesPlan.sort(String::compareTo);
         });
 
         PlanCharge planCharge = planChargeService.load(LocalDate.of(2016, 11, 28));
