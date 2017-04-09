@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
+    <artifactId>planCharge</artifactId>
+    <version>1.0-m1-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <url-path>release/${project.version}</url-path>
+        <departement>dal</departement>
+        <si>sial</si>
+        <sous-si>proto/ct</sous-si>
+
+<!--
+        <jna.version>4.2.0</jna.version>
+        <libreoffice.version>5.2.0</libreoffice.version>
+-->
+    </properties>
+
+    <!--
+    **********************************************************************
+    Dépôt de sources.
+    **********************************************************************
+    Identification du SCM (Gestionnaire de Sources). Ce paramétrage est
+    notamment utilisé par le plugin maven release. Il doit
+    SYSTEMATIQUEMENT être en synchronisation avec l'emplacement du projet
+    dans le source. (URL à changer pour les équipes externes)
+    -->
+    <scm>
+        <connection>
+            scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0
+        </connection>
+        <developerConnection>
+            scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0
+        </developerConnection>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>developpement</id>
+            <!--
+                        <properties>
+                            <libreoffice.home>C:/Program Files/LibreOffice 5</libreoffice.home>
+                            <libreoffice.sdk.home>${libreoffice.home}/sdk</libreoffice.sdk.home> &lt;!&ndash;D:\Pgms\LibreOffice_5_SKD ?&ndash;&gt;
+                        </properties>
+            -->
+        </profile>
+    </profiles>
+
+    <build>
+
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!--
+                        &lt;!&ndash;Cf. https://wiki.openoffice.org/wiki/OpenOffice_Maven2_Integration&ndash;&gt;
+                        <plugin>
+                            <groupId>org.openoffice.dev</groupId>
+                            <artifactId>maven-ooo-plugin</artifactId>
+                            <version>1.1</version>
+                            <configuration>
+                                <idlDir>${project.basedir}/src/main/idl</idlDir>
+                                <ooo>${libreoffice.home}</ooo>
+                                <sdk>${libreoffice.sdk.home}</sdk>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <phase>generate-sources</phase>
+                                    <goals>
+                                        <goal>build-idl</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
+
+<!--
+            &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/ext-jlop/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+-->
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+
+<!--
+        &lt;!&ndash;Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/install.html&ndash;&gt;
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/jurt &ndash;&gt;
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>jurt</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        &lt;!&ndash;
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>libreoffice-dist</artifactId>
+                    <version>5.2.1-alfresco</version>
+                </dependency>
+        &ndash;&gt;
+
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/ridl &ndash;&gt;
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>ridl</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>juh</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoloader &ndash;&gt;
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>unoloader</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoil &ndash;&gt;
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>unoil</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+-->
+
+        <!--Pour avoir notamment les combobox multi-sélection (CheckComboBox).-->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.12</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

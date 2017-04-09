@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController">
+    <content>
+        <TableView fx:id="dispos" editable="true">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Ressource" />
+                <TableColumn prefWidth="75.0" text="Profil" />
+                <TableColumn prefWidth="35.0" text="S" />
+                <TableColumn prefWidth="35.0" text="S+1" />
+                <TableColumn prefWidth="35.0" text="S+2" />
+                <TableColumn prefWidth="35.0" text="S+3" />
+                <TableColumn prefWidth="35.0" text="S+4" />
+                <TableColumn prefWidth="35.0" text="S+5" />
+                <TableColumn prefWidth="35.0" text="S+5" />
+                <TableColumn prefWidth="35.0" text="S+6" />
+                <TableColumn prefWidth="35.0" text="S+7" />
+                <TableColumn prefWidth="35.0" text="S+8" />
+                <TableColumn prefWidth="35.0" text="S+9" />
+                <TableColumn prefWidth="35.0" text="S+10" />
+                <TableColumn prefWidth="35.0" text="S+11" />
+                <TableColumn prefWidth="35.0" text="S+12" />
+            </columns>
+        </TableView>
+    </content>
+</ScrollPane>

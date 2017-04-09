@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
+    <left>
+        <TableView fx:id="planificationTable" editable="true" minWidth="-Infinity" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="noTacheColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="55.0" text="N° tâche" />
+                <TableColumn fx:id="noTicketIdalColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="80.0" text="N° IDAL" />
+                <TableColumn fx:id="descriptionColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="300.0" text="Description" />
+                <TableColumn fx:id="projetAppliColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Projet/Appli" />
+                <TableColumn fx:id="debutColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="75.0" text="Début" />
+                <TableColumn fx:id="echeanceColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="75.0" text="Echéance" />
+                <TableColumn fx:id="importanceColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="75.0" text="Importance" />
+                <TableColumn fx:id="chargeColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" text="Charge" />
+                <TableColumn fx:id="ressourceColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="40.0" text="Rsrc" />
+                <TableColumn fx:id="profilColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" text="Profil" />
+            </columns>
+        </TableView>
+    </left>
+    <center>
+        <TableView fx:id="planificationTable1" editable="true" prefHeight="1000.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn prefWidth="35.0" text="S" />
+                <TableColumn prefWidth="35.0" text="S+1" />
+                <TableColumn prefWidth="35.0" text="S+2" />
+                <TableColumn prefWidth="35.0" text="S+3" />
+                <TableColumn prefWidth="35.0" text="S+4" />
+                <TableColumn prefWidth="35.0" text="S+5" />
+                <TableColumn prefWidth="35.0" text="S+5" />
+                <TableColumn prefWidth="35.0" text="S+6" />
+                <TableColumn prefWidth="35.0" text="S+7" />
+                <TableColumn prefWidth="35.0" text="S+8" />
+                <TableColumn prefWidth="35.0" text="S+9" />
+                <TableColumn prefWidth="35.0" text="S+10" />
+                <TableColumn prefWidth="35.0" text="S+11" />
+                <TableColumn prefWidth="35.0" text="S+12" />
+            </columns>
+        </TableView>
+    </center>
+    <top>
+        <Accordion BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane animated="false" text="Filtres">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                        <BorderPane>
+                           <right>
+                              <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </BorderPane.margin>
+                              </Button>
+                           </right>
+                           <center>
+                                      <VBox BorderPane.alignment="CENTER">
+                                          <children>
+                                              <GridPane>
+                                                  <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="581.0" minWidth="10.0" prefWidth="98.9999771118164" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1109.0000228881836" minWidth="10.0" prefWidth="1081.0000228881836" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                  <children>
+                                                      <Label text="Filtre global" />
+                                                      <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1" />
+                                                  </children>
+                                              </GridPane>
+                                              <HBox>
+                                                  <children>
+                                                      <TextField fx:id="filtreNoTacheField" prefWidth="50.0" />
+                                                      <TextField fx:id="filtreNoTicketIdalField" prefWidth="70.0" />
+                                                      <TextField fx:id="filtreDescriptionField" prefWidth="300.0" />
+                                                      <CheckComboBox fx:id="filtreProjetsApplisField" prefWidth="100.0" />
+                                                      <DatePicker fx:id="filtreDebutField" prefWidth="75.0" />
+                                                      <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0" />
+                                                      <CheckComboBox fx:id="filtreImportancesField" prefWidth="75.0" />
+                                                      <TextField fx:id="filtreChargeField" prefWidth="50.0" />
+                                                      <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0" />
+                                                      <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0" />
+                                                  </children>
+                                              </HBox>
+                                          </children>
+                                      </VBox>
+                           </center>
+                        </BorderPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </top>
+</BorderPane>
