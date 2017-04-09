@@ -1,0 +1,1 @@
+Une appli en JavaFX pour gérer le plan de charge d'une équipe d'un centre de service.
