@@ -447,9 +447,8 @@ public class ModuleChargeController {
 
     @FXML
     private void razFiltres(ActionEvent event) {
-        LOGGER.debug("RAZ filtres");
+        LOGGER.debug("RAZ des filtres...");
         filtreNoTacheField.clear();
-        // TODO FDA 2017/04 Continuer...
         filtreNoTicketIdalField.clear();
         filtreDescriptionField.clear();
         filtreDebutField.setValue(null);
