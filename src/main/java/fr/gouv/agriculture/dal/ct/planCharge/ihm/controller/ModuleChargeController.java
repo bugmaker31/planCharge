@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.Planification;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -11,12 +12,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
@@ -41,31 +40,27 @@ public class ModuleChargeController {
     // Les tables :
 
     @FXML
-    private TableView<TacheBean> tachesTable;
-    @FXML
-    private TableColumn<TacheBean, String> noTacheColumn;
-    @FXML
-    private TableColumn<TacheBean, String> noTicketIdalColumn;
-    @FXML
-    private TableColumn<TacheBean, String> descriptionColumn;
-    @FXML
-    private TableColumn<TacheBean, String> projetAppliColumn;
-    @FXML
-    private TableColumn<TacheBean, LocalDate> debutColumn;
-    @FXML
-    private TableColumn<TacheBean, LocalDate> echeanceColumn;
-    @FXML
-    private TableColumn<TacheBean, String> importanceColumn;
-    @FXML
-    private TableColumn<TacheBean, Double> chargeColumn;
-    @FXML
-    private TableColumn<TacheBean, String> ressourceColumn;
-    @FXML
-    private TableColumn<TacheBean, String> profilColumn;
-
-
-    @FXML
     private TableView<PlanificationBean> planificationsTable;
+    @FXML
+    private TableColumn<PlanificationBean, String> noTacheColumn;
+    @FXML
+    private TableColumn<PlanificationBean, String> noTicketIdalColumn;
+    @FXML
+    private TableColumn<PlanificationBean, String> descriptionColumn;
+    @FXML
+    private TableColumn<PlanificationBean, String> projetAppliColumn;
+    @FXML
+    private TableColumn<PlanificationBean, LocalDate> debutColumn;
+    @FXML
+    private TableColumn<PlanificationBean, LocalDate> echeanceColumn;
+    @FXML
+    private TableColumn<PlanificationBean, String> importanceColumn;
+    @FXML
+    private TableColumn<PlanificationBean, Double> chargeColumn;
+    @FXML
+    private TableColumn<PlanificationBean, String> ressourceColumn;
+    @FXML
+    private TableColumn<PlanificationBean, String> profilColumn;
     @FXML
     private TableColumn<PlanificationBean, Double> semaine1Column;
     @FXML
@@ -162,19 +157,19 @@ public class ModuleChargeController {
 */
 
         // Formattage des données des cellules (en rendu "non éditable") :
-        noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().noTacheProperty());
-        noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().noTicketIdalProperty());
-        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
-        projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().projetAppliProperty());
-        debutColumn.setCellValueFactory(cellData -> cellData.getValue().debutProperty());
-        echeanceColumn.setCellValueFactory(cellData -> cellData.getValue().echeanceProperty());
-        importanceColumn.setCellValueFactory(cellData -> cellData.getValue().importanceProperty());
-        chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
-        ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().ressourceProperty());
-        profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
+        noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTacheProperty());
+        noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTicketIdalProperty());
+        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().descriptionProperty());
+        projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().projetAppliProperty());
+        debutColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().debutProperty());
+        echeanceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().echeanceProperty());
+        importanceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().importanceProperty());
+        chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().chargeProperty().asObject());
+        ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().ressourceProperty());
+        profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().profilProperty());
         // Custom rendering of the table cell:
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
-        chargeColumn.setCellFactory(column -> new TableCell<TacheBean, Double>() {
+        chargeColumn.setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -217,8 +212,10 @@ public class ModuleChargeController {
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
 
+/*
         // Cf. http://stackoverflow.com/questions/23789525/onscroll-listener-does-not-working-in-tableview-in-javafx-2
         tachesTable.addEventFilter(ScrollEvent.ANY, event -> tachesScroll(event));
+*/
 
         populePlan();
     }
@@ -397,12 +394,11 @@ public class ModuleChargeController {
                         })
         );
         // 3. Wrap the FilteredList in a SortedList.
-        List<TacheBean> taches = filteredData.stream().map(planification -> planification.getTache()).collect(Collectors.toList());
-        SortedList<TacheBean> tachesTriees = new SortedList<>(FXCollections.observableList(taches));
+        SortedList<PlanificationBean> sortedData = new SortedList<>(filteredData);
         // 4. Bind the SortedList comparator to the TableView comparator.
-        tachesTriees.comparatorProperty().bind(tachesTable.comparatorProperty());
+        sortedData.comparatorProperty().bind(planificationsTable.comparatorProperty());
         // 5. Add sorted (and filtered) data to the table.
-        tachesTable.setItems(tachesTriees);
+        planificationsTable.setItems(sortedData);
     }
 
     private void populeFiltreProjetsApplis() {
@@ -475,6 +471,7 @@ public class ModuleChargeController {
         filtreProfilsField.getCheckModel().checkAll();
     }
 
+/*
     @FXML
     private void tachesScroll(Event event) {
         LOGGER.debug("Scroll sur la table des tâches...");
@@ -489,4 +486,5 @@ public class ModuleChargeController {
     private void tachesScroll(ScrollEvent event) {
         LOGGER.debug("Scroll sur la table des tâches...");
     }
+*/
 }

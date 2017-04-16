@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.CheckComboBox?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
-    <left>
-        <TableView fx:id="tachesTable" editable="true" minWidth="-Infinity" onScrollTo="#tachesScroll" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+    <center>
+        <TableView fx:id="planificationsTable" editable="true" minWidth="-Infinity" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn fx:id="noTacheColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="55.0" text="N° tâche" />
                 <TableColumn fx:id="noTicketIdalColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="80.0" text="N° IDAL" />
@@ -18,12 +18,6 @@
                 <TableColumn fx:id="chargeColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" text="Charge" />
                 <TableColumn fx:id="ressourceColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="40.0" text="Rsrc" />
                 <TableColumn fx:id="profilColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" text="Profil" />
-            </columns>
-        </TableView>
-    </left>
-    <center>
-        <TableView fx:id="planificationsTable" editable="true" BorderPane.alignment="CENTER">
-            <columns>
                 <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" />
                 <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" />
                 <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" />
