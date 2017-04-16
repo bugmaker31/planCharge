@@ -74,7 +74,7 @@ public class Tache {
     }
 
     public String noTache() {
-        return (id + "").format(FORMAT_NO_TACHE);
+        return String.format(FORMAT_NO_TACHE, id);
     }
 
     @Override

@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class PlanChargeApplication extends javafx.application.Application {
+public class PlanChargeIhm extends javafx.application.Application {
 
     public static final String APP_NAME = "Plan de charge";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeApplication.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
-    private static PlanChargeApplication APPLICATION;
+    private static PlanChargeIhm APPLICATION;
 
     private BorderPane applicationView;
     private Region disponibilitesView;
@@ -29,7 +29,7 @@ public class PlanChargeApplication extends javafx.application.Application {
         launch(args);
     }
 
-    public static PlanChargeApplication APPLICATION() {
+    public static PlanChargeIhm APPLICATION() {
         return APPLICATION;
     }
 
@@ -48,7 +48,7 @@ public class PlanChargeApplication extends javafx.application.Application {
     /**
      * Constructor
      */
-    public PlanChargeApplication() {
+    public PlanChargeIhm() {
         super();
     }
 
@@ -103,6 +103,7 @@ public class PlanChargeApplication extends javafx.application.Application {
         LOGGER.info("Application en cours d'arrêt...");
         super.stop();
         LOGGER.info("Application arrêtée.");
+//        Platform.exit();
         System.exit(0);
     }
 

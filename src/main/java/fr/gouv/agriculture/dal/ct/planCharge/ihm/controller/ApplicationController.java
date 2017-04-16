@@ -1,7 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeApplication;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -14,7 +14,7 @@ public class ApplicationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
-    private PlanChargeApplication application;
+    private PlanChargeIhm application;
 
     private BorderPane getApplicationView() {
         return application.getApplicationView();
@@ -28,7 +28,7 @@ public class ApplicationController {
         return application.getChargeView();
     }
 
-    public void setApplication(PlanChargeApplication application) {
+    public void setApplication(PlanChargeIhm application) {
         this.application = application;
     }
 
@@ -78,7 +78,7 @@ public class ApplicationController {
         LOGGER.debug("Aide > A propos");
 
         Alert aProposInfo = new Alert(Alert.AlertType.INFORMATION);
-        aProposInfo.setTitle(PlanChargeApplication.APP_NAME);
+        aProposInfo.setTitle(PlanChargeIhm.APP_NAME);
         aProposInfo.setHeaderText("A propos");
         aProposInfo.setContentText("Auteur : Frédéric Danna\n2017/03");
 

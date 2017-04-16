@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeApplication;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.fxml.FXML;
 
 /**
@@ -8,9 +8,9 @@ import javafx.fxml.FXML;
  */
 public class ModuleDisponibilitesController {
 
-    private PlanChargeApplication application = PlanChargeApplication.APPLICATION();
+    private PlanChargeIhm application = PlanChargeIhm.APPLICATION();
 
-    public void setApplication(PlanChargeApplication application) {
+    public void setApplication(PlanChargeIhm application) {
         this.application = application;
     }
 

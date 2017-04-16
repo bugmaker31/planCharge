@@ -1,12 +1,11 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeApplication;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.exceptions.TacheSansPlanificationException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -27,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +35,7 @@ public class ModuleChargeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargeController.class);
 
-    private PlanChargeApplication application;
+    private PlanChargeIhm application;
 
     // Les tables :
 
@@ -133,7 +131,7 @@ public class ModuleChargeController {
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
 
-    public void setApplication(PlanChargeApplication application) {
+    public void setApplication(PlanChargeIhm application) {
         this.application = application;
     }
 
@@ -169,7 +167,18 @@ public class ModuleChargeController {
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().profilProperty());
-        semaine1Column.setCellValueFactory(cellData -> cellData.getValue().getMatrice().values().iterator().next().asObject());
+        semaine1Column.setCellValueFactory(cellData -> (cellData.getValue().charge(1).asObject()));
+        semaine2Column.setCellValueFactory(cellData -> (cellData.getValue().charge(2).asObject()));
+        semaine3Column.setCellValueFactory(cellData -> (cellData.getValue().charge(3).asObject()));
+        semaine4Column.setCellValueFactory(cellData -> (cellData.getValue().charge(4).asObject()));
+        semaine5Column.setCellValueFactory(cellData -> (cellData.getValue().charge(5).asObject()));
+        semaine6Column.setCellValueFactory(cellData -> (cellData.getValue().charge(6).asObject()));
+        semaine7Column.setCellValueFactory(cellData -> (cellData.getValue().charge(7).asObject()));
+        semaine8Column.setCellValueFactory(cellData -> (cellData.getValue().charge(8).asObject()));
+        semaine9Column.setCellValueFactory(cellData -> (cellData.getValue().charge(9).asObject()));
+        semaine10Column.setCellValueFactory(cellData -> (cellData.getValue().charge(10).asObject()));
+        semaine11Column.setCellValueFactory(cellData -> (cellData.getValue().charge(11).asObject()));
+        semaine12Column.setCellValueFactory(cellData -> (cellData.getValue().charge(12).asObject()));
         //
         // Custom rendering of the table cell:
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
@@ -224,8 +233,7 @@ public class ModuleChargeController {
         populePlan();
     }
 
-    private void populePlan() {
-
+    private void populePlan()  {
         planifications.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
             codesImportancesTaches.clear();
             codesImportancesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTache().getImportance()).collect(Collectors.toSet()));
@@ -249,18 +257,12 @@ public class ModuleChargeController {
                 planCharge.getPlanification().taches()
                         .stream()
                         .map(tache -> {
-                                    try {
-                                        return new PlanificationBean(
-                                                new TacheBean(tache),
-                                                new TreeMap<LocalDate, DoubleProperty>(
-                                                        planCharge.getPlanification().planification(tache)
-                                                )
-                                        );
-                                    } catch (TacheSansPlanificationException e) {
-                                        throw new
-                                    }
-                                }
-                        )
+                            try {
+                                return new PlanificationBean(tache, planCharge.getPlanification().planification(tache));
+                            } catch (TacheSansPlanificationException e) {
+                                throw new ControllerException("Impossible de définir le plan de charge.", e);
+                            }
+                        })
                         .collect(Collectors.toList())
         );
 
@@ -482,6 +484,7 @@ public class ModuleChargeController {
     @FXML
     private void razFiltres(ActionEvent event) {
         LOGGER.debug("RAZ des filtres...");
+        filtreGlobalField.clear();
         filtreNoTacheField.clear();
         filtreNoTicketIdalField.clear();
         filtreDescriptionField.clear();
