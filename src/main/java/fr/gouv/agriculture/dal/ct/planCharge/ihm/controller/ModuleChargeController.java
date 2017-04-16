@@ -6,6 +6,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
 import org.controlsfx.control.CheckComboBox;
@@ -143,6 +146,7 @@ public class ModuleChargeController {
         super();
     }
 
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -156,6 +160,20 @@ public class ModuleChargeController {
         splitPane.lookupAll(".split-pane-divider").stream().forEach(div ->  div.setMouseTransparent(true) );
 */
 
+        class ChargeCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
+            private final int noSemaine;
+
+            public ChargeCellCallback(int noSemaine) {
+                this.noSemaine = noSemaine;
+            }
+
+            @Override
+            public ObservableValue<Double> call(TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
+                Double charge = cell.getValue().charge(noSemaine).doubleValue();
+                return charge.equals(0.0) ? null : new SimpleDoubleProperty(charge).asObject();
+            }
+        }
+
         // Formattage des données des cellules (en rendu "non éditable") :
         noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTacheProperty());
         noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTicketIdalProperty());
@@ -167,18 +185,18 @@ public class ModuleChargeController {
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().profilProperty());
-        semaine1Column.setCellValueFactory(cellData -> (cellData.getValue().charge(1).asObject()));
-        semaine2Column.setCellValueFactory(cellData -> (cellData.getValue().charge(2).asObject()));
-        semaine3Column.setCellValueFactory(cellData -> (cellData.getValue().charge(3).asObject()));
-        semaine4Column.setCellValueFactory(cellData -> (cellData.getValue().charge(4).asObject()));
-        semaine5Column.setCellValueFactory(cellData -> (cellData.getValue().charge(5).asObject()));
-        semaine6Column.setCellValueFactory(cellData -> (cellData.getValue().charge(6).asObject()));
-        semaine7Column.setCellValueFactory(cellData -> (cellData.getValue().charge(7).asObject()));
-        semaine8Column.setCellValueFactory(cellData -> (cellData.getValue().charge(8).asObject()));
-        semaine9Column.setCellValueFactory(cellData -> (cellData.getValue().charge(9).asObject()));
-        semaine10Column.setCellValueFactory(cellData -> (cellData.getValue().charge(10).asObject()));
-        semaine11Column.setCellValueFactory(cellData -> (cellData.getValue().charge(11).asObject()));
-        semaine12Column.setCellValueFactory(cellData -> (cellData.getValue().charge(12).asObject()));
+        semaine1Column.setCellValueFactory(new ChargeCellCallback(1)::call);
+        semaine2Column.setCellValueFactory(new ChargeCellCallback(2)::call);
+        semaine3Column.setCellValueFactory(new ChargeCellCallback(3)::call);
+        semaine4Column.setCellValueFactory(new ChargeCellCallback(4)::call);
+        semaine5Column.setCellValueFactory(new ChargeCellCallback(5)::call);
+        semaine6Column.setCellValueFactory(new ChargeCellCallback(6)::call);
+        semaine7Column.setCellValueFactory(new ChargeCellCallback(7)::call);
+        semaine8Column.setCellValueFactory(new ChargeCellCallback(8)::call);
+        semaine9Column.setCellValueFactory(new ChargeCellCallback(9)::call);
+        semaine10Column.setCellValueFactory(new ChargeCellCallback(10)::call);
+        semaine11Column.setCellValueFactory(new ChargeCellCallback(11)::call);
+        semaine12Column.setCellValueFactory(new ChargeCellCallback(12)::call);
         //
         // Custom rendering of the table cell:
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
@@ -223,6 +241,18 @@ public class ModuleChargeController {
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
+        semaine1Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine2Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine3Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine4Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine5Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine6Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine7Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine8Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine9Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine10Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine11Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine12Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
 /*
         // Cf. http://stackoverflow.com/questions/23789525/onscroll-listener-does-not-working-in-tableview-in-javafx-2
