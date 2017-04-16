@@ -5,11 +5,14 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 11/03/2017.
  */
 public class TacheBean {
+
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final Tache tache;
     private IntegerProperty id = new SimpleIntegerProperty();
@@ -120,6 +123,77 @@ public class TacheBean {
 
     public StringBinding noTacheProperty() {
         return idProperty().asString(Tache.FORMAT_NO_TACHE);
+    }
+
+    public String noTache() {
+        return tache.noTache();
+    }
+
+    public boolean matcheNoTache(String otherValue) {
+        if (new String(getId() + "").contains(otherValue)) {
+            return true; // matches
+        }
+        if (noTache().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheNoTicketIdal(String otherValue) {
+        if (getNoTicketIdal().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheDescription(String otherValue) {
+        if (getDescription().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheProjetAppli(String otherValue) {
+        if (getProjetAppli().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheImportance(String otherValue) {
+        if (getImportance().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheDebut(String otherValue) {
+        if (getDebut().format(DATE_FORMATTER).contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheEcheance(String otherValue) {
+        if (getEcheance().format(DATE_FORMATTER).contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+
+    public boolean matcheRessource(String otherValue) {
+        if (getRessource().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheProfil(String otherValue) {
+        if (getProfil().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
     }
 
     // Pour les débug, uniquement.
