@@ -1,4 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
+
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 
 /**
  * Created by frederic.danna on 25/03/2017.

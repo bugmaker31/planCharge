@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 

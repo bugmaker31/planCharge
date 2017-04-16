@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import java.time.LocalDate;
 

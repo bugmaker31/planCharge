@@ -1,7 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.PlanChargeDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 
 import java.time.LocalDate;
 

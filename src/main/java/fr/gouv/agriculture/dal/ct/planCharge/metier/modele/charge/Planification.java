@@ -1,4 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
+
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.exceptions.TacheSansPlanificationException;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -44,5 +47,12 @@ public class Planification {
             }
         }
         return null;
+    }
+
+    public Map<LocalDate, Double> planification(Tache tache) throws TacheSansPlanificationException {
+        if (!matrice.containsKey(tache)) {
+            throw new TacheSansPlanificationException(tache);
+        }
+        return matrice.get(tache);
     }
 }

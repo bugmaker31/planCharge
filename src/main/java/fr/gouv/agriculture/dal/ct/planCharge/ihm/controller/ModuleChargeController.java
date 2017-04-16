@@ -3,9 +3,10 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.Planification;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.exceptions.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -167,9 +169,12 @@ public class ModuleChargeController {
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().profilProperty());
+        semaine1Column.setCellValueFactory(cellData -> cellData.getValue().getMatrice().values().iterator().next().asObject());
+        //
         // Custom rendering of the table cell:
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         chargeColumn.setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
+            //            TODO FDA 2017/04 Terminer.
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -195,8 +200,6 @@ public class ModuleChargeController {
             }
         });
 
-        // Chargement des lignes du plan de charge :
-
         // Paramétrage des cellules éditables :
 /*
         La colonne "N° de tâche" n'est pas éditable (car c'est la "primaty key").
@@ -217,6 +220,7 @@ public class ModuleChargeController {
         tachesTable.addEventFilter(ScrollEvent.ANY, event -> tachesScroll(event));
 */
 
+        // Chargement des lignes du plan de charge :
         populePlan();
     }
 
@@ -241,7 +245,24 @@ public class ModuleChargeController {
         });
 
         PlanCharge planCharge = planChargeService.load(LocalDate.of(2016, 11, 28));
-        planifications.addAll(planCharge.getPlanification().taches().stream().map(tache -> new PlanificationBean(new TacheBean(tache))).collect(Collectors.toList()));
+        planifications.addAll(
+                planCharge.getPlanification().taches()
+                        .stream()
+                        .map(tache -> {
+                                    try {
+                                        return new PlanificationBean(
+                                                new TacheBean(tache),
+                                                new TreeMap<LocalDate, DoubleProperty>(
+                                                        planCharge.getPlanification().planification(tache)
+                                                )
+                                        );
+                                    } catch (TacheSansPlanificationException e) {
+                                        throw new
+                                    }
+                                }
+                        )
+                        .collect(Collectors.toList())
+        );
 
         populeFiltreProjetsApplis();
         populeFiltreImportances();

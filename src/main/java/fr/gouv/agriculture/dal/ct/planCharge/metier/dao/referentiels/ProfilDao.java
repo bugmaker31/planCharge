@@ -1,6 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.Profil;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

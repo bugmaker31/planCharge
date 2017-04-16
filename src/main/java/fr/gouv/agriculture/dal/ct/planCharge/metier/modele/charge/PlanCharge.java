@@ -1,7 +1,8 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.diff.Difference;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.diff.StatutDifference;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
 
 import java.time.LocalDate;
 import java.util.HashSet;
