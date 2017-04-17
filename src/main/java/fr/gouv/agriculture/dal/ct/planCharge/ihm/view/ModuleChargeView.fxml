@@ -42,11 +42,7 @@
                             <children>
                                 <BorderPane>
                                     <right>
-                                        <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ" BorderPane.alignment="CENTER">
-                                            <BorderPane.margin>
-                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                            </BorderPane.margin>
-                                        </Button>
+                                        <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ" BorderPane.alignment="CENTER" />
                                     </right>
                                     <center>
                                         <VBox BorderPane.alignment="CENTER">

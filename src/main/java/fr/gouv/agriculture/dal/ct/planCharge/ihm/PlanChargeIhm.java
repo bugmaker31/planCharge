@@ -1,17 +1,23 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ErrorController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class PlanChargeIhm extends javafx.application.Application {
 
@@ -55,11 +61,41 @@ public class PlanChargeIhm extends javafx.application.Application {
     @Override
     public void init() throws Exception {
         LOGGER.info("Application en cours d'initialisation...");
+
         super.init();
+
         initApplicationView();
+
+        // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
+        Thread.setDefaultUncaughtExceptionHandler(PlanChargeIhm::showError);
+
         APPLICATION = this;
         LOGGER.info("Application initialisée.");
     }
+
+    private static void showError(Thread thread, Throwable throwable) {
+        LOGGER.warn("An unexpected error occurred in " + thread + ".", throwable);
+        if (Platform.isFxApplicationThread()) {
+            showErrorDialog(throwable);
+        }
+    }
+
+    private static void showErrorDialog(Throwable t) {
+        StringWriter errorMsg = new StringWriter();
+        t.printStackTrace(new PrintWriter(errorMsg));
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
+        try {
+            Parent root = loader.load();
+            ((ErrorController)loader.getController()).setErrorText(errorMsg.toString());
+            dialog.setScene(new Scene(root, 250, 400));
+            dialog.show();
+        } catch (IOException e) {
+            LOGGER.error("Impossible d'afficher l'erreur.", e);
+        }
+    }
+
 
     @Override
     public void start(Stage primaryStage) throws IOException {

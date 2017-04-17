@@ -401,7 +401,21 @@ public class ModuleChargeController {
                 return false; // Does not match.
             });
         });
-//        filtreEcheanceField TODO FDA 2017/04
+        filtreEcheanceField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
+            filteredData.setPredicate(planification -> {
+
+                // If filter text is empty, display all data.
+                if (newValue == null) {
+                    return true;
+                }
+
+                // Compare column values with filter text.
+                if (planification.getTache().matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
+                    return true; // Filter matches
+                }
+                return false; // Does not match.
+            });
+        });
         filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener(
                 (ListChangeListener<String>) comboBoxChange ->
                         filteredData.setPredicate(planification -> {
