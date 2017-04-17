@@ -5,7 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planification;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class PlanChargeDao {
         // TODO FDA 2017/03 Débouchonner.
         Map<Tache, Map<LocalDate, Double>> matrice = new HashMap<>();
 
-        Planification planification = new Planification(matrice);
+        Planifications planifications = new Planifications(matrice);
         // >>> Partie générée, ne pas modifier à la main
         {
             Tache tache = new Tache(2001, "IDAL0001", "Tâche n°1", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
@@ -3040,7 +3040,7 @@ public class PlanChargeDao {
             matrice.put(tache, planif);
         }
         // <<< Fin de la partie générée
-        return new PlanCharge(date, planification);
+        return new PlanCharge(date, planifications);
     }
 
 }

@@ -74,7 +74,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     }
 
     private static void showError(Thread thread, Throwable throwable) {
-        LOGGER.warn("An unexpected error occurred in " + thread + ".", throwable);
+        LOGGER.error("An unexpected error occurred in " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
             showErrorDialog(throwable);
         }
@@ -89,7 +89,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         try {
             Parent root = loader.load();
             ((ErrorController)loader.getController()).setErrorText(errorMsg.toString());
-            dialog.setScene(new Scene(root, 250, 400));
+            dialog.setScene(new Scene(root, 800, 400));
             dialog.show();
         } catch (IOException e) {
             LOGGER.error("Impossible d'afficher l'erreur.", e);

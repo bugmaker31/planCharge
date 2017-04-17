@@ -19,19 +19,24 @@ public class PlanificationBean {
 
     private final TacheBean tache;
     private final List<Pair<LocalDate, DoubleProperty>> matrice;
+    private DoubleProperty chargePlanifiee = new SimpleDoubleProperty();
 
     public PlanificationBean(TacheBean tache, List<Pair<LocalDate, DoubleProperty>> matrice) {
+        super();
         this.tache = tache;
         this.matrice = matrice;
+
+        majChargePlanifiee();
     }
 
     public PlanificationBean(Tache tache, Map<LocalDate, Double> matrice) {
         this.tache = new TacheBean(tache);
         this.matrice = new ArrayList<>();
-        matrice.entrySet()
-                .stream()
+        matrice.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
                 .forEach(entry -> this.matrice.add(new Pair<LocalDate, DoubleProperty>(entry.getKey(), new SimpleDoubleProperty(entry.getValue()))));
+
+        majChargePlanifiee();
     }
 
     public TacheBean getTache() {
@@ -40,6 +45,14 @@ public class PlanificationBean {
 
     public List<Pair<LocalDate, DoubleProperty>> getMatrice() {
         return matrice;
+    }
+
+    public double getChargePlanifiee() {
+        return chargePlanifiee.get();
+    }
+
+    public DoubleProperty chargePlanifieeProperty() {
+        return chargePlanifiee;
     }
 
     public Pair<LocalDate, DoubleProperty> chargePlanifiee(int noSemaine) throws IhmException {
@@ -52,7 +65,23 @@ public class PlanificationBean {
         return matrice.get(noSemaine - 1);
     }
 
+    private double chargePlanifiee() throws IhmException {
+        final double[] chargePlanifiee = {0.0};
+        matrice.parallelStream().forEach(elt -> chargePlanifiee[0] += (elt.getValue().get()));
+        return chargePlanifiee[0];
+    }
+
     public DoubleProperty charge(int noSemaine) {
         return chargePlanifiee(noSemaine).getValue();
+    }
+
+    public void majChargePlanifiee() {
+        chargePlanifiee.setValue(chargePlanifiee());
+    }
+
+    // Pour déboguer, uniquement.
+    @Override
+    public String toString() {
+        return tache.toString() + " : " + chargePlanifiee.get();
     }
 }

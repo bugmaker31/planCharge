@@ -6,7 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -40,8 +41,7 @@ public class ModuleChargeController {
 
     private PlanChargeIhm application;
 
-    // Les tables :
-
+    // La table de planification des tâches :
     @FXML
     private TableView<PlanificationBean> planificationsTable;
     @FXML
@@ -88,47 +88,36 @@ public class ModuleChargeController {
     private TableColumn<PlanificationBean, Double> semaine11Column;
     @FXML
     private TableColumn<PlanificationBean, Double> semaine12Column;
+    @FXML
+    private TableColumn<PlanificationBean, Double> chargePlanifieeColumn;
 
     // Les filtres :
-
     @FXML
     private TextField filtreGlobalField;
-
     @FXML
     private TextField filtreNoTacheField;
-
     @FXML
     private TextField filtreNoTicketIdalField;
-
     @FXML
     private TextField filtreDescriptionField;
-
     @FXML
     private CheckComboBox<String> filtreProjetsApplisField;
-
     @FXML
     private DatePicker filtreDebutField; // TODO FDA 2017/04 Utiliser.
-
     @FXML
     private DatePicker filtreEcheanceField;  // TODO FDA 2017/04 Utiliser.
-
     @FXML
     private CheckComboBox<String> filtreImportancesField;
-
     @FXML
     private CheckComboBox<String> filtreRessourcesField;
-
     @FXML
     private CheckComboBox<String> filtreProfilsField;
 
     // Les services métier :
-
     private PlanChargeService planChargeService = new PlanChargeService();
 
     // Les collections de données :
-
     private ObservableList<PlanificationBean> planifications = FXCollections.observableArrayList();
-
     private ObservableList<String> codesImportancesTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
@@ -160,21 +149,21 @@ public class ModuleChargeController {
         splitPane.lookupAll(".split-pane-divider").stream().forEach(div ->  div.setMouseTransparent(true) );
 */
 
-        class ChargeCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
+        // Formattage des données des cellules (en rendu "non éditable") :
+        class ChargeSemaineCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
             private final int noSemaine;
 
-            public ChargeCellCallback(int noSemaine) {
+            private ChargeSemaineCellCallback(int noSemaine) {
                 this.noSemaine = noSemaine;
             }
 
             @Override
             public ObservableValue<Double> call(TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
-                Double charge = cell.getValue().charge(noSemaine).doubleValue();
-                return charge.equals(0.0) ? null : new SimpleDoubleProperty(charge).asObject();
+                PlanificationBean planifBean = cell.getValue();
+                Double nouvelleCharge = planifBean.charge(noSemaine).doubleValue();
+                return nouvelleCharge.equals(0.0) ? null : new SimpleDoubleProperty(nouvelleCharge).asObject();
             }
         }
-
-        // Formattage des données des cellules (en rendu "non éditable") :
         noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTacheProperty());
         noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTicketIdalProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().descriptionProperty());
@@ -185,37 +174,40 @@ public class ModuleChargeController {
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().profilProperty());
-        semaine1Column.setCellValueFactory(new ChargeCellCallback(1)::call);
-        semaine2Column.setCellValueFactory(new ChargeCellCallback(2)::call);
-        semaine3Column.setCellValueFactory(new ChargeCellCallback(3)::call);
-        semaine4Column.setCellValueFactory(new ChargeCellCallback(4)::call);
-        semaine5Column.setCellValueFactory(new ChargeCellCallback(5)::call);
-        semaine6Column.setCellValueFactory(new ChargeCellCallback(6)::call);
-        semaine7Column.setCellValueFactory(new ChargeCellCallback(7)::call);
-        semaine8Column.setCellValueFactory(new ChargeCellCallback(8)::call);
-        semaine9Column.setCellValueFactory(new ChargeCellCallback(9)::call);
-        semaine10Column.setCellValueFactory(new ChargeCellCallback(10)::call);
-        semaine11Column.setCellValueFactory(new ChargeCellCallback(11)::call);
-        semaine12Column.setCellValueFactory(new ChargeCellCallback(12)::call);
+        semaine1Column.setCellValueFactory(new ChargeSemaineCellCallback(1));
+        semaine2Column.setCellValueFactory(new ChargeSemaineCellCallback(2));
+        semaine3Column.setCellValueFactory(new ChargeSemaineCellCallback(3));
+        semaine4Column.setCellValueFactory(new ChargeSemaineCellCallback(4));
+        semaine5Column.setCellValueFactory(new ChargeSemaineCellCallback(5));
+        semaine6Column.setCellValueFactory(new ChargeSemaineCellCallback(6));
+        semaine7Column.setCellValueFactory(new ChargeSemaineCellCallback(7));
+        semaine8Column.setCellValueFactory(new ChargeSemaineCellCallback(8));
+        semaine9Column.setCellValueFactory(new ChargeSemaineCellCallback(9));
+        semaine10Column.setCellValueFactory(new ChargeSemaineCellCallback(10));
+        semaine11Column.setCellValueFactory(new ChargeSemaineCellCallback(11));
+        semaine12Column.setCellValueFactory(new ChargeSemaineCellCallback(12));
+        chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeProperty().asObject());
         //
         // Custom rendering of the table cell:
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         chargeColumn.setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
-            //            TODO FDA 2017/04 Terminer.
             @Override
-            protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
+            protected void updateItem(Double charge, boolean empty) {
+                super.updateItem(charge, empty);
 
-                if (item == null || empty) {
+                if (charge == null || empty) {
                     setText(null);
                     setStyle("");
                 } else {
+
                     // Format.
-                    setText(item.toString());
+                    setText(charge.toString()); // TODO FDA 2017/04 Mieux formater les charges ?
 
                     // Style with a different color.
+                    //            TODO FDA 2017/04 Terminer.
                     String styleBackgroundColour;
-                    if (item < 10.0) {
+                    double chargePlanifiee = planifications.get(this.getIndex()).getChargePlanifiee();
+                    if (charge < chargePlanifiee) {
                         setTextFill(Color.WHITE);
                         styleBackgroundColour = "maroon";
                     } else {
@@ -226,6 +218,35 @@ public class ModuleChargeController {
                 }
             }
         });
+        class ChargeSemaineEditHandler implements EventHandler<TableColumn.CellEditEvent<PlanificationBean, Double>> {
+
+            private final int noSemaine;
+
+            public ChargeSemaineEditHandler(int noSemaine) {
+                this.noSemaine = noSemaine;
+            }
+
+            @Override
+            public void handle(TableColumn.CellEditEvent<PlanificationBean, Double> event) {
+
+                PlanificationBean planifBean = event.getRowValue();
+                planifBean.charge(noSemaine).setValue(event.getNewValue());
+
+                planifBean.majChargePlanifiee();
+            }
+        }
+        semaine1Column.setOnEditCommit(new ChargeSemaineEditHandler(1));
+        semaine2Column.setOnEditCommit(new ChargeSemaineEditHandler(2));
+        semaine3Column.setOnEditCommit(new ChargeSemaineEditHandler(3));
+        semaine4Column.setOnEditCommit(new ChargeSemaineEditHandler(4));
+        semaine5Column.setOnEditCommit(new ChargeSemaineEditHandler(5));
+        semaine6Column.setOnEditCommit(new ChargeSemaineEditHandler(6));
+        semaine7Column.setOnEditCommit(new ChargeSemaineEditHandler(7));
+        semaine8Column.setOnEditCommit(new ChargeSemaineEditHandler(8));
+        semaine9Column.setOnEditCommit(new ChargeSemaineEditHandler(9));
+        semaine10Column.setOnEditCommit(new ChargeSemaineEditHandler(10));
+        semaine11Column.setOnEditCommit(new ChargeSemaineEditHandler(11));
+        semaine12Column.setOnEditCommit(new ChargeSemaineEditHandler(12));
 
         // Paramétrage des cellules éditables :
 /*
@@ -260,10 +281,10 @@ public class ModuleChargeController {
 */
 
         // Chargement des lignes du plan de charge :
-        populePlan();
+        populerPlan();
     }
 
-    private void populePlan()  {
+    private void populerPlan() {
         planifications.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
             codesImportancesTaches.clear();
             codesImportancesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTache().getImportance()).collect(Collectors.toSet()));
@@ -282,24 +303,25 @@ public class ModuleChargeController {
             codesProfilsTaches.sort(String::compareTo);
         });
 
-        PlanCharge planCharge = planChargeService.load(LocalDate.of(2016, 11, 28));
+        PlanCharge planCharge = planChargeService.load(LocalDate.of(2016, 11, 28)); // TODO FDA 2017/04 Paramétrer la date du plan de charge.
         planifications.addAll(
-                planCharge.getPlanification().taches()
+                planCharge.getPlanifications().taches()
                         .stream()
                         .map(tache -> {
                             try {
-                                return new PlanificationBean(tache, planCharge.getPlanification().planification(tache));
+                                return new PlanificationBean(tache, planCharge.getPlanifications().planification(tache));
                             } catch (TacheSansPlanificationException e) {
-                                throw new ControllerException("Impossible de définir le plan de charge.", e);
+                                throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
                             }
                         })
                         .collect(Collectors.toList())
         );
 
-        populeFiltreProjetsApplis();
-        populeFiltreImportances();
-        populeFiltreRessources();
-        populeFiltreProfils();
+        populerFiltreProjetsApplis();
+        populerFiltreImportances();
+        populerFiltreRessources();
+        populerFiltreProfils();
+        definirNomsColonnesSemaine();
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
         // 1. Wrap the ObservableList in a FilteredList
@@ -468,7 +490,11 @@ public class ModuleChargeController {
         planificationsTable.setItems(sortedData);
     }
 
-    private void populeFiltreProjetsApplis() {
+    private void definirNomsColonnesSemaine() {
+        // TODO FDA 2017/04 Coder.
+    }
+
+    private void populerFiltreProjetsApplis() {
 
         List<String> codesProjetsApplisList = new ArrayList<>();
         codesProjetsApplisList.addAll(planifications.stream().map(planification -> planification.getTache().getProjetAppli()).distinct().collect(Collectors.toList()));
@@ -482,7 +508,7 @@ public class ModuleChargeController {
         filtreProjetsApplisField.getCheckModel().checkAll();
     }
 
-    private void populeFiltreImportances() {
+    private void populerFiltreImportances() {
 
         List<String> codesImportancesList = new ArrayList<>();
         codesImportancesList.addAll(planifications.stream().map(planification -> planification.getTache().getImportance()).distinct().collect(Collectors.toList()));
@@ -496,7 +522,7 @@ public class ModuleChargeController {
         filtreImportancesField.getCheckModel().checkAll();
     }
 
-    private void populeFiltreRessources() {
+    private void populerFiltreRessources() {
 
         List<String> codesRessourcesList = new ArrayList<>();
         codesRessourcesList.addAll(planifications.stream().map(planification -> planification.getTache().getRessource()).distinct().collect(Collectors.toList()));
@@ -510,7 +536,7 @@ public class ModuleChargeController {
         filtreRessourcesField.getCheckModel().checkAll();
     }
 
-    private void populeFiltreProfils() {
+    private void populerFiltreProfils() {
 
         List<String> codesProfilsList = new ArrayList<>();
         codesProfilsList.addAll(planifications.stream().map(planification -> planification.getTache().getProfil()).distinct().collect(Collectors.toList()));
@@ -523,7 +549,6 @@ public class ModuleChargeController {
 
         filtreProfilsField.getCheckModel().checkAll();
     }
-
 
     @FXML
     private void razFiltres(ActionEvent event) {

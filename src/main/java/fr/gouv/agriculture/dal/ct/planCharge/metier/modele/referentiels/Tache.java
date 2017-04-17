@@ -95,6 +95,6 @@ public class Tache {
     // Pour les débug, uniquement.
     @Override
     public String toString() {
-        return "[" + projetAppli + "] " + noTache() + " (" + noTicketIdal + ") " + description;
+        return "[" + projetAppli + "] " + noTache() + " (" + noTicketIdal + ") " + '"' + description + '"';
     }
 }

@@ -17,9 +17,14 @@ public class ProjetAppli extends AbstractEntity<String> {
         return code;
     }
 
-
     @Override
     public String getIdentity() {
         return getCode();
+    }
+
+    // pour déboguer, uniquement.
+    @Override
+    public String toString() {
+        return code;
     }
 }

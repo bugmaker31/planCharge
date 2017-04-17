@@ -9,11 +9,11 @@ import java.util.Set;
 /**
  * Created by frederic.danna on 20/03/2017.
  */
-public class Planification {
+public class Planifications {
 
     Map<Tache, Map<LocalDate, Double>> matrice;
 
-    public Planification(Map<Tache, Map<LocalDate, Double>> matrice) {
+    public Planifications(Map<Tache, Map<LocalDate, Double>> matrice) {
         this.matrice = matrice;
     }
 
@@ -21,8 +21,8 @@ public class Planification {
         return matrice.keySet();
     }
 
-    public Double chargePlanifiee(Tache tache) {
-        Double chargePlanifiee;
+    public double chargePlanifiee(Tache tache) {
+        double chargePlanifiee;
 
         Map<LocalDate, Double> ligne = matrice.get(tache);
         if (ligne == null) {
