@@ -307,20 +307,6 @@ public class ModuleChargeController {
             codesProfilsTaches.sort(String::compareTo);
         });
 
-        PlanCharge planCharge = planChargeService.load(LocalDate.of(2016, 11, 28)); // TODO FDA 2017/04 Paramétrer la date du plan de charge.
-        planifications.addAll(
-                planCharge.getPlanifications().taches()
-                        .stream()
-                        .map(tache -> {
-                            try {
-                                return new PlanificationBean(tache, planCharge.getPlanifications().planification(tache));
-                            } catch (TacheSansPlanificationException e) {
-                                throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
-                            }
-                        })
-                        .collect(Collectors.toList())
-        );
-
         populerFiltreProjetsApplis();
         populerFiltreImportances();
         populerFiltreRessources();
@@ -584,4 +570,5 @@ public class ModuleChargeController {
         LOGGER.debug("Scroll sur la table des tâches...");
     }
 */
+
 }
