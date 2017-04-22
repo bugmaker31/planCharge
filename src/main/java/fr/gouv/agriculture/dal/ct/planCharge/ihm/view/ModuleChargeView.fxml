@@ -6,7 +6,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
     <center>
-        <TableView fx:id="planificationsTable" editable="true" minWidth="-Infinity" tableMenuButtonVisible="true"
+        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
                    BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0" text="N° tâche"/>
@@ -31,7 +31,7 @@
                 <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
                 <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
                 <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
-                <TableColumn fx:id="chargePlanifieeColumn" prefWidth="50.0" text="Charge planifiée" editable="false" />
+                <TableColumn fx:id="chargePlanifieeColumn" prefWidth="50.0" text="Charge planifiée" editable="false"/>
             </columns>
         </TableView>
     </center>
