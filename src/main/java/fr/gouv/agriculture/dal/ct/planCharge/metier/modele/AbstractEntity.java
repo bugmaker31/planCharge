@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
 
+import com.sun.istack.internal.NotNull;
+
 import java.io.Serializable;
 
 /**
@@ -7,5 +9,6 @@ import java.io.Serializable;
  */
 public abstract class AbstractEntity<I extends Serializable> {
 
+    @NotNull
     abstract public I getIdentity();
 }

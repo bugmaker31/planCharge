@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao;
 
+import com.sun.istack.internal.NotNull;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,8 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
 
     protected abstract E newEntity(EI id);
 
-    final public E load(EI id) {
+    @NotNull
+    final public E load(EI id) /*throws EntityNotFoundException*/ {
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");

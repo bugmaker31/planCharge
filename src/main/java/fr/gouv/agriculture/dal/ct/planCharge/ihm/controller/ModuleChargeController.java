@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
@@ -275,6 +276,9 @@ public class ModuleChargeController {
         semaine11Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         semaine12Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
+        // Paramétrage des ordres de tri :
+        importanceColumn.setComparator(new ImportanceComparator());
+
 /*
         // Cf. http://stackoverflow.com/questions/23789525/onscroll-listener-does-not-working-in-tableview-in-javafx-2
         tachesTable.addEventFilter(ScrollEvent.ANY, event -> tachesScroll(event));
@@ -484,7 +488,7 @@ public class ModuleChargeController {
         );
         // 3. Wrap the FilteredList in a SortedList.
         SortedList<PlanificationBean> sortedData = new SortedList<>(filteredData);
-        // 4. Bind the SortedList comparator to the TableView comparator.
+        // 4. Bind the SortedList COMPARATOR to the TableView COMPARATOR.
         sortedData.comparatorProperty().bind(planificationsTable.comparatorProperty());
         // 5. Add sorted (and filtered) data to the table.
         planificationsTable.setItems(sortedData);

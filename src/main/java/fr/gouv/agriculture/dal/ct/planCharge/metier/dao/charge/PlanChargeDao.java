@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ImportanceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
@@ -32,3013 +32,391 @@ public class PlanChargeDao {
         Map<Tache, Map<LocalDate, Double>> matrice = new HashMap<>();
 
         Planifications planifications = new Planifications(matrice);
-        // >>> Partie générée, ne pas modifier à la main
-        {
-            Tache tache = new Tache(2001, "IDAL0001", "Tâche n°1", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), 1.0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2002, "IDAL0002", "Tâche n°2", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2003, "IDAL0003", "Tâche n°3", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2004, "IDAL0004", "Tâche n°4", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2005, "IDAL0005", "Tâche n°5", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), 2.0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2006, "IDAL0006", "Tâche n°6", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .1);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2007, "IDAL0007", "Tâche n°7", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2008, "IDAL0008", "Tâche n°8", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2009, "IDAL0009", "Tâche n°9", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 2.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2010, "IDAL00010", "Tâche n°10", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), 1.0);
-            planif.put(LocalDate.of(2017, 5, 15), 1.0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2011, "IDAL00011", "Tâche n°11", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2012, "IDAL00012", "Tâche n°12", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .3);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2013, "IDAL00013", "Tâche n°13", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2014, "IDAL00014", "Tâche n°14", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2015, "IDAL00015", "Tâche n°15", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .3);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2016, "IDAL00016", "Tâche n°16", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2017, "IDAL00017", "Tâche n°17", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2018, "IDAL00018", "Tâche n°18", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2019, "IDAL00019", "Tâche n°19", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2020, "IDAL00020", "Tâche n°20", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .3);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2021, "IDAL00021", "Tâche n°21", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2022, "IDAL00022", "Tâche n°22", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), 2.0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2023, "IDAL00023", "Tâche n°23", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .1);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2024, "IDAL00024", "Tâche n°24", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2025, "IDAL00025", "Tâche n°25", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2026, "IDAL00026", "Tâche n°26", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .1);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2027, "IDAL00027", "Tâche n°27", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2028, "IDAL00028", "Tâche n°28", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .1);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2029, "IDAL00029", "Tâche n°29", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2030, "IDAL00030", "Tâche n°30", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2031, "IDAL00031", "Tâche n°31", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2032, "IDAL00032", "Tâche n°32", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 1.0);
-            planif.put(LocalDate.of(2017, 6, 19), 1.0);
-            planif.put(LocalDate.of(2017, 6, 26), 1.0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2033, "IDAL00033", "Tâche n°33", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2034, "IDAL00034", "Tâche n°34", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .3);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2035, "IDAL00035", "Tâche n°35", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2036, "IDAL00036", "Tâche n°36", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2037, "IDAL00037", "Tâche n°37", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), 1.0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2038, "IDAL00038", "Tâche n°38", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2039, "IDAL00039", "Tâche n°39", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2040, "IDAL00040", "Tâche n°40", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2041, "IDAL00041", "Tâche n°41", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), 2.0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2042, "IDAL00042", "Tâche n°42", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .1);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2043, "IDAL00043", "Tâche n°43", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2044, "IDAL00044", "Tâche n°44", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2045, "IDAL00045", "Tâche n°45", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 2.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2046, "IDAL00046", "Tâche n°46", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), 1.0);
-            planif.put(LocalDate.of(2017, 5, 15), 1.0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2047, "IDAL00047", "Tâche n°47", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2048, "IDAL00048", "Tâche n°48", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .3);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2049, "IDAL00049", "Tâche n°49", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2050, "IDAL00050", "Tâche n°50", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2051, "IDAL00051", "Tâche n°51", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .3);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2052, "IDAL00052", "Tâche n°52", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2053, "IDAL00053", "Tâche n°53", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2054, "IDAL00054", "Tâche n°54", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2055, "IDAL00055", "Tâche n°55", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2056, "IDAL00056", "Tâche n°56", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .3);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2057, "IDAL00057", "Tâche n°57", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2058, "IDAL00058", "Tâche n°58", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), 2.0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2059, "IDAL00059", "Tâche n°59", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .1);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2060, "IDAL00060", "Tâche n°60", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2061, "IDAL00061", "Tâche n°61", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2062, "IDAL00062", "Tâche n°62", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .1);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2063, "IDAL00063", "Tâche n°63", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2064, "IDAL00064", "Tâche n°64", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .1);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2065, "IDAL00065", "Tâche n°65", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2066, "IDAL00066", "Tâche n°66", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2067, "IDAL00067", "Tâche n°67", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2068, "IDAL00068", "Tâche n°68", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 1.0);
-            planif.put(LocalDate.of(2017, 6, 19), 1.0);
-            planif.put(LocalDate.of(2017, 6, 26), 1.0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2069, "IDAL00069", "Tâche n°69", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2070, "IDAL00070", "Tâche n°70", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .3);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2071, "IDAL00071", "Tâche n°71", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2072, "IDAL00072", "Tâche n°72", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2073, "IDAL00073", "Tâche n°73", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), 1.0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2074, "IDAL00074", "Tâche n°74", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2075, "IDAL00075", "Tâche n°75", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2076, "IDAL00076", "Tâche n°76", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2077, "IDAL00077", "Tâche n°77", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), 2.0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2078, "IDAL00078", "Tâche n°78", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .1);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2079, "IDAL00079", "Tâche n°79", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2080, "IDAL00080", "Tâche n°80", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2081, "IDAL00081", "Tâche n°81", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 2.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2082, "IDAL00082", "Tâche n°82", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), 1.0);
-            planif.put(LocalDate.of(2017, 5, 15), 1.0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2083, "IDAL00083", "Tâche n°83", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2084, "IDAL00084", "Tâche n°84", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .3);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2085, "IDAL00085", "Tâche n°85", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2086, "IDAL00086", "Tâche n°86", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2087, "IDAL00087", "Tâche n°87", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .3);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2088, "IDAL00088", "Tâche n°88", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2089, "IDAL00089", "Tâche n°89", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2090, "IDAL00090", "Tâche n°90", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2091, "IDAL00091", "Tâche n°91", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2092, "IDAL00092", "Tâche n°92", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .3);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2093, "IDAL00093", "Tâche n°93", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2094, "IDAL00094", "Tâche n°94", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), 2.0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2095, "IDAL00095", "Tâche n°95", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .1);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2096, "IDAL00096", "Tâche n°96", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2097, "IDAL00097", "Tâche n°97", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2098, "IDAL00098", "Tâche n°98", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .1);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2099, "IDAL00099", "Tâche n°99", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2100, "IDAL000100", "Tâche n°100", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .1);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2101, "IDAL000101", "Tâche n°101", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2102, "IDAL000102", "Tâche n°102", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2103, "IDAL000103", "Tâche n°103", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2104, "IDAL000104", "Tâche n°104", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 1.0);
-            planif.put(LocalDate.of(2017, 6, 19), 1.0);
-            planif.put(LocalDate.of(2017, 6, 26), 1.0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2105, "IDAL000105", "Tâche n°105", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2106, "IDAL000106", "Tâche n°106", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .3);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2107, "IDAL000107", "Tâche n°107", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2108, "IDAL000108", "Tâche n°108", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2109, "IDAL000109", "Tâche n°109", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), 1.0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2110, "IDAL000110", "Tâche n°110", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2111, "IDAL000111", "Tâche n°111", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2112, "IDAL000112", "Tâche n°112", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2113, "IDAL000113", "Tâche n°113", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), 2.0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2114, "IDAL000114", "Tâche n°114", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .1);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2115, "IDAL000115", "Tâche n°115", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2116, "IDAL000116", "Tâche n°116", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2117, "IDAL000117", "Tâche n°117", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 2.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2118, "IDAL000118", "Tâche n°118", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), 1.0);
-            planif.put(LocalDate.of(2017, 5, 15), 1.0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2119, "IDAL000119", "Tâche n°119", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2120, "IDAL000120", "Tâche n°120", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .3);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2121, "IDAL000121", "Tâche n°121", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2122, "IDAL000122", "Tâche n°122", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2123, "IDAL000123", "Tâche n°123", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .3);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2124, "IDAL000124", "Tâche n°124", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2125, "IDAL000125", "Tâche n°125", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2126, "IDAL000126", "Tâche n°126", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2127, "IDAL000127", "Tâche n°127", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2128, "IDAL000128", "Tâche n°128", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .3);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2129, "IDAL000129", "Tâche n°129", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2130, "IDAL000130", "Tâche n°130", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), 2.0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2131, "IDAL000131", "Tâche n°131", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .1);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2132, "IDAL000132", "Tâche n°132", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2133, "IDAL000133", "Tâche n°133", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2134, "IDAL000134", "Tâche n°134", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .1);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2135, "IDAL000135", "Tâche n°135", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2136, "IDAL000136", "Tâche n°136", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .1);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2137, "IDAL000137", "Tâche n°137", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2138, "IDAL000138", "Tâche n°138", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2139, "IDAL000139", "Tâche n°139", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2140, "IDAL000140", "Tâche n°140", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 1.0);
-            planif.put(LocalDate.of(2017, 6, 19), 1.0);
-            planif.put(LocalDate.of(2017, 6, 26), 1.0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2141, "IDAL000141", "Tâche n°141", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2142, "IDAL000142", "Tâche n°142", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .3);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2143, "IDAL000143", "Tâche n°143", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2144, "IDAL000144", "Tâche n°144", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), 2.0);
-            planif.put(LocalDate.of(2017, 7, 3), 2.0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2145, "IDAL000145", "Tâche n°145", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), 1.0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2146, "IDAL000146", "Tâche n°146", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2147, "IDAL000147", "Tâche n°147", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .3);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2148, "IDAL000148", "Tâche n°148", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2149, "IDAL000149", "Tâche n°149", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), 2.0);
-            planif.put(LocalDate.of(2017, 5, 1), 2.0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2150, "IDAL000150", "Tâche n°150", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .1);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2151, "IDAL000151", "Tâche n°151", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2152, "IDAL000152", "Tâche n°152", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 1.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2153, "IDAL000153", "Tâche n°153", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), 2.0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2154, "IDAL000154", "Tâche n°154", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), 1.0);
-            planif.put(LocalDate.of(2017, 5, 8), 1.0);
-            planif.put(LocalDate.of(2017, 5, 15), 1.0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2155, "IDAL000155", "Tâche n°155", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2156, "IDAL000156", "Tâche n°156", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .3);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2157, "IDAL000157", "Tâche n°157", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2158, "IDAL000158", "Tâche n°158", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), 2.0);
-            planif.put(LocalDate.of(2017, 5, 15), 2.0);
-            planif.put(LocalDate.of(2017, 5, 22), 2.0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2159, "IDAL000159", "Tâche n°159", projetAppliDao.load("ProjetA"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .3);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2160, "IDAL000160", "Tâche n°160", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .1);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2161, "IDAL000161", "Tâche n°161", projetAppliDao.load("ProjetB"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .3);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2162, "IDAL000162", "Tâche n°162", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2163, "IDAL000163", "Tâche n°163", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2164, "IDAL000164", "Tâche n°164", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .3);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2165, "IDAL000165", "Tâche n°165", projetAppliDao.load("ProjetC"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2166, "IDAL000166", "Tâche n°166", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .0);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), 2.0);
-            planif.put(LocalDate.of(2017, 6, 12), 2.0);
-            planif.put(LocalDate.of(2017, 6, 19), 2.0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
-        {
-            Tache tache = new Tache(2167, "IDAL000167", "Tâche n°167", projetAppliDao.load("*"), LocalDate.parse("2016-11-13"), LocalDate.parse("2016-11-30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));
-            Map<LocalDate, Double> planif = new HashMap<>();
-            planif.put(LocalDate.of(2017, 4, 17), .0);
-            planif.put(LocalDate.of(2017, 4, 24), .0);
-            planif.put(LocalDate.of(2017, 5, 1), .1);
-            planif.put(LocalDate.of(2017, 5, 8), .0);
-            planif.put(LocalDate.of(2017, 5, 15), .0);
-            planif.put(LocalDate.of(2017, 5, 22), .0);
-            planif.put(LocalDate.of(2017, 5, 29), .0);
-            planif.put(LocalDate.of(2017, 6, 5), .0);
-            planif.put(LocalDate.of(2017, 6, 12), .0);
-            planif.put(LocalDate.of(2017, 6, 19), .0);
-            planif.put(LocalDate.of(2017, 6, 26), .0);
-            planif.put(LocalDate.of(2017, 7, 3), .0);
-            ;
-            matrice.put(tache, planif);
-        }
+        // >>> /!\ Ne pas modifier à la main, partie générée (depuis le fichier "src/test/data/mocks/gene_donnees_charges.xlsx".
+        {Tache t = new Tache(2100, "IDAL000100", "Tâche n°100", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/02/27"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2101, "IDAL000101", "Tâche n°101", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/02/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2102, "IDAL000102", "Tâche n°102", projetAppliDao.load("ProjetA"), LocalDate.parse("2046/02/01"), LocalDate.parse("2017/03/01"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2103, "IDAL000103", "Tâche n°103", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/03/02"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2104, "IDAL000104", "Tâche n°104", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/03"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2105, "IDAL000105", "Tâche n°105", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/04"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2106, "IDAL000106", "Tâche n°106", projetAppliDao.load("ProjetB"), LocalDate.parse("2047/02/04"), LocalDate.parse("2017/03/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2107, "IDAL000107", "Tâche n°107", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/06"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2108, "IDAL000108", "Tâche n°108", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/07"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2109, "IDAL000109", "Tâche n°109", projetAppliDao.load("ProjetA"), LocalDate.parse("2048/02/07"), LocalDate.parse("2017/03/08"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2110, "IDAL000110", "Tâche n°110", projetAppliDao.load("*"), null, LocalDate.parse("2017/03/09"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2111, "IDAL000111", "Tâche n°111", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/10"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2112, "IDAL000112", "Tâche n°112", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/11"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2113, "IDAL000113", "Tâche n°113", projetAppliDao.load("ProjetC"), LocalDate.parse("2049/02/09"), LocalDate.parse("2017/03/12"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2114, "IDAL000114", "Tâche n°114", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/13"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2115, "IDAL000115", "Tâche n°115", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/14"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2116, "IDAL000116", "Tâche n°116", projetAppliDao.load("*"), LocalDate.parse("2050/02/12"), LocalDate.parse("2017/03/15"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2117, "IDAL000117", "Tâche n°117", projetAppliDao.load("*"), null, LocalDate.parse("2017/03/16"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2118, "IDAL000118", "Tâche n°118", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2119, "IDAL000119", "Tâche n°119", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/18"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2120, "IDAL000120", "Tâche n°120", projetAppliDao.load("ProjetA"), LocalDate.parse("2051/02/15"), LocalDate.parse("2017/03/19"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2121, "IDAL000121", "Tâche n°121", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2122, "IDAL000122", "Tâche n°122", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/03/21"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2123, "IDAL000123", "Tâche n°123", projetAppliDao.load("ProjetC"), LocalDate.parse("2052/02/18"), LocalDate.parse("2017/03/22"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2124, "IDAL000124", "Tâche n°124", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/23"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2125, "IDAL000125", "Tâche n°125", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/24"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2126, "IDAL000126", "Tâche n°126", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/03/25"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2127, "IDAL000127", "Tâche n°127", projetAppliDao.load("ProjetA"), LocalDate.parse("2053/02/20"), LocalDate.parse("2017/03/26"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2128, "IDAL000128", "Tâche n°128", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/03/27"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2129, "IDAL000129", "Tâche n°129", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/28"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2130, "IDAL000130", "Tâche n°130", projetAppliDao.load("ProjetB"), LocalDate.parse("2054/02/23"), LocalDate.parse("2017/03/29"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2131, "IDAL000131", "Tâche n°131", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/03/30"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2132, "IDAL000132", "Tâche n°132", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/03/31"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2133, "IDAL000133", "Tâche n°133", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/01"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2134, "IDAL000134", "Tâche n°134", projetAppliDao.load("ProjetA"), LocalDate.parse("2055/02/26"), LocalDate.parse("2017/04/02"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2135, "IDAL000135", "Tâche n°135", projetAppliDao.load("*"), null, LocalDate.parse("2017/04/03"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2136, "IDAL000136", "Tâche n°136", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2137, "IDAL000137", "Tâche n°137", projetAppliDao.load("ProjetC"), LocalDate.parse("2056/02/29"), LocalDate.parse("2017/04/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2138, "IDAL000138", "Tâche n°138", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/04/06"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2139, "IDAL000139", "Tâche n°139", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/04/07"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2140, "IDAL000140", "Tâche n°140", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/04/08"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2141, "IDAL000141", "Tâche n°141", projetAppliDao.load("*"), LocalDate.parse("2057/03/03"), LocalDate.parse("2017/04/09"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2142, "IDAL000142", "Tâche n°142", projetAppliDao.load("*"), null, LocalDate.parse("2017/04/10"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2143, "IDAL000143", "Tâche n°143", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/11"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2144, "IDAL000144", "Tâche n°144", projetAppliDao.load("ProjetC"), LocalDate.parse("2058/03/06"), LocalDate.parse("2017/04/12"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2145, "IDAL000145", "Tâche n°145", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/04/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2146, "IDAL000146", "Tâche n°146", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/04/14"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2147, "IDAL000147", "Tâche n°147", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/04/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2148, "IDAL000148", "Tâche n°148", projetAppliDao.load("ProjetC"), LocalDate.parse("2059/03/09"), LocalDate.parse("2017/04/16"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2149, "IDAL000149", "Tâche n°149", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2150, "IDAL000150", "Tâche n°150", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/04/18"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2151, "IDAL000151", "Tâche n°151", projetAppliDao.load("ProjetA"), LocalDate.parse("2060/03/11"), LocalDate.parse("2017/04/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2152, "IDAL000152", "Tâche n°152", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/04/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2153, "IDAL000153", "Tâche n°153", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/04/21"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2154, "IDAL000154", "Tâche n°154", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/22"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2155, "IDAL000155", "Tâche n°155", projetAppliDao.load("ProjetB"), LocalDate.parse("2061/03/14"), LocalDate.parse("2017/04/23"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2156, "IDAL000156", "Tâche n°156", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/24"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2157, "IDAL000157", "Tâche n°157", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/04/25"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2158, "IDAL000158", "Tâche n°158", projetAppliDao.load("ProjetB"), LocalDate.parse("2062/03/17"), LocalDate.parse("2017/04/26"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2159, "IDAL000159", "Tâche n°159", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/04/27"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2160, "IDAL000160", "Tâche n°160", projetAppliDao.load("*"), null, LocalDate.parse("2017/04/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2161, "IDAL000161", "Tâche n°161", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/04/29"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2162, "IDAL000162", "Tâche n°162", projetAppliDao.load("ProjetC"), LocalDate.parse("2063/03/20"), LocalDate.parse("2017/04/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2163, "IDAL000163", "Tâche n°163", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/01"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2164, "IDAL000164", "Tâche n°164", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/02"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2165, "IDAL000165", "Tâche n°165", projetAppliDao.load("ProjetC"), LocalDate.parse("2064/03/22"), LocalDate.parse("2017/05/03"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2166, "IDAL000166", "Tâche n°166", projetAppliDao.load("*"), null, LocalDate.parse("2017/05/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2167, "IDAL000167", "Tâche n°167", projetAppliDao.load("*"), null, LocalDate.parse("2017/05/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2168, "IDAL000168", "Tâche n°168", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/05/06"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2169, "IDAL000169", "Tâche n°169", projetAppliDao.load("ProjetC"), LocalDate.parse("2065/03/25"), LocalDate.parse("2017/05/07"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2170, "IDAL000170", "Tâche n°170", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/05/08"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2171, "IDAL000171", "Tâche n°171", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/09"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2172, "IDAL000172", "Tâche n°172", projetAppliDao.load("ProjetA"), LocalDate.parse("2066/03/28"), LocalDate.parse("2017/05/10"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2173, "IDAL000173", "Tâche n°173", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/11"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2174, "IDAL000174", "Tâche n°174", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/05/12"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2175, "IDAL000175", "Tâche n°175", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2176, "IDAL000176", "Tâche n°176", projetAppliDao.load("ProjetA"), LocalDate.parse("2067/03/31"), LocalDate.parse("2017/05/14"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2177, "IDAL000177", "Tâche n°177", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/05/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2178, "IDAL000178", "Tâche n°178", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/05/16"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2179, "IDAL000179", "Tâche n°179", projetAppliDao.load("ProjetB"), LocalDate.parse("2068/04/02"), LocalDate.parse("2017/05/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2180, "IDAL000180", "Tâche n°180", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/05/18"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2181, "IDAL000181", "Tâche n°181", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/05/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2182, "IDAL000182", "Tâche n°182", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2183, "IDAL000183", "Tâche n°183", projetAppliDao.load("ProjetB"), LocalDate.parse("2069/04/05"), LocalDate.parse("2017/05/21"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2184, "IDAL000184", "Tâche n°184", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/05/22"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2185, "IDAL000185", "Tâche n°185", projetAppliDao.load("*"), null, LocalDate.parse("2017/05/23"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2186, "IDAL000186", "Tâche n°186", projetAppliDao.load("ProjetB"), LocalDate.parse("2070/04/08"), LocalDate.parse("2017/05/24"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2187, "IDAL000187", "Tâche n°187", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/25"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2188, "IDAL000188", "Tâche n°188", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/26"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2189, "IDAL000189", "Tâche n°189", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/05/27"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2190, "IDAL000190", "Tâche n°190", projetAppliDao.load("ProjetC"), LocalDate.parse("2071/04/11"), LocalDate.parse("2017/05/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2191, "IDAL000191", "Tâche n°191", projetAppliDao.load("*"), null, LocalDate.parse("2017/05/29"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2192, "IDAL000192", "Tâche n°192", projetAppliDao.load("*"), null, LocalDate.parse("2017/05/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2193, "IDAL000193", "Tâche n°193", projetAppliDao.load("ProjetB"), LocalDate.parse("2072/04/13"), LocalDate.parse("2017/05/31"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2194, "IDAL000194", "Tâche n°194", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/01"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2195, "IDAL000195", "Tâche n°195", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/02"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2196, "IDAL000196", "Tâche n°196", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/03"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2197, "IDAL000197", "Tâche n°197", projetAppliDao.load("ProjetA"), LocalDate.parse("2073/04/16"), LocalDate.parse("2017/06/04"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("EGR"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2198, "IDAL000198", "Tâche n°198", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2199, "IDAL000199", "Tâche n°199", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/06/06"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2200, "IDAL000200", "Tâche n°200", projetAppliDao.load("ProjetC"), LocalDate.parse("2074/04/19"), LocalDate.parse("2017/06/07"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2201, "IDAL000201", "Tâche n°201", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/08"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2202, "IDAL000202", "Tâche n°202", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2203, "IDAL000203", "Tâche n°203", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/10"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2204, "IDAL000204", "Tâche n°204", projetAppliDao.load("ProjetB"), LocalDate.parse("2075/04/22"), LocalDate.parse("2017/06/11"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2205, "IDAL000205", "Tâche n°205", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/06/12"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2206, "IDAL000206", "Tâche n°206", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/06/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2207, "IDAL000207", "Tâche n°207", projetAppliDao.load("ProjetC"), LocalDate.parse("2076/04/24"), LocalDate.parse("2017/06/14"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2208, "IDAL000208", "Tâche n°208", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/06/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2209, "IDAL000209", "Tâche n°209", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/16"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2210, "IDAL000210", "Tâche n°210", projetAppliDao.load("*"), null, LocalDate.parse("2017/06/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2211, "IDAL000211", "Tâche n°211", projetAppliDao.load("ProjetB"), LocalDate.parse("2077/04/27"), LocalDate.parse("2017/06/18"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("RVA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2212, "IDAL000212", "Tâche n°212", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/19"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2213, "IDAL000213", "Tâche n°213", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2214, "IDAL000214", "Tâche n°214", projetAppliDao.load("ProjetC"), LocalDate.parse("2078/04/30"), LocalDate.parse("2017/06/21"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2215, "IDAL000215", "Tâche n°215", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/22"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2216, "IDAL000216", "Tâche n°216", projetAppliDao.load("*"), null, LocalDate.parse("2017/06/23"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2217, "IDAL000217", "Tâche n°217", projetAppliDao.load("*"), null, LocalDate.parse("2017/06/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2218, "IDAL000218", "Tâche n°218", projetAppliDao.load("ProjetB"), LocalDate.parse("2079/05/03"), LocalDate.parse("2017/06/25"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2219, "IDAL000219", "Tâche n°219", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/26"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2220, "IDAL000220", "Tâche n°220", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/27"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2221, "IDAL000221", "Tâche n°221", projetAppliDao.load("ProjetC"), LocalDate.parse("2080/05/05"), LocalDate.parse("2017/06/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2222, "IDAL000222", "Tâche n°222", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/06/29"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2223, "IDAL000223", "Tâche n°223", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/06/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2224, "IDAL000224", "Tâche n°224", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/01"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2225, "IDAL000225", "Tâche n°225", projetAppliDao.load("ProjetC"), LocalDate.parse("2081/05/08"), LocalDate.parse("2017/07/02"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2226, "IDAL000226", "Tâche n°226", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/03"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("EGR"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2227, "IDAL000227", "Tâche n°227", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/04"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2228, "IDAL000228", "Tâche n°228", projetAppliDao.load("ProjetA"), LocalDate.parse("2082/05/11"), LocalDate.parse("2017/07/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2229, "IDAL000229", "Tâche n°229", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/06"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2230, "IDAL000230", "Tâche n°230", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/07"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2231, "IDAL000231", "Tâche n°231", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/08"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2232, "IDAL000232", "Tâche n°232", projetAppliDao.load("ProjetC"), LocalDate.parse("2083/05/14"), LocalDate.parse("2017/07/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2233, "IDAL000233", "Tâche n°233", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/10"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2234, "IDAL000234", "Tâche n°234", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/11"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2235, "IDAL000235", "Tâche n°235", projetAppliDao.load("*"), LocalDate.parse("2084/05/16"), LocalDate.parse("2017/07/12"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2236, "IDAL000236", "Tâche n°236", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2237, "IDAL000237", "Tâche n°237", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/07/14"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2238, "IDAL000238", "Tâche n°238", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/07/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2239, "IDAL000239", "Tâche n°239", projetAppliDao.load("ProjetC"), LocalDate.parse("2085/05/19"), LocalDate.parse("2017/07/16"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2240, "IDAL000240", "Tâche n°240", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/07/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2241, "IDAL000241", "Tâche n°241", projetAppliDao.load("*"), null, LocalDate.parse("2017/07/18"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2242, "IDAL000242", "Tâche n°242", projetAppliDao.load("*"), LocalDate.parse("2086/05/22"), LocalDate.parse("2017/07/19"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2243, "IDAL000243", "Tâche n°243", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2244, "IDAL000244", "Tâche n°244", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/07/21"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2245, "IDAL000245", "Tâche n°245", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/22"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2246, "IDAL000246", "Tâche n°246", projetAppliDao.load("ProjetC"), LocalDate.parse("2087/05/25"), LocalDate.parse("2017/07/23"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("HLE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2247, "IDAL000247", "Tâche n°247", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2248, "IDAL000248", "Tâche n°248", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/07/25"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2249, "IDAL000249", "Tâche n°249", projetAppliDao.load("ProjetB"), LocalDate.parse("2088/05/27"), LocalDate.parse("2017/07/26"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2250, "IDAL000250", "Tâche n°250", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/07/27"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2251, "IDAL000251", "Tâche n°251", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2252, "IDAL000252", "Tâche n°252", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/07/29"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2253, "IDAL000253", "Tâche n°253", projetAppliDao.load("ProjetA"), LocalDate.parse("2089/05/30"), LocalDate.parse("2017/07/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2254, "IDAL000254", "Tâche n°254", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/07/31"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2255, "IDAL000255", "Tâche n°255", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/01"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2256, "IDAL000256", "Tâche n°256", projetAppliDao.load("ProjetB"), LocalDate.parse("2090/06/02"), LocalDate.parse("2017/08/02"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2257, "IDAL000257", "Tâche n°257", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/03"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2258, "IDAL000258", "Tâche n°258", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2259, "IDAL000259", "Tâche n°259", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/08/05"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2260, "IDAL000260", "Tâche n°260", projetAppliDao.load("*"), LocalDate.parse("2091/06/05"), LocalDate.parse("2017/08/06"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2261, "IDAL000261", "Tâche n°261", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/07"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("HLE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2262, "IDAL000262", "Tâche n°262", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/08"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2263, "IDAL000263", "Tâche n°263", projetAppliDao.load("ProjetC"), LocalDate.parse("2092/06/07"), LocalDate.parse("2017/08/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2264, "IDAL000264", "Tâche n°264", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/10"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2265, "IDAL000265", "Tâche n°265", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/11"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2266, "IDAL000266", "Tâche n°266", projetAppliDao.load("*"), null, LocalDate.parse("2017/08/12"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2267, "IDAL000267", "Tâche n°267", projetAppliDao.load("*"), LocalDate.parse("2093/06/10"), LocalDate.parse("2017/08/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2268, "IDAL000268", "Tâche n°268", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/14"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2269, "IDAL000269", "Tâche n°269", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2270, "IDAL000270", "Tâche n°270", projetAppliDao.load("ProjetA"), LocalDate.parse("2094/06/13"), LocalDate.parse("2017/08/16"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2271, "IDAL000271", "Tâche n°271", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/17"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2272, "IDAL000272", "Tâche n°272", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/08/18"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2273, "IDAL000273", "Tâche n°273", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2274, "IDAL000274", "Tâche n°274", projetAppliDao.load("ProjetB"), LocalDate.parse("2095/06/16"), LocalDate.parse("2017/08/20"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("HLE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2275, "IDAL000275", "Tâche n°275", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/21"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FBO"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2276, "IDAL000276", "Tâche n°276", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/08/22"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FBO"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2277, "IDAL000277", "Tâche n°277", projetAppliDao.load("ProjetA"), LocalDate.parse("2096/06/18"), LocalDate.parse("2017/08/23"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2278, "IDAL000278", "Tâche n°278", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/08/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2279, "IDAL000279", "Tâche n°279", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/25"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2280, "IDAL000280", "Tâche n°280", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/26"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2281, "IDAL000281", "Tâche n°281", projetAppliDao.load("ProjetB"), LocalDate.parse("2097/06/21"), LocalDate.parse("2017/08/27"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2282, "IDAL000282", "Tâche n°282", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/08/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("EGR"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2283, "IDAL000283", "Tâche n°283", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/08/29"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2284, "IDAL000284", "Tâche n°284", projetAppliDao.load("ProjetA"), LocalDate.parse("2098/06/24"), LocalDate.parse("2017/08/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2285, "IDAL000285", "Tâche n°285", projetAppliDao.load("*"), null, LocalDate.parse("2017/08/31"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2286, "IDAL000286", "Tâche n°286", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/01"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2287, "IDAL000287", "Tâche n°287", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/02"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2288, "IDAL000288", "Tâche n°288", projetAppliDao.load("ProjetC"), LocalDate.parse("2099/06/27"), LocalDate.parse("2017/09/03"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2289, "IDAL000289", "Tâche n°289", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/04"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2290, "IDAL000290", "Tâche n°290", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/05"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2291, "IDAL000291", "Tâche n°291", projetAppliDao.load("*"), LocalDate.parse("2100/06/30"), LocalDate.parse("2017/09/06"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2292, "IDAL000292", "Tâche n°292", projetAppliDao.load("*"), null, LocalDate.parse("2017/09/07"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2293, "IDAL000293", "Tâche n°293", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/08"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2294, "IDAL000294", "Tâche n°294", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2295, "IDAL000295", "Tâche n°295", projetAppliDao.load("ProjetA"), LocalDate.parse("2101/07/03"), LocalDate.parse("2017/09/10"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2296, "IDAL000296", "Tâche n°296", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/11"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2297, "IDAL000297", "Tâche n°297", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/09/12"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2298, "IDAL000298", "Tâche n°298", projetAppliDao.load("ProjetC"), LocalDate.parse("2102/07/06"), LocalDate.parse("2017/09/13"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2299, "IDAL000299", "Tâche n°299", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/14"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2300, "IDAL000300", "Tâche n°300", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2301, "IDAL000301", "Tâche n°301", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/09/16"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2302, "IDAL000302", "Tâche n°302", projetAppliDao.load("ProjetA"), LocalDate.parse("2103/07/09"), LocalDate.parse("2017/09/17"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2303, "IDAL000303", "Tâche n°303", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/09/18"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2304, "IDAL000304", "Tâche n°304", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2305, "IDAL000305", "Tâche n°305", projetAppliDao.load("ProjetB"), LocalDate.parse("2104/07/11"), LocalDate.parse("2017/09/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2306, "IDAL000306", "Tâche n°306", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/21"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2307, "IDAL000307", "Tâche n°307", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/22"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2308, "IDAL000308", "Tâche n°308", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/23"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2309, "IDAL000309", "Tâche n°309", projetAppliDao.load("ProjetA"), LocalDate.parse("2105/07/14"), LocalDate.parse("2017/09/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2310, "IDAL000310", "Tâche n°310", projetAppliDao.load("*"), null, LocalDate.parse("2017/09/25"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2311, "IDAL000311", "Tâche n°311", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/09/26"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2312, "IDAL000312", "Tâche n°312", projetAppliDao.load("ProjetC"), LocalDate.parse("2106/07/17"), LocalDate.parse("2017/09/27"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2313, "IDAL000313", "Tâche n°313", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/28"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2314, "IDAL000314", "Tâche n°314", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/29"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2315, "IDAL000315", "Tâche n°315", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/09/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2316, "IDAL000316", "Tâche n°316", projetAppliDao.load("*"), LocalDate.parse("2107/07/20"), LocalDate.parse("2017/10/01"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2317, "IDAL000317", "Tâche n°317", projetAppliDao.load("*"), null, LocalDate.parse("2017/10/02"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2318, "IDAL000318", "Tâche n°318", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/10/03"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2319, "IDAL000319", "Tâche n°319", projetAppliDao.load("ProjetC"), LocalDate.parse("2108/07/22"), LocalDate.parse("2017/10/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2320, "IDAL000320", "Tâche n°320", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/10/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2321, "IDAL000321", "Tâche n°321", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/10/06"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2322, "IDAL000322", "Tâche n°322", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/10/07"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2323, "IDAL000323", "Tâche n°323", projetAppliDao.load("ProjetC"), LocalDate.parse("2109/07/25"), LocalDate.parse("2017/10/08"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2324, "IDAL000324", "Tâche n°324", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/10/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2325, "IDAL000325", "Tâche n°325", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/10/10"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2326, "IDAL000326", "Tâche n°326", projetAppliDao.load("ProjetA"), LocalDate.parse("2110/07/28"), LocalDate.parse("2017/10/11"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2327, "IDAL000327", "Tâche n°327", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/10/12"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2328, "IDAL000328", "Tâche n°328", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/10/13"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2329, "IDAL000329", "Tâche n°329", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/10/14"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2330, "IDAL000330", "Tâche n°330", projetAppliDao.load("ProjetB"), LocalDate.parse("2111/07/31"), LocalDate.parse("2017/10/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2331, "IDAL000331", "Tâche n°331", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/10/16"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2332, "IDAL000332", "Tâche n°332", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/10/17"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2333, "IDAL000333", "Tâche n°333", projetAppliDao.load("ProjetB"), LocalDate.parse("2112/08/02"), LocalDate.parse("2017/10/18"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2334, "IDAL000334", "Tâche n°334", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/10/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2335, "IDAL000335", "Tâche n°335", projetAppliDao.load("*"), null, LocalDate.parse("2017/10/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2336, "IDAL000336", "Tâche n°336", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/10/21"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2337, "IDAL000337", "Tâche n°337", projetAppliDao.load("ProjetC"), LocalDate.parse("2113/08/05"), LocalDate.parse("2017/10/22"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2338, "IDAL000338", "Tâche n°338", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/10/23"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("EGR"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2339, "IDAL000339", "Tâche n°339", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/10/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2340, "IDAL000340", "Tâche n°340", projetAppliDao.load("ProjetC"), LocalDate.parse("2114/08/08"), LocalDate.parse("2017/10/25"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2341, "IDAL000341", "Tâche n°341", projetAppliDao.load("*"), null, LocalDate.parse("2017/10/26"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2342, "IDAL000342", "Tâche n°342", projetAppliDao.load("*"), null, LocalDate.parse("2017/10/27"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2343, "IDAL000343", "Tâche n°343", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/10/28"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2344, "IDAL000344", "Tâche n°344", projetAppliDao.load("ProjetC"), LocalDate.parse("2115/08/11"), LocalDate.parse("2017/10/29"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2345, "IDAL000345", "Tâche n°345", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/10/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2346, "IDAL000346", "Tâche n°346", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/10/31"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2347, "IDAL000347", "Tâche n°347", projetAppliDao.load("ProjetA"), LocalDate.parse("2116/08/13"), LocalDate.parse("2017/11/01"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2348, "IDAL000348", "Tâche n°348", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/02"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2349, "IDAL000349", "Tâche n°349", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/11/03"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2350, "IDAL000350", "Tâche n°350", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2351, "IDAL000351", "Tâche n°351", projetAppliDao.load("ProjetA"), LocalDate.parse("2117/08/16"), LocalDate.parse("2017/11/05"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2352, "IDAL000352", "Tâche n°352", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/11/06"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2353, "IDAL000353", "Tâche n°353", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/11/07"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2354, "IDAL000354", "Tâche n°354", projetAppliDao.load("ProjetB"), LocalDate.parse("2118/08/19"), LocalDate.parse("2017/11/08"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2355, "IDAL000355", "Tâche n°355", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/11/09"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2356, "IDAL000356", "Tâche n°356", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/11/10"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2357, "IDAL000357", "Tâche n°357", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/11"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2358, "IDAL000358", "Tâche n°358", projetAppliDao.load("ProjetB"), LocalDate.parse("2119/08/22"), LocalDate.parse("2017/11/12"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2359, "IDAL000359", "Tâche n°359", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/11/13"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2360, "IDAL000360", "Tâche n°360", projetAppliDao.load("*"), null, LocalDate.parse("2017/11/14"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2361, "IDAL000361", "Tâche n°361", projetAppliDao.load("ProjetB"), LocalDate.parse("2120/08/24"), LocalDate.parse("2017/11/15"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2362, "IDAL000362", "Tâche n°362", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/16"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2363, "IDAL000363", "Tâche n°363", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/17"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2364, "IDAL000364", "Tâche n°364", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/18"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2365, "IDAL000365", "Tâche n°365", projetAppliDao.load("ProjetC"), LocalDate.parse("2121/08/27"), LocalDate.parse("2017/11/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("RVA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2366, "IDAL000366", "Tâche n°366", projetAppliDao.load("*"), null, LocalDate.parse("2017/11/20"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2367, "IDAL000367", "Tâche n°367", projetAppliDao.load("*"), null, LocalDate.parse("2017/11/21"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2368, "IDAL000368", "Tâche n°368", projetAppliDao.load("ProjetB"), LocalDate.parse("2122/08/30"), LocalDate.parse("2017/11/22"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2369, "IDAL000369", "Tâche n°369", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/23"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2370, "IDAL000370", "Tâche n°370", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/11/24"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2371, "IDAL000371", "Tâche n°371", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/25"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2372, "IDAL000372", "Tâche n°372", projetAppliDao.load("ProjetA"), LocalDate.parse("2123/09/02"), LocalDate.parse("2017/11/26"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2373, "IDAL000373", "Tâche n°373", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/11/27"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2374, "IDAL000374", "Tâche n°374", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/11/28"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2375, "IDAL000375", "Tâche n°375", projetAppliDao.load("ProjetC"), LocalDate.parse("2124/09/04"), LocalDate.parse("2017/11/29"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2376, "IDAL000376", "Tâche n°376", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/11/30"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2377, "IDAL000377", "Tâche n°377", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/01"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2378, "IDAL000378", "Tâche n°378", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/02"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2379, "IDAL000379", "Tâche n°379", projetAppliDao.load("ProjetB"), LocalDate.parse("2125/09/07"), LocalDate.parse("2017/12/03"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2380, "IDAL000380", "Tâche n°380", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2381, "IDAL000381", "Tâche n°381", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/05"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2382, "IDAL000382", "Tâche n°382", projetAppliDao.load("ProjetC"), LocalDate.parse("2126/09/10"), LocalDate.parse("2017/12/06"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2383, "IDAL000383", "Tâche n°383", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/07"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2384, "IDAL000384", "Tâche n°384", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/08"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2385, "IDAL000385", "Tâche n°385", projetAppliDao.load("*"), null, LocalDate.parse("2017/12/09"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2386, "IDAL000386", "Tâche n°386", projetAppliDao.load("ProjetB"), LocalDate.parse("2127/09/13"), LocalDate.parse("2017/12/10"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2387, "IDAL000387", "Tâche n°387", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/12/11"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2388, "IDAL000388", "Tâche n°388", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/12/12"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2389, "IDAL000389", "Tâche n°389", projetAppliDao.load("ProjetC"), LocalDate.parse("2128/09/15"), LocalDate.parse("2017/12/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2390, "IDAL000390", "Tâche n°390", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/12/14"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2391, "IDAL000391", "Tâche n°391", projetAppliDao.load("*"), null, LocalDate.parse("2017/12/15"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2392, "IDAL000392", "Tâche n°392", projetAppliDao.load("*"), null, LocalDate.parse("2017/12/16"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2393, "IDAL000393", "Tâche n°393", projetAppliDao.load("ProjetB"), LocalDate.parse("2129/09/18"), LocalDate.parse("2017/12/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2394, "IDAL000394", "Tâche n°394", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/12/18"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2395, "IDAL000395", "Tâche n°395", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2396, "IDAL000396", "Tâche n°396", projetAppliDao.load("ProjetC"), LocalDate.parse("2130/09/21"), LocalDate.parse("2017/12/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2397, "IDAL000397", "Tâche n°397", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/21"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2398, "IDAL000398", "Tâche n°398", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2017/12/22"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2399, "IDAL000399", "Tâche n°399", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/23"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2400, "IDAL000400", "Tâche n°400", projetAppliDao.load("ProjetC"), LocalDate.parse("2131/09/24"), LocalDate.parse("2017/12/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2401, "IDAL000401", "Tâche n°401", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/25"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2402, "IDAL000402", "Tâche n°402", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2017/12/26"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2403, "IDAL000403", "Tâche n°403", projetAppliDao.load("ProjetA"), LocalDate.parse("2132/09/26"), LocalDate.parse("2017/12/27"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2404, "IDAL000404", "Tâche n°404", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/28"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2405, "IDAL000405", "Tâche n°405", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/29"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2406, "IDAL000406", "Tâche n°406", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2017/12/30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2407, "IDAL000407", "Tâche n°407", projetAppliDao.load("ProjetC"), LocalDate.parse("2133/09/29"), LocalDate.parse("2017/12/31"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2408, "IDAL000408", "Tâche n°408", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/01"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2409, "IDAL000409", "Tâche n°409", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/01/02"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2410, "IDAL000410", "Tâche n°410", projetAppliDao.load("*"), LocalDate.parse("2134/10/02"), LocalDate.parse("2018/01/03"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2411, "IDAL000411", "Tâche n°411", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2412, "IDAL000412", "Tâche n°412", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2413, "IDAL000413", "Tâche n°413", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/06"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2414, "IDAL000414", "Tâche n°414", projetAppliDao.load("ProjetC"), LocalDate.parse("2135/10/05"), LocalDate.parse("2018/01/07"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2415, "IDAL000415", "Tâche n°415", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/08"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2416, "IDAL000416", "Tâche n°416", projetAppliDao.load("*"), null, LocalDate.parse("2018/01/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2417, "IDAL000417", "Tâche n°417", projetAppliDao.load("*"), LocalDate.parse("2136/10/07"), LocalDate.parse("2018/01/10"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2418, "IDAL000418", "Tâche n°418", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/11"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2419, "IDAL000419", "Tâche n°419", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/12"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2420, "IDAL000420", "Tâche n°420", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/01/13"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2421, "IDAL000421", "Tâche n°421", projetAppliDao.load("ProjetC"), LocalDate.parse("2137/10/10"), LocalDate.parse("2018/01/14"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("RVA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2422, "IDAL000422", "Tâche n°422", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/01/15"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("EGR"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2423, "IDAL000423", "Tâche n°423", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/16"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2424, "IDAL000424", "Tâche n°424", projetAppliDao.load("ProjetB"), LocalDate.parse("2138/10/13"), LocalDate.parse("2018/01/17"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2425, "IDAL000425", "Tâche n°425", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/18"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2426, "IDAL000426", "Tâche n°426", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/01/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2427, "IDAL000427", "Tâche n°427", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/01/20"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2428, "IDAL000428", "Tâche n°428", projetAppliDao.load("ProjetA"), LocalDate.parse("2139/10/16"), LocalDate.parse("2018/01/21"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2429, "IDAL000429", "Tâche n°429", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/22"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("HLE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2430, "IDAL000430", "Tâche n°430", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/23"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2431, "IDAL000431", "Tâche n°431", projetAppliDao.load("ProjetB"), LocalDate.parse("2140/10/18"), LocalDate.parse("2018/01/24"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2432, "IDAL000432", "Tâche n°432", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/25"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2433, "IDAL000433", "Tâche n°433", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/26"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2434, "IDAL000434", "Tâche n°434", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/01/27"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2435, "IDAL000435", "Tâche n°435", projetAppliDao.load("*"), LocalDate.parse("2141/10/21"), LocalDate.parse("2018/01/28"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2436, "IDAL000436", "Tâche n°436", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/01/29"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2437, "IDAL000437", "Tâche n°437", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/01/30"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2438, "IDAL000438", "Tâche n°438", projetAppliDao.load("ProjetC"), LocalDate.parse("2142/10/24"), LocalDate.parse("2018/01/31"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2439, "IDAL000439", "Tâche n°439", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/01"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2440, "IDAL000440", "Tâche n°440", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/02"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2441, "IDAL000441", "Tâche n°441", projetAppliDao.load("*"), null, LocalDate.parse("2018/02/03"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2442, "IDAL000442", "Tâche n°442", projetAppliDao.load("*"), LocalDate.parse("2143/10/27"), LocalDate.parse("2018/02/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2443, "IDAL000443", "Tâche n°443", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/02/05"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2444, "IDAL000444", "Tâche n°444", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/06"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2445, "IDAL000445", "Tâche n°445", projetAppliDao.load("ProjetA"), LocalDate.parse("2144/10/29"), LocalDate.parse("2018/02/07"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2446, "IDAL000446", "Tâche n°446", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/08"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2447, "IDAL000447", "Tâche n°447", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/02/09"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2448, "IDAL000448", "Tâche n°448", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/10"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2449, "IDAL000449", "Tâche n°449", projetAppliDao.load("ProjetB"), LocalDate.parse("2145/11/01"), LocalDate.parse("2018/02/11"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2450, "IDAL000450", "Tâche n°450", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/12"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("EGR"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2451, "IDAL000451", "Tâche n°451", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/02/13"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2452, "IDAL000452", "Tâche n°452", projetAppliDao.load("ProjetA"), LocalDate.parse("2146/11/04"), LocalDate.parse("2018/02/14"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .3); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2453, "IDAL000453", "Tâche n°453", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/02/15"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2454, "IDAL000454", "Tâche n°454", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/02/16"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), 2.0); planif.put(LocalDate.of(2017, 6, 12), 2.0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2455, "IDAL000455", "Tâche n°455", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/02/17"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .1); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2456, "IDAL000456", "Tâche n°456", projetAppliDao.load("ProjetB"), LocalDate.parse("2147/11/07"), LocalDate.parse("2018/02/18"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2457, "IDAL000457", "Tâche n°457", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/19"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2458, "IDAL000458", "Tâche n°458", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/02/20"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .1); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2459, "IDAL000459", "Tâche n°459", projetAppliDao.load("ProjetA"), LocalDate.parse("2148/11/09"), LocalDate.parse("2018/02/21"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FBO"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2460, "IDAL000460", "Tâche n°460", projetAppliDao.load("*"), null, LocalDate.parse("2018/02/22"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .1); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2461, "IDAL000461", "Tâche n°461", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/02/23"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .1); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2462, "IDAL000462", "Tâche n°462", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/24"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2463, "IDAL000463", "Tâche n°463", projetAppliDao.load("ProjetC"), LocalDate.parse("2149/11/12"), LocalDate.parse("2018/02/25"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2464, "IDAL000464", "Tâche n°464", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/26"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), 1.0); planif.put(LocalDate.of(2017, 6, 19), 1.0); planif.put(LocalDate.of(2017, 6, 26), 1.0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2465, "IDAL000465", "Tâche n°465", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/02/27"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2466, "IDAL000466", "Tâche n°466", projetAppliDao.load("*"), LocalDate.parse("2150/11/15"), LocalDate.parse("2018/02/28"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .3); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2467, "IDAL000467", "Tâche n°467", projetAppliDao.load("*"), null, LocalDate.parse("2018/03/01"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("GC"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2468, "IDAL000468", "Tâche n°468", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/03/02"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("TestPerf"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), 2.0); planif.put(LocalDate.of(2017, 6, 26), 2.0); planif.put(LocalDate.of(2017, 7, 3), 2.0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2469, "IDAL000469", "Tâche n°469", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/03/03"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("BPE"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), 1.0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2470, "IDAL000470", "Tâche n°470", projetAppliDao.load("ProjetA"), LocalDate.parse("2151/11/18"), LocalDate.parse("2018/03/04"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("HLE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2471, "IDAL000471", "Tâche n°471", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/03/05"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .3); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2472, "IDAL000472", "Tâche n°472", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/03/06"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FBO"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2473, "IDAL000473", "Tâche n°473", projetAppliDao.load("ProjetC"), LocalDate.parse("2152/11/20"), LocalDate.parse("2018/03/07"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), 2.0); planif.put(LocalDate.of(2017, 5, 1), 2.0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2474, "IDAL000474", "Tâche n°474", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/03/08"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("BPE"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .1); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2475, "IDAL000475", "Tâche n°475", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/03/09"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .3); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2476, "IDAL000476", "Tâche n°476", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/03/10"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("ITA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 1.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2477, "IDAL000477", "Tâche n°477", projetAppliDao.load("ProjetA"), LocalDate.parse("2153/11/23"), LocalDate.parse("2018/03/11"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("RVA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), 2.0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2478, "IDAL000478", "Tâche n°478", projetAppliDao.load("ProjetA"), null, LocalDate.parse("2018/03/12"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("EGR"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), 1.0); planif.put(LocalDate.of(2017, 5, 8), 1.0); planif.put(LocalDate.of(2017, 5, 15), 1.0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2479, "IDAL000479", "Tâche n°479", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/03/13"), importanceDao.load("90_Maximale"), 3.0, ressourceDao.load("FDA"), profilDao.load("Archi"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2480, "IDAL000480", "Tâche n°480", projetAppliDao.load("ProjetB"), LocalDate.parse("2154/11/26"), LocalDate.parse("2018/03/14"), importanceDao.load("70_Haute"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .3); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2481, "IDAL000481", "Tâche n°481", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/03/15"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2482, "IDAL000482", "Tâche n°482", projetAppliDao.load("ProjetC"), null, LocalDate.parse("2018/03/16"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("FDA"), profilDao.load("RefTech"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .0); planif.put(LocalDate.of(2017, 5, 8), 2.0); planif.put(LocalDate.of(2017, 5, 15), 2.0); planif.put(LocalDate.of(2017, 5, 22), 2.0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
+        {Tache t = new Tache(2483, "IDAL000483", "Tâche n°483", projetAppliDao.load("ProjetB"), null, LocalDate.parse("2018/03/17"), importanceDao.load("50_Normale"), 3.0, ressourceDao.load("BPE"), profilDao.load("Dev"));Map<LocalDate, Double> planif = new HashMap<>();            planif.put(LocalDate.of(2017, 4, 17), .0); planif.put(LocalDate.of(2017, 4, 24), .0); planif.put(LocalDate.of(2017, 5, 1), .3); planif.put(LocalDate.of(2017, 5, 8), .0); planif.put(LocalDate.of(2017, 5, 15), .0); planif.put(LocalDate.of(2017, 5, 22), .0); planif.put(LocalDate.of(2017, 5, 29), .0); planif.put(LocalDate.of(2017, 6, 5), .0); planif.put(LocalDate.of(2017, 6, 12), .0); planif.put(LocalDate.of(2017, 6, 19), .0); planif.put(LocalDate.of(2017, 6, 26), .0); planif.put(LocalDate.of(2017, 7, 3), .0);             matrice.put(t, planif);        }
         // <<< Fin de la partie générée
         return new PlanCharge(date, planifications);
     }
