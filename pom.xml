@@ -198,6 +198,20 @@
             <version>8.40.12</version>
         </dependency>
 
+        <!--Pour l'IOC-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.2.0.RELEASE</version>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
+-->
+
     </dependencies>
 
 </project>

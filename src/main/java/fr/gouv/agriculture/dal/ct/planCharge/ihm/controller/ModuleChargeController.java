@@ -1,11 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -27,6 +24,7 @@ import javafx.util.converter.LocalDateStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,11 +34,9 @@ import java.util.stream.Collectors;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ModuleChargeController {
+public class ModuleChargeController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargeController.class);
-
-    private PlanChargeIhm application;
 
     // La table de planification des tâches :
     @FXML
@@ -115,7 +111,11 @@ public class ModuleChargeController {
     private CheckComboBox<String> filtreProfilsField;
 
     // Les services métier :
-    private PlanChargeService planChargeService = new PlanChargeService();
+    @Autowired
+    private PlanChargeService planChargeService;
+    public void setPlanChargeService(PlanChargeService planChargeService) {
+        this.planChargeService = planChargeService;
+    }
 
     // Les collections de données :
     private ObservableList<PlanificationBean> planifications = FXCollections.observableArrayList();
@@ -123,10 +123,6 @@ public class ModuleChargeController {
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
-
-    public void setApplication(PlanChargeIhm application) {
-        this.application = application;
-    }
 
     /**
      * The constructor.

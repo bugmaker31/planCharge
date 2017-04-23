@@ -1,24 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.fxml.FXML;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ModuleDisponibilitesController {
+public class ModuleDisponibilitesController extends AbstractController {
 
-    private PlanChargeIhm application = PlanChargeIhm.APPLICATION();
-
-    public void setApplication(PlanChargeIhm application) {
-        this.application = application;
-    }
 
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     public ModuleDisponibilitesController() {
+        super();
     }
 
     /**
@@ -27,5 +22,6 @@ public class ModuleDisponibilitesController {
      */
     @FXML
     private void initialize() {
+        // Rien... pour l'instant.
     }
 }

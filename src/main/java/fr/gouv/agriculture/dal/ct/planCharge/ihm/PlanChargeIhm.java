@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ErrorController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController;
@@ -20,6 +21,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,25 +39,23 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
-    private static PlanChargeIhm APPLICATION;
-
     private Stage primaryStage;
     private BorderPane applicationView;
     private Region disponibilitesView;
     private Region chargeView;
 
+    private ApplicationController applicationContoller;
+    private ModuleDisponibilitesController disponibilitesController;
+    private ModuleChargeController chargeController;
+
     // Les données métier :
     private PlanCharge planCharge;
 
     // Les services métier :
-    private PlanChargeService planChargeService = new PlanChargeService();
+    private PlanChargeService planChargeService;
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static PlanChargeIhm APPLICATION() {
-        return APPLICATION;
     }
 
     public BorderPane getApplicationView() {
@@ -89,12 +91,12 @@ public class PlanChargeIhm extends javafx.application.Application {
 
         super.init();
 
-        initApplicationView();
-
         // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
         Thread.setDefaultUncaughtExceptionHandler(PlanChargeIhm::showError);
 
-        APPLICATION = this;
+        initApplicationView();
+
+        inject();
 
         LOGGER.info("Application initialisée.");
     }
@@ -104,27 +106,39 @@ public class PlanChargeIhm extends javafx.application.Application {
             FXMLLoader appLoader = new FXMLLoader();
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = appLoader.load();
-            // Give the controller access to the main app.
-            ((ApplicationController) appLoader.getController()).setApplication(this);
+            applicationContoller = appLoader.getController();
         }
         {
             FXMLLoader dispoLoader = new FXMLLoader();
             dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
             disponibilitesView = dispoLoader.load();
-            // Give the controller access to the main app.
-            ((ModuleDisponibilitesController) dispoLoader.getController()).setApplication(this);
+            disponibilitesController = dispoLoader.getController();
         }
         {
             FXMLLoader chargeLoader = new FXMLLoader();
             chargeLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargeView.fxml"));
             chargeView = chargeLoader.load();
-            // Give the controller access to the main app.
-            ((ModuleChargeController) chargeLoader.getController()).setApplication(this);
+            chargeController = chargeLoader.getController();
         }
     }
 
+    private void inject() {
+
+        // On utilise Spring IOC pour l'injection, principalement :
+        ApplicationContext context = new ClassPathXmlApplicationContext("kernel-conf-ioc.xml");
+
+        // On mémorise les données que Spring ne peut gérer :
+        PlanChargeApplication planChargeApp = context.getBean(PlanChargeApplication.class);
+        planChargeApp.setIhm(this);
+        planChargeApp.setContext(context);
+
+        // Les beans utilisés dans cette classe ne peuvent être injectés par Spring, car cette classe n'est pas instanciée par Spring.
+        // Il faut donc l'injecter soi-même, en récupérant l'instance créée à l'instant par Spring.
+        planChargeService = context.getBean(PlanChargeService.class);
+    }
+
     private static void showError(Thread thread, Throwable throwable) {
-        LOGGER.error("An unexpected error occurred in " + thread + ".", throwable);
+        LOGGER.error("An error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
             showErrorDialog(throwable);
         }
@@ -146,7 +160,6 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
-
     @Override
     public void start(Stage primaryStage) throws IOException {
         LOGGER.info("Application en cours de démarrage...");
@@ -159,7 +172,12 @@ public class PlanChargeIhm extends javafx.application.Application {
 
         // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
         applicationView.setCenter(getChargeView());
-        chargeDonnees(LocalDate.of(2016, 11, 13));
+
+        // Chargement des données utilisées dernièrement :
+        LocalDate dateEtatPrec = LocalDate.of(2016, 11, 13); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).
+        if (dateEtatPrec != null) {
+            chargeDonnees(dateEtatPrec);
+        }
 
         LOGGER.info("Application démarrée.");
     }

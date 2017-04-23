@@ -1,16 +1,14 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
 import com.sun.istack.internal.NotNull;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -18,28 +16,51 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class PlanChargeDao {
+public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeDao.class);
 
-    private PlanChargeIhm application = PlanChargeIhm.APPLICATION();
+    private static final Map<LocalDate, PlanCharge> CACHE = new HashMap<>();
 
-    private ProjetAppliDao projetAppliDao = new ProjetAppliDao();
-    private ImportanceDao importanceDao = new ImportanceDao();
-    private RessourceDao ressourceDao = new RessourceDao();
-    private ProfilDao profilDao = new ProfilDao();
+    @NotNull
+    @Autowired
+    private PlanChargeApplication application;
 
-    public PlanCharge load(@NotNull LocalDate date) throws PlanChargeDaoException {
-        File fichierPlanif = application.getFichierPlanificationsCharge(date);
+    /*
+    private ProjetAppliDao projetAppliDao ;
+    private ImportanceDao importanceDao;
+    private RessourceDao ressourceDao;
+    private ProfilDao profilDao;
+*/
+
+    @Override
+    protected Map<LocalDate, PlanCharge> getCache() {
+        return CACHE;
+    }
+
+    @Override
+    protected PlanCharge newEntity(LocalDate datePlanif) {
+        return new PlanCharge(datePlanif, null); // TODO FDA 2017/04 Confirmer qu'on peut passer null pour les planifications.
+    }
+
+    @Override
+    public PlanCharge load(@NotNull LocalDate date) throws EntityNotFoundException {
+        File fichierPlanif = application.getIhm().getFichierPlanificationsCharge(date);
         if (fichierPlanif == null) {
-            throw new PlanChargeDaoException("Fichier inexistant pour la date du " + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            throw new EntityNotFoundException("Fichier inexistant pour la date du " + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
         }
-        Planifications planifications = planifications(fichierPlanif);
-        return new PlanCharge(date, planifications);
+        try {
+            Planifications  planifications = planifications(fichierPlanif);
+            return new PlanCharge(date, planifications);
+        } catch (PlanChargeDaoException e) {
+            throw new EntityNotFoundException("", e);
+        }
     }
 
     /**
@@ -66,6 +87,12 @@ public class PlanChargeDao {
         } catch (Exception e) { // catches ANY exception
             throw new PlanChargeDaoException("Impossible de charger le plan de charge depuis le fichier '" + file.getAbsolutePath() + "'.", e);
         }
+    }
+
+    public void save(PlanCharge planCharge) throws PlanChargeDaoException {
+        LocalDate dateEtat = planCharge.getDateEtat();
+        File fichierPlanif = application.getIhm().getFichierPlanificationsCharge(dateEtat);
+        savePlanChargeToFile(fichierPlanif, planCharge);
     }
 
     /**
@@ -95,5 +122,4 @@ public class PlanChargeDao {
             throw new PlanChargeDaoException("Impossible de sauver le plan de charge dans le fichier '" + file.getAbsolutePath() + "'.", e);
         }
     }
-
 }

@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 /**
  * Created by frederic.danna on 17/04/2017.
  */
-public class ErrorController {
+public class ErrorController extends AbstractController  {
     
     @FXML
     private Label errorMessage;

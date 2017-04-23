@@ -20,7 +20,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
     protected abstract E newEntity(EI id);
 
     @NotNull
-    final public E load(EI id) /*throws EntityNotFoundException*/ {
+    public E load(EI id) throws EntityNotFoundException {
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");

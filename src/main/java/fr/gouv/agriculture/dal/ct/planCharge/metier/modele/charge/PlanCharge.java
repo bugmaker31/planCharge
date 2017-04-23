@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @author frederic.danna
  */
-public class PlanCharge {
+public class PlanCharge extends AbstractEntity<LocalDate> {
 
     private LocalDate dateEtat;
     private Planifications planifications;
@@ -21,6 +22,11 @@ public class PlanCharge {
     public PlanCharge(LocalDate dateEtat, Planifications planifications) {
         this.dateEtat = dateEtat;
         this.planifications = planifications;
+    }
+
+    @Override
+    public LocalDate getIdentity() {
+        return dateEtat;
     }
 
     public LocalDate getDateEtat() {
