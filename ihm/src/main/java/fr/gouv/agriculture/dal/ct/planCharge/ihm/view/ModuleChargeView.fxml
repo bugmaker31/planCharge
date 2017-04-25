@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.CheckComboBox?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
+    <top>
+        <Accordion BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane animated="false" text="Filtres">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <BorderPane>
+                                    <right>
+                                        <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ"
+                                                BorderPane.alignment="CENTER"/>
+                                    </right>
+                                    <center>
+                                        <VBox BorderPane.alignment="CENTER">
+                                            <children>
+                                                <GridPane>
+                                                    <children>
+                                                        <Label text="Filtre global"/>
+                                                        <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1"/>
+                                                    </children>
+                                                </GridPane>
+                                                <HBox>
+                                                    <children>
+                                                        <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
+                                                        <TextField fx:id="filtreNoTicketIdalField" prefWidth="70.0"/>
+                                                        <TextField fx:id="filtreDescriptionField" prefWidth="300.0"/>
+                                                        <CheckComboBox fx:id="filtreProjetsApplisField"
+                                                                       prefWidth="100.0"/>
+                                                        <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
+                                                        <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
+                                                        <CheckComboBox fx:id="filtreImportancesField" prefWidth="75.0"/>
+                                                        <TextField fx:id="filtreChargeField" prefWidth="50.0"/>
+                                                        <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0"/>
+                                                        <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </center>
+                                </BorderPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </top>
+    <center>
+        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
+                   BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0" text="N° tâche"/>
+                <TableColumn fx:id="noTicketIdalColumn" prefWidth="80.0" text="N° IDAL"/>
+                <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
+                <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
+                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
+                <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
+                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
+                <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+                <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
+                <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"/>
+                <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"/>
+                <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"/>
+                <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"/>
+                <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"/>
+                <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"/>
+                <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"/>
+                <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"/>
+                <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
+                <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
+                <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
+                <TableColumn fx:id="chargePlanifieeColumn" prefWidth="50.0" text="Charge planifiée" editable="false"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <Accordion BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane animated="false" text="Actions">
+                    <content>
+                        <AnchorPane BorderPane.alignment="CENTER">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#ajouterTache" text="Ajouter une tâche"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </bottom>
+</BorderPane>

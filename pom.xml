@@ -6,7 +6,13 @@
 
     <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
     <artifactId>planCharge</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-m1-SNAPSHOT</version>
+
+    <modules>
+        <module>metier</module>
+        <module>ihm</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,10 +24,10 @@
         <si>sial</si>
         <sous-si>proto/ct</sous-si>
 
-<!--
-        <jna.version>4.2.0</jna.version>
-        <libreoffice.version>5.2.0</libreoffice.version>
--->
+        <!--
+                <jna.version>4.2.0</jna.version>
+                <libreoffice.version>5.2.0</libreoffice.version>
+        -->
     </properties>
 
     <!--
@@ -42,22 +48,27 @@
         </developerConnection>
     </scm>
 
+<!--
     <profiles>
         <profile>
-            <id>developpement</id>
-            <!--
-                        <properties>
-                            <libreoffice.home>C:/Program Files/LibreOffice 5</libreoffice.home>
-                            <libreoffice.sdk.home>${libreoffice.home}/sdk</libreoffice.sdk.home> &lt;!&ndash;D:\Pgms\LibreOffice_5_SKD ?&ndash;&gt;
-                        </properties>
-            -->
+            <id>windows</id>
+            <properties>
+                <libreoffice.home>C:/Program Files/LibreOffice 5</libreoffice.home>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <properties>
+                <libreoffice.home>/usr/lib/libreoffice</libreoffice.home>
+            </properties>
         </profile>
     </profiles>
+-->
 
     <build>
 
         <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <testSourceDirectory>metier/src/test/java</testSourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -66,7 +77,7 @@
                 </includes>
             </resource>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>ihm/src/main/resources</directory>
                 <includes>
                     <include>**/**</include>
                 </includes>
@@ -96,27 +107,27 @@
                         </plugin>
             -->
 
-<!--
-            &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/ext-jlop/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
--->
+            <!--
+                        &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>build-helper-maven-plugin</artifactId>
+                            <version>1.9.1</version>
+                            <executions>
+                                <execution>
+                                    <phase>generate-sources</phase>
+                                    <goals>
+                                        <goal>add-source</goal>
+                                    </goals>
+                                    <configuration>
+                                        <sources>
+                                            <source>src/ext-jlop/java</source>
+                                        </sources>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
         </plugins>
     </build>
 
@@ -133,63 +144,63 @@
             <version>1.1.7</version>
         </dependency>
 
-<!--
-        &lt;!&ndash;Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/install.html&ndash;&gt;
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>${jna.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>${jna.version}</version>
-        </dependency>
+        <!--
+                &lt;!&ndash;Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/install.html&ndash;&gt;
+                <dependency>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna</artifactId>
+                    <version>${jna.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna-platform</artifactId>
+                    <version>${jna.version}</version>
+                </dependency>
 
-        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/jurt &ndash;&gt;
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>jurt</artifactId>
-            <version>${libreoffice.version}</version>
-        </dependency>
-
-        &lt;!&ndash;
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/jurt &ndash;&gt;
                 <dependency>
                     <groupId>org.libreoffice</groupId>
-                    <artifactId>libreoffice-dist</artifactId>
-                    <version>5.2.1-alfresco</version>
+                    <artifactId>jurt</artifactId>
+                    <version>${libreoffice.version}</version>
                 </dependency>
-        &ndash;&gt;
 
-        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/ridl &ndash;&gt;
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>ridl</artifactId>
-            <version>${libreoffice.version}</version>
-        </dependency>
+                &lt;!&ndash;
+                        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
+                        <dependency>
+                            <groupId>org.libreoffice</groupId>
+                            <artifactId>libreoffice-dist</artifactId>
+                            <version>5.2.1-alfresco</version>
+                        </dependency>
+                &ndash;&gt;
 
-        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>juh</artifactId>
-            <version>${libreoffice.version}</version>
-        </dependency>
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/ridl &ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>ridl</artifactId>
+                    <version>${libreoffice.version}</version>
+                </dependency>
 
-        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoloader &ndash;&gt;
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>unoloader</artifactId>
-            <version>${libreoffice.version}</version>
-        </dependency>
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>juh</artifactId>
+                    <version>${libreoffice.version}</version>
+                </dependency>
 
-        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoil &ndash;&gt;
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>unoil</artifactId>
-            <version>${libreoffice.version}</version>
-        </dependency>
--->
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoloader &ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>unoloader</artifactId>
+                    <version>${libreoffice.version}</version>
+                </dependency>
+
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoil &ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>unoil</artifactId>
+                    <version>${libreoffice.version}</version>
+                </dependency>
+        -->
 
         <!--Pour avoir notamment les combobox multi-sélection (CheckComboBox).-->
         <dependency>
@@ -204,13 +215,21 @@
             <artifactId>spring-context</artifactId>
             <version>4.2.0.RELEASE</version>
         </dependency>
-<!--
+        <!--
+                <dependency>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                    <version>1</version>
+                </dependency>
+        -->
+
+        <!--Pour avoir les annotations NotNull et Nullable-->
+        <!--Cf. http://stackoverflow.com/questions/19030954/cant-find-nullable-inside-javax-annotation-->
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.3</version>
         </dependency>
--->
 
     </dependencies>
 

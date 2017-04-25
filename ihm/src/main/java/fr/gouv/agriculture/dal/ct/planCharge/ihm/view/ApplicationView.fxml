@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
+    <top>
+        <VBox>
+            <MenuBar BorderPane.alignment="CENTER">
+                <menus>
+                    <Menu mnemonicParsing="false" text="Fichier">
+                        <items>
+                            <MenuItem fx:id="charger" mnemonicParsing="false" onAction="#charger" text="Charger"/>
+                            <MenuItem mnemonicParsing="false" onAction="#sauver" text="Sauver">
+                                <accelerator>
+                                    <KeyCodeCombination alt="UP" code="S" control="ANY" meta="UP" shift="UP"
+                                                        shortcut="UP"/>
+                                </accelerator>
+                            </MenuItem>
+                            <MenuItem mnemonicParsing="false" text="Préférences"/>
+                            <MenuItem mnemonicParsing="false" onAction="#quitter" text="Quitter"/>
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Editer">
+                        <items>
+                            <MenuItem disable="true" mnemonicParsing="false" onAction="#supprimer" text="Supprimer"/>
+                        </items>
+                    </Menu>
+                    <Menu disable="true" mnemonicParsing="false" text="Suivi"/>
+                    <Menu mnemonicParsing="false" text="Référentiel">
+                        <items>
+                            <MenuItem disable="true" mnemonicParsing="false" text="Jours fériés"/>
+                            <SeparatorMenuItem mnemonicParsing="false"/>
+                            <MenuItem disable="true" mnemonicParsing="false" text="Projets / Applis"/>
+                            <MenuItem disable="true" mnemonicParsing="false" text="Importances"/>
+                            <MenuItem disable="true" mnemonicParsing="false" text="Ressources"/>
+                            <MenuItem disable="true" mnemonicParsing="false" text="Profils"/>
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Gérer">
+                        <items>
+                            <MenuItem mnemonicParsing="false" onAction="#afficherModuleDispo" text="Disponibilités"/>
+                            <!--<MenuItem mnemonicParsing="false" onAction="#afficherModuleTache" text="Tâches"/>-->
+                            <MenuItem mnemonicParsing="false" onAction="#afficherModuleCharge" text="Charge"/>
+                        </items>
+                    </Menu>
+                    <Menu disable="true" mnemonicParsing="false" text="TODOs">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Action 1"/>
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Aide">
+                        <items>
+                            <MenuItem mnemonicParsing="false" onAction="#aPropos" text="A propos"/>
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+        </VBox>
+    </top>
+</BorderPane>
