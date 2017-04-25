@@ -3,10 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ErrorController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
@@ -21,7 +18,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -42,11 +38,15 @@ public class PlanChargeIhm extends javafx.application.Application {
     private Stage primaryStage;
     private BorderPane applicationView;
     private Region disponibilitesView;
+    private Region tachesView;
     private Region chargeView;
 
     private ApplicationController applicationContoller;
-    private ModuleDisponibilitesController disponibilitesController;
+    private ModuleDisponibilitesController disponibiliteController;
+    private ModuleTacheController tacheController;
     private ModuleChargeController chargeController;
+
+    private String moduleCourant;
 
     // Les données métier :
     private PlanCharge planCharge;
@@ -56,18 +56,6 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public BorderPane getApplicationView() {
-        return applicationView;
-    }
-
-    public Region getDisponibilitesView() {
-        return disponibilitesView;
-    }
-
-    public Region getChargeView() {
-        return chargeView;
     }
 
     public PlanCharge getPlanCharge() {
@@ -96,7 +84,7 @@ public class PlanChargeIhm extends javafx.application.Application {
 
         initApplicationView();
 
-        inject();
+        injecter();
 
         LOGGER.info("Application initialisée.");
     }
@@ -110,9 +98,15 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
         {
             FXMLLoader dispoLoader = new FXMLLoader();
-            dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
+            dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibiliteView.fxml"));
             disponibilitesView = dispoLoader.load();
-            disponibilitesController = dispoLoader.getController();
+            disponibiliteController = dispoLoader.getController();
+        }
+        {
+            FXMLLoader tachesLoader = new FXMLLoader();
+            tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTacheView.fxml"));
+            tachesView = tachesLoader.load();
+            tacheController = tachesLoader.getController();
         }
         {
             FXMLLoader chargeLoader = new FXMLLoader();
@@ -122,7 +116,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
-    private void inject() {
+    private void injecter() {
 
         // On utilise Spring IOC pour l'injection, principalement :
         ApplicationContext context = new ClassPathXmlApplicationContext("kernel-conf-ioc.xml");
@@ -132,9 +126,18 @@ public class PlanChargeIhm extends javafx.application.Application {
         planChargeApp.setIhm(this);
         planChargeApp.setContext(context);
 
-        // Les beans utilisés dans cette classe ne peuvent être injectés par Spring, car cette classe n'est pas instanciée par Spring.
-        // Il faut donc l'injecter soi-même, en récupérant l'instance créée à l'instant par Spring.
+        // Les beans Spring (métier) utilisés dans les classes JavaFX (IHM) ne peuvent être injectés par Spring,
+        // car les classes JavaFX ne sont pas instanciées par Spring.
+        // Il faut donc les injecter soi-même, en récupérant les instances créées par Spring of course :
         planChargeService = context.getBean(PlanChargeService.class);
+
+        // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
+        // par JavaFX, etc.). Donc on les "injecte" soi-même :
+        applicationContoller.setApplication(planChargeApp);
+        disponibiliteController.setApplication(planChargeApp);
+        tacheController.setApplication(planChargeApp);
+        tacheController.setPlanChargeService(context.getBean(PlanChargeService.class));
+        chargeController.setApplication(planChargeApp);
     }
 
     private static void showError(Thread thread, Throwable throwable) {
@@ -170,16 +173,23 @@ public class PlanChargeIhm extends javafx.application.Application {
         primaryStage.setScene(new Scene(applicationView));
         primaryStage.show();
 
-        // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
-        applicationView.setCenter(getChargeView());
-
-        // Chargement des données utilisées dernièrement :
-        LocalDate dateEtatPrec = LocalDate.of(2016, 11, 13); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).
+        // Chargement des données utilisées dernièrement (if any) :
+        LocalDate dateEtatPrec = dateEtatPrecedente();
         if (dateEtatPrec != null) {
             chargeDonnees(dateEtatPrec);
+        } else {
+            planCharge = null;
         }
 
+        // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
+        applicationView.setCenter(tachesView);
+//        applicationView.setCenter(chargeView);
+
         LOGGER.info("Application démarrée.");
+    }
+
+    private LocalDate dateEtatPrecedente() {
+        return null; //LocalDate.of(2016, 11, 13); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).;
     }
 
     private void chargeDonnees(LocalDate dateEtat) {
@@ -262,14 +272,41 @@ public class PlanChargeIhm extends javafx.application.Application {
             prefs.put(clefPrefFic, file.getPath());
 
             // Update the stage title.
-            String complementTitreFenetre = dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-            primaryStage.setTitle(APP_NAME + " - " + complementTitreFenetre);
+            majTitre();
         } else {
             prefs.remove(clefPrefFic);
 
             // Update the stage title.
-            primaryStage.setTitle(APP_NAME);
+            majTitre();
         }
     }
 
+    public void afficherModuleDisponibilites() {
+        applicationView.setCenter(disponibilitesView);
+        moduleCourant = "Dispo.";
+        majTitre();
+    }
+
+    public void afficherModuleTaches() {
+        applicationView.setCenter(tachesView);
+        moduleCourant = "Tâches";
+        majTitre();
+    }
+
+    public void afficherModuleCharge() {
+        applicationView.setCenter(chargeView);
+        moduleCourant = "Charge";
+        majTitre();
+    }
+
+    private void majTitre() {
+        String titre = APP_NAME;
+        if (planCharge != null && planCharge.getDateEtat() != null) {
+            titre += (" - " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        }
+        if (moduleCourant != null) {
+            titre += (" - " + moduleCourant);
+        }
+        primaryStage.setTitle(titre);
+    }
 }

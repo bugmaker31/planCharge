@@ -12,7 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,20 +20,7 @@ public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
-    private BorderPane getApplicationView() {
-        return getApplication().getApplicationView();
-    }
-
-    private Region getDisponibiliteView() {
-        return getApplication().getDisponibilitesView();
-    }
-
-    private Region getChargeView() {
-        return getApplication().getChargeView();
-    }
-
     // Les services métier :
-    @Autowired
     private PlanChargeService planChargeService;
     public void setPlanChargeService(PlanChargeService planChargeService) {
         this.planChargeService = planChargeService;
@@ -47,14 +33,14 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void quitter(ActionEvent event) throws Exception {
         LOGGER.debug("Fichier > Quitter");
-        getApplication().stop();
+        getApplicationIhm().stop();
     }
 
     @FXML
     private void sauver(ActionEvent event) throws Exception {
         LOGGER.debug("Fichier > Sauver");
 
-        PlanCharge planCharge = getApplication().getPlanCharge();
+        PlanCharge planCharge = getApplicationIhm().getPlanCharge();
         try {
             planChargeService.save(planCharge);
         } catch (ServiceException e) {
@@ -72,7 +58,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("Fichier > Charger");
         LocalDate dateEtat = LocalDate.of(2017, 1, 1); // TODO FDA 2017/04 Débouchonner : lister les sauvegardes/fichiers/dates d'état existantes et permettre à l'utilisateur d'en choisir 1.
         try {
-            getApplication().setPlanCharge(planChargeService.load(dateEtat));
+            getApplicationIhm().setPlanCharge(planChargeService.load(dateEtat));
         } catch (ServiceException e) {
             LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -100,14 +86,20 @@ public class ApplicationController extends AbstractController {
 
     @FXML
     private void afficherModuleDispo(ActionEvent event) {
-        LOGGER.debug("afficherModuleDispo");
-        getApplicationView().setCenter(getDisponibiliteView());
+        LOGGER.debug("afficherModuleDisponibilites");
+        getApplication().getIhm().afficherModuleDisponibilites();
+    }
+
+    @FXML
+    private void afficherModuleTache(ActionEvent event) {
+        LOGGER.debug("afficherModuleTaches");
+        getApplication().getIhm().afficherModuleTaches();
     }
 
     @FXML
     private void afficherModuleCharge(ActionEvent event) {
         LOGGER.debug("afficherModuleCharge");
-        getApplicationView().setCenter(getChargeView());
+        getApplication().getIhm().afficherModuleCharge();
     }
 
     /*

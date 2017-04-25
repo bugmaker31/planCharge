@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import com.sun.istack.internal.NotNull;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -26,19 +27,27 @@ public class TacheBean {
     private StringProperty ressource = new SimpleStringProperty();
     private StringProperty profil = new SimpleStringProperty();
 
-    public TacheBean(Tache tache) {
+    public TacheBean(@NotNull Tache tache) {
         this.tache = tache;
 
         this.id.set(tache.getId());
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
-        this.projetAppli.set(tache.getProjetAppli().getCode());
+        if (tache.getProjetAppli() != null) {
+            this.projetAppli.set(tache.getProjetAppli().getCode());
+        }
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
-        this.importance.set(tache.getImportance().getCode());
+        if (tache.getImportance() != null) {
+            this.importance.set(tache.getImportance().getCode());
+        }
         this.charge.set(tache.getCharge());
-        this.ressource.set(tache.getRessource().getTrigramme());
-        this.profil.set(tache.getProfil().getCode());
+        if (tache.getRessource() != null) {
+            this.ressource.set(tache.getRessource().getTrigramme());
+        }
+        if (tache.getProfil() != null) {
+            this.profil.set(tache.getProfil().getCode());
+        }
     }
 
     public int getId() {

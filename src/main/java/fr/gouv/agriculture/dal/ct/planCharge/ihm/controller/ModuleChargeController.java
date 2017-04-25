@@ -111,7 +111,6 @@ public class ModuleChargeController extends AbstractController {
     private CheckComboBox<String> filtreProfilsField;
 
     // Les services métier :
-    @Autowired
     private PlanChargeService planChargeService;
     public void setPlanChargeService(PlanChargeService planChargeService) {
         this.planChargeService = planChargeService;
