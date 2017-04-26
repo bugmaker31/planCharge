@@ -58,11 +58,11 @@ public class ApplicationController extends AbstractController {
         try {
             getApplicationIhm().setPlanCharge(planChargeService.charger(dateEtat));
         } catch (ServiceException e) {
-            LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+            LOGGER.error("Impossible de load les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de charger le plan de charge");
-            alert.setContentText("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            alert.setHeaderText("Impossible de load le plan de charge");
+            alert.setContentText("Impossible de load les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
             alert.showAndWait();
         }
     }

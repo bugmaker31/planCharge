@@ -1,10 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
-import com.sun.istack.internal.NotNull;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 

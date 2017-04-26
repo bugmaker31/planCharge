@@ -29,14 +29,14 @@ public class PlanChargeService {
             PlanCharge planCharge = planChargeDao.load(dateEtat);
             return planCharge;
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de charger le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+            throw new ServiceException("Impossible de load le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
         }
     }
 
     public void sauver(@NotNull PlanCharge planCharge) throws ServiceException {
         LocalDate dateEtat = planCharge.getDateEtat();
         try {
-            planChargeDao.save(planCharge);
+            planChargeDao.sauver(planCharge);
         } catch (DaoException e) {
             throw new ServiceException("Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
         }

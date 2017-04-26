@@ -9,18 +9,13 @@
 
     <context:annotation-config/>
 
-    <bean id="application" class="fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication" scope="singleton"/>
-
-    <!--<bean id="ihm" class="fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm" scope="singleton"/>-->
-
     <bean id="planChargeService" class="fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService"
-          scope="singleton">
-        <!--<property name="dao" ref="planChargeDao" />-->
-    </bean>
+          scope="singleton" />
 
     <bean id="planChargeDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao"
           scope="singleton">
-        <!--<property name="application" ref="application" />-->
+        <property name="repPersistanceDonnees" value="./donnees/" />
+        <property name="patronFicPersistanceDonnees" value="planCharge_{dateEtat}" />
     </bean>
 
 </beans>

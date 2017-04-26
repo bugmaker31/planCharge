@@ -3,6 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -113,6 +115,7 @@ public class ModuleChargeController extends AbstractController {
 
     // Les services métier :
     private PlanChargeService planChargeService;
+
     public void setPlanChargeService(PlanChargeService planChargeService) {
         this.planChargeService = planChargeService;
     }
@@ -570,22 +573,29 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
-        Tache t = new Tache(
-                idTacheSuivant(),
-                "(pas de ticket IDAL)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                0.0,
-                null,
-                null
-        );
-        Map<LocalDate, Double> matrice = new ArrayList<>();
+        try {
+            Tache t = new Tache(
+                    idTacheSuivant(),
+                    "(pas de ticket IDAL)",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    0.0,
+                    null,
+                    null
+            );
+            PlanCharge planCharge = getApplicationIhm().getPlanCharge();
+            planChargeService.ajouterLigne(planCharge, t);
 
-        PlanificationBean planifBean = new PlanificationBean(t, matrice);
-        planifications.add(planifBean);
+            Map<LocalDate, Double> ligne = planCharge.getPlanifications().planification(t);
+
+            PlanificationBean planifBean = new PlanificationBean(t, ligne);
+            planifications.add(planifBean);
+        } catch (TacheSansPlanificationException e) {
+            getApplicationIhm().erreur("Impossible d'ajouter la tâche.");
+        }
     }
 
     private int idTacheSuivant() {

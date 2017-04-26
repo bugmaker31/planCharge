@@ -1,7 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
@@ -21,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -92,25 +91,25 @@ public class PlanChargeIhm extends javafx.application.Application {
     private void initApplicationView() throws IOException {
         {
             FXMLLoader appLoader = new FXMLLoader();
-            appLoader.setLocation(getClass().getResource("/ihm/src/main/java/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
+            appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = appLoader.load();
             applicationContoller = appLoader.getController();
         }
         {
             FXMLLoader dispoLoader = new FXMLLoader();
-            dispoLoader.setLocation(getClass().getResource("/ihm/src/main/java/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibiliteView.fxml"));
+            dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibiliteView.fxml"));
             disponibilitesView = dispoLoader.load();
             disponibiliteController = dispoLoader.getController();
         }
         {
             FXMLLoader tachesLoader = new FXMLLoader();
-            tachesLoader.setLocation(getClass().getResource("/ihm/src/main/java/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTacheView.fxml"));
+            tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTacheView.fxml"));
             tachesView = tachesLoader.load();
             tacheController = tachesLoader.getController();
         }
         {
             FXMLLoader chargeLoader = new FXMLLoader();
-            chargeLoader.setLocation(getClass().getResource("/ihm/src/main/java/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargeView.fxml"));
+            chargeLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargeView.fxml"));
             chargeView = chargeLoader.load();
             chargeController = chargeLoader.getController();
         }
@@ -119,7 +118,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     private void injecter() {
 
         // On utilise Spring IOC pour l'injection, principalement :
-        ApplicationContext context = new ClassPathXmlApplicationContext("kernel-conf-ioc.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("ihm-conf-ioc.xml");
 
         // On mémorise les données que Spring ne peut gérer :
         PlanChargeApplication planChargeApp = context.getBean(PlanChargeApplication.class);
@@ -143,24 +142,29 @@ public class PlanChargeIhm extends javafx.application.Application {
     private static void showError(Thread thread, Throwable throwable) {
         LOGGER.error("An error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
-            showErrorDialog(throwable);
+            StringWriter errorMsg = new StringWriter();
+            throwable.printStackTrace(new PrintWriter(errorMsg));
+            showErrorDialog(errorMsg.toString());
         }
     }
 
-    private static void showErrorDialog(Throwable t) {
-        StringWriter errorMsg = new StringWriter();
-        t.printStackTrace(new PrintWriter(errorMsg));
+    private static void showErrorDialog(String errorMsg) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/ihm/src/main/java/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
         try {
             Parent root = loader.load();
-            ((ErrorController) loader.getController()).setErrorText(errorMsg.toString());
+            ((ErrorController) loader.getController()).setErrorText(errorMsg);
             dialog.setScene(new Scene(root, 800, 400));
             dialog.show();
         } catch (IOException e) {
-            LOGGER.error("Impossible d'afficher l'erreur.", e);
+            LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
         }
+    }
+
+    public void erreur(String message) {
+        LOGGER.error("Erreur : " + message);
+        showErrorDialog(message);
     }
 
     @Override
@@ -200,7 +204,7 @@ public class PlanChargeIhm extends javafx.application.Application {
             LOGGER.error("Impossible de lire les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de charger le plan de charge");
+            alert.setHeaderText("Impossible de load le plan de charge");
             alert.setContentText("Impossible de lire les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
             alert.showAndWait();
         }
@@ -267,7 +271,7 @@ public class PlanChargeIhm extends javafx.application.Application {
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     public void setFichierPlanificationsCharge(@Nullable File file, @Nullable LocalDate dateEtat) {
-        @NotNull Preferences prefs = Preferences.userNodeForPackage(PlanChargeIhm.class);
+        /*@NotNull*/ Preferences prefs = Preferences.userNodeForPackage(PlanChargeIhm.class);
         String clefPrefFic = clefPrefPlanifCharge(dateEtat);
         if (file != null) {
             prefs.put(clefPrefFic, file.getPath());

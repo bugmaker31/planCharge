@@ -1,13 +1,11 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
-import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.JAXBContext;
@@ -29,15 +27,33 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     private static final Map<LocalDate, PlanCharge> CACHE = new HashMap<>();
 
     @NotNull
-    @Autowired
-    private PlanChargeApplication application;
+    private String repPersistanceDonnees;
+
+    @NotNull
+    private String patronFicPersistanceDonnees;
 
     /*
+    @NotNull
+    @Autowired
     private ProjetAppliDao projetAppliDao ;
+    @NotNull
+    @Autowired
     private ImportanceDao importanceDao;
+    @NotNull
+    @Autowired
     private RessourceDao ressourceDao;
+    @NotNull
+    @Autowired
     private ProfilDao profilDao;
 */
+
+    public void setRepPersistanceDonnees(String repPersistanceDonnees) {
+        this.repPersistanceDonnees = repPersistanceDonnees;
+    }
+
+    public void setPatronFicPersistanceDonnees(String patronFicPersistanceDonnees) {
+        this.patronFicPersistanceDonnees = patronFicPersistanceDonnees;
+    }
 
     @Override
     protected Map<LocalDate, PlanCharge> getCache() {
@@ -45,26 +61,34 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     }
 
     @Override
-    protected PlanCharge newEntity(LocalDate datePlanif) {
-        return new PlanCharge(datePlanif, null); // TODO FDA 2017/04 Confirmer qu'on peut passer null pour les planifications.
+    protected PlanCharge newEntity(LocalDate dateEtat) {
+        return new PlanCharge(dateEtat, null); // TODO FDA 2017/04 Confirmer qu'on peut passer null pour les planifications.
     }
 
     @Override
-    public PlanCharge load(@NotNull LocalDate date) throws EntityNotFoundException {
-        File fichierPlanif = application.getIhm().getFichierPlanificationsCharge(date);
+    public PlanCharge load(@NotNull LocalDate dateEtat) throws EntityNotFoundException {
+        File fichierPlanif = fichierPlanificationsCharge(dateEtat);
         if (fichierPlanif == null) {
-            throw new EntityNotFoundException("Fichier inexistant pour la date du " + date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            throw new EntityNotFoundException("Fichier inexistant pour la dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
         }
         try {
-            Planifications  planifications = planifications(fichierPlanif);
-            return new PlanCharge(date, planifications);
+            Planifications planifications = planifications(fichierPlanif);
+            return new PlanCharge(dateEtat, planifications);
         } catch (PlanChargeDaoException e) {
-            throw new EntityNotFoundException("", e);
+            throw new EntityNotFoundException("Impossible de charger le plan de charge en dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
         }
     }
 
+    @NotNull
+    private File fichierPlanificationsCharge(@NotNull LocalDate dateEtat) {
+        String nomFic = patronFicPersistanceDonnees
+                .replaceAll("\\{dateEtat}",  dateEtat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                + ".xml";
+        return new File(repPersistanceDonnees, nomFic);
+    }
+
     /**
-     * Loads data from the specified file. The current data will be replaced.
+     * Loads data from the specified file.
      *
      * @param file
      */
@@ -79,29 +103,24 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
             return wrapper.getPlanifications();
 
-/*
-            // Save the file path to the registry.
-            setPersonFilePath(file);
-*/
-
-        } catch (Exception e) { // catches ANY exception
-            throw new PlanChargeDaoException("Impossible de charger le plan de charge depuis le fichier '" + file.getAbsolutePath() + "'.", e);
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible de dé-sérialiser le plan de charge depuis le fichier XML '" + file.getAbsolutePath() + "'.", e);
         }
     }
 
-    public void save(PlanCharge planCharge) throws PlanChargeDaoException {
+    public void sauver(PlanCharge planCharge) throws PlanChargeDaoException {
         LocalDate dateEtat = planCharge.getDateEtat();
-        File fichierPlanif = application.getIhm().getFichierPlanificationsCharge(dateEtat);
-        savePlanChargeToFile(fichierPlanif, planCharge);
+        File fichierPlanif = fichierPlanificationsCharge(dateEtat);
+        serialiserPlanCharge(fichierPlanif, planCharge);
     }
 
     /**
-     * Saves the current person data to the specified file.
+     * Saves the current data to the specified file.
      *
      * @param file
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private void savePlanChargeToFile(File file, PlanCharge planCharge) throws PlanChargeDaoException {
+    private void serialiserPlanCharge(File file, PlanCharge planCharge) throws PlanChargeDaoException {
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeWrapper.class);
             Marshaller m = context.createMarshaller();
@@ -113,13 +132,9 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
             // Marshalling and saving XML to the file.
             m.marshal(wrapper, file);
-
-/*
-            // Save the file path to the registry.
-            setPersonFilePath(file);
-*/
-        } catch (Exception e) { // catches ANY exception
-            throw new PlanChargeDaoException("Impossible de sauver le plan de charge dans le fichier '" + file.getAbsolutePath() + "'.", e);
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible de sérialiser le plan de charge dans le fichier XML '" + file.getAbsolutePath() + "'.", e);
         }
     }
+
 }
