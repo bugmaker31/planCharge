@@ -78,7 +78,7 @@ public class Planifications {
         LocalDate dateSemaine = planCharge.getDateEtat();
         for (int noSemaine = 1; noSemaine <= NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             ligne.put(dateSemaine, 0.0);
-            dateSemaine.plusDays(7);
+            dateSemaine = dateSemaine.plusDays(7);
         }
         matrice.put(tache, ligne);
     }
