@@ -10,12 +10,62 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>planCharge-metier</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-        </dependency>
-    </dependencies>
+    <!--<packaging>jar</packaging>-->
 
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>
+        <!--<plugins>-->
+            <!--
+                        &lt;!&ndash;Cf. https://wiki.openoffice.org/wiki/OpenOffice_Maven2_Integration&ndash;&gt;
+                        <plugin>
+                            <groupId>org.openoffice.dev</groupId>
+                            <artifactId>maven-ooo-plugin</artifactId>
+                            <version>1.1</version>
+                            <configuration>
+                                <idlDir>${project.basedir}/src/main/idl</idlDir>
+                                <ooo>${libreoffice.home}</ooo>
+                                <sdk>${libreoffice.sdk.home}</sdk>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <phase>generate-sources</phase>
+                                    <goals>
+                                        <goal>build-idl</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
+            <!--
+                        &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>build-helper-maven-plugin</artifactId>
+                            <version>1.9.1</version>
+                            <executions>
+                                <execution>
+                                    <phase>generate-sources</phase>
+                                    <goals>
+                                        <goal>add-source</goal>
+                                    </goals>
+                                    <configuration>
+                                        <sources>
+                                            <source>src/ext-jlop/java</source>
+                                        </sources>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
+        <!--</plugins>-->
+    </build>
 </project>

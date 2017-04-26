@@ -11,13 +11,43 @@
 
     <artifactId>planCharge-ihm</artifactId>
 
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>
+
+    </build>
 
     <dependencies>
+
+        <!--Dépendance vers le métier de cette application :-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>${project.parent.artifactId}-metier</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!--Pour avoir notamment les combobox multi-sélection (CheckComboBox) :-->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.12</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>

@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -252,7 +252,7 @@ public class PlanChargeIhm extends javafx.application.Application {
      * @return
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    @Nullable
+    @Null
     public File getFichierPlanificationsCharge(LocalDate datePlanif) {
         Preferences prefs = Preferences.userNodeForPackage(PlanChargeIhm.class);
         String filePath = prefs.get(clefPrefPlanifCharge(datePlanif), null);
@@ -270,7 +270,7 @@ public class PlanChargeIhm extends javafx.application.Application {
      * @param file the file, or null to remove the path
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    public void setFichierPlanificationsCharge(@Nullable File file, @Nullable LocalDate dateEtat) {
+    public void setFichierPlanificationsCharge(@Null File file, @Null LocalDate dateEtat) {
         /*@NotNull*/ Preferences prefs = Preferences.userNodeForPackage(PlanChargeIhm.class);
         String clefPrefFic = clefPrefPlanifCharge(dateEtat);
         if (file != null) {
