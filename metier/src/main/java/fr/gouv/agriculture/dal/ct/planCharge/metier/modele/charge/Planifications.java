@@ -21,6 +21,11 @@ public class Planifications {
     @NotNull
     private Map<Tache, Map<LocalDate, Double>> matrice;
 
+    public Planifications(@NotNull PlanCharge planCharge) {
+        this.planCharge = planCharge;
+        this.matrice = new HashMap<>();
+    }
+
     public Planifications(@NotNull PlanCharge planCharge, @NotNull Map<Tache, Map<LocalDate, Double>> matrice) {
         this.planCharge = planCharge;
         this.matrice = matrice;

@@ -27,6 +27,15 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
         this.planifications = planifications;
     }
 
+    public PlanCharge(LocalDate dateEtat) {
+        this.dateEtat = dateEtat;
+        initPlanifications();
+    }
+
+    public void initPlanifications() {
+        this.planifications = new Planifications(this);
+    }
+
     @Override
     public LocalDate getIdentity() {
         return dateEtat;
@@ -94,4 +103,5 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
 
         return differences;
     }
+
 }

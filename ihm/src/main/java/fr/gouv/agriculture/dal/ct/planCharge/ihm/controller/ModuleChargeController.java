@@ -27,7 +27,9 @@ import javafx.util.converter.LocalDateStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +116,8 @@ public class ModuleChargeController extends AbstractController {
     private CheckComboBox<String> filtreProfilsField;
 
     // Les services métier :
+    @NotNull
+    @Autowired
     private PlanChargeService planChargeService;
 
     public void setPlanChargeService(PlanChargeService planChargeService) {
@@ -573,9 +577,10 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
+        PlanCharge planCharge = getApplicationIhm().getPlanCharge();
         try {
             Tache t = new Tache(
-                    idTacheSuivant(),
+                    planChargeService.idTacheSuivant(planCharge),
                     "(pas de ticket IDAL)",
                     null,
                     null,
@@ -586,7 +591,6 @@ public class ModuleChargeController extends AbstractController {
                     null,
                     null
             );
-            PlanCharge planCharge = getApplicationIhm().getPlanCharge();
             planChargeService.ajouterLigne(planCharge, t);
 
             Map<LocalDate, Double> ligne = planCharge.getPlanifications().planification(t);
@@ -597,10 +601,5 @@ public class ModuleChargeController extends AbstractController {
             getApplicationIhm().erreur("Impossible d'ajouter la tâche.");
         }
     }
-
-    private int idTacheSuivant() {
-        return 0; // TODO FDA 2017/04 Coder.
-    }
-
 
 }

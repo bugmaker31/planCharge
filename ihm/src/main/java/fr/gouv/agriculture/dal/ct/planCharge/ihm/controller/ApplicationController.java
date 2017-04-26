@@ -10,7 +10,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -19,7 +21,10 @@ public class ApplicationController extends AbstractController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
     // Les services métier :
+    @NotNull
+    @Autowired
     private PlanChargeService planChargeService;
+
     public void setPlanChargeService(PlanChargeService planChargeService) {
         this.planChargeService = planChargeService;
     }
@@ -39,6 +44,16 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("Fichier > Sauver");
 
         PlanCharge planCharge = getApplicationIhm().getPlanCharge();
+        if (planCharge == null) {
+            LOGGER.warn("Impossible de sauver un plan de charge non défini.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Impossible de sauver le plan de charge");
+            alert.setContentText("Impossible de sauver le plan de charge car non défini.");
+            alert.showAndWait();
+            return;
+        }
+
         try {
             planChargeService.sauver(planCharge);
         } catch (ServiceException e) {

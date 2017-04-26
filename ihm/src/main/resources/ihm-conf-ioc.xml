@@ -12,5 +12,4 @@
     <import resource="classpath:metier-conf-ioc.xml" />
 
     <bean id="application" class="fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication" scope="singleton"/>
-
 </beans>

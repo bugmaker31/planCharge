@@ -12,8 +12,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +65,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     @Override
     protected PlanCharge newEntity(LocalDate dateEtat) {
-        return new PlanCharge(dateEtat, null); // TODO FDA 2017/04 Confirmer qu'on peut passer null pour les planifications.
+        return new PlanCharge(dateEtat);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     @NotNull
     private File fichierPlanificationsCharge(@NotNull LocalDate dateEtat) {
         String nomFic = patronFicPersistanceDonnees
-                .replaceAll("\\{dateEtat}",  dateEtat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .replaceAll("\\{dateEtat}", dateEtat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 + ".xml";
         return new File(repPersistanceDonnees, nomFic);
     }
@@ -109,8 +112,19 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     }
 
     public void sauver(PlanCharge planCharge) throws PlanChargeDaoException {
+
         LocalDate dateEtat = planCharge.getDateEtat();
+
         File fichierPlanif = fichierPlanificationsCharge(dateEtat);
+        if (fichierPlanif.exists()) {
+            fichierPlanif.delete();
+        }
+        try {
+            fichierPlanif.createNewFile();
+        } catch (IOException e) {
+            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+        }
+
         serialiserPlanCharge(fichierPlanif, planCharge);
     }
 
@@ -124,10 +138,12 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeWrapper.class);
             Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_ENCODING, "UTF8");
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our person data.
             PlanChargeWrapper wrapper = new PlanChargeWrapper();
+            wrapper.setDateEtat(planCharge.getDateEtat());
             wrapper.setPlanifications(planCharge.getPlanifications());
 
             // Marshalling and saving XML to the file.

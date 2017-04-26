@@ -85,13 +85,9 @@
     <bottom>
         <Accordion BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane animated="false" text="Actions">
+                <TitledPane animated="false" text="Actions" expanded="true">
                     <content>
-                        <AnchorPane BorderPane.alignment="CENTER">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#ajouterTache" text="Ajouter une tâche"/>
-                            </children>
-                        </AnchorPane>
+                        <Button mnemonicParsing="false" onAction="#ajouterTache" text="Ajouter une tâche" alignment="BASELINE_CENTER"/>
                     </content>
                 </TitledPane>
             </panes>

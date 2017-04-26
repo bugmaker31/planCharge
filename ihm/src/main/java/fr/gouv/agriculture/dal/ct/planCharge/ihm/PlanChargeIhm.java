@@ -19,11 +19,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.prefs.Preferences;
@@ -57,7 +59,20 @@ public class PlanChargeIhm extends javafx.application.Application {
         launch(args);
     }
 
+    @NotNull
     public PlanCharge getPlanCharge() {
+        if (planCharge == null) {
+
+            LocalDate dateEtat = LocalDate.now();
+            DayOfWeek dayOfWeek = dateEtat.getDayOfWeek();
+            if (dayOfWeek.getValue() != 1) {
+                int nbrJoursJsqauProchainLundi = 7 - dayOfWeek.getValue() + 1;
+                dateEtat = dateEtat.plusDays(nbrJoursJsqauProchainLundi);
+            }
+
+            planCharge = new PlanCharge(dateEtat);
+            majTitre();
+        }
         return planCharge;
     }
 
@@ -133,10 +148,12 @@ public class PlanChargeIhm extends javafx.application.Application {
         // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
         // par JavaFX, etc.). Donc on les "injecte" soi-même :
         applicationContoller.setApplication(planChargeApp);
+        applicationContoller.setPlanChargeService(context.getBean(PlanChargeService.class));
         disponibiliteController.setApplication(planChargeApp);
         tacheController.setApplication(planChargeApp);
         tacheController.setPlanChargeService(context.getBean(PlanChargeService.class));
         chargeController.setApplication(planChargeApp);
+        chargeController.setPlanChargeService(context.getBean(PlanChargeService.class));
     }
 
     private static void showError(Thread thread, Throwable throwable) {
@@ -151,7 +168,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     private static void showErrorDialog(String errorMsg) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/ihm/src/main/java/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
+        FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
         try {
             Parent root = loader.load();
             ((ErrorController) loader.getController()).setErrorText(errorMsg);
