@@ -104,7 +104,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             // Reading XML from the file and unmarshalling.
             PlanChargeWrapper wrapper = (PlanChargeWrapper) um.unmarshal(file);
 
-            return wrapper.getPlanifications();
+            return new Planifications(); // TODO FDA 2017/04 Coder : exploiter le wrapper.
 
         } catch (Exception e) {
             throw new PlanChargeDaoException("Impossible de dé-sérialiser le plan de charge depuis le fichier XML '" + file.getAbsolutePath() + "'.", e);

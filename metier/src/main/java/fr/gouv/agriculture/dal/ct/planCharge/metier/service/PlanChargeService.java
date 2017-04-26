@@ -26,7 +26,7 @@ public class PlanChargeService {
             planCharge.initPlanifications();
         }
 */
-        planCharge.getPlanifications().ajouter(tache);
+        planCharge.getPlanifications().ajouter(tache, planCharge.getDateEtat());
     }
 
     @NotNull

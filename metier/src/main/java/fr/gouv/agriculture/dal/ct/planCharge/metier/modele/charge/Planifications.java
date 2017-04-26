@@ -16,18 +16,13 @@ public class Planifications {
     public static final int NBR_SEMAINES_PLANIFIEES = 12;
 
     @NotNull
-    private PlanCharge planCharge;
-
-    @NotNull
     private Map<Tache, Map<LocalDate, Double>> matrice;
 
-    public Planifications(@NotNull PlanCharge planCharge) {
-        this.planCharge = planCharge;
+    public Planifications() {
         this.matrice = new HashMap<>();
     }
 
-    public Planifications(@NotNull PlanCharge planCharge, @NotNull Map<Tache, Map<LocalDate, Double>> matrice) {
-        this.planCharge = planCharge;
+    public Planifications(@NotNull Map<Tache, Map<LocalDate, Double>> matrice) {
         this.matrice = matrice;
     }
 
@@ -73,9 +68,9 @@ public class Planifications {
         return matrice.get(tache);
     }
 
-    public void ajouter(@NotNull Tache tache) {
+    public void ajouter(@NotNull Tache tache, LocalDate dateEtat) {
         Map<LocalDate, Double> ligne = new HashMap<>(NBR_SEMAINES_PLANIFIEES);
-        LocalDate dateSemaine = planCharge.getDateEtat();
+        LocalDate dateSemaine = dateEtat;
         for (int noSemaine = 1; noSemaine <= NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             ligne.put(dateSemaine, 0.0);
             dateSemaine = dateSemaine.plusDays(7);

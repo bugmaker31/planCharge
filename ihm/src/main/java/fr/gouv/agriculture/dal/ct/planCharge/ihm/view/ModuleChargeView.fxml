@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<BorderPane prefHeight="450.0" prefWidth="1372.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>
@@ -99,15 +99,14 @@
             </columns>
         </TableView>
     </center>
-    <bottom>
-        <Accordion BorderPane.alignment="CENTER">
-            <panes>
-                <TitledPane animated="false" expanded="true" text="Actions">
-                    <content>
-                        <Button alignment="BASELINE_CENTER" mnemonicParsing="false" onAction="#ajouterTache" text="Ajouter une tâche" />
-                    </content>
-                </TitledPane>
-            </panes>
-        </Accordion>
-    </bottom>
+   <right>
+      <BorderPane BorderPane.alignment="CENTER" />
+   </right>
+   <bottom>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+                  <Button alignment="BASELINE_CENTER" mnemonicParsing="false" onAction="#ajouterTache" text="Ajouter une tâche" />
+         </children>
+      </AnchorPane>
+   </bottom>
 </BorderPane>
