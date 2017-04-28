@@ -47,8 +47,4 @@ public class PlanChargeService {
         }
     }
 
-    public int idTacheSuivant(@NotNull PlanCharge planCharge) {
-        OptionalInt max = planCharge.getPlanifications().taches().stream().mapToInt(Tache::getId).max();
-        return (!max.isPresent()) ? 1 : (max.getAsInt() + 1);
-    }
 }

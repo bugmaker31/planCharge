@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 
@@ -13,9 +13,12 @@ import java.time.format.DateTimeFormatter;
  */
 public class TacheBean {
 
+    @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private final Tache tache;
+    @NotNull
+    private Tache tache;
+
     private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty noTicketIdal = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
@@ -50,95 +53,127 @@ public class TacheBean {
         }
     }
 
+    public TacheBean(int id, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
+        this(new Tache(id, noTicketIdal, description, projetAppli, debut, echeance, importance, charge, ressource, profil));
+    }
+
+    @NotNull
+    public Tache getTache() {
+        return tache;
+    }
+
+    @NotNull
     public int getId() {
         return id.get();
     }
 
+    @NotNull
     public IntegerProperty idProperty() {
         return id;
     }
 
+    @NotNull
     public String getNoTicketIdal() {
         return noTicketIdal.get();
     }
 
+    @NotNull
     public StringProperty noTicketIdalProperty() {
         return noTicketIdal;
     }
 
+    @NotNull
     public String getDescription() {
         return description.get();
     }
 
+    @NotNull
     public StringProperty descriptionProperty() {
         return description;
     }
 
+    @NotNull
     public String getProjetAppli() {
         return projetAppli.get();
     }
 
+    @NotNull
     public StringProperty projetAppliProperty() {
         return projetAppli;
     }
 
+    @NotNull
     public LocalDate getDebut() {
         return debut.get();
     }
 
+    @NotNull
     public ObjectProperty<LocalDate> debutProperty() {
         return debut;
     }
 
+    @NotNull
     public LocalDate getEcheance() {
         return echeance.get();
     }
 
+    @NotNull
     public ObjectProperty<LocalDate> echeanceProperty() {
         return echeance;
     }
 
+    @NotNull
     public String getImportance() {
         return importance.get();
     }
 
+    @NotNull
     public StringProperty importanceProperty() {
         return importance;
     }
 
+    @NotNull
     public double getCharge() {
         return charge.get();
     }
 
+    @NotNull
     public DoubleProperty chargeProperty() {
         return charge;
     }
 
+    @NotNull
     public String getRessource() {
         return ressource.get();
     }
 
+    @NotNull
     public StringProperty ressourceProperty() {
         return ressource;
     }
 
+    @NotNull
     public String getProfil() {
         return profil.get();
     }
 
+    @NotNull
     public StringProperty profilProperty() {
         return profil;
     }
 
+    @NotNull
     public StringBinding noTacheProperty() {
         return idProperty().asString(Tache.FORMAT_NO_TACHE);
     }
 
+    @NotNull
     public String noTache() {
         return tache.noTache();
     }
 
-    public boolean matcheNoTache(String otherValue) {
+    @NotNull
+    public boolean matcheNoTache(@NotNull String otherValue) {
         if (new String(getId() + "").contains(otherValue)) {
             return true; // matches
         }
@@ -148,42 +183,48 @@ public class TacheBean {
         return false; // does not match.
     }
 
-    public boolean matcheNoTicketIdal(String otherValue) {
+    @NotNull
+    public boolean matcheNoTicketIdal(@NotNull String otherValue) {
         if (getNoTicketIdal().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    public boolean matcheDescription(String otherValue) {
+    @NotNull
+    public boolean matcheDescription(@NotNull String otherValue) {
         if (getDescription().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    public boolean matcheProjetAppli(String otherValue) {
+    @NotNull
+    public boolean matcheProjetAppli(@NotNull String otherValue) {
         if (getProjetAppli().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    public boolean matcheImportance(String otherValue) {
+    @NotNull
+    public boolean matcheImportance(@NotNull String otherValue) {
         if (getImportance().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    public boolean matcheDebut(String otherValue) {
+    @NotNull
+    public boolean matcheDebut(@NotNull String otherValue) {
         if (getDebut().format(DATE_FORMATTER).contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    public boolean matcheEcheance(String otherValue) {
+    @NotNull
+    public boolean matcheEcheance(@NotNull String otherValue) {
         if (getEcheance().format(DATE_FORMATTER).contains(otherValue)) {
             return true; // matches
         }
@@ -191,14 +232,16 @@ public class TacheBean {
     }
 
 
-    public boolean matcheRessource(String otherValue) {
+    @NotNull
+    public boolean matcheRessource(@NotNull String otherValue) {
         if (getRessource().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    public boolean matcheProfil(String otherValue) {
+    @NotNull
+    public boolean matcheProfil(@NotNull String otherValue) {
         if (getProfil().contains(otherValue)) {
             return true; // matches
         }
@@ -207,6 +250,7 @@ public class TacheBean {
 
     // Pour les débug, uniquement.
     @Override
+    @NotNull
     public String toString() {
         return tache.toString();
     }

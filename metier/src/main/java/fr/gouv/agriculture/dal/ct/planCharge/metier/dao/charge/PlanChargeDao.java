@@ -14,9 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,12 +48,12 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     private ProfilDao profilDao;
 */
 
-    public void setRepPersistanceDonnees(String repPersistanceDonnees) {
-        this.repPersistanceDonnees = repPersistanceDonnees;
+    public void setRepPersistance(String repPersistance) {
+        this.repPersistanceDonnees = repPersistance;
     }
 
-    public void setPatronFicPersistanceDonnees(String patronFicPersistanceDonnees) {
-        this.patronFicPersistanceDonnees = patronFicPersistanceDonnees;
+    public void setPatronFicPersistance(String patronFicPersistance) {
+        this.patronFicPersistanceDonnees = patronFicPersistance;
     }
 
     @Override
@@ -141,10 +139,8 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             m.setProperty(Marshaller.JAXB_ENCODING, "UTF8");
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            // Wrapping our person data.
-            PlanChargeWrapper wrapper = new PlanChargeWrapper();
-            wrapper.setDateEtat(planCharge.getDateEtat());
-            wrapper.setPlanifications(planCharge.getPlanifications());
+            // Wrapping our data.
+            PlanChargeWrapper wrapper = new PlanChargeWrapper(planCharge);
 
             // Marshalling and saving XML to the file.
             m.marshal(wrapper, file);

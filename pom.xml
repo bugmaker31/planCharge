@@ -41,10 +41,14 @@
     -->
     <scm>
         <connection>
-            scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0
+            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
+            <!--TODO FDA 2017/04 Tester le repo GIT.-->
+            scm:git:https://github.com/bugmaker31/planCharge/tree/master
         </connection>
         <developerConnection>
-            scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0
+            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
+            <!--TODO FDA 2017/04 Tester le repo GIT.-->
+            scm:git:https://github.com/bugmaker31/planCharge/tree/master
         </developerConnection>
     </scm>
 

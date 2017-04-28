@@ -19,38 +19,38 @@ import java.util.Map;
 public class PlanificationBean {
 
     @NotNull
-    private final TacheBean tache;
+    private final TacheBean tacheBean;
     @NotNull
-    private final List<Pair<LocalDate, DoubleProperty>> matrice;
+    private final List<Pair<LocalDate, DoubleProperty>> calendrier;
     @NotNull
     private DoubleProperty chargePlanifiee = new SimpleDoubleProperty();
 
-    public PlanificationBean(@NotNull TacheBean tache, @NotNull List<Pair<LocalDate, DoubleProperty>> matrice) {
+    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier) {
         super();
-        this.tache = tache;
-        this.matrice = matrice;
+        this.tacheBean = tacheBean;
+        this.calendrier = calendrier;
 
         majChargePlanifiee();
     }
 
-    public PlanificationBean(@NotNull Tache tache, @NotNull Map<LocalDate, Double> matrice) {
-        this.tache = new TacheBean(tache);
-        this.matrice = new ArrayList<>();
-        matrice.entrySet().stream()
+    public PlanificationBean(@NotNull Tache tacheBean, @NotNull Map<LocalDate, Double> calendrier) {
+        this.tacheBean = new TacheBean(tacheBean);
+        this.calendrier = new ArrayList<>();
+        calendrier.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .forEach(entry -> this.matrice.add(new Pair<LocalDate, DoubleProperty>(entry.getKey(), new SimpleDoubleProperty(entry.getValue()))));
+                .forEach(entry -> this.calendrier.add(new Pair<LocalDate, DoubleProperty>(entry.getKey(), new SimpleDoubleProperty(entry.getValue()))));
 
         majChargePlanifiee();
     }
 
     @NotNull
-    public TacheBean getTache() {
-        return tache;
+    public TacheBean getTacheBean() {
+        return tacheBean;
     }
 
     @NotNull
-    public List<Pair<LocalDate, DoubleProperty>> getMatrice() {
-        return matrice;
+    public List<Pair<LocalDate, DoubleProperty>> getCalendrier() {
+        return calendrier;
     }
 
     @NotNull
@@ -68,15 +68,15 @@ public class PlanificationBean {
         if (noSemaine < 1) {
             throw new IhmException("Le n° de semaine doit être supérieur ou égal à 1.");
         }
-        if (noSemaine > matrice.size()) {
-            throw new IhmException("Pas de planification pour la semaine n°" + noSemaine + ".");
+        if (noSemaine > calendrier.size()) {
+            throw new IhmException("Pas de calendrier pour la semaine n°" + noSemaine + ".");
         }
-        return matrice.get(noSemaine - 1);
+        return calendrier.get(noSemaine - 1);
     }
 
     @NotNull
     private double chargePlanifiee() throws IhmException {
-        return matrice.stream().mapToDouble(elt -> elt.getValue().get()).sum();
+        return calendrier.stream().mapToDouble(elt -> elt.getValue().get()).sum();
     }
 
     @NotNull
@@ -92,6 +92,6 @@ public class PlanificationBean {
     // Pour déboguer, uniquement.
     @Override
     public String toString() {
-        return tache.toString() + " : " + chargePlanifiee.get();
+        return tacheBean.toString() + " : " + chargePlanifiee.get();
     }
 }

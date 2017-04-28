@@ -8,6 +8,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
  */
 public class TacheSansPlanificationException extends ModeleException {
     public TacheSansPlanificationException(Tache tache) {
-        super("Tâche sans planification : " + tache.noTache());
+        super("Tâche sans calendrier : " + tache.noTache());
     }
 }

@@ -3,10 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,6 +21,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
 import org.controlsfx.control.CheckComboBox;
@@ -30,10 +30,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +42,7 @@ public class ModuleChargeController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargeController.class);
 
-    // La table de planification des tâches :
+    // La table de calendrier des tâches :
     @FXML
     private TableView<PlanificationBean> planificationsTable;
     @FXML
@@ -93,6 +92,10 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private TableColumn<PlanificationBean, Double> chargePlanifieeColumn;
 
+    // Les paramètres :
+    @FXML
+    private DatePicker dateEtatPicker;
+
     // Les filtres :
     @FXML
     private TextField filtreGlobalField;
@@ -124,8 +127,21 @@ public class ModuleChargeController extends AbstractController {
         this.planChargeService = planChargeService;
     }
 
-    // Les collections de données :
-    private ObservableList<PlanificationBean> planifications = FXCollections.observableArrayList();
+    // Les données métier :
+    @Null
+    private LocalDate dateEtat;
+
+    public void setDateEtat(LocalDate dateEtat) {
+        this.dateEtat = dateEtat;
+    }
+
+    @Null
+    private ObservableList<PlanificationBean> planificationsBeans;
+
+    public void setPlanificationsBeans(ObservableList<PlanificationBean> planificationsBeans) {
+        this.planificationsBeans = planificationsBeans;
+    }
+
     private ObservableList<String> codesImportancesTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
@@ -146,8 +162,11 @@ public class ModuleChargeController extends AbstractController {
      */
     @FXML
     private void initialize() {
+    }
 
-/*
+    public void configurer() {
+
+        /*
         // Rendre le "divider" du SplitPane fixe (== "non draggable") :
         // (Cf. http://stackoverflow.com/questions/26762928/javafx-disable-divider)
         splitPane.lookupAll(".split-pane-divider").stream().forEach(div ->  div.setMouseTransparent(true) );
@@ -168,16 +187,16 @@ public class ModuleChargeController extends AbstractController {
                 return nouvelleCharge.equals(0.0) ? null : new SimpleDoubleProperty(nouvelleCharge).asObject();
             }
         }
-        noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTacheProperty());
-        noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().noTicketIdalProperty());
-        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().descriptionProperty());
-        projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().projetAppliProperty());
-        debutColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().debutProperty());
-        echeanceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().echeanceProperty());
-        importanceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().importanceProperty());
-        chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().chargeProperty().asObject());
-        ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().ressourceProperty());
-        profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTache().profilProperty());
+        noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().noTacheProperty());
+        noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().noTicketIdalProperty());
+        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().descriptionProperty());
+        projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().projetAppliProperty());
+        debutColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().debutProperty());
+        echeanceColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().echeanceProperty());
+        importanceColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().importanceProperty());
+        chargeColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().chargeProperty().asObject());
+        ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().ressourceProperty());
+        profilColumn.setCellValueFactory(cellData -> cellData.getValue().getTacheBean().profilProperty());
         semaine1Column.setCellValueFactory(new ChargeSemaineCellCallback(1));
         semaine2Column.setCellValueFactory(new ChargeSemaineCellCallback(2));
         semaine3Column.setCellValueFactory(new ChargeSemaineCellCallback(3));
@@ -210,7 +229,7 @@ public class ModuleChargeController extends AbstractController {
                     // Style with a different color.
                     //            TODO FDA 2017/04 Terminer.
                     String styleBackgroundColour;
-                    double chargePlanifiee = planifications.get(this.getIndex()).getChargePlanifiee();
+                    double chargePlanifiee = planificationsBeans.get(this.getIndex()).getChargePlanifiee();
                     if (charge < chargePlanifiee) {
                         setTextFill(Color.WHITE);
                         styleBackgroundColour = "maroon";
@@ -287,26 +306,21 @@ public class ModuleChargeController extends AbstractController {
         tachesTable.addEventFilter(ScrollEvent.ANY, event -> tachesScroll(event));
 */
 
-        // Chargement des lignes du plan de charge :
-        populerPlan();
-    }
-
-    private void populerPlan() {
-        planifications.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
+        planificationsBeans.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
             codesImportancesTaches.clear();
-            codesImportancesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTache().getImportance()).collect(Collectors.toSet()));
+            codesImportancesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
             codesImportancesTaches.sort(String::compareTo);
 
             codesProjetsApplisTaches.clear();
-            codesProjetsApplisTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTache().getProjetAppli()).collect(Collectors.toSet()));
+            codesProjetsApplisTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProjetAppli()).collect(Collectors.toSet()));
             codesProjetsApplisTaches.sort(String::compareTo);
 
             codesRessourcesTaches.clear();
-            codesRessourcesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTache().getRessource()).collect(Collectors.toSet()));
+            codesRessourcesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getRessource()).collect(Collectors.toSet()));
             codesRessourcesTaches.sort(String::compareTo);
 
             codesProfilsTaches.clear();
-            codesProfilsTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTache().getProfil()).collect(Collectors.toSet()));
+            codesProfilsTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProfil()).collect(Collectors.toSet()));
             codesProfilsTaches.sort(String::compareTo);
         });
 
@@ -318,7 +332,7 @@ public class ModuleChargeController extends AbstractController {
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
         // 1. Wrap the ObservableList in a FilteredList
-        FilteredList<PlanificationBean> filteredData = new FilteredList<>(planifications);
+        FilteredList<PlanificationBean> filteredData = new FilteredList<>(planificationsBeans);
         // 2. Set the filter Predicate whenever the filter changes.
         filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredData.setPredicate(planification -> {
@@ -329,25 +343,25 @@ public class ModuleChargeController extends AbstractController {
                     }
 
                     // Compare column values with filter text.
-                    if (planification.getTache().matcheNoTache(newValue)) {
+                    if (planification.getTacheBean().matcheNoTache(newValue)) {
                         return true; // Filter matches
                     }
-                    if (planification.getTache().matcheNoTicketIdal(newValue)) {
+                    if (planification.getTacheBean().matcheNoTicketIdal(newValue)) {
                         return true; // Filter matches
                     }
-                    if (planification.getTache().matcheDescription(newValue)) {
+                    if (planification.getTacheBean().matcheDescription(newValue)) {
                         return true; // Filter matches
                     }
-                    if (planification.getTache().matcheProjetAppli(newValue)) {
+                    if (planification.getTacheBean().matcheProjetAppli(newValue)) {
                         return true; // Filter matches
                     }
-                    if (planification.getTache().matcheImportance(newValue)) {
+                    if (planification.getTacheBean().matcheImportance(newValue)) {
                         return true; // Filter matches
                     }
-                    if (planification.getTache().matcheDebut(newValue)) {
+                    if (planification.getTacheBean().matcheDebut(newValue)) {
                         return true; // Filter matches
                     }
-                    if (planification.getTache().matcheEcheance(newValue)) {
+                    if (planification.getTacheBean().matcheEcheance(newValue)) {
                         return true; // Filter matches
                     }
                     return false; // Does not match.
@@ -363,7 +377,7 @@ public class ModuleChargeController extends AbstractController {
 
                 // Compare column values with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
-                if (planification.getTache().matcheNoTache(lowerCaseFilter)) {
+                if (planification.getTacheBean().matcheNoTache(lowerCaseFilter)) {
                     return true; // Filter matches
                 }
                 return false; // Does not match.
@@ -379,7 +393,7 @@ public class ModuleChargeController extends AbstractController {
 
                 // Compare column values with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
-                if (planification.getTache().matcheNoTicketIdal(lowerCaseFilter)) {
+                if (planification.getTacheBean().matcheNoTicketIdal(lowerCaseFilter)) {
                     return true; // Filter matches
                 }
                 return false; // Does not match.
@@ -395,7 +409,7 @@ public class ModuleChargeController extends AbstractController {
 
                 // Compare column values with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
-                if (planification.getTache().matcheDescription(lowerCaseFilter)) {
+                if (planification.getTacheBean().matcheDescription(lowerCaseFilter)) {
                     return true; // Filter matches
                 }
                 return false; // Does not match.
@@ -410,7 +424,7 @@ public class ModuleChargeController extends AbstractController {
                 }
 
                 // Compare column values with filter text.
-                if (planification.getTache().matcheDebut(newValue.format(TacheBean.DATE_FORMATTER))) {
+                if (planification.getTacheBean().matcheDebut(newValue.format(TacheBean.DATE_FORMATTER))) {
                     return true; // Filter matches
                 }
                 return false; // Does not match.
@@ -425,7 +439,7 @@ public class ModuleChargeController extends AbstractController {
                 }
 
                 // Compare column values with filter text.
-                if (planification.getTache().matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
+                if (planification.getTacheBean().matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
                     return true; // Filter matches
                 }
                 return false; // Does not match.
@@ -435,7 +449,7 @@ public class ModuleChargeController extends AbstractController {
                 (ListChangeListener<String>) comboBoxChange ->
                         filteredData.setPredicate(planification -> {
                             for (String codeProjetAppliSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTache().matcheProjetAppli(codeProjetAppliSelectionne)) {
+                                if (planification.getTacheBean().matcheProjetAppli(codeProjetAppliSelectionne)) {
                                     return true;
                                 }
                             }
@@ -446,7 +460,7 @@ public class ModuleChargeController extends AbstractController {
                 (ListChangeListener<String>) comboBoxChange ->
                         filteredData.setPredicate(planification -> {
                             for (String codeImportanceSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTache().matcheImportance(codeImportanceSelectionne)) {
+                                if (planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
                                     return true;
                                 }
                             }
@@ -457,7 +471,7 @@ public class ModuleChargeController extends AbstractController {
                 (ListChangeListener<String>) comboBoxChange ->
                         filteredData.setPredicate(planification -> {
                             for (String codeRessourceSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTache().matcheRessource(codeRessourceSelectionne)) {
+                                if (planification.getTacheBean().matcheRessource(codeRessourceSelectionne)) {
                                     return true;
                                 }
                             }
@@ -468,7 +482,7 @@ public class ModuleChargeController extends AbstractController {
                 (ListChangeListener<String>) comboBoxChange ->
                         filteredData.setPredicate(planification -> {
                             for (String codeProfilSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTache().matcheProfil(codeProfilSelectionne)) {
+                                if (planification.getTacheBean().matcheProfil(codeProfilSelectionne)) {
                                     return true;
                                 }
                             }
@@ -490,7 +504,7 @@ public class ModuleChargeController extends AbstractController {
     private void populerFiltreProjetsApplis() {
 
         List<String> codesProjetsApplisList = new ArrayList<>();
-        codesProjetsApplisList.addAll(planifications.stream().map(planification -> planification.getTache().getProjetAppli()).distinct().collect(Collectors.toList()));
+        codesProjetsApplisList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getProjetAppli()).distinct().collect(Collectors.toList()));
         codesProjetsApplisList.sort(String::compareTo);
 
         filtreProjetsApplisField.getItems().clear();
@@ -504,7 +518,7 @@ public class ModuleChargeController extends AbstractController {
     private void populerFiltreImportances() {
 
         List<String> codesImportancesList = new ArrayList<>();
-        codesImportancesList.addAll(planifications.stream().map(planification -> planification.getTache().getImportance()).distinct().collect(Collectors.toList()));
+        codesImportancesList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getImportance()).distinct().collect(Collectors.toList()));
         codesImportancesList.sort(String::compareTo);
 
         filtreImportancesField.getItems().clear();
@@ -518,7 +532,7 @@ public class ModuleChargeController extends AbstractController {
     private void populerFiltreRessources() {
 
         List<String> codesRessourcesList = new ArrayList<>();
-        codesRessourcesList.addAll(planifications.stream().map(planification -> planification.getTache().getRessource()).distinct().collect(Collectors.toList()));
+        codesRessourcesList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getRessource()).distinct().collect(Collectors.toList()));
         codesRessourcesList.sort(String::compareTo);
 
         filtreRessourcesField.getItems().clear();
@@ -532,7 +546,7 @@ public class ModuleChargeController extends AbstractController {
     private void populerFiltreProfils() {
 
         List<String> codesProfilsList = new ArrayList<>();
-        codesProfilsList.addAll(planifications.stream().map(planification -> planification.getTache().getProfil()).distinct().collect(Collectors.toList()));
+        codesProfilsList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getProfil()).distinct().collect(Collectors.toList()));
         codesProfilsList.sort(String::compareTo);
 
         filtreProfilsField.getItems().clear();
@@ -577,29 +591,52 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
-        PlanCharge planCharge = getApplicationIhm().getPlanCharge();
-        try {
-            Tache t = new Tache(
-                    planChargeService.idTacheSuivant(planCharge),
-                    "(pas de ticket IDAL)",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0.0,
-                    null,
-                    null
-            );
-            planChargeService.ajouterLigne(planCharge, t);
 
-            Map<LocalDate, Double> ligne = planCharge.getPlanifications().planification(t);
-
-            PlanificationBean planifBean = new PlanificationBean(t, ligne);
-            planifications.add(planifBean);
-        } catch (TacheSansPlanificationException e) {
-            getApplicationIhm().erreur("Impossible d'ajouter la tâche.");
+        if (dateEtat == null) {
+            LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Impossible d'ajouter une tâche");
+            alert.setContentText("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
+            alert.showAndWait();
+            return;
         }
+
+        TacheBean t = new TacheBean(
+                idTacheSuivant(),
+                "(pas de ticket IDAL)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                0.0,
+                null,
+                null
+        );
+
+        List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);
+        LocalDate dateSemaine = dateEtat;
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            calendrier.add(new Pair(dateSemaine, new SimpleDoubleProperty(0.0)));
+            dateSemaine = dateSemaine.plusDays(7);
+        }
+
+        PlanificationBean planifBean = new PlanificationBean(t, calendrier);
+        planificationsBeans.add(planifBean);
     }
 
+    private int idTacheSuivant() {
+        OptionalInt max = planificationsBeans.stream().mapToInt(planifBean -> planifBean.getTacheBean().getId()).max();
+        return (!max.isPresent()) ? 1 : (max.getAsInt() + 1);
+    }
+
+    @FXML
+    private void definirDateEtat(ActionEvent event) {
+        LOGGER.debug("definirDateEtat...");
+
+        dateEtat = dateEtatPicker.getValue(); // FIXME FDA 2017/04 On écrase la référence vers l'instance créée par PlanChargeIhm !
+
+        getApplicationIhm().majTitre();
+    }
 }

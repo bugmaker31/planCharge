@@ -8,14 +8,20 @@
          http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:annotation-config/>
+    <context:component-scan base-package="fr.gouv.agriculture.dal.ct.planCharge.metier" />
+    <!--<context:property-override location="metier-conf.properties" />-->
+
+    <bean id="kernel" class="fr.gouv.agriculture.dal.ct.planCharge.Kernel" scope="singleton">
+        <property name="applicationVersion" value="${project.version}" />
+    </bean>
 
     <bean id="planChargeService" class="fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService"
           scope="singleton" />
 
     <bean id="planChargeDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao"
           scope="singleton">
-        <property name="repPersistanceDonnees" value="./donnees/" />
-        <property name="patronFicPersistanceDonnees" value="planCharge_{dateEtat}" />
+        <property name="repPersistance" value="./donnees/" />
+        <property name="patronFicPersistance" value="planCharge_{dateEtat}" />
     </bean>
 
 </beans>

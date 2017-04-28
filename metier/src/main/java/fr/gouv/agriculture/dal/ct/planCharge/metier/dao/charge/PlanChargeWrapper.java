@@ -1,62 +1,74 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.Kernel;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.time.LocalDate;
+import javax.xml.bind.annotation.*;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 22/04/2017.
  */
 // Cf. http://code.makery.c h/library/javafx-8-tutorial/fr/part5/
 @XmlRootElement(name = "planCharge")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PlanChargeWrapper {
 
-    private static final String VERSION = "1.0";
+    private static final String VERSION_FORMAT = "1.0";
 
-    private String version = VERSION;
+    @Autowired
+    private Kernel kernel;
 
-    private Date dateEtat;
-    private List<PlanificationWrapper> planifications;
+    @XmlAttribute(name = "versionFormat", required = true)
+    private String versionFormat = VERSION_FORMAT;
 
-    @XmlAttribute(name = "version", required = true)
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
+    @XmlAttribute(name = "versionAppli", required = true)
+    private String versionAppli = kernel.getApplicationVersion();
 
     @XmlElement(name = "dateEtat", required = true)
+    private Date dateEtat;
+    @XmlElement(name = "planifications", required = true)
+    private PlanificationsWrapper planifications;
+
+    public PlanChargeWrapper() {
+    }
+
+    public PlanChargeWrapper(PlanCharge planCharge) throws PlanChargeDaoException {
+        this.dateEtat = Date.from(planCharge.getDateEtat().atStartOfDay(ZoneId.of("GMT")).toInstant());// Cf. http://stackoverflow.com/questions/22929237/convert-java-time-localdate-into-java-util-date-type
+        this.planifications = new PlanificationsWrapper(planCharge.getPlanifications());
+    }
+
+    public String getVersionFormat() {
+        return versionFormat;
+    }
+
+    public void setVersionFormat(String versionFormat) {
+        this.versionFormat = versionFormat;
+    }
+
+    public String getVersionAppli() {
+        return versionAppli;
+    }
+
+    public void setVersionAppli(String versionAppli) {
+        this.versionAppli = versionAppli;
+    }
+
     public Date getDateEtat() {
         return dateEtat;
     }
 
-    public void setDateEtat(LocalDate dateEtat) {
-        // Cf. http://stackoverflow.com/questions/22929237/convert-java-time-localdate-into-java-util-date-type
-        this.dateEtat = Date.from(dateEtat.atStartOfDay(ZoneId.of("GMT")).toInstant());
+    public void setDateEtat(Date dateEtat) {
+        this.dateEtat = dateEtat;
     }
 
-    @XmlElement(name = "planifications", required = true)
-    public List<PlanificationWrapper> getPlanifications() {
+    public PlanificationsWrapper getPlanifications() {
         return planifications;
     }
 
-    public void setPlanifications(Planifications planifications) {
-        this.planifications = new ArrayList<>();
-        for (Tache tache : planifications.taches()) {
-            PlanificationWrapper planif = new PlanificationWrapper();
-            planif.setTache(tache);
-            this.planifications.add(planif);
-        }
+    public void setPlanifications(PlanificationsWrapper planifications) {
+        this.planifications = planifications;
     }
-
 }
