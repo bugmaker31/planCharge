@@ -1,35 +1,37 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
-import javafx.util.Pair;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by frederic.danna on 26/04/2017.
  */
 public class CalendrierWrapper {
 
-    private List<Pair<Date, Double>> tableau;
+    private Map<Date, Double> semaines;
 
     public CalendrierWrapper() {
         super();
     }
 
-    public CalendrierWrapper(Map<LocalDate, Double> tableau) {
-        this.tableau = new ArrayList<>(tableau.size());
-        // TODO FDA 2017/04 Coder.
+    public CalendrierWrapper(Map<LocalDate, Double> semaines) {
+        this.semaines = new HashMap<>(semaines.size());
+        semaines.keySet().stream().forEach(
+                date -> this.semaines.put(Dates.asDate(date), semaines.get(date))
+        );
     }
 
-    @XmlElement(name = "tableau", required = true)
-    public List<Pair<Date, Double>> getTableau() {
-        return tableau;
+    @XmlElement(name = "semaines", required = true)
+    public Map<Date, Double> getSemaine() {
+        return semaines;
     }
 
-    public void setTableau(List<Pair<Date, Double>> tableau) {
-        this.tableau = tableau;
+    public void setSemaine(Map<Date, Double> tableau) {
+        this.semaines = tableau;
     }
 }
