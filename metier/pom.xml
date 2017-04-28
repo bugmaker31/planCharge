@@ -18,55 +18,65 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <!--On "filtre" les ressources de type "properties",
+                notamment pour subsituer la variable maven "project.version" dans le fichier "metier-conf.properties :-->
                 <filtering>true</filtering>
                 <includes>
-                    <include>**/**</include>
+                    <include>*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--On ne filtre pas les ressources de type XML (+ propre) : -->
+                <filtering>false</filtering>
+                <includes>
+                    <include>*.xml</include>
                 </includes>
             </resource>
         </resources>
         <!--<plugins>-->
-            <!--
-                        &lt;!&ndash;Cf. https://wiki.openoffice.org/wiki/OpenOffice_Maven2_Integration&ndash;&gt;
-                        <plugin>
-                            <groupId>org.openoffice.dev</groupId>
-                            <artifactId>maven-ooo-plugin</artifactId>
-                            <version>1<version>
-                            <configuration>
-                                <idlDir>${project.basedir}/src/main/idl</idlDir>
-                                <ooo>${libreoffice.home}</ooo>
-                                <sdk>${libreoffice.sdk.home}</sdk>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <phase>generate-sources</phase>
-                                    <goals>
-                                        <goal>build-idl</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-            -->
-            <!--
-                        &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>build-helper-maven-plugin</artifactId>
-                            <version>1.9<version>
-                            <executions>
-                                <execution>
-                                    <phase>generate-sources</phase>
-                                    <goals>
-                                        <gajouter>add-source</goal>
-                                    </goals>
-                                    <configuration>
-                                        <sources>
-                                            <source>src/ext-jlop/java</source>
-                                        </sources>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-            -->
+        <!--
+                    &lt;!&ndash;Cf. https://wiki.openoffice.org/wiki/OpenOffice_Maven2_Integration&ndash;&gt;
+                    <plugin>
+                        <groupId>org.openoffice.dev</groupId>
+                        <artifactId>maven-ooo-plugin</artifactId>
+                        <version>1<version>
+                        <configuration>
+                            <idlDir>${project.basedir}/src/main/idl</idlDir>
+                            <ooo>${libreoffice.home}</ooo>
+                            <sdk>${libreoffice.sdk.home}</sdk>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>build-idl</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+        -->
+        <!--
+                    &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.9<version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <gajouter>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/ext-jlop/java</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+        -->
         <!--</plugins>-->
     </build>
 </project>

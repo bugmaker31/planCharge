@@ -9,10 +9,11 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="fr.gouv.agriculture.dal.ct.planCharge.metier" />
-    <!--<context:property-override location="metier-conf.properties" />-->
+    <context:property-override location="metier-conf.properties" />
 
-    <bean id="kernel" class="fr.gouv.agriculture.dal.ct.planCharge.Kernel" scope="singleton">
-        <property name="applicationVersion" value="${project.version}" />
+    <bean id="contexte" class="fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte" scope="singleton">
+        <!--Au lieu d'injecter la valeur de la variable Maven dans ce fichier, on l'injecte dans le fichier "metier-conf.properties" (+ propre) :-->
+        <!--<property name="applicationVersion" value="${project.version}" />-->
     </bean>
 
     <bean id="planChargeService" class="fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService"
@@ -23,5 +24,7 @@
         <property name="repPersistance" value="./donnees/" />
         <property name="patronFicPersistance" value="planCharge_{dateEtat}" />
     </bean>
+
+    <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeWrapper" />
 
 </beans>

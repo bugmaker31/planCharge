@@ -8,24 +8,20 @@
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane animated="false" text="Paramètres" expanded="true">
+                <TitledPane animated="false" expanded="true" text="Paramètres">
                     <content>
                         <GridPane>
                             <children>
                                 <Label text="Date d'état : "/>
-                                <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                                <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
+                                            GridPane.columnIndex="2"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                                <Button onAction="#positionnerDateEtatAuProchainLundi" text="Lundi prochain"
+                                        GridPane.columnIndex="3"/>
                             </children>
-                            <columnConstraints>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints/>
-                            </rowConstraints>
                         </GridPane>
                     </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Filtres" expanded="true">
+                <TitledPane animated="false" expanded="true" text="Filtres">
                     <content>
                         <AnchorPane>
                             <children>

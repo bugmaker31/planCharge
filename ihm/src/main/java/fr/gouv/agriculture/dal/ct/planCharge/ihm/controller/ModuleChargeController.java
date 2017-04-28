@@ -30,9 +30,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 /**
@@ -128,23 +130,15 @@ public class ModuleChargeController extends AbstractController {
     }
 
     // Les données métier :
-    @Null
-    private LocalDate dateEtat;
-
-    public void setDateEtat(LocalDate dateEtat) {
-        this.dateEtat = dateEtat;
-    }
-
-    @Null
     private ObservableList<PlanificationBean> planificationsBeans;
 
-    public void setPlanificationsBeans(ObservableList<PlanificationBean> planificationsBeans) {
-        this.planificationsBeans = planificationsBeans;
-    }
-
+    @NotNull
     private ObservableList<String> codesImportancesTaches = FXCollections.observableArrayList();
+    @NotNull
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
+    @NotNull
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
+    @NotNull
     private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
 
     /**
@@ -162,9 +156,14 @@ public class ModuleChargeController extends AbstractController {
      */
     @FXML
     private void initialize() {
+        // Rien... pour l'instant.
     }
 
     public void configurer() {
+
+        dateEtatPicker.setValue(getPlanChargeBean().getDateEtat());
+
+        planificationsBeans = getPlanChargeBean().getPlanificationsBeans();
 
         /*
         // Rendre le "divider" du SplitPane fixe (== "non draggable") :
@@ -592,7 +591,7 @@ public class ModuleChargeController extends AbstractController {
     private void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
 
-        if (dateEtat == null) {
+        if (getPlanChargeBean().getDateEtat() == null) {
             LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -616,7 +615,7 @@ public class ModuleChargeController extends AbstractController {
         );
 
         List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);
-        LocalDate dateSemaine = dateEtat;
+        LocalDate dateSemaine = getPlanChargeBean().getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calendrier.add(new Pair(dateSemaine, new SimpleDoubleProperty(0.0)));
             dateSemaine = dateSemaine.plusDays(7);
@@ -634,9 +633,22 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private void definirDateEtat(ActionEvent event) {
         LOGGER.debug("definirDateEtat...");
-
-        dateEtat = dateEtatPicker.getValue(); // FIXME FDA 2017/04 On écrase la référence vers l'instance créée par PlanChargeIhm !
-
-        getApplicationIhm().majTitre();
+        LocalDate dateEtat = dateEtatPicker.getValue();
+        getApplicationIhm().definirDateEtat(dateEtat);
     }
+
+    @FXML
+    private void positionnerDateEtatAuProchainLundi(ActionEvent event) {
+        LOGGER.debug("positionnerDateEtatAuProchainLundi...");
+
+        LocalDate dateEtat = LocalDate.now();
+        if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+            dateEtat = dateEtat.plusDays(7 - dateEtat.getDayOfWeek().getValue() + 1);
+        }
+
+        dateEtatPicker.setValue(dateEtat);
+
+        getApplicationIhm().definirDateEtat(dateEtat);
+    }
+
 }

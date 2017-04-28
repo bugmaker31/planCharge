@@ -1,6 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -8,11 +11,17 @@ import org.springframework.context.ApplicationContext;
  */
 public class PlanChargeApplication {
 
+    @Autowired
+    private PlanChargeBean planChargeBean;
     private PlanChargeIhm ihm;
     private ApplicationContext context;
 
-    public PlanChargeApplication() {
-        super();
+    public PlanChargeBean getPlanChargeBean() {
+        return planChargeBean;
+    }
+
+    public void setPlanChargeBean(PlanChargeBean planChargeBean) {
+        this.planChargeBean = planChargeBean;
     }
 
     public PlanChargeIhm getIhm() {
@@ -29,5 +38,9 @@ public class PlanChargeApplication {
 
     public void setContext(ApplicationContext context) {
         this.context = context;
+    }
+
+    public PlanChargeApplication() {
+        super();
     }
 }

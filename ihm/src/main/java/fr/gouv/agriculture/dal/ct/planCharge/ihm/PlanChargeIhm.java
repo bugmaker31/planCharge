@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
@@ -32,6 +33,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
@@ -72,11 +75,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     /*
      Les données métier :
       */
-
-    @Null
-    private LocalDate dateEtat;
-    @Null
-    private ObservableList<PlanificationBean> planificationsBeans = FXCollections.observableArrayList();
+    private PlanChargeBean planChargeBean;
 
     /*
      Les services métier :
@@ -94,14 +93,6 @@ public class PlanChargeIhm extends javafx.application.Application {
      */
     public PlanChargeIhm() {
         super();
-    }
-
-    public LocalDate getDateEtat() {
-        return dateEtat;
-    }
-
-    public ObservableList<PlanificationBean> getPlanificationsBeans() {
-        return planificationsBeans;
     }
 
     @Override
@@ -166,17 +157,14 @@ public class PlanChargeIhm extends javafx.application.Application {
 
         // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
         // par JavaFX, etc.). Donc on les "injecte" soi-même :
+        this.planChargeBean =  planChargeApp.getPlanChargeBean();
         applicationContoller.setApplication(planChargeApp);
         applicationContoller.setPlanChargeService(planChargeService);
-        applicationContoller.setDateEtat(dateEtat);
-        applicationContoller.setPlanificationsBeans(planificationsBeans);
         disponibiliteController.setApplication(planChargeApp);
         tacheController.setApplication(planChargeApp);
         tacheController.setPlanChargeService(planChargeService);
         chargeController.setApplication(planChargeApp);
         chargeController.setPlanChargeService(planChargeService);
-        chargeController.setDateEtat(dateEtat);
-        chargeController.setPlanificationsBeans(planificationsBeans);
     }
 
     private void configurerView() {
@@ -224,11 +212,11 @@ public class PlanChargeIhm extends javafx.application.Application {
         // Chargement des données utilisées dernièrement (if any) :
         LocalDate dateEtatPrec = dateEtatPrecedente();
         if (dateEtatPrec != null) {
-            dateEtat = dateEtatPrec;
-            planificationsBeans = chargeDonnees(dateEtatPrec);
+            planChargeBean.setDateEtat(dateEtatPrec);
+            planChargeBean.getPlanificationsBeans().setAll(chargeDonnees(dateEtatPrec));
         } else {
-            dateEtatPrec = null;
-            planificationsBeans = FXCollections.observableArrayList();
+            planChargeBean.setDateEtat(null);
+            planChargeBean.getPlanificationsBeans().clear();
         }
 
         // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
@@ -243,10 +231,13 @@ public class PlanChargeIhm extends javafx.application.Application {
         return null; //LocalDate.of(2016, 11, 13); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).;
     }
 
-    private ObservableList<PlanificationBean> chargeDonnees(LocalDate dateEtat) {
+    private List<PlanificationBean> chargeDonnees(LocalDate dateEtat) {
+        List<PlanificationBean> planificationsBeans = null;
         try {
+
             PlanCharge planCharge = planChargeService.charger(dateEtat);
-            planificationsBeans = FXCollections.observableArrayList();
+
+            planificationsBeans = new ArrayList<>(planCharge.getPlanifications().size());
             planificationsBeans.addAll(
                     planCharge.getPlanifications().taches()
                             .stream()
@@ -352,12 +343,17 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     public void majTitre() {
         String titre = APP_NAME;
-        if (dateEtat != null) {
-            titre += (" - " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        if (planChargeBean.getDateEtat() != null) {
+            titre += (" - " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         }
         if (moduleCourant != null) {
             titre += (" - " + moduleCourant);
         }
         primaryStage.setTitle(titre);
+    }
+
+    public void definirDateEtat(LocalDate dateEtat) {
+        planChargeBean.setDateEtat(dateEtat);
+        majTitre();
     }
 }

@@ -8,8 +8,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.DoubleProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -29,21 +26,6 @@ import java.util.Map;
 public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
-
-    // Les données métier :
-    @Null
-    private LocalDate dateEtat;
-
-    public void setDateEtat(LocalDate dateEtat) {
-        this.dateEtat = dateEtat;
-    }
-
-    @Null
-    private ObservableList<PlanificationBean> planificationsBeans;
-
-    public void setPlanificationsBeans(ObservableList<PlanificationBean> planificationsBeans) {
-        this.planificationsBeans = planificationsBeans;
-    }
 
     // Les services métier :
     @NotNull
@@ -68,7 +50,7 @@ public class ApplicationController extends AbstractController {
     private void sauver(ActionEvent event) throws Exception {
         LOGGER.debug("Fichier > Sauver");
 
-        if (getApplicationIhm().getDateEtat() == null || getApplicationIhm().getPlanificationsBeans() == null) {
+        if (getApplication().getPlanChargeBean().getDateEtat() == null || getApplication().getPlanChargeBean().getPlanificationsBeans() == null) {
             LOGGER.warn("Impossible de sauver un plan de charge non défini.");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -79,7 +61,7 @@ public class ApplicationController extends AbstractController {
         }
 
         Planifications planifications = new Planifications();
-        getApplicationIhm().getPlanificationsBeans().stream().forEach(
+        getApplication().getPlanChargeBean().getPlanificationsBeans().stream().forEach(
                 planificationBean -> {
                     List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
                     Map<LocalDate, Double> calendrier = new HashMap<>();
@@ -87,9 +69,15 @@ public class ApplicationController extends AbstractController {
                     planifications.ajouter(planificationBean.getTacheBean().getTache(), calendrier);
                 }
         );
-        PlanCharge planCharge = new PlanCharge(getApplicationIhm().getDateEtat(), planifications);
+        PlanCharge planCharge = new PlanCharge(
+                getApplication().getPlanChargeBean().getDateEtat(),
+                planifications
+        );
+
         try {
+
             planChargeService.sauver(planCharge);
+
         } catch (ServiceException e) {
             LOGGER.error("Impossible de sauver les données.", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -105,11 +93,13 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("Fichier > Charger");
         LocalDate dateEtat = LocalDate.of(2017, 1, 1); // TODO FDA 2017/04 Débouchonner : lister les sauvegardes/fichiers/dates d'état existantes et permettre à l'utilisateur d'en choisir 1.
         try {
+
             PlanCharge planCharge = planChargeService.charger(dateEtat);
-            this.dateEtat = planCharge.getDateEtat();
-            this.planificationsBeans = FXCollections.observableArrayList();
+
+            getPlanChargeBean().setDateEtat(planCharge.getDateEtat());
+            getPlanChargeBean().getPlanificationsBeans().clear();
             planCharge.getPlanifications().entrySet().stream().forEach(
-                    planif -> this.planificationsBeans.add(new PlanificationBean(planif.getKey(), planif.getValue()))
+                    planif -> getPlanChargeBean().getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
             );
         } catch (ServiceException e) {
             LOGGER.error("Impossible de load les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
