@@ -1,35 +1,35 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
+import javafx.util.Pair;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 26/04/2017.
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class CalendrierWrapper {
 
-//    @XmlElement(name="calendrier", required = true)
-    private SortedMap<Date, Double> tableau;
+    private List<Pair<Date, Double>> tableau;
 
     public CalendrierWrapper() {
+        super();
     }
 
     public CalendrierWrapper(Map<LocalDate, Double> tableau) {
-        this.tableau = new TreeMap<>(/*calendrier.size()*/);
+        this.tableau = new ArrayList<>(tableau.size());
         // TODO FDA 2017/04 Coder.
     }
 
-    public SortedMap<Date, Double> getTableau() {
+    @XmlElement(name = "tableau", required = true)
+    public List<Pair<Date, Double>> getTableau() {
         return tableau;
     }
 
-    public void setTableau(SortedMap<Date, Double> tableau) {
+    public void setTableau(List<Pair<Date, Double>> tableau) {
         this.tableau = tableau;
     }
 }

@@ -36,7 +36,7 @@
         <!--Dépendance vers le métier de cette application :-->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>${project.parent.artifactId}-metier</artifactId>
+            <artifactId>planCharge-metier</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -11,15 +11,14 @@ import java.util.Map;
 /**
  * Created by frederic.danna on 26/04/2017.
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PlanificationWrapper {
 
-    @XmlElement(name = "tache", required = true)
     private TacheWrapper tache;
-    @XmlElement(name = "calendrier", required = true)
+
     private CalendrierWrapper calendrier;
 
     public PlanificationWrapper() {
+        super();
     }
 
     public PlanificationWrapper(Tache tache, Map<LocalDate, Double> calendrier) {
@@ -27,6 +26,7 @@ public class PlanificationWrapper {
         this.calendrier = new CalendrierWrapper(calendrier);
     }
 
+    @XmlElement(name = "tache", required = true)
     public TacheWrapper getTache() {
         return tache;
     }
@@ -35,6 +35,7 @@ public class PlanificationWrapper {
         this.tache = tache;
     }
 
+    @XmlElement(name = "calendrier", required = true)
     public CalendrierWrapper getCalendrier() {
         return calendrier;
     }

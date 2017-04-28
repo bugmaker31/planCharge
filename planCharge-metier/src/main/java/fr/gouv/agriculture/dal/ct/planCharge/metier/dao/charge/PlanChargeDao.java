@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.JAXBContext;
@@ -32,6 +33,10 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     @NotNull
     private String patronFicPersistanceDonnees;
+
+    @NotNull
+    @Autowired
+    private PlanChargeWrapper wrapper;
 
     /*
     @NotNull
@@ -100,7 +105,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
-            PlanChargeWrapper wrapper = (PlanChargeWrapper) um.unmarshal(file);
+            wrapper = (PlanChargeWrapper) um.unmarshal(file);
 
             return new Planifications(); // TODO FDA 2017/04 Coder : exploiter le wrapper.
 
@@ -140,7 +145,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our data.
-            PlanChargeWrapper wrapper = new PlanChargeWrapper(planCharge);
+            wrapper.init(planCharge);
 
             // Marshalling and saving XML to the file.
             m.marshal(wrapper, file);

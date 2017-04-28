@@ -2,10 +2,11 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
-import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -17,27 +18,23 @@ public class PlanChargeWrapper {
 
     private static final String VERSION_FORMAT = "1.0";
 
+    @NotNull
     @Autowired
     private Contexte contexte;
 
-    @XmlAttribute(name = "versionFormat", required = true)
     private String versionFormat = VERSION_FORMAT;
 
-    @XmlElement(name = "dateEtat", required = true)
+    private String versionApplication;
+
     private Date dateEtat;
-    @XmlElement(name = "planifications", required = true)
+
     private PlanificationsWrapper planifications;
 
     public PlanChargeWrapper() {
-//        versionAppli = contexte.getApplicationVersion();
+        super();
     }
 
-    public PlanChargeWrapper(PlanCharge planCharge) throws PlanChargeDaoException {
-        this();
-        this.dateEtat = Date.from(planCharge.getDateEtat().atStartOfDay(ZoneId.of("GMT")).toInstant());// Cf. http://stackoverflow.com/questions/22929237/convert-java-time-localdate-into-java-util-date-type
-        this.planifications = new PlanificationsWrapper(planCharge.getPlanifications());
-    }
-
+    @XmlAttribute(name = "versionFormat", required = true)
     public String getVersionFormat() {
         return versionFormat;
     }
@@ -46,12 +43,16 @@ public class PlanChargeWrapper {
         this.versionFormat = versionFormat;
     }
 
-    @XmlAttribute(name = "versionAppli", required = true)
-    public String getVersionAppli() {
-//        return versionAppli;
-        return contexte.getApplicationVersion();
+    @XmlAttribute(name = "versionApplication", required = true)
+    public String getVersionApplication() {
+        return versionApplication;
     }
 
+    public void setVersionApplication(String versionApplication) {
+        this.versionApplication = versionApplication;
+    }
+
+    @XmlElement(name = "dateEtat", required = true)
     public Date getDateEtat() {
         return dateEtat;
     }
@@ -60,11 +61,19 @@ public class PlanChargeWrapper {
         this.dateEtat = dateEtat;
     }
 
+    @XmlElement(name = "planifications", required = true)
     public PlanificationsWrapper getPlanifications() {
         return planifications;
     }
 
     public void setPlanifications(PlanificationsWrapper planifications) {
         this.planifications = planifications;
+    }
+
+    public void init(PlanCharge planCharge) throws PlanChargeDaoException {
+        versionApplication = contexte.getApplicationVersion();
+
+        this.dateEtat = Dates.asDate(planCharge.getDateEtat());
+        this.planifications = new PlanificationsWrapper(planCharge.getPlanifications());
     }
 }

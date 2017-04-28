@@ -4,8 +4,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +11,12 @@ import java.util.List;
 /**
  * Created by frederic.danna on 26/04/2017.
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PlanificationsWrapper {
 
-    @XmlElement(name = "calendrier", required = true)
     private List<PlanificationWrapper> planifications;
 
     public PlanificationsWrapper() {
+        super();
     }
 
     public PlanificationsWrapper(Planifications planifications) throws PlanChargeDaoException {
@@ -34,6 +31,7 @@ public class PlanificationsWrapper {
         }
     }
 
+    @XmlElement(name = "planification", required = true)
     public List<PlanificationWrapper> getPlanifications() {
         return planifications;
     }

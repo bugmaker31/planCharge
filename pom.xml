@@ -10,8 +10,9 @@
     <version>1.0-m1-SNAPSHOT</version>
 
     <modules>
-        <module>metier</module>
-        <module>ihm</module>
+        <module>planCharge-util</module>
+        <module>planCharge-metier</module>
+        <module>planCharge-ihm</module>
     </modules>
 
     <properties>

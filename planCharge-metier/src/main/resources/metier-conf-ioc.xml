@@ -25,6 +25,6 @@
         <property name="patronFicPersistance" value="planCharge_{dateEtat}" />
     </bean>
 
-    <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeWrapper" />
+    <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeWrapper" scope="singleton" />
 
 </beans>
