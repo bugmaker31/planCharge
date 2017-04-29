@@ -45,10 +45,10 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
-    private static ApplicationContext context;
+    private static ApplicationContext contexte;
 
-    public static ApplicationContext getContext() {
-        return context;
+    public static ApplicationContext getContexte() {
+        return contexte;
     }
 
     @NotNull
@@ -88,6 +88,23 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private PlanChargeBean planChargeBean;
 
+
+    public ApplicationController getApplicationContoller() {
+        return applicationContoller;
+    }
+
+    public ModuleDisponibilitesController getDisponibiliteController() {
+        return disponibiliteController;
+    }
+
+    public ModuleTacheController getTacheController() {
+        return tacheController;
+    }
+
+    public ModuleChargeController getChargeController() {
+        return chargeController;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -118,18 +135,18 @@ public class PlanChargeIhm extends javafx.application.Application {
     private void injecter() {
 
         // On utilise Spring IOC pour l'injection, principalement :
-        context = new ClassPathXmlApplicationContext("ihm-conf-ioc.xml");
+        contexte = new ClassPathXmlApplicationContext("ihm-conf-ioc.xml");
 
         // Les beans Spring (métier) utilisés dans les classes JavaFX (IHM) ne peuvent être injectés par Spring,
         // car les classes JavaFX ne sont pas instanciées par Spring.
         // Il faut donc les injecter soi-même :
-        planChargeService = context.getBean(PlanChargeService.class);
-        ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) context).getBeanFactory();
+        planChargeService = contexte.getBean(PlanChargeService.class);
+        ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) contexte).getBeanFactory();
         beanFactory.registerSingleton(this.getClass().getCanonicalName(), this);
 
         // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
         // par JavaFX, etc.). Donc on les "injecte" soi-même :
-        planChargeBean = context.getBean(PlanChargeBean.class);
+        planChargeBean = contexte.getBean(PlanChargeBean.class);
     }
 
     private void initialiserView() throws IOException {

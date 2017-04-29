@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
@@ -20,10 +22,10 @@ public class ImportanceComparator implements Comparator<String> {
     @Override
     public int compare(@NotNull String codeImportance1, @NotNull String codeImportance2) throws IhmException {
         try {
-            /*@NotNull*/ Importance i1 = importanceDao.loadByCode(codeImportance1);
-            /*@NotNull*/ Importance i2 = importanceDao.loadByCode(codeImportance2);
+            /*@NotNull*/ Importance i1 = importanceDao.load(codeImportance1);
+            /*@NotNull*/ Importance i2 = importanceDao.load(codeImportance2);
             return i1.compareTo(i2);
-        } catch (ImportanceDaoException e) {
+        } catch (DaoException e) {
             throw new IhmException("Impossible de trier les importances.", e);
         }
     }

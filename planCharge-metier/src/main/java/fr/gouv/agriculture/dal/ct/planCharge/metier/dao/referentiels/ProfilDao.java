@@ -15,7 +15,7 @@ public class ProfilDao extends AbstractDao<Profil, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfilDao.class);
 
-    private static final Map<String, Profil> CACHE = new HashMap();
+    private static final Map<String, Profil> CACHE = new HashMap<>();
 
     @Override
     protected Map<String, Profil> getCache() {

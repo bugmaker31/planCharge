@@ -5,8 +5,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -32,10 +35,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -134,17 +139,17 @@ public class ModuleChargeController extends AbstractController {
     // L'IHM :
     @NotNull
     @Autowired
-    private PlanChargeIhm ihm = PlanChargeIhm.getContext().getBean(PlanChargeIhm.class);
+    private PlanChargeIhm ihm = PlanChargeIhm.getContexte().getBean(PlanChargeIhm.class);
 
     // Les services métier :
     @NotNull
     @Autowired
-    private PlanChargeService planChargeService = PlanChargeIhm.getContext().getBean(PlanChargeService.class);
+    private PlanChargeService planChargeService = PlanChargeIhm.getContexte().getBean(PlanChargeService.class);
 
     // Les données métier :
     @NotNull
     @Autowired
-    private PlanChargeBean planChargeBean = PlanChargeIhm.getContext().getBean(PlanChargeBean.class);
+    private PlanChargeBean planChargeBean = PlanChargeIhm.getContexte().getBean(PlanChargeBean.class);
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
@@ -157,7 +162,6 @@ public class ModuleChargeController extends AbstractController {
         super();
     }
 
-
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -166,8 +170,6 @@ public class ModuleChargeController extends AbstractController {
     private void initialize() {
 
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
-
-        planificationsBeans = planChargeBean.getPlanificationsBeans();
 
         /*
         // Rendre le "divider" du SplitPane fixe (== "non draggable") :
@@ -310,6 +312,7 @@ public class ModuleChargeController extends AbstractController {
 */
 
         planificationsBeans.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
+
             codesImportancesTaches.clear();
             codesImportancesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
             codesImportancesTaches.sort(String::compareTo);
@@ -325,12 +328,14 @@ public class ModuleChargeController extends AbstractController {
             codesProfilsTaches.clear();
             codesProfilsTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProfil()).collect(Collectors.toSet()));
             codesProfilsTaches.sort(String::compareTo);
+
+            populerFiltreProjetsApplis();
+            populerFiltreImportances();
+            populerFiltreRessources();
+            populerFiltreProfils();
+
         });
 
-        populerFiltreProjetsApplis();
-        populerFiltreImportances();
-        populerFiltreRessources();
-        populerFiltreProfils();
         definirNomsColonnesSemaine();
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
@@ -655,4 +660,29 @@ public class ModuleChargeController extends AbstractController {
         ihm.definirDateEtat(dateEtat);
     }
 
+    public void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+        PlanCharge planCharge;
+        try {
+            planCharge = planChargeService.importerDepuisCalc(ficCalc);
+        } catch (ServiceException e) {
+            throw new ControllerException("Impossible d'importer le plan de charghe depsui le ficheir '" + ficCalc.getAbsolutePath() + "'.", e);
+        }
+
+        planChargeBean.setDateEtat(planCharge.getDateEtat());
+
+        planChargeBean.getPlanificationsBeans().clear();
+        planChargeBean.getPlanificationsBeans().addAll(
+                planCharge.getPlanifications().taches().stream()
+                        .map(tache -> {
+                            try {
+                                Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
+                                return new PlanificationBean(tache, calendrier);
+                            } catch (TacheSansPlanificationException e) {
+                                throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
+                            }
+                        })
+                        .collect(Collectors.toList())
+        );
+
+    }
 }

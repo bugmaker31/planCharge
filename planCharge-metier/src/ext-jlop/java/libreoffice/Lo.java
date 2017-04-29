@@ -1,4 +1,5 @@
 package libreoffice;
+
 // Lo.java
 // Andrew Davison, ad@fivedots.coe.psu.ac.th, February 2015
 
@@ -42,8 +43,6 @@ import com.sun.star.comp.helper.BootstrapException;
 import com.sun.star.connection.XConnection;
 import com.sun.star.connection.XConnector;
 import com.sun.star.container.XChild;
-import com.sun.star.container.XIndexAccess;
-import com.sun.star.container.XNamed;
 import com.sun.star.document.MacroExecMode;
 import com.sun.star.frame.*;
 import com.sun.star.io.IOException;
@@ -58,13 +57,16 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.util.CloseVetoException;
 import com.sun.star.util.XCloseable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class Lo {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Lo.class);
+
     // docType ints
     public static final int UNKNOWN = 0;
     public static final int WRITER = 1;
@@ -176,7 +178,7 @@ public class Lo {
      uses 'old' XMultiServiceFactory, so a document must have already been loaded/created
   */ {
         if (msFactory == null) {
-            System.out.println("No document found");
+            LOGGER.debug("No document found");
             return null;
         }
 
@@ -187,7 +189,7 @@ public class Lo {
             // uses bridge to obtain proxy to remote interface inside service;
             // implements casting across process boundaries
         } catch (Exception e) {
-            System.out.println("Couldn't create interface for \"" + serviceName + "\": " + e);
+            LOGGER.debug("Couldn't create interface for \"" + serviceName + "\": " + e);
         }
         return interfaceObj;
     }  // end of createInstanceMSF()
@@ -199,7 +201,7 @@ public class Lo {
      uses 'old' XMultiServiceFactory, so a document must have been already loaded/created
   */ {
         if (msf == null) {
-            System.out.println("No document found");
+            LOGGER.debug("No document found");
             return null;
         }
 
@@ -210,7 +212,7 @@ public class Lo {
             // uses bridge to obtain proxy to remote interface inside service;
             // implements casting across process boundaries
         } catch (Exception e) {
-            System.out.println("Couldn't create interface for \"" + serviceName + "\":\n  " + e);
+            LOGGER.debug("Couldn't create interface for \"" + serviceName + "\":\n  " + e);
         }
         return interfaceObj;
     }  // end of createInstanceMSF()
@@ -222,7 +224,7 @@ public class Lo {
      so only a bridge to office is needed
   */ {
         if ((xcc == null) || (mcFactory == null)) {
-            System.out.println("No office connection found");
+            LOGGER.debug("No office connection found");
             return null;
         }
 
@@ -234,7 +236,7 @@ public class Lo {
             // uses bridge to obtain proxy to remote interface inside service;
             // implements casting across process boundaries
         } catch (Exception e) {
-            System.out.println("Couldn't create interface for \"" + serviceName + "\": " + e);
+            LOGGER.debug("Couldn't create interface for \"" + serviceName + "\": " + e);
         }
         return interfaceObj;
     }  // end of createInstanceMCF()
@@ -246,7 +248,7 @@ public class Lo {
      so only a bridge to office is needed
   */ {
         if ((xcc == null) || (mcFactory == null)) {
-            System.out.println("No office connection found");
+            LOGGER.debug("No office connection found");
             return null;
         }
 
@@ -258,7 +260,7 @@ public class Lo {
             // uses bridge to obtain proxy to remote interface inside service;
             // implements casting across process boundaries
         } catch (Exception e) {
-            System.out.println("Couldn't create interface for \"" + serviceName + "\": " + e);
+            LOGGER.debug("Couldn't create interface for \"" + serviceName + "\": " + e);
         }
         return interfaceObj;
     }  // end of createInstanceMCF()
@@ -275,12 +277,12 @@ public class Lo {
     // ======================== start office ==============
 
 
-    public static XComponentLoader loadOffice() {
+    public static XComponentLoader loadOffice() throws LOException {
         return loadOffice(true);
     }    // default is to using office via pipes
 
 
-    public static XComponentLoader loadSocketOffice() {
+    public static XComponentLoader loadSocketOffice() throws LOException {
         return loadOffice(false);
     }
 
@@ -292,29 +294,26 @@ public class Lo {
                         component loader (XComponentLoader)
     Once we have a component loader, we can load a document. 
     xcc, mcFactory, and xDesktop are stored as static globals.
-  */ {
-        System.out.println("Loading Office...");
+  */ throws LOException {
+        LOGGER.debug("Loading Office...");
         if (usingPipes)
             xcc = bootstrapContext(); // connects to office via pipes
         else
             xcc = socketContext();    // connects to office via a socket
         if (xcc == null) {
-            System.out.println("Office context could not be created");
-            System.exit(1);
+            throw new LOException("Office context could not be created");
         }
 
         // get the remote office service manager
         mcFactory = xcc.getServiceManager();
         if (mcFactory == null) {
-            System.out.println("Office Service Manager is unavailable");
-            System.exit(1);
+            throw new LOException("Office Service Manager is unavailable");
         }
 
         // desktop service handles application windows and documents
         xDesktop = createInstanceMCF(XDesktop.class, "com.sun.star.frame.Desktop");
         if (xDesktop == null) {
-            System.out.println("Could not create a desktop service");
-            System.exit(1);
+            throw new LOException("Could not create a desktop service");
         }
 
         // XComponentLoader provides ability to load components
@@ -322,7 +321,7 @@ public class Lo {
     }  // end of loadOffice()
 
 
-    private static XComponentContext bootstrapContext()
+    private static XComponentContext bootstrapContext() throws LOException
     // connect pipes to office using the Bootstrap class
     // i.e. see code at http://svn.apache.org/repos/asf/openoffice/symphony/trunk/main/
     //                    javaunohelper/com/sun/star/comp/helper/Bootstrap.java
@@ -332,13 +331,13 @@ public class Lo {
             xcc = Bootstrap.bootstrap();  //  get remote office component context
             // Connect to office, if office is not running then it's started
         } catch (BootstrapException e) {
-            System.out.println("Unable to bootstrap Office");
+            throw new LOException("Unable to bootstrap Office");
         }
         return xcc;
     }  // end of bootstrapContext()
 
 
-    private static XComponentContext socketContext()
+    private static XComponentContext socketContext() throws LOException
     // use socket connection to Office
     // https://forum.openoffice.org/en/forum/viewtopic.php?f=44&t=1014
     {
@@ -351,10 +350,11 @@ public class Lo {
             cmdArray[2] = "-accept=socket,host=localhost,port=" +
                     SOCKET_PORT + ";urp;";
             Process p = Runtime.getRuntime().exec(cmdArray);
+/*
             if (p != null)
-                System.out.println("Office process created");
-            delay(5000);
-            // Wait 5 seconds, until office is in listening mode
+                LOGGER.debug("Office process created");
+*/
+            delay(5000); // Wait 5 seconds, until office is in listening mode
 
             // Create a local Component Context
             XComponentContext localContext =
@@ -401,7 +401,7 @@ public class Lo {
             // get the remote interface XComponentContext
             xcc = Lo.qi(XComponentContext.class, defaultContext);
         } catch (java.lang.Exception e) {
-            System.out.println("Unable to socket connect to Office");
+            throw new LOException("Unable to socket connect to Office");
         }
 
         return xcc;
@@ -411,18 +411,16 @@ public class Lo {
     // ================== office shutdown =========================
 
 
-    public static void closeOffice()
+    public static void closeOffice() throws LOException
     // tell office to terminate
     {
-        System.out.println("Closing Office");
+        LOGGER.debug("Closing Office");
         if (xDesktop == null) {
-            System.out.println("No office connection found");
-            return;
+            throw new LOException("No office connection found");
         }
 
         if (isOfficeTerminated) {
-            System.out.println("Office has already been requested to terminate");
-            return;
+            throw new LOException("Office has already been requested to terminate");
         }
 
         int numTries = 1;
@@ -434,36 +432,39 @@ public class Lo {
     }  // end of closeOffice()
 
 
-    public static boolean tryToTerminate(int numTries) {
+    public static boolean tryToTerminate(int numTries) throws LOException {
         try {
             boolean isDead = xDesktop.terminate();
             if (isDead) {
+/*
                 if (numTries > 1)
-                    System.out.println(numTries + ". Office terminated");
+                    LOGGER.debug(numTries + ". Office terminated");
                 else
-                    System.out.println("Office terminated");
-            } else
-                System.out.println(numTries + ". Office failed to terminate");
+                    LOGGER.debug("Office terminated");
+*/
+/*
+            } else {
+                LOGGER.debug(numTries + ". Office failed to terminate");
+*/
+            }
             return isDead;
         } catch (com.sun.star.lang.DisposedException e) {
-            System.out.println("Office link disposed");
-            return true;
+            throw new LOException("Office link disposed", e);
         } catch (java.lang.Exception e) {
-            System.out.println("Termination exception: " + e);
-            return false;
+            throw new LOException("Termination exception: " + e, e);
         }
     }  // end of tryToTerminate()
 
 
-    public static void killOffice()
+    public static void killOffice() throws LOException
     // kill office processes using a batch file
     // or use JNAUtils.killOffice()
     {
         try {
             Runtime.getRuntime().exec("cmd /c lokill.bat");
-            System.out.println("Killed Office");
+            LOGGER.debug("Killed Office");
         } catch (java.lang.Exception e) {
-            System.out.println("Unable to kill Office: " + e);
+            throw new LOException("Unable to kill Office: " + e, e);
         }
     }  // end of killOffice()
 
@@ -472,42 +473,41 @@ public class Lo {
 
 
     public static XComponent openFlatDoc(String fnm, String docType,
-                                         XComponentLoader loader) {
+                                         XComponentLoader loader) throws LOException {
         String nm = XML.getFlatFilterName(docType);
-        System.out.println("Flat filter Name: " + nm);
+        LOGGER.debug("Flat filter Name: " + nm);
         return openDoc(fnm, loader, Props.makeProps("FilterName", nm));
     }
 
 
-    public static XComponent openDoc(String fnm, XComponentLoader loader) {
+    public static XComponent openDoc(String fnm, XComponentLoader loader) throws LOException {
         return openDoc(fnm, loader, Props.makeProps("Hidden", true));
     }
 
 
-    public static XComponent openReadOnlyDoc(String fnm, XComponentLoader loader) {
+    public static XComponent openReadOnlyDoc(String fnm, XComponentLoader loader) throws LOException {
         return openDoc(fnm, loader, Props.makeProps("Hidden", true, "ReadOnly", true));
     }
 
 
     public static XComponent openDoc(String fnm, XComponentLoader loader,
-                                     PropertyValue[] props)
+                                     PropertyValue[] props) throws LOException
     // open the specified document
     // the possibly props for a document are listed in the MediaDescriptor service
     {
         if (fnm == null) {
-            System.out.println("Filename is null");
-            return null;
+            throw new LOException("Filename is null");
         }
 
         String openFileURL = null;
         if (!FileIO.isOpenable(fnm)) {
             if (isURL(fnm)) {
-                System.out.println("Will treat filename as a URL: \"" + fnm + "\"");
+                LOGGER.debug("Will treat filename as a URL: \"" + fnm + "\"");
                 openFileURL = fnm;
             } else
                 return null;
         } else {
-            System.out.println("Opening " + fnm);
+            LOGGER.debug("Opening " + fnm);
             openFileURL = FileIO.fnmToURL(fnm);
             if (openFileURL == null)
                 return null;
@@ -519,7 +519,7 @@ public class Lo {
             doc = loader.loadComponentFromURL(openFileURL, "_blank", 0, props);
             msFactory = Lo.qi(XMultiServiceFactory.class, doc);
         } catch (Exception e) {
-            System.out.println("Unable to open the document");
+            throw new LOException("Unable to open the document", e);
         }
         return doc;
     }  // end of openDoc()
@@ -556,7 +556,7 @@ public class Lo {
             case "odf":
                 return MATH_STR;
             default:
-                System.out.println("Do not recognize extension \"" + ext + "\"; using writer");
+                LOGGER.debug("Do not recognize extension \"" + ext + "\"; using writer");
                 return WRITER_STR;    // could use UNKNOWN_STR
         }
     }  // end of ext2DocType()
@@ -600,18 +600,18 @@ public class Lo {
             case MATH:
                 return MATH_STR;
             default:
-                System.out.println("Do not recognize extension \"" + docTypeVal + "\"; using writer");
+                LOGGER.debug("Do not recognize extension \"" + docTypeVal + "\"; using writer");
                 return WRITER_STR;    // could use UNKNOWN_STR
         }
     }  // end of docTypeStr()
 
 
-    public static XComponent createDoc(String docType, XComponentLoader loader) {
+    public static XComponent createDoc(String docType, XComponentLoader loader) throws LOException {
         return createDoc(docType, loader, Props.makeProps("Hidden", true));
     }
 
 
-    public static XComponent createMacroDoc(String docType, XComponentLoader loader) {
+    public static XComponent createMacroDoc(String docType, XComponentLoader loader) throws LOException {
         return createDoc(docType, loader, Props.makeProps("Hidden", false,
                 //"MacroExecutionMode", MacroExecMode.ALWAYS_EXECUTE) );  }
                 "MacroExecutionMode", MacroExecMode.ALWAYS_EXECUTE_NO_WARN));
@@ -619,10 +619,10 @@ public class Lo {
 
 
     public static XComponent createDoc(String docType, XComponentLoader loader,
-                                       PropertyValue[] props)
+                                       PropertyValue[] props) throws LOException
     // create a new document of the specified type
     {
-        System.out.println("Creating Office document " + docType);
+        LOGGER.debug("Creating Office document " + docType);
         // PropertyValue[] props = Props.makeProps("Hidden", true);
         // if Hidden == true, office will not terminate properly
         XComponent doc = null;
@@ -630,19 +630,19 @@ public class Lo {
             doc = loader.loadComponentFromURL("private:factory/" + docType, "_blank", 0, props);
             msFactory = Lo.qi(XMultiServiceFactory.class, doc);
         } catch (Exception e) {
-            System.out.println("Could not create a document");
+            throw new LOException("Could not create a document", e);
         }
         return doc;
     }  // end of createDoc()
 
 
     public static XComponent createDocFromTemplate(String templatePath,
-                                                   XComponentLoader loader)
+                                                   XComponentLoader loader) throws LOException
     // create a new document using the specified template
     {
         if (!FileIO.isOpenable(templatePath))
             return null;
-        System.out.println("Opening template " + templatePath);
+        LOGGER.debug("Opening template " + templatePath);
         String templateURL = FileIO.fnmToURL(templatePath);
         if (templateURL == null)
             return null;
@@ -653,7 +653,7 @@ public class Lo {
             doc = loader.loadComponentFromURL(templateURL, "_blank", 0, props);
             msFactory = Lo.qi(XMultiServiceFactory.class, doc);
         } catch (Exception e) {
-            System.out.println("Could not create document from template: " + e);
+            throw new LOException("Could not create document from template: " + e, e);
         }
         return doc;
     }  // end of createDocFromTemplate()
@@ -662,20 +662,20 @@ public class Lo {
     // ======================== document saving ==============
 
 
-    public static void save(Object odoc)
+    public static void save(Object odoc) throws LOException
     // was XComponent
     {
         XStorable store = Lo.qi(XStorable.class, odoc);
         try {
             store.store();
-            System.out.println("Saved the document by overwriting");
+            LOGGER.debug("Saved the document by overwriting");
         } catch (IOException e) {
-            System.out.println("Could not save the document");
+            throw new LOException("Could not save the document", e);
         }
     }  // end of save()
 
 
-    public static void saveDoc(Object odoc, String fnm)
+    public static void saveDoc(Object odoc, String fnm) throws LOException
     // was XComponent
     {
         XStorable store = Lo.qi(XStorable.class, odoc);
@@ -685,7 +685,7 @@ public class Lo {
     }
 
 
-    public static void saveDoc(Object odoc, String fnm, String password)
+    public static void saveDoc(Object odoc, String fnm, String password) throws LOException
     // was XComponent
     {
         XStorable store = Lo.qi(XStorable.class, odoc);
@@ -695,7 +695,7 @@ public class Lo {
     }
 
 
-    public static void saveDoc(Object odoc, String fnm, String format, String password)
+    public static void saveDoc(Object odoc, String fnm, String format, String password) throws LOException
     // was XComponent
     {
         XStorable store = Lo.qi(XStorable.class, odoc);
@@ -707,15 +707,16 @@ public class Lo {
     //{  saveDoc(store, docType, fnm, null);  }     // no password
 
 
-    public static void storeDoc(XStorable store, int docType, String fnm, String password)
+    public static void storeDoc(XStorable store, int docType, String fnm, String password) throws LOException
     // Save the document using the file's extension as a guide.
     {
         String ext = Info.getExt(fnm);
         String format = "Text";
-        if (ext == null)
-            System.out.println("Assuming a text format");
-        else
+        if (ext == null) {
+            LOGGER.debug("Assuming a text format");
+        } else {
             format = ext2Format(docType, ext);
+        }
         storeDocFormat(store, fnm, format, password);
     }  // end of storeDoc()
 
@@ -845,17 +846,17 @@ public class Lo {
 
 
             default:   // assume user means text
-                System.out.println("Do not recognize extension \"" + ext + "\"; using text");
+                LOGGER.debug("Do not recognize extension \"" + ext + "\"; using text");
                 return "Text";
         }
     }  // end of ext2Format()
 
 
-    public static void storeDocFormat(XStorable store, String fnm, String format, String password)
+    public static void storeDocFormat(XStorable store, String fnm, String format, String password) throws LOException
     // save the document in the specified file using the supplied office format
     {
-        System.out.println("Saving the document in " + fnm);
-        System.out.println("Using format: " + format);
+        LOGGER.debug("Saving the document in " + fnm);
+        LOGGER.debug("Using format: " + format);
         try {
             String saveFileURL = FileIO.fnmToURL(fnm);
             if (saveFileURL == null)
@@ -871,7 +872,7 @@ public class Lo {
             }
             store.storeToURL(saveFileURL, storeProps);
         } catch (IOException e) {
-            System.out.println("Could not save " + fnm + ": " + e);
+            throw new LOException("Could not save " + fnm + ": " + e, e);
         }
     } // end of storeDocFormat()
 
@@ -879,27 +880,27 @@ public class Lo {
     // ======================== document closing ==============
 
 
-    public static void closeDoc(Object doc)
+    public static void closeDoc(Object doc) throws LOException
     // was XComponent
     {
         try {
             XCloseable closeable = Lo.qi(XCloseable.class, doc);
             close(closeable);
         } catch (com.sun.star.lang.DisposedException e) {
-            System.out.println("Document close failed since Office link disposed");
+            throw new LOException("Document close failed since Office link disposed", e);
         }
     }
 
 
-    public static void close(XCloseable closeable) {
+    public static void close(XCloseable closeable) throws LOException {
         if (closeable == null)
             return;
-        System.out.println("Closing the document");
+        LOGGER.debug("Closing the document");
         try {
             closeable.close(false);   // true to force a close
             // set modifiable to false to close a modified doc without complaint setModified(False)
         } catch (CloseVetoException e) {
-            System.out.println("Close was vetoed");
+            throw new LOException("Close was vetoed", e);
         }
     }  // end of close()
 
@@ -907,17 +908,15 @@ public class Lo {
     // ================= initialization via Addon-supplied context ====================
 
 
-    public static XComponent addonInitialize(XComponentContext addonXcc) {
+    public static XComponent addonInitialize(XComponentContext addonXcc) throws LOException {
         xcc = addonXcc;
         if (xcc == null) {
-            System.out.println("Could not access component context");
-            return null;
+            throw new LOException("Could not access component context");
         }
 
         mcFactory = xcc.getServiceManager();
         if (mcFactory == null) {
-            System.out.println("Office Service Manager is unavailable");
-            return null;
+            throw new LOException("Office Service Manager is unavailable");
         }
 
         try {
@@ -925,14 +924,12 @@ public class Lo {
                     "com.sun.star.frame.Desktop", xcc);
             xDesktop = Lo.qi(XDesktop.class, oDesktop);
         } catch (Exception e) {
-            System.out.println("Could not access desktop");
-            return null;
+            throw new LOException("Could not access desktop", e);
         }
 
         XComponent doc = xDesktop.getCurrentComponent();
         if (doc == null) {
-            System.out.println("Could not access document");
-            return null;
+            throw new LOException("Could not access document");
         }
 
         msFactory = Lo.qi(XMultiServiceFactory.class, doc);
@@ -943,33 +940,28 @@ public class Lo {
     // ============= initialization via script context ======================
 
 
-    public static XComponent scriptInitialize(XScriptContext sc) {
+    public static XComponent scriptInitialize(XScriptContext sc) throws LOException {
         if (sc == null) {
-            System.out.println("Script Context is null");
-            return null;
+            throw new LOException("Script Context is null");
         }
 
         xcc = sc.getComponentContext();
         if (xcc == null) {
-            System.out.println("Could not access component context");
-            return null;
+            throw new LOException("Could not access component context");
         }
         mcFactory = xcc.getServiceManager();
         if (mcFactory == null) {
-            System.out.println("Office Service Manager is unavailable");
-            return null;
+            throw new LOException("Office Service Manager is unavailable");
         }
 
         xDesktop = sc.getDesktop();
         if (xDesktop == null) {
-            System.out.println("Could not access desktop");
-            return null;
+            throw new LOException("Could not access desktop");
         }
 
         XComponent doc = xDesktop.getCurrentComponent();
         if (doc == null) {
-            System.out.println("Could not access document");
-            return null;
+            throw new LOException("Could not access document");
         }
 
         msFactory = Lo.qi(XMultiServiceFactory.class, doc);
@@ -981,24 +973,23 @@ public class Lo {
     // see https://wiki.documentfoundation.org/Development/DispatchCommands
 
 
-    public static boolean dispatchCmd(String cmd) {
+    public static boolean dispatchCmd(String cmd) throws LOException {
         return dispatchCmd(xDesktop.getCurrentFrame(), cmd, null);
     }
 
 
-    public static boolean dispatchCmd(String cmd, PropertyValue[] props) {
+    public static boolean dispatchCmd(String cmd, PropertyValue[] props) throws LOException {
         return dispatchCmd(xDesktop.getCurrentFrame(), cmd, props);
     }
 
 
-    public static boolean dispatchCmd(XFrame frame, String cmd, PropertyValue[] props)
+    public static boolean dispatchCmd(XFrame frame, String cmd, PropertyValue[] props) throws LOException
     // cmd does not include the ".uno:" substring; e.g. pass "Zoom" not ".uno:Zoom"
     {
         XDispatchHelper helper =
                 createInstanceMCF(XDispatchHelper.class, "com.sun.star.frame.DispatchHelper");
         if (helper == null) {
-            System.out.println("Could not create dispatch helper for command " + cmd);
-            return false;
+            throw new LOException("Could not create dispatch helper for command " + cmd);
         }
 
         try {
@@ -1010,16 +1001,15 @@ public class Lo {
       DispatchResultEvent res =  (DispatchResultEvent)
                   helper.executeDispatch(provider, (".uno:" + cmd), "", 0, props);
       if (res.State == DispatchResultState.FAILURE)
-        System.out.println("Dispatch failed for \"" + cmd + "\"");
+        LOGGER.debug("Dispatch failed for \"" + cmd + "\"");
       else if (res.State == DispatchResultState.DONTKNOW)
-        System.out.println("Dispatch result unknown for \"" + cmd + "\"");
+        LOGGER.debug("Dispatch result unknown for \"" + cmd + "\"");
       */
             helper.executeDispatch(provider, (".uno:" + cmd), "", 0, props);
             return true;
         } catch (java.lang.Exception e) {
-            System.out.println("Could not dispatch \"" + cmd + "\":\n  " + e);
+            throw new LOException("Could not dispatch \"" + cmd + "\":\n  " + e, e);
         }
-        return false;
     }  // end of dispatchCmd()
 
 
@@ -1034,21 +1024,19 @@ public class Lo {
     }
 
 
-    public static String extractItemName(String unoCmd)
+    public static String extractItemName(String unoCmd) throws LOException
   /* format is:
        "vnd.sun.star.script:Foo/Foo." + itemName + 
                                   "?language=Java&location=share";
   */ {
         int fooPos = unoCmd.indexOf("Foo.");
         if (fooPos == -1) {
-            System.out.println("Could not find Foo header in command: \"" + unoCmd + "\"");
-            return null;
+            throw new LOException("Could not find Foo header in command: \"" + unoCmd + "\"");
         }
 
         int langPos = unoCmd.indexOf("?language");
         if (langPos == -1) {
-            System.out.println("Could not find language header in command: \"" + unoCmd + "\"");
-            return null;
+            throw new LOException("Could not find language header in command: \"" + unoCmd + "\"");
         }
 
         return unoCmd.substring(fooPos + 4, langPos);
@@ -1058,13 +1046,12 @@ public class Lo {
     // ======================== use Inspector extensions ====================
 
 
-    public static void inspect(Object obj)
+    public static void inspect(Object obj) throws LOException
   /* call XInspector.inspect() in the Inspector.oxt extension
      Available from https://wiki.openoffice.org/wiki/Object_Inspector
   */ {
         if ((xcc == null) || (mcFactory == null)) {
-            System.out.println("No office connection found");
-            return;
+            throw new LOException("No office connection found");
         }
 
         try {
@@ -1077,18 +1064,17 @@ public class Lo {
                     "org.openoffice.InstanceInspector", xcc);
             // hangs on second use
             if (inspector == null) {
-                System.out.println("Inspector Service could not be instantiated");
-                return;
+                throw new LOException("Inspector Service could not be instantiated");
             }
 
-            System.out.println("Inspector Service instantiated");
+            LOGGER.debug("Inspector Service instantiated");
 /*
       // report on inspector
       XServiceInfo si = Lo.qi(XServiceInfo.class, inspector);
-      System.out.println("Implementation name: " + si.getImplementationName());
+      LOGGER.debug("Implementation name: " + si.getImplementationName());
       String[] serviceNames = si.getSupportedServiceNames();
       for(String nm : serviceNames)
-         System.out.println("Service name: " + nm);
+         LOGGER.debug("Service name: " + nm);
 */
             XIntrospection intro = createInstanceMCF(XIntrospection.class,
                     "com.sun.star.beans.Introspection");
@@ -1101,23 +1087,23 @@ public class Lo {
       XIdlReflection idlReflect = Lo.qi(XIdlReflection.class, coreReflect);
       XIdlClass idlClass = idlReflect.forName("org.openoffice.XInstanceInspector");
       XIdlMethod[] methods = idlClass.getMethods();
-      System.out.println("No of methods: " + methods.length);
+      LOGGER.debug("No of methods: " + methods.length);
       for(XIdlMethod m : methods)
-         System.out.println("  " + m.getName());
+         LOGGER.debug("  " + m.getName());
 
       XIdlMethod method = idlClass.getMethod("inspect");
 */
-            System.out.println("inspect() method was found: " + (method != null));
+            LOGGER.debug("inspect() method was found: " + (method != null));
 
             Object[][] params = new Object[][]{new Object[]{obj, title}};
             method.invoke(inspector, params);
         } catch (Exception e) {
-            System.out.println("Could not access Inspector: " + e);
+            throw new LOException("Could not access Inspector: " + e, e);
         }
     }  // end of accessInspector()
 
 
-    public static void mriInspect(Object obj)
+    public static void mriInspect(Object obj) throws LOException
   /* call MRI's inspect()
      Available from http://extensions.libreoffice.org/extension-center/mri-uno-object-inspection-tool
                   or http://extensions.services.openoffice.org/en/project/MRI
@@ -1126,11 +1112,10 @@ public class Lo {
   */ {
         XIntrospection xi = createInstanceMCF(XIntrospection.class, "mytools.Mri");
         if (xi == null) {
-            System.out.println("MRI Inspector Service could not be instantiated");
-            return;
+            throw new LOException("MRI Inspector Service could not be instantiated");
         }
 
-        System.out.println("MRI Inspector Service instantiated");
+        LOGGER.debug("MRI Inspector Service instantiated");
         xi.inspect(obj);
     }  // end of mriInspect()
 
@@ -1142,7 +1127,7 @@ public class Lo {
     // return the color as an integer, ignoring the alpha channel
     {
         if (color == null) {
-            System.out.println("No color supplied");
+            LOGGER.debug("No color supplied");
             return 0;
         } else
             return (color.getRGB() & 0xffffff);
@@ -1159,7 +1144,7 @@ public class Lo {
 
     public static String getColorHexString(java.awt.Color color) {
         if (color == null) {
-            System.out.println("No color supplied");
+            LOGGER.debug("No color supplied");
             return "#000000";
         } else
             return int2HexString(color.getRGB() & 0xffffff);
@@ -1177,16 +1162,17 @@ public class Lo {
     // ================== other utils =============================
 
 
-    public static void wait(int ms)    // I can never remember the name :)
+    public static void wait(int ms) throws LOException    // I can never remember the name :)
     {
         delay(ms);
     }
 
 
-    public static void delay(int ms) {
+    public static void delay(int ms) throws LOException {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
+            throw new LOException("Can't delay.", e);
         }
     }
 
@@ -1196,13 +1182,15 @@ public class Lo {
     }
 
 
+/*
     public static void waitEnter() {
-        System.out.println("Press Enter to continue...");
+        LOGGER.debug("Press Enter to continue...");
         try {
             System.in.read();
         } catch (java.io.IOException e) {
         }
     }  // end of waitEnter()
+*/
 
 
     public static String getTimeStamp() {
@@ -1215,37 +1203,35 @@ public class Lo {
         printNames(names, 4);
     }
 
-
     public static void printNames(String[] names, int numPerLine)
     // print a large array with <numPerLine> strings/line, indented by 2 spaces
     {
         if (names == null)
-            System.out.println("  No names found");
+            LOGGER.debug("  No names found");
         else {
             Arrays.sort(names, String.CASE_INSENSITIVE_ORDER);
             int nlCounter = 0;
-            System.out.println("No. of names: " + names.length);
+            LOGGER.debug("No. of names: " + names.length);
             for (String name : names) {
-                System.out.print("  \"" + name + "\"");
+                LOGGER.debug("  \"" + name + "\"");
                 nlCounter++;
                 if (nlCounter % numPerLine == 0) {
-                    System.out.println();
+                    LOGGER.debug("\n");
                     nlCounter = 0;
                 }
             }
-            System.out.println("\n\n");
+            LOGGER.debug("\n\n");
         }
     }  // end of printNames()
 
-
     public static void printTable(String name, Object[][] table) {
-        System.out.println("-- " + name + " ----------------");
+        LOGGER.debug("-- " + name + " ----------------");
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[i].length; j++)
-                System.out.print("  " + table[i][j]);
-            System.out.println();
+                LOGGER.debug("  " + table[i][j]);
+            LOGGER.debug("\n");
         }
-        System.out.println("-----------------------------\n");
+        LOGGER.debug("-----------------------------\n");
     } // end of printTable()
 
 
@@ -1259,18 +1245,21 @@ public class Lo {
     }  // end of capitalize()
 
 
+/*
     public static int parseInt(String s) {
         if (s == null)
             return 0;
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException ex) {
-            System.out.println(s + " could not be parsed as an int; using 0");
+            LOGGER.debug(s + " could not be parsed as an int; using 0");
             return 0;
         }
     }  // end of parseInt()
+*/
 
 
+/*
     public static void addJar(String jarPath)
     // load this JAR into the classloader at run time
     // from http://stackoverflow.com/questions/60764/how-should-i-load-jars-dynamically-at-runtime
@@ -1283,25 +1272,27 @@ public class Lo {
             m.setAccessible(true);
             m.invoke(classLoader, new java.net.URL(jarPath));
         } catch (java.lang.Exception e) {
-            System.out.println(e);
+            LOGGER.debug(e);
         }
     }  // end of addJar()
+*/
 
 
     // ------------------- container manipulation --------------------
 
 
+/*
     public static String[] getContainerNames(XIndexAccess con)
     // extract the names of the elements in the indexed container
     {
         if (con == null) {
-            System.out.println("Container is null");
+            LOGGER.debug("Container is null");
             return null;
         }
 
         int numElems = con.getCount();
         if (numElems == 0) {
-            System.out.println("No elements in the container");
+            LOGGER.debug("No elements in the container");
             return null;
         }
 
@@ -1311,13 +1302,13 @@ public class Lo {
                 XNamed named = Lo.qi(XNamed.class, con.getByIndex(i));
                 namesList.add(named.getName());
             } catch (Exception e) {
-                System.out.println("Could not access name of element " + i);
+                LOGGER.debug("Could not access name of element " + i);
             }
         }
 
         int sz = namesList.size();
         if (sz == 0) {
-            System.out.println("No element names found in the container");
+            LOGGER.debug("No element names found in the container");
             return null;
         }
 
@@ -1331,7 +1322,7 @@ public class Lo {
 
     public static XPropertySet findContainerProps(XIndexAccess con, String nm) {
         if (con == null) {
-            System.out.println("Container is null");
+            LOGGER.debug("Container is null");
             return null;
         }
 
@@ -1343,13 +1334,14 @@ public class Lo {
                     return (XPropertySet) Lo.qi(XPropertySet.class, oElem);
                 }
             } catch (Exception e) {
-                System.out.println("Could not access element " + i);
+                LOGGER.debug("Could not access element " + i);
             }
         }
 
-        System.out.println("Could not find a \"" + nm + "\" property set in the container");
+        LOGGER.debug("Could not find a \"" + nm + "\" property set in the container");
         return null;
     }  // end of findContainerProps()
+*/
 
 
 }  // end of Lo class

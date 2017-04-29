@@ -7,6 +7,7 @@ import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.CellContentType;
 import com.sun.star.table.XCell;
 import com.sun.star.table.XCellRange;
+import libreoffice.LOException;
 import libreoffice.Lo;
 
 import java.util.Calendar;
@@ -21,9 +22,25 @@ import java.util.GregorianCalendar;
 public class Calc {
 
     private static final int OFFICE_EPOCH_YEAR = 1900;
+    private static XComponentLoader loader;
+
+    public static XComponentLoader getLoader() throws LibreOfficeException {
+        if (loader == null) {
+            try {
+                loader = Lo.loadOffice();
+            } catch (LOException e) {
+                throw new LibreOfficeException("Can't load Office.", e);
+            }
+        }
+        return loader;
+    }
 
     public static void closeOffice() throws LibreOfficeException {
-        Lo.closeOffice();
+        try {
+            Lo.closeOffice();
+        } catch (LOException e) {
+            throw new LibreOfficeException("Can't close Office.", e);
+        }
     }
 
     public static XSpreadsheetDocument openDoc(String docName, XComponentLoader loader) throws LibreOfficeException {
@@ -227,4 +244,5 @@ public class Calc {
         // Cf. https://wiki.openoffice.org/wiki/Documentation/BASIC_Guide/Editing_Spreadsheet_Documents#Deleting_Cell_Contents
         setString(cell, "");
     }
+
 }

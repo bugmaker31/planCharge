@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,17 +18,17 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
 
     protected abstract Map<EI, E> getCache();
 
-    protected abstract E newEntity(EI id);
+    protected abstract E newEntity(EI id) throws DaoException;
 
     @NotNull
-    public E load(EI id) throws EntityNotFoundException {
+    public E load(EI id) throws EntityNotFoundException, DaoException {
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");
             return (E) getCache().get(id);
         }
 
-        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence.
+        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence (thrower une EntityNotFoundException si pas trouvé)
         E nouvelleEntite = newEntity(id);
 
         getCache().put(id, nouvelleEntite);

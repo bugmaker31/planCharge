@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,17 +32,17 @@ public class ApplicationController extends AbstractController {
     // L'IHM :
     @NotNull
     @Autowired
-    private PlanChargeIhm ihm = PlanChargeIhm.getContext().getBean(PlanChargeIhm.class);
+    private PlanChargeIhm ihm = PlanChargeIhm.getContexte().getBean(PlanChargeIhm.class);
 
     // Les services métier :
     @NotNull
     @Autowired
-    private PlanChargeService planChargeService = PlanChargeIhm.getContext().getBean(PlanChargeService.class);
+    private PlanChargeService planChargeService = PlanChargeIhm.getContexte().getBean(PlanChargeService.class);
 
     // Les données métier :
     @NotNull
     @Autowired
-    private PlanChargeBean planChargeBean = PlanChargeIhm.getContext().getBean(PlanChargeBean.class);
+    private PlanChargeBean planChargeBean = PlanChargeIhm.getContexte().getBean(PlanChargeBean.class);
 
 /*
     Menu "Fichier" :
@@ -152,9 +153,10 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void importerDepuisCalc(ActionEvent event) {
+    private void importerChargesDepuisCalc(ActionEvent event) {
         LOGGER.debug("Charges > Importer depuis Calc");
-        // TODO FDA 2017/04 Coder.
+
+        ihm.getChargeController().importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
     }
 
 

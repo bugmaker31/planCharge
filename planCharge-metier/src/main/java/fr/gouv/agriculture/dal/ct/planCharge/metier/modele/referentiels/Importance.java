@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 
 import javax.validation.constraints.NotNull;
 import java.util.Comparator;
@@ -17,20 +18,29 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
             return i1.getOrder().compareTo(i2.getOrder());
         }
     }
+
     public static final ImportanceComparator COMPARATOR = new ImportanceComparator();
 
     @NotNull
-    private final String internalCode;
+    private final String codeInterne;
     @NotNull
     private final String code;
     @NotNull
     private int order;
 
-    public Importance(@NotNull String internalCode) {
-        this.internalCode = internalCode;
+    public Importance(@NotNull String codeInterne) throws ModeleException {
+        this.codeInterne = codeInterne;
 
-        code = internalCode.replaceFirst("^\\d{2}_", "");
-        order =  Integer.parseInt(internalCode.replaceFirst("_.+$", ""));
+        code = codeInterne.replaceFirst("^\\d{2}-", "");
+        if (code.equals(codeInterne)) {
+            throw new ModeleException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.");
+        }
+
+        try {
+            order = Integer.parseInt(codeInterne.replaceFirst("-.+$", ""));
+        } catch (NumberFormatException e) {
+            throw new ModeleException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.");
+        }
     }
 
     @NotNull

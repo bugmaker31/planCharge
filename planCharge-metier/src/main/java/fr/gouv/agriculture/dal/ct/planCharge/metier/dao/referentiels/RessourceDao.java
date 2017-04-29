@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class RessourceDao extends AbstractDao<Ressource, String> {
 
-    private static final Map<String, Ressource> CACHE = new HashMap();
+    private static final Map<String, Ressource> CACHE = new HashMap<>();
 
     @Override
     protected Map<String, Ressource> getCache() {

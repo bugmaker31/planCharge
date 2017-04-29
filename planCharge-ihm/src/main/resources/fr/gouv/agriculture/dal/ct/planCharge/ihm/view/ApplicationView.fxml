@@ -46,7 +46,7 @@
                 <Menu mnemonicParsing="true" onAction="#afficherModuleTache" text="_Tâches" />
                 <Menu mnemonicParsing="true" onAction="#afficherModuleCharge" text="_Charge">
                <items>
-                  <MenuItem fx:id="importerDepuisCalc" mnemonicParsing="false" text="Importer depuis Calc..." />
+                  <MenuItem fx:id="importerChargesDepuisCalc" mnemonicParsing="false" text="Importer depuis Calc..." onAction="#importerChargesDepuisCalc" />
                </items></Menu>
                 <Menu disable="true" mnemonicParsing="false" text="TODOs">
                     <items>
