@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -120,18 +122,6 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private CheckComboBox<String> filtreProfilsField;
 
-    // Les services métier :
-    @NotNull
-    @Autowired
-    private PlanChargeService planChargeService;
-
-    public void setPlanChargeService(PlanChargeService planChargeService) {
-        this.planChargeService = planChargeService;
-    }
-
-    // Les données métier :
-    private ObservableList<PlanificationBean> planificationsBeans;
-
     @NotNull
     private ObservableList<String> codesImportancesTaches = FXCollections.observableArrayList();
     @NotNull
@@ -140,6 +130,24 @@ public class ModuleChargeController extends AbstractController {
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
     @NotNull
     private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
+
+    // L'IHM :
+    @NotNull
+    @Autowired
+    private PlanChargeIhm ihm = PlanChargeIhm.getContext().getBean(PlanChargeIhm.class);
+
+    // Les services métier :
+    @NotNull
+    @Autowired
+    private PlanChargeService planChargeService = PlanChargeIhm.getContext().getBean(PlanChargeService.class);
+
+    // Les données métier :
+    @NotNull
+    @Autowired
+    private PlanChargeBean planChargeBean = PlanChargeIhm.getContext().getBean(PlanChargeBean.class);
+
+    @NotNull
+    private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
     /**
      * The constructor.
@@ -156,14 +164,10 @@ public class ModuleChargeController extends AbstractController {
      */
     @FXML
     private void initialize() {
-        // Rien... pour l'instant.
-    }
 
-    public void configurer() {
+        dateEtatPicker.setValue(planChargeBean.getDateEtat());
 
-        dateEtatPicker.setValue(getPlanChargeBean().getDateEtat());
-
-        planificationsBeans = getPlanChargeBean().getPlanificationsBeans();
+        planificationsBeans = planChargeBean.getPlanificationsBeans();
 
         /*
         // Rendre le "divider" du SplitPane fixe (== "non draggable") :
@@ -591,7 +595,7 @@ public class ModuleChargeController extends AbstractController {
     private void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
 
-        if (getPlanChargeBean().getDateEtat() == null) {
+        if (planChargeBean.getDateEtat() == null) {
             LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -615,7 +619,7 @@ public class ModuleChargeController extends AbstractController {
         );
 
         List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);
-        LocalDate dateSemaine = getPlanChargeBean().getDateEtat();
+        LocalDate dateSemaine = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calendrier.add(new Pair(dateSemaine, new SimpleDoubleProperty(0.0)));
             dateSemaine = dateSemaine.plusDays(7);
@@ -634,7 +638,7 @@ public class ModuleChargeController extends AbstractController {
     private void definirDateEtat(ActionEvent event) {
         LOGGER.debug("definirDateEtat...");
         LocalDate dateEtat = dateEtatPicker.getValue();
-        getApplicationIhm().definirDateEtat(dateEtat);
+        ihm.definirDateEtat(dateEtat);
     }
 
     @FXML
@@ -648,7 +652,7 @@ public class ModuleChargeController extends AbstractController {
 
         dateEtatPicker.setValue(dateEtat);
 
-        getApplicationIhm().definirDateEtat(dateEtat);
+        ihm.definirDateEtat(dateEtat);
     }
 
 }

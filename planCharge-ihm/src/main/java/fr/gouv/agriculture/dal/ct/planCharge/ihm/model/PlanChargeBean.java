@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javax.validation.constraints.Null;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 /**
@@ -25,7 +24,7 @@ public class PlanChargeBean {
     }
 
     @Null
-    private ObservableList<PlanificationBean> planificationsBeans;
+    private ObservableList<PlanificationBean> planificationsBeans = FXCollections.observableArrayList();
 
     @Null
     public ObservableList<PlanificationBean> getPlanificationsBeans() {
@@ -39,9 +38,6 @@ public class PlanChargeBean {
 */
 
     public PlanChargeBean() {
-
-        dateEtat = null;
-
-        planificationsBeans = FXCollections.observableArrayList();
+        super();
     }
 }

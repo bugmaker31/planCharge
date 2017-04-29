@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -27,30 +28,36 @@ public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
+    // L'IHM :
+    @NotNull
+    @Autowired
+    private PlanChargeIhm ihm = PlanChargeIhm.getContext().getBean(PlanChargeIhm.class);
+
     // Les services métier :
     @NotNull
     @Autowired
-    private PlanChargeService planChargeService;
+    private PlanChargeService planChargeService = PlanChargeIhm.getContext().getBean(PlanChargeService.class);
 
-    public void setPlanChargeService(PlanChargeService planChargeService) {
-        this.planChargeService = planChargeService;
-    }
+    // Les données métier :
+    @NotNull
+    @Autowired
+    private PlanChargeBean planChargeBean = PlanChargeIhm.getContext().getBean(PlanChargeBean.class);
 
-    /*
+/*
     Menu "Fichier" :
      */
 
     @FXML
     private void quitter(ActionEvent event) throws Exception {
         LOGGER.debug("Fichier > Quitter");
-        getApplicationIhm().stop();
+        ihm.stop();
     }
 
     @FXML
     private void sauver(ActionEvent event) throws Exception {
         LOGGER.debug("Fichier > Sauver");
 
-        if (getApplication().getPlanChargeBean().getDateEtat() == null || getApplication().getPlanChargeBean().getPlanificationsBeans() == null) {
+        if (planChargeBean.getDateEtat() == null || planChargeBean.getPlanificationsBeans() == null) {
             LOGGER.warn("Impossible de sauver un plan de charge non défini.");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -61,7 +68,7 @@ public class ApplicationController extends AbstractController {
         }
 
         Planifications planifications = new Planifications();
-        getApplication().getPlanChargeBean().getPlanificationsBeans().stream().forEach(
+        planChargeBean.getPlanificationsBeans().stream().forEach(
                 planificationBean -> {
                     List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
                     Map<LocalDate, Double> calendrier = new HashMap<>();
@@ -70,7 +77,7 @@ public class ApplicationController extends AbstractController {
                 }
         );
         PlanCharge planCharge = new PlanCharge(
-                getApplication().getPlanChargeBean().getDateEtat(),
+                planChargeBean.getDateEtat(),
                 planifications
         );
 
@@ -96,17 +103,17 @@ public class ApplicationController extends AbstractController {
 
             PlanCharge planCharge = planChargeService.charger(dateEtat);
 
-            getPlanChargeBean().setDateEtat(planCharge.getDateEtat());
-            getPlanChargeBean().getPlanificationsBeans().clear();
+            planChargeBean.setDateEtat(planCharge.getDateEtat());
+            planChargeBean.getPlanificationsBeans().clear();
             planCharge.getPlanifications().entrySet().stream().forEach(
-                    planif -> getPlanChargeBean().getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
+                    planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
             );
         } catch (ServiceException e) {
-            LOGGER.error("Impossible de load les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+            LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de load le plan de charge");
-            alert.setContentText("Impossible de load les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            alert.setHeaderText("Impossible de charger le plan de charge");
+            alert.setContentText("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
             alert.showAndWait();
         }
     }
@@ -129,20 +136,27 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void afficherModuleDispo(ActionEvent event) {
         LOGGER.debug("afficherModuleDisponibilites");
-        getApplication().getIhm().afficherModuleDisponibilites();
+        ihm.afficherModuleDisponibilites();
     }
 
     @FXML
     private void afficherModuleTache(ActionEvent event) {
         LOGGER.debug("afficherModuleTaches");
-        getApplication().getIhm().afficherModuleTaches();
+        ihm.afficherModuleTaches();
     }
 
     @FXML
     private void afficherModuleCharge(ActionEvent event) {
         LOGGER.debug("afficherModuleCharge");
-        getApplication().getIhm().afficherModuleCharge();
+        ihm.afficherModuleCharge();
     }
+
+    @FXML
+    private void importerDepuisCalc(ActionEvent event) {
+        LOGGER.debug("Charges > Importer depuis Calc");
+        // TODO FDA 2017/04 Coder.
+    }
+
 
     /*
     Menu "Aide" :

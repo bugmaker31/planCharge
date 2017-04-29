@@ -15,12 +15,14 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <resources>
+<!-- Plus la peine, depuis que j'ai déplacé les fichiers FXML dans le répertoires des ressources (+ propre).
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.fxml</include>
                 </includes>
             </resource>
+-->
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>

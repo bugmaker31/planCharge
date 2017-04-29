@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 
@@ -9,21 +8,4 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
  */
 public abstract class AbstractController {
 
-    private PlanChargeApplication application;
-
-    public PlanChargeApplication getApplication() {
-        return application;
-    }
-
-    public void setApplication(PlanChargeApplication application) {
-        this.application = application;
-    }
-
-    public PlanChargeIhm getApplicationIhm() {
-        return application.getIhm();
-    }
-
-    public PlanChargeBean getPlanChargeBean() {
-        return application.getPlanChargeBean();
-    }
 }

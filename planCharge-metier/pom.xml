@@ -12,6 +12,13 @@
     <artifactId>planCharge-metier</artifactId>
     <!--<packaging>jar</packaging>-->
 
+    <properties>
+        <jna.version>4.2.0</jna.version>
+        <libreoffice.version>5.2.0</libreoffice.version>
+        <libreoffice.basedir>C:/Program Files/LibreOffice 5</libreoffice.basedir>
+        <!--<libreoffice.basedir>/usr/bin/office</libreoffice.basedir>-->
+    </properties>
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -34,56 +41,126 @@
                 </includes>
             </resource>
         </resources>
-        <!--<plugins>-->
-        <!--
-                    &lt;!&ndash;Cf. https://wiki.openoffice.org/wiki/OpenOffice_Maven2_Integration&ndash;&gt;
-                    <plugin>
-                        <groupId>org.openoffice.dev</groupId>
-                        <artifactId>maven-ooo-plugin</artifactId>
-                        <version>1<version>
+        <plugins>
+            <!--
+                        &lt;!&ndash;Cf. https://wiki.openoffice.org/wiki/OpenOffice_Maven2_Integration&ndash;&gt;
+                        <plugin>
+                            <groupId>org.openoffice.dev</groupId>
+                            <artifactId>maven-ooo-plugin</artifactId>
+                            <version>1<version>
+                            <configuration>
+                                <idlDir>${project.basedir}/src/main/idl</idlDir>
+                                <ooo>${libreoffice.home}</ooo>
+                                <sdk>${libreoffice.sdk.home}</sdk>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <phase>generate-sources</phase>
+                                    <goals>
+                                        <goal>build-idl</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
+            <!--Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
                         <configuration>
-                            <idlDir>${project.basedir}/src/main/idl</idlDir>
-                            <ooo>${libreoffice.home}</ooo>
-                            <sdk>${libreoffice.sdk.home}</sdk>
+                            <sources>
+                                <source>src/ext-jlop/java</source>
+                            </sources>
                         </configuration>
-                        <executions>
-                            <execution>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>build-idl</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-        -->
-        <!--
-                    &lt;!&ndash;Cf. http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories&ndash;&gt;
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.9<version>
-                        <executions>
-                            <execution>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <gajouter>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/ext-jlop/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-        -->
-        <!--</plugins>-->
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <dependencies>
+
+        <!--On a besoin des utilitaires communs :-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>planCharge-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!--
+                Pour LibreOffice (import depuis fichiers OOCalc) :
+        -->
+
+        <!--Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/install.html-->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.libreoffice/jurt -->
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>jurt</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        <!--
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>libreoffice-dist</artifactId>
+                    <version>5.2.1-alfresco</version>
+                </dependency>
+        -->
+
+        <!-- https://mvnrepository.com/artifact/org.libreoffice/ridl -->
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>ridl</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.libreoffice/juh -->
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>juh</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.libreoffice/unoloader -->
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>unoloader</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.libreoffice/unoil -->
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>unoil</artifactId>
+            <version>${libreoffice.version}</version>
+        </dependency>
+
+        <!--Certains binaires "soffice" doivent être dans le classpath, lors de l'exécution.-->
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>bsh</artifactId>
+            <version>UNKNOWN</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.basedir}/program/classes/bsh.jar</systemPath>
+        </dependency>
+
     </dependencies>
 </project>

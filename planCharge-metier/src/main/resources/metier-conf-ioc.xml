@@ -25,6 +25,15 @@
         <property name="patronFicPersistance" value="planCharge_{dateEtat}" />
     </bean>
 
+    <bean id="projetAppliDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao"
+          scope="singleton"/>
+    <bean id="importanceDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao"
+          scope="singleton"/>
+    <bean id="ressourceDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao"
+          scope="singleton"/>
+    <bean id="profilDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao"
+          scope="singleton"/>
+
     <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeWrapper" scope="singleton" />
 
 </beans>

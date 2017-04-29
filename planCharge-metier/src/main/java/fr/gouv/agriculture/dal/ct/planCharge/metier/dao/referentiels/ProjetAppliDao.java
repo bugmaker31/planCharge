@@ -15,7 +15,7 @@ public class ProjetAppliDao extends AbstractDao<ProjetAppli, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjetAppliDao.class);
 
-    private static final Map<String, ProjetAppli> CACHE = new HashMap();
+    private static final Map<String, ProjetAppli> CACHE = new HashMap<>();
 
     @Override
     protected Map<String, ProjetAppli> getCache() {

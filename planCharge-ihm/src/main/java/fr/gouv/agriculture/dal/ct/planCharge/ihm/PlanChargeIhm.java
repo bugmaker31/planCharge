@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
-import fr.gouv.agriculture.dal.ct.planCharge.PlanChargeApplication;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
@@ -9,8 +8,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlani
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +19,9 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.validation.constraints.NotNull;
@@ -46,8 +45,11 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
-    @NotNull
-    private PlanChargeApplication planChargeApp;
+    private static ApplicationContext context;
+
+    public static ApplicationContext getContext() {
+        return context;
+    }
 
     @NotNull
     private Stage primaryStage;
@@ -73,16 +75,18 @@ public class PlanChargeIhm extends javafx.application.Application {
     private String moduleCourant;
 
     /*
-     Les données métier :
-      */
-    private PlanChargeBean planChargeBean;
-
-    /*
      Les services métier :
       */
     @Autowired
     @NotNull
     private PlanChargeService planChargeService;
+
+    /*
+     Les données métier :
+      */
+    @Autowired
+    @NotNull
+    private PlanChargeBean planChargeBean;
 
     public static void main(String[] args) {
         launch(args);
@@ -104,13 +108,28 @@ public class PlanChargeIhm extends javafx.application.Application {
         // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
         Thread.setDefaultUncaughtExceptionHandler(PlanChargeIhm::showError);
 
-        initialiserView();
-
         injecter();
 
-        configurerView();
+        initialiserView();
 
         LOGGER.info("Application initialisée.");
+    }
+
+    private void injecter() {
+
+        // On utilise Spring IOC pour l'injection, principalement :
+        context = new ClassPathXmlApplicationContext("ihm-conf-ioc.xml");
+
+        // Les beans Spring (métier) utilisés dans les classes JavaFX (IHM) ne peuvent être injectés par Spring,
+        // car les classes JavaFX ne sont pas instanciées par Spring.
+        // Il faut donc les injecter soi-même :
+        planChargeService = context.getBean(PlanChargeService.class);
+        ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) context).getBeanFactory();
+        beanFactory.registerSingleton(this.getClass().getCanonicalName(), this);
+
+        // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
+        // par JavaFX, etc.). Donc on les "injecte" soi-même :
+        planChargeBean = context.getBean(PlanChargeBean.class);
     }
 
     private void initialiserView() throws IOException {
@@ -138,37 +157,6 @@ public class PlanChargeIhm extends javafx.application.Application {
             chargeView = chargeLoader.load();
             chargeController = chargeLoader.getController();
         }
-    }
-
-    private void injecter() {
-
-        // On utilise Spring IOC pour l'injection, principalement :
-        ApplicationContext context = new ClassPathXmlApplicationContext("ihm-conf-ioc.xml");
-
-        // On mémorise ("injecte") les données que Spring ne peut gérer :
-        planChargeApp = context.getBean(PlanChargeApplication.class);
-        planChargeApp.setContext(context);
-        planChargeApp.setIhm(this);
-
-        // Les beans Spring (métier) utilisés dans les classes JavaFX (IHM) ne peuvent être injectés par Spring,
-        // car les classes JavaFX ne sont pas instanciées par Spring.
-        // Il faut donc les injecter soi-même, en récupérant les instances créées par Spring of course :
-        planChargeService = context.getBean(PlanChargeService.class);
-
-        // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
-        // par JavaFX, etc.). Donc on les "injecte" soi-même :
-        this.planChargeBean =  planChargeApp.getPlanChargeBean();
-        applicationContoller.setApplication(planChargeApp);
-        applicationContoller.setPlanChargeService(planChargeService);
-        disponibiliteController.setApplication(planChargeApp);
-        tacheController.setApplication(planChargeApp);
-        tacheController.setPlanChargeService(planChargeService);
-        chargeController.setApplication(planChargeApp);
-        chargeController.setPlanChargeService(planChargeService);
-    }
-
-    private void configurerView() {
-        chargeController.configurer();
     }
 
     private static void showError(Thread thread, Throwable throwable) {
@@ -254,8 +242,8 @@ public class PlanChargeIhm extends javafx.application.Application {
             LOGGER.error("Impossible de lire les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de load le plan de charge");
-            alert.setContentText("Impossible de lire les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            alert.setHeaderText("Impossible de charger le plan de charge");
+            alert.setContentText("Impossible de charger les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
             alert.showAndWait();
         }
         return planificationsBeans;
