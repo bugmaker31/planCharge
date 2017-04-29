@@ -1,1 +1,1 @@
-Une appli en JavaFX pour gérer le plan de charge d'une équipe d'un centre de service.
+Une appli avec IHM en JavaFX pour gérer le plan de charge d'une équipe d'un centre de service.
