@@ -53,6 +53,11 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     @NotNull
     private Stage primaryStage;
+
+/*
+    @NotNull
+    private BorderPane errorView;
+*/
     @NotNull
     private BorderPane applicationView;
     @NotNull
@@ -62,6 +67,10 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private Region chargeView;
 
+/*
+    @NotNull
+    private ErrorController errorController;
+*/
     @NotNull
     private ApplicationController applicationContoller;
     @NotNull
@@ -88,6 +97,9 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private PlanChargeBean planChargeBean;
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
 
     public ApplicationController getApplicationContoller() {
         return applicationContoller;
@@ -123,11 +135,11 @@ public class PlanChargeIhm extends javafx.application.Application {
         super.init();
 
         // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
-        Thread.setDefaultUncaughtExceptionHandler(PlanChargeIhm::showError);
+        Thread.setDefaultUncaughtExceptionHandler(this::showError);
 
         injecter();
 
-        initialiserView();
+        initialiserViewsEtControllers();
 
         LOGGER.info("Application initialisée.");
     }
@@ -141,15 +153,23 @@ public class PlanChargeIhm extends javafx.application.Application {
         // car les classes JavaFX ne sont pas instanciées par Spring.
         // Il faut donc les injecter soi-même :
         planChargeService = contexte.getBean(PlanChargeService.class);
-        ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) contexte).getBeanFactory();
-        beanFactory.registerSingleton(this.getClass().getCanonicalName(), this);
+        planChargeBean = contexte.getBean(PlanChargeBean.class);
 
         // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
         // par JavaFX, etc.). Donc on les "injecte" soi-même :
-        planChargeBean = contexte.getBean(PlanChargeBean.class);
+        ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) contexte).getBeanFactory();
+        beanFactory.registerSingleton(this.getClass().getCanonicalName(), this);
     }
 
-    private void initialiserView() throws IOException {
+    private void initialiserViewsEtControllers() throws IOException {
+/*
+        {
+            FXMLLoader errorLoader = new FXMLLoader();
+            errorLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
+            errorView = errorLoader.load();
+            errorController = errorLoader.getController();
+        }
+*/
         {
             FXMLLoader appLoader = new FXMLLoader();
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
@@ -176,7 +196,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
-    private static void showError(Thread thread, Throwable throwable) {
+    public void showError(Thread thread, Throwable throwable) {
         LOGGER.error("An error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
             StringWriter errorMsg = new StringWriter();
@@ -185,7 +205,14 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
-    private static void showErrorDialog(String errorMsg) {
+    private void showErrorDialog(String errorMsg) {
+/*
+        Stage errorDialog = new Stage();
+        errorDialog.initModality(Modality.APPLICATION_MODAL);
+        errorDialog.setScene(new Scene(errorView, 800, 400));
+        errorController.setErrorText(errorMsg);
+        errorDialog.show();
+*/
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
@@ -197,6 +224,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         } catch (IOException e) {
             LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
         }
+
     }
 
     public void erreur(String message) {

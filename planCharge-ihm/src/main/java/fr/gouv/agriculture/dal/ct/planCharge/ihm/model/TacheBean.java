@@ -64,7 +64,7 @@ public class TacheBean {
 
     @NotNull
     public int getId() {
-        return id.get();
+        return id == null ? null : id.get();
     }
 
     @NotNull
@@ -164,12 +164,12 @@ public class TacheBean {
 
     @NotNull
     public StringBinding noTacheProperty() {
-        return idProperty().asString(Tache.FORMAT_NO_TACHE);
+        return idProperty() == null ? null : idProperty().asString(Tache.FORMAT_NO_TACHE);
     }
 
     @NotNull
     public String noTache() {
-        return tache.noTache();
+        return tache == null ? null : tache.noTache();
     }
 
     @NotNull
@@ -185,6 +185,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheNoTicketIdal(@NotNull String otherValue) {
+        if (getNoTicketIdal() == null) {
+            return true;
+        }
         if (getNoTicketIdal().contains(otherValue)) {
             return true; // matches
         }
@@ -193,6 +196,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheDescription(@NotNull String otherValue) {
+        if (getDescription() == null) {
+            return true;
+        }
         if (getDescription().contains(otherValue)) {
             return true; // matches
         }
@@ -201,6 +207,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheProjetAppli(@NotNull String otherValue) {
+        if (getProjetAppli() == null) {
+            return true;
+        }
         if (getProjetAppli().contains(otherValue)) {
             return true; // matches
         }
@@ -209,6 +218,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheImportance(@NotNull String otherValue) {
+        if (getImportance() == null) {
+            return true;
+        }
         if (getImportance().contains(otherValue)) {
             return true; // matches
         }
@@ -217,6 +229,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheDebut(@NotNull String otherValue) {
+        if (getDebut() == null) {
+            return true;
+        }
         if (getDebut().format(DATE_FORMATTER).contains(otherValue)) {
             return true; // matches
         }
@@ -225,6 +240,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheEcheance(@NotNull String otherValue) {
+        if (getEcheance() == null) {
+            return true;
+        }
         if (getEcheance().format(DATE_FORMATTER).contains(otherValue)) {
             return true; // matches
         }
@@ -234,6 +252,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheRessource(@NotNull String otherValue) {
+        if (getRessource() == null) {
+            return true;
+        }
         if (getRessource().contains(otherValue)) {
             return true; // matches
         }
@@ -242,6 +263,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheProfil(@NotNull String otherValue) {
+        if (getProfil() == null) {
+            return true;
+        }
         if (getProfil().contains(otherValue)) {
             return true; // matches
         }

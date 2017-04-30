@@ -25,6 +25,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
@@ -153,6 +154,8 @@ public class ModuleChargeController extends AbstractController {
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+    @NotNull
+    private FilteredList<PlanificationBean> filteredPlanifBeans = new FilteredList<>(planificationsBeans);
 
     /**
      * The constructor.
@@ -311,23 +314,21 @@ public class ModuleChargeController extends AbstractController {
         tachesTable.addEventFilter(ScrollEvent.ANY, event -> tachesScroll(event));
 */
 
+/*
+        codesImportancesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
+        codesProjetsApplisTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
+        codesRessourcesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
+        codesProfilsTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
+*/
+
         planificationsBeans.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
 
-            codesImportancesTaches.clear();
-            codesImportancesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
-            codesImportancesTaches.sort(String::compareTo);
-
-            codesProjetsApplisTaches.clear();
-            codesProjetsApplisTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProjetAppli()).collect(Collectors.toSet()));
-            codesProjetsApplisTaches.sort(String::compareTo);
-
-            codesRessourcesTaches.clear();
-            codesRessourcesTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getRessource()).collect(Collectors.toSet()));
-            codesRessourcesTaches.sort(String::compareTo);
-
-            codesProfilsTaches.clear();
-            codesProfilsTaches.addAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProfil()).collect(Collectors.toSet()));
-            codesProfilsTaches.sort(String::compareTo);
+/* TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
+            codesImportancesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
+            codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProjetAppli()).collect(Collectors.toSet()));
+            codesRessourcesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getRessource()).collect(Collectors.toSet()));
+            codesProfilsTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProfil()).collect(Collectors.toSet()));
+*/
 
             populerFiltreProjetsApplis();
             populerFiltreImportances();
@@ -340,10 +341,10 @@ public class ModuleChargeController extends AbstractController {
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
         // 1. Wrap the ObservableList in a FilteredList
-        FilteredList<PlanificationBean> filteredData = new FilteredList<>(planificationsBeans);
+        filteredPlanifBeans.clear();
         // 2. Set the filter Predicate whenever the filter changes.
         filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) ->
-                filteredData.setPredicate(planification -> {
+                filteredPlanifBeans.setPredicate(planification -> {
 
                     // If filter text is empty, display all data.
                     if (newValue == null || newValue.isEmpty()) {
@@ -376,7 +377,7 @@ public class ModuleChargeController extends AbstractController {
                 })
         );
         filtreNoTacheField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(planification -> {
+            filteredPlanifBeans.setPredicate(planification -> {
 
                 // If filter text is empty, display all data.
                 if (newValue == null || newValue.isEmpty()) {
@@ -392,7 +393,7 @@ public class ModuleChargeController extends AbstractController {
             });
         });
         filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(planification -> {
+            filteredPlanifBeans.setPredicate(planification -> {
 
                 // If filter text is empty, display all data.
                 if (newValue == null || newValue.isEmpty()) {
@@ -408,7 +409,7 @@ public class ModuleChargeController extends AbstractController {
             });
         });
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(planification -> {
+            filteredPlanifBeans.setPredicate(planification -> {
 
                 // If filter text is empty, display all data.
                 if (newValue == null || newValue.isEmpty()) {
@@ -424,7 +425,7 @@ public class ModuleChargeController extends AbstractController {
             });
         });
         filtreDebutField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
-            filteredData.setPredicate(planification -> {
+            filteredPlanifBeans.setPredicate(planification -> {
 
                 // If filter text is empty, display all data.
                 if (newValue == null) {
@@ -439,7 +440,7 @@ public class ModuleChargeController extends AbstractController {
             });
         });
         filtreEcheanceField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
-            filteredData.setPredicate(planification -> {
+            filteredPlanifBeans.setPredicate(planification -> {
 
                 // If filter text is empty, display all data.
                 if (newValue == null) {
@@ -454,51 +455,59 @@ public class ModuleChargeController extends AbstractController {
             });
         });
         filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) comboBoxChange ->
-                        filteredData.setPredicate(planification -> {
-                            for (String codeProjetAppliSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTacheBean().matcheProjetAppli(codeProjetAppliSelectionne)) {
-                                    return true;
-                                }
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredPlanifBeans.setPredicate(planification -> {
+                        for (String codeProjetAppliSelectionne : change.getList()) {
+                            if (planification.getTacheBean().matcheProjetAppli(codeProjetAppliSelectionne)) {
+                                return true;
                             }
-                            return false;
-                        })
+                        }
+                        return false;
+                    });
+                }
         );
         filtreImportancesField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) comboBoxChange ->
-                        filteredData.setPredicate(planification -> {
-                            for (String codeImportanceSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
-                                    return true;
-                                }
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredPlanifBeans.setPredicate(planification -> {
+                        for (String codeImportanceSelectionne : change.getList()) {
+                            if (planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
+                                return true;
                             }
-                            return false;
-                        })
+                        }
+                        return false;
+                    });
+                }
         );
         filtreRessourcesField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) comboBoxChange ->
-                        filteredData.setPredicate(planification -> {
-                            for (String codeRessourceSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTacheBean().matcheRessource(codeRessourceSelectionne)) {
-                                    return true;
-                                }
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredPlanifBeans.setPredicate(planification -> {
+                        for (String codeRessourceSelectionne : change.getList()) {
+                            if (planification.getTacheBean().matcheRessource(codeRessourceSelectionne)) {
+                                return true;
                             }
-                            return false;
-                        })
+                        }
+                        return false;
+                    });
+                }
         );
         filtreProfilsField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) comboBoxChange ->
-                        filteredData.setPredicate(planification -> {
-                            for (String codeProfilSelectionne : comboBoxChange.getList()) {
-                                if (planification.getTacheBean().matcheProfil(codeProfilSelectionne)) {
-                                    return true;
-                                }
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredPlanifBeans.setPredicate(planification -> {
+                        for (String codeProfilSelectionne : change.getList()) {
+                            if (planification.getTacheBean().matcheProfil(codeProfilSelectionne)) {
+                                return true;
                             }
-                            return false;
-                        })
+                        }
+                        return false;
+                    });
+                }
         );
         // 3. Wrap the FilteredList in a SortedList.
-        SortedList<PlanificationBean> sortedData = new SortedList<>(filteredData);
+        SortedList<PlanificationBean> sortedData = new SortedList<>(filteredPlanifBeans);
         // 4. Bind the SortedList COMPARATOR to the TableView COMPARATOR.
         sortedData.comparatorProperty().bind(planificationsTable.comparatorProperty());
         // 5. Add sorted (and filtered) data to the table.
@@ -510,58 +519,50 @@ public class ModuleChargeController extends AbstractController {
     }
 
     private void populerFiltreProjetsApplis() {
-
-        List<String> codesProjetsApplisList = new ArrayList<>();
-        codesProjetsApplisList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getProjetAppli()).distinct().collect(Collectors.toList()));
-        codesProjetsApplisList.sort(String::compareTo);
-
-        filtreProjetsApplisField.getItems().clear();
-        for (String codeProjetAppli : codesProjetsApplisList) {
-            filtreProjetsApplisField.getItems().add(codeProjetAppli);
-        }
-
+        filtreProjetsApplisField.getItems().setAll(
+                planificationsBeans.stream()
+                        .filter(planification -> (planification.getTacheBean().getProjetAppli() != null))
+                        .map(planification -> planification.getTacheBean().getProjetAppli())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
         filtreProjetsApplisField.getCheckModel().checkAll();
     }
 
     private void populerFiltreImportances() {
-
-        List<String> codesImportancesList = new ArrayList<>();
-        codesImportancesList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getImportance()).distinct().collect(Collectors.toList()));
-        codesImportancesList.sort(String::compareTo);
-
-        filtreImportancesField.getItems().clear();
-        for (String codeImportance : codesImportancesList) {
-            filtreImportancesField.getItems().add(codeImportance);
-        }
-
+        filtreImportancesField.getItems().setAll(
+                planificationsBeans.stream()
+                        .filter(planification -> (planification.getTacheBean().getImportance() != null))
+                        .map(planification -> planification.getTacheBean().getImportance())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
         filtreImportancesField.getCheckModel().checkAll();
     }
 
     private void populerFiltreRessources() {
-
-        List<String> codesRessourcesList = new ArrayList<>();
-        codesRessourcesList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getRessource()).distinct().collect(Collectors.toList()));
-        codesRessourcesList.sort(String::compareTo);
-
-        filtreRessourcesField.getItems().clear();
-        for (String codeRessource : codesRessourcesList) {
-            filtreRessourcesField.getItems().add(codeRessource);
-        }
-
+        filtreRessourcesField.getItems().setAll(
+                planificationsBeans.stream()
+                        .filter(planification -> (planification.getTacheBean().getRessource() != null))
+                        .map(planification -> planification.getTacheBean().getRessource())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
         filtreRessourcesField.getCheckModel().checkAll();
     }
 
     private void populerFiltreProfils() {
-
-        List<String> codesProfilsList = new ArrayList<>();
-        codesProfilsList.addAll(planificationsBeans.stream().map(planification -> planification.getTacheBean().getProfil()).distinct().collect(Collectors.toList()));
-        codesProfilsList.sort(String::compareTo);
-
-        filtreProfilsField.getItems().clear();
-        for (String codeProfil : codesProfilsList) {
-            filtreProfilsField.getItems().add(codeProfil);
-        }
-
+        filtreProfilsField.getItems().setAll(
+                planificationsBeans.stream()
+                        .filter(planification -> (planification.getTacheBean().getProfil() != null))
+                        .map(planification -> planification.getTacheBean().getProfil())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
         filtreProfilsField.getCheckModel().checkAll();
     }
 
@@ -660,7 +661,20 @@ public class ModuleChargeController extends AbstractController {
         ihm.definirDateEtat(dateEtat);
     }
 
-    public void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    public void importerDepuisCalc() throws ControllerException {
+
+        // Cf. https://docs.oracle.com/javase/8/javafx/api/javafx/stage/FileChooser.html
+        File ficCalc;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir le fichier");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
+        );
+        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
+        if (ficCalc == null) {
+            return; // TODO FDA 2017/04 Afficher "annulé" à l'utilisateur.
+        }
+
         PlanCharge planCharge;
         try {
             planCharge = planChargeService.importerDepuisCalc(ficCalc);
@@ -668,21 +682,17 @@ public class ModuleChargeController extends AbstractController {
             throw new ControllerException("Impossible d'importer le plan de charghe depsui le ficheir '" + ficCalc.getAbsolutePath() + "'.", e);
         }
 
-        planChargeBean.setDateEtat(planCharge.getDateEtat());
-
-        planChargeBean.getPlanificationsBeans().clear();
-        planChargeBean.getPlanificationsBeans().addAll(
-                planCharge.getPlanifications().taches().stream()
-                        .map(tache -> {
-                            try {
-                                Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
-                                return new PlanificationBean(tache, calendrier);
-                            } catch (TacheSansPlanificationException e) {
-                                throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
-                            }
-                        })
-                        .collect(Collectors.toList())
-        );
+        ihm.definirDateEtat(planCharge.getDateEtat());
+        planificationsBeans.setAll(planCharge.getPlanifications().taches().stream()
+                .map(tache -> {
+                    try {
+                        Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
+                        return new PlanificationBean(tache, calendrier);
+                    } catch (TacheSansPlanificationException e) {
+                        throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
+                    }
+                })
+                .collect(Collectors.toList()));
 
     }
 }

@@ -23,8 +23,9 @@ public class PlanChargeBean {
         this.dateEtat = dateEtat;
     }
 
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @Null
-    private ObservableList<PlanificationBean> planificationsBeans = FXCollections.observableArrayList();
+    private final ObservableList<PlanificationBean> planificationsBeans;
 
     @Null
     public ObservableList<PlanificationBean> getPlanificationsBeans() {
@@ -32,6 +33,7 @@ public class PlanChargeBean {
     }
 
 /*
+Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     public void setPlanificationsBeans(ObservableList<PlanificationBean> planificationsBeans) {
         this.planificationsBeans = planificationsBeans;
     }
@@ -39,5 +41,7 @@ public class PlanChargeBean {
 
     public PlanChargeBean() {
         super();
+        dateEtat =  null;
+        planificationsBeans = FXCollections.observableArrayList();
     }
 }

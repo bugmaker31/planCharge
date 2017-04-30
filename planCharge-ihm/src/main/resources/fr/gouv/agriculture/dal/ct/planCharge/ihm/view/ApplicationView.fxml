@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-
 <BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -14,24 +9,21 @@
                 <Menu mnemonicParsing="true" text="_Fichier">
                     <items>
                         <MenuItem fx:id="charger" mnemonicParsing="false" onAction="#charger" text="Charger..." />
-                        <MenuItem mnemonicParsing="true" onAction="#sauver" text="_Sauver...">
-                            <accelerator>
-                                <KeyCodeCombination alt="UP" code="S" control="ANY" meta="UP" shift="UP" shortcut="UP" />
-                            </accelerator>
-                        </MenuItem>
+                        <MenuItem mnemonicParsing="true" onAction="#sauver" text="_Sauver..." accelerator="Shortcut+S" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="true" text="_Préférences..." />
+                        <MenuItem mnemonicParsing="true" text="_Préférences..."/>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="true" onAction="#quitter" text="_Quitter" />
+                        <MenuItem mnemonicParsing="true" onAction="#quitter" text="_Quitter" accelerator="Shortcut+Q"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Editer">
                     <items>
-                        <MenuItem disable="true" mnemonicParsing="false" onAction="#supprimer" text="Supprimer" />
+                        <MenuItem mnemonicParsing="true" onAction="#annuler" text="_Annuler/Défaire" accelerator="Shortcut+Z" />
+                        <MenuItem mnemonicParsing="true" onAction="#refaire" text="_Refaire" accelerator="Shortcut+Shift+Y" />
                     </items>
                 </Menu>
                 <Menu disable="true" mnemonicParsing="true" text="_Suivi" />
-                <Menu mnemonicParsing="true" text="_Référentiel">
+                <Menu mnemonicParsing="true" text="_Référentiels">
                     <items>
                         <MenuItem disable="true" mnemonicParsing="false" text="Jours fériés" />
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -46,7 +38,7 @@
                 <Menu mnemonicParsing="true" onAction="#afficherModuleTache" text="_Tâches" />
                 <Menu mnemonicParsing="true" onAction="#afficherModuleCharge" text="_Charge">
                <items>
-                  <MenuItem fx:id="importerChargesDepuisCalc" mnemonicParsing="false" text="Importer depuis Calc..." onAction="#importerChargesDepuisCalc" />
+                  <MenuItem fx:id="importerChargesDepuisCalc" mnemonicParsing="true" text="_Importer depuis Calc..." onAction="#importerChargesDepuisCalc" />
                </items></Menu>
                 <Menu disable="true" mnemonicParsing="false" text="TODOs">
                     <items>

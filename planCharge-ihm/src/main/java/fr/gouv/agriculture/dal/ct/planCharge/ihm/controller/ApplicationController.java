@@ -123,10 +123,25 @@ public class ApplicationController extends AbstractController {
     Menu "Editer" :
      */
 
+    /**
+     * Undo
+     * @param event
+     */
     @FXML
-    private void supprimer(ActionEvent event) {
+    private void annuler(ActionEvent event) {
         // TODO FDA 2017/03 Coder.
-        LOGGER.debug("Editer > Supprimer");
+        LOGGER.debug("Editer > annuler");
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Redo
+     * @param event
+     */
+    @FXML
+    private void refaire(ActionEvent event) {
+        // TODO FDA 2017/03 Coder.
+        LOGGER.debug("Editer > refaire");
         throw new NotImplementedException();
     }
 
@@ -155,8 +170,7 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void importerChargesDepuisCalc(ActionEvent event) {
         LOGGER.debug("Charges > Importer depuis Calc");
-
-        ihm.getChargeController().importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+        ihm.getChargeController().importerDepuisCalc();
     }
 
 

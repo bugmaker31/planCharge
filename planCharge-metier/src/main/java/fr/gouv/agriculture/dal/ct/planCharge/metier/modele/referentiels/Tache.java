@@ -121,6 +121,13 @@ public class Tache {
     @Override
     @NotNull
     public String toString() {
-        return "[" + projetAppli + "] " + noTache() + " (" + noTicketIdal + ") " + '"' + description + '"';
+        return ("[" + projetAppli + "]")
+                + " "
+                + noTache()
+                + " "
+                + ("(" + (noTicketIdal == null || noTicketIdal.isEmpty() ? "N/A" : noTicketIdal) + ")")
+                + " "
+                + ("<< " + description + " >> ")
+                ;
     }
 }
