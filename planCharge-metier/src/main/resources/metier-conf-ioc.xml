@@ -7,33 +7,77 @@
          http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+<!--
     <context:annotation-config/>
-    <context:component-scan base-package="fr.gouv.agriculture.dal.ct.planCharge.metier" />
-    <context:property-override location="metier-conf.properties" />
+    <context:component-scan base-package="fr.gouv.agriculture.dal.ct.planCharge.metier"/>
+    <context:property-override location="metier-conf.properties"/>
+-->
 
-    <bean id="contexte" class="fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte" scope="singleton">
-        <!--Au lieu d'injecter la valeur de la variable Maven dans ce fichier, on l'injecte dans le fichier "metier-conf.properties" (+ propre) :-->
-        <!--<property name="applicationVersion" value="${project.version}" />-->
+<!--
+    &lt;!&ndash;Le (seul et unique) contexte applicatif :&ndash;&gt;
+    <bean id="contexte" class="fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte">
+        &lt;!&ndash;Au lieu d'injecter la valeur de la variable Maven dans ce fichier, on l'injecte dans le fichier "metier-conf.properties" (+ propre) :&ndash;&gt;
+        &lt;!&ndash;<property name="applicationVersion" value="${project.version}" />&ndash;&gt;
     </bean>
+-->
+<!--
+    &lt;!&ndash;Les services :&ndash;&gt;
+    <bean id="planChargeService" class="fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService"/>
 
-    <bean id="planChargeService" class="fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService"
-          scope="singleton" />
-
-    <bean id="planChargeDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao"
-          scope="singleton">
-        <property name="repPersistance" value="./donnees/" />
-        <property name="patronFicPersistance" value="planCharge_{dateEtat}" />
+    &lt;!&ndash;Les DAOs :&ndash;&gt;
+    <bean id="planChargeDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao">
+        <property name="repPersistance" value="./donnees/"/>
+        <property name="patronFicPersistance" value="planCharge_{dateEtat}"/>
     </bean>
+    <bean id="projetAppliDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao"/>
+    <bean id="importanceDao"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao"/>
+    <bean id="ressourceDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao"/>
+    <bean id="profilDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao"/>
 
-    <bean id="projetAppliDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao"
-          scope="singleton"/>
-    <bean id="importanceDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao"
-          scope="singleton"/>
-    <bean id="ressourceDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao"
-          scope="singleton"/>
-    <bean id="profilDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao"
-          scope="singleton"/>
-
-    <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper" scope="singleton" />
+    &lt;!&ndash;Les wrappers XML :&ndash;&gt;
+    &lt;!&ndash;Tous en scope 'prototype', afin qu'ils soient instanciés systématiquement (pour chaque "ligne" du fichier XML).&ndash;&gt;
+    <bean id="referentielsXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper"
+          scope="prototype"/>
+    <bean id="importancesXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ImportancesXmlWrapper"
+          scope="prototype"/>
+    <bean id="importanceXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ImportanceXmlWrapper"
+          scope="prototype"/>
+    <bean id="profilsXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ProfilsXmlWrapper"
+          scope="prototype"/>
+    <bean id="profilXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ProfilXmlWrapper"
+          scope="prototype"/>
+    <bean id="projetsApplisXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ProjetsApplisXmlWrapper"
+          scope="prototype"/>
+    <bean id="projetAppliXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ProjetAppliXmlWrapper"
+          scope="prototype"/>
+    <bean id="ressourcesXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.RessourcesXmlWrapper"
+          scope="prototype"/>
+    <bean id="ressourceXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.RessourceXmlWrapper"
+          scope="prototype"/>
+    <bean id="planChargeXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper"
+          scope="prototype"/>
+    <bean id="planificationsXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanificationsXmlWrapper"
+          scope="prototype"/>
+    <bean id="planificationXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanificationXmlWrapper"
+          scope="prototype"/>
+    <bean id="tacheXmlWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.TacheXmlWrapper"
+          scope="prototype"/>
+    <bean id="calendrierXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.CalendrierXmlWrapper"
+          scope="prototype"/>
+-->
 
 </beans>

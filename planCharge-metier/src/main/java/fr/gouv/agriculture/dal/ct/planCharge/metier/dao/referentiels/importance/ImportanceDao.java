@@ -20,6 +20,20 @@ public class ImportanceDao extends AbstractDao<Importance, String> {
 
     private static final Map<String, Importance> CACHE = new HashMap<>();
 
+    private static ImportanceDao instance;
+
+    public static ImportanceDao instance() {
+        if (instance == null) {
+            instance = new ImportanceDao();
+        }
+        return instance;
+    }
+
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private ImportanceDao() {
+        super();
+    }
+
     @Override
     protected Map<String, Importance> getCache() {
         return CACHE;

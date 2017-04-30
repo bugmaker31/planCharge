@@ -1,14 +1,17 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 /**
@@ -21,19 +24,32 @@ public class PlanChargeXmlWrapper {
     private static final String VERSION_FORMAT = "1.0";
 
     @NotNull
-    @Autowired
-    private Contexte contexte;
+//    @Autowired
+//    private Contexte contexte = Contexte.instance();
+    private ParametresApplicatifs params = ParametresApplicatifs.instance();
 
     private String versionFormat = VERSION_FORMAT;
 
+    /*
+        @Inject
+        @Property("application.version")
+    */
     private String versionApplication;
-
-    private ReferentielsXmlWrapper referentiels;
 
     private Date dateEtat;
 
-    private PlanificationsXmlWrapper planifications;
+    //    @Autowired
+    @NotNull
+    private ReferentielsXmlWrapper referentielsXmlWrapper = new ReferentielsXmlWrapper();
+    //    @Autowired
+    @NotNull
+    private PlanificationsXmlWrapper planificationsXmlWrapper = new PlanificationsXmlWrapper();
 
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
     public PlanChargeXmlWrapper() {
         super();
     }
@@ -58,7 +74,7 @@ public class PlanChargeXmlWrapper {
 
     @XmlElement(name = "referentiels", required = true)
     public ReferentielsXmlWrapper getReferentiels() {
-        return referentiels;
+        return referentielsXmlWrapper;
     }
 
     @XmlElement(name = "dateEtat", required = true)
@@ -72,19 +88,31 @@ public class PlanChargeXmlWrapper {
 
     @XmlElement(name = "planifications", required = true)
     public PlanificationsXmlWrapper getPlanifications() {
-        return planifications;
+        return planificationsXmlWrapper;
     }
 
     public void setPlanifications(PlanificationsXmlWrapper planifications) {
-        this.planifications = planifications;
+        this.planificationsXmlWrapper = planifications;
     }
 
-    public void init(PlanCharge planCharge) throws PlanChargeDaoException {
-        versionApplication = contexte.getApplicationVersion();
+    public PlanChargeXmlWrapper init(PlanCharge planCharge) throws PlanChargeDaoException {
+        versionApplication = params.getParametrage("application.version");
 
-        this.dateEtat = Dates.asDate(planCharge.getDateEtat());
-        this.planifications = new PlanificationsXmlWrapper(planCharge.getPlanifications());
+        dateEtat = Dates.asDate(planCharge.getDateEtat());
+        referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getPlanifications());
+        planificationsXmlWrapper = planificationsXmlWrapper.init(planCharge.getPlanifications());
 
-        referentiels = new ReferentielsXmlWrapper(planCharge.getPlanifications());
+        return this;
     }
+
+    public PlanCharge extract() throws DaoException {
+        PlanCharge planCharge;
+        Planifications planifications = planificationsXmlWrapper.extract();
+        planCharge = new PlanCharge(
+                Dates.asLocalDate(dateEtat),
+                planifications
+        );
+        return planCharge;
+    }
+
 }

@@ -12,21 +12,40 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ProfilXmlWrapper {
 
-    private final Profil profil;
+    private String id;
+    private String code;
 
-    public ProfilXmlWrapper(Profil profil) {
-        this.profil = profil;
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
+    public ProfilXmlWrapper() {
+        super();
+    }
+
+    public ProfilXmlWrapper init (Profil profil) {
+        this.id = profil.getIdentity();
+        this.code = profil.getCode();
+        return this;
     }
 
     @XmlAttribute(name="id", required = true)
     public String getId() {
-        return profil.getIdentity();
+        return id;
     }
 
     @XmlElement(name="code", required = true)
     @NotNull
     public String getCode() {
-        return profil.getCode();
+        return code;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

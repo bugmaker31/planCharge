@@ -1,8 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -51,7 +51,7 @@ public class ModuleTacheController extends AbstractController {
     @FXML
     private TableColumn<TacheBean, LocalDate> echeanceColumn;
     @FXML
-    private TableColumn<TacheBean, String> importanceColumn;
+    private TableColumn<TacheBean, Importance> importanceColumn;
     @FXML
     private TableColumn<TacheBean, Double> chargeColumn;
     @FXML
@@ -89,7 +89,7 @@ public class ModuleTacheController extends AbstractController {
 
     // Les collections de données :
     private ObservableList<TacheBean> taches = FXCollections.observableArrayList();
-    private ObservableList<String> codesImportancesTaches = FXCollections.observableArrayList();
+    private ObservableList<Importance> importancesTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
     private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
@@ -132,13 +132,13 @@ public class ModuleTacheController extends AbstractController {
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplisTaches));
         debutColumn.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter())); // TODO FDA 2017/04 Ne permettre de saisir qu'une date (DatePicker), plutôt qu'un string.
         echeanceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter())); // TODO FDA 2017/04 Ne permettre de saisir qu'une date (DatePicker), plutôt qu'un string.
-        importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesImportancesTaches));
+        importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(importancesTaches));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
 
         // Paramétrage des ordres de tri :
-        importanceColumn.setComparator(new ImportanceComparator());
+        importanceColumn.setComparator(Importance::compareTo);
 
 /*
         // Cf. http://stackoverflow.com/questions/23789525/onscroll-listener-does-not-working-in-tableview-in-javafx-2
@@ -151,9 +151,9 @@ public class ModuleTacheController extends AbstractController {
 
     private void populerTaches() {
         taches.addListener((ListChangeListener<? super TacheBean>) changeListener -> {
-            codesImportancesTaches.clear();
-            codesImportancesTaches.addAll(changeListener.getList().stream().map(tache -> tache.getImportance()).collect(Collectors.toSet()));
-            codesImportancesTaches.sort(String::compareTo);
+            importancesTaches.clear();
+            importancesTaches.addAll(changeListener.getList().stream().map(tache -> tache.getImportance()).collect(Collectors.toSet()));
+            importancesTaches.sort(Importance::compareTo);
 
             codesProjetsApplisTaches.clear();
             codesProjetsApplisTaches.addAll(changeListener.getList().stream().map(tache -> tache.getProjetAppli()).collect(Collectors.toSet()));
@@ -357,7 +357,7 @@ public class ModuleTacheController extends AbstractController {
     private void populerFiltreImportances() {
 
         List<String> codesImportancesList = new ArrayList<>();
-        codesImportancesList.addAll(taches.stream().map(tache -> tache.getImportance()).distinct().collect(Collectors.toList()));
+        codesImportancesList.addAll(taches.stream().map(tache -> tache.getImportance().getCode()).distinct().collect(Collectors.toList()));
         codesImportancesList.sort(String::compareTo);
 
         filtreImportancesField.getItems().clear();
@@ -413,7 +413,7 @@ public class ModuleTacheController extends AbstractController {
     @FXML
     private void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
-        Tache t = new Tache(
+        TacheBean nouvTache = new TacheBean(
                 idTacheSuivant(),
                 "(pas de ticket IDAL)",
                 null,
@@ -425,7 +425,6 @@ public class ModuleTacheController extends AbstractController {
                 null,
                 null
         );
-        TacheBean nouvTache = new TacheBean(t);
         taches.add(nouvTache);
     }
 

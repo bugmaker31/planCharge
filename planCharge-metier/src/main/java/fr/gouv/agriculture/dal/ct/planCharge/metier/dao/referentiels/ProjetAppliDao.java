@@ -17,6 +17,20 @@ public class ProjetAppliDao extends AbstractDao<ProjetAppli, String> {
 
     private static final Map<String, ProjetAppli> CACHE = new HashMap<>();
 
+    private static ProjetAppliDao instance = null;
+
+    public static ProjetAppliDao instance() {
+        if (instance == null) {
+            instance = new ProjetAppliDao();
+        }
+        return instance;
+    }
+
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private ProjetAppliDao() {
+        super();
+    }
+
     @Override
     protected Map<String, ProjetAppli> getCache() {
         return CACHE;

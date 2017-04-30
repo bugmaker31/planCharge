@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 
 import javax.validation.constraints.NotNull;
@@ -12,21 +11,40 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class RessourceXmlWrapper {
 
-    private final Ressource ressource;
+    private String id;
+    private String trigramme;
 
-    public RessourceXmlWrapper(Ressource ressource) {
-        this.ressource = ressource;
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
+    public RessourceXmlWrapper() {
+        super();
     }
 
-    @XmlAttribute(name="id", required = true)
+    public RessourceXmlWrapper init(Ressource ressource) {
+        this.id = ressource.getIdentity();
+        this.trigramme = ressource.getTrigramme();
+        return this;
+    }
+
+    @XmlAttribute(name = "id", required = true)
     public String getId() {
-        return ressource.getIdentity();
+        return id;
     }
 
-    @XmlElement(name="trigramme", required = true)
+    @XmlElement(name = "trigramme", required = true)
     @NotNull
-    public String getCode() {
-        return ressource.getTrigramme();
+    public String getTrigramme() {
+        return trigramme;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTrigramme(String trigramme) {
+        this.trigramme = trigramme;
+    }
 }

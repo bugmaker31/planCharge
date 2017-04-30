@@ -4,6 +4,7 @@ import com.sun.star.frame.XComponentLoader;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.XCell;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
@@ -14,13 +15,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.JAXBContext;
@@ -39,42 +40,63 @@ import java.util.Map;
  */
 public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
+    public static final String CLEF_PARAM_REP_PERSISTANCE = "persistance.repertoire";
+    public static final String CLEF_PARAM_PATRON_FICHIER = "persistance.patronFichier";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeDao.class);
 
     private static final Map<LocalDate, PlanCharge> CACHE = new HashMap<>();
 
-    @NotNull
-    private String repPersistanceDonnees;
+    private static PlanChargeDao instance;
 
-    @NotNull
-    private String patronFicPersistanceDonnees;
-
-    @NotNull
-    @Autowired
-    private PlanChargeXmlWrapper wrapper;
-
-    @NotNull
-    @Autowired
-    private ProjetAppliDao projetAppliDao;
-
-    @NotNull
-    @Autowired
-    private ImportanceDao importanceDao;
-
-    @NotNull
-    @Autowired
-    private RessourceDao ressourceDao;
-
-    @NotNull
-    @Autowired
-    private ProfilDao profilDao;
-
-    public void setRepPersistance(String repPersistance) {
-        this.repPersistanceDonnees = repPersistance;
+    public static PlanChargeDao instance() {
+        if (instance == null) {
+            instance = new PlanChargeDao();
+        }
+        return instance;
     }
 
-    public void setPatronFicPersistance(String patronFicPersistance) {
-        this.patronFicPersistanceDonnees = patronFicPersistance;
+    //    @Inject
+    @NotNull
+    private ParametresApplicatifs params = ParametresApplicatifs.instance();
+
+/*
+//    @Inject
+//    @Property("persistance.repertoire")
+    @NotNull
+    private String repPersistanceDonnees;
+*/
+
+/*
+//    @Inject
+//    @Property("persistance.patronFichier")
+    @NotNull
+    private String patronFicPersistanceDonnees;
+*/
+
+    @NotNull
+//    @Autowired
+    private PlanChargeXmlWrapper wrapper = new PlanChargeXmlWrapper();
+
+    @NotNull
+//    @Autowired
+    private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+
+    @NotNull
+//    @Autowired
+    private ImportanceDao importanceDao = ImportanceDao.instance();
+
+    @NotNull
+//    @Autowired
+    private RessourceDao ressourceDao = RessourceDao.instance();
+
+    @NotNull
+//    @Autowired
+    private ProfilDao profilDao = ProfilDao.instance();
+
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private PlanChargeDao() {
+        super();
     }
 
     @Override
@@ -89,20 +111,22 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     @Override
     public PlanCharge load(@NotNull LocalDate dateEtat) throws EntityNotFoundException {
-        File fichierPlanif = fichierPlanificationsCharge(dateEtat);
+        File fichierPlanif = fichierPlanCharge(dateEtat);
         if (fichierPlanif == null) {
             throw new EntityNotFoundException("Fichier inexistant pour la dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
         }
         try {
-            Planifications planifications = planifications(fichierPlanif);
-            return new PlanCharge(dateEtat, planifications);
+            PlanCharge plan = plan(fichierPlanif);
+            return plan;
         } catch (PlanChargeDaoException e) {
             throw new EntityNotFoundException("Impossible de charger le plan de charge en dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
         }
     }
 
     @NotNull
-    private File fichierPlanificationsCharge(@NotNull LocalDate dateEtat) {
+    private File fichierPlanCharge(@NotNull LocalDate dateEtat) {
+        final String repPersistanceDonnees = params.getParametrage(CLEF_PARAM_REP_PERSISTANCE);
+        final String patronFicPersistanceDonnees = params.getParametrage(CLEF_PARAM_PATRON_FICHIER);
         String nomFic = patronFicPersistanceDonnees
                 .replaceAll("\\{dateEtat}", dateEtat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 + ".xml";
@@ -115,7 +139,8 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
      * @param file
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private Planifications planifications(@NotNull File file) throws PlanChargeDaoException {
+    private PlanCharge plan(@NotNull File file) throws PlanChargeDaoException {
+        PlanCharge plan;
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Unmarshaller um = context.createUnmarshaller();
@@ -123,19 +148,21 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             // Reading XML from the file and unmarshalling.
             wrapper = (PlanChargeXmlWrapper) um.unmarshal(file);
 
-            return new Planifications(); // TODO FDA 2017/04 Coder : exploiter le wrapper.
+            plan = wrapper.extract();
 
         } catch (Exception e) {
             throw new PlanChargeDaoException("Impossible de dé-sérialiser le plan de charge depuis le fichier XML '" + file.getAbsolutePath() + "'.", e);
         }
+        return plan;
     }
 
     public void sauver(PlanCharge planCharge) throws PlanChargeDaoException {
 
         LocalDate dateEtat = planCharge.getDateEtat();
 
-        File fichierPlanif = fichierPlanificationsCharge(dateEtat);
+        File fichierPlanif = fichierPlanCharge(dateEtat);
         if (fichierPlanif.exists()) {
+            // TODO FDA 2017/04 Demander confirmation à l'utilisateur, avant.
             fichierPlanif.delete();
         }
         try {
@@ -340,9 +367,10 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                     profil
             );
 
-        } catch (DaoException|LibreOfficeException e) {
+        } catch (ModeleException | DaoException | LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer la tâche.", e);
         }
         return tache;
     }
+
 }

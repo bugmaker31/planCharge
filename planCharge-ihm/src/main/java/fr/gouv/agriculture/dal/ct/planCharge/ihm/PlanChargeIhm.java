@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
+import fr.gouv.agriculture.dal.ct.kernel.KernelException;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
@@ -9,20 +11,15 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -45,11 +42,14 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
-    private static ApplicationContext contexte;
+    private static PlanChargeIhm instance;
 
-    public static ApplicationContext getContexte() {
-        return contexte;
+    public static PlanChargeIhm instance() {
+        return instance;
     }
+
+//    private static Contexte contexte = Contexte.instance();
+    private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
     @NotNull
     private Stage primaryStage;
@@ -72,7 +72,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         private ErrorController errorController;
     */
     @NotNull
-    private ApplicationController applicationContoller;
+    private ApplicationController applicationController;
     @NotNull
     private ModuleDisponibilitesController disponibiliteController;
     @NotNull
@@ -86,23 +86,23 @@ public class PlanChargeIhm extends javafx.application.Application {
     /*
      Les services métier :
       */
-    @Autowired
+//    @Autowired
     @NotNull
-    private PlanChargeService planChargeService;
+    private PlanChargeService planChargeService = PlanChargeService.instance();
 
     /*
      Les données métier :
       */
-    @Autowired
+//    @Autowired
     @NotNull
-    private PlanChargeBean planChargeBean;
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
-    public ApplicationController getApplicationContoller() {
-        return applicationContoller;
+    public ApplicationController getApplicationController() {
+        return applicationController;
     }
 
     public ModuleDisponibilitesController getDisponibiliteController() {
@@ -131,19 +131,31 @@ public class PlanChargeIhm extends javafx.application.Application {
     @Override
     public void init() throws Exception {
         LOGGER.info("Application en cours d'initialisation...");
+        instance = this;
 
         super.init();
+
+        chargerParametresApplicatifs();
 
         // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
         Thread.setDefaultUncaughtExceptionHandler(this::showError);
 
-        injecter();
+//        injecter();
 
         initialiserViewsEtControllers();
 
         LOGGER.info("Application initialisée.");
     }
 
+    private void chargerParametresApplicatifs() throws Exception {
+        try {
+            params.init();
+        } catch (KernelException e) {
+            throw new Exception("Impossible de charger les paramètres applicatifs.", e);
+        }
+    }
+
+/*
     private void injecter() {
 
         // On utilise Spring IOC pour l'injection, principalement :
@@ -160,6 +172,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) contexte).getBeanFactory();
         beanFactory.registerSingleton(this.getClass().getCanonicalName(), this);
     }
+*/
 
     private void initialiserViewsEtControllers() throws IOException {
 /*
@@ -174,7 +187,7 @@ public class PlanChargeIhm extends javafx.application.Application {
             FXMLLoader appLoader = new FXMLLoader();
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = appLoader.load();
-            applicationContoller = appLoader.getController();
+            applicationController = appLoader.getController();
         }
         {
             FXMLLoader dispoLoader = new FXMLLoader();
@@ -197,29 +210,40 @@ public class PlanChargeIhm extends javafx.application.Application {
     }
 
     public void showError(Thread thread, Throwable throwable) {
-        LOGGER.error("An error occurred in thread " + thread + ".", throwable);
+        LOGGER.error("An (uncaught) error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
+
             StringWriter errorMsg = new StringWriter();
             throwable.printStackTrace(new PrintWriter(errorMsg));
-            showErrorDialog(errorMsg.toString());
+
+            afficherPopUp(Alert.AlertType.ERROR, "Erreur interne", errorMsg.toString());
         }
     }
 
-    public void afficherErreur(@NotNull String message) {
-        LOGGER.error(message);
-        if (Platform.isFxApplicationThread()) {
-            showErrorDialog(message);
-        }
+    public void afficherPopUp(Alert.AlertType type, String titre, String message) {
+        afficherPopUp(type, titre, message, Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100));
     }
 
-    private void showErrorDialog(String errorMsg) {
+    public void afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
+        Alert popUp = new Alert(type);
+        popUp.setTitle(type.name());
+        popUp.setHeaderText(titre);
+        popUp.setContentText(message);
 /*
-        Stage errorDialog = new Stage();
-        errorDialog.initModality(Modality.APPLICATION_MODAL);
-        errorDialog.setScene(new Scene(errorView, 800, 400));
-        errorController.setErrorText(errorMsg);
-        errorDialog.show();
+        // Cf. http://stackoverflow.com/questions/29738083/javafx-alert-dialog-html
+        WebView webView = new WebView();
+        webView.getEngine().loadContent("<html>" + message + "</html>");
+        webView.setPrefSize(width, height);
+        popUp.getDialogPane().setContent(webView);
 */
+        popUp.getButtonTypes().setAll(ButtonType.OK);
+        popUp.getDialogPane().setPrefWidth(width);
+        popUp.getDialogPane().setPrefHeight(height);
+        popUp.showAndWait();
+    }
+
+/*
+    private void showErrorDialog(@NotNull String titre,  String errorMsg) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
@@ -232,6 +256,7 @@ public class PlanChargeIhm extends javafx.application.Application {
             LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
         }
     }
+*/
 
     @Override
     public void start(@NotNull Stage primaryStage) throws IOException {
@@ -241,6 +266,7 @@ public class PlanChargeIhm extends javafx.application.Application {
 
         primaryStage.setTitle(APP_NAME);
         primaryStage.setScene(new Scene(applicationView));
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
         primaryStage.show();
 
         // Chargement des données utilisées dernièrement (if any) :
@@ -257,7 +283,11 @@ public class PlanChargeIhm extends javafx.application.Application {
 //        afficherModuleDisponibilites();
 //        afficherModuleTaches();
         afficherModuleCharge();
-        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+
+//        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+
+        definirDateEtat(LocalDate.of(2017, 4, 17));
+//        applicationController.charger();
 
         LOGGER.info("Application démarrée.");
     }
@@ -287,11 +317,12 @@ public class PlanChargeIhm extends javafx.application.Application {
             );
         } catch (ServiceException e) {
             LOGGER.error("Impossible de lire les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de charger le plan de charge");
-            alert.setContentText("Impossible de charger les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
-            alert.showAndWait();
+            afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de charger le plan de charge",
+                    "Impossible de charger les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    500, 200
+            );
         }
         return planificationsBeans;
     }
@@ -387,15 +418,16 @@ public class PlanChargeIhm extends javafx.application.Application {
         primaryStage.setTitle(titre);
     }
 
-    public void definirDateEtat(LocalDate dateEtat) {
+    public void definirDateEtat(@Null LocalDate dateEtat) {
 
-        if (!dateEtat.equals(planChargeBean.getDateEtat())) {
+        if (dateEtat == null || !dateEtat.equals(planChargeBean.getDateEtat())) {
             planChargeBean.setDateEtat(dateEtat);
         }
-        if (!dateEtat.equals(getChargeController().getDateEtatPicker().getValue())) {
+        if (dateEtat == null || !dateEtat.equals(getChargeController().getDateEtatPicker().getValue())) {
             getChargeController().getDateEtatPicker().setValue(dateEtat);
         }
 
         majTitre();
     }
+
 }

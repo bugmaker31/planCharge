@@ -11,6 +11,15 @@ import java.time.LocalDate;
  */
 public class PlanChargeBean {
 
+    private static PlanChargeBean instance;
+
+    public static PlanChargeBean instance() {
+        if (instance == null) {
+            instance = new PlanChargeBean();
+        }
+        return instance;
+    }
+
     @Null
     private LocalDate dateEtat;
 
@@ -39,9 +48,11 @@ Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners 
     }
 */
 
-    public PlanChargeBean() {
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private PlanChargeBean() {
         super();
         dateEtat =  null;
         planificationsBeans = FXCollections.observableArrayList();
     }
+
 }

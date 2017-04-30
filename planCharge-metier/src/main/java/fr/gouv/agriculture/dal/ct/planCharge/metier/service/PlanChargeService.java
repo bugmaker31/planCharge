@@ -6,7 +6,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -20,17 +19,22 @@ public class PlanChargeService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeService.class);
 
-    @NotNull
-    @Autowired
-    private PlanChargeDao planChargeDao;
+    private static PlanChargeService instance;
 
-    public void ajouterLigne(@NotNull PlanCharge planCharge, @NotNull Tache tache) {
-/*
-        if (planCharge.getPlanifications() == null) {
-            planCharge.initPlanifications();
+    public static PlanChargeService instance() {
+        if (instance == null) {
+            instance = new PlanChargeService();
         }
-*/
-        planCharge.getPlanifications().ajouter(tache, planCharge.getDateEtat());
+        return instance;
+    }
+
+    @NotNull
+//    @Autowired
+    private PlanChargeDao planChargeDao = PlanChargeDao.instance();
+
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private PlanChargeService() {
+        super();
     }
 
     @NotNull

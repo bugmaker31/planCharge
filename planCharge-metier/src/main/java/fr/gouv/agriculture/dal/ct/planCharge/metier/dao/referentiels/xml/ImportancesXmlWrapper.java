@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,15 +10,30 @@ import java.util.List;
  */
 public class ImportancesXmlWrapper {
 
-    private final List<ImportanceXmlWrapper> importances;
+    private List<ImportanceXmlWrapper> importances = new ArrayList<>();
 
-    public ImportancesXmlWrapper(List<ImportanceXmlWrapper>  importances) {
-        this.importances = importances;
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
+    public ImportancesXmlWrapper() {
+        super();
     }
 
-    @XmlElement(name="importance", required = true)
+    public ImportancesXmlWrapper init(List<ImportanceXmlWrapper> importances) {
+        this.importances.clear();
+        this.importances.addAll(importances);
+        return this;
+    }
+
+    @XmlElement(name = "importance", required = true)
     @NotNull
     public List<ImportanceXmlWrapper> getImportances() {
         return importances;
+    }
+
+    public void setImportances(List<ImportanceXmlWrapper> importances) {
+        this.importances = importances;
     }
 }

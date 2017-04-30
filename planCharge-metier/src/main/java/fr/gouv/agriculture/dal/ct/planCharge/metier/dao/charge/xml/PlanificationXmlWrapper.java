@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import java.time.LocalDate;
 import java.util.Map;
@@ -11,17 +12,27 @@ import java.util.Map;
  */
 public class PlanificationXmlWrapper {
 
-    private TacheXmlWrapper tache;
+//    @Autowired
+    @NotNull
+    private TacheXmlWrapper tache = new TacheXmlWrapper();
 
-    private CalendrierXmlWrapper calendrier;
+//    @Autowired
+    @NotNull
+    private CalendrierXmlWrapper calendrier = new CalendrierXmlWrapper();
 
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
     public PlanificationXmlWrapper() {
         super();
     }
 
-    public PlanificationXmlWrapper(Tache tache, Map<LocalDate, Double> calendrier) {
-        this.tache = new TacheXmlWrapper(tache);
-        this.calendrier = new CalendrierXmlWrapper(calendrier);
+    public PlanificationXmlWrapper init(Tache tache, Map<LocalDate, Double> calendrier) {
+        this.tache = this.tache.init(tache);
+        this.calendrier = this.calendrier.init(calendrier);
+        return this;
     }
 
     @XmlElement(name = "tache", required = true)

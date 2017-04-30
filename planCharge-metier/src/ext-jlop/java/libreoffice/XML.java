@@ -296,7 +296,7 @@ public class XML
       return result.getWriter().toString();
     }
     catch(Exception e)
-    {  System.out.println("Unable to transform " + xmlFnm + " with " + xslFnm); 
+    {  System.out.println("Unable to extract " + xmlFnm + " with " + xslFnm);
        System.out.println("  " + e);
        return null;
     }
@@ -320,7 +320,7 @@ public class XML
       return result.getWriter().toString();
     }
     catch(Exception e)
-    {  System.out.println("Unable to transform the string"); 
+    {  System.out.println("Unable to extract the string");
        System.out.println("  " + e);
        // e.printStackTrace();
        return null;

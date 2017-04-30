@@ -1,5 +1,12 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -16,23 +23,31 @@ public class TacheBean {
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    @NotNull
-    private Tache tache;
-
     private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty noTicketIdal = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
     private StringProperty projetAppli = new SimpleStringProperty();
     private ObjectProperty<LocalDate> debut = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     private ObjectProperty<LocalDate> echeance = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
-    private StringProperty importance = new SimpleStringProperty();
+    private ObjectProperty<Importance> importance = new SimpleObjectProperty<>();
     private DoubleProperty charge = new SimpleDoubleProperty();
     private StringProperty ressource = new SimpleStringProperty();
     private StringProperty profil = new SimpleStringProperty();
 
-    public TacheBean(@NotNull Tache tache) {
-        this.tache = tache;
+    //    @Autowired
+    @NotNull
+    private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+    //    @Autowired
+    @NotNull
+    private RessourceDao ressourceDao = RessourceDao.instance();
+    //    @Autowired
+    @NotNull
+    private ImportanceDao importanceDao = ImportanceDao.instance();
+    //    @Autowired
+    @NotNull
+    private ProfilDao profilDao = ProfilDao.instance();
 
+    public TacheBean(@NotNull Tache tache) {
         this.id.set(tache.getId());
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
@@ -42,7 +57,7 @@ public class TacheBean {
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
         if (tache.getImportance() != null) {
-            this.importance.set(tache.getImportance().getCode());
+            this.importance.set(tache.getImportance());
         }
         this.charge.set(tache.getCharge());
         if (tache.getRessource() != null) {
@@ -54,12 +69,24 @@ public class TacheBean {
     }
 
     public TacheBean(int id, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
-        this(new Tache(id, noTicketIdal, description, projetAppli, debut, echeance, importance, charge, ressource, profil));
-    }
-
-    @NotNull
-    public Tache getTache() {
-        return tache;
+        this.id.set(id);
+        this.noTicketIdal.set(noTicketIdal);
+        this.description.set(description);
+        if (projetAppli != null) {
+            this.projetAppli.set(projetAppli.getCode());
+        }
+        this.debut.set(debut);
+        this.echeance.set(echeance);
+        if (importance != null) {
+            this.importance.set(importance);
+        }
+        this.charge.set(charge);
+        if (ressource != null) {
+            this.ressource.set(ressource.getTrigramme());
+        }
+        if (profil != null) {
+            this.profil.set(profil.getCode());
+        }
     }
 
     @NotNull
@@ -123,12 +150,12 @@ public class TacheBean {
     }
 
     @NotNull
-    public String getImportance() {
+    public Importance getImportance() {
         return importance.get();
     }
 
     @NotNull
-    public StringProperty importanceProperty() {
+    public ObjectProperty<Importance> importanceProperty() {
         return importance;
     }
 
@@ -169,7 +196,7 @@ public class TacheBean {
 
     @NotNull
     public String noTache() {
-        return tache == null ? null : tache.noTache();
+        return Tache.noTache(id.get());
     }
 
     @NotNull
@@ -208,8 +235,15 @@ public class TacheBean {
     }
 
     @NotNull
+    public boolean matcheImportance(@NotNull Importance otherValue) {
+        if (getImportance().getCode().contains(otherValue.getCode())) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+    @NotNull
     public boolean matcheImportance(@NotNull String otherValue) {
-        if (getImportance().contains(otherValue)) {
+        if (getImportance().getCode().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -252,6 +286,34 @@ public class TacheBean {
     @Override
     @NotNull
     public String toString() {
-        return tache.toString();
+        return ("[" + projetAppli.get() + "]")
+                + " "
+                + noTache()
+                + " "
+                + ("(" + (noTicketIdal.isEmpty().get() ? "N/A" : noTicketIdal.get()) + ")")
+                + " "
+                + ("<< " + description.get() + " >> ")
+                ;
+    }
+
+    public Tache extract() {
+        Tache tache;
+        try {
+            tache = new Tache(
+                    id.get(),
+                    noTicketIdal.get(),
+                    description.get(),
+                    projetAppliDao.load(projetAppli.get()),
+                    debut.get(),
+                    echeance.get(),
+                    importance.get(),
+                    charge.get(),
+                    ressourceDao.load(ressource.get()),
+                    profilDao.load(profil.get())
+            );
+        } catch (ModeleException | DaoException e) {
+            throw new IhmException("Impossible d'extraire la tâche depuis le bean.", e);
+        }
+        return tache;
     }
 }

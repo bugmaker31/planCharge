@@ -1,15 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceComparator;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -25,7 +23,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
@@ -33,15 +30,12 @@ import javafx.util.converter.LocalDateStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -68,7 +62,7 @@ public class ModuleChargeController extends AbstractController {
     @FXML
     private TableColumn<PlanificationBean, LocalDate> echeanceColumn;
     @FXML
-    private TableColumn<PlanificationBean, String> importanceColumn;
+    private TableColumn<PlanificationBean, Importance> importanceColumn;
     @FXML
     private TableColumn<PlanificationBean, Double> chargeColumn;
     @FXML
@@ -129,7 +123,7 @@ public class ModuleChargeController extends AbstractController {
     private CheckComboBox<String> filtreProfilsField;
 
     @NotNull
-    private ObservableList<String> codesImportancesTaches = FXCollections.observableArrayList();
+    private ObservableList<Importance> importancesTaches = FXCollections.observableArrayList();
     @NotNull
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
     @NotNull
@@ -139,18 +133,18 @@ public class ModuleChargeController extends AbstractController {
 
     // L'IHM :
     @NotNull
-    @Autowired
-    private PlanChargeIhm ihm = PlanChargeIhm.getContexte().getBean(PlanChargeIhm.class);
+//    @Autowired
+    private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
     // Les services métier :
     @NotNull
-    @Autowired
-    private PlanChargeService planChargeService = PlanChargeIhm.getContexte().getBean(PlanChargeService.class);
+//    @Autowired
+    private PlanChargeService planChargeService = PlanChargeService.instance();
 
     // Les données métier :
     @NotNull
-    @Autowired
-    private PlanChargeBean planChargeBean = PlanChargeIhm.getContexte().getBean(PlanChargeBean.class);
+//    @Autowired
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
@@ -291,7 +285,7 @@ public class ModuleChargeController extends AbstractController {
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplisTaches));
         debutColumn.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter())); // TODO FDA 2017/04 Ne permettre de saisir qu'une date (DatePicker), plutôt qu'un string.
         echeanceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter())); // TODO FDA 2017/04 Ne permettre de saisir qu'une date (DatePicker), plutôt qu'un string.
-        importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesImportancesTaches));
+        importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(importancesTaches));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
@@ -311,7 +305,7 @@ public class ModuleChargeController extends AbstractController {
         definirNomsColonnesSemaine();
 
         // Paramétrage des ordres de tri :
-        importanceColumn.setComparator(new ImportanceComparator());
+        importanceColumn.setComparator(Importance::compareTo);
 
 /*
         // Cf. http://stackoverflow.com/questions/23789525/onscroll-listener-does-not-working-in-tableview-in-javafx-2
@@ -319,16 +313,16 @@ public class ModuleChargeController extends AbstractController {
 */
 
 /*
-        codesImportancesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
+        importancesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
         codesProjetsApplisTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
         codesRessourcesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
         codesProfilsTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
 */
 
 /* TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
-            codesImportancesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
+            importancesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
             codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProjetAppli()).collect(Collectors.toSet()));
-            codesRessourcesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getRessource()).collect(Collectors.toSet()));
+            codesRessourcesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getIdRessource()).collect(Collectors.toSet()));
             codesProfilsTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProfil()).collect(Collectors.toSet()));
 */
         populerFiltreProjetsApplis();
@@ -369,7 +363,7 @@ public class ModuleChargeController extends AbstractController {
                         if (!planification.getTacheBean().projetAppliProperty().isEmpty().get() && planification.getTacheBean().matcheProjetAppli(newValue)) {
                             return true; // Filter matches
                         }
-                        if (!planification.getTacheBean().importanceProperty().isEmpty().get() && planification.getTacheBean().matcheImportance(newValue)) {
+                        if (!planification.getTacheBean().importanceProperty().isNull().get() && planification.getTacheBean().matcheImportance(newValue)) {
                             return true; // Filter matches
                         }
                         if (!planification.getTacheBean().ressourceProperty().isEmpty().get() && planification.getTacheBean().matcheRessource(newValue)) {
@@ -477,7 +471,7 @@ public class ModuleChargeController extends AbstractController {
 //                    change.reset();
                         filteredPlanifBeans.setPredicate(planification -> {
                             for (String codeImportanceSelectionne : change.getList()) {
-                                if (!planification.getTacheBean().importanceProperty().isEmpty().get() && planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
+                                if (!planification.getTacheBean().importanceProperty().isNull().get() && planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
                                     return true;
                                 }
                             }
@@ -540,7 +534,7 @@ public class ModuleChargeController extends AbstractController {
         filtreImportancesField.getItems().setAll(
                 planificationsBeans.stream()
                         .filter(planification -> (planification.getTacheBean().getImportance() != null))
-                        .map(planification -> planification.getTacheBean().getImportance())
+                        .map(planification -> planification.getTacheBean().getImportance().getCode())
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
@@ -609,11 +603,12 @@ public class ModuleChargeController extends AbstractController {
 
         if (planChargeBean.getDateEtat() == null) {
             LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Impossible d'ajouter une tâche");
-            alert.setContentText("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
-            alert.showAndWait();
+            ihm.afficherPopUp(
+                    Alert.AlertType.WARNING,
+                    "Impossible d'ajouter une tâche",
+                    "Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.",
+                    500, 200
+            );
             return;
         }
 
@@ -665,41 +660,4 @@ public class ModuleChargeController extends AbstractController {
         ihm.definirDateEtat(dateEtat);
     }
 
-    public void importerDepuisCalc() throws ControllerException {
-
-        File ficCalc;
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir le fichier Calc qui contient un plan de charge : ");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
-        );
-        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
-        if (ficCalc == null) {
-            return; // TODO FDA 2017/04 Afficher "annulé" à l'utilisateur.
-        }
-
-        importerDepuisCalc(ficCalc);
-    }
-
-    // TODO FDA 23017/02 Afficher une "progress bar".
-    public void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
-        PlanCharge planCharge;
-        try {
-            planCharge = planChargeService.importerDepuisCalc(ficCalc);
-        } catch (ServiceException e) {
-            throw new ControllerException("Impossible d'importer le plan de charghe depsui le ficheir '" + ficCalc.getAbsolutePath() + "'.", e);
-        }
-
-        ihm.definirDateEtat(planCharge.getDateEtat());
-        planificationsBeans.setAll(planCharge.getPlanifications().taches().stream()
-                .map(tache -> {
-                    try {
-                        Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
-                        return new PlanificationBean(tache, calendrier);
-                    } catch (TacheSansPlanificationException e) {
-                        throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
-                    }
-                })
-                .collect(Collectors.toList()));
-    }
 }

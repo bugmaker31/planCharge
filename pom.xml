@@ -143,12 +143,18 @@
                 </dependency>
         -->
 
-        <!--Pour l'IOC-->
+<!--
+IOC Spring trop compliquée à utiliser quand on pousse un peu l'utilisation.
+On instancie par programme (soi-même), et on récupère les instances (via des méthodes statiques "instance()" par exemple).
+-->
+<!--
+        &lt;!&ndash;Pour l'IOC&ndash;&gt;
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>4.2.0.RELEASE</version>
         </dependency>
+-->
         <!--
                 <dependency>
                     <groupId>javax.inject</groupId>
@@ -156,6 +162,16 @@
                     <version>1</version>
                 </dependency>
         -->
+<!--Impossible de faire fonctionner CDI (NPE) => on met les (2 !) constantes dans le code.-->
+<!--
+        &lt;!&ndash;Pour injecter les properties :&ndash;&gt;
+        &lt;!&ndash;Cf. https://dzone.com/articles/how-to-inject-property-file-properties-with-cdi&ndash;&gt;
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+-->
 
         <!--Pour avoir les annotations NotNull et Nullable-->
 <!--

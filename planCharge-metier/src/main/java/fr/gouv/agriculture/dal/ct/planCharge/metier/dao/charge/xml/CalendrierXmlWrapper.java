@@ -13,17 +13,23 @@ import java.util.Map;
  */
 public class CalendrierXmlWrapper {
 
-    private Map<Date, Double> semaines;
+    private Map<Date, Double> semaines = new HashMap<>();
 
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
     public CalendrierXmlWrapper() {
         super();
     }
 
-    public CalendrierXmlWrapper(Map<LocalDate, Double> semaines) {
-        this.semaines = new HashMap<>(semaines.size());
+    public CalendrierXmlWrapper init(Map<LocalDate, Double> semaines) {
+        this.semaines.clear();
         semaines.keySet().stream().forEach(
                 date -> this.semaines.put(Dates.asDate(date), semaines.get(date))
         );
+        return this;
     }
 
     @XmlElement(name = "semaines", required = true)
@@ -33,5 +39,12 @@ public class CalendrierXmlWrapper {
 
     public void setSemaine(Map<Date, Double> tableau) {
         this.semaines = tableau;
+    }
+
+    public Map<LocalDate, Double> extract() {
+        Map<LocalDate, Double> cal = new HashMap<>();
+        semaines.keySet().stream()
+                .forEach(date -> cal.put(Dates.asLocalDate(date), semaines.get(date)));
+        return cal;
     }
 }

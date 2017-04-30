@@ -25,21 +25,25 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <!--On "filtre" les ressources de type "properties",
-                notamment pour subsituer la variable maven "project.version" dans le fichier "metier-conf.properties :-->
+                <!--
+                On "filtre" les ressources de type "properties",
+                notamment pour subsituer la variable maven "project.version" dans le fichier "metier-conf.properties :
+                -->
                 <filtering>true</filtering>
                 <includes>
                     <include>*.properties</include>
                 </includes>
             </resource>
+<!--
             <resource>
                 <directory>src/main/resources</directory>
-                <!--On ne filtre pas les ressources de type XML (+ propre) : -->
+                &lt;!&ndash;On ne filtre pas les ressources de type XML : &ndash;&gt;
                 <filtering>false</filtering>
                 <includes>
                     <include>*.xml</include>
                 </includes>
             </resource>
+-->
         </resources>
         <plugins>
             <!--

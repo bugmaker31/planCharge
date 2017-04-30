@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
@@ -32,16 +34,51 @@ public class Tache implements Comparable<Tache> {
     @NotNull
     private Profil profil;
 
-    public Tache(int id, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
+    public Tache(int id, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil)
+    throws ModeleException {
+
         this.id = id;
+
+        if (noTicketIdal == null) {
+            throw new ModeleException("No ticket IDAL non défini");
+        }
         this.noTicketIdal = noTicketIdal;
+
+        if (description == null) {
+            throw new ModeleException("Description non définie");
+        }
         this.description = description;
+
+        if (projetAppli == null) {
+            throw new ModeleException("Projet/Appli non défini(e)");
+        }
         this.projetAppli = projetAppli;
+
         this.debut = debut;
+
+        if (echeance == null) {
+            throw new ModeleException("Echéance non définie");
+        }
         this.echeance = echeance;
+
+        if (importance == null) {
+            throw new ModeleException("Importance non définie");
+        }
         this.importance = importance;
+
+        if (importance == null) {
+            throw new ModeleException("Charge non définie");
+        }
         this.charge = charge;
+
+        if (ressource == null) {
+            throw new ModeleException("Ressource non définie");
+        }
         this.ressource = ressource;
+
+        if (profil == null) {
+            throw new ModeleException("Profil non défini");
+        }
         this.profil = profil;
     }
 
@@ -97,6 +134,11 @@ public class Tache implements Comparable<Tache> {
 
     @NotNull
     public String noTache() {
+        return noTache(id);
+    }
+
+    @NotNull
+    public static String noTache(int id) {
         return String.format(FORMAT_NO_TACHE, id);
     }
 

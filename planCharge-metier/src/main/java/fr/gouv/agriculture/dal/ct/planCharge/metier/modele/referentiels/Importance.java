@@ -15,7 +15,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
 
         @Override
         public int compare(@NotNull Importance i1, @NotNull Importance i2) {
-            return i1.getOrder().compareTo(i2.getOrder());
+            return i1.getOrdre().compareTo(i2.getOrdre());
         }
     }
 
@@ -24,12 +24,22 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
     @NotNull
     private final String codeInterne;
     @NotNull
-    private final String code;
+    private int ordre;
     @NotNull
-    private int order;
+    private final String code;
+
+    public Importance(@NotNull int ordre, @NotNull String code) {
+        this.codeInterne = ordre + "-" + code;
+        this.ordre = ordre;
+        this.code = code;
+    }
 
     public Importance(@NotNull String codeInterne) throws ModeleException {
         this.codeInterne = codeInterne;
+
+        if (codeInterne == null) {
+            throw new ModeleException("Code non défini.");
+        }
 
         code = codeInterne.replaceFirst("^\\d{2}-", "");
         if (code.equals(codeInterne)) {
@@ -37,7 +47,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
         }
 
         try {
-            order = Integer.parseInt(codeInterne.replaceFirst("-.+$", ""));
+            ordre = Integer.parseInt(codeInterne.replaceFirst("-.+$", ""));
         } catch (NumberFormatException e) {
             throw new ModeleException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.");
         }
@@ -49,18 +59,19 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
     }
 
     @NotNull
+    public Integer getOrdre() {
+        return ordre;
+    }
+
+    @NotNull
     public String getCode() {
         return code;
     }
 
-    @NotNull
-    public Integer getOrder() {
-        return order;
-    }
-
     @Override
     public String getIdentity() {
-        return getOrder() + "";
+//        return getOrdre() + "";
+        return codeInterne;
     }
 
     @Override

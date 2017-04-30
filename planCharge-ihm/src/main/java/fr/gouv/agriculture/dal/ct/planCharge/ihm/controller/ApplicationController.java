@@ -6,16 +6,19 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.DoubleProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -24,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ApplicationController extends AbstractController {
 
@@ -31,18 +35,21 @@ public class ApplicationController extends AbstractController {
 
     // L'IHM :
     @NotNull
-    @Autowired
-    private PlanChargeIhm ihm = PlanChargeIhm.getContexte().getBean(PlanChargeIhm.class);
+//    @Autowired
+    private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
     // Les services métier :
     @NotNull
-    @Autowired
-    private PlanChargeService planChargeService = PlanChargeIhm.getContexte().getBean(PlanChargeService.class);
+//    @Autowired
+    private PlanChargeService planChargeService = PlanChargeService.instance();
 
     // Les données métier :
     @NotNull
-    @Autowired
-    private PlanChargeBean planChargeBean = PlanChargeIhm.getContexte().getBean(PlanChargeBean.class);
+//    @Autowired
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+    @NotNull
+    private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
 /*
     Menu "Fichier" :
@@ -60,21 +67,26 @@ public class ApplicationController extends AbstractController {
 
         if (planChargeBean.getDateEtat() == null || planChargeBean.getPlanificationsBeans() == null) {
             LOGGER.warn("Impossible de sauver un plan de charge non défini.");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Impossible de sauver le plan de charge");
-            alert.setContentText("Impossible de sauver le plan de charge car non défini.");
-            alert.showAndWait();
+            ihm.afficherPopUp(
+                    Alert.AlertType.WARNING,
+                    "Impossible de sauver le plan de charge",
+                    "Impossible de sauver un plan de charge sans date d'état et/ou planification.",
+                    500, 200
+            );
             return;
         }
 
         Planifications planifications = new Planifications();
         planChargeBean.getPlanificationsBeans().stream().forEach(
                 planificationBean -> {
-                    List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
+
+                    Tache tache = planificationBean.getTacheBean().extract();
+
                     Map<LocalDate, Double> calendrier = new HashMap<>();
+                    List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
                     ligne.forEach(semaine -> calendrier.put(semaine.getKey(), semaine.getValue().doubleValue()));
-                    planifications.ajouter(planificationBean.getTacheBean().getTache(), calendrier);
+
+                    planifications.ajouter(tache, calendrier);
                 }
         );
         PlanCharge planCharge = new PlanCharge(
@@ -87,35 +99,45 @@ public class ApplicationController extends AbstractController {
             planChargeService.sauver(planCharge);
 
         } catch (ServiceException e) {
-            LOGGER.error("Impossible de sauver les données.", e);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de sauver le plan de charge");
-            alert.setContentText("Impossible de sauver le plan de charge en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
-            alert.showAndWait();
+            LOGGER.error("Impossible de sauver le plan de charge.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de sauver le plan de charge",
+                    "Impossible de sauver le plan de charge en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    500, 200
+            );
         }
     }
 
     @FXML
     private void charger(ActionEvent event) throws Exception {
         LOGGER.debug("Fichier > Charger");
-        LocalDate dateEtat = LocalDate.of(2017, 1, 1); // TODO FDA 2017/04 Débouchonner : lister les sauvegardes/fichiers/dates d'état existantes et permettre à l'utilisateur d'en choisir 1.
-        try {
+        charger();
+    }
 
-            PlanCharge planCharge = planChargeService.charger(dateEtat);
+    public void charger() {
+        LocalDate dateEtat = planChargeBean.getDateEtat();
+        if (dateEtat == null) {
+            // TODO FDA 2017/04 Coder.
+        } else {
+            try {
 
-            planChargeBean.setDateEtat(planCharge.getDateEtat());
-            planChargeBean.getPlanificationsBeans().clear();
-            planCharge.getPlanifications().entrySet().stream().forEach(
-                    planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
-            );
-        } catch (ServiceException e) {
-            LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible de charger le plan de charge");
-            alert.setContentText("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
-            alert.showAndWait();
+                PlanCharge planCharge = planChargeService.charger(dateEtat);
+
+                planChargeBean.setDateEtat(planCharge.getDateEtat());
+                planChargeBean.getPlanificationsBeans().clear();
+                planCharge.getPlanifications().entrySet().stream().forEach(
+                        planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
+                );
+            } catch (ServiceException e) {
+                LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+                ihm.afficherPopUp(
+                        Alert.AlertType.ERROR,
+                        "Impossible de charger le plan de charge",
+                        "Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                        500, 200
+                );
+            }
         }
     }
 
@@ -125,6 +147,7 @@ public class ApplicationController extends AbstractController {
 
     /**
      * Undo
+     *
      * @param event
      */
     @FXML
@@ -136,6 +159,7 @@ public class ApplicationController extends AbstractController {
 
     /**
      * Redo
+     *
      * @param event
      */
     @FXML
@@ -170,7 +194,41 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void importerChargesDepuisCalc(ActionEvent event) {
         LOGGER.debug("Charges > Importer depuis Calc");
-        ihm.getChargeController().importerDepuisCalc();
+
+        File ficCalc;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir le fichier Calc qui contient un plan de charge : ");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
+        );
+        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
+        if (ficCalc == null) {
+            return; // TODO FDA 2017/04 Afficher "annulé" à l'utilisateur.
+        }
+
+        importerDepuisCalc(ficCalc);
+    }
+
+    // TODO FDA 23017/02 Afficher une "progress bar".
+    public void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+        PlanCharge planCharge;
+        try {
+            planCharge = planChargeService.importerDepuisCalc(ficCalc);
+        } catch (ServiceException e) {
+            throw new ControllerException("Impossible d'importer le plan de charghe depsui le ficheir '" + ficCalc.getAbsolutePath() + "'.", e);
+        }
+
+        ihm.definirDateEtat(planCharge.getDateEtat());
+        planificationsBeans.setAll(planCharge.getPlanifications().taches().stream()
+                .map(tache -> {
+                    try {
+                        Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
+                        return new PlanificationBean(tache, calendrier);
+                    } catch (TacheSansPlanificationException e) {
+                        throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
+                    }
+                })
+                .collect(Collectors.toList()));
     }
 
 
@@ -182,11 +240,13 @@ public class ApplicationController extends AbstractController {
     private void aPropos(ActionEvent event) {
         LOGGER.debug("Aide > A propos");
 
-        Alert aProposInfo = new Alert(Alert.AlertType.INFORMATION);
-        aProposInfo.setTitle(PlanChargeIhm.APP_NAME);
-        aProposInfo.setHeaderText("A propos");
-        aProposInfo.setContentText("Auteur : Frédéric Danna\n2017/03");
-
-        aProposInfo.showAndWait();
+        ihm.afficherPopUp(
+                Alert.AlertType.INFORMATION,
+                "A propos de l'application \"" + PlanChargeIhm.APP_NAME + "\"",
+                "Gestion du plan de charge d'une équipe d'un centre de service."
+                        + "\n"
+                        + "\n(C) Frédéric Danna - 2017",
+                400, 200
+        );
     }
 }

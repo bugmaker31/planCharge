@@ -1,10 +1,15 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
@@ -14,86 +19,177 @@ import java.util.Date;
  */
 public class TacheXmlWrapper {
 
-    private Tache tache;
+    private Integer id;
+    private String noTache;
+    private String noTicketIdal;
+    private String description;
+    private String idProjetAppli;
+    private Date debut;
+    private Date echeance;
+    private String idImportance;
+    private double charge;
+    private String idRessource;
+    private String idProfil;
 
+//    @Autowired
+    @NotNull
+    private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+//    @Autowired
+    @NotNull
+    private RessourceDao ressourceDao = RessourceDao.instance();
+//    @Autowired
+    @NotNull
+    private ImportanceDao importanceDao = ImportanceDao.instance();
+//    @Autowired
+    @NotNull
+    private ProfilDao profilDao = ProfilDao.instance();
+
+    /**
+     * Constructeur vide (appelé notamment par JAXB).
+     *
+     * @return
+     */
     public TacheXmlWrapper() {
         super();
     }
 
-    public TacheXmlWrapper(Tache tache) {
-        this.tache = tache;
+    public TacheXmlWrapper init(Tache tache) {
+        id = tache.getId();
+        noTache = tache.noTache();
+        noTicketIdal = tache.getNoTicketIdal();
+        description = tache.getDescription();
+        idProjetAppli = tache.getProjetAppli().getIdentity();
+        debut = Dates.asDate(tache.getDebut());
+        echeance = Dates.asDate(tache.getEcheance());
+        idImportance = tache.getImportance().getIdentity();
+        charge = tache.getCharge();
+        idRessource = tache.getRessource().getIdentity();
+        idProfil = tache.getProfil().getIdentity();
+        return this;
     }
 
     @XmlAttribute(name = "id", required = true)
     public Integer getId() {
-        return tache.getId();
+        return id;
     }
 
     @XmlElement(name = "noTache", required = true)
     public String getNoTache() {
-        return tache.noTache();
+        return noTache;
     }
 
     @XmlElement(name = "noTicketIdal", required = true)
     public String getNoTicketIdal() {
-        return tache.getNoTicketIdal();
+        return noTicketIdal;
     }
 
     @XmlElement(name = "description", required = true)
     public String getDescription() {
-        return tache.getDescription();
+        return description;
     }
 
-    @XmlElement(required = true)
-    public String getProjetAppli() {
-        if (tache.getProjetAppli() == null) {
-            return null;
-        }
-        return tache.getProjetAppli().getCode();
+    @XmlElement(name = "idProjetAppli", required = true)
+    public String getIdProjetAppli() {
+        return idProjetAppli;
     }
 
     @XmlElement(name = "debut", required = false)
     public Date getDebut() {
-        if (tache.getDebut() == null) {
-            return null;
-        }
-        return Dates.asDate(tache.getDebut());
+        return debut;
     }
 
     @XmlElement(name = "echeance", required = true)
     public Date getEcheance() {
-        if (tache.getEcheance() == null) {
-            return null;
-        }
-        return Dates.asDate(tache.getEcheance());
+        return echeance;
     }
 
-    @XmlElement(name = "importance", required = true)
-    public String getImportance() {
-        if (tache.getImportance() == null) {
-            return null;
-        }
-        return tache.getImportance().getCode();
+    @XmlElement(name = "idImportance", required = true)
+    public String getIdImportance() {
+        return idImportance;
     }
 
     @XmlElement(name = "charge", required = true)
     public double getCharge() {
-        return tache.getCharge();
+        return charge;
     }
 
-    @XmlElement(name = "ressource", required = true)
-    public String getRessource() {
-        if (tache.getRessource() == null) {
-            return null;
-        }
-        return tache.getRessource().getTrigramme();
+    @XmlElement(name = "idRessource", required = true)
+    public String getIdRessource() {
+        return idRessource;
     }
 
-    @XmlElement(name = "profil", required = true)
-    public String getProfil() {
-        if (tache.getProfil() == null) {
-            return null;
+    @XmlElement(name = "idProfil", required = true)
+    public String getIdProfil() {
+        return idProfil;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setNoTache(String noTache) {
+        this.noTache = noTache;
+    }
+
+    public void setNoTicketIdal(String noTicketIdal) {
+        this.noTicketIdal = noTicketIdal;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIdProjetAppli(String idProjetAppli) {
+        this.idProjetAppli = idProjetAppli;
+    }
+
+    public void setDebut(Date debut) {
+        this.debut = debut;
+    }
+
+    public void setEcheance(Date echeance) {
+        this.echeance = echeance;
+    }
+
+    public void setIdImportance(String idImportance) {
+        this.idImportance = idImportance;
+    }
+
+    public void setCharge(double charge) {
+        this.charge = charge;
+    }
+
+    public void setIdRessource(String idRessource) {
+        this.idRessource = idRessource;
+    }
+
+    public void setIdProfil(String idProfil) {
+        this.idProfil = idProfil;
+    }
+
+    @NotNull
+    public Tache extract() throws DaoException {
+        Tache tache;
+        try {
+            tache = new Tache(
+                    id,
+                    noTicketIdal,
+                    description,
+                    projetAppliDao.load(idProjetAppli),
+                    Dates.asLocalDate(debut),
+                    Dates.asLocalDate(echeance),
+                    importanceDao.load(idImportance),
+                    charge,
+                    ressourceDao.load(idRessource),
+                    profilDao.load(idProfil)
+            );
+        } catch (ModeleException e) {
+            throw new DaoException("Impossible d'extraire la tâche depuis le XML.", e);
         }
-        return tache.getProfil().getCode();
+        return tache;
+    }
+
+    public void setProjetAppliDao(ProjetAppliDao projetAppliDao) {
+        this.projetAppliDao = projetAppliDao;
     }
 }

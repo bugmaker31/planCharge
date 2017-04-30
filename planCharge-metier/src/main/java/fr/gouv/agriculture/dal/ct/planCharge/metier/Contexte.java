@@ -5,6 +5,15 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier;
  */
 public class Contexte {
 
+    private static Contexte instance;
+
+    public static Contexte instance() {
+        if (instance == null) {
+            instance = new Contexte();
+        }
+        return instance;
+    }
+
     private String applicationVersion;
 
     public String getApplicationVersion() {
@@ -15,7 +24,8 @@ public class Contexte {
         this.applicationVersion = applicationVersion;
     }
 
-    public Contexte() {
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private Contexte() {
         super();
     }
 
