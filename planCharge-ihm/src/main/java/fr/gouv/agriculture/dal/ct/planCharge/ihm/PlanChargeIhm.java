@@ -54,10 +54,10 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private Stage primaryStage;
 
-/*
-    @NotNull
-    private BorderPane errorView;
-*/
+    /*
+        @NotNull
+        private BorderPane errorView;
+    */
     @NotNull
     private BorderPane applicationView;
     @NotNull
@@ -67,10 +67,10 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private Region chargeView;
 
-/*
-    @NotNull
-    private ErrorController errorController;
-*/
+    /*
+        @NotNull
+        private ErrorController errorController;
+    */
     @NotNull
     private ApplicationController applicationContoller;
     @NotNull
@@ -205,6 +205,13 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
+    public void afficherErreur(@NotNull String message) {
+        LOGGER.error(message);
+        if (Platform.isFxApplicationThread()) {
+            showErrorDialog(message);
+        }
+    }
+
     private void showErrorDialog(String errorMsg) {
 /*
         Stage errorDialog = new Stage();
@@ -224,16 +231,10 @@ public class PlanChargeIhm extends javafx.application.Application {
         } catch (IOException e) {
             LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
         }
-
-    }
-
-    public void erreur(String message) {
-        LOGGER.error("Erreur : " + message);
-        showErrorDialog(message);
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(@NotNull Stage primaryStage) throws IOException {
         LOGGER.info("Application en cours de démarrage...");
 
         this.primaryStage = primaryStage;
@@ -256,6 +257,7 @@ public class PlanChargeIhm extends javafx.application.Application {
 //        afficherModuleDisponibilites();
 //        afficherModuleTaches();
         afficherModuleCharge();
+        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 
         LOGGER.info("Application démarrée.");
     }
@@ -386,7 +388,14 @@ public class PlanChargeIhm extends javafx.application.Application {
     }
 
     public void definirDateEtat(LocalDate dateEtat) {
-        planChargeBean.setDateEtat(dateEtat);
+
+        if (!dateEtat.equals(planChargeBean.getDateEtat())) {
+            planChargeBean.setDateEtat(dateEtat);
+        }
+        if (!dateEtat.equals(getChargeController().getDateEtatPicker().getValue())) {
+            getChargeController().getDateEtatPicker().setValue(dateEtat);
+        }
+
         majTitre();
     }
 }

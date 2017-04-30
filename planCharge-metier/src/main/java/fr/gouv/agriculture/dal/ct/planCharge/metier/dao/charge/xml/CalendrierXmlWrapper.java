@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
@@ -11,15 +11,15 @@ import java.util.Map;
 /**
  * Created by frederic.danna on 26/04/2017.
  */
-public class CalendrierWrapper {
+public class CalendrierXmlWrapper {
 
     private Map<Date, Double> semaines;
 
-    public CalendrierWrapper() {
+    public CalendrierXmlWrapper() {
         super();
     }
 
-    public CalendrierWrapper(Map<LocalDate, Double> semaines) {
+    public CalendrierXmlWrapper(Map<LocalDate, Double> semaines) {
         this.semaines = new HashMap<>(semaines.size());
         semaines.keySet().stream().forEach(
                 date -> this.semaines.put(Dates.asDate(date), semaines.get(date))

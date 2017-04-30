@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
@@ -12,15 +12,15 @@ import java.util.Date;
 /**
  * Created by frederic.danna on 26/04/2017.
  */
-public class TacheWrapper {
+public class TacheXmlWrapper {
 
     private Tache tache;
 
-    public TacheWrapper() {
+    public TacheXmlWrapper() {
         super();
     }
 
-    public TacheWrapper(Tache tache) {
+    public TacheXmlWrapper(Tache tache) {
         this.tache = tache;
     }
 

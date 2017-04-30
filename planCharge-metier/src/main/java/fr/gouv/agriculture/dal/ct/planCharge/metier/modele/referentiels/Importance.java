@@ -44,6 +44,11 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
     }
 
     @NotNull
+    public String getCodeInterne() {
+        return codeInterne;
+    }
+
+    @NotNull
     public String getCode() {
         return code;
     }

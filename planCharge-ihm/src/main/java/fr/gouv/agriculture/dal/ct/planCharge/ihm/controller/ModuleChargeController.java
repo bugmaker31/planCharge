@@ -154,8 +154,10 @@ public class ModuleChargeController extends AbstractController {
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
-    @NotNull
-    private FilteredList<PlanificationBean> filteredPlanifBeans = new FilteredList<>(planificationsBeans);
+
+    public DatePicker getDateEtatPicker() {
+        return dateEtatPicker;
+    }
 
     /**
      * The constructor.
@@ -306,6 +308,8 @@ public class ModuleChargeController extends AbstractController {
         semaine11Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         semaine12Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
+        definirNomsColonnesSemaine();
+
         // Paramétrage des ordres de tri :
         importanceColumn.setComparator(new ImportanceComparator());
 
@@ -321,29 +325,63 @@ public class ModuleChargeController extends AbstractController {
         codesProfilsTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
 */
 
-        planificationsBeans.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
-
 /* TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
             codesImportancesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getImportance()).collect(Collectors.toSet()));
             codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProjetAppli()).collect(Collectors.toSet()));
             codesRessourcesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getRessource()).collect(Collectors.toSet()));
             codesProfilsTaches.setAll(changeListener.getList().stream().map(planification -> planification.getTacheBean().getProfil()).collect(Collectors.toSet()));
 */
+        populerFiltreProjetsApplis();
+        populerFiltreImportances();
+        populerFiltreRessources();
+        populerFiltreProfils();
 
-            populerFiltreProjetsApplis();
-            populerFiltreImportances();
-            populerFiltreRessources();
-            populerFiltreProfils();
+        planificationsBeans.addListener((ListChangeListener<? super PlanificationBean>) changeListener -> {
 
-        });
+            // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+            // 1. Wrap the ObservableList in a FilteredList
+            FilteredList<PlanificationBean> filteredPlanifBeans = new FilteredList<>(planificationsBeans);
+            // 2. Set the filter Predicate whenever the filter changes.
+            filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) ->
+                    filteredPlanifBeans.setPredicate(planification -> {
 
-        definirNomsColonnesSemaine();
+                        // If filter text is empty, display all data.
+                        if (newValue == null || newValue.isEmpty()) {
+                            return true;
+                        }
 
-        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-        // 1. Wrap the ObservableList in a FilteredList
-        filteredPlanifBeans.clear();
-        // 2. Set the filter Predicate whenever the filter changes.
-        filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) ->
+                        // Compare column values with filter text.
+                        if (planification.getTacheBean().matcheNoTache(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().noTicketIdalProperty().isEmpty().get() && planification.getTacheBean().matcheNoTicketIdal(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().descriptionProperty().isEmpty().get() && planification.getTacheBean().matcheDescription(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().debutProperty().isNull().get() && planification.getTacheBean().matcheDebut(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().echeanceProperty().isNull().get() && planification.getTacheBean().matcheEcheance(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().projetAppliProperty().isEmpty().get() && planification.getTacheBean().matcheProjetAppli(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().importanceProperty().isEmpty().get() && planification.getTacheBean().matcheImportance(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().ressourceProperty().isEmpty().get() && planification.getTacheBean().matcheRessource(newValue)) {
+                            return true; // Filter matches
+                        }
+                        if (!planification.getTacheBean().profilProperty().isEmpty().get() && planification.getTacheBean().matcheProfil(newValue)) {
+                            return true; // Filter matches
+                        }
+                        return false; // Does not match.
+                    })
+            );
+            filtreNoTacheField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredPlanifBeans.setPredicate(planification -> {
 
                     // If filter text is empty, display all data.
@@ -352,166 +390,134 @@ public class ModuleChargeController extends AbstractController {
                     }
 
                     // Compare column values with filter text.
-                    if (planification.getTacheBean().matcheNoTache(newValue)) {
-                        return true; // Filter matches
-                    }
-                    if (planification.getTacheBean().matcheNoTicketIdal(newValue)) {
-                        return true; // Filter matches
-                    }
-                    if (planification.getTacheBean().matcheDescription(newValue)) {
-                        return true; // Filter matches
-                    }
-                    if (planification.getTacheBean().matcheProjetAppli(newValue)) {
-                        return true; // Filter matches
-                    }
-                    if (planification.getTacheBean().matcheImportance(newValue)) {
-                        return true; // Filter matches
-                    }
-                    if (planification.getTacheBean().matcheDebut(newValue)) {
-                        return true; // Filter matches
-                    }
-                    if (planification.getTacheBean().matcheEcheance(newValue)) {
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if (planification.getTacheBean().matcheNoTache(lowerCaseFilter)) {
                         return true; // Filter matches
                     }
                     return false; // Does not match.
-                })
-        );
-        filtreNoTacheField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredPlanifBeans.setPredicate(planification -> {
-
-                // If filter text is empty, display all data.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                // Compare column values with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (planification.getTacheBean().matcheNoTache(lowerCaseFilter)) {
-                    return true; // Filter matches
-                }
-                return false; // Does not match.
+                });
             });
-        });
-        filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredPlanifBeans.setPredicate(planification -> {
+            filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredPlanifBeans.setPredicate(planification -> {
 
-                // If filter text is empty, display all data.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+                    // If filter text is empty, display all data.
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
 
-                // Compare column values with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (planification.getTacheBean().matcheNoTicketIdal(lowerCaseFilter)) {
-                    return true; // Filter matches
-                }
-                return false; // Does not match.
+                    // Compare column values with filter text.
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if (!planification.getTacheBean().noTicketIdalProperty().isEmpty().get() && planification.getTacheBean().matcheNoTicketIdal(lowerCaseFilter)) {
+                        return true; // Filter matches
+                    }
+                    return false; // Does not match.
+                });
             });
-        });
-        filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredPlanifBeans.setPredicate(planification -> {
+            filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredPlanifBeans.setPredicate(planification -> {
 
-                // If filter text is empty, display all data.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+                    // If filter text is empty, display all data.
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
 
-                // Compare column values with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (planification.getTacheBean().matcheDescription(lowerCaseFilter)) {
-                    return true; // Filter matches
-                }
-                return false; // Does not match.
+                    // Compare column values with filter text.
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if (!planification.getTacheBean().descriptionProperty().isEmpty().get() && planification.getTacheBean().matcheDescription(lowerCaseFilter)) {
+                        return true; // Filter matches
+                    }
+                    return false; // Does not match.
+                });
             });
-        });
-        filtreDebutField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
-            filteredPlanifBeans.setPredicate(planification -> {
+            filtreDebutField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
+                filteredPlanifBeans.setPredicate(planification -> {
 
-                // If filter text is empty, display all data.
-                if (newValue == null) {
-                    return true;
-                }
+                    // If filter text is empty, display all data.
+                    if (newValue == null) {
+                        return true;
+                    }
 
-                // Compare column values with filter text.
-                if (planification.getTacheBean().matcheDebut(newValue.format(TacheBean.DATE_FORMATTER))) {
-                    return true; // Filter matches
-                }
-                return false; // Does not match.
+                    // Compare column values with filter text.
+                    if (!planification.getTacheBean().debutProperty().isNull().get() && planification.getTacheBean().matcheDebut(newValue.format(TacheBean.DATE_FORMATTER))) {
+                        return true; // Filter matches
+                    }
+                    return false; // Does not match.
+                });
             });
-        });
-        filtreEcheanceField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
-            filteredPlanifBeans.setPredicate(planification -> {
+            filtreEcheanceField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
+                filteredPlanifBeans.setPredicate(planification -> {
 
-                // If filter text is empty, display all data.
-                if (newValue == null) {
-                    return true;
-                }
+                    // If filter text is empty, display all data.
+                    if (newValue == null) {
+                        return true;
+                    }
 
-                // Compare column values with filter text.
-                if (planification.getTacheBean().matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
-                    return true; // Filter matches
-                }
-                return false; // Does not match.
+                    // Compare column values with filter text.
+                    if (!planification.getTacheBean().echeanceProperty().isNull().get() && planification.getTacheBean().matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
+                        return true; // Filter matches
+                    }
+                    return false; // Does not match.
+                });
             });
-        });
-        filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) change -> {
+            filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener(
+                    (ListChangeListener<String>) change -> {
 //                    change.reset();
-                    filteredPlanifBeans.setPredicate(planification -> {
-                        for (String codeProjetAppliSelectionne : change.getList()) {
-                            if (planification.getTacheBean().matcheProjetAppli(codeProjetAppliSelectionne)) {
-                                return true;
+                        filteredPlanifBeans.setPredicate(planification -> {
+                            for (String codeProjetAppliSelectionne : change.getList()) {
+                                if (!planification.getTacheBean().projetAppliProperty().isEmpty().get() && planification.getTacheBean().matcheProjetAppli(codeProjetAppliSelectionne)) {
+                                    return true;
+                                }
                             }
-                        }
-                        return false;
-                    });
-                }
-        );
-        filtreImportancesField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) change -> {
+                            return false;
+                        });
+                    }
+            );
+            filtreImportancesField.getCheckModel().getCheckedItems().addListener(
+                    (ListChangeListener<String>) change -> {
 //                    change.reset();
-                    filteredPlanifBeans.setPredicate(planification -> {
-                        for (String codeImportanceSelectionne : change.getList()) {
-                            if (planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
-                                return true;
+                        filteredPlanifBeans.setPredicate(planification -> {
+                            for (String codeImportanceSelectionne : change.getList()) {
+                                if (!planification.getTacheBean().importanceProperty().isEmpty().get() && planification.getTacheBean().matcheImportance(codeImportanceSelectionne)) {
+                                    return true;
+                                }
                             }
-                        }
-                        return false;
-                    });
-                }
-        );
-        filtreRessourcesField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) change -> {
+                            return false;
+                        });
+                    }
+            );
+            filtreRessourcesField.getCheckModel().getCheckedItems().addListener(
+                    (ListChangeListener<String>) change -> {
 //                    change.reset();
-                    filteredPlanifBeans.setPredicate(planification -> {
-                        for (String codeRessourceSelectionne : change.getList()) {
-                            if (planification.getTacheBean().matcheRessource(codeRessourceSelectionne)) {
-                                return true;
+                        filteredPlanifBeans.setPredicate(planification -> {
+                            for (String codeRessourceSelectionne : change.getList()) {
+                                if (!planification.getTacheBean().ressourceProperty().isEmpty().get() && planification.getTacheBean().matcheRessource(codeRessourceSelectionne)) {
+                                    return true;
+                                }
                             }
-                        }
-                        return false;
-                    });
-                }
-        );
-        filtreProfilsField.getCheckModel().getCheckedItems().addListener(
-                (ListChangeListener<String>) change -> {
+                            return false;
+                        });
+                    }
+            );
+            filtreProfilsField.getCheckModel().getCheckedItems().addListener(
+                    (ListChangeListener<String>) change -> {
 //                    change.reset();
-                    filteredPlanifBeans.setPredicate(planification -> {
-                        for (String codeProfilSelectionne : change.getList()) {
-                            if (planification.getTacheBean().matcheProfil(codeProfilSelectionne)) {
-                                return true;
+                        filteredPlanifBeans.setPredicate(planification -> {
+                            for (String codeProfilSelectionne : change.getList()) {
+                                if (!planification.getTacheBean().profilProperty().isEmpty().get() && planification.getTacheBean().matcheProfil(codeProfilSelectionne)) {
+                                    return true;
+                                }
                             }
-                        }
-                        return false;
-                    });
-                }
-        );
-        // 3. Wrap the FilteredList in a SortedList.
-        SortedList<PlanificationBean> sortedData = new SortedList<>(filteredPlanifBeans);
-        // 4. Bind the SortedList COMPARATOR to the TableView COMPARATOR.
-        sortedData.comparatorProperty().bind(planificationsTable.comparatorProperty());
-        // 5. Add sorted (and filtered) data to the table.
-        planificationsTable.setItems(sortedData);
+                            return false;
+                        });
+                    }
+            );
+            // 3. Wrap the FilteredList in a SortedList.
+            SortedList<PlanificationBean> sortedPlanifBeans = new SortedList<>(filteredPlanifBeans);
+            // 4. Bind the SortedList COMPARATOR to the TableView COMPARATOR.
+            sortedPlanifBeans.comparatorProperty().bind(planificationsTable.comparatorProperty());
+            // 5. Add sorted (and filtered) data to the table.
+            planificationsTable.setItems(sortedPlanifBeans);
+        });
     }
 
     private void definirNomsColonnesSemaine() {
@@ -611,9 +617,9 @@ public class ModuleChargeController extends AbstractController {
             return;
         }
 
-        TacheBean t = new TacheBean(
+        TacheBean tache = new TacheBean(
                 idTacheSuivant(),
-                "(pas de ticket IDAL)",
+                null,
                 null,
                 null,
                 null,
@@ -631,7 +637,7 @@ public class ModuleChargeController extends AbstractController {
             dateSemaine = dateSemaine.plusDays(7);
         }
 
-        PlanificationBean planifBean = new PlanificationBean(t, calendrier);
+        PlanificationBean planifBean = new PlanificationBean(tache, calendrier);
         planificationsBeans.add(planifBean);
     }
 
@@ -656,17 +662,14 @@ public class ModuleChargeController extends AbstractController {
             dateEtat = dateEtat.plusDays(7 - dateEtat.getDayOfWeek().getValue() + 1);
         }
 
-        dateEtatPicker.setValue(dateEtat);
-
         ihm.definirDateEtat(dateEtat);
     }
 
     public void importerDepuisCalc() throws ControllerException {
 
-        // Cf. https://docs.oracle.com/javase/8/javafx/api/javafx/stage/FileChooser.html
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir le fichier");
+        fileChooser.setTitle("Choisir le fichier Calc qui contient un plan de charge : ");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
         );
@@ -675,6 +678,11 @@ public class ModuleChargeController extends AbstractController {
             return; // TODO FDA 2017/04 Afficher "annulé" à l'utilisateur.
         }
 
+        importerDepuisCalc(ficCalc);
+    }
+
+    // TODO FDA 23017/02 Afficher une "progress bar".
+    public void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
         PlanCharge planCharge;
         try {
             planCharge = planChargeService.importerDepuisCalc(ficCalc);
@@ -693,6 +701,5 @@ public class ModuleChargeController extends AbstractController {
                     }
                 })
                 .collect(Collectors.toList()));
-
     }
 }

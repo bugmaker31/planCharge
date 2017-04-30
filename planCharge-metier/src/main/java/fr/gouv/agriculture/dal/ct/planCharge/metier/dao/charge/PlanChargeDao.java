@@ -9,6 +9,7 @@ import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
@@ -17,7 +18,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
-import libreoffice.Lo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     @NotNull
     @Autowired
-    private PlanChargeWrapper wrapper;
+    private PlanChargeXmlWrapper wrapper;
 
     @NotNull
     @Autowired
@@ -117,11 +117,11 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     private Planifications planifications(@NotNull File file) throws PlanChargeDaoException {
         try {
-            JAXBContext context = JAXBContext.newInstance(PlanChargeWrapper.class);
+            JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
-            wrapper = (PlanChargeWrapper) um.unmarshal(file);
+            wrapper = (PlanChargeXmlWrapper) um.unmarshal(file);
 
             return new Planifications(); // TODO FDA 2017/04 Coder : exploiter le wrapper.
 
@@ -155,7 +155,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     private void serialiserPlanCharge(File file, PlanCharge planCharge) throws PlanChargeDaoException {
         try {
-            JAXBContext context = JAXBContext.newInstance(PlanChargeWrapper.class);
+            JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_ENCODING, "UTF8");
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

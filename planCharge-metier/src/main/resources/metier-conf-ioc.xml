@@ -34,6 +34,6 @@
     <bean id="profilDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao"
           scope="singleton"/>
 
-    <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeWrapper" scope="singleton" />
+    <bean id="planChargeWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper" scope="singleton" />
 
 </beans>

@@ -1,6 +1,8 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,8 @@ import java.util.Date;
  * Created by frederic.danna on 22/04/2017.
  */
 // Cf. http://code.makery.c h/library/javafx-8-tutorial/fr/part5/
-@XmlRootElement(name = "planCharge")
-public class PlanChargeWrapper {
+@XmlRootElement(name = "planCharge", namespace = "fr.gouv.agriculture.dal.ct.planCharge")
+public class PlanChargeXmlWrapper {
 
     private static final String VERSION_FORMAT = "1.0";
 
@@ -26,11 +28,13 @@ public class PlanChargeWrapper {
 
     private String versionApplication;
 
+    private ReferentielsWrapper referentiels;
+
     private Date dateEtat;
 
-    private PlanificationsWrapper planifications;
+    private PlanificationsXmlWrapper planifications;
 
-    public PlanChargeWrapper() {
+    public PlanChargeXmlWrapper() {
         super();
     }
 
@@ -52,6 +56,11 @@ public class PlanChargeWrapper {
         this.versionApplication = versionApplication;
     }
 
+    @XmlElement(name = "referentiels", required = true)
+    public ReferentielsWrapper getReferentiels() {
+        return referentiels;
+    }
+
     @XmlElement(name = "dateEtat", required = true)
     public Date getDateEtat() {
         return dateEtat;
@@ -62,11 +71,11 @@ public class PlanChargeWrapper {
     }
 
     @XmlElement(name = "planifications", required = true)
-    public PlanificationsWrapper getPlanifications() {
+    public PlanificationsXmlWrapper getPlanifications() {
         return planifications;
     }
 
-    public void setPlanifications(PlanificationsWrapper planifications) {
+    public void setPlanifications(PlanificationsXmlWrapper planifications) {
         this.planifications = planifications;
     }
 
@@ -74,6 +83,8 @@ public class PlanChargeWrapper {
         versionApplication = contexte.getApplicationVersion();
 
         this.dateEtat = Dates.asDate(planCharge.getDateEtat());
-        this.planifications = new PlanificationsWrapper(planCharge.getPlanifications());
+        this.planifications = new PlanificationsXmlWrapper(planCharge.getPlanifications());
+
+        referentiels = new ReferentielsWrapper(planCharge.getPlanifications());
     }
 }
