@@ -60,9 +60,8 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
 
     @Override
     public String getIdentity() {
-        return getCode();
+        return getOrder() + "";
     }
-
 
     @Override
     public int compareTo(@NotNull Importance other) {

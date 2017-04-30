@@ -2,7 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.Contexte;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsWrapper;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Date;
  * Created by frederic.danna on 22/04/2017.
  */
 // Cf. http://code.makery.c h/library/javafx-8-tutorial/fr/part5/
-@XmlRootElement(name = "planCharge", namespace = "fr.gouv.agriculture.dal.ct.planCharge")
+@XmlRootElement(name = "planCharge")
 public class PlanChargeXmlWrapper {
 
     private static final String VERSION_FORMAT = "1.0";
@@ -28,7 +28,7 @@ public class PlanChargeXmlWrapper {
 
     private String versionApplication;
 
-    private ReferentielsWrapper referentiels;
+    private ReferentielsXmlWrapper referentiels;
 
     private Date dateEtat;
 
@@ -57,7 +57,7 @@ public class PlanChargeXmlWrapper {
     }
 
     @XmlElement(name = "referentiels", required = true)
-    public ReferentielsWrapper getReferentiels() {
+    public ReferentielsXmlWrapper getReferentiels() {
         return referentiels;
     }
 
@@ -85,6 +85,6 @@ public class PlanChargeXmlWrapper {
         this.dateEtat = Dates.asDate(planCharge.getDateEtat());
         this.planifications = new PlanificationsXmlWrapper(planCharge.getPlanifications());
 
-        referentiels = new ReferentielsWrapper(planCharge.getPlanifications());
+        referentiels = new ReferentielsXmlWrapper(planCharge.getPlanifications());
     }
 }

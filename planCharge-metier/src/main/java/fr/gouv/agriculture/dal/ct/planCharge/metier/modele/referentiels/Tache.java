@@ -7,7 +7,7 @@ import java.time.LocalDate;
 /**
  * Created by frederic.danna on 11/03/2017.
  */
-public class Tache {
+public class Tache implements Comparable<Tache> {
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 
@@ -115,6 +115,11 @@ public class Tache {
     @NotNull
     public int hashCode() {
         return id;
+    }
+
+    @Override
+    public int compareTo(Tache o) {
+        return new Integer(getId()).compareTo(o.getId());
     }
 
     // Pour les débug, uniquement.

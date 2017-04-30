@@ -9,19 +9,17 @@ import javax.xml.bind.annotation.XmlElement;
 /**
  * Created by frederic.danna on 30/04/2017.
  */
-public class ImportanceWrapper {
+public class ImportanceXmlWrapper {
 
-    private final String id;
     private final Importance importance;
 
-    public ImportanceWrapper(Importance importance) {
+    public ImportanceXmlWrapper(Importance importance) {
         this.importance = importance;
-        this.id = importance.getCodeInterne();
     }
 
     @XmlAttribute(name="id", required = true)
     public String getId() {
-        return id;
+        return importance.getIdentity();
     }
 
     @XmlElement(name="codeInterne", required = true)

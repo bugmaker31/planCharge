@@ -1,7 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
-
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
@@ -9,17 +7,17 @@ import java.util.List;
 /**
  * Created by frederic.danna on 30/04/2017.
  */
-public class ImportancesWrapper {
+public class ImportancesXmlWrapper {
 
-    private final List<ImportanceWrapper> importances;
+    private final List<ImportanceXmlWrapper> importances;
 
-    public ImportancesWrapper(List<ImportanceWrapper>  importances) {
+    public ImportancesXmlWrapper(List<ImportanceXmlWrapper>  importances) {
         this.importances = importances;
     }
 
     @XmlElement(name="importance", required = true)
     @NotNull
-    public List<ImportanceWrapper> getImportances() {
+    public List<ImportanceXmlWrapper> getImportances() {
         return importances;
     }
 }

@@ -41,4 +41,5 @@ public class PlanificationXmlWrapper {
     public void setCalendrier(CalendrierXmlWrapper calendrier) {
         this.calendrier = calendrier;
     }
+
 }
