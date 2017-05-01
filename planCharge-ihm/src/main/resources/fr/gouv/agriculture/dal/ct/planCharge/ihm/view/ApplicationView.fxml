@@ -2,52 +2,71 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
+<BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="true" text="_Fichier">
                     <items>
-                        <MenuItem fx:id="charger" mnemonicParsing="false" onAction="#charger" text="Charger..." />
-                        <MenuItem mnemonicParsing="true" onAction="#sauver" text="_Sauver..." accelerator="Shortcut+S" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="true" text="_Préférences..."/>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="true" onAction="#quitter" text="_Quitter" accelerator="Shortcut+Q"/>
+                        <MenuItem fx:id="charger" mnemonicParsing="false" text="Charger..." onAction="#charger"/>
+                        <MenuItem fx:id="importerChargesDepuisCalc" mnemonicParsing="true"
+                                  text="_Importer depuis Calc..." onAction="#importerDepuisCalc"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="true" text="_Sauver..." onAction="#sauver" accelerator="Shortcut+S"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="true" text="_Préférences..." onAction="#afficherPreferences"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="true" text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Editer">
                     <items>
-                        <MenuItem mnemonicParsing="true" onAction="#annuler" text="_Annuler/Défaire" accelerator="Shortcut+Z" />
-                        <MenuItem mnemonicParsing="true" onAction="#refaire" text="_Refaire" accelerator="Shortcut+Shift+Y" />
+                        <MenuItem mnemonicParsing="true" onAction="#annuler" text="_Annuler/Défaire"
+                                  accelerator="Shortcut+Z"/>
+                        <MenuItem mnemonicParsing="true" onAction="#refaire" text="_Refaire"
+                                  accelerator="Shortcut+Shift+Y"/>
                     </items>
                 </Menu>
-                <Menu disable="true" mnemonicParsing="true" text="_Suivi" />
+                <Menu disable="true" mnemonicParsing="true" text="_Suivi"/>
                 <Menu mnemonicParsing="true" text="_Référentiels">
                     <items>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Jours fériés" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Ressources" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Profils" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Projets / Applis" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Importances" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Jours fériés"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem disable="true" mnemonicParsing="false" text="Ressources"/>
+                        <MenuItem disable="true" mnemonicParsing="false" text="Profils"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem disable="true" mnemonicParsing="false" text="Projets/Applis"/>
+                        <MenuItem disable="true" mnemonicParsing="false" text="Importances"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="true" onAction="#afficherModuleDispo" text="_Disponibilités" />
-                <Menu mnemonicParsing="true" onAction="#afficherModuleTache" text="_Tâches" />
-                <Menu mnemonicParsing="true" onAction="#afficherModuleCharge" text="_Charge">
-               <items>
-                  <MenuItem fx:id="importerChargesDepuisCalc" mnemonicParsing="true" text="_Importer depuis Calc..." onAction="#importerChargesDepuisCalc" />
-               </items></Menu>
+                <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDispo">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Afficher dispo"
+                                  onAction="#afficherModuleDispo" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="true" onAction="#afficherModuleTache" text="_Tâches" fx:id="menuTaches">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Afficher tâches"
+                                  onAction="#afficherModuleTache" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Afficher charges"
+                                  onAction="#afficherModuleCharge" />
+                    </items>
+                </Menu>
                 <Menu disable="true" mnemonicParsing="false" text="TODOs">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 1"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Aide">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aPropos" text="A propos" />
+                        <MenuItem mnemonicParsing="false" onAction="#aPropos" text="A propos"/>
                     </items>
                 </Menu>
             </menus>

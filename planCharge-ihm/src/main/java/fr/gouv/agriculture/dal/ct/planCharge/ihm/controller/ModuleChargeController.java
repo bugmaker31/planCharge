@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
@@ -32,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ModuleChargeController extends AbstractController {
+public class ModuleChargeController extends AbstractTachesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargeController.class);
 
@@ -101,26 +101,7 @@ public class ModuleChargeController extends AbstractController {
     private DatePicker dateEtatPicker;
 
     // Les filtres :
-    @FXML
-    private TextField filtreGlobalField;
-    @FXML
-    private TextField filtreNoTacheField;
-    @FXML
-    private TextField filtreNoTicketIdalField;
-    @FXML
-    private TextField filtreDescriptionField;
-    @FXML
-    private CheckComboBox<String> filtreProjetsApplisField;
-    @FXML
-    private DatePicker filtreDebutField; // TODO FDA 2017/04 Utiliser.
-    @FXML
-    private DatePicker filtreEcheanceField;  // TODO FDA 2017/04 Utiliser.
-    @FXML
-    private CheckComboBox<String> filtreImportancesField;
-    @FXML
-    private CheckComboBox<String> filtreRessourcesField;
-    @FXML
-    private CheckComboBox<String> filtreProfilsField;
+    // TODO FDA 2017/05 Ajouter les filtres spécifiques des charges : semaine chargée, reste à planifier <> 0, planifiée dans le mois qui vient, etc.
 
     @NotNull
     private ObservableList<Importance> importancesTaches = FXCollections.observableArrayList();
@@ -131,24 +112,25 @@ public class ModuleChargeController extends AbstractController {
     @NotNull
     private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
 
-    // L'IHM :
-    @NotNull
-//    @Autowired
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
-
     // Les services métier :
-    @NotNull
 //    @Autowired
+    @NotNull
     private PlanChargeService planChargeService = PlanChargeService.instance();
 
-    // Les données métier :
-    @NotNull
+    // L'IHM :
 //    @Autowired
+    @NotNull
+    private PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+    // Les données métier :
+//    @Autowired
+    @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
+    @NotNull
     public DatePicker getDateEtatPicker() {
         return dateEtatPicker;
     }
@@ -566,20 +548,6 @@ public class ModuleChargeController extends AbstractController {
         filtreProfilsField.getCheckModel().checkAll();
     }
 
-    @FXML
-    private void razFiltres(ActionEvent event) {
-        LOGGER.debug("RAZ des filtres...");
-        filtreGlobalField.clear();
-        filtreNoTacheField.clear();
-        filtreNoTicketIdalField.clear();
-        filtreDescriptionField.clear();
-        filtreDebutField.setValue(null);
-        filtreEcheanceField.setValue(null);
-        filtreProjetsApplisField.getCheckModel().checkAll();
-        filtreImportancesField.getCheckModel().checkAll();
-        filtreProfilsField.getCheckModel().checkAll();
-    }
-
 /*
     @FXML
     private void tachesScroll(Event event) {
@@ -598,7 +566,7 @@ public class ModuleChargeController extends AbstractController {
 */
 
     @FXML
-    private void ajouterTache(ActionEvent event) {
+    protected void ajouterTache(ActionEvent event) {
         LOGGER.debug("ajouterTache...");
 
         if (planChargeBean.getDateEtat() == null) {
@@ -612,18 +580,9 @@ public class ModuleChargeController extends AbstractController {
             return;
         }
 
-        TacheBean tache = new TacheBean(
-                idTacheSuivant(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0.0,
-                null,
-                null
-        );
+        super.ajouterTache(event);
+
+        TacheBean tache = taches.get(taches.size() - 1);
 
         List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);
         LocalDate dateSemaine = planChargeBean.getDateEtat();
@@ -634,11 +593,6 @@ public class ModuleChargeController extends AbstractController {
 
         PlanificationBean planifBean = new PlanificationBean(tache, calendrier);
         planificationsBeans.add(planifBean);
-    }
-
-    private int idTacheSuivant() {
-        OptionalInt max = planificationsBeans.stream().mapToInt(planifBean -> planifBean.getTacheBean().getId()).max();
-        return (!max.isPresent()) ? 1 : (max.getAsInt() + 1);
     }
 
     @FXML

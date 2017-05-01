@@ -64,4 +64,7 @@ public class PlanChargeService {
         }
     }
 
+    public File fichierPersistancePlanCharge(@NotNull LocalDate dateEtat) {
+        return planChargeDao.fichierPlanCharge(dateEtat);
+    }
 }

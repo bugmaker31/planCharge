@@ -188,6 +188,7 @@ public class PlanChargeIhm extends javafx.application.Application {
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = appLoader.load();
             applicationController = appLoader.getController();
+            applicationController.init();
         }
         {
             FXMLLoader dispoLoader = new FXMLLoader();
@@ -239,6 +240,8 @@ public class PlanChargeIhm extends javafx.application.Application {
         popUp.getButtonTypes().setAll(ButtonType.OK);
         popUp.getDialogPane().setPrefWidth(width);
         popUp.getDialogPane().setPrefHeight(height);
+        Stage popUpStage = (Stage) popUp.getDialogPane().getScene().getWindow();
+        popUpStage.getIcons().addAll(primaryStage.getIcons());
         popUp.showAndWait();
     }
 
@@ -282,7 +285,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
 //        afficherModuleDisponibilites();
 //        afficherModuleTaches();
-        afficherModuleCharge();
+//        afficherModuleCharge();
 
 //        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 

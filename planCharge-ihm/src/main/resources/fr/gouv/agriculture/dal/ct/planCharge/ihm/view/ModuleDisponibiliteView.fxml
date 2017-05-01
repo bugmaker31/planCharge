@@ -1,30 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-
-<ScrollPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController">
-    <content>
-        <TableView fx:id="dispos" editable="true">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import org.controlsfx.control.CheckComboBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController">
+    <top>
+        <Accordion BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane animated="false" expanded="true" text="Filtres">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <BorderPane>
+                                    <right>
+                                    </right>
+                                    <center>
+                                        <VBox BorderPane.alignment="CENTER">
+                                            <children>
+                                                <GridPane>
+                                                    <children>
+                                                        <Label text="Filtre global : "/>
+                                                        <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1"/>
+                                                    </children>
+                                                    <columnConstraints>
+                                                        <ColumnConstraints/>
+                                                        <ColumnConstraints/>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints/>
+                                                    </rowConstraints>
+                                                </GridPane>
+                                                <HBox>
+                                                    <children>
+                                                        <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0"/>
+                                                        <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </center>
+                                </BorderPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </top>
+    <center>
+        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true"
+                   BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn prefWidth="75.0" text="Ressource" />
-                <TableColumn prefWidth="75.0" text="Profil" />
-                <TableColumn prefWidth="35.0" text="S" />
-                <TableColumn prefWidth="35.0" text="S+1" />
-                <TableColumn prefWidth="35.0" text="S+2" />
-                <TableColumn prefWidth="35.0" text="S+3" />
-                <TableColumn prefWidth="35.0" text="S+4" />
-                <TableColumn prefWidth="35.0" text="S+5" />
-                <TableColumn prefWidth="35.0" text="S+5" />
-                <TableColumn prefWidth="35.0" text="S+6" />
-                <TableColumn prefWidth="35.0" text="S+7" />
-                <TableColumn prefWidth="35.0" text="S+8" />
-                <TableColumn prefWidth="35.0" text="S+9" />
-                <TableColumn prefWidth="35.0" text="S+10" />
-                <TableColumn prefWidth="35.0" text="S+11" />
-                <TableColumn prefWidth="35.0" text="S+12" />
+                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
+                <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
+                <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"/>
+                <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"/>
+                <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"/>
+                <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"/>
+                <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"/>
+                <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"/>
+                <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"/>
+                <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"/>
+                <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
+                <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
+                <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
             </columns>
         </TableView>
-    </content>
-</ScrollPane>
+    </center>
+    <bottom>
+        <AnchorPane BorderPane.alignment="CENTER">
+            <children>
+                <Button text="Ajouter" />
+            </children>
+        </AnchorPane>
+    </bottom>
+</BorderPane>

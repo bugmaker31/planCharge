@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Menu;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import org.slf4j.Logger;
@@ -32,6 +33,13 @@ import java.util.stream.Collectors;
 public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
+
+    @FXML
+    private Menu menuDispo;
+    @FXML
+    private Menu menuTaches;
+    @FXML
+    private Menu menuCharges;
 
     // L'IHM :
     @NotNull
@@ -51,14 +59,73 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
+    public void init() {
+        // Cf. http://stackoverflow.com/questions/10315774/javafx-2-0-activating-a-menu-like-a-menuitem
+        if (menuDispo.getItems().size() == 1) {
+            menuDispo.showingProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    menuDispo.getItems().get(0).fire();
+                }
+            });
+        }
+        if (menuTaches.getItems().size() == 1) {
+            menuTaches.showingProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    menuTaches.getItems().get(0).fire();
+                }
+            });
+        }
+        if (menuCharges.getItems().size() == 1) {
+            menuCharges.showingProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    menuCharges.getItems().get(0).fire();
+                }
+            });
+        }
+    }
+
+
 /*
     Menu "Fichier" :
      */
 
     @FXML
-    private void quitter(ActionEvent event) throws Exception {
-        LOGGER.debug("Fichier > Quitter");
-        ihm.stop();
+    private void charger(ActionEvent event) throws Exception {
+        LOGGER.debug("Fichier > Charger");
+        charger();
+        ihm.afficherPopUp(
+                Alert.AlertType.INFORMATION,
+                "Chargement terminé",
+                "Le chargement est terminé (" + planChargeBean.getPlanificationsBeans().size() + " tâches).",
+                400, 200
+        );
+        afficherModuleCharge();
+    }
+
+    public void charger() {
+        LocalDate dateEtat = planChargeBean.getDateEtat();
+        if (dateEtat == null) {
+            // TODO FDA 2017/04 Coder.
+        } else {
+            try {
+
+                PlanCharge planCharge = planChargeService.charger(dateEtat);
+
+                planChargeBean.setDateEtat(planCharge.getDateEtat());
+                planChargeBean.getPlanificationsBeans().clear();
+                planCharge.getPlanifications().entrySet().stream().forEach(
+                        planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
+                );
+            } catch (ServiceException e) {
+                LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+                ihm.afficherPopUp(
+                        Alert.AlertType.ERROR,
+                        "Impossible de charger le plan de charge",
+                        "Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                        500, 200
+                );
+            }
+        }
     }
 
     @FXML
@@ -98,6 +165,16 @@ public class ApplicationController extends AbstractController {
 
             planChargeService.sauver(planCharge);
 
+            File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Sauvegarder terminée",
+                    "Les " + planCharge.getPlanifications().size() + " lignes du plan de charge"
+                            + " en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                            + " a été sauvé (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
+                    400, 200
+            );
+
         } catch (ServiceException e) {
             LOGGER.error("Impossible de sauver le plan de charge.", e);
             ihm.afficherPopUp(
@@ -110,36 +187,71 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void charger(ActionEvent event) throws Exception {
-        LOGGER.debug("Fichier > Charger");
-        charger();
-    }
+    private void importerDepuisCalc(ActionEvent event) {
+        LOGGER.debug("Charges > Importer depuis Calc");
 
-    public void charger() {
-        LocalDate dateEtat = planChargeBean.getDateEtat();
-        if (dateEtat == null) {
-            // TODO FDA 2017/04 Coder.
-        } else {
-            try {
-
-                PlanCharge planCharge = planChargeService.charger(dateEtat);
-
-                planChargeBean.setDateEtat(planCharge.getDateEtat());
-                planChargeBean.getPlanificationsBeans().clear();
-                planCharge.getPlanifications().entrySet().stream().forEach(
-                        planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
-                );
-            } catch (ServiceException e) {
-                LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
-                ihm.afficherPopUp(
-                        Alert.AlertType.ERROR,
-                        "Impossible de charger le plan de charge",
-                        "Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
-                        500, 200
-                );
-            }
+        File ficCalc;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir le fichier Calc qui contient un plan de charge : ");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
+        );
+        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
+        if (ficCalc == null) {
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Import annulé",
+                    "L'import depuis un fichier Calc a été annulé par l'utilisateur.",
+                    400, 200
+            );
+            return;
         }
+
+        importerDepuisCalc(ficCalc);
+
+        ihm.afficherPopUp(
+                Alert.AlertType.INFORMATION,
+                "Données importées",
+                "Le plan de charge a été importé depuis le fichier '" + ficCalc.getAbsolutePath() + "'."
+                        + "\nDate d'état : " + planChargeBean.getDateEtat() + ".",
+                400, 200
+        );
     }
+
+    // TODO FDA 23017/02 Afficher une "progress bar".
+    private void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+        PlanCharge planCharge;
+        try {
+            planCharge = planChargeService.importerDepuisCalc(ficCalc);
+        } catch (ServiceException e) {
+            throw new ControllerException("Impossible d'importer le plan de charghe depsui le ficheir '" + ficCalc.getAbsolutePath() + "'.", e);
+        }
+
+        ihm.definirDateEtat(planCharge.getDateEtat());
+        planificationsBeans.setAll(planCharge.getPlanifications().taches().stream()
+                .map(tache -> {
+                    try {
+                        Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
+                        return new PlanificationBean(tache, calendrier);
+                    } catch (TacheSansPlanificationException e) {
+                        throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
+                    }
+                })
+                .collect(Collectors.toList()));
+    }
+
+    @FXML
+    private void quitter(ActionEvent event) throws Exception {
+        LOGGER.debug("Fichier > Quitter");
+        ihm.stop();
+    }
+
+    @FXML
+    private void afficherPreferences(ActionEvent event) {
+        LOGGER.debug("afficherPreferences");
+        // TODO FDA 2017/04 Coder.
+    }
+
 
     /*
     Menu "Editer" :
@@ -175,7 +287,7 @@ public class ApplicationController extends AbstractController {
 
     @FXML
     private void afficherModuleDispo(ActionEvent event) {
-        LOGGER.debug("afficherModuleDisponibilites");
+        LOGGER.debug("afficherModuleDispo");
         ihm.afficherModuleDisponibilites();
     }
 
@@ -187,50 +299,13 @@ public class ApplicationController extends AbstractController {
 
     @FXML
     private void afficherModuleCharge(ActionEvent event) {
+        afficherModuleCharge();
+    }
+
+    private void afficherModuleCharge() {
         LOGGER.debug("afficherModuleCharge");
         ihm.afficherModuleCharge();
     }
-
-    @FXML
-    private void importerChargesDepuisCalc(ActionEvent event) {
-        LOGGER.debug("Charges > Importer depuis Calc");
-
-        File ficCalc;
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir le fichier Calc qui contient un plan de charge : ");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
-        );
-        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
-        if (ficCalc == null) {
-            return; // TODO FDA 2017/04 Afficher "annulé" à l'utilisateur.
-        }
-
-        importerDepuisCalc(ficCalc);
-    }
-
-    // TODO FDA 23017/02 Afficher une "progress bar".
-    public void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
-        PlanCharge planCharge;
-        try {
-            planCharge = planChargeService.importerDepuisCalc(ficCalc);
-        } catch (ServiceException e) {
-            throw new ControllerException("Impossible d'importer le plan de charghe depsui le ficheir '" + ficCalc.getAbsolutePath() + "'.", e);
-        }
-
-        ihm.definirDateEtat(planCharge.getDateEtat());
-        planificationsBeans.setAll(planCharge.getPlanifications().taches().stream()
-                .map(tache -> {
-                    try {
-                        Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
-                        return new PlanificationBean(tache, calendrier);
-                    } catch (TacheSansPlanificationException e) {
-                        throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
-                    }
-                })
-                .collect(Collectors.toList()));
-    }
-
 
     /*
     Menu "Aide" :
@@ -249,4 +324,5 @@ public class ApplicationController extends AbstractController {
                 400, 200
         );
     }
+
 }

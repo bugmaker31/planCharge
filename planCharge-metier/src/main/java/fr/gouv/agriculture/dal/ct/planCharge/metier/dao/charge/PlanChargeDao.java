@@ -124,7 +124,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     }
 
     @NotNull
-    private File fichierPlanCharge(@NotNull LocalDate dateEtat) {
+    public File fichierPlanCharge(@NotNull LocalDate dateEtat) {
         final String repPersistanceDonnees = params.getParametrage(CLEF_PARAM_REP_PERSISTANCE);
         final String patronFicPersistanceDonnees = params.getParametrage(CLEF_PARAM_PATRON_FICHIER);
         String nomFic = patronFicPersistanceDonnees

@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ModuleTacheController extends AbstractController {
+public class ModuleTacheController extends AbstractTachesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleTacheController.class);
 
@@ -60,39 +59,13 @@ public class ModuleTacheController extends AbstractController {
     private TableColumn<TacheBean, String> profilColumn;
 
     // Les filtres :
-    @FXML
-    private TextField filtreGlobalField;
-    @FXML
-    private TextField filtreNoTacheField;
-    @FXML
-    private TextField filtreNoTicketIdalField;
-    @FXML
-    private TextField filtreDescriptionField;
-    @FXML
-    private CheckComboBox<String> filtreProjetsApplisField;
-    @FXML
-    private DatePicker filtreDebutField; // TODO FDA 2017/04 Utiliser.
-    @FXML
-    private DatePicker filtreEcheanceField;  // TODO FDA 2017/04 Utiliser.
-    @FXML
-    private CheckComboBox<String> filtreImportancesField;
-    @FXML
-    private CheckComboBox<String> filtreRessourcesField;
-    @FXML
-    private CheckComboBox<String> filtreProfilsField;
+    // TODO FDA 2017/05 Ajouter les filtres spécifiques des charges : semaine chargée, reste à planifier <> 0, planifiée dans le mois qui vient, etc.
 
     // Les services métier :
     private PlanChargeService planChargeService;
     public void setPlanChargeService(PlanChargeService planChargeService) {
         this.planChargeService = planChargeService;
     }
-
-    // Les collections de données :
-    private ObservableList<TacheBean> taches = FXCollections.observableArrayList();
-    private ObservableList<Importance> importancesTaches = FXCollections.observableArrayList();
-    private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
-    private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
-    private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
 
     /**
      * The constructor.
@@ -151,21 +124,10 @@ public class ModuleTacheController extends AbstractController {
 
     private void populerTaches() {
         taches.addListener((ListChangeListener<? super TacheBean>) changeListener -> {
-            importancesTaches.clear();
-            importancesTaches.addAll(changeListener.getList().stream().map(tache -> tache.getImportance()).collect(Collectors.toSet()));
-            importancesTaches.sort(Importance::compareTo);
-
-            codesProjetsApplisTaches.clear();
-            codesProjetsApplisTaches.addAll(changeListener.getList().stream().map(tache -> tache.getProjetAppli()).collect(Collectors.toSet()));
-            codesProjetsApplisTaches.sort(String::compareTo);
-
-            codesRessourcesTaches.clear();
-            codesRessourcesTaches.addAll(changeListener.getList().stream().map(tache -> tache.getRessource()).collect(Collectors.toSet()));
-            codesRessourcesTaches.sort(String::compareTo);
-
-            codesProfilsTaches.clear();
-            codesProfilsTaches.addAll(changeListener.getList().stream().map(tache -> tache.getProfil()).collect(Collectors.toSet()));
-            codesProfilsTaches.sort(String::compareTo);
+            importancesTaches.setAll(changeListener.getList().stream().map(tache -> tache.getImportance()).sorted(Importance::compareTo).collect(Collectors.toSet()));
+            codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(tache -> tache.getProjetAppli()).sorted(String::compareTo).collect(Collectors.toSet()));
+            codesRessourcesTaches.setAll(changeListener.getList().stream().map(tache -> tache.getRessource()).sorted(String::compareTo).collect(Collectors.toSet()));
+            codesProfilsTaches.setAll(changeListener.getList().stream().map(tache -> tache.getProfil()).sorted(String::compareTo).collect(Collectors.toSet()));
         });
 
         populerFiltreProjetsApplis();
@@ -394,42 +356,6 @@ public class ModuleTacheController extends AbstractController {
         }
 
         filtreProfilsField.getCheckModel().checkAll();
-    }
-
-    @FXML
-    private void razFiltres(ActionEvent event) {
-        LOGGER.debug("RAZ des filtres...");
-        filtreGlobalField.clear();
-        filtreNoTacheField.clear();
-        filtreNoTicketIdalField.clear();
-        filtreDescriptionField.clear();
-        filtreDebutField.setValue(null);
-        filtreEcheanceField.setValue(null);
-        filtreProjetsApplisField.getCheckModel().checkAll();
-        filtreImportancesField.getCheckModel().checkAll();
-        filtreProfilsField.getCheckModel().checkAll();
-    }
-
-    @FXML
-    private void ajouterTache(ActionEvent event) {
-        LOGGER.debug("ajouterTache...");
-        TacheBean nouvTache = new TacheBean(
-                idTacheSuivant(),
-                "(pas de ticket IDAL)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                0.0,
-                null,
-                null
-        );
-        taches.add(nouvTache);
-    }
-
-    private int idTacheSuivant() {
-        return 0;
     }
 
 }

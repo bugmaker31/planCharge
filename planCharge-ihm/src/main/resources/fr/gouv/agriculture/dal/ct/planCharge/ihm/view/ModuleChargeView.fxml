@@ -6,71 +6,82 @@
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
     <top>
-        <Accordion BorderPane.alignment="CENTER">
-            <panes>
-                <TitledPane animated="false" expanded="true" text="Paramètres">
-                    <content>
-                        <GridPane>
-                            <children>
-                                <Label text="Date d'état : "/>
-                                <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
-                                            GridPane.columnIndex="2"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
-                                <Button onAction="#positionnerDateEtatAuProchainLundi" text="Lundi prochain"
-                                        GridPane.columnIndex="3"/>
-                            </children>
-                        </GridPane>
-                    </content>
-                </TitledPane>
-                <TitledPane animated="false" expanded="true" text="Filtres">
-                    <content>
-                        <AnchorPane>
-                            <children>
-                                <BorderPane>
-                                    <right>
-                                        <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ"
-                                                BorderPane.alignment="CENTER"/>
-                                    </right>
-                                    <center>
-                                        <VBox BorderPane.alignment="CENTER">
-                                            <children>
-                                                <GridPane>
-                                                    <children>
-                                                        <Label text="Filtre global : "/>
-                                                        <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1"/>
-                                                    </children>
-                                                    <columnConstraints>
-                                                        <ColumnConstraints/>
-                                                        <ColumnConstraints/>
-                                                    </columnConstraints>
-                                                    <rowConstraints>
-                                                        <RowConstraints/>
-                                                    </rowConstraints>
-                                                </GridPane>
-                                                <HBox>
-                                                    <children>
-                                                        <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
-                                                        <TextField fx:id="filtreNoTicketIdalField" prefWidth="70.0"/>
-                                                        <TextField fx:id="filtreDescriptionField" prefWidth="300.0"/>
-                                                        <CheckComboBox fx:id="filtreProjetsApplisField"
-                                                                       prefWidth="100.0"/>
-                                                        <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
-                                                        <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
-                                                        <CheckComboBox fx:id="filtreImportancesField" prefWidth="75.0"/>
-                                                        <TextField fx:id="filtreChargeField" prefWidth="50.0"/>
-                                                        <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0"/>
-                                                        <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </center>
-                                </BorderPane>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </TitledPane>
-            </panes>
-        </Accordion>
+        <VBox>
+            <Accordion BorderPane.alignment="CENTER">
+                <panes>
+                    <TitledPane animated="false" expanded="true" text="Paramètres">
+                        <content>
+                            <GridPane>
+                                <children>
+                                    <Label text="Date d'état : "/>
+                                    <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
+                                                GridPane.columnIndex="2"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                                    <Button onAction="#positionnerDateEtatAuProchainLundi" text="Lundi prochain"
+                                            GridPane.columnIndex="3"/>
+                                </children>
+                            </GridPane>
+                        </content>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+            <Accordion BorderPane.alignment="CENTER">
+                <panes>
+                    <TitledPane animated="false" expanded="true" text="Filtres">
+                        <content>
+                            <AnchorPane>
+                                <children>
+                                    <BorderPane>
+                                        <right>
+                                            <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ"
+                                                    BorderPane.alignment="CENTER"/>
+                                        </right>
+                                        <center>
+                                            <VBox BorderPane.alignment="CENTER">
+                                                <children>
+                                                    <GridPane>
+                                                        <children>
+                                                            <Label text="Filtre global : "/>
+                                                            <TextField fx:id="filtreGlobalField"
+                                                                       GridPane.columnIndex="1"/>
+                                                        </children>
+                                                        <columnConstraints>
+                                                            <ColumnConstraints/>
+                                                            <ColumnConstraints/>
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints/>
+                                                        </rowConstraints>
+                                                    </GridPane>
+                                                    <HBox>
+                                                        <children>
+                                                            <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
+                                                            <TextField fx:id="filtreNoTicketIdalField"
+                                                                       prefWidth="70.0"/>
+                                                            <TextField fx:id="filtreDescriptionField"
+                                                                       prefWidth="300.0"/>
+                                                            <CheckComboBox fx:id="filtreProjetsApplisField"
+                                                                           prefWidth="100.0"/>
+                                                            <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
+                                                            <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
+                                                            <CheckComboBox fx:id="filtreImportancesField"
+                                                                           prefWidth="75.0"/>
+                                                            <TextField fx:id="filtreChargeField" prefWidth="50.0"/>
+                                                            <CheckComboBox fx:id="filtreRessourcesField"
+                                                                           prefWidth="75.0"/>
+                                                            <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
+                                                        </children>
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+                                        </center>
+                                    </BorderPane>
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </VBox>
     </top>
     <center>
         <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"

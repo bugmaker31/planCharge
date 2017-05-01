@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
  */
 public class ModuleDisponibilitesController extends AbstractController {
 
-
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
