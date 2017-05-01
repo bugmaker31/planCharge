@@ -296,12 +296,14 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         Planifications planification;
 
         final int noLigPeriodes = 1;
-        final int noLigDebut = 5;
+        final int noLigDebut = 4;
         final int noColDebut = 12;
 
         Map<Tache, Map<LocalDate, Double>> matrice = new HashMap<>();
         {
             int cptLig = noLigDebut;
+            CategorieTache categorieTache = null;
+            SousCategorieTache sousCategorieTache = null;
             LIG:
             while (true) {
 //            LOGGER.debug("Ligne n°" + cptLig);
@@ -314,12 +316,32 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                 }
 
                 if (!Calc.isNumericValue(cell)) {
-                    LOGGER.warn("La ligne n°" + cptLig + " ne commence pas par un n° de tâche (entier), donc on la skippe. PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
+                    String cellStrValue = Calc.getString(cell);
+                    CATEGORISATION:
+                    {
+                        // Catégorie de tâche ?
+                        CategorieTache categ = CategorieTache.valeurOuNull(cellStrValue);
+                        if (categ != null) {
+                            categorieTache = categ;
+                            break CATEGORISATION;
+                        }
+
+                        // Sous-catégorie de tâche ?
+                        SousCategorieTache sousCateg = SousCategorieTache.valeurOuNull(cellStrValue);
+                        if (sousCateg != null) {
+                            sousCategorieTache = sousCateg;
+                            break CATEGORISATION;
+                        }
+
+                        // Pas une tâche, ni une catégorie de tâche => on continue.
+                        throw new PlanChargeDaoException("La ligne n°" + cptLig + " ne commence ni par un n° de tâche (entier), ni par un code d'une catégorie de tâche (Projets, Services, etc.)."
+                                + " PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
+                    }
                     cptLig++;
                     continue LIG;
                 }
 
-                Tache tache = importerTache(feuille, cptLig);
+                Tache tache = importerTache(feuille, cptLig, categorieTache, sousCategorieTache);
 
                 matrice.put(tache, new HashMap<>());
                 {
@@ -358,7 +380,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         return Math.round(charge * 8.0) / 8.0;
     }
 
-    private Tache importerTache(XSpreadsheet feuille, int noLig) throws PlanChargeDaoException, LibreOfficeException {
+    private Tache importerTache(XSpreadsheet feuille, int noLig, CategorieTache categorie, SousCategorieTache sousCategorie) throws PlanChargeDaoException, LibreOfficeException {
         Tache tache;
         try {
             int cptCol = 1;
@@ -398,7 +420,10 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             cptCol++;
 
             tache = new Tache(
-                    id, noTicketIdal,
+                    id,
+                    categorie,
+                    sousCategorie,
+                    noTicketIdal,
                     description,
                     projetAppli,
                     Dates.asLocalDate(debut), Dates.asLocalDate(echeance),

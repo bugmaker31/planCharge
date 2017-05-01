@@ -6,6 +6,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppli
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.SousCategorieTache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
@@ -20,6 +22,8 @@ import java.util.Date;
 public class TacheXmlWrapper {
 
     private Integer id;
+    private String categorie;
+    private String sousCategorie;
     private String noTache;
     private String noTicketIdal;
     private String description;
@@ -31,16 +35,16 @@ public class TacheXmlWrapper {
     private String idRessource;
     private String idProfil;
 
-//    @Autowired
+    //    @Autowired
     @NotNull
     private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
-//    @Autowired
+    //    @Autowired
     @NotNull
     private RessourceDao ressourceDao = RessourceDao.instance();
-//    @Autowired
+    //    @Autowired
     @NotNull
     private ImportanceDao importanceDao = ImportanceDao.instance();
-//    @Autowired
+    //    @Autowired
     @NotNull
     private ProfilDao profilDao = ProfilDao.instance();
 
@@ -55,6 +59,8 @@ public class TacheXmlWrapper {
 
     public TacheXmlWrapper init(Tache tache) {
         id = tache.getId();
+        categorie = tache.getCategorie().getCode();
+        sousCategorie = (tache.getSousCategorie() == null ? null : tache.getSousCategorie().getCode());
         noTache = tache.noTache();
         noTicketIdal = tache.getNoTicketIdal();
         description = tache.getDescription();
@@ -71,6 +77,16 @@ public class TacheXmlWrapper {
     @XmlAttribute(name = "id", required = true)
     public Integer getId() {
         return id;
+    }
+
+    @XmlElement(name = "categorie", required = true)
+    public String getCategorie() {
+        return categorie;
+    }
+
+    @XmlElement(name = "sousCategorie", required = true)
+    public String getSousCategorie() {
+        return sousCategorie;
     }
 
     @XmlElement(name = "noTache", required = true)
@@ -127,6 +143,14 @@ public class TacheXmlWrapper {
         this.id = id;
     }
 
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
+    }
+
+    public void setSousCategorie(String sousCategorie) {
+        this.sousCategorie = sousCategorie;
+    }
+
     public void setNoTache(String noTache) {
         this.noTache = noTache;
     }
@@ -173,6 +197,8 @@ public class TacheXmlWrapper {
         try {
             tache = new Tache(
                     id,
+                    CategorieTache.valeur(categorie),
+                    (sousCategorie == null ? null : SousCategorieTache.valeurOuNull(sousCategorie)),
                     noTicketIdal,
                     description,
                     projetAppliDao.load(idProjetAppli),
@@ -187,9 +213,5 @@ public class TacheXmlWrapper {
             throw new DaoException("Impossible d'extraire la tâche depuis le XML.", e);
         }
         return tache;
-    }
-
-    public void setProjetAppliDao(ProjetAppliDao projetAppliDao) {
-        this.projetAppliDao = projetAppliDao;
     }
 }

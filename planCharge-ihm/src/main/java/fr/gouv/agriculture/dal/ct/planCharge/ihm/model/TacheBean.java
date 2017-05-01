@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.AbstractTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
@@ -10,28 +11,50 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by frederic.danna on 11/03/2017.
  */
 public class TacheBean {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
+
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    @NotNull
     private IntegerProperty id = new SimpleIntegerProperty();
+    @NotNull
+    private StringProperty categorie = new SimpleStringProperty();
+    @Null
+    private StringProperty sousCategorie = new SimpleStringProperty();
+    @NotNull
     private StringProperty noTicketIdal = new SimpleStringProperty();
+    @NotNull
     private StringProperty description = new SimpleStringProperty();
+    @NotNull
     private StringProperty projetAppli = new SimpleStringProperty();
+    @NotNull
     private ObjectProperty<LocalDate> debut = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
+    @NotNull
     private ObjectProperty<LocalDate> echeance = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
+    @NotNull
     private ObjectProperty<Importance> importance = new SimpleObjectProperty<>();
+    @NotNull
     private DoubleProperty charge = new SimpleDoubleProperty();
+    @NotNull
     private StringProperty ressource = new SimpleStringProperty();
+    @NotNull
     private StringProperty profil = new SimpleStringProperty();
 
     //    @Autowired
@@ -47,8 +70,12 @@ public class TacheBean {
     @NotNull
     private ProfilDao profilDao = ProfilDao.instance();
 
-    public TacheBean(@NotNull Tache tache) {
+    TacheBean(@NotNull Tache tache) {
         this.id.set(tache.getId());
+        this.categorie.set(tache.getCategorie().getCode());
+        if (tache.getSousCategorie() != null) {
+            this.sousCategorie.set(tache.getSousCategorie().getCode());
+        }
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
         if (tache.getProjetAppli() != null) {
@@ -68,8 +95,14 @@ public class TacheBean {
         }
     }
 
-    public TacheBean(int id, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
+    public TacheBean(int id, CategorieTache categorie, SousCategorieTache sousCategorie, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
         this.id.set(id);
+        if (categorie != null) {
+            this.categorie.set(categorie.getCode());
+        }
+        if (sousCategorie != null) {
+            this.sousCategorie.set(sousCategorie.getCode());
+        }
         this.noTicketIdal.set(noTicketIdal);
         this.description.set(description);
         if (projetAppli != null) {
@@ -91,12 +124,33 @@ public class TacheBean {
 
     @NotNull
     public int getId() {
-        return id == null ? null : id.get();
+        assert id != null;
+        return id.get();
     }
 
     @NotNull
     public IntegerProperty idProperty() {
         return id;
+    }
+
+    @NotNull
+    public String getCategorie() {
+        return categorie.get();
+    }
+
+    @NotNull
+    public StringProperty categorieProperty() {
+        return categorie;
+    }
+
+    @Null
+    public String getSousCategorie() {
+        return sousCategorie.get();
+    }
+
+    @NotNull
+    public StringProperty sousCategorieProperty() {
+        return sousCategorie;
     }
 
     @NotNull
@@ -129,7 +183,7 @@ public class TacheBean {
         return projetAppli;
     }
 
-    @NotNull
+    @Null
     public LocalDate getDebut() {
         return debut.get();
     }
@@ -189,6 +243,7 @@ public class TacheBean {
         return profil;
     }
 
+
     @NotNull
     public StringBinding noTacheProperty() {
         return idProperty() == null ? null : idProperty().asString(Tache.FORMAT_NO_TACHE);
@@ -211,6 +266,22 @@ public class TacheBean {
     }
 
     @NotNull
+    public boolean matcheCategorie(@NotNull String otherValue) {
+        if (getCategorie().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    @NotNull
+    public boolean matcheSousCategorie(@NotNull String otherValue) {
+        if (getSousCategorie().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    @NotNull
     public boolean matcheNoTicketIdal(@NotNull String otherValue) {
         if (getNoTicketIdal().contains(otherValue)) {
             return true; // matches
@@ -219,10 +290,22 @@ public class TacheBean {
     }
 
     @NotNull
-    public boolean matcheDescription(@NotNull String otherValue) {
-        if (getDescription().contains(otherValue)) {
+    public boolean matcheDescription(@NotNull String otherValue) throws IhmException {
+        if (getDescription() == null) {
+            return true;
+        }
+
+        Pattern patron;
+        try {
+            patron = Pattern.compile(otherValue);
+        } catch (PatternSyntaxException e) {
+            throw new IhmException("Patron de filtre incorrect : '" + otherValue + "'.", e);
+        }
+        Matcher matcher = patron.matcher(getDescription());
+        if (matcher.find()) {
             return true; // matches
         }
+
         return false; // does not match.
     }
 
@@ -241,6 +324,7 @@ public class TacheBean {
         }
         return false; // does not match.
     }
+
     @NotNull
     public boolean matcheImportance(@NotNull String otherValue) {
         if (getImportance().getCode().contains(otherValue)) {
@@ -296,11 +380,13 @@ public class TacheBean {
                 ;
     }
 
-    public Tache extract() {
+    public Tache extract() throws IhmException {
         Tache tache;
         try {
             tache = new Tache(
                     id.get(),
+                    CategorieTache.valeur(categorie.get()),
+                    (sousCategorie.isEmpty().get() ? null : SousCategorieTache.valeur(sousCategorie.get())),
                     noTicketIdal.get(),
                     description.get(),
                     projetAppliDao.load(projetAppli.get()),

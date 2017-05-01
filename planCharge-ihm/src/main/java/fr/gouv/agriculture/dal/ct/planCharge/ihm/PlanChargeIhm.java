@@ -76,9 +76,9 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private ModuleDisponibilitesController disponibiliteController;
     @NotNull
-    private ModuleTacheController tacheController;
+    private ModuleTachesController tacheController;
     @NotNull
-    private ModuleChargeController chargeController;
+    private ModuleChargesController chargeController;
 
     @Null
     private String moduleCourant;
@@ -109,11 +109,11 @@ public class PlanChargeIhm extends javafx.application.Application {
         return disponibiliteController;
     }
 
-    public ModuleTacheController getTacheController() {
+    public ModuleTachesController getTacheController() {
         return tacheController;
     }
 
-    public ModuleChargeController getChargeController() {
+    public ModuleChargesController getChargeController() {
         return chargeController;
     }
 
@@ -192,19 +192,19 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
         {
             FXMLLoader dispoLoader = new FXMLLoader();
-            dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibiliteView.fxml"));
+            dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
             disponibilitesView = dispoLoader.load();
             disponibiliteController = dispoLoader.getController();
         }
         {
             FXMLLoader tachesLoader = new FXMLLoader();
-            tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTacheView.fxml"));
+            tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTachesView.fxml"));
             tachesView = tachesLoader.load();
             tacheController = tachesLoader.getController();
         }
         {
             FXMLLoader chargeLoader = new FXMLLoader();
-            chargeLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargeView.fxml"));
+            chargeLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
             chargeView = chargeLoader.load();
             chargeController = chargeLoader.getController();
         }

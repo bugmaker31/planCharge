@@ -307,7 +307,7 @@ public class Lo {
         // get the remote office service manager
         mcFactory = xcc.getServiceManager();
         if (mcFactory == null) {
-            throw new LOException("Office Service Manager is unavailable");
+            throw new LOException("Office SERVICE Manager is unavailable");
         }
 
         // desktop service handles application windows and documents
@@ -916,7 +916,7 @@ public class Lo {
 
         mcFactory = xcc.getServiceManager();
         if (mcFactory == null) {
-            throw new LOException("Office Service Manager is unavailable");
+            throw new LOException("Office SERVICE Manager is unavailable");
         }
 
         try {
@@ -951,7 +951,7 @@ public class Lo {
         }
         mcFactory = xcc.getServiceManager();
         if (mcFactory == null) {
-            throw new LOException("Office Service Manager is unavailable");
+            throw new LOException("Office SERVICE Manager is unavailable");
         }
 
         xDesktop = sc.getDesktop();
@@ -1064,17 +1064,17 @@ public class Lo {
                     "org.openoffice.InstanceInspector", xcc);
             // hangs on second use
             if (inspector == null) {
-                throw new LOException("Inspector Service could not be instantiated");
+                throw new LOException("Inspector SERVICE could not be instantiated");
             }
 
-            LOGGER.debug("Inspector Service instantiated");
+            LOGGER.debug("Inspector SERVICE instantiated");
 /*
       // report on inspector
       XServiceInfo si = Lo.qi(XServiceInfo.class, inspector);
       LOGGER.debug("Implementation name: " + si.getImplementationName());
       String[] serviceNames = si.getSupportedServiceNames();
       for(String nm : serviceNames)
-         LOGGER.debug("Service name: " + nm);
+         LOGGER.debug("SERVICE name: " + nm);
 */
             XIntrospection intro = createInstanceMCF(XIntrospection.class,
                     "com.sun.star.beans.Introspection");
@@ -1112,10 +1112,10 @@ public class Lo {
   */ {
         XIntrospection xi = createInstanceMCF(XIntrospection.class, "mytools.Mri");
         if (xi == null) {
-            throw new LOException("MRI Inspector Service could not be instantiated");
+            throw new LOException("MRI Inspector SERVICE could not be instantiated");
         }
 
-        LOGGER.debug("MRI Inspector Service instantiated");
+        LOGGER.debug("MRI Inspector SERVICE instantiated");
         xi.inspect(obj);
     }  // end of mriInspect()
 

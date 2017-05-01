@@ -204,6 +204,9 @@ public class Calc {
 
     public static String getString(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
+        return getString(cell);
+    }
+    public static String getString(XCell cell) throws LibreOfficeException {
         Object cellVal = getVal(cell);
         if (cellVal == null) {
             return "";

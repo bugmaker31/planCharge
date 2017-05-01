@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController">
+    <top>
+        <Accordion BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane animated="false" text="Filtres">
+                    <AnchorPane>
+                        <BorderPane>
+                            <right>
+                                <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ"
+                                        BorderPane.alignment="CENTER"/>
+                            </right>
+                            <center>
+                                <VBox BorderPane.alignment="CENTER">
+                                    <GridPane>
+                                        <columnConstraints>
+                                            <ColumnConstraints/>
+                                            <ColumnConstraints/>
+                                        </columnConstraints>
+                                        <rowConstraints>
+                                            <RowConstraints/>
+                                        </rowConstraints>
+                                        <Label text="Filtre global"/>
+                                        <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1"/>
+                                    </GridPane>
+                                    <HBox>
+                                        <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50.0"/>
+                                        <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50.0"/>
+                                        <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
+                                        <TextField fx:id="filtreNoTicketIdalField" prefWidth="70.0"/>
+                                        <TextField fx:id="filtreDescriptionField" prefWidth="300.0"/>
+                                        <CheckComboBox fx:id="filtreProjetsApplisField"
+                                                       prefWidth="100.0"/>
+                                        <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
+                                        <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
+                                        <CheckComboBox fx:id="filtreImportancesField" prefWidth="75.0"/>
+                                        <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0"/>
+                                        <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
+                                    </HBox>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </AnchorPane>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </top>
+    <center>
+        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="categorieColumn" editable="false" prefWidth="55.0" text="Catégorie"/>
+                <TableColumn fx:id="sousCategorieColumn" editable="false" prefWidth="55.0" text="Sous-catégorie"/>
+                <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0" text="N° tâche"/>
+                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
+                <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
+                <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
+                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
+                <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
+                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
+                <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <AnchorPane BorderPane.alignment="CENTER">
+            <Button alignment="BASELINE_CENTER" mnemonicParsing="false" onAction="#ajouterTache"
+                    text="Ajouter une tâche"/>
+        </AnchorPane>
+    </bottom>
+</BorderPane>

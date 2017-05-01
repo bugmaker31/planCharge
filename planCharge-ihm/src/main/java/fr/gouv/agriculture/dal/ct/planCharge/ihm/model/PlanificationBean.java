@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class PlanificationBean {
+public class PlanificationBean extends TacheBean {
 
     @NotNull
     private final TacheBean tacheBean;
@@ -25,16 +25,17 @@ public class PlanificationBean {
     @NotNull
     private DoubleProperty chargePlanifiee = new SimpleDoubleProperty();
 
-    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier) {
-        super();
+    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier) throws IhmException {
+        super(tacheBean.extract());
         this.tacheBean = tacheBean;
         this.calendrier = calendrier;
 
         majChargePlanifiee();
     }
 
-    public PlanificationBean(@NotNull Tache tacheBean, @NotNull Map<LocalDate, Double> calendrier) {
-        this.tacheBean = new TacheBean(tacheBean);
+    public PlanificationBean(@NotNull Tache tache, @NotNull Map<LocalDate, Double> calendrier) {
+        super(tache);
+        this.tacheBean = new TacheBean(tache);
         this.calendrier = new ArrayList<>();
         calendrier.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
@@ -79,12 +80,12 @@ public class PlanificationBean {
     }
 
     @NotNull
-    private double chargePlanifiee() throws IhmException {
+    private double chargePlanifiee() {
         return calendrier.stream().mapToDouble(elt -> elt.getValue().get()).sum();
     }
 
     @NotNull
-    public DoubleProperty charge(@NotNull int noSemaine) {
+    public DoubleProperty charge(@NotNull int noSemaine) throws IhmException {
         return chargePlanifiee(noSemaine).getValue();
     }
 
