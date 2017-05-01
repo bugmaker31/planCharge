@@ -48,6 +48,18 @@ public class PlanChargeService {
         }
     }
 
+    @NotNull
+    public PlanCharge charger(@NotNull File ficPlanCharge) throws ServiceException {
+        try {
+            return planChargeDao.load(ficPlanCharge);
+        } catch (DaoException e) {
+            throw new ServiceException(
+                    "Impossible de charger le plan de charge depuis le fichier '"+ficPlanCharge.getAbsolutePath()+"'.",
+                    e);
+        }
+    }
+
+
     public void sauver(@NotNull PlanCharge planCharge) throws ServiceException {
         LocalDate dateEtat = planCharge.getDateEtat();
         try {

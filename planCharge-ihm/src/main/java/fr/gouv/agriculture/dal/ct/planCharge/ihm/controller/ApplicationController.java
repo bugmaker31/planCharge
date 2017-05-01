@@ -96,46 +96,77 @@ public class ApplicationController extends AbstractController {
      */
 
     @FXML
-    private void charger(ActionEvent event) throws Exception {
+    private void charger(ActionEvent event) {
         LOGGER.debug("Fichier > Charger");
-        charger();
+        try {
+            charger();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible de charger le plan de charge.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de charger le plan de charge",
+                    e.getLocalizedMessage(),
+                    400, 200
+            );
+        }
+    }
+
+    private void charger() throws IhmException {
+
+        File ficCalc;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Indiquez le fichier XML qui contient un plan de charge : ");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Fichier XML", "*.xml")
+        );
+        try {
+            fileChooser.setInitialDirectory(new File(params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
+        } catch (KernelException e) {
+            throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
+        }
+        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
+        if (ficCalc == null) {
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Chargement annulé",
+                    "Le chargement a été annulé par l'utilisateur.",
+                    400, 200
+            );
+            return;
+        }
+
+        charger(ficCalc);
+
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
                 "Chargement terminé",
                 "Le chargement est terminé (" + planChargeBean.getPlanificationsBeans().size() + " tâches).",
                 400, 200
         );
+
         afficherModuleCharge();
     }
 
-    public void charger() {
-        LocalDate dateEtat = planChargeBean.getDateEtat();
-        if (dateEtat == null) {
-            // TODO FDA 2017/04 Coder.
-        } else {
-            try {
+    private void charger(@NotNull File ficPlanCharge) throws IhmException {
+        if (ficPlanCharge == null) {
+            throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
+        }
+        try {
 
-                PlanCharge planCharge = planChargeService.charger(dateEtat);
+            PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
-                planChargeBean.setDateEtat(planCharge.getDateEtat());
-                planChargeBean.getPlanificationsBeans().clear();
-                planCharge.getPlanifications().entrySet().stream().forEach(
-                        planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
-                );
-            } catch (ServiceException e) {
-                LOGGER.error("Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
-                ihm.afficherPopUp(
-                        Alert.AlertType.ERROR,
-                        "Impossible de charger le plan de charge",
-                        "Impossible de charger les données datées du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
-                        500, 200
-                );
-            }
+            planChargeBean.setDateEtat(planCharge.getDateEtat());
+            planChargeBean.getPlanificationsBeans().clear();
+            planCharge.getPlanifications().entrySet().stream().forEach(
+                    planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
     }
 
     @FXML
-    private void sauver(ActionEvent event) throws Exception {
+    private void sauver(ActionEvent event) {
         LOGGER.debug("Fichier > Sauver");
 
         if (planChargeBean.getDateEtat() == null || planChargeBean.getPlanificationsBeans() == null) {
@@ -208,18 +239,21 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void importerDepuisCalc() throws IhmException {
+    private void importerDepuisCalc() {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
+        fileChooser.setTitle("Indiquez le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
         );
+        String nomRepFicCalc;
         try {
-            fileChooser.setInitialDirectory(new File(params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
+            // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
+            nomRepFicCalc = params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
-            throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
+            throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge.", e);
         }
+        fileChooser.setInitialDirectory(new File(nomRepFicCalc));
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
             ihm.afficherPopUp(
@@ -266,9 +300,18 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void quitter(ActionEvent event) throws Exception {
+    private void quitter(ActionEvent event) {
         LOGGER.debug("Fichier > Quitter");
-        ihm.stop();
+        try {
+            ihm.stop();
+        } catch (Exception e) {
+            LOGGER.error("Impossible de stopper l'application.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de stopper l'application",
+                    "Erreur interne : " + e.getLocalizedMessage()
+            );
+        }
     }
 
     @FXML

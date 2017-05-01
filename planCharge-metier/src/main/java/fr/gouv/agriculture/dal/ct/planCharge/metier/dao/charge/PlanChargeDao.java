@@ -120,9 +120,22 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         }
 
         try {
-            plan = plan(fichierPlanif);
+            plan = load(fichierPlanif);
         } catch (PlanChargeDaoException e) {
             throw new EntityNotFoundException("Impossible de charger le plan de charge en dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
+        }
+
+        return plan;
+    }
+
+    @NotNull
+    public PlanCharge load(@NotNull File ficPlanCharge) throws EntityNotFoundException, PlanChargeDaoException {
+        PlanCharge plan;
+
+        try {
+            plan = plan(ficPlanCharge);
+        } catch (PlanChargeDaoException e) {
+            throw new EntityNotFoundException("Impossible de charger le plan de charge depuis le fichier " + ficPlanCharge.getAbsolutePath() + ".", e);
         }
 
         return plan;
@@ -289,7 +302,8 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         Map<Tache, Map<LocalDate, Double>> matrice = new HashMap<>();
         {
             int cptLig = noLigDebut;
-            LIG:while (true) {
+            LIG:
+            while (true) {
 //            LOGGER.debug("Ligne n°" + cptLig);
 
                 XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
@@ -310,7 +324,8 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                 matrice.put(tache, new HashMap<>());
                 {
                     int cptCol = noColDebut;
-                    COL:while (true) {
+                    COL:
+                    while (true) {
 //                        LOG.debug("Colonne n°" + cptCol);
 
                         if (Calc.isEmpty(feuille, cptCol - 1, noLigPeriodes - 1)) {

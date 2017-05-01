@@ -3,8 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.CheckComboBox?>
+<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargeController">
+
+        <stylesheets>
+            <URL value="@/css/main.css"/>
+        </stylesheets>
+
     <top>
         <VBox>
             <Accordion BorderPane.alignment="CENTER">
@@ -32,8 +38,11 @@
                                 <children>
                                     <BorderPane>
                                         <right>
-                                            <Button mnemonicParsing="false" onAction="#razFiltres" text="RAZ"
-                                                    BorderPane.alignment="CENTER"/>
+                                            <Button mnemonicParsing="false" text="RAZ"
+                                                    onAction="#razFiltres"
+                                                    BorderPane.alignment="CENTER"
+                                                    styleClass="erase-button"
+                                            />
                                         </right>
                                         <center>
                                             <VBox BorderPane.alignment="CENTER">
