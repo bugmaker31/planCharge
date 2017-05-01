@@ -4,6 +4,7 @@ import com.sun.star.frame.XComponentLoader;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.XCell;
+import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
@@ -110,26 +111,44 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     }
 
     @Override
-    public PlanCharge load(@NotNull LocalDate dateEtat) throws EntityNotFoundException {
+    public PlanCharge load(@NotNull LocalDate dateEtat) throws EntityNotFoundException, PlanChargeDaoException {
+        PlanCharge plan;
+
         File fichierPlanif = fichierPlanCharge(dateEtat);
         if (fichierPlanif == null) {
             throw new EntityNotFoundException("Fichier inexistant pour la dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
         }
+
         try {
-            PlanCharge plan = plan(fichierPlanif);
-            return plan;
+            plan = plan(fichierPlanif);
         } catch (PlanChargeDaoException e) {
             throw new EntityNotFoundException("Impossible de charger le plan de charge en dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
         }
+
+        return plan;
     }
 
     @NotNull
-    public File fichierPlanCharge(@NotNull LocalDate dateEtat) {
-        final String repPersistanceDonnees = params.getParametrage(CLEF_PARAM_REP_PERSISTANCE);
-        final String patronFicPersistanceDonnees = params.getParametrage(CLEF_PARAM_PATRON_FICHIER);
+    public File fichierPlanCharge(@NotNull LocalDate dateEtat) throws PlanChargeDaoException {
+
+        final String repPersistanceDonnees;
+        try {
+            repPersistanceDonnees = params.getParametrage(CLEF_PARAM_REP_PERSISTANCE);
+        } catch (KernelException e) {
+            throw new PlanChargeDaoException("Impossible de déterminer le répetoire de persistance du plan de charge.", e);
+        }
+
+        final String patronFicPersistanceDonnees;
+        try {
+            patronFicPersistanceDonnees = params.getParametrage(CLEF_PARAM_PATRON_FICHIER);
+        } catch (KernelException e) {
+            throw new PlanChargeDaoException("Impossible de déterminer le patron du nom du fichier pour persister le plan de charge.", e);
+        }
+
         String nomFic = patronFicPersistanceDonnees
                 .replaceAll("\\{dateEtat}", dateEtat.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 + ".xml";
+
         return new File(repPersistanceDonnees, nomFic);
     }
 
@@ -268,53 +287,60 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         final int noColDebut = 12;
 
         Map<Tache, Map<LocalDate, Double>> matrice = new HashMap<>();
-        int cptLig = noLigDebut;
-        LIG:
-        while (true) {
+        {
+            int cptLig = noLigDebut;
+            LIG:while (true) {
 //            LOGGER.debug("Ligne n°" + cptLig);
 
-            XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
+                XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
 
-            if (Calc.isEmpty(cell)) {
+                if (Calc.isEmpty(cell)) {
 //                LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
-                break LIG;
-            }
-
-            if (!Calc.isNumericValue(cell)) {
-                LOGGER.warn("La ligne n°" + cptLig + " ne commence pas par un n° de tâche (entier), donc on la skippe. PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
-                cptLig++;
-                continue LIG;
-            }
-
-            Tache tache = importerTache(feuille, cptLig);
-
-            matrice.put(tache, new HashMap<>());
-
-            int cptCol = noColDebut;
-            COL:
-            while (true) {
-//                LOG.debug("Colonne n°" + cptCol);
-
-                if (Calc.isEmpty(feuille, cptCol - 1, noLigPeriodes - 1)) {
-                    break COL;
+                    break LIG;
                 }
 
-                Date debutPeriode = Calc.getDate(feuille, cptCol - 1, noLigPeriodes - 1);
-
-                Double chargePlanifiée = (Double) Calc.getVal(feuille, cptCol - 1, cptLig - 1);
-                if (chargePlanifiée == null) {
-                    chargePlanifiée = 0.0;
+                if (!Calc.isNumericValue(cell)) {
+                    LOGGER.warn("La ligne n°" + cptLig + " ne commence pas par un n° de tâche (entier), donc on la skippe. PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
+                    cptLig++;
+                    continue LIG;
                 }
 
-                matrice.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiée);
+                Tache tache = importerTache(feuille, cptLig);
 
-                cptCol++;
+                matrice.put(tache, new HashMap<>());
+                {
+                    int cptCol = noColDebut;
+                    COL:while (true) {
+//                        LOG.debug("Colonne n°" + cptCol);
+
+                        if (Calc.isEmpty(feuille, cptCol - 1, noLigPeriodes - 1)) {
+                            break COL;
+                        }
+
+                        Date debutPeriode = Calc.getDate(feuille, cptCol - 1, noLigPeriodes - 1);
+
+                        Double chargePlanifiee = (Double) Calc.getVal(feuille, cptCol - 1, cptLig - 1);
+                        if (chargePlanifiee == null) {
+                            chargePlanifiee = 0.0;
+                        } else {
+                            chargePlanifiee = chargeArrondie(chargePlanifiee);
+                        }
+
+                        matrice.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiee);
+
+                        cptCol++;
+                    }
+                    cptLig++;
+                }
             }
-            cptLig++;
         }
 
         planification = new Planifications(matrice);
         return planification;
+    }
+
+    private Double chargeArrondie(Double charge) {
+        return Math.round(charge * 8.0) / 8.0;
     }
 
     private Tache importerTache(XSpreadsheet feuille, int noLig) throws PlanChargeDaoException, LibreOfficeException {

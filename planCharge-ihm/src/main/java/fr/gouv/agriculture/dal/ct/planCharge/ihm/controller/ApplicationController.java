@@ -1,9 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.kernel.KernelException;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
@@ -33,6 +37,8 @@ import java.util.stream.Collectors;
 public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
+
+    private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
     @FXML
     private Menu menuDispo;
@@ -189,13 +195,31 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void importerDepuisCalc(ActionEvent event) {
         LOGGER.debug("Charges > Importer depuis Calc");
+        try {
+            importerDepuisCalc();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'importer le plan de charge.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'importer le plan de charge",
+                    e.getLocalizedMessage(),
+                    400, 200
+            );
+        }
+    }
 
+    private void importerDepuisCalc() throws IhmException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir le fichier Calc qui contient un plan de charge : ");
+        fileChooser.setTitle("Choisir le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
         );
+        try {
+            fileChooser.setInitialDirectory(new File(params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
+        } catch (KernelException e) {
+            throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
+        }
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
             ihm.afficherPopUp(
@@ -213,7 +237,8 @@ public class ApplicationController extends AbstractController {
                 Alert.AlertType.INFORMATION,
                 "Données importées",
                 "Le plan de charge a été importé depuis le fichier '" + ficCalc.getAbsolutePath() + "'."
-                        + "\nDate d'état : " + planChargeBean.getDateEtat() + ".",
+                        + "\nDate d'état : " + planChargeBean.getDateEtat() + "."
+                        + "\n" + planChargeBean.getPlanificationsBeans().size() + " lignes.",
                 400, 200
         );
     }

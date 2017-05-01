@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
+import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
@@ -96,7 +97,11 @@ public class PlanChargeXmlWrapper {
     }
 
     public PlanChargeXmlWrapper init(PlanCharge planCharge) throws PlanChargeDaoException {
-        versionApplication = params.getParametrage("application.version");
+        try {
+            versionApplication = params.getParametrage("application.version");
+        } catch (KernelException e) {
+            throw new PlanChargeDaoException("Impossible de déterminer la version de l'application.", e);
+        }
 
         dateEtat = Dates.asDate(planCharge.getDateEtat());
         referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getPlanifications());

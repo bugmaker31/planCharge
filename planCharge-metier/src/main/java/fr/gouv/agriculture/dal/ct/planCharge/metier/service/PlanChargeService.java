@@ -2,8 +2,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,9 @@ public class PlanChargeService {
         try {
             return planChargeDao.load(dateEtat);
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de charger le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+            throw new ServiceException(
+                    "Impossible de charger le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    e);
         }
     }
 
@@ -51,7 +53,9 @@ public class PlanChargeService {
         try {
             planChargeDao.sauver(planCharge);
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
+            throw new ServiceException(
+                    "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    e);
         }
     }
 
@@ -60,11 +64,20 @@ public class PlanChargeService {
         try {
             return planChargeDao.importerDepuisCalc(ficCalc);
         } catch (DaoException e) {
-            throw new ServiceException("Impossible d'importer le plan de charge depuis le fichier Calc '" + ficCalc.getAbsolutePath() + "'.", e);
+            throw new ServiceException(
+                    "Impossible d'importer le plan de charge depuis le fichier Calc '" + ficCalc.getAbsolutePath() + "'.",
+                    e);
         }
     }
 
-    public File fichierPersistancePlanCharge(@NotNull LocalDate dateEtat) {
-        return planChargeDao.fichierPlanCharge(dateEtat);
+    public File fichierPersistancePlanCharge(@NotNull LocalDate dateEtat) throws ServiceException {
+        try {
+            return planChargeDao.fichierPlanCharge(dateEtat);
+        } catch (PlanChargeDaoException e) {
+            throw new ServiceException(
+                    "Impossible de déterminer le nom du fichier de persistance du plan de charge, pour la date du "
+                            + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    e);
+        }
     }
 }

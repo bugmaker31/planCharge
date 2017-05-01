@@ -38,7 +38,11 @@ public class PlanificationBean {
         this.calendrier = new ArrayList<>();
         calendrier.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .forEach(entry -> this.calendrier.add(new Pair<LocalDate, DoubleProperty>(entry.getKey(), new SimpleDoubleProperty(entry.getValue()))));
+                .forEach(entry -> {
+                    LocalDate dateSemaine = entry.getKey();
+                    Double charge = entry.getValue();
+                    this.calendrier.add(new Pair<>(dateSemaine, new SimpleDoubleProperty(charge)));
+                });
 
         majChargePlanifiee();
     }

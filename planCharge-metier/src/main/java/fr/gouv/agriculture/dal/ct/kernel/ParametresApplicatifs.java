@@ -39,12 +39,12 @@ public class ParametresApplicatifs {
         }
     }
 
-    public String getParametrage(String clef) {
+    public String getParametrage(String clef) throws KernelException {
         if (!this.properties.containsKey(clef)) {
-            throw new RuntimeException("No property '" + clef + "' in resource '" + PROPERTIES_FILE_RSRC_NAME + "'.");
+            throw new KernelException("No property '" + clef + "' in resource '" + PROPERTIES_FILE_RSRC_NAME + "'.");
         }
         if (this.properties.getProperty(clef) == null) {
-            throw new RuntimeException("Property '" + clef + "' is null (in resource '" + PROPERTIES_FILE_RSRC_NAME + "').");
+            throw new KernelException("Property '" + clef + "' is null (in resource '" + PROPERTIES_FILE_RSRC_NAME + "').");
         }
         return this.properties.getProperty(clef);
     }
