@@ -16,6 +16,8 @@ public class CodeImportanceComparator implements Comparator<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeImportanceComparator.class);
 
+    public static final Comparator<String> COMPARATEUR = new CodeImportanceComparator();
+
     //    @Autowired
     @NotNull
     private ImportanceDao importanceDao = ImportanceDao.instance();
@@ -23,12 +25,15 @@ public class CodeImportanceComparator implements Comparator<String> {
     @Override
     public int compare(@NotNull String codeImportance1, @NotNull String codeImportance2) {
         try {
-            /*@NotNull*/ Importance i1 = importanceDao.load(codeImportance1);
-            /*@NotNull*/ Importance i2 = importanceDao.load(codeImportance2);
+            Importance i1 = importanceDao.loadByCode(codeImportance1);
+            Importance i2 = importanceDao.loadByCode(codeImportance2);
+            assert i1 != null;
+            assert i2 != null;
             return i1.compareTo(i2);
         } catch (DaoException e) {
-            LOGGER.error("Impossible de trier les importances.", e);
+            LOGGER.error("Impossible de trier les importances '" + codeImportance1 + "' et '" + codeImportance2 + "'.", e);
             return 0;
         }
     }
+
 }

@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.control.CheckComboBox?>
+<?import org.controlsfx.control.*?>
 <?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController">
 
-        <stylesheets>
-            <URL value="@/css/main.css"/>
-        </stylesheets>
+    <stylesheets>
+        <URL value="@/css/main.css"/>
+    </stylesheets>
 
     <top>
         <VBox>
@@ -84,30 +84,43 @@
         <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true"
                    BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="categorieColumn" editable="false" prefWidth="55.0" text="Catégorie"/>
-                <TableColumn fx:id="sousCategorieColumn" editable="false" prefWidth="55.0" text="Sous-catégorie"/>
+                <TableColumn text="Catégories">
+                    <columns>
+                        <TableColumn fx:id="categorieColumn" editable="false" prefWidth="55.0" text="Catégorie"/>
+                        <TableColumn fx:id="sousCategorieColumn" editable="false" prefWidth="55.0"
+                                     text="Sous-catégorie"/>
+                    </columns>
+                </TableColumn>
                 <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0" text="N° tâche"/>
                 <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                 <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
                 <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
-                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
-                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                <TableColumn text="Période souhaitée">
+                    <columns>
+                        <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+                        <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                    </columns>
+                </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
                 <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
                 <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
                 <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
-                <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
-                <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"/>
-                <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"/>
-                <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"/>
-                <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"/>
-                <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"/>
-                <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"/>
-                <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"/>
-                <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"/>
-                <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
-                <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
-                <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
+                <TableColumn text="Planification">
+                    <columns>
+                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
+                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"/>
+                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"/>
+                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"/>
+                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"/>
+                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"/>
+                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"/>
+                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"/>
+                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"/>
+                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
+                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
+                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
+                    </columns>
+                </TableColumn>
                 <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0" text="Charge planifiée"/>
             </columns>
         </TableView>

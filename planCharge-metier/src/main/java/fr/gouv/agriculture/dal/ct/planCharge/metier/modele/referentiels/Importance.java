@@ -11,15 +11,16 @@ import java.util.Comparator;
  */
 public class Importance extends AbstractEntity<String> implements Comparable<Importance> {
 
-    public static class ImportanceComparator implements Comparator<Importance> {
+    public static class OrdreImportanceComparator implements Comparator<Importance> {
 
         @Override
         public int compare(@NotNull Importance i1, @NotNull Importance i2) {
             return i1.getOrdre().compareTo(i2.getOrdre());
         }
+
     }
 
-    public static final ImportanceComparator COMPARATOR = new ImportanceComparator();
+    public static final Comparator<Importance> COMPARATOR_DEFAUT = new OrdreImportanceComparator();
 
     @NotNull
     private final String codeInterne;
@@ -76,6 +77,6 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
 
     @Override
     public int compareTo(@NotNull Importance other) {
-        return COMPARATOR.compare(this, other);
+        return COMPARATOR_DEFAUT.compare(this, other);
     }
 }

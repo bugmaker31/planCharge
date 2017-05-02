@@ -53,14 +53,23 @@
     <center>
         <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="categorieColumn" editable="false" prefWidth="55.0" text="Catégorie"/>
-                <TableColumn fx:id="sousCategorieColumn" editable="false" prefWidth="55.0" text="Sous-catégorie"/>
+                <TableColumn text="Catégories">
+                    <columns>
+                        <TableColumn fx:id="categorieColumn" editable="false" prefWidth="55.0" text="Catégorie"/>
+                        <TableColumn fx:id="sousCategorieColumn" editable="false" prefWidth="55.0"
+                                     text="Sous-catégorie"/>
+                    </columns>
+                </TableColumn>
                 <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0" text="N° tâche"/>
                 <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                 <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
                 <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
-                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
-                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                <TableColumn text="Période souhaitée">
+                    <columns>
+                        <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+                        <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                    </columns>
+                </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
                 <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
                 <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>

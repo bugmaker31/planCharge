@@ -181,10 +181,13 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                         setTextFill(Color.WHITE);
                         styleBackgroundColour = "maroon";
                     } else {
-                        setTextFill(Color.BLACK);
-                        styleBackgroundColour = "black";
+                        setTextFill(null);
+                        styleBackgroundColour = null;
                     }
-                    setStyle("-fx-background-color: " + styleBackgroundColour + "; -fx-alignment: center-right");
+                    setStyle(
+                            (styleBackgroundColour == null ? "" : ("-fx-background-color: " + styleBackgroundColour + ";"))
+                                    + " -fx-alignment: center-right"
+                    );
                 }
             }
         });

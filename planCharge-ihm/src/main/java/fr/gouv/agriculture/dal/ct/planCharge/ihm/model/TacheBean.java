@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.AbstractTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
@@ -36,7 +35,7 @@ public class TacheBean {
     private IntegerProperty id = new SimpleIntegerProperty();
     @NotNull
     private StringProperty categorie = new SimpleStringProperty();
-    @Null
+    @NotNull
     private StringProperty sousCategorie = new SimpleStringProperty();
     @NotNull
     private StringProperty noTicketIdal = new SimpleStringProperty();
@@ -49,7 +48,7 @@ public class TacheBean {
     @NotNull
     private ObjectProperty<LocalDate> echeance = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
-    private ObjectProperty<Importance> importance = new SimpleObjectProperty<>();
+    private StringProperty importance = new SimpleStringProperty();
     @NotNull
     private DoubleProperty charge = new SimpleDoubleProperty();
     @NotNull
@@ -84,7 +83,7 @@ public class TacheBean {
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
         if (tache.getImportance() != null) {
-            this.importance.set(tache.getImportance());
+            this.importance.set(tache.getImportance().getCode());
         }
         this.charge.set(tache.getCharge());
         if (tache.getRessource() != null) {
@@ -111,7 +110,7 @@ public class TacheBean {
         this.debut.set(debut);
         this.echeance.set(echeance);
         if (importance != null) {
-            this.importance.set(importance);
+            this.importance.set(importance.getCode());
         }
         this.charge.set(charge);
         if (ressource != null) {
@@ -204,12 +203,12 @@ public class TacheBean {
     }
 
     @NotNull
-    public Importance getImportance() {
+    public String getImportance() {
         return importance.get();
     }
 
     @NotNull
-    public ObjectProperty<Importance> importanceProperty() {
+    public StringProperty importanceProperty() {
         return importance;
     }
 
@@ -267,6 +266,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheCategorie(@NotNull String otherValue) {
+        if (getCategorie() == null) {
+            return false;
+        }
         if (getCategorie().contains(otherValue)) {
             return true; // matches
         }
@@ -275,6 +277,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheSousCategorie(@NotNull String otherValue) {
+        if (getSousCategorie() == null) {
+            return false;
+        }
         if (getSousCategorie().contains(otherValue)) {
             return true; // matches
         }
@@ -283,6 +288,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheNoTicketIdal(@NotNull String otherValue) {
+        if (getNoTicketIdal() == null) {
+            return false;
+        }
         if (getNoTicketIdal().contains(otherValue)) {
             return true; // matches
         }
@@ -292,9 +300,8 @@ public class TacheBean {
     @NotNull
     public boolean matcheDescription(@NotNull String otherValue) throws IhmException {
         if (getDescription() == null) {
-            return true;
+            return false;
         }
-
         Pattern patron;
         try {
             patron = Pattern.compile(otherValue);
@@ -311,6 +318,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheProjetAppli(@NotNull String otherValue) {
+        if (getProjetAppli() == null) {
+            return false;
+        }
         if (getProjetAppli().contains(otherValue)) {
             return true; // matches
         }
@@ -319,7 +329,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheImportance(@NotNull Importance otherValue) {
-        if (getImportance().getCode().contains(otherValue.getCode())) {
+        if (getImportance() == null) {
+            return false;
+        }
+        if (getImportance().contains(otherValue.getCode())) {
             return true; // matches
         }
         return false; // does not match.
@@ -327,7 +340,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheImportance(@NotNull String otherValue) {
-        if (getImportance().getCode().contains(otherValue)) {
+        if (getImportance() == null) {
+            return false;
+        }
+        if (getImportance().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -335,6 +351,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheDebut(@NotNull String otherValue) {
+        if (getDebut() == null) {
+            return false;
+        }
         if (getDebut().format(DATE_FORMATTER).contains(otherValue)) {
             return true; // matches
         }
@@ -343,6 +362,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheEcheance(@NotNull String otherValue) {
+        if (getEcheance() == null) {
+            return false;
+        }
         if (getEcheance().format(DATE_FORMATTER).contains(otherValue)) {
             return true; // matches
         }
@@ -352,6 +374,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheRessource(@NotNull String otherValue) {
+        if (getRessource() == null) {
+            return false;
+        }
         if (getRessource().contains(otherValue)) {
             return true; // matches
         }
@@ -360,6 +385,9 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheProfil(@NotNull String otherValue) {
+        if (getProfil() == null) {
+            return false;
+        }
         if (getProfil().contains(otherValue)) {
             return true; // matches
         }
@@ -370,7 +398,9 @@ public class TacheBean {
     @Override
     @NotNull
     public String toString() {
-        return ("[" + projetAppli.get() + "]")
+        return (categorie.get() + (sousCategorie.get() == null ? "" : ("::" + sousCategorie.get())))
+                + " "
+                + ("[" + projetAppli.get() + "]")
                 + " "
                 + noTache()
                 + " "
@@ -392,7 +422,7 @@ public class TacheBean {
                     projetAppliDao.load(projetAppli.get()),
                     debut.get(),
                     echeance.get(),
-                    importance.get(),
+                    importanceDao.loadByCode(importance.get()),
                     charge.get(),
                     ressourceDao.load(ressource.get()),
                     profilDao.load(profil.get())

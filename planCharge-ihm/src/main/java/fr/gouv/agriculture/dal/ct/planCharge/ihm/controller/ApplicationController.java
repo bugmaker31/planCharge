@@ -136,18 +136,9 @@ public class ApplicationController extends AbstractController {
         }
 
         charger(ficCalc);
-
-        ihm.afficherPopUp(
-                Alert.AlertType.INFORMATION,
-                "Chargement terminé",
-                "Le chargement est terminé (" + planChargeBean.getPlanificationsBeans().size() + " tâches).",
-                400, 200
-        );
-
-        afficherModuleCharges();
     }
 
-    private void charger(@NotNull File ficPlanCharge) throws IhmException {
+    public void charger(@NotNull File ficPlanCharge) throws IhmException {
         if (ficPlanCharge == null) {
             throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
         }
@@ -160,6 +151,16 @@ public class ApplicationController extends AbstractController {
             planCharge.getPlanifications().entrySet().stream().forEach(
                     planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
             );
+
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Chargement terminé",
+                    "Le chargement est terminé (" + planChargeBean.getPlanificationsBeans().size() + " tâches).",
+                    400, 200
+            );
+
+            afficherModuleCharges();
+
         } catch (ServiceException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
@@ -269,17 +270,6 @@ public class ApplicationController extends AbstractController {
         }
 
         importerDepuisCalc(ficCalc);
-
-        ihm.afficherPopUp(
-                Alert.AlertType.INFORMATION,
-                "Données importées",
-                "Le plan de charge a été importé : "
-                        + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                        + "\n- date d'état : " + planChargeBean.getDateEtat()
-                        + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size(),
-                700, 300
-        );
-        afficherModuleCharges();
     }
 
     // TODO FDA 23017/02 Afficher une "progress bar".
@@ -302,6 +292,19 @@ public class ApplicationController extends AbstractController {
                     }
                 })
                 .collect(Collectors.toList()));
+
+
+        ihm.afficherPopUp(
+                Alert.AlertType.INFORMATION,
+                "Données importées",
+                "Le plan de charge a été importé : "
+                        + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                        + "\n- date d'état : " + planChargeBean.getDateEtat()
+                        + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size(),
+                700, 300
+        );
+
+        afficherModuleCharges();
     }
 
     @FXML

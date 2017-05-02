@@ -1,8 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -10,7 +10,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
@@ -45,7 +48,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
     @NotNull
     private ObservableList<String> codesSousCategoriesTaches = FXCollections.observableArrayList();
     @NotNull
-    private ObservableList<Importance> importancesTaches = FXCollections.observableArrayList();
+    private ObservableList<String> importancesTaches = FXCollections.observableArrayList();
     @NotNull
     private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
     @NotNull
@@ -72,7 +75,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
     @FXML
     private TableColumn<TB, LocalDate> echeanceColumn;
     @FXML
-    private TableColumn<TB, Importance> importanceColumn;
+    private TableColumn<TB, String> importanceColumn;
     @FXML
     private TableColumn<TB, Double> chargeColumn;
     @FXML
@@ -145,6 +148,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         LOGGER.debug("RAZ des filtres...");
         filtreGlobalField.clear();
         filtreCategoriesField.getCheckModel().checkAll();
+        filtreSousCategoriesField.getCheckModel().checkAll();
         filtreNoTacheField.clear();
         filtreNoTicketIdalField.clear();
         filtreDescriptionField.clear();
@@ -159,6 +163,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         categorieColumn.setCellValueFactory(cellData -> cellData.getValue().categorieProperty());
+        sousCategorieColumn.setCellValueFactory(cellData -> cellData.getValue().sousCategorieProperty());
         noTacheColumn.setCellValueFactory(cellData -> cellData.getValue().noTacheProperty());
         noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().noTicketIdalProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
@@ -185,21 +190,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
 
         // Paramétrage des ordres de tri :
-        importanceColumn.setComparator(Importance::compareTo);
-
-        /* TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
-        importancesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
-        codesProjetsApplisTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
-        codesRessourcesTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
-        codesProfilsTaches.addListener((ListChangeListener<? super String>) changeListener -> changeListener.getList().sort(String::compareTo));
-        */
-
-        /* TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
-        importancesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getImportance()).collect(Collectors.toSet()));
-        codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(planification -> planification.getProjetAppli()).collect(Collectors.toSet()));
-        codesRessourcesTaches.setAll(changeListener.getList().stream().map(planification -> planification.getIdRessource()).collect(Collectors.toSet()));
-        codesProfilsTaches.setAll(changeListener.getList().stream().map(planification -> planification.getProfil()).collect(Collectors.toSet()));
-        */
+        importanceColumn.setComparator(CodeImportanceComparator.COMPARATEUR);
 
         populerFiltreCategories();
         populerFiltreSousCategories();
@@ -285,33 +276,36 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
                         });
                     }
             );
-            filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredTaches.setPredicate(tache -> {
+            filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) ->
+                    filteredTaches.setPredicate(tache -> {
 
-                    // If filter text is empty, display all data.
-                    if (newValue == null || newValue.isEmpty()) {
-                        return true;
-                    }
+                        // If filter text is empty, display all data.
+                        if (newValue == null || newValue.isEmpty()) {
+                            return true;
+                        }
 
-                    // Compare column values with filter text.
-                    if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
-                        return true; // Filter matches
-                    }
-                    return false; // Does not match.
-                });
-            });
+                        // Compare column values with filter text.
+                        if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
+                            return true; // Filter matches
+                        }
+                        return false; // Does not match.
+                    })
+            );
             filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
 
                 if (newValue != null && !newValue.isEmpty()) {
                     try {
-                        Pattern patron = Pattern.compile(newValue);
+                        Pattern.compile(newValue);
                     } catch (PatternSyntaxException e) {
+/*
                         ihm.afficherPopUp(
                                 Alert.AlertType.ERROR,
                                 "Valeur incorrecte",
                                 "Expression régulière incorrecte : '" + newValue + "'.",
                                 400, 200
                         );
+                        filtreDescriptionField.clear();
+*/
                         return;
                     }
                 }
@@ -414,96 +408,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
             );
             // 3. Wrap the FilteredList in a SortedList.
             SortedList<TB> sortedPlanifBeans = new SortedList<>(filteredTaches);
-            // 4. Bind the SortedList COMPARATOR to the TableView COMPARATOR.
+            // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
             sortedPlanifBeans.comparatorProperty().bind(tachesTable.comparatorProperty());
             // 5. Add sorted (and filtered) data to the table.
             getTachesTable().setItems(sortedPlanifBeans);
         });
 
-        // Chargement des données (TacheBean ou PlanificationBean)
-        populerTaches();
-    }
-
-    private void populerFiltreCategories() {
-        filtreCategoriesField.getItems().setAll(
-                tachesBeans.stream()
-                        .filter(tacheBean -> (tacheBean.getCategorie() != null))
-                        .map(tacheBean -> tacheBean.getCategorie())
-                        .distinct()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())
-        );
-        filtreCategoriesField.getCheckModel().checkAll();
-    }
-
-    private void populerFiltreSousCategories() {
-        filtreSousCategoriesField.getItems().setAll(
-                tachesBeans.stream()
-                        .filter(tacheBean -> (tacheBean.getSousCategorie() != null))
-                        .map(tacheBean -> tacheBean.getSousCategorie())
-                        .distinct()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())
-        );
-        filtreSousCategoriesField.getCheckModel().checkAll();
-    }
-
-    private void populerFiltreProjetsApplis() {
-        filtreProjetsApplisField.getItems().setAll(
-                tachesBeans.stream()
-                        .filter(tacheBean -> (tacheBean.getProjetAppli() != null))
-                        .map(tacheBean -> tacheBean.getProjetAppli())
-                        .distinct()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())
-        );
-        filtreProjetsApplisField.getCheckModel().checkAll();
-    }
-
-    private void populerFiltreImportances() {
-        filtreImportancesField.getItems().setAll(
-                tachesBeans.stream()
-                        .filter(tacheBean -> (tacheBean.getImportance() != null))
-                        .map(tacheBean -> tacheBean.getImportance().getCode())
-                        .distinct()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())
-        );
-        filtreImportancesField.getCheckModel().checkAll();
-    }
-
-    private void populerFiltreRessources() {
-        filtreRessourcesField.getItems().setAll(
-                tachesBeans.stream()
-                        .filter(tacheBean -> (tacheBean.getRessource() != null))
-                        .map(tacheBean -> tacheBean.getRessource())
-                        .distinct()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())
-        );
-        filtreRessourcesField.getCheckModel().checkAll();
-    }
-
-    private void populerFiltreProfils() {
-        filtreProfilsField.getItems().setAll(
-                tachesBeans.stream()
-                        .filter(tacheBean -> (tacheBean.getProfil() != null))
-                        .map(tacheBean -> tacheBean.getProfil())
-                        .distinct()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())
-        );
-        filtreProfilsField.getCheckModel().checkAll();
-    }
-
-    protected void populerTaches() {
         tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
-            codesCategoriesTaches.setAll(changeListener.getList().stream().map(TacheBean::getCategorie).sorted(String::compareTo).collect(Collectors.toSet()));
-            codesSousCategoriesTaches.setAll(changeListener.getList().stream().filter(o -> !o.sousCategorieProperty().isEmpty().get()).map(TacheBean::getSousCategorie).sorted(String::compareTo).collect(Collectors.toSet()));
-            importancesTaches.setAll(changeListener.getList().stream().map(TacheBean::getImportance).sorted(Importance::compareTo).collect(Collectors.toSet()));
-            codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(TacheBean::getProjetAppli).sorted(String::compareTo).collect(Collectors.toSet()));
-            codesRessourcesTaches.setAll(changeListener.getList().stream().map(TacheBean::getRessource).sorted(String::compareTo).collect(Collectors.toSet()));
-            codesProfilsTaches.setAll(changeListener.getList().stream().map(TacheBean::getProfil).sorted(String::compareTo).collect(Collectors.toSet()));
+            // TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
+            codesCategoriesTaches.setAll(changeListener.getList().stream().map(TacheBean::getCategorie).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
+            codesSousCategoriesTaches.setAll(changeListener.getList().stream().filter(o -> !o.sousCategorieProperty().isEmpty().get()).map(TacheBean::getSousCategorie).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
+            importancesTaches.setAll(changeListener.getList().stream().map(TacheBean::getImportance).distinct().sorted(CodeImportanceComparator.COMPARATEUR).collect(Collectors.toSet()));
+            codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(TacheBean::getProjetAppli).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
+            codesRessourcesTaches.setAll(changeListener.getList().stream().map(TacheBean::getRessource).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
+            codesProfilsTaches.setAll(changeListener.getList().stream().map(TacheBean::getProfil).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
         });
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
@@ -686,10 +604,82 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         );
         // 3. Wrap the FilteredList in a SortedList.
         SortedList<TB> sortedData = new SortedList<>(filteredData);
-        // 4. Bind the SortedList COMPARATOR to the TableView COMPARATOR.
+        // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
         sortedData.comparatorProperty().bind(tachesTable.comparatorProperty());
         // 5. Add sorted (and filtered) data to the table.
         tachesTable.setItems(sortedData);
+    }
+
+    private void populerFiltreCategories() {
+        filtreCategoriesField.getItems().setAll(
+                tachesBeans.stream()
+                        .filter(tacheBean -> (tacheBean.getCategorie() != null))
+                        .map(tacheBean -> tacheBean.getCategorie())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
+        filtreCategoriesField.getCheckModel().checkAll();
+    }
+
+    private void populerFiltreSousCategories() {
+        filtreSousCategoriesField.getItems().setAll(
+                tachesBeans.stream()
+                        .filter(tacheBean -> (tacheBean.getSousCategorie() != null))
+                        .map(tacheBean -> tacheBean.getSousCategorie())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
+        filtreSousCategoriesField.getCheckModel().checkAll();
+    }
+
+    private void populerFiltreProjetsApplis() {
+        filtreProjetsApplisField.getItems().setAll(
+                tachesBeans.stream()
+                        .filter(tacheBean -> (tacheBean.getProjetAppli() != null))
+                        .map(tacheBean -> tacheBean.getProjetAppli())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
+        filtreProjetsApplisField.getCheckModel().checkAll();
+    }
+
+    private void populerFiltreImportances() {
+        filtreImportancesField.getItems().setAll(
+                tachesBeans.stream()
+                        .filter(tacheBean -> (tacheBean.getImportance() != null))
+                        .map(tacheBean -> tacheBean.getImportance())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
+        filtreImportancesField.getCheckModel().checkAll();
+    }
+
+    private void populerFiltreRessources() {
+        filtreRessourcesField.getItems().setAll(
+                tachesBeans.stream()
+                        .filter(tacheBean -> (tacheBean.getRessource() != null))
+                        .map(tacheBean -> tacheBean.getRessource())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
+        filtreRessourcesField.getCheckModel().checkAll();
+    }
+
+    private void populerFiltreProfils() {
+        filtreProfilsField.getItems().setAll(
+                tachesBeans.stream()
+                        .filter(tacheBean -> (tacheBean.getProfil() != null))
+                        .map(tacheBean -> tacheBean.getProfil())
+                        .distinct()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())
+        );
+        filtreProfilsField.getCheckModel().checkAll();
     }
 
 }

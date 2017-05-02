@@ -286,11 +286,9 @@ public class PlanChargeIhm extends javafx.application.Application {
 //        afficherModuleDisponibilites();
 //        afficherModuleTaches();
 //        afficherModuleCharge();
-
+        //
 //        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-
-        definirDateEtat(LocalDate.of(2017, 4, 17));
-//        applicationController.charger();
+        applicationController.charger(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\planCharge_2017-04-17.xml"));
 
         LOGGER.info("Application démarrée.");
     }

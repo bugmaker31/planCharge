@@ -198,7 +198,7 @@ public class TacheXmlWrapper {
             tache = new Tache(
                     id,
                     CategorieTache.valeur(categorie),
-                    (sousCategorie == null ? null : SousCategorieTache.valeurOuNull(sousCategorie)),
+                    (sousCategorie == null ? null : SousCategorieTache.valeur(sousCategorie)),
                     noTicketIdal,
                     description,
                     projetAppliDao.load(idProjetAppli),
