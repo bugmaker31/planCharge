@@ -84,7 +84,7 @@
         <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true"
                    BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn text="Catégories">
+                <TableColumn text="Catégories" visible="false">
                     <columns>
                         <TableColumn fx:id="categorieColumn" editable="false" prefWidth="55.0" text="Catégorie"/>
                         <TableColumn fx:id="sousCategorieColumn" editable="false" prefWidth="55.0"

@@ -146,7 +146,7 @@ public class ApplicationController extends AbstractController {
 
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
-            planChargeBean.setDateEtat(planCharge.getDateEtat());
+            ihm.definirDateEtat(planCharge.getDateEtat());
             planChargeBean.getPlanificationsBeans().clear();
             planCharge.getPlanifications().entrySet().stream().forEach(
                     planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
@@ -228,8 +228,25 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
+    private void importerTachesDepuisCalc(ActionEvent event) {
+        LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
+        try {
+            // TODO FDA 2017/05 Coder.
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'importer les tâches.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'importer les tâches",
+                    e.getLocalizedMessage(),
+                    400, 200
+            );
+        }
+    }
+
+
+    @FXML
     private void importerPlanChargeDepuisCalc(ActionEvent event) {
-        LOGGER.debug("> Fichier > Importer depuis Calc");
+        LOGGER.debug("> Fichier > Importer > Plan charge depuis Calc");
         try {
             importerPlanChargeDepuisCalc();
         } catch (IhmException e) {

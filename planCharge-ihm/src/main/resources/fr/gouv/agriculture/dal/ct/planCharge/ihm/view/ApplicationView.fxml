@@ -13,10 +13,11 @@
                         <MenuItem mnemonicParsing="false" text="Charger..." onAction="#charger"/>
                         <Menu mnemonicParsing="true"
                               text="_Importer...">
-                            <MenuItem mnemonicParsing="true" text="...un plan de charge depuis _Calc..."
+                            <MenuItem mnemonicParsing="true" text="Importer les _tâches depuis Calc..."
+                                      onAction="#importerTachesDepuisCalc"/>
+                            <MenuItem mnemonicParsing="true" text="Importer un plan de _charge depuis Calc..."
                                       onAction="#importerPlanChargeDepuisCalc"/>
                         </Menu>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="true" text="_Sauver..." onAction="#sauver" accelerator="Shortcut+S"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="true" text="_Préférences..." onAction="#afficherPreferences"/>
