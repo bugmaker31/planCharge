@@ -228,10 +228,10 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void importerDepuisCalc(ActionEvent event) {
+    private void importerPlanChargeDepuisCalc(ActionEvent event) {
         LOGGER.debug("> Fichier > Importer depuis Calc");
         try {
-            importerDepuisCalc();
+            importerPlanChargeDepuisCalc();
         } catch (IhmException e) {
             LOGGER.error("Impossible d'importer le plan de charge.", e);
             ihm.afficherPopUp(
@@ -243,7 +243,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void importerDepuisCalc() {
+    private void importerPlanChargeDepuisCalc() {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
@@ -269,11 +269,11 @@ public class ApplicationController extends AbstractController {
             return;
         }
 
-        importerDepuisCalc(ficCalc);
+        importerPlanChargeDepuisCalc(ficCalc);
     }
 
     // TODO FDA 23017/02 Afficher une "progress bar".
-    private void importerDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
         PlanCharge planCharge;
         try {
             planCharge = planChargeService.importerDepuisCalc(ficCalc);
@@ -380,7 +380,7 @@ public class ApplicationController extends AbstractController {
 
     private void afficherModuleCharges() {
         LOGGER.debug("> Charges");
-        ihm.afficherModuleCharge();
+        ihm.afficherModuleCharges();
     }
 
     /*

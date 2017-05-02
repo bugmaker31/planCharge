@@ -65,7 +65,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private Region tachesView;
     @NotNull
-    private Region chargeView;
+    private Region chargesView;
 
     /*
         @NotNull
@@ -205,7 +205,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         {
             FXMLLoader chargeLoader = new FXMLLoader();
             chargeLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
-            chargeView = chargeLoader.load();
+            chargesView = chargeLoader.load();
             chargeController = chargeLoader.getController();
         }
     }
@@ -285,7 +285,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
 //        afficherModuleDisponibilites();
 //        afficherModuleTaches();
-//        afficherModuleCharge();
+//        afficherModuleCharges();
         //
 //        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
         applicationController.charger(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\planCharge_2017-04-17.xml"));
@@ -392,7 +392,7 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     public void afficherModuleDisponibilites() {
         applicationView.setCenter(disponibilitesView);
-        moduleCourant = "Dispo.";
+        moduleCourant = "Disponibilités";
         majTitre();
     }
 
@@ -402,9 +402,9 @@ public class PlanChargeIhm extends javafx.application.Application {
         majTitre();
     }
 
-    public void afficherModuleCharge() {
-        applicationView.setCenter(chargeView);
-        moduleCourant = "Charge";
+    public void afficherModuleCharges() {
+        applicationView.setCenter(chargesView);
+        moduleCourant = "Charges";
         majTitre();
     }
 

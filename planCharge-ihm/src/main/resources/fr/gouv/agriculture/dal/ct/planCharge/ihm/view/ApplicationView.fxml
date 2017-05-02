@@ -11,8 +11,11 @@
                 <Menu mnemonicParsing="true" text="_Fichier">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Charger..." onAction="#charger"/>
-                        <MenuItem mnemonicParsing="true"
-                                  text="_Importer depuis Calc..." onAction="#importerDepuisCalc"/>
+                        <Menu mnemonicParsing="true"
+                              text="_Importer...">
+                            <MenuItem mnemonicParsing="true" text="...un plan de charge depuis _Calc..."
+                                      onAction="#importerPlanChargeDepuisCalc"/>
+                        </Menu>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="true" text="_Sauver..." onAction="#sauver" accelerator="Shortcut+S"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
@@ -44,19 +47,19 @@
                 <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDisponibilites">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Afficher dispo"
-                                  onAction="#afficherModuleDisponibilites" />
+                                  onAction="#afficherModuleDisponibilites"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="true" onAction="#afficherModuleTaches" text="_Tâches" fx:id="menuTaches">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Afficher tâches"
-                                  onAction="#afficherModuleTaches" />
+                                  onAction="#afficherModuleTaches"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Afficher charges"
-                                  onAction="#afficherModuleCharges" />
+                                  onAction="#afficherModuleCharges"/>
                     </items>
                 </Menu>
                 <Menu disable="true" mnemonicParsing="false" text="TODOs">
