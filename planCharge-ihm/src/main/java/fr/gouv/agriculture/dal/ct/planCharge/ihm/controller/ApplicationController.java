@@ -18,8 +18,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import org.slf4j.Logger;
@@ -29,10 +28,10 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ApplicationController extends AbstractController {
 
@@ -40,32 +39,60 @@ public class ApplicationController extends AbstractController {
 
     private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
+    // Les menus :
+
+/*
     @FXML
+    @NotNull
     private Menu menuDisponibilites;
     @FXML
+    @NotNull
     private Menu menuTaches;
     @FXML
+    @NotNull
     private Menu menuCharges;
+*/
+
+    // Les onglets :
+
+    @FXML
+    @NotNull
+    private TabPane gestionTabPane;
+    @FXML
+    @NotNull
+    private Tab disponibilitesTab;
+    @FXML
+    @NotNull
+    private Tab tachesTab;
+    @FXML
+    @NotNull
+    private Tab chargesTab;
 
     // L'IHM :
-    @NotNull
 //    @Autowired
+    @NotNull
     private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
+/*
+    @Null
+    private String moduleCourant;
+*/
+
     // Les services métier :
-    @NotNull
 //    @Autowired
+    @NotNull
     private PlanChargeService planChargeService = PlanChargeService.instance();
 
     // Les données métier :
-    @NotNull
 //    @Autowired
+    @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
     public void init() {
+/*
         // Cf. http://stackoverflow.com/questions/10315774/javafx-2-0-activating-a-menu-like-a-menuitem
         if (menuDisponibilites.getItems().size() == 1) {
             menuDisponibilites.showingProperty().addListener((observable, oldValue, newValue) -> {
@@ -86,6 +113,39 @@ public class ApplicationController extends AbstractController {
                 if (newValue) {
                     menuCharges.getItems().get(0).fire();
                 }
+            });
+        }
+*/
+
+        // Cf. http://stackoverflow.com/questions/26915259/javafx-setting-a-tab-mnemonics
+        {
+            Button fakeLabel = new Button("_" + disponibilitesTab.getText());
+            disponibilitesTab.setText("");
+            fakeLabel.setMnemonicParsing(true);
+            fakeLabel.getStyleClass().clear();
+            disponibilitesTab.setGraphic(fakeLabel);
+            fakeLabel.setOnAction(ev -> {
+                gestionTabPane.getSelectionModel().select(disponibilitesTab);
+            });
+        }
+        {
+            Button fakeLabel = new Button("_" + tachesTab.getText());
+            tachesTab.setText("");
+            fakeLabel.setMnemonicParsing(true);
+            fakeLabel.getStyleClass().clear();
+            tachesTab.setGraphic(fakeLabel);
+            fakeLabel.setOnAction(ev -> {
+                gestionTabPane.getSelectionModel().select(tachesTab);
+            });
+        }
+        {
+            Button fakeLabel = new Button("_" + chargesTab.getText());
+            chargesTab.setText("");
+            fakeLabel.setMnemonicParsing(true);
+            fakeLabel.getStyleClass().clear();
+            chargesTab.setGraphic(fakeLabel);
+            fakeLabel.setOnAction(ev -> {
+                gestionTabPane.getSelectionModel().select(chargesTab);
             });
         }
     }
@@ -138,7 +198,22 @@ public class ApplicationController extends AbstractController {
         charger(ficCalc);
     }
 
-    public void charger(@NotNull File ficPlanCharge) throws IhmException {
+    public void charger(@NotNull LocalDate dateEtat) {
+        try {
+            File ficCalc = planChargeService.fichierPersistancePlanCharge(dateEtat);
+            charger(ficCalc);
+        } catch (Exception e) {
+            LOGGER.error("Impossible de charger le plan de charge.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de charger le plan de charge",
+                    e.getLocalizedMessage(),
+                    400, 200
+            );
+        }
+    }
+
+    private void charger(@NotNull File ficPlanCharge) throws IhmException {
         if (ficPlanCharge == null) {
             throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
         }
@@ -169,61 +244,54 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void sauver(ActionEvent event) {
         LOGGER.debug("> Fichier > Sauver");
-        try {
-            if (planChargeBean.getDateEtat() == null || planChargeBean.getPlanificationsBeans() == null) {
-                LOGGER.warn("Impossible de sauver un plan de charge non défini.");
-                ihm.afficherPopUp(
-                        Alert.AlertType.WARNING,
-                        "Impossible de sauver le plan de charge",
-                        "Impossible de sauver un plan de charge sans date d'état et/ou planification.",
-                        500, 200
-                );
-                return;
-            }
 
-            Planifications planifications = new Planifications();
-            planChargeBean.getPlanificationsBeans().stream().forEach(
-                    planificationBean -> {
-
-                        Tache tache = planificationBean.getTacheBean().extract();
-
-                        Map<LocalDate, Double> calendrier = new HashMap<>();
-                        List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
-                        ligne.forEach(semaine -> calendrier.put(semaine.getKey(), semaine.getValue().doubleValue()));
-
-                        planifications.ajouter(tache, calendrier);
-                    }
+        if (planChargeBean.getDateEtat() == null || planChargeBean.getPlanificationsBeans() == null) {
+            LOGGER.warn("Impossible de sauver un plan de charge non défini.");
+            ihm.afficherPopUp(
+                    Alert.AlertType.WARNING,
+                    "Impossible de sauver le plan de charge",
+                    "Impossible de sauver un plan de charge sans date d'état et/ou planification.",
+                    500, 200
             );
+            return;
+        }
+
+        try {
+            Planifications planifications = new Planifications();
+
+            for (PlanificationBean planificationBean : planChargeBean.getPlanificationsBeans()) {
+                Tache tache = planificationBean.getTacheBean().extract();
+                Map<LocalDate, Double> calendrier = new HashMap<>();
+                List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
+                ligne.forEach(semaine -> calendrier.put(semaine.getKey(), semaine.getValue().doubleValue()));
+
+                planifications.ajouter(tache, calendrier);
+            }
             PlanCharge planCharge = new PlanCharge(
                     planChargeBean.getDateEtat(),
                     planifications
             );
 
-            try {
+            planChargeService.sauver(planCharge);
 
-                planChargeService.sauver(planCharge);
+            File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Sauvegarder terminée",
+                    "Les " + planCharge.getPlanifications().size() + " lignes du plan de charge"
+                            + " en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                            + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
+                    500, 300
+            );
 
-                File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
-                ihm.afficherPopUp(
-                        Alert.AlertType.INFORMATION,
-                        "Sauvegarder terminée",
-                        "Les " + planCharge.getPlanifications().size() + " lignes du plan de charge"
-                                + " en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
-                                + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
-                        500, 300
-                );
-
-            } catch (ServiceException e) {
-                LOGGER.error("Impossible de sauver le plan de charge.", e);
-                ihm.afficherPopUp(
-                        Alert.AlertType.ERROR,
-                        "Impossible de sauver le plan de charge",
-                        "Impossible de sauver le plan de charge en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
-                        500, 200
-                );
-            }
-        } catch (IhmException e) {
-
+        } catch (IhmException | ServiceException e) {
+            LOGGER.error("Impossible de sauver le plan de charge.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de sauver le plan de charge",
+                    "Impossible de sauver le plan de charge en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    500, 200
+            );
         }
     }
 
@@ -232,6 +300,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
         try {
             // TODO FDA 2017/05 Coder.
+            throw new IhmException("Not implemented");
         } catch (IhmException e) {
             LOGGER.error("Impossible d'importer les tâches.", e);
             ihm.afficherPopUp(
@@ -260,7 +329,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void importerPlanChargeDepuisCalc() {
+    private void importerPlanChargeDepuisCalc() throws IhmException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
@@ -299,17 +368,17 @@ public class ApplicationController extends AbstractController {
         }
 
         ihm.definirDateEtat(planCharge.getDateEtat());
-        planificationsBeans.setAll(planCharge.getPlanifications().taches().stream()
-                .map(tache -> {
-                    try {
-                        Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
-                        return new PlanificationBean(tache, calendrier);
-                    } catch (TacheSansPlanificationException e) {
-                        throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
-                    }
-                })
-                .collect(Collectors.toList()));
 
+        List<PlanificationBean> planifBeans = new ArrayList<>();
+        for (Tache tache : planCharge.getPlanifications().taches()) {
+            try {
+                Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
+                planifBeans.add(new PlanificationBean(tache, calendrier));
+            } catch (TacheSansPlanificationException e) {
+                throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
+            }
+        }
+        planificationsBeans.setAll(planifBeans);
 
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
@@ -374,20 +443,23 @@ public class ApplicationController extends AbstractController {
         throw new NotImplementedException();
     }
 
-    /*
+/*
+    */
+/*
     Menu "Gérer" :
-     */
+     *//*
+
 
     @FXML
     private void afficherModuleDisponibilites(ActionEvent event) {
         LOGGER.debug("> Disponibilites");
-        ihm.afficherModuleDisponibilites();
+        afficherModuleDisponibilites();
     }
 
     @FXML
     private void afficherModuleTaches(ActionEvent event) {
         LOGGER.debug("> Tâches");
-        ihm.afficherModuleTaches();
+        afficherModuleTaches();
     }
 
     @FXML
@@ -397,8 +469,9 @@ public class ApplicationController extends AbstractController {
 
     private void afficherModuleCharges() {
         LOGGER.debug("> Charges");
-        ihm.afficherModuleCharges();
+        afficherModuleCharges();
     }
+*/
 
     /*
     Menu "Aide" :
@@ -417,5 +490,33 @@ public class ApplicationController extends AbstractController {
                 400, 200
         );
     }
+
+//    @FXML
+    private void afficherModuleDisponibilites() {
+//        applicationView.setCenter(disponibilitesView);
+        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+        gestionTabPane.getSelectionModel().select(disponibilitesTab);
+//        moduleCourant = "Disponibilités";
+//        ihm.majTitre();
+    }
+
+//    @FXML
+    private void afficherModuleTaches() {
+//        applicationView.setCenter(tachesView);
+        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+        gestionTabPane.getSelectionModel().select(tachesTab);
+//        moduleCourant = "Tâches";
+//        ihm.majTitre();
+    }
+
+//    @FXML
+    private void afficherModuleCharges() {
+//        applicationView.setCenter(chargesView);
+        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+        gestionTabPane.getSelectionModel().select(chargesTab);
+//        moduleCourant = "Charges";
+//        ihm.majTitre();
+    }
+
 
 }

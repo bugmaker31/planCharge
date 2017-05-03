@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
@@ -7,6 +8,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +26,7 @@ import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.LazyReflectiveObjectGenerator;
 
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
@@ -138,9 +142,14 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
             @Override
             public ObservableValue<Double> call(TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
-                PlanificationBean planifBean = cell.getValue();
-                Double nouvelleCharge = planifBean.charge(noSemaine).doubleValue();
-                return nouvelleCharge.equals(0.0) ? null : new SimpleDoubleProperty(nouvelleCharge).asObject();
+                try {
+                    PlanificationBean planifBean = cell.getValue();
+                    Double nouvelleCharge = planifBean.charge(noSemaine).doubleValue();
+                    return nouvelleCharge.equals(0.0) ? null : new SimpleDoubleProperty(nouvelleCharge).asObject();
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de formatter la cellule contenant la charge d'une semaine.", e);
+                    return null;
+                }
             }
         }
         semaine1Column.setCellValueFactory(new ChargeSemaineCellCallback(1));
@@ -203,7 +212,11 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             public void handle(TableColumn.CellEditEvent<PlanificationBean, Double> event) {
 
                 PlanificationBean planifBean = event.getRowValue();
-                planifBean.charge(noSemaine).setValue(event.getNewValue());
+                try {
+                    planifBean.charge(noSemaine).setValue(event.getNewValue());
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
+                }
 
                 planifBean.majChargePlanifiee();
             }
@@ -285,7 +298,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
     @Override
-    PlanificationBean nouveauBean() {
+    PlanificationBean nouveauBean() throws IhmException {
 
         TacheBean tacheBean = new TacheBean(
                 idTacheSuivant(),

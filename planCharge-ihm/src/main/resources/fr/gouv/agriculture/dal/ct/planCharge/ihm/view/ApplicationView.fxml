@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.*?>
 <BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.112"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
@@ -20,7 +18,8 @@
                         </Menu>
                         <MenuItem mnemonicParsing="true" text="_Sauver..." onAction="#sauver" accelerator="Shortcut+S"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="true" text="_Préférences..." onAction="#afficherPreferences"/>
+                        <MenuItem mnemonicParsing="true" text="_Préférences..." onAction="#afficherPreferences"
+                                  disable="true"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="true" text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
                     </items>
@@ -45,24 +44,26 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="Importances"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDisponibilites">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Afficher dispo"
-                                  onAction="#afficherModuleDisponibilites"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="true" onAction="#afficherModuleTaches" text="_Tâches" fx:id="menuTaches">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Afficher tâches"
-                                  onAction="#afficherModuleTaches"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Afficher charges"
-                                  onAction="#afficherModuleCharges"/>
-                    </items>
-                </Menu>
+                <!--
+                                <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDisponibilites">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Afficher dispo"
+                                                  onAction="#afficherModuleDisponibilites"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="true" onAction="#afficherModuleTaches" text="_Tâches" fx:id="menuTaches">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Afficher tâches"
+                                                  onAction="#afficherModuleTaches"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Afficher charges"
+                                                  onAction="#afficherModuleCharges"/>
+                                    </items>
+                                </Menu>
+                -->
                 <Menu disable="true" mnemonicParsing="false" text="TODOs">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Action 1"/>
@@ -76,4 +77,33 @@
             </menus>
         </MenuBar>
     </top>
+    <center>
+        <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
+            <Tab fx:id="disponibilitesTab" text="Disponibilités">
+                <fx:include source="ModuleDisponibilitesView.fxml"/>
+            </Tab>
+            <Tab fx:id="tachesTab" text="Tâches">
+                <fx:include source="ModuleTachesView.fxml"/>
+            </Tab>
+            <Tab fx:id="chargesTab" text="Charge">
+                <fx:include source="ModuleChargesView.fxml"/>
+            </Tab>
+        </TabPane>
+    </center>
+    <bottom>
+        <AnchorPane BorderPane.alignment="CENTER" fx:id="barreEtat">
+            <HBox>
+                <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
+                    <tooltip>
+                        <Tooltip text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
+                    </tooltip>
+                </CheckBox>
+                <Label text="Modifié ?">
+                    <tooltip>
+                        <Tooltip text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
+                    </tooltip>
+                </Label>
+            </HBox>
+        </AnchorPane>
+    </bottom>
 </BorderPane>

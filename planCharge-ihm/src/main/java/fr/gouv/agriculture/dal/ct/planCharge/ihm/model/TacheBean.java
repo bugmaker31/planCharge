@@ -34,27 +34,27 @@ public class TacheBean {
     @NotNull
     private IntegerProperty id = new SimpleIntegerProperty();
     @NotNull
-    private StringProperty categorie = new SimpleStringProperty();
+    private StringProperty codeCategorie = new SimpleStringProperty();
     @NotNull
-    private StringProperty sousCategorie = new SimpleStringProperty();
+    private StringProperty codeSousCategorie = new SimpleStringProperty();
     @NotNull
     private StringProperty noTicketIdal = new SimpleStringProperty();
     @NotNull
     private StringProperty description = new SimpleStringProperty();
     @NotNull
-    private StringProperty projetAppli = new SimpleStringProperty();
+    private StringProperty codeProjetAppli = new SimpleStringProperty();
     @NotNull
     private ObjectProperty<LocalDate> debut = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
     private ObjectProperty<LocalDate> echeance = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
-    private StringProperty importance = new SimpleStringProperty();
+    private StringProperty codeImportance = new SimpleStringProperty();
+    @NotNull
+    private StringProperty codeRessource = new SimpleStringProperty();
     @NotNull
     private DoubleProperty charge = new SimpleDoubleProperty();
     @NotNull
-    private StringProperty ressource = new SimpleStringProperty();
-    @NotNull
-    private StringProperty profil = new SimpleStringProperty();
+    private StringProperty codeProfil = new SimpleStringProperty();
 
     //    @Autowired
     @NotNull
@@ -69,57 +69,91 @@ public class TacheBean {
     @NotNull
     private ProfilDao profilDao = ProfilDao.instance();
 
+    public TacheBean(int id, String codeCategorie, String codeSousCategorie, String noTicketIdal, String description, String codeProjetAppli, LocalDate debut, LocalDate echeance, String codeImportance, double charge, String codeRessource, String codeProfil) {
+        this.id.set(id);
+        this.codeCategorie.set(codeCategorie);
+        this.codeSousCategorie.set(codeSousCategorie);
+        this.noTicketIdal.set(noTicketIdal);
+        this.description.set(description);
+        this.codeProjetAppli.set(codeProjetAppli);
+        this.debut.set(debut);
+        this.echeance.set(echeance);
+        this.codeImportance.set(codeImportance);
+        this.charge.set(charge);
+        this.codeRessource.set(codeRessource);
+        this.codeProfil.set(codeProfil);
+    }
+
+    public TacheBean(TacheBean tacheBean) {
+        this(
+                tacheBean.getId(),
+                tacheBean.getCodeCategorie(),
+                tacheBean.getCodeSousCategorie(),
+                tacheBean.getNoTicketIdal(),
+                tacheBean.getDescription(),
+                tacheBean.getCodeProjetAppli(),
+                tacheBean.getDebut(),
+                tacheBean.getEcheance(),
+                tacheBean.getCodeImportance(),
+                tacheBean.getCharge(),
+                tacheBean.getCodeRessource(),
+                tacheBean.getCodeProfil()
+        );
+    }
+
     TacheBean(@NotNull Tache tache) {
         this.id.set(tache.getId());
-        this.categorie.set(tache.getCategorie().getCode());
+        this.codeCategorie.set(tache.getCategorie().getCode());
         if (tache.getSousCategorie() != null) {
-            this.sousCategorie.set(tache.getSousCategorie().getCode());
+            this.codeSousCategorie.set(tache.getSousCategorie().getCode());
         }
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
         if (tache.getProjetAppli() != null) {
-            this.projetAppli.set(tache.getProjetAppli().getCode());
+            this.codeProjetAppli.set(tache.getProjetAppli().getCode());
         }
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
         if (tache.getImportance() != null) {
-            this.importance.set(tache.getImportance().getCode());
+            this.codeImportance.set(tache.getImportance().getCode());
         }
         this.charge.set(tache.getCharge());
         if (tache.getRessource() != null) {
-            this.ressource.set(tache.getRessource().getTrigramme());
+            this.codeRessource.set(tache.getRessource().getTrigramme());
         }
         if (tache.getProfil() != null) {
-            this.profil.set(tache.getProfil().getCode());
+            this.codeProfil.set(tache.getProfil().getCode());
         }
     }
 
+/*
     public TacheBean(int id, CategorieTache categorie, SousCategorieTache sousCategorie, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
         this.id.set(id);
         if (categorie != null) {
-            this.categorie.set(categorie.getCode());
+            this.codeCategorie.set(categorie.getCode());
         }
         if (sousCategorie != null) {
-            this.sousCategorie.set(sousCategorie.getCode());
+            this.codeSousCategorie.set(sousCategorie.getCode());
         }
         this.noTicketIdal.set(noTicketIdal);
         this.description.set(description);
         if (projetAppli != null) {
-            this.projetAppli.set(projetAppli.getCode());
+            this.codeProjetAppli.set(projetAppli.getCode());
         }
         this.debut.set(debut);
         this.echeance.set(echeance);
         if (importance != null) {
-            this.importance.set(importance.getCode());
+            this.codeImportance.set(importance.getCode());
         }
         this.charge.set(charge);
         if (ressource != null) {
-            this.ressource.set(ressource.getTrigramme());
+            this.codeRessource.set(ressource.getTrigramme());
         }
         if (profil != null) {
-            this.profil.set(profil.getCode());
+            this.codeProfil.set(profil.getCode());
         }
     }
+*/
 
     @NotNull
     public int getId() {
@@ -133,23 +167,23 @@ public class TacheBean {
     }
 
     @NotNull
-    public String getCategorie() {
-        return categorie.get();
+    public String getCodeCategorie() {
+        return codeCategorie.get();
     }
 
     @NotNull
-    public StringProperty categorieProperty() {
-        return categorie;
+    public StringProperty codeCategorieProperty() {
+        return codeCategorie;
     }
 
     @Null
-    public String getSousCategorie() {
-        return sousCategorie.get();
+    public String getCodeSousCategorie() {
+        return codeSousCategorie.get();
     }
 
     @NotNull
-    public StringProperty sousCategorieProperty() {
-        return sousCategorie;
+    public StringProperty codeSousCategorieProperty() {
+        return codeSousCategorie;
     }
 
     @NotNull
@@ -173,13 +207,13 @@ public class TacheBean {
     }
 
     @NotNull
-    public String getProjetAppli() {
-        return projetAppli.get();
+    public String getCodeProjetAppli() {
+        return codeProjetAppli.get();
     }
 
     @NotNull
-    public StringProperty projetAppliProperty() {
-        return projetAppli;
+    public StringProperty codeProjetAppliProperty() {
+        return codeProjetAppli;
     }
 
     @Null
@@ -203,13 +237,13 @@ public class TacheBean {
     }
 
     @NotNull
-    public String getImportance() {
-        return importance.get();
+    public String getCodeImportance() {
+        return codeImportance.get();
     }
 
     @NotNull
-    public StringProperty importanceProperty() {
-        return importance;
+    public StringProperty codeImportanceProperty() {
+        return codeImportance;
     }
 
     @NotNull
@@ -223,23 +257,23 @@ public class TacheBean {
     }
 
     @NotNull
-    public String getRessource() {
-        return ressource.get();
+    public String getCodeRessource() {
+        return codeRessource.get();
     }
 
     @NotNull
-    public StringProperty ressourceProperty() {
-        return ressource;
+    public StringProperty codeRessourceProperty() {
+        return codeRessource;
     }
 
     @NotNull
-    public String getProfil() {
-        return profil.get();
+    public String getCodeProfil() {
+        return codeProfil.get();
     }
 
     @NotNull
-    public StringProperty profilProperty() {
-        return profil;
+    public StringProperty codeProfilProperty() {
+        return codeProfil;
     }
 
 
@@ -266,10 +300,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheCategorie(@NotNull String otherValue) {
-        if (getCategorie() == null) {
+        if (getCodeCategorie() == null) {
             return false;
         }
-        if (getCategorie().contains(otherValue)) {
+        if (getCodeCategorie().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -277,10 +311,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheSousCategorie(@NotNull String otherValue) {
-        if (getSousCategorie() == null) {
+        if (getCodeSousCategorie() == null) {
             return false;
         }
-        if (getSousCategorie().contains(otherValue)) {
+        if (getCodeSousCategorie().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -318,10 +352,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheProjetAppli(@NotNull String otherValue) {
-        if (getProjetAppli() == null) {
+        if (getCodeProjetAppli() == null) {
             return false;
         }
-        if (getProjetAppli().contains(otherValue)) {
+        if (getCodeProjetAppli().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -329,10 +363,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheImportance(@NotNull Importance otherValue) {
-        if (getImportance() == null) {
+        if (getCodeImportance() == null) {
             return false;
         }
-        if (getImportance().contains(otherValue.getCode())) {
+        if (getCodeImportance().contains(otherValue.getCode())) {
             return true; // matches
         }
         return false; // does not match.
@@ -340,10 +374,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheImportance(@NotNull String otherValue) {
-        if (getImportance() == null) {
+        if (getCodeImportance() == null) {
             return false;
         }
-        if (getImportance().contains(otherValue)) {
+        if (getCodeImportance().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -374,10 +408,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheRessource(@NotNull String otherValue) {
-        if (getRessource() == null) {
+        if (getCodeRessource() == null) {
             return false;
         }
-        if (getRessource().contains(otherValue)) {
+        if (getCodeRessource().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -385,10 +419,10 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheProfil(@NotNull String otherValue) {
-        if (getProfil() == null) {
+        if (getCodeProfil() == null) {
             return false;
         }
-        if (getProfil().contains(otherValue)) {
+        if (getCodeProfil().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -398,9 +432,9 @@ public class TacheBean {
     @Override
     @NotNull
     public String toString() {
-        return (categorie.get() + (sousCategorie.get() == null ? "" : ("::" + sousCategorie.get())))
+        return (codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
                 + " "
-                + ("[" + projetAppli.get() + "]")
+                + ("[" + codeProjetAppli.get() + "]")
                 + " "
                 + noTache()
                 + " "
@@ -415,17 +449,17 @@ public class TacheBean {
         try {
             tache = new Tache(
                     id.get(),
-                    CategorieTache.valeur(categorie.get()),
-                    (sousCategorie.isEmpty().get() ? null : SousCategorieTache.valeur(sousCategorie.get())),
+                    (codeCategorie.isEmpty().get() ? null : CategorieTache.valeur(codeCategorie.get())),
+                    (codeSousCategorie.isEmpty().get() ? null : SousCategorieTache.valeur(codeSousCategorie.get())),
                     noTicketIdal.get(),
                     description.get(),
-                    projetAppliDao.load(projetAppli.get()),
+                    (codeProjetAppli.isEmpty().get() ? null : projetAppliDao.load(codeProjetAppli.get())),
                     debut.get(),
                     echeance.get(),
-                    importanceDao.loadByCode(importance.get()),
+                    (codeImportance.isEmpty().get() ? null : importanceDao.loadByCode(codeImportance.get())),
                     charge.get(),
-                    ressourceDao.load(ressource.get()),
-                    profilDao.load(profil.get())
+                    (codeRessource.isEmpty().get() ? null : ressourceDao.load(codeRessource.get())),
+                    (codeProfil.isEmpty().get() ? null : profilDao.load(codeProfil.get()))
             );
         } catch (ModeleException | DaoException e) {
             throw new IhmException("Impossible d'extraire la tâche depuis le bean.", e);

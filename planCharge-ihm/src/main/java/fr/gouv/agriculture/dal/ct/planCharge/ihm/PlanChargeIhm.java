@@ -2,14 +2,14 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,16 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 public class PlanChargeIhm extends javafx.application.Application {
 
@@ -48,7 +43,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         return instance;
     }
 
-//    private static Contexte contexte = Contexte.instance();
+    //    private static Contexte contexte = Contexte.instance();
     private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
     @NotNull
@@ -79,9 +74,6 @@ public class PlanChargeIhm extends javafx.application.Application {
     private ModuleTachesController tacheController;
     @NotNull
     private ModuleChargesController chargeController;
-
-    @Null
-    private String moduleCourant;
 
     /*
      Les services métier :
@@ -275,11 +267,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         // Chargement des données utilisées dernièrement (if any) :
         LocalDate dateEtatPrec = dateEtatPrecedente();
         if (dateEtatPrec != null) {
-            planChargeBean.setDateEtat(dateEtatPrec);
-            planChargeBean.getPlanificationsBeans().setAll(chargeDonnees(dateEtatPrec));
-        } else {
-            planChargeBean.setDateEtat(null);
-            planChargeBean.getPlanificationsBeans().clear();
+            applicationController.charger(dateEtatPrec);
         }
 
         // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
@@ -288,44 +276,12 @@ public class PlanChargeIhm extends javafx.application.Application {
 //        afficherModuleCharges();
         //
 //        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-        applicationController.charger(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\planCharge_2017-04-17.xml"));
 
         LOGGER.info("Application démarrée.");
     }
 
     private LocalDate dateEtatPrecedente() {
-        return null; //LocalDate.of(2016, 11, 13); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).;
-    }
-
-    private List<PlanificationBean> chargeDonnees(LocalDate dateEtat) {
-        List<PlanificationBean> planificationsBeans = null;
-        try {
-
-            PlanCharge planCharge = planChargeService.charger(dateEtat);
-
-            planificationsBeans = new ArrayList<>(planCharge.getPlanifications().size());
-            planificationsBeans.addAll(
-                    planCharge.getPlanifications().taches()
-                            .stream()
-                            .map(tache -> {
-                                try {
-                                    return new PlanificationBean(tache, planCharge.getPlanifications().calendrier(tache));
-                                } catch (TacheSansPlanificationException e) {
-                                    throw new ControllerException("Impossible de définir le plan de charge, pour la tâche " + tache.noTache() + ".", e);
-                                }
-                            })
-                            .collect(Collectors.toList())
-            );
-        } catch (ServiceException e) {
-            LOGGER.error("Impossible de lire les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".", e);
-            afficherPopUp(
-                    Alert.AlertType.ERROR,
-                    "Impossible de charger le plan de charge",
-                    "Impossible de charger les données en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
-                    500, 200
-            );
-        }
-        return planificationsBeans;
+        return LocalDate.of(2017, 4, 17); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).;
     }
 
     @Override
@@ -337,6 +293,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         System.exit(0);
     }
 
+/*
 
     private static final String PREF_KEY_FIC_PLANIF_CHARGE = "PREF_KEY_FIC_PLANIF_CHARGE";
 
@@ -346,14 +303,16 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     // TODO FDA 2017/04 Coder pour enregistrer ka date de dernière planif que l'utilisateur a travaillé.
 
-    /**
-     * Returns the file preference, i.e. the file that was last opened.
-     * The preference is read from the OS specific registry. If no such
-     * preference can be found, null is returned.
-     *
-     * @param datePlanif Date de la planification.
-     * @return
-     */
+    */
+/**
+ * Returns the file preference, i.e. the file that was last opened.
+ * The preference is read from the OS specific registry. If no such
+ * preference can be found, null is returned.
+ *
+ * @param datePlanif Date de la planification.
+ * @return
+ *//*
+
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     @Null
     public File getFichierPlanificationsCharge(LocalDate datePlanif) {
@@ -366,15 +325,20 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
+    */
+
     /**
      * Sets the file path of the currently loaded file. The path is persisted in
      * the OS specific registry.
      *
      * @param file the file, or null to remove the path
-     */
+     *//*
+
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     public void setFichierPlanificationsCharge(@Null File file, @Null LocalDate dateEtat) {
-        /*@NotNull*/
+        */
+/*@NotNull*//*
+
         Preferences prefs = Preferences.userNodeForPackage(PlanChargeIhm.class);
         String clefPrefFic = clefPrefPlanifCharge(dateEtat);
         if (file != null) {
@@ -389,33 +353,21 @@ public class PlanChargeIhm extends javafx.application.Application {
             majTitre();
         }
     }
-
-    public void afficherModuleDisponibilites() {
-        applicationView.setCenter(disponibilitesView);
-        moduleCourant = "Disponibilités";
-        majTitre();
-    }
-
-    public void afficherModuleTaches() {
-        applicationView.setCenter(tachesView);
-        moduleCourant = "Tâches";
-        majTitre();
-    }
-
-    public void afficherModuleCharges() {
-        applicationView.setCenter(chargesView);
-        moduleCourant = "Charges";
-        majTitre();
-    }
-
+*/
     public void majTitre() {
-        String titre = APP_NAME;
+        String titre = PlanChargeIhm.APP_NAME;
         if (planChargeBean.getDateEtat() != null) {
             titre += (" - " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         }
+/*
         if (moduleCourant != null) {
             titre += (" - " + moduleCourant);
         }
+*/
+        definirTitre(titre);
+    }
+
+    private void definirTitre(@Null String titre) {
         primaryStage.setTitle(titre);
     }
 

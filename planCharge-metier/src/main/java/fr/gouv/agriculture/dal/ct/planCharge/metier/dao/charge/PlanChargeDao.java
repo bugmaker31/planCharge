@@ -405,7 +405,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             cptCol++;
 
             String codeImportance = Calc.getString(feuille, cptCol - 1, noLig - 1);
-            Importance importance = importanceDao.loadByCode(codeImportance);
+            Importance importance = importanceDao.load(codeImportance);
             cptCol++;
 
             double charge = Calc.getDouble(feuille, cptCol - 1, noLig - 1);

@@ -19,23 +19,44 @@ import java.util.Map;
 public class PlanificationBean extends TacheBean {
 
     @NotNull
-    private final TacheBean tacheBean;
-    @NotNull
     private final List<Pair<LocalDate, DoubleProperty>> calendrier;
     @NotNull
     private DoubleProperty chargePlanifiee = new SimpleDoubleProperty();
 
-    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier) throws IhmException {
-        super(tacheBean.extract());
-        this.tacheBean = tacheBean;
+    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>>calendrier) throws IhmException {
+        super(tacheBean);
         this.calendrier = calendrier;
 
         majChargePlanifiee();
     }
 
+/*
+    public PlanificationBean(
+            int id, String codeCategorie, String codeSousCategorie, String noTicketIdal, String description, String codeProjetAppli, LocalDate debut, LocalDate echeance, String codeImportance, double charge, String codeRessource, String codeProfil,
+            @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier
+    ) throws IhmException {
+        super(
+                id,
+                codeCategorie,
+                codeSousCategorie,
+                noTicketIdal,
+                description,
+                codeProjetAppli,
+                debut,
+                echeance,
+                codeImportance,
+                charge,
+                codeRessource,
+                codeProfil
+        );
+        this.calendrier = calendrier;
+
+        majChargePlanifiee();
+    }
+*/
+
     public PlanificationBean(@NotNull Tache tache, @NotNull Map<LocalDate, Double> calendrier) {
         super(tache);
-        this.tacheBean = new TacheBean(tache);
         this.calendrier = new ArrayList<>();
         calendrier.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
@@ -50,7 +71,7 @@ public class PlanificationBean extends TacheBean {
 
     @NotNull
     public TacheBean getTacheBean() {
-        return tacheBean;
+        return this;
     }
 
     @NotNull
@@ -97,6 +118,6 @@ public class PlanificationBean extends TacheBean {
     // Pour déboguer, uniquement.
     @Override
     public String toString() {
-        return tacheBean.toString() + " : " + chargePlanifiee.get();
+        return super.toString() + " : " + chargePlanifiee.get();
     }
 }

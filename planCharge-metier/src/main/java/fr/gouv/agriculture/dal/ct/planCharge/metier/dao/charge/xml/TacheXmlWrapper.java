@@ -22,18 +22,18 @@ import java.util.Date;
 public class TacheXmlWrapper {
 
     private Integer id;
-    private String categorie;
-    private String sousCategorie;
+    private String codeCategorie;
+    private String codeSousCategorie;
     private String noTache;
     private String noTicketIdal;
     private String description;
-    private String idProjetAppli;
+    private String codeProjetAppli;
     private Date debut;
     private Date echeance;
-    private String idImportance;
+    private String codeImportance;
     private double charge;
-    private String idRessource;
-    private String idProfil;
+    private String codeRessource;
+    private String codeProfil;
 
     //    @Autowired
     @NotNull
@@ -59,18 +59,18 @@ public class TacheXmlWrapper {
 
     public TacheXmlWrapper init(Tache tache) {
         id = tache.getId();
-        categorie = tache.getCategorie().getCode();
-        sousCategorie = (tache.getSousCategorie() == null ? null : tache.getSousCategorie().getCode());
+        codeCategorie = tache.getCategorie().getCode();
+        codeSousCategorie = (tache.getSousCategorie() == null ? null : tache.getSousCategorie().getCode());
         noTache = tache.noTache();
         noTicketIdal = tache.getNoTicketIdal();
         description = tache.getDescription();
-        idProjetAppli = tache.getProjetAppli().getIdentity();
+        codeProjetAppli = tache.getProjetAppli().getIdentity();
         debut = Dates.asDate(tache.getDebut());
         echeance = Dates.asDate(tache.getEcheance());
-        idImportance = tache.getImportance().getIdentity();
+        codeImportance = tache.getImportance().getIdentity();
         charge = tache.getCharge();
-        idRessource = tache.getRessource().getIdentity();
-        idProfil = tache.getProfil().getIdentity();
+        codeRessource = tache.getRessource().getIdentity();
+        codeProfil = tache.getProfil().getIdentity();
         return this;
     }
 
@@ -79,14 +79,14 @@ public class TacheXmlWrapper {
         return id;
     }
 
-    @XmlElement(name = "categorie", required = true)
-    public String getCategorie() {
-        return categorie;
+    @XmlElement(name = "codeCategorie", required = true)
+    public String getCodeCategorie() {
+        return codeCategorie;
     }
 
-    @XmlElement(name = "sousCategorie", required = true)
-    public String getSousCategorie() {
-        return sousCategorie;
+    @XmlElement(name = "codeSousCategorie", required = true)
+    public String getCodeSousCategorie() {
+        return codeSousCategorie;
     }
 
     @XmlElement(name = "noTache", required = true)
@@ -104,9 +104,9 @@ public class TacheXmlWrapper {
         return description;
     }
 
-    @XmlElement(name = "idProjetAppli", required = true)
-    public String getIdProjetAppli() {
-        return idProjetAppli;
+    @XmlElement(name = "codeProjetAppli", required = true)
+    public String getCodeProjetAppli() {
+        return codeProjetAppli;
     }
 
     @XmlElement(name = "debut", required = false)
@@ -119,9 +119,9 @@ public class TacheXmlWrapper {
         return echeance;
     }
 
-    @XmlElement(name = "idImportance", required = true)
-    public String getIdImportance() {
-        return idImportance;
+    @XmlElement(name = "codeImportance", required = true)
+    public String getCodeImportance() {
+        return codeImportance;
     }
 
     @XmlElement(name = "charge", required = true)
@@ -129,26 +129,26 @@ public class TacheXmlWrapper {
         return charge;
     }
 
-    @XmlElement(name = "idRessource", required = true)
-    public String getIdRessource() {
-        return idRessource;
+    @XmlElement(name = "codeRessource", required = true)
+    public String getCodeRessource() {
+        return codeRessource;
     }
 
-    @XmlElement(name = "idProfil", required = true)
-    public String getIdProfil() {
-        return idProfil;
+    @XmlElement(name = "codeProfil", required = true)
+    public String getCodeProfil() {
+        return codeProfil;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
+    public void setCodeCategorie(String codeCategorie) {
+        this.codeCategorie = codeCategorie;
     }
 
-    public void setSousCategorie(String sousCategorie) {
-        this.sousCategorie = sousCategorie;
+    public void setCodeSousCategorie(String codeSousCategorie) {
+        this.codeSousCategorie = codeSousCategorie;
     }
 
     public void setNoTache(String noTache) {
@@ -163,8 +163,8 @@ public class TacheXmlWrapper {
         this.description = description;
     }
 
-    public void setIdProjetAppli(String idProjetAppli) {
-        this.idProjetAppli = idProjetAppli;
+    public void setCodeProjetAppli(String codeProjetAppli) {
+        this.codeProjetAppli = codeProjetAppli;
     }
 
     public void setDebut(Date debut) {
@@ -175,20 +175,20 @@ public class TacheXmlWrapper {
         this.echeance = echeance;
     }
 
-    public void setIdImportance(String idImportance) {
-        this.idImportance = idImportance;
+    public void setCodeImportance(String codeImportance) {
+        this.codeImportance = codeImportance;
     }
 
     public void setCharge(double charge) {
         this.charge = charge;
     }
 
-    public void setIdRessource(String idRessource) {
-        this.idRessource = idRessource;
+    public void setCodeRessource(String codeRessource) {
+        this.codeRessource = codeRessource;
     }
 
-    public void setIdProfil(String idProfil) {
-        this.idProfil = idProfil;
+    public void setCodeProfil(String codeProfil) {
+        this.codeProfil = codeProfil;
     }
 
     @NotNull
@@ -197,17 +197,17 @@ public class TacheXmlWrapper {
         try {
             tache = new Tache(
                     id,
-                    CategorieTache.valeur(categorie),
-                    (sousCategorie == null ? null : SousCategorieTache.valeur(sousCategorie)),
+                    CategorieTache.valeur(codeCategorie),
+                    (codeSousCategorie == null ? null : SousCategorieTache.valeur(codeSousCategorie)),
                     noTicketIdal,
                     description,
-                    projetAppliDao.load(idProjetAppli),
+                    projetAppliDao.load(codeProjetAppli),
                     Dates.asLocalDate(debut),
                     Dates.asLocalDate(echeance),
-                    importanceDao.load(idImportance),
+                    importanceDao.load(codeImportance),
                     charge,
-                    ressourceDao.load(idRessource),
-                    profilDao.load(idProfil)
+                    ressourceDao.load(codeRessource),
+                    profilDao.load(codeProfil)
             );
         } catch (ModeleException e) {
             throw new DaoException("Impossible d'extraire la tâche depuis le XML.", e);
