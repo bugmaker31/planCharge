@@ -1,10 +1,20 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Pair;
 
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 28/04/2017.
@@ -55,4 +65,29 @@ Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners 
         planificationsBeans = FXCollections.observableArrayList();
     }
 
+    public void init(PlanCharge planCharge) {
+        dateEtat = planCharge.getDateEtat();
+        planificationsBeans.setAll(
+                planCharge.getPlanifications().entrySet().stream()
+                        .map(planif -> new PlanificationBean(planif.getKey(), planif.getValue()))
+                        .collect(Collectors.toList())
+        );
+    }
+
+
+    public PlanCharge extract() throws IhmException {
+
+        Planifications planifications = new Planifications();
+        for (PlanificationBean planificationBean : planificationsBeans) {
+            Tache tache = planificationBean.getTacheBean().extract();
+            Map<LocalDate, Double> calendrier = new HashMap<>();
+            List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
+            ligne.forEach(semaine -> calendrier.put(semaine.getKey(), semaine.getValue().doubleValue()));
+
+            planifications.ajouter(tache, calendrier);
+        }
+
+        PlanCharge planCharge = new PlanCharge(dateEtat, planifications);
+        return planCharge;
+    }
 }

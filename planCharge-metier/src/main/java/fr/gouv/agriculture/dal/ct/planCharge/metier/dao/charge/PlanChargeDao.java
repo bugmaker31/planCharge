@@ -20,6 +20,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,16 +130,34 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     }
 
     @NotNull
-    public PlanCharge load(@NotNull File ficPlanCharge) throws EntityNotFoundException, PlanChargeDaoException {
+    public PlanCharge load(@NotNull File ficCalc) throws EntityNotFoundException, PlanChargeDaoException {
         PlanCharge plan;
 
         try {
-            plan = plan(ficPlanCharge);
+            plan = plan(ficCalc);
         } catch (PlanChargeDaoException e) {
-            throw new EntityNotFoundException("Impossible de charger le plan de charge depuis le fichier " + ficPlanCharge.getAbsolutePath() + ".", e);
+            throw new EntityNotFoundException("Impossible de charger le plan de charge depuis le fichier " + ficCalc.getAbsolutePath() + ".", e);
         }
 
         return plan;
+    }
+
+    public void sauver(PlanCharge planCharge) throws PlanChargeDaoException {
+
+        LocalDate dateEtat = planCharge.getDateEtat();
+
+        File fichierPlanif = fichierPlanCharge(dateEtat);
+        if (fichierPlanif.exists()) {
+            // TODO FDA 2017/04 Demander confirmation à l'utilisateur, avant.
+            fichierPlanif.delete();
+        }
+        try {
+            fichierPlanif.createNewFile();
+        } catch (IOException e) {
+            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+        }
+
+        serialiserPlanCharge(fichierPlanif, planCharge);
     }
 
     @NotNull
@@ -168,51 +187,33 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     /**
      * Loads data from the specified file.
      *
-     * @param file
+     * @param ficCalc
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private PlanCharge plan(@NotNull File file) throws PlanChargeDaoException {
+    private PlanCharge plan(@NotNull File ficCalc) throws PlanChargeDaoException {
         PlanCharge plan;
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
-            wrapper = (PlanChargeXmlWrapper) um.unmarshal(file);
+            wrapper = (PlanChargeXmlWrapper) um.unmarshal(ficCalc);
 
             plan = wrapper.extract();
 
         } catch (Exception e) {
-            throw new PlanChargeDaoException("Impossible de dé-sérialiser le plan de charge depuis le fichier XML '" + file.getAbsolutePath() + "'.", e);
+            throw new PlanChargeDaoException("Impossible de dé-sérialiser le plan de charge depuis le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
         }
         return plan;
-    }
-
-    public void sauver(PlanCharge planCharge) throws PlanChargeDaoException {
-
-        LocalDate dateEtat = planCharge.getDateEtat();
-
-        File fichierPlanif = fichierPlanCharge(dateEtat);
-        if (fichierPlanif.exists()) {
-            // TODO FDA 2017/04 Demander confirmation à l'utilisateur, avant.
-            fichierPlanif.delete();
-        }
-        try {
-            fichierPlanif.createNewFile();
-        } catch (IOException e) {
-            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
-        }
-
-        serialiserPlanCharge(fichierPlanif, planCharge);
     }
 
     /**
      * Saves the current data to the specified file.
      *
-     * @param file
+     * @param ficCalc
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private void serialiserPlanCharge(File file, PlanCharge planCharge) throws PlanChargeDaoException {
+    private void serialiserPlanCharge(File ficCalc, PlanCharge planCharge) throws PlanChargeDaoException {
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Marshaller m = context.createMarshaller();
@@ -223,9 +224,9 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             wrapper.init(planCharge);
 
             // Marshalling and saving XML to the file.
-            m.marshal(wrapper, file);
+            m.marshal(wrapper, ficCalc);
         } catch (Exception e) {
-            throw new PlanChargeDaoException("Impossible de sérialiser le plan de charge dans le fichier XML '" + file.getAbsolutePath() + "'.", e);
+            throw new PlanChargeDaoException("Impossible de sérialiser le plan de charge dans le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
         }
     }
 
@@ -233,7 +234,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         PlanCharge planCharge;
 
         if (!ficCalc.exists()) {
-            throw new PlanChargeDaoException("Impossible d'importerPlanCharge le plan ce charge, fichier non trouvé : '" + ficCalc.getAbsolutePath() + "'.");
+            throw new PlanChargeDaoException("Impossible d'importer le plan ce charge, fichier non trouvé : '" + ficCalc.getAbsolutePath() + "'.");
         }
         XSpreadsheetDocument docCalc = null;
         try {
@@ -247,7 +248,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             planCharge = importer(docCalc);
 
         } catch (LibreOfficeException e) {
-            throw new PlanChargeDaoException("Impossible d'importerPlanCharge le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
+            throw new PlanChargeDaoException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         } finally {
             if (docCalc != null) {
                 try {
@@ -299,19 +300,19 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         final int noLigDebut = 4;
         final int noColDebut = 12;
 
-        Map<Tache, Map<LocalDate, Double>> matrice = new HashMap<>();
+        Map<Tache, Map<LocalDate, Double>> calendrier = new HashMap<>();
         {
             int cptLig = noLigDebut;
             CategorieTache categorieTache = null;
             SousCategorieTache sousCategorieTache = null;
             LIG:
             while (true) {
-//            LOGGER.debug("Ligne n°" + cptLig);
+                LOGGER.debug("Ligne n°" + cptLig);
 
                 XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
 
                 if (Calc.isEmpty(cell)) {
-//                LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
+                    LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
                     break LIG;
                 }
 
@@ -333,7 +334,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                             break CATEGORISATION;
                         }
 
-                        // Pas une tâche, ni une catégorie de tâche => on continue.
+                        // Pas une tâche, ni une catégorie de tâche.
                         throw new PlanChargeDaoException("La ligne n°" + cptLig + " ne commence ni par un n° de tâche (entier), ni par un code d'une catégorie de tâche (Projets, Services, etc.)."
                                 + " PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
                     }
@@ -343,12 +344,12 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
                 Tache tache = importerTache(feuille, cptLig, categorieTache, sousCategorieTache);
 
-                matrice.put(tache, new HashMap<>());
+                calendrier.put(tache, new HashMap<>());
                 {
                     int cptCol = noColDebut;
                     COL:
                     while (true) {
-//                        LOG.debug("Colonne n°" + cptCol);
+                        LOGGER.debug("Colonne n°" + cptCol);
 
                         if (Calc.isEmpty(feuille, cptCol - 1, noLigPeriodes - 1)) {
                             break COL;
@@ -363,16 +364,16 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                             chargePlanifiee = chargeArrondie(chargePlanifiee);
                         }
 
-                        matrice.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiee);
+                        calendrier.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiee);
 
                         cptCol++;
                     }
-                    cptLig++;
                 }
+                cptLig++;
             }
         }
 
-        planification = new Planifications(matrice);
+        planification = new Planifications(calendrier);
         return planification;
     }
 
@@ -383,41 +384,31 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     private Tache importerTache(XSpreadsheet feuille, int noLig, CategorieTache categorie, SousCategorieTache sousCategorie) throws PlanChargeDaoException, LibreOfficeException {
         Tache tache;
         try {
-            int cptCol = 1;
 
-            int id = Calc.getInt(feuille, cptCol - 1, noLig - 1);
-            cptCol++;
+            int id = Calc.getInt(feuille, 1 - 1, noLig - 1);
 
-            String noTicketIdal = Calc.getString(feuille, cptCol - 1, noLig - 1);
-            cptCol++;
+            String noTicketIdal = Calc.getString(feuille, 2 - 1, noLig - 1);
 
-            String description = Calc.getString(feuille, cptCol - 1, noLig - 1);
-            cptCol++;
+            String description = Calc.getString(feuille, 3 - 1, noLig - 1);
 
-            String codeProjetAppli = Calc.getString(feuille, cptCol - 1, noLig - 1);
+            String codeProjetAppli = Calc.getString(feuille, 4 - 1, noLig - 1);
             ProjetAppli projetAppli = projetAppliDao.load(codeProjetAppli);
-            cptCol++;
 
-            Date debut = (Calc.isEmpty(feuille, cptCol - 1, noLig - 1) ? null : Calc.getDate(feuille, cptCol - 1, noLig - 1));
-            cptCol++;
+            int noColDebut = 5;
+            Date debut = (Calc.isEmpty(feuille, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuille, noColDebut - 1, noLig - 1));
 
-            Date echeance = Calc.getDate(feuille, cptCol - 1, noLig - 1);
-            cptCol++;
+            Date echeance = Calc.getDate(feuille, 6 - 1, noLig - 1);
 
-            String codeImportance = Calc.getString(feuille, cptCol - 1, noLig - 1);
+            String codeImportance = Calc.getString(feuille, 7 - 1, noLig - 1);
             Importance importance = importanceDao.load(codeImportance);
-            cptCol++;
 
-            double charge = Calc.getDouble(feuille, cptCol - 1, noLig - 1);
-            cptCol++;
+            double charge = Calc.getDouble(feuille, 8 - 1, noLig - 1);
 
-            String codeRessource = Calc.getString(feuille, cptCol - 1, noLig - 1);
+            String codeRessource = Calc.getString(feuille, 9 - 1, noLig - 1);
             Ressource ressource = ressourceDao.load(codeRessource);
-            cptCol++;
 
-            String codeProfil = Calc.getString(feuille, cptCol - 1, noLig - 1);
+            String codeProfil = Calc.getString(feuille, 10 - 1, noLig - 1);
             Profil profil = profilDao.load(codeProfil);
-            cptCol++;
 
             tache = new Tache(
                     id,
@@ -438,5 +429,4 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         }
         return tache;
     }
-
 }

@@ -1,8 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.*;
@@ -48,15 +49,12 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
         return chargePlanifiee;
     }
 
-    @NotNull
+    @Null
     public Tache tache(@NotNull int idTache) {
-        // TODO FDA 2017/03 Trouver une meilleure façon de faire (pas codé à la main, plus rapide, etc.)
-        for (Tache tache : plan.keySet()) {
-            if (tache.getId() == idTache) {
-                return tache;
-            }
-        }
-        return null;
+        Optional<Tache> optTache = plan.keySet().parallelStream()
+                .filter(tache -> tache.getId() == idTache)
+                .findAny();
+        return (!optTache.isPresent() ? null : optTache.get());
     }
 
     @NotNull

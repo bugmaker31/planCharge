@@ -11,7 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.DoubleProperty;
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ApplicationController extends AbstractController {
 
@@ -221,19 +222,15 @@ public class ApplicationController extends AbstractController {
 
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
-            ihm.definirDateEtat(planCharge.getDateEtat());
-            planChargeBean.getPlanificationsBeans().clear();
-            planCharge.getPlanifications().entrySet().stream().forEach(
-                    planif -> planChargeBean.getPlanificationsBeans().add(new PlanificationBean(planif.getKey(), planif.getValue()))
-            );
+            planChargeBean.init(planCharge);
 
+            ihm.definirDateEtat(planCharge.getDateEtat());
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
                     "Chargement terminé",
                     "Le chargement est terminé (" + planChargeBean.getPlanificationsBeans().size() + " tâches).",
                     400, 200
             );
-
             afficherModuleCharges();
 
         } catch (ServiceException e) {
@@ -257,20 +254,7 @@ public class ApplicationController extends AbstractController {
         }
 
         try {
-            Planifications planifications = new Planifications();
-
-            for (PlanificationBean planificationBean : planChargeBean.getPlanificationsBeans()) {
-                Tache tache = planificationBean.getTacheBean().extract();
-                Map<LocalDate, Double> calendrier = new HashMap<>();
-                List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
-                ligne.forEach(semaine -> calendrier.put(semaine.getKey(), semaine.getValue().doubleValue()));
-
-                planifications.ajouter(tache, calendrier);
-            }
-            PlanCharge planCharge = new PlanCharge(
-                    planChargeBean.getDateEtat(),
-                    planifications
-            );
+            PlanCharge planCharge = planChargeBean.extract();
 
             planChargeService.sauver(planCharge);
 
@@ -296,11 +280,10 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void importerTachesDepuisCalc(ActionEvent event) {
+    private void majTachesDepuisCalc(ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
         try {
-            // TODO FDA 2017/05 Coder.
-            throw new IhmException("Not implemented");
+            majTachesDepuisCalc();
         } catch (IhmException e) {
             LOGGER.error("Impossible d'importer les tâches.", e);
             ihm.afficherPopUp(
@@ -310,6 +293,57 @@ public class ApplicationController extends AbstractController {
                     400, 200
             );
         }
+    }
+
+    private void majTachesDepuisCalc() throws IhmException {
+        File ficCalc;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Indiquez le fichier Calc (LibreOffice) qui contient les tâches ('suivi des demandes'') : ");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
+        );
+        String nomRepFicCalc;
+        try {
+            // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
+            nomRepFicCalc = params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
+        } catch (KernelException e) {
+            throw new IhmException("Impossible de déterminer le répertoire de persistance des tâches.", e);
+        }
+        fileChooser.setInitialDirectory(new File(nomRepFicCalc));
+        ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
+        if (ficCalc == null) {
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "MàJ annulé",
+                    "La mise à jour des tâches depuis un fichier Calc a été annulé par l'utilisateur.",
+                    400, 200
+            );
+            return;
+        }
+
+        majTachesDepuisCalc(ficCalc);
+    }
+
+    // TODO FDA 23017/02 Afficher une "progress bar".
+    private void majTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+
+        try {
+            PlanCharge planCharge = planChargeBean.extract();
+            planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
+        } catch (IhmException | ServiceException e) {
+            throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
+        }
+
+        ihm.afficherPopUp(
+                Alert.AlertType.INFORMATION,
+                "Tâches mises à jour importées",
+                "Les tâches ont été mises à jour : "
+                        + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                        + "\n- nombre de tâches au final :" + planChargeBean.getPlanificationsBeans().size(),
+                700, 300
+        );
+
+        afficherModuleCharges();
     }
 
 
@@ -371,12 +405,13 @@ public class ApplicationController extends AbstractController {
 
         List<PlanificationBean> planifBeans = new ArrayList<>();
         for (Tache tache : planCharge.getPlanifications().taches()) {
+            Map<LocalDate, Double> calendrier;
             try {
-                Map<LocalDate, Double> calendrier = planCharge.getPlanifications().calendrier(tache);
-                planifBeans.add(new PlanificationBean(tache, calendrier));
+                calendrier = planCharge.getPlanifications().calendrier(tache);
             } catch (TacheSansPlanificationException e) {
                 throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
             }
+            planifBeans.add(new PlanificationBean(tache, calendrier));
         }
         planificationsBeans.setAll(planifBeans);
 

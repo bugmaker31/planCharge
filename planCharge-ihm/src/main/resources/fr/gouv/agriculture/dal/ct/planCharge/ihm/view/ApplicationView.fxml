@@ -12,7 +12,7 @@
                         <Menu mnemonicParsing="true"
                               text="_Importer...">
                             <MenuItem mnemonicParsing="true" text="Importer les _tâches depuis Calc..."
-                                      onAction="#importerTachesDepuisCalc"/>
+                                      onAction="#majTachesDepuisCalc"/>
                             <MenuItem mnemonicParsing="true" text="Importer un plan de _charge depuis Calc..."
                                       onAction="#importerPlanChargeDepuisCalc"/>
                         </Menu>

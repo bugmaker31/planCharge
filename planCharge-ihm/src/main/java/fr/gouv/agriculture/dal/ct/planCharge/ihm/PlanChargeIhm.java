@@ -220,6 +220,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     public void afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
         Alert popUp = new Alert(type);
         popUp.setTitle(type.name());
+        popUp.setResizable(true);
         popUp.setHeaderText(titre);
         popUp.setContentText(message);
 /*
@@ -281,7 +282,7 @@ public class PlanChargeIhm extends javafx.application.Application {
     }
 
     private LocalDate dateEtatPrecedente() {
-        return LocalDate.of(2017, 4, 17); // TODO FDA 2017/04 Récupérer la dernière date d'état dynamiquement (pas une constante !).;
+        return LocalDate.of(2017, 4, 17); // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur (pas une constante !).;
     }
 
     @Override
@@ -304,14 +305,15 @@ public class PlanChargeIhm extends javafx.application.Application {
     // TODO FDA 2017/04 Coder pour enregistrer ka date de dernière planif que l'utilisateur a travaillé.
 
     */
-/**
- * Returns the file preference, i.e. the file that was last opened.
- * The preference is read from the OS specific registry. If no such
- * preference can be found, null is returned.
- *
- * @param datePlanif Date de la planification.
- * @return
- *//*
+///**
+// * Returns the file preference, i.e. the file that was last opened.
+// * The preference is read from the OS specific registry. If no such
+// * preference can be found, null is returned.
+// *
+// * @param datePlanif Date de la planification.
+// * @return
+// */
+/*
 
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     @Null
@@ -327,12 +329,13 @@ public class PlanChargeIhm extends javafx.application.Application {
 
     */
 
-    /**
-     * Sets the file path of the currently loaded file. The path is persisted in
-     * the OS specific registry.
-     *
-     * @param file the file, or null to remove the path
-     *//*
+//    /**
+//     * Sets the file path of the currently loaded file. The path is persisted in
+//     * the OS specific registry.
+//     *
+//     * @param file the file, or null to remove the path
+//     */
+/*
 
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     public void setFichierPlanificationsCharge(@Null File file, @Null LocalDate dateEtat) {

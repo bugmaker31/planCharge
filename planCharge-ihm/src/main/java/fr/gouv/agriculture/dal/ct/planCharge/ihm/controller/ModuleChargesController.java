@@ -183,7 +183,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                     setText(charge.toString()); // TODO FDA 2017/04 Mieux formater les charges ?
 
                     // Style with a different color.
-                    //            TODO FDA 2017/04 Terminer.
+                    //            TODO FDA 2017/04 Terminer (CSS).
                     String styleBackgroundColour;
                     double chargePlanifiee = planificationsBeans.get(this.getIndex()).getChargePlanifiee();
                     if (charge < chargePlanifiee) {

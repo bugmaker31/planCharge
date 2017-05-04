@@ -1,6 +1,8 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 /**
  * Created by frederic.danna on 11/03/2017.
  */
-public class Tache implements Comparable<Tache> {
+public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> {
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 
@@ -38,10 +40,15 @@ public class Tache implements Comparable<Tache> {
     @NotNull
     private Profil profil;
 
+    public Tache(int id) {
+        super();
+        this.id = id;
+    }
+
     public Tache(int id, CategorieTache categorie, SousCategorieTache sousCategorie, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil)
             throws ModeleException {
 
-        this.id = id;
+        this(id);
 
         if (categorie == null) {
             throw new ModeleException("Catégorie de tâche non définie.");
@@ -187,6 +194,12 @@ public class Tache implements Comparable<Tache> {
     @Override
     public int compareTo(Tache o) {
         return new Integer(getId()).compareTo(o.getId());
+    }
+
+    @NotNull
+    @Override
+    public Integer getIdentity() {
+        return getId();
     }
 
     // Pour les débug, uniquement.

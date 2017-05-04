@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDa
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import org.slf4j.Logger;

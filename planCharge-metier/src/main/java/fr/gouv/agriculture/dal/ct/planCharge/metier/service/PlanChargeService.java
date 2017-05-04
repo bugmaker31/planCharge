@@ -3,7 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -28,9 +31,14 @@ public class PlanChargeService {
         return instance;
     }
 
+    //    @Autowired
     @NotNull
-//    @Autowired
     private PlanChargeDao planChargeDao = PlanChargeDao.instance();
+
+    //    @Autowired
+    @NotNull
+    private TacheDao tacheDao = TacheDao.instance();
+
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeService() {
@@ -67,6 +75,23 @@ public class PlanChargeService {
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    e);
+        }
+    }
+
+    @NotNull
+    public void majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches) throws ServiceException {
+        try {
+
+            Set<Tache> taches = tacheDao.importerDepuisCalc(ficCalcTaches);
+
+            // Suppression des tâches qui n'existent plus (terminée/annulée/etc.),
+            // ajout des tâches qui ont été créées depuis,
+            // et mise à jour des tâches qui existaient déjà avant.
+
+        } catch (DaoException e) {
+            throw new ServiceException(
+                    "Impossible de màj les tâches depuis le fichier Calc '" + ficCalcTaches.getAbsolutePath() + "'.",
                     e);
         }
     }
