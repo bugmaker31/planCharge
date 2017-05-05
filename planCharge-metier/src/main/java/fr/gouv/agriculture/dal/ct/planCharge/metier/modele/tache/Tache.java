@@ -51,56 +51,56 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         this(id);
 
         if (categorie == null) {
-            throw new ModeleException("Catégorie de tâche non définie.");
+            throw new ModeleException("Tache n°" + id + " : Catégorie de tâche non définie.");
         }
         this.categorie = categorie;
 
         if (sousCategorie == null) {
-//            throw new ModeleException("Sous-catégorie de tâche non définie.");
+//            throw new ModeleException("Tache n°" + id + " : Sous-catégorie de tâche non définie.");
             this.sousCategorie = null;
         } else {
             this.sousCategorie = sousCategorie;
         }
 
         if (noTicketIdal == null) {
-            throw new ModeleException("N° de ticket IDAL non défini.");
+            throw new ModeleException("Tache n°" + id + " : N° de ticket IDAL non défini.");
         }
         this.noTicketIdal = noTicketIdal;
 
         if (description == null) {
-            throw new ModeleException("Description non définie.");
+            throw new ModeleException("Tache n°" + id + " : Description non définie.");
         }
         this.description = description;
 
         if (projetAppli == null) {
-            throw new ModeleException("PROJET/Appli non défini(e).");
+            throw new ModeleException("Tache n°" + id + " : PROJET/Appli non défini(e).");
         }
         this.projetAppli = projetAppli;
 
         this.debut = debut;
 
         if (echeance == null) {
-            throw new ModeleException("Echéance non définie.");
+            throw new ModeleException("Tache n°" + id + " : Echéance non définie.");
         }
         this.echeance = echeance;
 
         if (importance == null) {
-            throw new ModeleException("Importance non définie.");
+            throw new ModeleException("Tache n°" + id + " : Importance non définie.");
         }
         this.importance = importance;
 
         if (importance == null) {
-            throw new ModeleException("Charge non définie.");
+            throw new ModeleException("Tache n°" + id + " : Charge non définie.");
         }
         this.charge = charge;
 
         if (ressource == null) {
-            throw new ModeleException("Ressource non définie.");
+            throw new ModeleException("Tache n°" + id + " : Ressource non définie.");
         }
         this.ressource = ressource;
 
         if (profil == null) {
-            throw new ModeleException("Profil non défini.");
+            throw new ModeleException("Tache n°" + id + " : Profil non défini.");
         }
         this.profil = profil;
     }
