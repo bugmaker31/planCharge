@@ -15,9 +15,26 @@
     <properties>
         <jna.version>4.2.0</jna.version>
         <libreoffice.version>5.2.0</libreoffice.version>
-        <libreoffice.basedir>C:/Program Files/LibreOffice 5</libreoffice.basedir>
-        <!--<libreoffice.basedir>/usr/bin/office</libreoffice.basedir>-->
     </properties>
+
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <properties>
+                <libreoffice.basedir>C:/Program Files/LibreOffice 5</libreoffice.basedir>
+                <libreoffice.classes.basedir>${libreoffice.basedir}/program/classes</libreoffice.classes.basedir>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <properties>
+                <libreoffice.basedir>/usr/lib/libreoffice</libreoffice.basedir>
+                <libreoffice.program.basedir>${libreoffice.basedir}/program</libreoffice.program.basedir>
+                <libreoffice.classes.basedir>/usr/share/java</libreoffice.classes.basedir>
+            </properties>
+        </profile>
+    </profiles>
+
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -44,6 +61,24 @@
                 </includes>
             </resource>
 -->
+            <resource>
+                <directory>${libreoffice.program.basedir}</directory>
+                <includes>
+                    <include>*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${libreoffice.program.basedir}/classes</directory>
+                <includes>
+                    <include>*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${libreoffice.program.basedir}</directory>
+                <includes>
+                    <include>*.so</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <!--
@@ -160,11 +195,20 @@
         <!--Certains binaires "soffice" doivent être dans le classpath, lors de l'exécution.-->
         <dependency>
             <groupId>org.libreoffice</groupId>
-            <artifactId>bsh</artifactId>
+            <artifactId>soffice</artifactId>
             <version>UNKNOWN</version>
             <scope>system</scope>
-            <systemPath>${libreoffice.basedir}/program/classes/bsh.jar</systemPath>
+            <systemPath>${libreoffice.program.basedir}/soffice</systemPath>
         </dependency>
+<!--
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>bsh</artifactId>
+            <version>2.0b4</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/bsh.jar</systemPath>
+        </dependency>
+-->
 
     </dependencies>
 </project>
