@@ -8,8 +8,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,7 +24,6 @@ import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.LazyReflectiveObjectGenerator;
 
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;

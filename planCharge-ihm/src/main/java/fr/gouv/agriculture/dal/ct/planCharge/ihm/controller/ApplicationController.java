@@ -9,18 +9,18 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
-import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +29,8 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ApplicationController extends AbstractController {
 
@@ -377,6 +375,7 @@ public class ApplicationController extends AbstractController {
         } catch (KernelException e) {
             throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge.", e);
         }
+        // TODO FDA 2017/05 Vérifier que le répertoire existe. Si non, le créer ?
         fileChooser.setInitialDirectory(new File(nomRepFicCalc));
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
