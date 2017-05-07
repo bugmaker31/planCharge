@@ -13,8 +13,9 @@
     <!--<packaging>jar</packaging>-->
 
     <properties>
-        <jna.version>4.2.0</jna.version>
-        <libreoffice.version>5.2.0</libreoffice.version>
+        <jna.version>4.4.0</jna.version>
+        <libreoffice.version>5.3.2</libreoffice.version>
+        <libreoffice.dist.version>5.3.2-alfresco</libreoffice.dist.version>
     </properties>
 
     <profiles>
@@ -22,8 +23,43 @@
             <id>windows</id>
             <properties>
                 <libreoffice.basedir>C:/Program Files/LibreOffice 5</libreoffice.basedir>
-                <libreoffice.classes.basedir>${libreoffice.basedir}/program/classes</libreoffice.classes.basedir>
+                <libreoffice.program.basedir>${libreoffice.basedir}/program</libreoffice.program.basedir>
+                <libreoffice.classes.basedir>${libreoffice.program.basedir}/classes</libreoffice.classes.basedir>
             </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${libreoffice.program.basedir}</directory>
+                        <includes>
+
+                            <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
+                            <include>soffice.exe</include>
+
+                            <!--<include>*.jar</include>-->
+                            <!--<include>*.so</include>-->
+                        </includes>
+                    </resource>
+<!--
+                    <resource>
+                        <directory>${libreoffice.classes.basedir}</directory>
+                        <includes>
+                            <include>*.jar</include>
+                        </includes>
+                    </resource>
+-->
+                </resources>
+            </build>
+            <dependencies>
+<!--
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>bsh</artifactId>
+                    <version>2.0b4</version>
+                    <scope>system</scope>
+                    <systemPath>${libreoffice.classes.basedir}/bsh.jar</systemPath>
+                </dependency>
+-->
+            </dependencies>
         </profile>
         <profile>
             <id>unix</id>
@@ -32,9 +68,40 @@
                 <libreoffice.program.basedir>${libreoffice.basedir}/program</libreoffice.program.basedir>
                 <libreoffice.classes.basedir>/usr/share/java</libreoffice.classes.basedir>
             </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${libreoffice.program.basedir}</directory>
+                        <includes>
+
+                            <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
+                            <include>soffice.exe</include>
+
+                            <!--<include>*.jar</include>-->
+                            <!--<include>*.so</include>-->
+                        </includes>
+                    </resource>
+<!--
+                    <resource>
+                        <directory>${libreoffice.program.basedir}/classes</directory>
+                        <includes>
+                            <include>*.jar</include>
+                        </includes>
+                    </resource>
+-->
+                </resources>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>bsh</artifactId>
+                    <version>2.0b4</version>
+                    <scope>system</scope>
+                    <systemPath>${libreoffice.classes.basedir}/bsh.jar</systemPath>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
-
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -51,34 +118,16 @@
                     <include>*.properties</include>
                 </includes>
             </resource>
-<!--
-            <resource>
-                <directory>src/main/resources</directory>
-                &lt;!&ndash;On ne filtre pas les ressources de type XML : &ndash;&gt;
-                <filtering>false</filtering>
-                <includes>
-                    <include>*.xml</include>
-                </includes>
-            </resource>
--->
-            <resource>
-                <directory>${libreoffice.program.basedir}</directory>
-                <includes>
-                    <include>*.jar</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${libreoffice.program.basedir}/classes</directory>
-                <includes>
-                    <include>*.jar</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${libreoffice.program.basedir}</directory>
-                <includes>
-                    <include>*.so</include>
-                </includes>
-            </resource>
+            <!--
+                        <resource>
+                            <directory>src/main/resources</directory>
+                            &lt;!&ndash;On ne filtre pas les ressources de type XML : &ndash;&gt;
+                            <filtering>false</filtering>
+                            <includes>
+                                <include>*.xml</include>
+                            </includes>
+                        </resource>
+            -->
         </resources>
         <plugins>
             <!--
@@ -123,6 +172,34 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>MavenRepository</id>
+            <name>MavenRepository</name>
+            <url>https://mvnrepository.com/artifact</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>Alfresco</id>
+            <name>Alfresco</name>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <dependencies>
 
         <!--On a besoin des utilitaires communs :-->
@@ -155,15 +232,6 @@
             <version>${libreoffice.version}</version>
         </dependency>
 
-        <!--
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>libreoffice-dist</artifactId>
-                    <version>5.2.1-alfresco</version>
-                </dependency>
-        -->
-
         <!-- https://mvnrepository.com/artifact/org.libreoffice/ridl -->
         <dependency>
             <groupId>org.libreoffice</groupId>
@@ -192,23 +260,23 @@
             <version>${libreoffice.version}</version>
         </dependency>
 
-        <!--Certains binaires "soffice" doivent être dans le classpath, lors de l'exécution.-->
+        <!-- https://mvnrepository.com/artifact/org.libreoffice/officebean -->
         <dependency>
             <groupId>org.libreoffice</groupId>
-            <artifactId>soffice</artifactId>
-            <version>UNKNOWN</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.program.basedir}/soffice</systemPath>
+            <artifactId>officebean</artifactId>
+            <version>${libreoffice.version}</version>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>bsh</artifactId>
-            <version>2.0b4</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/bsh.jar</systemPath>
-        </dependency>
--->
+
+        <!--
+                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
+                &lt;!&ndash;Note: this artifact it located at Alfresco Public repository (https://artifacts.alfresco.com/nexus/content/repositories/public/)&ndash;&gt;
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>libreoffice-dist</artifactId>
+                    &lt;!&ndash;<classifier>alfresco</classifier>&ndash;&gt;
+                    <version>${libreoffice.dist.version}</version>
+                </dependency>
+        -->
 
     </dependencies>
 </project>
