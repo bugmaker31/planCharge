@@ -14,8 +14,11 @@
 
     <properties>
         <jna.version>4.4.0</jna.version>
-        <libreoffice.version>5.3.2</libreoffice.version>
-        <libreoffice.dist.version>5.3.2-alfresco</libreoffice.dist.version>
+
+        <!--NB : La version de LibreOffice utilisée pour compiler doit être compatible avec la version de LibreOffice intallée sur le poste clientqui exécute ce pgm Java. -->
+        <libreoffice.version>5.1.6</libreoffice.version>
+
+        <!--<libreoffice.dist.version>5.3.2-alfresco</libreoffice.dist.version>-->
     </properties>
 
     <profiles>
@@ -31,12 +34,8 @@
                     <resource>
                         <directory>${libreoffice.program.basedir}</directory>
                         <includes>
-
                             <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
                             <include>soffice.exe</include>
-
-                            <!--<include>*.jar</include>-->
-                            <!--<include>*.so</include>-->
                         </includes>
                     </resource>
 <!--
@@ -49,17 +48,6 @@
 -->
                 </resources>
             </build>
-            <dependencies>
-<!--
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>bsh</artifactId>
-                    <version>2.0b4</version>
-                    <scope>system</scope>
-                    <systemPath>${libreoffice.classes.basedir}/bsh.jar</systemPath>
-                </dependency>
--->
-            </dependencies>
         </profile>
         <profile>
             <id>unix</id>
@@ -230,6 +218,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>jurt</artifactId>
             <version>${libreoffice.version}</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/jurt.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/ridl -->
@@ -237,6 +227,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>ridl</artifactId>
             <version>${libreoffice.version}</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/ridl.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/juh -->
@@ -244,6 +236,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>juh</artifactId>
             <version>${libreoffice.version}</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/juh.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/unoloader -->
@@ -251,6 +245,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>unoloader</artifactId>
             <version>${libreoffice.version}</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/unoloader.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/unoil -->
@@ -258,6 +254,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>unoil</artifactId>
             <version>${libreoffice.version}</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/unoil.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/officebean -->
@@ -265,6 +263,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>officebean</artifactId>
             <version>${libreoffice.version}</version>
+            <scope>system</scope>
+            <systemPath>${libreoffice.classes.basedir}/officebean.jar</systemPath>
         </dependency>
 
         <!--
@@ -274,7 +274,9 @@
                     <groupId>org.libreoffice</groupId>
                     <artifactId>libreoffice-dist</artifactId>
                     &lt;!&ndash;<classifier>alfresco</classifier>&ndash;&gt;
+                    <scope>system</scope>
                     <version>${libreoffice.dist.version}</version>
+                    <systemPath>.../libreoffice-dist.jar</systemPath>
                 </dependency>
         -->
 

@@ -85,64 +85,6 @@
             <version>1.1.7</version>
         </dependency>
 
-        <!--
-                &lt;!&ndash;Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/install.html&ndash;&gt;
-                <dependency>
-                    <groupId>net.java.dev.jna</groupId>
-                    <artifactId>jna</artifactId>
-                    <version>${jna.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.java.dev.jna</groupId>
-                    <artifactId>jna-platform</artifactId>
-                    <version>${jna.version}</version>
-                </dependency>
-
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/jurt &ndash;&gt;
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>jurt</artifactId>
-                    <version>${libreoffice.version}</version>
-                </dependency>
-
-                &lt;!&ndash;
-                        &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/libreoffice-dist &ndash;&gt;
-                        <dependency>
-                            <groupId>org.libreoffice</groupId>
-                            <artifactId>libreoffice-dist</artifactId>
-                            <version>5.2.1-alfresco</version>
-                        </dependency>
-                &ndash;&gt;
-
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/ridl &ndash;&gt;
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>ridl</artifactId>
-                    <version>${libreoffice.version}</version>
-                </dependency>
-
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>juh</artifactId>
-                    <version>${libreoffice.version}</version>
-                </dependency>
-
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoloader &ndash;&gt;
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>unoloader</artifactId>
-                    <version>${libreoffice.version}</version>
-                </dependency>
-
-                &lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/unoil &ndash;&gt;
-                <dependency>
-                    <groupId>org.libreoffice</groupId>
-                    <artifactId>unoil</artifactId>
-                    <version>${libreoffice.version}</version>
-                </dependency>
-        -->
-
 <!--
 IOC Spring trop compliquée à utiliser quand on pousse un peu l'utilisation.
 On instancie par programme (soi-même), et on récupère les instances (via des méthodes statiques "instance()" par exemple).

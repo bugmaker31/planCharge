@@ -255,30 +255,35 @@ public class PlanChargeIhm extends javafx.application.Application {
 */
 
     @Override
-    public void start(@NotNull Stage primaryStage) throws IOException {
-        LOGGER.info("Application en cours de démarrage...");
+    public void start(@NotNull Stage primaryStage) throws Exception {
+        try {
+            LOGGER.info("Application en cours de démarrage...");
 
-        this.primaryStage = primaryStage;
+            this.primaryStage = primaryStage;
 
-        primaryStage.setTitle(APP_NAME);
-        primaryStage.setScene(new Scene(applicationView));
-        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
-        primaryStage.show();
+            primaryStage.setTitle(APP_NAME);
+            primaryStage.setScene(new Scene(applicationView));
+            primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
+            primaryStage.show();
 
-        // Chargement des données utilisées dernièrement (if any) :
-        LocalDate dateEtatPrec = dateEtatPrecedente();
-        if (dateEtatPrec != null) {
-            applicationController.charger(dateEtatPrec);
-        }
+            // Chargement des données utilisées dernièrement (if any) :
+            LocalDate dateEtatPrec = dateEtatPrecedente();
+            if (dateEtatPrec != null) {
+                applicationController.charger(dateEtatPrec);
+            }
 
-        // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
+            // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
 //        afficherModuleDisponibilites();
 //        afficherModuleTaches();
 //        afficherModuleCharges();
-        //
+            //
 //        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 
-        LOGGER.info("Application démarrée.");
+            LOGGER.info("Application démarrée.");
+        } catch (Throwable e) {
+            LOGGER.error("Impossible de démarrer l'IHM.", e);
+            throw e;
+        }
     }
 
     private LocalDate dateEtatPrecedente() {
@@ -302,7 +307,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         return PREF_KEY_FIC_PLANIF_CHARGE + "-" + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 
-    // TODO FDA 2017/04 Coder pour enregistrer ka date de dernière planif que l'utilisateur a travaillé.
+    // TODO FDA 2017/04 Coder pour enregistrer la date de dernière planif que l'utilisateur a travaillé.
 
     */
 ///**

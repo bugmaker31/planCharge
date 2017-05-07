@@ -19,6 +19,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
+    // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
     @NotNull
     private ObservableList<TacheBean> planificationsBeans = (ObservableList)planChargeBean.getPlanificationsBeans();
 
