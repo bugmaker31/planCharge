@@ -12,6 +12,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -325,9 +326,10 @@ public class ApplicationController extends AbstractController {
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void majTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
+        RapportMajTaches rapportMajTaches;
         try {
             PlanCharge planCharge = planChargeBean.extract();
-            planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
+            rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
         } catch (IhmException | ServiceException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
@@ -337,11 +339,16 @@ public class ApplicationController extends AbstractController {
                 "Tâches mises à jour importées",
                 "Les tâches ont été mises à jour : "
                         + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                        + "\n- nombre de tâches au final :" + planChargeBean.getPlanificationsBeans().size(),
+                        + "\n- nombre de tâches initial : " + rapportMajTaches.getNbrTachePlanifiees()
+                        + "\n- nombre de tâches importées : " + rapportMajTaches.getNbrTachesImportees()
+                        + "\n- nombre de tâches mises à jour : " + rapportMajTaches.getNbrTachesMisesAJour()
+                        + "\n- nombre de tâches ajoutées : " + rapportMajTaches.getNbrTachesAjoutees()
+                        + "\n- nombre de tâches supprimées : " + rapportMajTaches.getNbrTachesSupprimees()
+                        + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
                 700, 300
         );
 
-        afficherModuleCharges();
+        afficherModuleTaches();
     }
 
 

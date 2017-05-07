@@ -429,22 +429,6 @@ public class TacheBean {
         return false; // does not match.
     }
 
-    // Pour les débug, uniquement.
-    @Override
-    @NotNull
-    public String toString() {
-        return (codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
-                + " "
-                + ("[" + codeProjetAppli.get() + "]")
-                + " "
-                + noTache()
-                + " "
-                + ("(" + (noTicketIdal.isEmpty().get() ? "N/A" : noTicketIdal.get()) + ")")
-                + " "
-                + ("<< " + description.get() + " >> ")
-                ;
-    }
-
     public Tache extract() throws IhmException {
         Tache tache;
         try {
@@ -466,5 +450,21 @@ public class TacheBean {
             throw new IhmException("Impossible d'extraire la tâche depuis le bean.", e);
         }
         return tache;
+    }
+
+    // Pour les débug, uniquement.
+    @Override
+    @NotNull
+    public String toString() {
+        return /*(codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
+                + " "
+                +*/ ("[" + codeProjetAppli.get() + "]")
+                + " "
+                + noTache()
+                + " "
+                + ("(" + (noTicketIdal.isEmpty().get() ? "N/A" : noTicketIdal.get()) + ")")
+                + " "
+                + ("<< " + description.get() + " >> ")
+                ;
     }
 }

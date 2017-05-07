@@ -10,6 +10,7 @@ import com.sun.star.table.XCellRange;
 import libreoffice.LOException;
 import libreoffice.Lo;
 
+import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -141,6 +142,7 @@ public class Calc {
         libreoffice.Calc.setVal(cell, value);
     }
 
+    @NotNull
     public static XCell getCell(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = libreoffice.Calc.getCell(sheet, column, row);
         if (cell == null) {
@@ -150,22 +152,26 @@ public class Calc {
     }
 
 /*
+    @NotNull
     public static Object getVal(XSpreadsheet sheet, String cellName) {
         Object val = libreoffice.Calc.getVal(sheet, cellName);
         return val;
     }
 */
 
+    @NotNull
     public static Object getVal(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getVal(cell);
     }
 
+    @NotNull
     public static Object getVal(XCell cell) {
         Object val = libreoffice.Calc.getVal(cell);
         return val;
     }
 
+    @NotNull
     public static Date getDate(XCell cell) throws LibreOfficeException {
         Double cellValue = cell.getValue();
         return doubleToDate(cellValue);
@@ -176,6 +182,7 @@ public class Calc {
         return getDate(cell);
     }
 
+    @NotNull
     public static Date getDate(XSpreadsheet sheet, String cellRangeName) throws LibreOfficeException {
         try {
             XCellRange cellRange = sheet.getCellRangeByName(cellRangeName);
@@ -186,6 +193,7 @@ public class Calc {
         }
     }
 
+    @NotNull
     private static Date doubleToDate(Double val) throws LibreOfficeException {
         if (val == null) {
             throw new LibreOfficeException("Pas de date.");
@@ -196,16 +204,20 @@ public class Calc {
         return gc.getTime();
     }
 
+    @NotNull
     public static Integer getInt(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         Double val = (Double) getVal(sheet, column, row);
         Integer integer = val.intValue();
         return integer;
     }
 
+    @NotNull
     public static String getString(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getString(cell);
     }
+
+    @NotNull
     public static String getString(XCell cell) throws LibreOfficeException {
         Object cellVal = getVal(cell);
         if (cellVal == null) {
@@ -226,6 +238,9 @@ public class Calc {
 
     public static double getDouble(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         Double doubleVal = (Double) getVal(sheet, column, row);
+        if (doubleVal == null) {
+            throw new LibreOfficeException("La cellule (" + (row + 1) + ", " + (column + 1) + ") ne contient pas de nombre (vide).");
+        }
         return doubleVal;
     }
 

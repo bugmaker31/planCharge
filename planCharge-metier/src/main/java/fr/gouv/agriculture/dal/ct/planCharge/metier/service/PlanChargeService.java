@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,10 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -62,7 +66,7 @@ public class PlanChargeService {
             return planChargeDao.load(ficPlanCharge);
         } catch (DaoException e) {
             throw new ServiceException(
-                    "Impossible de charger le plan de charge depuis le fichier '"+ficPlanCharge.getAbsolutePath()+"'.",
+                    "Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.",
                     e);
         }
     }
@@ -80,20 +84,58 @@ public class PlanChargeService {
     }
 
     @NotNull
-    public void majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches) throws ServiceException {
+    public RapportMajTaches majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches) throws ServiceException {
+        RapportMajTaches rapport;
         try {
 
-            Set<Tache> taches = tacheDao.importerDepuisCalc(ficCalcTaches);
+            Set<Tache> tachesImportees = tacheDao.importerDepuisCalc(ficCalcTaches);
 
-            // Suppression des tâches qui n'existent plus (terminée/annulée/etc.),
-            // ajout des tâches qui ont été créées depuis,
-            // et mise à jour des tâches qui existaient déjà avant.
+            rapport = new RapportMajTaches(planCharge.getPlanifications().size(), tachesImportees.size());
 
-        } catch (DaoException e) {
+            // MàJ du plan de charge :
+            // - suppression des tâches qui n'existent plus (terminée/annulée/etc.)
+            // - ajout des tâches qui ont été créées depuis
+            // - mise à jour des tâches qui existaient déjà avant
+            for (Tache tacheImportee : tachesImportees) {
+
+                if (!planCharge.getPlanifications().taches().contains(tacheImportee)) {
+
+                    // Ajout des tâches qui ont été créées depuis :
+                    planCharge.getPlanifications().ajouter(tacheImportee, planCharge.getDateEtat());
+                    LOGGER.debug("Tâche " + tacheImportee + " ajoutée.");
+                    rapport.incrNbrTachesAjoutees();
+                } else {
+                    assert planCharge.getPlanifications().taches().contains(tacheImportee);
+
+                    // Mise à jour des tâches qui existaient déjà avant, en gardant la planification actuelle :
+                    Tache tacheActuelle = planCharge.getPlanifications().tache(tacheImportee.getId());
+                    Map<LocalDate, Double> calendrierTache = planCharge.getPlanifications().calendrier(tacheActuelle);
+                    planCharge.getPlanifications().put(tacheImportee, calendrierTache);
+                    LOGGER.debug("Tâche " + tacheActuelle + " màj.");
+                    rapport.incrNbrTachesMisesAJour();
+                }
+            }
+            // Suppression des tâches qui n'existent plus (terminée/annulée/etc.) :
+            Set<Tache> tachesActuellesASupprimer = new HashSet<>();
+            for (Tache tacheActuelle : planCharge.getPlanifications().taches()) {
+                if (!tachesImportees.contains(tacheActuelle)) {
+                    tachesActuellesASupprimer.add(tacheActuelle);
+                } else {
+                    // Tâche déjà mise à jour, dans la boucle 'for' ci-dessus.
+                }
+            }
+            tachesActuellesASupprimer.forEach(tacheActuelle -> {
+                planCharge.getPlanifications().remove(tacheActuelle);
+                rapport.incrNbrTachesSupprimees();
+                LOGGER.debug("Tâche " + tacheActuelle + " supprimée.");
+            });
+
+        } catch (DaoException | TacheSansPlanificationException e) {
             throw new ServiceException(
                     "Impossible de màj les tâches depuis le fichier Calc '" + ficCalcTaches.getAbsolutePath() + "'.",
                     e);
         }
+        return rapport;
     }
 
     @NotNull

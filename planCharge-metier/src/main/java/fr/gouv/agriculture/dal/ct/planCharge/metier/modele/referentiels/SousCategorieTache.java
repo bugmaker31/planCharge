@@ -49,6 +49,6 @@ public enum SousCategorieTache {
         Optional<SousCategorieTache> categ = Arrays.stream(values())
                 .filter(cat -> texte.startsWith(cat.code))
                 .findAny();
-        return (categ.isPresent() ? categ.get() : null);
+        return (categ.orElse(null));
     }
 }

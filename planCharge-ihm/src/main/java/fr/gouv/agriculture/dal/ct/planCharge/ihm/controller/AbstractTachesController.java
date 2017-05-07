@@ -109,15 +109,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
     @FXML
     protected CheckComboBox<String> filtreProfilsField;
 
-    protected ObservableList<TB> getTachesBeans() {
-        return tachesBeans;
-    }
-
-    protected void setTachesBeans(ObservableList<TB> tachesBeans) {
+    void setTachesBeans(ObservableList<TB> tachesBeans) {
         this.tachesBeans = tachesBeans;
     }
 
-    protected TableView<TB> getTachesTable() {
+    private TableView<TB> getTachesTable() {
         return tachesTable;
     }
 

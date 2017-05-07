@@ -179,9 +179,7 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Tache tache = (Tache) o;
-
         return id == tache.id;
     }
 
@@ -206,9 +204,9 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     @Override
     @NotNull
     public String toString() {
-        return (categorie.getCode() + (sousCategorie == null ? "" : ("::" + sousCategorie.getCode())))
+        return /*(categorie.getCode() + (sousCategorie == null ? "" : ("::" + sousCategorie.getCode())))
                 + " "
-                + ("[" + projetAppli + "]")
+                +*/ ("[" + projetAppli + "]")
                 + " "
                 + noTache()
                 + " "

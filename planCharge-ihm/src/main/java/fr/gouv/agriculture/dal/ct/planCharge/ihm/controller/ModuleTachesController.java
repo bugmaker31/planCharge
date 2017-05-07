@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +12,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ModuleTachesController extends AbstractTachesController {
+public class ModuleTachesController extends AbstractTachesController<TacheBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleTachesController.class);
 
@@ -21,7 +20,7 @@ public class ModuleTachesController extends AbstractTachesController {
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     @NotNull
-    private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+    private ObservableList<TacheBean> planificationsBeans = (ObservableList)planChargeBean.getPlanificationsBeans();
 
     /**
      * The constructor.
@@ -60,5 +59,4 @@ public class ModuleTachesController extends AbstractTachesController {
         );
         return tacheBean;
     }
-
 }

@@ -7,8 +7,8 @@
         </encoder>
     </appender>
 
-    <logger name="fr.gouv.agriculture.dal.ct" level="DEBUG" />
-    <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.dao" level="INFO" />
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge" level="DEBUG" />
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

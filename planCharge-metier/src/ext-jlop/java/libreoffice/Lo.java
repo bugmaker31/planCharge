@@ -326,12 +326,12 @@ public class Lo {
     // i.e. see code at http://svn.apache.org/repos/asf/openoffice/symphony/trunk/main/
     //                    javaunohelper/com/sun/star/comp/helper/Bootstrap.java
     {
-        XComponentContext xcc = null;   // the remote office component context
+        XComponentContext xcc;   // the remote office component context
         try {
             xcc = Bootstrap.bootstrap();  //  get remote office component context
-            // Connect to office, if office is not running then it's started
+            // Connected to office, if office is not running then it's started
         } catch (BootstrapException e) {
-            throw new LOException("Unable to bootstrap Office");
+            throw new LOException("Unable to bootstrap Office", e);
         }
         return xcc;
     }  // end of bootstrapContext()
@@ -341,7 +341,7 @@ public class Lo {
     // use socket connection to Office
     // https://forum.openoffice.org/en/forum/viewtopic.php?f=44&t=1014
     {
-        XComponentContext xcc = null;   // the remote office component context
+        XComponentContext xcc;   // the remote office component context
         try {
             String[] cmdArray = new String[3];
             cmdArray[0] = "soffice";

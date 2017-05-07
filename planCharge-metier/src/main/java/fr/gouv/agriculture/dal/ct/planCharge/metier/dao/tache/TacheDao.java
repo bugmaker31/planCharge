@@ -135,23 +135,31 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
             LIG:
             while (true) {
                 LOGGER.debug("Ligne n°" + cptLig);
+                PARSE_LIG:
+                {
+                    XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
 
-                XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
+                    if (Calc.isEmpty(cell)) {
+                        LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
+                        break LIG;
+                    }
 
-                if (Calc.isEmpty(cell)) {
-                    LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
-                    break LIG;
+                    String statutTache = Calc.getString(feuille, 13 - 1, cptLig - 1);
+                    if (statutTache.compareTo("85-Reportée") >= 0) {
+                        LOGGER.debug("Tâche avec statut '" + statutTache + "' (< \"85-Reportée\"), skippée.");
+                        break PARSE_LIG;
+                    }
+
+                    if (!Calc.isNumericValue(cell)) {
+                        // Pas une tâche, ni une catégorie de tâche.
+                        throw new TacheDaoException("La ligne n°" + cptLig + " ne commence ni par un n° de tâche (entier), ni par un code d'une catégorie de tâche (Projets, Services, etc.)."
+                                + " PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
+                    }
+
+                    Tache tache = importerTache(feuille, cptLig);
+
+                    taches.add(tache);
                 }
-
-                if (!Calc.isNumericValue(cell)) {
-                    // Pas une tâche, ni une catégorie de tâche.
-                    throw new TacheDaoException("La ligne n°" + cptLig + " ne commence ni par un n° de tâche (entier), ni par un code d'une catégorie de tâche (Projets, Services, etc.)."
-                            + " PI, la 1ère colonne de cette ligne contient '" + Calc.getVal(cell) + "'.");
-                }
-
-                Tache tache = importerTache(feuille, cptLig);
-
-                taches.add(tache);
                 cptLig++;
             }
         }

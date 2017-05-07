@@ -54,7 +54,7 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
         Optional<Tache> optTache = plan.keySet().parallelStream()
                 .filter(tache -> tache.getId() == idTache)
                 .findAny();
-        return (!optTache.isPresent() ? null : optTache.get());
+        return (optTache.orElse(null));
     }
 
     @NotNull
