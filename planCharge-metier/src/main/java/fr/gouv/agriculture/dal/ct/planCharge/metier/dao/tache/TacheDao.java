@@ -88,6 +88,7 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
         }
         XSpreadsheetDocument docCalc = null;
         try {
+
             // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/jlop04/04.%20Spreadsheet%20Processing.pdf
             XComponentLoader loader = Calc.getLoader();
             docCalc = Calc.openDoc(ficCalc.getAbsolutePath(), loader);

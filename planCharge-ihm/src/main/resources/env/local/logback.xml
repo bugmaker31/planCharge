@@ -1,0 +1,30 @@
+<configuration scan="false">
+
+    <property name="APP_NAME" value="planCharge" />
+    <property name="LOGS_DIR" value="./logs" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{20} [%file:%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/${APP_NAME}.log</file>
+        <encoder>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level [%thread] %logger{20} [%file:%line] - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOGS_DIR}/${APP_NAME}_%d{yyyy-MM-dd}.txt.zip</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge" level="DEBUG"/>
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.dao" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

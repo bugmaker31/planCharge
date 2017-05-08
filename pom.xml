@@ -9,6 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-m1-SNAPSHOT</version>
 
+    <organization>
+        <name>MAAF/SDSI/BIA/DAL</name>
+    </organization>
+
     <modules>
         <module>planCharge-util</module>
         <module>planCharge-metier</module>
@@ -22,8 +26,7 @@
 
         <url-path>release/${project.version}</url-path>
         <departement>dal</departement>
-        <si>sial</si>
-        <sous-si>proto/ct</sous-si>
+        <si>sial/proto/ct</si>
 
         <!--
                 <jna.version>4.2.0</jna.version>
@@ -42,61 +45,42 @@
     -->
     <scm>
         <connection>
-            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
+            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
             scm:git:https://github.com/bugmaker31/planCharge/tree/master
         </connection>
         <developerConnection>
-            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}${sous-si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
+            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
             scm:git:https://github.com/bugmaker31/planCharge/tree/master
         </developerConnection>
     </scm>
 
-<!--
-    <profiles>
-        <profile>
-            <id>windows</id>
-            <properties>
-                <libreoffice.home>C:/Program Files/LibreOffice 5</libreoffice.home>
-            </properties>
-        </profile>
-        <profile>
-            <id>unix</id>
-            <properties>
-                <libreoffice.home>/usr/lib/libreoffice</libreoffice.home>
-            </properties>
-        </profile>
-    </profiles>
--->
-
     <dependencies>
 
-<!--
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
         </dependency>
--->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.7</version>
+            <version>1.2.3</version>
         </dependency>
 
-<!--
-IOC Spring trop compliquée à utiliser quand on pousse un peu l'utilisation.
-On instancie par programme (soi-même), et on récupère les instances (via des méthodes statiques "instance()" par exemple).
--->
-<!--
-        &lt;!&ndash;Pour l'IOC&ndash;&gt;
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>4.2.0.RELEASE</version>
-        </dependency>
--->
+        <!--
+        IOC Spring trop compliquée à utiliser quand on pousse un peu l'utilisation.
+        On instancie par programme (soi-même), et on récupère les instances (via des méthodes statiques "instance()" par exemple).
+        -->
+        <!--
+                &lt;!&ndash;Pour l'IOC&ndash;&gt;
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                    <version>4.2.0.RELEASE</version>
+                </dependency>
+        -->
         <!--
                 <dependency>
                     <groupId>javax.inject</groupId>
@@ -104,26 +88,26 @@ On instancie par programme (soi-même), et on récupère les instances (via des 
                     <version>1</version>
                 </dependency>
         -->
-<!--Impossible de faire fonctionner CDI (NPE) => on met les (2 !) constantes dans le code.-->
-<!--
-        &lt;!&ndash;Pour injecter les properties :&ndash;&gt;
-        &lt;!&ndash;Cf. https://dzone.com/articles/how-to-inject-property-file-properties-with-cdi&ndash;&gt;
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.0</version>
-        </dependency>
--->
+        <!--Impossible de faire fonctionner CDI (NPE) => on met les (2 !) constantes dans le code.-->
+        <!--
+                &lt;!&ndash;Pour injecter les properties :&ndash;&gt;
+                &lt;!&ndash;Cf. https://dzone.com/articles/how-to-inject-property-file-properties-with-cdi&ndash;&gt;
+                <dependency>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                    <version>1.0</version>
+                </dependency>
+        -->
 
         <!--Pour avoir les annotations NotNull et Nullable-->
-<!--
-        &lt;!&ndash;Cf. http://stackoverflow.com/questions/19030954/cant-find-nullable-inside-javax-annotation&ndash;&gt;
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>2.0.3</version>
-        </dependency>
--->
+        <!--
+                &lt;!&ndash;Cf. http://stackoverflow.com/questions/19030954/cant-find-nullable-inside-javax-annotation&ndash;&gt;
+                <dependency>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                    <version>2.0.3</version>
+                </dependency>
+        -->
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
