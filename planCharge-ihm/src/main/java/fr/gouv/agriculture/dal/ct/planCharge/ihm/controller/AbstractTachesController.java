@@ -428,12 +428,47 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
 
         tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
             // TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
-            codesCategoriesTaches.setAll(changeListener.getList().stream().map(TacheBean::getCodeCategorie).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
-            codesSousCategoriesTaches.setAll(changeListener.getList().stream().filter(o -> !o.codeSousCategorieProperty().isEmpty().get()).map(TacheBean::getCodeSousCategorie).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
-            importancesTaches.setAll(changeListener.getList().stream().map(TacheBean::getCodeImportance).distinct().sorted(CodeImportanceComparator.COMPARATEUR).collect(Collectors.toSet()));
-            codesProjetsApplisTaches.setAll(changeListener.getList().stream().map(TacheBean::getCodeProjetAppli).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
-            codesRessourcesTaches.setAll(changeListener.getList().stream().map(TacheBean::getCodeRessource).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
-            codesProfilsTaches.setAll(changeListener.getList().stream().map(TacheBean::getCodeProfil).distinct().sorted(String::compareTo).collect(Collectors.toSet()));
+            codesCategoriesTaches.setAll(changeListener.getList().stream()
+                    .filter(tache -> !tache.codeCategorieProperty().isEmpty().get())
+                    .map(TacheBean::getCodeCategorie)
+                    .distinct()
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toSet())
+            );
+            codesSousCategoriesTaches.setAll(changeListener.getList().stream()
+                    .filter(tache -> !tache.codeSousCategorieProperty().isEmpty().get())
+                    .map(TacheBean::getCodeSousCategorie)
+                    .distinct()
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toSet())
+            );
+            importancesTaches.setAll(changeListener.getList().stream()
+                    .filter(tache -> !tache.codeImportanceProperty().isEmpty().get())
+                    .map(TacheBean::getCodeImportance)
+                    .distinct().sorted(CodeImportanceComparator.COMPARATEUR)
+                    .collect(Collectors.toSet())
+            );
+            codesProjetsApplisTaches.setAll(changeListener.getList().stream()
+                    .filter(tache -> !tache.codeProjetAppliProperty().isEmpty().get())
+                    .map(TacheBean::getCodeProjetAppli)
+                    .distinct()
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toSet())
+            );
+            codesRessourcesTaches.setAll(changeListener.getList().stream()
+                    .filter(tache -> !tache.codeRessourceProperty().isEmpty().get())
+                    .map(TacheBean::getCodeRessource)
+                    .distinct()
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toSet())
+            );
+            codesProfilsTaches.setAll(changeListener.getList().stream()
+                    .filter(tache -> !tache.codeProfilProperty().isEmpty().get())
+                    .map(TacheBean::getCodeProfil)
+                    .distinct()
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toSet())
+            );
         });
 
     }
