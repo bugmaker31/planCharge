@@ -13,10 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -61,6 +58,8 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         return dateEtatPicker;
     }
 
+    @NotNull
+    private TableView<PlanificationBean> planificationsTable;
 
     /*
      La couche "View" :
@@ -128,6 +127,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         super.initialize();
 
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
+        planificationsTable = getTachesTable();
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         class ChargeSemaineCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
@@ -288,8 +288,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
         /*PlanificationBean planifBean = */
         super.ajouterTache(event);
-
-        // TODO FDA 2017/05 Scroller la PlanifTable jusqu'à la tâche qu'on vient d'ajouter.
 
 //        return planifBean;
     }

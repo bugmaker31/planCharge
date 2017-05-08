@@ -113,7 +113,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         this.tachesBeans = tachesBeans;
     }
 
-    private TableView<TB> getTachesTable() {
+    TableView<TB> getTachesTable() {
         return tachesTable;
     }
 
@@ -124,10 +124,16 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
     @FXML
     protected void ajouterTache(ActionEvent event) {
         try {
+
             TB nouvTache;
             LOGGER.debug("ajouterTache...");
             nouvTache = nouveauBean();
             tachesBeans.add(nouvTache);
+
+            // Positionnement sur la tâche qu'on vient d'ajouter :
+            tachesTable.scrollTo(tachesTable.getItems().size());
+            tachesTable.edit(tachesTable.getItems().size(), descriptionColumn); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
+
 //        return nouvTache;
         } catch (IhmException e) {
             LOGGER.error("Impossible d'ajouter une tâche.", e);
