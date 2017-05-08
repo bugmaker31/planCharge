@@ -42,7 +42,7 @@ public class PlanificationsXmlWrapper {
                 PlanificationXmlWrapper planificationXmlWrapper = new PlanificationXmlWrapper().init(tache, planifications.calendrier(tache));
                 this.planifications.add(planificationXmlWrapper);
             }
-            this.planifications.sort(Comparator.comparing(p -> p.getTache().getId()));
+            this.planifications.sort(Comparator.comparing(p -> p.getTache().getIdTache()));
         } catch (TacheSansPlanificationException e) {
             throw new PlanChargeDaoException("Impossible de wrapper les planifications.", e);
         }
