@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
         <artifactId>planCharge</artifactId>
         <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
@@ -11,26 +12,131 @@
 
     <artifactId>planCharge-ihm</artifactId>
 
+    <packaging>jar</packaging>
+
+    <properties>
+        <javafx.version>2.2</javafx.version>
+    </properties>
+
+    <profiles>
+
+        <profile>
+            <id>os_exec.windows</id>
+            <properties>
+                <javafx.additionalAppResources>src/main/package/windows</javafx.additionalAppResources>
+                <javafx.bundler>exe</javafx.bundler>
+            </properties>
+        </profile>
+        <profile>
+            <id>os_exec.unix</id>
+            <properties>
+                <javafx.additionalAppResources>src/main/package/unix</javafx.additionalAppResources>
+                <javafx.bundler>deb</javafx.bundler>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>env_exec.local</id>
+            <properties>
+                <env.dir>env/local</env.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>env_exec.recette</id>
+            <properties>
+                <env.dir>env/recette</env.dir>
+            </properties>
+        </profile>
+
+    </profiles>
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <resources>
-<!-- Plus la peine, depuis que j'ai déplacé les fichiers FXML dans le répertoires des ressources (+ propre).
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.fxml</include>
-                </includes>
-            </resource>
--->
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+                <excludes>
+                    <exclude>env/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/${env.dir}</directory>
+                <filtering>true</filtering>
                 <includes>
                     <include>**/**</include>
                 </includes>
             </resource>
         </resources>
+        <plugins>
 
+            <!--Cf. https://javafx-maven-plugin.github.io/-->
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.6.0</version>
+                <configuration>
+                    <mainClass>fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm</mainClass>
+                    <verbose>true</verbose>
+                    <additionalAppResources>${javafx.additionalAppResources}</additionalAppResources>
+                    <bundler>${javafx.bundler}</bundler>
+                    <!--Pour packager une webapp :-->
+                    <appName>PlanCharge</appName>
+                    <allPermissions>true</allPermissions>
+                    <keyStore>src/main/package/keystore.jks</keyStore>
+                    <keyStoreAlias>planChargeJKS</keyStoreAlias>
+                    <keyStorePassword>planChargeJKS_keystorePassword</keyStorePassword>
+                    <keyPassword>planChargeJKS_keyPassword</keyPassword>
+                    <certDomain>fr.gouv.agriculture</certDomain>
+                    <certOrgUnit>fr.gouv.agriculture.dal</certOrgUnit>
+                    <certOrg>MAAF</certOrg>
+                    <certState>Toulouse</certState>
+                    <certCountry>FR</certCountry>
+                    <description>Application de gestion du plan de charge d'une équipe</description>
+                    <title>PlanCharge</title>
+                    <j2seVersion>1.8+</j2seVersion>
+                </configuration>
+                <executions>
+                    <!--
+                    <execution>
+                        &lt;!&ndash; required before build-native &ndash;&gt;
+                        <id>create-jfxjar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-native</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-native</goal>
+                        </goals>
+                    </execution>
+                    -->
+                    <execution>
+                        <!-- required before build-web -->
+                        <id>create-jfxjar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-web</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-web</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
     </build>
 
     <dependencies>
@@ -48,7 +154,6 @@
             <artifactId>controlsfx</artifactId>
             <version>8.40.12</version>
         </dependency>
-
 
     </dependencies>
 
