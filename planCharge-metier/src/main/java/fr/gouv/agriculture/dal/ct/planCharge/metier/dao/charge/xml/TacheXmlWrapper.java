@@ -12,27 +12,43 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 
 /**
  * Created by frederic.danna on 26/04/2017.
+ * @author frederic.danna
  */
+@SuppressWarnings({"DesignForExtension", "unused", "UseOfObsoleteDateTimeApi", "WeakerAccess", "PublicMethodWithoutLogging"})
 public class TacheXmlWrapper {
 
-    private Integer id;
+    @NotNull
+    private Integer idTache;
+    @NotNull
     private String codeCategorie;
+    @Null
     private String codeSousCategorie;
+    @NotNull
     private String noTache;
+    @NotNull
     private String noTicketIdal;
+    @NotNull
     private String description;
+    @NotNull
     private String codeProjetAppli;
+    @Null
     private Date debut;
+    @NotNull
     private Date echeance;
+    @NotNull
     private String codeImportance;
+    @NotNull
     private double charge;
+    @NotNull
     private String codeRessource;
+    @NotNull
     private String codeProfil;
 
     //    @Autowired
@@ -50,17 +66,15 @@ public class TacheXmlWrapper {
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
-     *
-     * @return
      */
     public TacheXmlWrapper() {
         super();
     }
 
     public TacheXmlWrapper init(Tache tache) {
-        id = tache.getId();
+        idTache = tache.getId();
         codeCategorie = tache.getCategorie().getCode();
-        codeSousCategorie = (tache.getSousCategorie() == null ? null : tache.getSousCategorie().getCode());
+        codeSousCategorie = ((tache.getSousCategorie() == null) ? null : tache.getSousCategorie().getCode());
         noTache = tache.noTache();
         noTicketIdal = tache.getNoTicketIdal();
         description = tache.getDescription();
@@ -74,9 +88,9 @@ public class TacheXmlWrapper {
         return this;
     }
 
-    @XmlAttribute(name = "id", required = true)
-    public Integer getId() {
-        return id;
+    @XmlAttribute(name = "idTache", required = true)
+    public Integer getIdTache() {
+        return idTache;
     }
 
     @XmlElement(name = "codeCategorie", required = true)
@@ -139,8 +153,8 @@ public class TacheXmlWrapper {
         return codeProfil;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdTache(Integer idTache) {
+        this.idTache = idTache;
     }
 
     public void setCodeCategorie(String codeCategorie) {
@@ -196,9 +210,9 @@ public class TacheXmlWrapper {
         Tache tache;
         try {
             tache = new Tache(
-                    id,
+                    idTache,
                     CategorieTache.valeur(codeCategorie),
-                    (codeSousCategorie == null ? null : SousCategorieTache.valeur(codeSousCategorie)),
+                    ((codeSousCategorie == null) ? null : SousCategorieTache.valeur(codeSousCategorie)),
                     noTicketIdal,
                     description,
                     projetAppliDao.load(codeProjetAppli),
