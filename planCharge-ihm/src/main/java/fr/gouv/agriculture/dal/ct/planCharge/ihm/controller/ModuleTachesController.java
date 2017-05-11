@@ -3,7 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,13 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     void initialize() {
         setTachesBeans(planificationsBeans);
         super.initialize();
+    }
+
+    // Surchargée juste pour pouvoir ajouter le @FXML.
+    @FXML
+    @Override
+    protected void ajouterTache(ActionEvent event) {
+        super.ajouterTache(event);
     }
 
     @Override

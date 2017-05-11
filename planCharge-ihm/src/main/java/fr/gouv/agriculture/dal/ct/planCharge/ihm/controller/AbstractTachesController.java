@@ -1,9 +1,11 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.OptionalInt;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -31,6 +34,8 @@ import java.util.stream.Collectors;
  * Created by frederic.danna on 01/05/2017.
  */
 public abstract class AbstractTachesController<TB extends TacheBean> {
+
+    private static final String FORMAT_DATE = "dd/MM/yy";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
 
@@ -69,9 +74,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
     @FXML
     private TableColumn<TB, String> projetAppliColumn;
     @FXML
-    private TableColumn<TB, LocalDate> debutColumn;
+    private TableColumn<TB, String> debutColumn;
     @FXML
-    private TableColumn<TB, LocalDate> echeanceColumn;
+    private TableColumn<TB, String> echeanceColumn;
     @FXML
     private TableColumn<TB, String> importanceColumn;
     @FXML
@@ -121,13 +126,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         return chargeColumn;
     }
 
-    @FXML
     protected void ajouterTache(ActionEvent event) {
+        LOGGER.debug("ajouterTache...");
         try {
-
-            TB nouvTache;
-            LOGGER.debug("ajouterTache...");
-            nouvTache = nouveauBean();
+            TB nouvTache = nouveauBean();
             tachesBeans.add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
@@ -149,8 +151,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
     abstract TB nouveauBean() throws IhmException;
 
     int idTacheSuivant() {
-        OptionalInt max = tachesBeans.stream().mapToInt(tacheBean -> tacheBean.getId()).max();
-        return (!max.isPresent()) ? 1 : (max.getAsInt() + 1);
+        OptionalInt max = tachesBeans.stream().mapToInt(TacheBean::getId).max();
+        return max.isPresent() ? (max.getAsInt() + 1) : 1;
     }
 
     @FXML
@@ -178,8 +180,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().noTicketIdalProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().codeProjetAppliProperty());
-        debutColumn.setCellValueFactory(cellData -> cellData.getValue().debutProperty());
-        echeanceColumn.setCellValueFactory(cellData -> cellData.getValue().echeanceProperty());
+        debutColumn.setCellValueFactory(cellData -> {
+            LocalDate debut = cellData.getValue().debutProperty().get();
+            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(FORMAT_DATE)));
+        });
+        echeanceColumn.setCellValueFactory(cellData -> {
+            LocalDate echeance = cellData.getValue().echeanceProperty().get();
+            return new SimpleStringProperty(echeance.format(DateTimeFormatter.ofPattern(FORMAT_DATE)));
+        });
         importanceColumn.setCellValueFactory(cellData -> cellData.getValue().codeImportanceProperty());
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().codeRessourceProperty());
@@ -192,8 +200,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplisTaches));
-        debutColumn.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter())); // TODO FDA 2017/04 Ne permettre de saisir qu'une date (DatePicker), plutôt qu'un string.
-        echeanceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter())); // TODO FDA 2017/04 Ne permettre de saisir qu'une date (DatePicker), plutôt qu'un string.
+        debutColumn.setCellFactory(cell -> new DatePickerCell<>(FORMAT_DATE));
+        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(FORMAT_DATE));
         importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(importancesTaches));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
@@ -219,7 +227,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
                     filteredTaches.setPredicate(tache -> {
 
                         // If filter text is empty, display all data.
-                        if (newValue == null || newValue.isEmpty()) {
+                        if ((newValue == null) || newValue.isEmpty()) {
                             return true;
                         }
 
@@ -294,7 +302,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
                     filteredTaches.setPredicate(tache -> {
 
                         // If filter text is empty, display all data.
-                        if (newValue == null || newValue.isEmpty()) {
+                        if ((newValue == null) || newValue.isEmpty()) {
                             return true;
                         }
 
@@ -307,7 +315,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
             );
             filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
 
-                if (newValue != null && !newValue.isEmpty()) {
+                if ((newValue != null) && !newValue.isEmpty()) {
                     try {
                         Pattern.compile(newValue);
                     } catch (PatternSyntaxException e) {
@@ -327,7 +335,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
                 filteredTaches.setPredicate(tache -> {
 
                     // If filter text is empty, display all data.
-                    if (newValue == null || newValue.isEmpty()) {
+                    if ((newValue == null) || newValue.isEmpty()) {
                         return true;
                     }
 
@@ -483,7 +491,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreCategoriesField.getItems().setAll(
                 tachesBeans.stream()
                         .filter(tacheBean -> (tacheBean.getCodeCategorie() != null))
-                        .map(tacheBean -> tacheBean.getCodeCategorie())
+                        .map(TacheBean::getCodeCategorie)
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
@@ -495,7 +503,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreSousCategoriesField.getItems().setAll(
                 tachesBeans.stream()
                         .filter(tacheBean -> (tacheBean.getCodeSousCategorie() != null))
-                        .map(tacheBean -> tacheBean.getCodeSousCategorie())
+                        .map(TacheBean::getCodeSousCategorie)
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
@@ -507,7 +515,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreProjetsApplisField.getItems().setAll(
                 tachesBeans.stream()
                         .filter(tacheBean -> (tacheBean.getCodeProjetAppli() != null))
-                        .map(tacheBean -> tacheBean.getCodeProjetAppli())
+                        .map(TacheBean::getCodeProjetAppli)
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
@@ -519,7 +527,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreImportancesField.getItems().setAll(
                 tachesBeans.stream()
                         .filter(tacheBean -> (tacheBean.getCodeImportance() != null))
-                        .map(tacheBean -> tacheBean.getCodeImportance())
+                        .map(TacheBean::getCodeImportance)
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
@@ -531,7 +539,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreRessourcesField.getItems().setAll(
                 tachesBeans.stream()
                         .filter(tacheBean -> (tacheBean.getCodeRessource() != null))
-                        .map(tacheBean -> tacheBean.getCodeRessource())
+                        .map(TacheBean::getCodeRessource)
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
@@ -543,7 +551,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreProfilsField.getItems().setAll(
                 tachesBeans.stream()
                         .filter(tacheBean -> (tacheBean.getCodeProfil() != null))
-                        .map(tacheBean -> tacheBean.getCodeProfil())
+                        .map(TacheBean::getCodeProfil)
                         .distinct()
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())

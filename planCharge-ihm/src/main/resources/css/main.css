@@ -15,9 +15,7 @@
     */
 }
 
-.cellule-modifiable {
-  /* TODO FDA 2017/05 Coder. */
-}
-.cellule-non-modifiable {
-    /* TODO FDA 2017/05 Coder. */
+/*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
+.non-modifiable {
+    -fx-font-style: italic;
 }
