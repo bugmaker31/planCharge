@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ChargePlanifieeCellFactory;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -171,7 +172,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             protected void updateItem(Double charge, boolean empty) {
                 super.updateItem(charge, empty);
 
-                if (charge == null || empty) {
+                if ((charge == null) || empty) {
                     setText(null);
                     setStyle("");
                 } else {
@@ -231,18 +232,18 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         semaine11Column.setOnEditCommit(new ChargeSemaineEditHandler(11));
         semaine12Column.setOnEditCommit(new ChargeSemaineEditHandler(12));
         //
-        semaine1Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine2Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine3Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine4Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine5Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine6Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine7Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine8Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine9Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine10Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine11Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        semaine12Column.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        semaine1Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine2Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine3Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine4Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine5Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine6Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine7Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine8Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine9Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine10Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine11Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
+        semaine12Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
 
         definirNomsColonnesSemaine();
     }

@@ -3,14 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
-<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController">
-
-    <stylesheets>
-        <URL value="@/css/main.css"/>
-    </stylesheets>
-
     <top>
         <VBox>
             <Accordion BorderPane.alignment="CENTER">
@@ -84,31 +78,35 @@
         <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true"
                    BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn text="Catégories" visible="false">
+                <TableColumn text="Tâche">
                     <columns>
-                        <TableColumn fx:id="categorieColumn" text="Catégorie" editable="false" styleClass="non-modifiable" prefWidth="60" visible="false"/>
-                        <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" editable="false" styleClass="non-modifiable"  prefWidth="100" visible="false"
-                                     >
-                            <graphic>
-                                <Label text="Sous-catégorie" wrapText="true"/>
-                            </graphic>
+                        <TableColumn text="Catégories" visible="false">
+                            <columns>
+                                <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60" visible="false"/>
+                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100" visible="false">
+                                    <graphic>
+                                        <Label text="Sous-catégorie" wrapText="true"/>
+                                    </graphic>
+                                </TableColumn>
+                            </columns>
                         </TableColumn>
+                        <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0"
+                                     text="N°"/>
+                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
+                        <TableColumn text="Période souhaitée">
+                            <columns>
+                                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
+                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
+                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0" text="N° tâche"/>
-                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
-                <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
-                <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
-                <TableColumn text="Période souhaitée">
-                    <columns>
-                        <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
-                        <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
-                    </columns>
-                </TableColumn>
-                <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
-                <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
-                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
-                <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
                 <TableColumn text="Planification">
                     <columns>
                         <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
@@ -125,9 +123,9 @@
                         <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="chargePlanifieeColumn" editable="false" styleClass="non-modifiable" prefWidth="50.0">
+                <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0">
                     <graphic>
-                        <Label text="Charge planifiée" wrapText="true"  />
+                        <Label text="Charge planifiée" wrapText="true" />
                     </graphic>
                 </TableColumn>
             </columns>

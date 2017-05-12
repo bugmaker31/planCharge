@@ -19,3 +19,19 @@
 .non-modifiable {
     -fx-font-style: italic;
 }
+
+.trop-tot {
+    -fx-background-color: lightgray;
+    -fx-opacity: 0.5;
+}
+.trop-tard {
+    -fx-background-color: darkgray;
+    -fx-opacity: 0.5;
+}
+
+label {
+    -fx-font-style: italic;
+}
+label:editable {
+    -fx-font-style: normal;
+}

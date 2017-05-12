@@ -1,47 +1,58 @@
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.112"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
+    <stylesheets>
+        <URL value="@/css/main.css" />
+    </stylesheets>
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="true" text="_Fichier">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Charger..." onAction="#charger"/>
-                        <Menu mnemonicParsing="true"
-                              text="_Importer...">
-                            <MenuItem mnemonicParsing="true" text="Importer les _tâches depuis Calc..."
-                                      onAction="#majTachesDepuisCalc"/>
-                            <MenuItem mnemonicParsing="true" text="Importer un plan de _charge depuis Calc..."
-                                      onAction="#importerPlanChargeDepuisCalc"/>
+                        <MenuItem mnemonicParsing="false" onAction="#charger" text="Charger..." />
+                        <Menu mnemonicParsing="true" text="_Importer...">
+                            <MenuItem mnemonicParsing="true" onAction="#majTachesDepuisCalc" text="Importer les _tâches depuis Calc..." />
+                            <MenuItem mnemonicParsing="true" onAction="#importerPlanChargeDepuisCalc" text="Importer un plan de _charge depuis Calc..." />
                         </Menu>
-                        <MenuItem mnemonicParsing="true" text="_Sauver..." onAction="#sauver" accelerator="Shortcut+S"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="true" text="_Préférences..." onAction="#afficherPreferences"
-                                  disable="true"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="true" text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
+                        <MenuItem accelerator="Shortcut+S" mnemonicParsing="true" onAction="#sauver" text="_Sauver..." />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem disable="true" mnemonicParsing="true" onAction="#afficherPreferences" text="_Préférences..." />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem accelerator="Shortcut+Q" mnemonicParsing="true" onAction="#quitter" text="_Quitter" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Editer">
                     <items>
-                        <MenuItem mnemonicParsing="true" onAction="#annuler" text="_Annuler/Défaire"
-                                  accelerator="Shortcut+Z"/>
-                        <MenuItem mnemonicParsing="true" onAction="#refaire" text="_Refaire"
-                                  accelerator="Shortcut+Shift+Y"/>
+                        <MenuItem accelerator="Shortcut+Z" mnemonicParsing="true" onAction="#annuler" text="_Annuler/Défaire" />
+                        <MenuItem accelerator="Shortcut+Shift+Y" mnemonicParsing="true" onAction="#refaire" text="_Refaire" />
                     </items>
                 </Menu>
-                <Menu disable="true" mnemonicParsing="true" text="_Suivi"/>
+                <Menu disable="true" mnemonicParsing="true" text="_Suivi" />
                 <Menu mnemonicParsing="true" text="_Référentiels">
                     <items>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Jours fériés"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Ressources"/>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Profils"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Projets/Applis"/>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Importances"/>
+                        <MenuItem disable="true" mnemonicParsing="false" text="Jours fériés" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Ressources" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Profils" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Projets/Applis" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Importances" />
                     </items>
                 </Menu>
                 <!--
@@ -66,12 +77,12 @@
                 -->
                 <Menu disable="true" mnemonicParsing="false" text="TODOs">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1"/>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Aide">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aPropos" text="A propos"/>
+                        <MenuItem mnemonicParsing="false" onAction="#aPropos" text="A propos" />
                     </items>
                 </Menu>
             </menus>
@@ -80,29 +91,39 @@
     <center>
         <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
             <Tab fx:id="disponibilitesTab" text="Disponibilités">
-                <fx:include source="ModuleDisponibilitesView.fxml"/>
+                <fx:include source="ModuleDisponibilitesView.fxml" />
             </Tab>
             <Tab fx:id="tachesTab" text="Tâches">
-                <fx:include source="ModuleTachesView.fxml"/>
+                <fx:include source="ModuleTachesView.fxml" />
             </Tab>
             <Tab fx:id="chargesTab" text="Charge">
-                <fx:include source="ModuleChargesView.fxml"/>
+                <fx:include source="ModuleChargesView.fxml" />
             </Tab>
         </TabPane>
     </center>
     <bottom>
-        <AnchorPane BorderPane.alignment="CENTER" fx:id="barreEtat">
-            <HBox>
-                <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
-                    <tooltip>
-                        <Tooltip text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
-                    </tooltip>
-                </CheckBox>
-                <Label text="Modifié ?">
-                    <tooltip>
-                        <Tooltip text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
-                    </tooltip>
-                </Label>
+        <AnchorPane fx:id="barreEtat" BorderPane.alignment="CENTER">
+            <HBox spacing="10.0">
+                <padding>
+                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                </padding>
+                <HBox alignment="CENTER">
+                    <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
+                        <tooltip>
+                            <Tooltip text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail." />
+                        </tooltip>
+                    </CheckBox>
+                    <Label text="Modifié ?">
+                        <tooltip>
+                            <Tooltip text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail." />
+                        </tooltip>
+                    </Label>
+                </HBox>
+                <HBox alignment="CENTER">
+                    <!--TODO FDA 2017/05 Afficher le nbr de tâches.-->
+                    <TextField fx:id="nbrTachesField" editable="false" prefHeight="25.0" prefWidth="51.0" />
+                    <Label text="tâches" />
+                </HBox>
             </HBox>
         </AnchorPane>
     </bottom>

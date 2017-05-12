@@ -55,12 +55,12 @@
             <columns>
                 <TableColumn text="Catégories">
                     <columns>
-                        <TableColumn fx:id="categorieColumn" text="Catégorie" editable="false" prefWidth="60" />
-                        <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" editable="false" prefWidth="100"
-                                     />
+                        <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60"/>
+                        <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0" text="N° tâche"/>
+                <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0"
+                             text="N°"/>
                 <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                 <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
                 <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
