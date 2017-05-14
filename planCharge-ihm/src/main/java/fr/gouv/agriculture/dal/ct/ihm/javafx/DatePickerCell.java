@@ -97,14 +97,17 @@ public class DatePickerCell<T> extends TableCell<T, String> {
     @Override
     public void startEdit() {
         super.startEdit();
-        if (!isEmpty()) {
-            String dateStr = getItem();
-            try {
-                datePicker.setValue(LocalDate.parse(dateStr, formatter));
-            } catch (DateTimeParseException e) {
-                // TODO FDA 2017/05 Trouver mieux qu'un RuntimeException.
-                throw new RuntimeException("Can't parse date '" + dateStr + "', thus can't set DatePicker value.", e);
-            }
+
+        String dateStr = getItem();
+        if (emptyProperty().get() || isEmpty() || (dateStr == null)) {
+            return;
+        }
+
+        try {
+            datePicker.setValue(LocalDate.parse(dateStr, formatter));
+        } catch (DateTimeParseException e) {
+            // TODO FDA 2017/05 Trouver mieux qu'un RuntimeException.
+            throw new RuntimeException("Can't parse date '" + dateStr + "', thus can't set DatePicker value.", e);
         }
     }
 

@@ -119,20 +119,21 @@
                         <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12" styleClass="periodeChargee"/>
+
+                        <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true.-->
+                        <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
+                                     editable="false" styleClass="non-modifiable" style="-fx-wrap-text: true"/>
+                        <!--
+                            Le libellé de l'entête de la colonne revient bien à la ligne, mais maintenant le libellé de la colonne n'apparâit plus dans le bouton "+"
+                            qui sert à l'utilisateur pour afficher/masquer des colonnes.
+                            <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0">
+                                <graphic>
+                                    <Label text="Charge planifiée" wrapText="true" />
+                                </graphic>
+                            </TableColumn>
+                        -->
                     </columns>
                 </TableColumn>
-                <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true.-->
-                <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
-                             editable="false" styleClass="non-modifiable" style="-fx-wrap-text: true"/>
-                <!--
-                    Le libellé de l'entête de la colonne revient bien à la ligne, mais maintenant le libellé de la colonne n'apparâit plus dans le bouton "+"
-                    qui sert à l'utilisateur pour afficher/masquer des colonnes.
-                    <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0">
-                        <graphic>
-                            <Label text="Charge planifiée" wrapText="true" />
-                        </graphic>
-                    </TableColumn>
-                -->
             </columns>
         </TableView>
     </center>

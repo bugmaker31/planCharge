@@ -11,7 +11,7 @@ import java.util.Comparator;
  */
 public class Importance extends AbstractEntity<String> implements Comparable<Importance> {
 
-    public static class OrdreImportanceComparator implements Comparator<Importance> {
+    private static class OrdreImportanceComparator implements Comparator<Importance> {
 
         @Override
         public int compare(@NotNull Importance i1, @NotNull Importance i2) {

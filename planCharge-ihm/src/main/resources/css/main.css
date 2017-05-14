@@ -26,6 +26,31 @@
     -fx-text-fill: white;
     /*-fx-opacity: 1.0;*/
 }
+
+
+/*
+Tâches
+*/
+
+.importanceAvecEngagement {
+    -fx-background-color:darksalmon;
+    -fx-font-weight: bold;
+}
+.importanceMaximale {
+    -fx-background-color:darksalmon;
+    -fx-font-weight: normal;
+}
+.importanceHaute {
+    -fx-background-color:salmon;
+    -fx-font-weight: normal;
+}
+.importanceNormale {
+    -fx-background-color:inherit;
+}
+.importanceBasse {
+    -fx-background-color:lightgray;
+}
+
 /*
 Plan de charge
 */
@@ -49,13 +74,13 @@ Plan de charge
 
 .tropTot {
     /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
-    /*-fx-opacity: 0.1;*/
+    -fx-opacity: 0.5;
     -fx-background-image: url("/images/rayures.gif");
 }
 
 .tropTard {
     /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
-    /*-fx-opacity: 0.1;*/
+    -fx-opacity: 0.5;
     -fx-background-image: url("/images/rayures.gif");
 }
 

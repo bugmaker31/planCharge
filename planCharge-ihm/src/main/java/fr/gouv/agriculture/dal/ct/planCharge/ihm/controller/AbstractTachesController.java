@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -208,7 +209,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplisTaches));
         debutColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
         echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
-        importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(importancesTaches));
+        importanceColumn.setCellFactory(cell -> new ImportanceCell<>(importancesTaches));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
