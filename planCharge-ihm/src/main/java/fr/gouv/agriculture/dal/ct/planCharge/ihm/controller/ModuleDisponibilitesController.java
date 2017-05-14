@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import javafx.fxml.FXML;
 
 /**
@@ -7,12 +8,22 @@ import javafx.fxml.FXML;
  */
 public class ModuleDisponibilitesController extends AbstractController {
 
+    private static ModuleDisponibilitesController instance;
+
+    public static ModuleDisponibilitesController instance() {
+        return instance;
+    }
+
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleDisponibilitesController() {
+    public ModuleDisponibilitesController() throws IhmException {
         super();
+        if (instance != null) {
+            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+        }
+        instance = this;
     }
 
     /**
@@ -20,7 +31,7 @@ public class ModuleDisponibilitesController extends AbstractController {
      * after the fxml file has been loaded.
      */
     @FXML
-    private void initialize() {
+    void initialize() throws IhmException {
         // Rien... pour l'instant.
     }
 }

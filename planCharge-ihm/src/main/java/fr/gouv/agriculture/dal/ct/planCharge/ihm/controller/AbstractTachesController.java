@@ -33,9 +33,7 @@ import java.util.stream.Collectors;
 /**
  * Created by frederic.danna on 01/05/2017.
  */
-public abstract class AbstractTachesController<TB extends TacheBean> {
-
-    private static final String FORMAT_DATE = "dd/MM/yy";
+public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
 
@@ -171,7 +169,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         filtreProfilsField.getCheckModel().checkAll();
     }
 
+    @Override
     void initialize() {
+//        super.initialize();
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         categorieColumn.setCellValueFactory(cellData -> cellData.getValue().codeCategorieProperty());
@@ -181,12 +181,18 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().codeProjetAppliProperty());
         debutColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().debutProperty().isNull().get()) {
+                return null;
+            }
             LocalDate debut = cellData.getValue().debutProperty().get();
-            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(FORMAT_DATE)));
+            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(PlanChargeIhm.FORMAT_DATE)));
         });
         echeanceColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().echeanceProperty().isNull().get()) {
+                return null;
+            }
             LocalDate echeance = cellData.getValue().echeanceProperty().get();
-            return new SimpleStringProperty(echeance.format(DateTimeFormatter.ofPattern(FORMAT_DATE)));
+            return new SimpleStringProperty(echeance.format(DateTimeFormatter.ofPattern(PlanChargeIhm.FORMAT_DATE)));
         });
         importanceColumn.setCellValueFactory(cellData -> cellData.getValue().codeImportanceProperty());
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
@@ -200,8 +206,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> {
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplisTaches));
-        debutColumn.setCellFactory(cell -> new DatePickerCell<>(FORMAT_DATE));
-        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(FORMAT_DATE));
+        debutColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
+        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
         importanceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(importancesTaches));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));

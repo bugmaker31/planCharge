@@ -2,6 +2,7 @@
 
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -20,5 +21,10 @@ public class ErrorController extends AbstractController  {
     @FXML
     private void close() {
         errorMessage.getScene().getWindow().hide();
+    }
+
+    @Override
+    void initialize() throws IhmException {
+        // Rien... pour l'instant.
     }
 }

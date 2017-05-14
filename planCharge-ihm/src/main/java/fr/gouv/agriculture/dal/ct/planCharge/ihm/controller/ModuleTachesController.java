@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import javafx.collections.ObservableList;
@@ -18,6 +19,12 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleTachesController.class);
 
+    private static ModuleTachesController instance;
+
+    public static ModuleTachesController instance() {
+        return instance;
+    }
+
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
@@ -29,8 +36,12 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleTachesController() {
+    public ModuleTachesController() throws IhmException {
         super();
+        if (instance != null) {
+            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+        }
+        instance = this;
     }
 
     /**

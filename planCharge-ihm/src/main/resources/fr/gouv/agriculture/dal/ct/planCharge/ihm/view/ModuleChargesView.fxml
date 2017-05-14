@@ -10,13 +10,11 @@
             <Accordion BorderPane.alignment="CENTER">
                 <panes>
                     <TitledPane animated="false" text="Paramètres">
-                        <GridPane>
-                            <Label text="Date d'état : "/>
-                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
-                                        GridPane.columnIndex="2"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
-                            <Button onAction="#positionnerDateEtatAuProchainLundi" text="Lundi prochain"
-                                    GridPane.columnIndex="3"/>
-                        </GridPane>
+                        <HBox spacing="2" alignment="BASELINE_LEFT">
+                            <Label text="Date d'état : Lundi "/>
+                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat" showWeekNumbers="true" /> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="Lundi suivant" />
+                        </HBox>
                     </TitledPane>
                 </panes>
             </Accordion>
@@ -80,7 +78,7 @@
             <columns>
                 <TableColumn text="Tâche">
                     <columns>
-                        <TableColumn text="Catégories" visible="false">
+                        <TableColumn text="Catégories"> <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
                             <columns>
                                 <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60" visible="false"/>
                                 <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100" visible="false">
@@ -109,25 +107,31 @@
                 </TableColumn>
                 <TableColumn text="Planification">
                     <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
-                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"/>
-                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"/>
-                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"/>
-                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"/>
-                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"/>
-                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"/>
-                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"/>
-                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"/>
-                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
-                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
-                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
+                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12" styleClass="periodeChargee"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0">
-                    <graphic>
-                        <Label text="Charge planifiée" wrapText="true" />
-                    </graphic>
-                </TableColumn>
+                <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true.-->
+                <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" style="-fx-wrap-text: true" editable="false" prefWidth="50.0" />
+                <!--
+                    Le libellé de l'entête de la colonne revient bien à la ligne, mais maintenant le libellé de la colonne n'apparâit plus dans le bouton "+"
+                    qui sert à l'utilisateur pour afficher/masquer des colonnes.
+                    <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0">
+                        <graphic>
+                            <Label text="Charge planifiée" wrapText="true" />
+                        </graphic>
+                    </TableColumn>
+                -->
             </columns>
         </TableView>
     </center>

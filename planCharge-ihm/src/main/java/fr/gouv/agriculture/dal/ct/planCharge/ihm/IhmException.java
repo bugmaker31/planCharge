@@ -10,7 +10,6 @@ public class IhmException extends Exception {
     public IhmException(String message, Exception cause) {
         super(message, cause);
     }
-
     public IhmException(Throwable cause) {
         super(cause);
     }

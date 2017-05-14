@@ -1,3 +1,35 @@
+/*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
+.non-modifiable {
+    -fx-font-style: italic;
+}
+
+/*Cf. http://www.java2s.com/Code/Java/JavaFX/UsingCSStostyletheborder.htm*/
+.barreEtat {
+    /*-fx-border-color: lightgray;*/
+    /*-fx-border-insets: 1;*/
+    /*-fx-border-width: 1;*/
+    /*-fx-border-style: solid;*/
+    /*-fx-spacing: 1;*/
+    -fx-alignment: baseline-center;
+}
+
+.itemBarreEtat {
+    -fx-alignment: center;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-spacing: 2;
+}
+
+.incoherence {
+    -fx-background-color:darkred;
+    -fx-text-fill: white;
+    /*-fx-opacity: 1.0;*/
+}
+/*
+Plan de charge
+*/
+
 .erase-button {
     -fx-graphic: url("/images/btnClear.png");
     /*
@@ -15,23 +47,25 @@
     */
 }
 
-/*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
-.non-modifiable {
-    -fx-font-style: italic;
+.tropTot {
+    /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
+    /*-fx-opacity: 0.1;*/
+    -fx-background-image: url("/images/rayures.gif");
 }
 
-.trop-tot {
-    -fx-background-color: lightgray;
-    -fx-opacity: 0.5;
-}
-.trop-tard {
-    -fx-background-color: darkgray;
-    -fx-opacity: 0.5;
+.tropTard {
+    /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
+    /*-fx-opacity: 0.1;*/
+    -fx-background-image: url("/images/rayures.gif");
 }
 
-label {
-    -fx-font-style: italic;
+.chargeNonPlanifiee {
+    -fx-background-color:lightcoral;
+    /*-fx-text-fill: white;*/
+    /*-fx-opacity: 0.5;*/
 }
-label:editable {
-    -fx-font-style: normal;
+
+.periodeChargee {
+    -fx-font-size: 75%;
+    -fx-wrap-text: true;
 }

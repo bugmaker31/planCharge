@@ -5,7 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ChargePlanifieeCellFactory;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -14,18 +14,21 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.paint.Color;
+import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import javafx.util.Pair;
-import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +38,18 @@ import java.util.List;
 public class ModuleChargesController extends AbstractTachesController<PlanificationBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargesController.class);
+
+    private static ModuleChargesController instance;
+
+    public static ModuleChargesController instance() {
+        return instance;
+    }
+
+    private static final DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance());
+
+    static {
+        df.setMaximumFractionDigits(3);
+    }
 
 
     /*
@@ -54,14 +69,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
-    @NotNull
-    public DatePicker getDateEtatPicker() {
-        return dateEtatPicker;
-    }
-
-    @NotNull
-    private TableView<PlanificationBean> planificationsTable;
-
     /*
      La couche "View" :
       */
@@ -71,7 +78,9 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
     // Les paramètres (TabedPane "Paramètres") :
+
     @FXML
+    @NotNull
     private DatePicker dateEtatPicker;
 
     // Les filtres (TabedPane "Filtres")) :
@@ -80,30 +89,43 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     // La Table :
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine1Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine2Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine3Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine4Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine5Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine6Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine7Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine8Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine9Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine10Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine11Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> semaine12Column;
     @FXML
+    @NotNull
     private TableColumn<PlanificationBean, Double> chargePlanifieeColumn;
 
 
@@ -111,10 +133,18 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleChargesController() {
+    public ModuleChargesController() throws IhmException {
         super();
+        if (instance != null) {
+            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+        }
+        instance = this;
     }
 
+    @NotNull
+    public DatePicker getDateEtatPicker() {
+        return dateEtatPicker;
+    }
 
     /**
      * Initializes the controller class. This method is automatically called
@@ -128,7 +158,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         super.initialize();
 
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
-        planificationsTable = getTachesTable();
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         class ChargeSemaineCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
@@ -173,28 +202,23 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 super.updateItem(charge, empty);
 
                 if ((charge == null) || empty) {
-                    setText(null);
-                    setStyle("");
-                } else {
+                    setStyle(null);
+                    return;
+                }
 
-                    // Format.
-                    setText(charge.toString()); // TODO FDA 2017/04 Mieux formater les charges ?
+                // Format :
+                setText(df.format(charge));
 
-                    // Style with a different color.
-                    //            TODO FDA 2017/04 Terminer (CSS).
-                    String styleBackgroundColour;
-                    double chargePlanifiee = planificationsBeans.get(this.getIndex()).getChargePlanifiee();
-                    if (charge < chargePlanifiee) {
-                        setTextFill(Color.WHITE);
-                        styleBackgroundColour = "maroon";
-                    } else {
-                        setTextFill(null);
-                        styleBackgroundColour = null;
+                // Style with a different color:
+                Double chargePlanifiee = chargePlanifieeColumn.getCellData(this.getIndex());
+                if (chargePlanifiee != null) {
+                    if (chargePlanifiee < charge) {
+                        getStyleClass().add("chargeNonPlanifiee");
                     }
-                    setStyle(
-                            (styleBackgroundColour == null ? "" : ("-fx-background-color: " + styleBackgroundColour + ";"))
-                                    + " -fx-alignment: center-right"
-                    );
+                    if (chargePlanifiee > charge) {
+                        getStyleClass().add("incoherence");
+                        // TODO FDA 2017/05 Afficher la cellule "Charge planifiée" en incohérence aussi (les incohérences vont tjs par paire).
+                    }
                 }
             }
         });
@@ -232,48 +256,98 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         semaine11Column.setOnEditCommit(new ChargeSemaineEditHandler(11));
         semaine12Column.setOnEditCommit(new ChargeSemaineEditHandler(12));
         //
-        semaine1Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine2Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine3Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine4Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine5Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine6Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine7Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine8Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine9Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine10Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine11Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-        semaine12Column.setCellFactory(col -> new ChargePlanifieeCellFactory(col, planChargeBean.getDateEtat()));
-
-        definirNomsColonnesSemaine();
+        semaine1Column.setCellFactory(col -> new PlanificationChargeCellFactory(1));
+        semaine2Column.setCellFactory(col -> new PlanificationChargeCellFactory(2));
+        semaine3Column.setCellFactory(col -> new PlanificationChargeCellFactory(3));
+        semaine4Column.setCellFactory(col -> new PlanificationChargeCellFactory(4));
+        semaine5Column.setCellFactory(col -> new PlanificationChargeCellFactory(5));
+        semaine6Column.setCellFactory(col -> new PlanificationChargeCellFactory(6));
+        semaine7Column.setCellFactory(col -> new PlanificationChargeCellFactory(7));
+        semaine8Column.setCellFactory(col -> new PlanificationChargeCellFactory(8));
+        semaine9Column.setCellFactory(col -> new PlanificationChargeCellFactory(9));
+        semaine10Column.setCellFactory(col -> new PlanificationChargeCellFactory(10));
+        semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(11));
+        semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(12));
     }
 
-    private void definirNomsColonnesSemaine() {
-        // TODO FDA 2017/04 Coder.
+    private void definirNomsPeriodes() {
+
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
+
+        LocalDate date = planChargeBean.getDateEtat();
+
+        semaine1Column.setText("S+1\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine2Column.setText("S+2\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine3Column.setText("S+3\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine4Column.setText("S+4\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine5Column.setText("S+5\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine6Column.setText("S+6\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine7Column.setText("S+7\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine8Column.setText("S+8\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine9Column.setText("S+9\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine10Column.setText("S+10\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine11Column.setText("S+11\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        semaine12Column.setText("S+12\n" + date.format(dateFormatter));
     }
 
     @FXML
-    private void definirDateEtat(ActionEvent event) {
+    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("definirDateEtat...");
+
         LocalDate dateEtat = dateEtatPicker.getValue();
+        if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+            dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+            dateEtatPicker.setValue(dateEtat);
+        }
+
         ihm.definirDateEtat(dateEtat);
+        definirNomsPeriodes();
     }
 
     @FXML
-    private void positionnerDateEtatAuProchainLundi(ActionEvent event) {
-        LOGGER.debug("positionnerDateEtatAuProchainLundi...");
+    private void positionnerDateEtatAuLundiSuivant(@SuppressWarnings("unused") ActionEvent event) {
+        LOGGER.debug("positionnerDateEtatAuLundiSuivant...");
 
-        LocalDate dateEtat = LocalDate.now();
-        if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-            dateEtat = dateEtat.plusDays(7 - dateEtat.getDayOfWeek().getValue() + 1);
+        LocalDate dateEtat;
+        if (planChargeBean.getDateEtat() == null) {
+            dateEtat = LocalDate.now();
+            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+            }
+        } else {
+            assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
+            dateEtat = planChargeBean.getDateEtat().plusDays(7);
         }
+        assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
 
         ihm.definirDateEtat(dateEtat);
     }
 
     @FXML
     @Override
-    protected void ajouterTache(ActionEvent event) {
+    protected void ajouterTache(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("ajouterTache...");
 
         if (planChargeBean.getDateEtat() == null) {
@@ -315,7 +389,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);
         LocalDate dateSemaine = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calendrier.add(new Pair(dateSemaine, new SimpleDoubleProperty(0.0)));
+            calendrier.add(new Pair<>(dateSemaine, new SimpleDoubleProperty(0.0)));
             dateSemaine = dateSemaine.plusDays(7);
         }
 

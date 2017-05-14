@@ -14,13 +14,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +35,12 @@ import java.util.Map;
 public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
+
+    private static ApplicationController instance;
+
+    public static ApplicationController instance() {
+        return instance;
+    }
 
     private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
@@ -68,6 +73,14 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private Tab chargesTab;
 
+    @FXML
+    @NotNull
+    private Region disponibilitesView;
+
+    @FXML
+    @NotNull
+    private Label nbrTachesField;
+
     // L'IHM :
 //    @Autowired
     @NotNull
@@ -91,7 +104,24 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
-    public void init() {
+
+    public ApplicationController() throws IhmException {
+        super();
+        if (instance != null) {
+            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+        }
+        instance = this;
+    }
+
+
+    @NotNull
+    public Region getDisponibilitesView() {
+        return disponibilitesView;
+    }
+
+    public void initialize() throws IhmException {
+//        super.initialize();
+
 /*
         // Cf. http://stackoverflow.com/questions/10315774/javafx-2-0-activating-a-menu-like-a-menuitem
         if (menuDisponibilites.getItems().size() == 1) {
@@ -148,6 +178,10 @@ public class ApplicationController extends AbstractController {
                 gestionTabPane.getSelectionModel().select(chargesTab);
             });
         }
+
+        planChargeBean.getPlanificationsBeans().addListener(
+                (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
+        );
     }
 
 
@@ -156,7 +190,7 @@ public class ApplicationController extends AbstractController {
      */
 
     @FXML
-    private void charger(ActionEvent event) {
+    private void charger(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Charger");
         try {
             charger();
@@ -223,11 +257,13 @@ public class ApplicationController extends AbstractController {
 
             planChargeBean.init(planCharge);
 
-            ihm.definirDateEtat(planCharge.getDateEtat());
+            ihm.definirDateEtat(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
                     "Chargement terminé",
-                    "Le chargement est terminé (" + planChargeBean.getPlanificationsBeans().size() + " tâches).",
+                    "Le chargement est terminé :"
+                            + "\n- date d'état : " + planChargeBean.getDateEtat()
+                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches",
                     400, 200
             );
             afficherModuleCharges();
@@ -238,15 +274,15 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void sauver(ActionEvent event) {
+    private void sauver(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Sauver");
 
-        if (planChargeBean.getDateEtat() == null || planChargeBean.getPlanificationsBeans() == null) {
+        if ((planChargeBean.getDateEtat() == null) || (planChargeBean.getPlanificationsBeans() == null)) {
             LOGGER.warn("Impossible de sauver un plan de charge non défini.");
             ihm.afficherPopUp(
                     Alert.AlertType.WARNING,
                     "Impossible de sauver le plan de charge",
-                    "Impossible de sauver un plan de charge sans date d'état et/ou planification.",
+                    "Impossible de sauver un plan de charge sans date d'état, ou sans planification.",
                     500, 200
             );
             return;
@@ -279,7 +315,7 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void majTachesDepuisCalc(ActionEvent event) {
+    private void majTachesDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
         try {
             majTachesDepuisCalc();
@@ -353,7 +389,7 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void importerPlanChargeDepuisCalc(ActionEvent event) {
+    private void importerPlanChargeDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Plan charge depuis Calc");
         try {
             importerPlanChargeDepuisCalc();
@@ -435,7 +471,7 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void quitter(ActionEvent event) {
+    private void quitter(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Quitter");
         try {
             ihm.stop();
@@ -450,7 +486,7 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void afficherPreferences(ActionEvent event) {
+    private void afficherPreferences(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Préférences");
         // TODO FDA 2017/04 Coder.
     }
@@ -466,9 +502,9 @@ public class ApplicationController extends AbstractController {
      * @param event
      */
     @FXML
-    private void annuler(ActionEvent event) {
-        // TODO FDA 2017/03 Coder.
+    private void annuler(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Editer > annuler");
+        // TODO FDA 2017/03 Coder.
         throw new NotImplementedException();
     }
 
@@ -478,9 +514,9 @@ public class ApplicationController extends AbstractController {
      * @param event
      */
     @FXML
-    private void refaire(ActionEvent event) {
-        // TODO FDA 2017/03 Coder.
+    private void refaire(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Editer > refaire");
+        // TODO FDA 2017/03 Coder.
         throw new NotImplementedException();
     }
 
@@ -532,7 +568,7 @@ public class ApplicationController extends AbstractController {
         );
     }
 
-//    @FXML
+    //    @FXML
     private void afficherModuleDisponibilites() {
 //        applicationView.setCenter(disponibilitesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
@@ -541,7 +577,7 @@ public class ApplicationController extends AbstractController {
 //        ihm.majTitre();
     }
 
-//    @FXML
+    //    @FXML
     private void afficherModuleTaches() {
 //        applicationView.setCenter(tachesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
@@ -550,7 +586,7 @@ public class ApplicationController extends AbstractController {
 //        ihm.majTitre();
     }
 
-//    @FXML
+    //    @FXML
     private void afficherModuleCharges() {
 //        applicationView.setCenter(chargesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab

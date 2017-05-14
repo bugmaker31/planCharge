@@ -7,7 +7,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppli
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.SousCategorieTache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -167,7 +169,7 @@ public class TacheBean {
         return id;
     }
 
-    @NotNull
+    @Null
     public String getCodeCategorie() {
         return codeCategorie.get();
     }
@@ -187,7 +189,7 @@ public class TacheBean {
         return codeSousCategorie;
     }
 
-    @NotNull
+    @Null
     public String getNoTicketIdal() {
         return noTicketIdal.get();
     }
@@ -197,7 +199,7 @@ public class TacheBean {
         return noTicketIdal;
     }
 
-    @NotNull
+    @Null
     public String getDescription() {
         return description.get();
     }
@@ -207,7 +209,7 @@ public class TacheBean {
         return description;
     }
 
-    @NotNull
+    @Null
     public String getCodeProjetAppli() {
         return codeProjetAppli.get();
     }
@@ -227,7 +229,7 @@ public class TacheBean {
         return debut;
     }
 
-    @NotNull
+    @Null
     public LocalDate getEcheance() {
         return echeance.get();
     }
@@ -237,7 +239,7 @@ public class TacheBean {
         return echeance;
     }
 
-    @NotNull
+    @Null
     public String getCodeImportance() {
         return codeImportance.get();
     }
@@ -247,8 +249,8 @@ public class TacheBean {
         return codeImportance;
     }
 
-    @NotNull
-    public double getCharge() {
+    @Null
+    public Double getCharge() {
         return charge.get();
     }
 
@@ -257,7 +259,7 @@ public class TacheBean {
         return charge;
     }
 
-    @NotNull
+    @Null
     public String getCodeRessource() {
         return codeRessource.get();
     }
@@ -267,7 +269,7 @@ public class TacheBean {
         return codeRessource;
     }
 
-    @NotNull
+    @Null
     public String getCodeProfil() {
         return codeProfil.get();
     }
@@ -278,9 +280,9 @@ public class TacheBean {
     }
 
 
-    @NotNull
+    @Null
     public StringBinding noTacheProperty() {
-        return idProperty() == null ? null : idProperty().asString(Tache.FORMAT_NO_TACHE);
+        return (idProperty() == null) ? null : idProperty().asString(Tache.FORMAT_NO_TACHE);
     }
 
     @NotNull
@@ -290,7 +292,7 @@ public class TacheBean {
 
     @NotNull
     public boolean matcheNoTache(@NotNull String otherValue) {
-        if (new String(getId() + "").contains(otherValue)) {
+        if ((getId() + "").contains(otherValue)) {
             return true; // matches
         }
         if (noTache().contains(otherValue)) {
@@ -450,6 +452,21 @@ public class TacheBean {
             throw new IhmException("Impossible d'extraire la tâche depuis le bean.", e);
         }
         return tache;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TacheBean)) return false;
+
+        TacheBean tacheBean = (TacheBean) o;
+
+        return getId() == tacheBean.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return new Integer(getId()).hashCode();
     }
 
     // Pour les débug, uniquement.

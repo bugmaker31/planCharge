@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<fx:root type="javafx.scene.layout." xmlns:fx="http://javafx.com/fxml">
+    <TableColumn text="Catégories" visible="false">
+        <columns>
+            <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60" visible="false"/>
+            <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100" visible="false">
+                <graphic>
+                    <Label text="Sous-catégorie" wrapText="true"/>
+                </graphic>
+            </TableColumn>
+        </columns>
+    </TableColumn>
+    <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0"
+                 text="N° tâche"/>
+    <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
+    <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
+    <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
+    <TableColumn text="Période souhaitée">
+        <columns>
+            <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+            <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+        </columns>
+    </TableColumn>
+    <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
+    <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
+    <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
+    <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+</fx:root>

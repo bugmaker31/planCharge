@@ -8,8 +8,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilites
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -26,13 +26,17 @@ import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class PlanChargeIhm extends javafx.application.Application {
+public class PlanChargeIhm extends Application {
 
     @NotNull
     public static final String APP_NAME = "Plan de charge";
+
+    @NotNull
+    public static final String FORMAT_DATE = "dd/MM/yy";
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
@@ -55,12 +59,6 @@ public class PlanChargeIhm extends javafx.application.Application {
     */
     @NotNull
     private BorderPane applicationView;
-    @NotNull
-    private Region disponibilitesView;
-    @NotNull
-    private Region tachesView;
-    @NotNull
-    private Region chargesView;
 
     /*
         @NotNull
@@ -69,11 +67,11 @@ public class PlanChargeIhm extends javafx.application.Application {
     @NotNull
     private ApplicationController applicationController;
     @NotNull
-    private ModuleDisponibilitesController disponibiliteController;
+    private ModuleDisponibilitesController disponibilitesController;
     @NotNull
-    private ModuleTachesController tacheController;
+    private ModuleTachesController tachesController;
     @NotNull
-    private ModuleChargesController chargeController;
+    private ModuleChargesController chargesController;
 
     /*
      Les services métier :
@@ -97,16 +95,16 @@ public class PlanChargeIhm extends javafx.application.Application {
         return applicationController;
     }
 
-    public ModuleDisponibilitesController getDisponibiliteController() {
-        return disponibiliteController;
+    public ModuleDisponibilitesController getDisponibilitesController() {
+        return disponibilitesController;
     }
 
-    public ModuleTachesController getTacheController() {
-        return tacheController;
+    public ModuleTachesController getTachesController() {
+        return tachesController;
     }
 
-    public ModuleChargesController getChargeController() {
-        return chargeController;
+    public ModuleChargesController getChargesController() {
+        return chargesController;
     }
 
     public static void main(String[] args) {
@@ -180,26 +178,30 @@ public class PlanChargeIhm extends javafx.application.Application {
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = appLoader.load();
             applicationController = appLoader.getController();
-            applicationController.init();
         }
+/*
         {
-            FXMLLoader dispoLoader = new FXMLLoader();
-            dispoLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
-            disponibilitesView = dispoLoader.load();
-            disponibiliteController = dispoLoader.getController();
+            FXMLLoader disponibilitesLoader = new FXMLLoader();
+            disponibilitesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
+            disponibilitesView = disponibilitesLoader.load();
+            disponibilitesController = disponibilitesLoader.getController();
         }
         {
             FXMLLoader tachesLoader = new FXMLLoader();
             tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTachesView.fxml"));
             tachesView = tachesLoader.load();
-            tacheController = tachesLoader.getController();
+            tachesController = tachesLoader.getController();
         }
         {
-            FXMLLoader chargeLoader = new FXMLLoader();
-            chargeLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
-            chargesView = chargeLoader.load();
-            chargeController = chargeLoader.getController();
+            FXMLLoader chargesLoader = new FXMLLoader();
+            chargesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
+            chargesView = chargesLoader.load();
+            chargesController = chargesLoader.getController();
         }
+*/
+        disponibilitesController = ModuleDisponibilitesController.instance();
+        tachesController= ModuleTachesController.instance().instance();
+        chargesController = ModuleChargesController.instance();
     }
 
     public void showError(Thread thread, Throwable throwable) {
@@ -255,7 +257,7 @@ public class PlanChargeIhm extends javafx.application.Application {
 */
 
     @Override
-    public void start(@NotNull Stage primaryStage) throws Exception {
+    public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
         try {
             LOGGER.info("Application en cours de démarrage...");
 
@@ -277,7 +279,7 @@ public class PlanChargeIhm extends javafx.application.Application {
 //        afficherModuleTaches();
 //        afficherModuleCharges();
             //
-//        chargeController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//        chargesController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {
@@ -286,6 +288,7 @@ public class PlanChargeIhm extends javafx.application.Application {
         }
     }
 
+    @Null
     private LocalDate dateEtatPrecedente() {
         return LocalDate.of(2017, 4, 17); // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur (pas une constante !).;
     }
@@ -380,12 +383,13 @@ public class PlanChargeIhm extends javafx.application.Application {
     }
 
     public void definirDateEtat(@Null LocalDate dateEtat) {
+        assert (dateEtat == null) || (dateEtat.getDayOfWeek() == DayOfWeek.MONDAY);
 
-        if (dateEtat == null || !dateEtat.equals(planChargeBean.getDateEtat())) {
+        if ((dateEtat == null) || !dateEtat.equals(planChargeBean.getDateEtat())) {
             planChargeBean.setDateEtat(dateEtat);
         }
-        if (dateEtat == null || !dateEtat.equals(getChargeController().getDateEtatPicker().getValue())) {
-            getChargeController().getDateEtatPicker().setValue(dateEtat);
+        if ((dateEtat == null) || !dateEtat.equals(getChargesController().getDateEtatPicker().getValue())) {
+            getChargesController().getDateEtatPicker().setValue(dateEtat);
         }
 
         majTitre();

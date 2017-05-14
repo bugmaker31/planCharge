@@ -8,36 +8,19 @@
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane animated="false" expanded="true" text="Filtres">
+                <TitledPane animated="false" text="Filtres">
                     <content>
                         <AnchorPane>
                             <children>
                                 <BorderPane>
-                                    <right>
-                                    </right>
                                     <center>
-                                        <VBox BorderPane.alignment="CENTER">
-                                            <children>
-                                                <GridPane>
-                                                    <children>
-                                                        <Label text="Filtre global : "/>
-                                                        <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1"/>
-                                                    </children>
-                                                    <columnConstraints>
-                                                        <ColumnConstraints/>
-                                                        <ColumnConstraints/>
-                                                    </columnConstraints>
-                                                    <rowConstraints>
-                                                        <RowConstraints/>
-                                                    </rowConstraints>
-                                                </GridPane>
-                                                <HBox>
-                                                    <children>
-                                                        <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0"/>
-                                                        <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
-                                                    </children>
-                                                </HBox>
-                                            </children>
+                                        <VBox BorderPane.alignment="BASELINE_CENTER">
+                                            <HBox alignment="BASELINE_CENTER" spacing="1">
+                                                <Label text="Filtre global : "/>
+                                                <TextField fx:id="filtreGlobalField" GridPane.columnIndex="1"/>
+                                                <CheckComboBox fx:id="filtreRessourcesField" prefWidth="75.0"/>
+                                                <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
+                                            </HBox>
                                         </VBox>
                                     </center>
                                 </BorderPane>
