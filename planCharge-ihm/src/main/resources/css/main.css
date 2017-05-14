@@ -66,6 +66,7 @@ Plan de charge
 }
 
 .periodeChargee {
-    -fx-font-size: 75%;
-    -fx-wrap-text: true;
+    -fx-font-size: 80%;
+    -fx-alignment: baseline-center;
+    -fx-wrap-text: true; /*TODO FDA 2017/05 A revoir, sans effet.*/
 }

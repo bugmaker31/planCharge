@@ -12,8 +12,9 @@
                     <TitledPane animated="false" text="Paramètres">
                         <HBox spacing="2" alignment="BASELINE_LEFT">
                             <Label text="Date d'état : Lundi "/>
-                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat" showWeekNumbers="true" /> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
-                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="Lundi suivant" />
+                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
+                                        showWeekNumbers="true"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="Lundi suivant"/>
                         </HBox>
                     </TitledPane>
                 </panes>
@@ -73,36 +74,44 @@
         </VBox>
     </top>
     <center>
-        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true"
-                   BorderPane.alignment="CENTER">
+        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn text="Tâche">
                     <columns>
-                        <TableColumn text="Catégories"> <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
+                        <TableColumn
+                                text="Catégories"> <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
                             <columns>
                                 <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60" visible="false"/>
-                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100" visible="false">
+                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"
+                                             visible="false">
                                     <graphic>
                                         <Label text="Sous-catégorie" wrapText="true"/>
                                     </graphic>
                                 </TableColumn>
                             </columns>
                         </TableColumn>
-                        <TableColumn fx:id="noTacheColumn" editable="false" prefWidth="55.0"
-                                     text="N°"/>
+                        <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55.0"
+                                     editable="false" styleClass="non-modifiable"/>
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                         <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"
+                                     style="-fx-alignment: baseline-center"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"
+                                             style="-fx-alignment: baseline-center"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"
+                                style="-fx-alignment: baseline-center"/>
                             </columns>
                         </TableColumn>
-                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
-                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
-                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
-                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"
+                                     style="-fx-alignment: baseline-center"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"
+                                     style="-fx-alignment: baseline-center"/>
+                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"
+                                     style="-fx-alignment: baseline-center"/>
+                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"
+                                     style="-fx-alignment: baseline-center"/>
                     </columns>
                 </TableColumn>
                 <TableColumn text="Planification">
@@ -122,7 +131,8 @@
                     </columns>
                 </TableColumn>
                 <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true.-->
-                <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" style="-fx-wrap-text: true" editable="false" prefWidth="50.0" />
+                <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
+                             editable="false" styleClass="non-modifiable" style="-fx-wrap-text: true"/>
                 <!--
                     Le libellé de l'entête de la colonne revient bien à la ligne, mais maintenant le libellé de la colonne n'apparâit plus dans le bouton "+"
                     qui sert à l'utilisateur pour afficher/masquer des colonnes.

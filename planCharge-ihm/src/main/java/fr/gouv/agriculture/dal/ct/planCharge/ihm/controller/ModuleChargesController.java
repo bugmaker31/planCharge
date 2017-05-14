@@ -14,10 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import org.slf4j.Logger;
@@ -213,10 +210,10 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 Double chargePlanifiee = chargePlanifieeColumn.getCellData(this.getIndex());
                 if (chargePlanifiee != null) {
                     if (chargePlanifiee < charge) {
-                        getStyleClass().add("chargeNonPlanifiee");
+                        getStyleClass().setAll("chargeNonPlanifiee");
                     }
                     if (chargePlanifiee > charge) {
-                        getStyleClass().add("incoherence");
+                        getStyleClass().setAll("incoherence");
                         // TODO FDA 2017/05 Afficher la cellule "Charge planifiée" en incohérence aussi (les incohérences vont tjs par paire).
                     }
                 }
