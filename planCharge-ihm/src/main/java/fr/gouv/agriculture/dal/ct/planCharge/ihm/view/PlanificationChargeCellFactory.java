@@ -57,7 +57,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
             }
         }
         if ((finPeriode != null) && (planifBean.getEcheance() != null)) {
-            if (finPeriode.isAfter(planifBean.getEcheance())) {
+            if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7))) {
                 getStyleClass().add("tropTard");
             }
         }
