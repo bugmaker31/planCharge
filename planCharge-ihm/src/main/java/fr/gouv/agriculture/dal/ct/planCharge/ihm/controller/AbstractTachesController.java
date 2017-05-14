@@ -304,6 +304,21 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         });
                     }
             );
+            filtreNoTacheField.textProperty().addListener((observable, oldValue, newValue) ->
+                    filteredTaches.setPredicate(tache -> {
+
+                        // If filter text is empty, display all data.
+                        if ((newValue == null) || newValue.isEmpty()) {
+                            return true;
+                        }
+
+                        // Compare column values with filter text.
+                        if (!tache.noTacheProperty().isEmpty().get() && tache.matcheNoTache(newValue)) {
+                            return true; // Filter matches
+                        }
+                        return false; // Does not match.
+                    })
+            );
             filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) ->
                     filteredTaches.setPredicate(tache -> {
 
