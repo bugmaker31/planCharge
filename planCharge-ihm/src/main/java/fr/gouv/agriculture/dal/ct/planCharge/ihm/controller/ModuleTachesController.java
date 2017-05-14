@@ -49,7 +49,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
      * after the fxml file has been loaded.
      */
     @FXML
-    void initialize() {
+    void initialize() throws IhmException {
         setTachesBeans(planificationsBeans);
         super.initialize();
     }

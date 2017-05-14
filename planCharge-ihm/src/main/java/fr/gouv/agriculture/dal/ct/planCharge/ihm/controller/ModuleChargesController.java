@@ -149,7 +149,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
      */
     @FXML
     @Override
-    void initialize() {
+    void initialize() throws IhmException {
         setTachesBeans(planificationsBeans);
 
         super.initialize();

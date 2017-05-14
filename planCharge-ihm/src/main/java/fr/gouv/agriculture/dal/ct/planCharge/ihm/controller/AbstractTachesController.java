@@ -6,6 +6,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -18,7 +21,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
-import javafx.util.converter.LocalDateStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.OptionalInt;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -37,6 +40,11 @@ import java.util.stream.Collectors;
 public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
+
+    //    @Autowired
+    @NotNull
+    private ReferentielsService referentielsService = ReferentielsService.instance();
+
 
     //    @Autowired
     @NotNull
@@ -171,7 +179,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @Override
-    void initialize() {
+    void initialize() throws IhmException {
 //        super.initialize();
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
@@ -217,12 +225,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Paramétrage des ordres de tri :
         importanceColumn.setComparator(CodeImportanceComparator.COMPARATEUR);
 
-        populerFiltreCategories();
-        populerFiltreSousCategories();
-        populerFiltreProjetsApplis();
-        populerFiltreImportances();
-        populerFiltreRessources();
-        populerFiltreProfils();
+        tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
+            populerFiltreCategories();
+            populerFiltreSousCategories();
+            populerFiltreProjetsApplis();
+            populerFiltreImportances();
+            populerFiltreRessources();
+            populerFiltreProfils();
+        });
 
         tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
 
@@ -460,53 +470,69 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             sortedPlanifBeans.comparatorProperty().bind(tachesTable.comparatorProperty());
             // 5. Add sorted (and filtered) data to the table.
             getTachesTable().setItems(sortedPlanifBeans);
+
+
+            // TODO FDA 2017/05 Trouver un meilleur moment/endroit pour pouler les listes des référentiels (une fois les données chargées, typiquement).
+            try {
+                populerReferentiels();
+            } catch (IhmException e) {
+                LOGGER.error("Impossible de populer les référentiels.", e);
+            }
         });
 
-        tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
-            // TODO FDA 2017/04 Alimenter ces listes avec les référentiels, plutôt.
-            codesCategoriesTaches.setAll(changeListener.getList().stream()
-                    .filter(tache -> !tache.codeCategorieProperty().isEmpty().get())
-                    .map(TacheBean::getCodeCategorie)
-                    .distinct()
-                    .sorted(String::compareTo)
-                    .collect(Collectors.toSet())
-            );
-            codesSousCategoriesTaches.setAll(changeListener.getList().stream()
-                    .filter(tache -> !tache.codeSousCategorieProperty().isEmpty().get())
-                    .map(TacheBean::getCodeSousCategorie)
-                    .distinct()
-                    .sorted(String::compareTo)
-                    .collect(Collectors.toSet())
-            );
-            importancesTaches.setAll(changeListener.getList().stream()
-                    .filter(tache -> !tache.codeImportanceProperty().isEmpty().get())
-                    .map(TacheBean::getCodeImportance)
-                    .distinct().sorted(CodeImportanceComparator.COMPARATEUR)
-                    .collect(Collectors.toSet())
-            );
-            codesProjetsApplisTaches.setAll(changeListener.getList().stream()
-                    .filter(tache -> !tache.codeProjetAppliProperty().isEmpty().get())
-                    .map(TacheBean::getCodeProjetAppli)
-                    .distinct()
-                    .sorted(String::compareTo)
-                    .collect(Collectors.toSet())
-            );
-            codesRessourcesTaches.setAll(changeListener.getList().stream()
-                    .filter(tache -> !tache.codeRessourceProperty().isEmpty().get())
-                    .map(TacheBean::getCodeRessource)
-                    .distinct()
-                    .sorted(String::compareTo)
-                    .collect(Collectors.toSet())
-            );
-            codesProfilsTaches.setAll(changeListener.getList().stream()
-                    .filter(tache -> !tache.codeProfilProperty().isEmpty().get())
-                    .map(TacheBean::getCodeProfil)
-                    .distinct()
-                    .sorted(String::compareTo)
-                    .collect(Collectors.toSet())
-            );
-        });
+//        populerReferentiels();
+    }
 
+    private void populerReferentiels() throws IhmException {
+/*
+        codesCategoriesTaches.setAll(changeListener.getList().stream()
+                .filter(tache -> !tache.codeCategorieProperty().isEmpty().get())
+                .map(TacheBean::getCodeCategorie)
+                .distinct()
+                .sorted(String::compareTo)
+                .collect(Collectors.toSet())
+        );
+        codesSousCategoriesTaches.setAll(changeListener.getList().stream()
+                .filter(tache -> !tache.codeSousCategorieProperty().isEmpty().get())
+                .map(TacheBean::getCodeSousCategorie)
+                .distinct()
+                .sorted(String::compareTo)
+                .collect(Collectors.toSet())
+        );
+*/
+
+        try {
+            List<Importance> importances = referentielsService.importances();
+            importancesTaches.setAll(importances.stream()
+                    .map(Importance::getCode)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw  new IhmException("Impossible de populer la liste des importances.", e);
+        }
+        /* TODO FDA 2017/05 Continuer de coder pour les autres listes référentielles, à l'instar de la liste des importances ci-dessus.
+        codesProjetsApplisTaches.setAll(changeListener.getList().stream()
+                .filter(tache -> !tache.codeProjetAppliProperty().isEmpty().get())
+                .map(TacheBean::getCodeProjetAppli)
+                .distinct()
+                .sorted(String::compareTo)
+                .collect(Collectors.toSet())
+        );
+        codesRessourcesTaches.setAll(changeListener.getList().stream()
+                .filter(tache -> !tache.codeRessourceProperty().isEmpty().get())
+                .map(TacheBean::getCodeRessource)
+                .distinct()
+                .sorted(String::compareTo)
+                .collect(Collectors.toSet())
+        );
+        codesProfilsTaches.setAll(changeListener.getList().stream()
+                .filter(tache -> !tache.codeProfilProperty().isEmpty().get())
+                .map(TacheBean::getCodeProfil)
+                .distinct()
+                .sorted(String::compareTo)
+                .collect(Collectors.toSet())
+        );
+        */
     }
 
     private void populerFiltreCategories() {

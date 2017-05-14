@@ -2,11 +2,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
             return (E) getCache().get(id);
         }
 
-        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence (thrower une EntityNotFoundException si pas trouvé)
+        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence (thrower une EntityNotFoundException, si pas trouvé).
         E nouvelleEntite = newEntity(id);
 
         getCache().put(id, nouvelleEntite);
@@ -38,4 +40,9 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
         return nouvelleEntite;
     }
 
+    @NotNull
+    public List<E> list() throws DaoException {
+        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence.
+        return new ArrayList<>(getCache().values());
+    }
 }
