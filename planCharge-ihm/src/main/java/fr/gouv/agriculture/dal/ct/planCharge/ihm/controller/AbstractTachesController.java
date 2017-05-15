@@ -6,7 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.SimpleStringProperty;
@@ -54,17 +54,17 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     private ObservableList<TB> tachesBeans;
     @NotNull
-    private ObservableList<String> codesCategoriesTaches = FXCollections.observableArrayList();
+    private ObservableList<String> codesCategories = FXCollections.observableArrayList();
     @NotNull
-    private ObservableList<String> codesSousCategoriesTaches = FXCollections.observableArrayList();
+    private ObservableList<String> codesSousCategories = FXCollections.observableArrayList();
     @NotNull
-    private ObservableList<String> importancesTaches = FXCollections.observableArrayList();
+    private ObservableList<String> codesImportances = FXCollections.observableArrayList();
     @NotNull
-    private ObservableList<String> codesProjetsApplisTaches = FXCollections.observableArrayList();
+    private ObservableList<String> codesProjetsApplis = FXCollections.observableArrayList();
     @NotNull
-    private ObservableList<String> codesRessourcesTaches = FXCollections.observableArrayList();
+    private ObservableList<String> codesRessources = FXCollections.observableArrayList();
     @NotNull
-    private ObservableList<String> codesProfilsTaches = FXCollections.observableArrayList();
+    private ObservableList<String> codesProfils = FXCollections.observableArrayList();
 
     @FXML
     private TableView<TB> tachesTable;
@@ -209,18 +209,18 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().codeProfilProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        categorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesCategoriesTaches));
-        sousCategorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesSousCategoriesTaches));
+        categorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesCategories));
+        sousCategorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesSousCategories));
         // Rq : La colonne "N° de tâche" n'est pas éditable (car c'est la "primaty key").
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplisTaches));
+        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplis));
         debutColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
         echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
-        importanceColumn.setCellFactory(cell -> new ImportanceCell<>(importancesTaches));
+        importanceColumn.setCellFactory(cell -> new ImportanceCell<>(codesImportances));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessourcesTaches));
-        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfilsTaches));
+        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessources));
+        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfils));
 
         // Paramétrage des ordres de tri :
         importanceColumn.setComparator(CodeImportanceComparator.COMPARATEUR);
@@ -484,55 +484,67 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     private void populerReferentiels() throws IhmException {
-/*
-        codesCategoriesTaches.setAll(changeListener.getList().stream()
-                .filter(tache -> !tache.codeCategorieProperty().isEmpty().get())
-                .map(TacheBean::getCodeCategorie)
-                .distinct()
-                .sorted(String::compareTo)
-                .collect(Collectors.toSet())
-        );
-        codesSousCategoriesTaches.setAll(changeListener.getList().stream()
-                .filter(tache -> !tache.codeSousCategorieProperty().isEmpty().get())
-                .map(TacheBean::getCodeSousCategorie)
-                .distinct()
-                .sorted(String::compareTo)
-                .collect(Collectors.toSet())
-        );
-*/
+        try {
+            List<CategorieTache> categories = referentielsService.categoriesTache();
+            codesCategories.setAll(categories.stream()
+                    .sorted(CategorieTache::compareTo)
+                    .map(CategorieTache::getCode)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de populer la liste des catégories de tâche.", e);
+        }
+        try {
+            List<SousCategorieTache> sousCategories = referentielsService.sousCategoriesTache();
+            codesSousCategories.setAll(sousCategories.stream()
+                    .sorted(SousCategorieTache::compareTo)
+                    .map(SousCategorieTache::getCode)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de populer la liste des sous-catégories de tâche.", e);
+        }
 
         try {
             List<Importance> importances = referentielsService.importances();
-            importancesTaches.setAll(importances.stream()
+            codesImportances.setAll(importances.stream()
+                    .sorted(Importance::compareTo)
                     .map(Importance::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
-            throw  new IhmException("Impossible de populer la liste des importances.", e);
+            throw new IhmException("Impossible de populer la liste des importances.", e);
         }
-        /* TODO FDA 2017/05 Continuer de coder pour les autres listes référentielles, à l'instar de la liste des importances ci-dessus.
-        codesProjetsApplisTaches.setAll(changeListener.getList().stream()
-                .filter(tache -> !tache.codeProjetAppliProperty().isEmpty().get())
-                .map(TacheBean::getCodeProjetAppli)
-                .distinct()
-                .sorted(String::compareTo)
-                .collect(Collectors.toSet())
-        );
-        codesRessourcesTaches.setAll(changeListener.getList().stream()
-                .filter(tache -> !tache.codeRessourceProperty().isEmpty().get())
-                .map(TacheBean::getCodeRessource)
-                .distinct()
-                .sorted(String::compareTo)
-                .collect(Collectors.toSet())
-        );
-        codesProfilsTaches.setAll(changeListener.getList().stream()
-                .filter(tache -> !tache.codeProfilProperty().isEmpty().get())
-                .map(TacheBean::getCodeProfil)
-                .distinct()
-                .sorted(String::compareTo)
-                .collect(Collectors.toSet())
-        );
-        */
+        try {
+            List<ProjetAppli> projetApplis = referentielsService.projetsApplis();
+            codesProjetsApplis.setAll(projetApplis.stream()
+                    .sorted(ProjetAppli::compareTo)
+                    .map(ProjetAppli::getCode)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de populer la liste des projets/applis.", e);
+        }
+        try {
+            List<Ressource> ressources = referentielsService.ressources();
+            codesRessources.setAll(ressources.stream()
+                    .sorted(Ressource::compareTo)
+                    .map(Ressource::getTrigramme)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de populer la liste des ressources.", e);
+        }
+        try {
+            List<Profil> profils= referentielsService.profils();
+            codesProfils.setAll(profils.stream()
+                    .sorted(Profil::compareTo)
+                    .map(Profil::getCode)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de populer la liste des profils.", e);
+        }
     }
 
     private void populerFiltreCategories() {

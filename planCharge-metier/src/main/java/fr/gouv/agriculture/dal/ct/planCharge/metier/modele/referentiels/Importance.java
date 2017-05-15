@@ -15,12 +15,13 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
 
         @Override
         public int compare(@NotNull Importance i1, @NotNull Importance i2) {
-            return i1.getOrdre().compareTo(i2.getOrdre());
+            return i2.getOrdre().compareTo(i1.getOrdre());
         }
 
     }
+    public static final OrdreImportanceComparator COMPARATOR_ORDRE = new OrdreImportanceComparator();
 
-    public static final Comparator<Importance> COMPARATOR_DEFAUT = new OrdreImportanceComparator();
+    public static final Comparator<Importance> COMPARATOR_DEFAUT = COMPARATOR_ORDRE;
 
     @NotNull
     private final String codeInterne;

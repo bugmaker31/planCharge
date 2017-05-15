@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 
 import javax.validation.constraints.NotNull;
