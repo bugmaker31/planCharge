@@ -10,6 +10,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,11 +19,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
@@ -68,8 +66,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     private ObservableList<String> codesProfils = FXCollections.observableArrayList();
 
-    @FXML
-    private TableView<TB> tachesTable;
     @FXML
     private TableColumn<TB, String> categorieColumn;
     @FXML
@@ -126,9 +122,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     abstract ObservableList<TB> getTachesBeans();
 
-    TableView<TB> getTachesTable() {
-        return tachesTable;
-    }
+    @NotNull
+    abstract TableView<TB> getTachesTable();
 
     TableColumn<TB, Double> getChargeColumn() {
         return chargeColumn;
@@ -141,8 +136,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesBeans().add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
-            tachesTable.scrollTo(tachesTable.getItems().size());
-            tachesTable.edit(tachesTable.getItems().size(), descriptionColumn); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
+            getTachesTable().scrollTo(getTachesTable().getItems().size());
+            getTachesTable().edit(getTachesTable().getItems().size(), descriptionColumn); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
 
 //        return nouvTache;
         } catch (IhmException e) {
@@ -164,7 +159,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @FXML
-    protected void razFiltres(ActionEvent event) {
+    protected void razFiltres(@SuppressWarnings("unused") ActionEvent event) {
+        razFiltres();
+    }
+
+    private void razFiltres() {
         LOGGER.debug("RAZ des filtres...");
         filtreGlobalField.clear();
         filtreCategoriesField.getCheckModel().checkAll();
@@ -227,6 +226,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         importanceColumn.setComparator(CodeImportanceComparator.COMPARATEUR);
 
         getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
+            LOGGER.debug("Changement pour la liste des tâches => màj des combobox des filtres...");
             populerFiltreCategories();
             populerFiltreSousCategories();
             populerFiltreProjetsApplis();
@@ -236,122 +236,140 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
 
         getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
+            LOGGER.debug("Changement pour la liste des tâches => filtrage des lignes de la table...");
 
             // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
             // 1. Wrap the ObservableList in a FilteredList
             FilteredList<TB> filteredTaches = new FilteredList<>(getTachesBeans());
             // 2. Set the filter Predicate whenever the filter changes.
-            filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) ->
-                    filteredTaches.setPredicate(tache -> {
+            ajouterListenersSurFiltres(filteredTaches);
+            // 3. Wrap the FilteredList in a SortedList.
+            SortedList<TB> sortedPlanifBeans = new SortedList<>(filteredTaches);
+            // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
+            sortedPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
+            // 5. Add sorted (and filtered) data to the table.
+            getTachesTable().setItems(sortedPlanifBeans);
+        });
 
-                        // If filter text is empty, display all data.
-                        if ((newValue == null) || newValue.isEmpty()) {
-                            return true;
-                        }
+    }
 
-                        // Compare column values with filter text.
-                        if (tache.matcheCategorie(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (tache.matcheSousCategorie(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (tache.matcheNoTache(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
-                            return true; // Filter matches
-                        }
-                        try {
-                            if (!tache.descriptionProperty().isEmpty().get() && tache.matcheDescription(newValue)) {
-                                return true; // Filter matches
-                            }
-                        } catch (IhmException e) {
-                            LOGGER.error("Impossible de filtrer sur la description.", e);
-                        }
-                        if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (!tache.echeanceProperty().isNull().get() && tache.matcheEcheance(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (!tache.codeProjetAppliProperty().isEmpty().get() && tache.matcheProjetAppli(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (!tache.codeImportanceProperty().isNull().get() && tache.matcheImportance(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (!tache.codeRessourceProperty().isEmpty().get() && tache.matcheRessource(newValue)) {
-                            return true; // Filter matches
-                        }
-                        if (!tache.codeProfilProperty().isEmpty().get() && tache.matcheProfil(newValue)) {
-                            return true; // Filter matches
-                        }
-                        return false; // Does not match.
-                    })
-            );
-            filtreCategoriesField.getCheckModel().getCheckedItems().addListener(
-                    (ListChangeListener<String>) change -> {
-//                    change.reset();
-                        filteredTaches.setPredicate(tache -> {
-                            for (String categorieSelectionnee : change.getList()) {
-                                if (!tache.codeCategorieProperty().isEmpty().get() && tache.matcheCategorie(categorieSelectionnee)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        });
+    void ajouterListenersSurFiltres(FilteredList<TB> filteredTaches) {
+
+        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+
+        //noinspection OverlyLongLambda
+        filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) -> {
+            LOGGER.debug("Changement pour le filtre 'filtreGlobal'...");
+            filteredTaches.setPredicate(tache -> {
+                // If filter text is empty, display all data.
+                if ((newValue == null) || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare column values with filter text.
+                if (tache.matcheCategorie(newValue)) {
+                    return true; // Filter matches
+                }
+                if (tache.matcheSousCategorie(newValue)) {
+                    return true; // Filter matches
+                }
+                if (tache.matcheNoTache(newValue)) {
+                    return true; // Filter matches
+                }
+                if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
+                    return true; // Filter matches
+                }
+                try {
+                    if (!tache.descriptionProperty().isEmpty().get() && tache.matcheDescription(newValue)) {
+                        return true; // Filter matches
                     }
-            );
-            filtreSousCategoriesField.getCheckModel().getCheckedItems().addListener(
-                    (ListChangeListener<String>) change -> {
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de filtrer sur la description.", e);
+                }
+                if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue)) {
+                    return true; // Filter matches
+                }
+                if (!tache.echeanceProperty().isNull().get() && tache.matcheEcheance(newValue)) {
+                    return true; // Filter matches
+                }
+                if (!tache.codeProjetAppliProperty().isEmpty().get() && tache.matcheProjetAppli(newValue)) {
+                    return true; // Filter matches
+                }
+                if (!tache.codeImportanceProperty().isNull().get() && tache.matcheImportance(newValue)) {
+                    return true; // Filter matches
+                }
+                if (!tache.codeRessourceProperty().isEmpty().get() && tache.matcheRessource(newValue)) {
+                    return true; // Filter matches
+                }
+                if (!tache.codeProfilProperty().isEmpty().get() && tache.matcheProfil(newValue)) {
+                    return true; // Filter matches
+                }
+                return false; // Does not match.
+            });
+        });
+        filtreCategoriesField.getCheckModel().getCheckedItems().addListener(
+                (ListChangeListener<String>) change -> {
+                    LOGGER.debug("Changement pour le filtre des catégories...");
 //                    change.reset();
-                        filteredTaches.setPredicate(tache -> {
-                            for (String sousCategorieSelectionnee : change.getList()) {
-                                if (!tache.codeSousCategorieProperty().isEmpty().get() && tache.matcheSousCategorie(sousCategorieSelectionnee)) {
-                                    return true;
-                                }
+                    filteredTaches.setPredicate(tache -> {
+                        for (String categorieSelectionnee : change.getList()) {
+                            if (!tache.codeCategorieProperty().isEmpty().get() && tache.matcheCategorie(categorieSelectionnee)) {
+                                return true;
                             }
-                            return false;
-                        });
+                        }
+                        return false;
+                    });
+                }
+        );
+        filtreSousCategoriesField.getCheckModel().getCheckedItems().addListener(
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredTaches.setPredicate(tache -> {
+                        for (String sousCategorieSelectionnee : change.getList()) {
+                            if (!tache.codeSousCategorieProperty().isEmpty().get() && tache.matcheSousCategorie(sousCategorieSelectionnee)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+        );
+        filtreNoTacheField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredTaches.setPredicate(tache -> {
+
+                    // If filter text is empty, display all data.
+                    if ((newValue == null) || newValue.isEmpty()) {
+                        return true;
                     }
-            );
-            filtreNoTacheField.textProperty().addListener((observable, oldValue, newValue) ->
-                    filteredTaches.setPredicate(tache -> {
 
-                        // If filter text is empty, display all data.
-                        if ((newValue == null) || newValue.isEmpty()) {
-                            return true;
-                        }
+                    // Compare column values with filter text.
+                    if (!tache.noTacheProperty().isEmpty().get() && tache.matcheNoTache(newValue)) {
+                        return true; // Filter matches
+                    }
+                    return false; // Does not match.
+                })
+        );
+        filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredTaches.setPredicate(tache -> {
 
-                        // Compare column values with filter text.
-                        if (!tache.noTacheProperty().isEmpty().get() && tache.matcheNoTache(newValue)) {
-                            return true; // Filter matches
-                        }
-                        return false; // Does not match.
-                    })
-            );
-            filtreNoTicketIdalField.textProperty().addListener((observable, oldValue, newValue) ->
-                    filteredTaches.setPredicate(tache -> {
+                    // If filter text is empty, display all data.
+                    if ((newValue == null) || newValue.isEmpty()) {
+                        return true;
+                    }
 
-                        // If filter text is empty, display all data.
-                        if ((newValue == null) || newValue.isEmpty()) {
-                            return true;
-                        }
+                    // Compare column values with filter text.
+                    if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
+                        return true; // Filter matches
+                    }
+                    return false; // Does not match.
+                })
+        );
+        filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
 
-                        // Compare column values with filter text.
-                        if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
-                            return true; // Filter matches
-                        }
-                        return false; // Does not match.
-                    })
-            );
-            filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
-
-                if ((newValue != null) && !newValue.isEmpty()) {
-                    try {
-                        Pattern.compile(newValue);
-                    } catch (PatternSyntaxException e) {
+            if ((newValue != null) && !newValue.isEmpty()) {
+                try {
+                    Pattern.compile(newValue);
+                } catch (PatternSyntaxException e) {
 /*
                         ihm.afficherPopUp(
                                 Alert.AlertType.ERROR,
@@ -361,130 +379,114 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         );
                         filtreDescriptionField.clear();
 */
-                        return;
-                    }
+                    return;
+                }
+            }
+
+            filteredTaches.setPredicate(tache -> {
+
+                // If filter text is empty, display all data.
+                if ((newValue == null) || newValue.isEmpty()) {
+                    return true;
                 }
 
-                filteredTaches.setPredicate(tache -> {
-
-                    // If filter text is empty, display all data.
-                    if ((newValue == null) || newValue.isEmpty()) {
-                        return true;
-                    }
-
-                    // Compare column values with filter text.
-                    try {
-                        if (!tache.descriptionProperty().isEmpty().get() && tache.matcheDescription(newValue)) {
-                            return true; // Filter matches
-                        }
-                    } catch (IhmException e) {
-                        LOGGER.error("Impossible de filtrer sur la description.", e);
-                    }
-                    return false; // Does not match.
-                });
-            });
-            filtreDebutField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
-                filteredTaches.setPredicate(tache -> {
-
-                    // If filter text is empty, display all data.
-                    if (newValue == null) {
-                        return true;
-                    }
-
-                    // Compare column values with filter text.
-                    if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue.format(TacheBean.DATE_FORMATTER))) {
+                // Compare column values with filter text.
+                try {
+                    if (!tache.descriptionProperty().isEmpty().get() && tache.matcheDescription(newValue)) {
                         return true; // Filter matches
                     }
-                    return false; // Does not match.
-                });
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de filtrer sur la description.", e);
+                }
+                return false; // Does not match.
             });
-            filtreEcheanceField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
-                filteredTaches.setPredicate(tache -> {
-
-                    // If filter text is empty, display all data.
-                    if (newValue == null) {
-                        return true;
-                    }
-
-                    // Compare column values with filter text.
-                    if (!tache.echeanceProperty().isNull().get() && tache.matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
-                        return true; // Filter matches
-                    }
-                    return false; // Does not match.
-                });
-            });
-            filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener(
-                    (ListChangeListener<String>) change -> {
-//                    change.reset();
-                        filteredTaches.setPredicate(tache -> {
-                            for (String codeProjetAppliSelectionne : change.getList()) {
-                                if (!tache.codeProjetAppliProperty().isEmpty().get() && tache.matcheProjetAppli(codeProjetAppliSelectionne)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        });
-                    }
-            );
-            filtreImportancesField.getCheckModel().getCheckedItems().addListener(
-                    (ListChangeListener<String>) change -> {
-//                    change.reset();
-                        filteredTaches.setPredicate(tache -> {
-                            for (String codeImportanceSelectionne : change.getList()) {
-                                if (!tache.codeImportanceProperty().isNull().get() && tache.matcheImportance(codeImportanceSelectionne)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        });
-                    }
-            );
-            filtreRessourcesField.getCheckModel().getCheckedItems().addListener(
-                    (ListChangeListener<String>) change -> {
-//                    change.reset();
-                        filteredTaches.setPredicate(tache -> {
-                            for (String codeRessourceSelectionne : change.getList()) {
-                                if (!tache.codeRessourceProperty().isEmpty().get() && tache.matcheRessource(codeRessourceSelectionne)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        });
-                    }
-            );
-            filtreProfilsField.getCheckModel().getCheckedItems().addListener(
-                    (ListChangeListener<String>) change -> {
-//                    change.reset();
-                        filteredTaches.setPredicate(tache -> {
-                            for (String codeProfilSelectionne : change.getList()) {
-                                if (!tache.codeProfilProperty().isEmpty().get() && tache.matcheProfil(codeProfilSelectionne)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        });
-                    }
-            );
-            // 3. Wrap the FilteredList in a SortedList.
-            SortedList<TB> sortedPlanifBeans = new SortedList<>(filteredTaches);
-            // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
-            sortedPlanifBeans.comparatorProperty().bind(tachesTable.comparatorProperty());
-            // 5. Add sorted (and filtered) data to the table.
-            getTachesTable().setItems(sortedPlanifBeans);
-
-
-            // TODO FDA 2017/05 Trouver un meilleur moment/endroit pour pouler les listes des référentiels (une fois les données chargées, typiquement).
-            try {
-                populerReferentiels();
-            } catch (IhmException e) {
-                LOGGER.error("Impossible de populer les référentiels.", e);
-            }
         });
+        filtreDebutField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
+            filteredTaches.setPredicate(tache -> {
 
-//        populerReferentiels();
+                // If filter text is empty, display all data.
+                if (newValue == null) {
+                    return true;
+                }
+
+                // Compare column values with filter text.
+                if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue.format(TacheBean.DATE_FORMATTER))) {
+                    return true; // Filter matches
+                }
+                return false; // Does not match.
+            });
+        });
+        filtreEcheanceField.valueProperty().addListener((observable, oldValue, newValue) -> { // Cf. http://stackoverflow.com/questions/17039101/jfxtras-how-to-add-change-listener-to-calendartextfield
+            filteredTaches.setPredicate(tache -> {
+
+                // If filter text is empty, display all data.
+                if (newValue == null) {
+                    return true;
+                }
+
+                // Compare column values with filter text.
+                if (!tache.echeanceProperty().isNull().get() && tache.matcheEcheance(newValue.format(TacheBean.DATE_FORMATTER))) {
+                    return true; // Filter matches
+                }
+                return false; // Does not match.
+            });
+        });
+        filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener(
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredTaches.setPredicate(tache -> {
+                        for (String codeProjetAppliSelectionne : change.getList()) {
+                            if (!tache.codeProjetAppliProperty().isEmpty().get() && tache.matcheProjetAppli(codeProjetAppliSelectionne)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+        );
+        filtreImportancesField.getCheckModel().getCheckedItems().addListener(
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredTaches.setPredicate(tache -> {
+                        for (String codeImportanceSelectionne : change.getList()) {
+                            if (!tache.codeImportanceProperty().isNull().get() && tache.matcheImportance(codeImportanceSelectionne)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+        );
+        filtreRessourcesField.getCheckModel().getCheckedItems().addListener(
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredTaches.setPredicate(tache -> {
+                        for (String codeRessourceSelectionne : change.getList()) {
+                            if (!tache.codeRessourceProperty().isEmpty().get() && tache.matcheRessource(codeRessourceSelectionne)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+        );
+        filtreProfilsField.getCheckModel().getCheckedItems().addListener(
+                (ListChangeListener<String>) change -> {
+//                    change.reset();
+                    filteredTaches.setPredicate(tache -> {
+                        for (String codeProfilSelectionne : change.getList()) {
+                            if (!tache.codeProfilProperty().isEmpty().get() && tache.matcheProfil(codeProfilSelectionne)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+        );
     }
 
-    private void populerReferentiels() throws IhmException {
+    void populerReferentiels() throws IhmException {
+        LOGGER.debug("populerReferentiels...");
         try {
             List<CategorieTache> categories = referentielsService.categoriesTache();
             codesCategories.setAll(categories.stream()
@@ -524,6 +526,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
+            //noinspection HardcodedFileSeparator
             throw new IhmException("Impossible de populer la liste des projets/applis.", e);
         }
         try {
@@ -537,7 +540,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             throw new IhmException("Impossible de populer la liste des ressources.", e);
         }
         try {
-            List<Profil> profils= referentielsService.profils();
+            List<Profil> profils = referentielsService.profils();
             codesProfils.setAll(profils.stream()
                     .sorted(Profil::compareTo)
                     .map(Profil::getCode)

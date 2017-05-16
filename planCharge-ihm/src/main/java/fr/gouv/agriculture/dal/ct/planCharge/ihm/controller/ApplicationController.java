@@ -188,8 +188,6 @@ public class ApplicationController extends AbstractController {
         planChargeBean.getPlanificationsBeans().addListener(
                 (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
         );
-
-        majBarreEtat();
     }
 
 
@@ -264,6 +262,8 @@ public class ApplicationController extends AbstractController {
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
             planChargeBean.init(planCharge);
             planChargeBean.vientDEtreCharge();
+
+            ihm.getTachesController().populerReferentiels();
 
             ihm.definirDateEtat(planChargeBean.getDateEtat());
             ihm.afficherPopUp(

@@ -48,10 +48,10 @@ public class PlanChargeBean {
     }
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
-    @Null
+    @NotNull
     private final ObservableList<PlanificationBean> planificationsBeans;
 
-    @Null
+    @NotNull
     public ObservableList<PlanificationBean> getPlanificationsBeans() {
         return planificationsBeans;
     }

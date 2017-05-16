@@ -22,6 +22,7 @@ public abstract class AbstractController implements Initializable {
         try {
             initialize();
         } catch (IhmException e) {
+            // TODO FDA 2017/06 Trouver mieux, comme gestion d'erreur.
             LOGGER.error("Impossible d'initialiser le contrôleur.", e);
             throw new RuntimeException("Impossible d'initialiser le contrôleur.", e);
         }

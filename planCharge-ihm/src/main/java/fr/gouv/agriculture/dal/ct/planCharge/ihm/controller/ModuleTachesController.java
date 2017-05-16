@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,10 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     //    @Autowired
     @NotNull
     private PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+    @NotNull
+    @FXML
+    private TableView<TacheBean>  tachesTable;
 
     /*
      La couche métier :
@@ -62,6 +67,11 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     @Override
     ObservableList<TacheBean> getTachesBeans() {
         return planificationsBeans;
+    }
+
+    @Override
+    TableView<TacheBean> getTachesTable() {
+        return tachesTable;
     }
 
     /**

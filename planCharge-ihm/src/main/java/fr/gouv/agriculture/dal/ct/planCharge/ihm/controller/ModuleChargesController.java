@@ -84,6 +84,9 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
     // La Table :
+    @NotNull
+    @FXML
+    private TableView<PlanificationBean> planificationsTable;
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
     @NotNull
@@ -144,6 +147,11 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         return planificationsBeans;
     }
 
+    @Override
+    TableView<PlanificationBean> getTachesTable() {
+        return planificationsTable;
+    }
+
     @NotNull
     public DatePicker getDateEtatPicker() {
         return dateEtatPicker;
@@ -156,7 +164,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @FXML
     @Override
     void initialize() throws IhmException {
-        super.initialize();
+        super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
 

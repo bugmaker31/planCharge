@@ -64,7 +64,7 @@
         </VBox>
     </top>
     <center>
-        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn text="Tâche">
                     <columns>
