@@ -5,9 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
+
     <artifactId>planCharge</artifactId>
-    <packaging>pom</packaging>
+    <name>Plan de charge</name>
+
     <version>1.0-m1-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
 
     <organization>
         <name>MAAF/SDSI/BIA/DAL</name>
