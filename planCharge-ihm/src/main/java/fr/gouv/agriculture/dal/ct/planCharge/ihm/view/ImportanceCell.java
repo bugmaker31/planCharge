@@ -25,7 +25,7 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, String> {
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (empty) {
+        if (empty || (getItem() == null)) {
             return;
         }
 
@@ -40,6 +40,9 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, String> {
     @NotNull
     private String importanceStyleClass() throws IhmException {
         String codeImportance = getItem();
+        if (codeImportance == null) {
+            return null;
+        }
         if (codeImportance.equals("Avec engag.")) {
             return "importanceAvecEngagement";
         }

@@ -138,6 +138,12 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         instance = this;
     }
 
+
+    @Override
+    ObservableList<PlanificationBean> getTachesBeans() {
+        return planificationsBeans;
+    }
+
     @NotNull
     public DatePicker getDateEtatPicker() {
         return dateEtatPicker;
@@ -150,8 +156,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @FXML
     @Override
     void initialize() throws IhmException {
-        setTachesBeans(planificationsBeans);
-
         super.initialize();
 
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
@@ -321,6 +325,8 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
         ihm.definirDateEtat(dateEtat);
         definirNomsPeriodes();
+
+        ihm.majBarreEtat();
     }
 
     @FXML
@@ -340,6 +346,8 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
 
         ihm.definirDateEtat(dateEtat);
+
+        ihm.majBarreEtat();
     }
 
     @FXML
@@ -361,6 +369,9 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         /*PlanificationBean planifBean = */
         super.ajouterTache(event);
 
+        planChargeBean.vientDEtreModifie();
+
+        ihm.majBarreEtat();
 //        return planifBean;
     }
 

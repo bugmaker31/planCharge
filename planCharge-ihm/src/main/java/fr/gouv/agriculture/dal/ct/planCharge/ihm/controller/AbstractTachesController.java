@@ -56,8 +56,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     // Les beans :
     @NotNull
-    private ObservableList<TB> tachesBeans;
-    @NotNull
     private ObservableList<String> codesCategories = FXCollections.observableArrayList();
     @NotNull
     private ObservableList<String> codesSousCategories = FXCollections.observableArrayList();
@@ -125,9 +123,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     protected CheckComboBox<String> filtreProfilsField;
 
-    void setTachesBeans(ObservableList<TB> tachesBeans) {
-        this.tachesBeans = tachesBeans;
-    }
+    @NotNull
+    abstract ObservableList<TB> getTachesBeans();
 
     TableView<TB> getTachesTable() {
         return tachesTable;
@@ -141,7 +138,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         LOGGER.debug("ajouterTache...");
         try {
             TB nouvTache = nouveauBean();
-            tachesBeans.add(nouvTache);
+            getTachesBeans().add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
             tachesTable.scrollTo(tachesTable.getItems().size());
@@ -162,7 +159,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     abstract TB nouveauBean() throws IhmException;
 
     int idTacheSuivant() {
-        OptionalInt max = tachesBeans.stream().mapToInt(TacheBean::getId).max();
+        OptionalInt max = getTachesBeans().stream().mapToInt(TacheBean::getId).max();
         return max.isPresent() ? (max.getAsInt() + 1) : 1;
     }
 
@@ -229,7 +226,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Paramétrage des ordres de tri :
         importanceColumn.setComparator(CodeImportanceComparator.COMPARATEUR);
 
-        tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
+        getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
             populerFiltreCategories();
             populerFiltreSousCategories();
             populerFiltreProjetsApplis();
@@ -238,11 +235,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             populerFiltreProfils();
         });
 
-        tachesBeans.addListener((ListChangeListener<TB>) changeListener -> {
+        getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
 
             // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
             // 1. Wrap the ObservableList in a FilteredList
-            FilteredList<TB> filteredTaches = new FilteredList<>(tachesBeans);
+            FilteredList<TB> filteredTaches = new FilteredList<>(getTachesBeans());
             // 2. Set the filter Predicate whenever the filter changes.
             filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) ->
                     filteredTaches.setPredicate(tache -> {
@@ -553,7 +550,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void populerFiltreCategories() {
         filtreCategoriesField.getItems().setAll(
-                tachesBeans.stream()
+                getTachesBeans().stream()
                         .filter(tacheBean -> (tacheBean.getCodeCategorie() != null))
                         .map(TacheBean::getCodeCategorie)
                         .distinct()
@@ -565,7 +562,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void populerFiltreSousCategories() {
         filtreSousCategoriesField.getItems().setAll(
-                tachesBeans.stream()
+                getTachesBeans().stream()
                         .filter(tacheBean -> (tacheBean.getCodeSousCategorie() != null))
                         .map(TacheBean::getCodeSousCategorie)
                         .distinct()
@@ -577,7 +574,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void populerFiltreProjetsApplis() {
         filtreProjetsApplisField.getItems().setAll(
-                tachesBeans.stream()
+                getTachesBeans().stream()
                         .filter(tacheBean -> (tacheBean.getCodeProjetAppli() != null))
                         .map(TacheBean::getCodeProjetAppli)
                         .distinct()
@@ -589,7 +586,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void populerFiltreImportances() {
         filtreImportancesField.getItems().setAll(
-                tachesBeans.stream()
+                getTachesBeans().stream()
                         .filter(tacheBean -> (tacheBean.getCodeImportance() != null))
                         .map(TacheBean::getCodeImportance)
                         .distinct()
@@ -601,7 +598,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void populerFiltreRessources() {
         filtreRessourcesField.getItems().setAll(
-                tachesBeans.stream()
+                getTachesBeans().stream()
                         .filter(tacheBean -> (tacheBean.getCodeRessource() != null))
                         .map(TacheBean::getCodeRessource)
                         .distinct()
@@ -613,7 +610,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void populerFiltreProfils() {
         filtreProfilsField.getItems().setAll(
-                tachesBeans.stream()
+                getTachesBeans().stream()
                         .filter(tacheBean -> (tacheBean.getCodeProfil() != null))
                         .map(TacheBean::getCodeProfil)
                         .distinct()

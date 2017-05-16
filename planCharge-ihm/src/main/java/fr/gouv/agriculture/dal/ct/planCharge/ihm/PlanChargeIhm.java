@@ -395,4 +395,7 @@ public class PlanChargeIhm extends Application {
         majTitre();
     }
 
+    public void majBarreEtat() {
+        getApplicationController().majBarreEtat();
+    }
 }

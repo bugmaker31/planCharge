@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import javafx.collections.ObservableList;
@@ -25,12 +26,25 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
         return instance;
     }
 
+    /*
+     La couche "View" :
+      */
+
+    //    @Autowired
+    @NotNull
+    private PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+    /*
+     La couche métier :
+      */
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
+    @SuppressWarnings("unchecked")
     @NotNull
     private ObservableList<TacheBean> planificationsBeans = (ObservableList)planChargeBean.getPlanificationsBeans();
+
 
     /**
      * The constructor.
@@ -44,13 +58,18 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
         instance = this;
     }
 
+
+    @Override
+    ObservableList<TacheBean> getTachesBeans() {
+        return planificationsBeans;
+    }
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
     @FXML
     void initialize() throws IhmException {
-        setTachesBeans(planificationsBeans);
         super.initialize();
     }
 
@@ -59,6 +78,8 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     @Override
     protected void ajouterTache(ActionEvent event) {
         super.ajouterTache(event);
+        planChargeBean.vientDEtreModifie();
+        ihm.majBarreEtat();
     }
 
     @Override

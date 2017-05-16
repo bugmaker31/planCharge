@@ -77,12 +77,18 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private Region disponibilitesView;
 
+
+    // La barre d'état :
+
+    @FXML
+    @NotNull
+    private CheckBox sauvegardeRequiseCheckbox;
+
     @FXML
     @NotNull
     private Label nbrTachesField;
 
-    // L'IHM :
-//    @Autowired
+    //    @Autowired
     @NotNull
     private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
@@ -182,6 +188,8 @@ public class ApplicationController extends AbstractController {
         planChargeBean.getPlanificationsBeans().addListener(
                 (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
         );
+
+        majBarreEtat();
     }
 
 
@@ -254,8 +262,8 @@ public class ApplicationController extends AbstractController {
         try {
 
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
-
             planChargeBean.init(planCharge);
+            planChargeBean.vientDEtreCharge();
 
             ihm.definirDateEtat(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
@@ -267,6 +275,8 @@ public class ApplicationController extends AbstractController {
                     400, 200
             );
             afficherModuleCharges();
+
+            majBarreEtat();
 
         } catch (ServiceException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
@@ -293,6 +303,8 @@ public class ApplicationController extends AbstractController {
 
             planChargeService.sauver(planCharge);
 
+            planChargeBean.vientDEtreSauvegarde();
+
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
@@ -302,6 +314,8 @@ public class ApplicationController extends AbstractController {
                             + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
                     500, 300
             );
+
+            majBarreEtat();
 
         } catch (IhmException | ServiceException e) {
             LOGGER.error("Impossible de sauver le plan de charge.", e);
@@ -370,6 +384,8 @@ public class ApplicationController extends AbstractController {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
 
+        planChargeBean.vientDEtreModifie();
+
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
                 "Tâches mises à jour importées",
@@ -385,6 +401,8 @@ public class ApplicationController extends AbstractController {
         );
 
         afficherModuleTaches();
+
+        majBarreEtat();
     }
 
 
@@ -457,6 +475,8 @@ public class ApplicationController extends AbstractController {
         }
         planificationsBeans.setAll(planifBeans);
 
+        planChargeBean.vientDEtreModifie();
+
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
                 "Données importées",
@@ -468,6 +488,8 @@ public class ApplicationController extends AbstractController {
         );
 
         afficherModuleCharges();
+
+        majBarreEtat();
     }
 
     @FXML
@@ -595,5 +617,8 @@ public class ApplicationController extends AbstractController {
 //        ihm.majTitre();
     }
 
-
+    public void majBarreEtat() {
+        LOGGER.debug("majBarreEtat...");
+        sauvegardeRequiseCheckbox.setSelected(planChargeBean.necessiteEtreSauvegarde());
+    }
 }

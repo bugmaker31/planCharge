@@ -6,9 +6,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -29,6 +31,9 @@ public class PlanChargeBean {
         }
         return instance;
     }
+
+    @NotNull
+    private boolean isModifie;
 
     @Null
     private LocalDate dateEtat;
@@ -61,8 +66,31 @@ Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeBean() {
         super();
-        dateEtat =  null;
+        dateEtat = null;
         planificationsBeans = FXCollections.observableArrayList();
+        isModifie = false;
+
+/*
+        planificationsBeans.addListener(
+                (ListChangeListener<? super PlanificationBean>) change -> necessiteEtreSauvegarde()
+        );
+*/
+    }
+
+    public void vientDEtreCharge() {
+        this.isModifie = false;
+    }
+
+    public void vientDEtreSauvegarde() {
+        this.isModifie = false;
+    }
+
+    public void vientDEtreModifie() {
+        this.isModifie = true;
+    }
+
+    public boolean necessiteEtreSauvegarde() {
+        return isModifie;
     }
 
     public void init(PlanCharge planCharge) {
@@ -73,7 +101,6 @@ Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners 
                         .collect(Collectors.toList())
         );
     }
-
 
     public PlanCharge extract() throws IhmException {
 
