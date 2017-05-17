@@ -263,9 +263,11 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreCharge();
             getSuiviActionsUtilisateur().push(new ChargementPlanCharge());
 
+            // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
             ihm.getTachesController().populerReferentiels();
             ihm.getChargesController().populerReferentiels();
 
+            // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
             ihm.getTachesController().populerFiltres();
             ihm.getChargesController().populerFiltres();
 
@@ -503,7 +505,6 @@ public class ApplicationController extends AbstractController {
     private void quitter(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Quitter");
 
-        // TODO FDA 2017/05 Tester.
         if (planChargeBean.necessiteEtreSauvegarde()) {
             Optional<ButtonType> result = ihm.afficherPopUp(
                     Alert.AlertType.CONFIRMATION,

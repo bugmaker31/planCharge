@@ -4,7 +4,6 @@ import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
@@ -140,8 +139,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesBeans().add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
-            getTachesTable().scrollTo(getTachesTable().getItems().size());
-            getTachesTable().edit(getTachesTable().getItems().size(), descriptionColumn); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
+            getTachesTable().scrollTo(nouvTache);
+            getTachesTable().scrollToColumn(descriptionColumn);
+            getTachesTable().getSelectionModel().select(nouvTache);
+//            getTachesTable().getSelectionModel().select(getTachesTable().getItems().size() - 1, descriptionColumn);
+            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
 
 //        return nouvTache;
         } catch (IhmException e) {
