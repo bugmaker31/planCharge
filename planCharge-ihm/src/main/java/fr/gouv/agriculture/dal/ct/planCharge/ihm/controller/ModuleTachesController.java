@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import javafx.collections.ObservableList;
@@ -80,16 +81,29 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
      */
     @FXML
     void initialize() throws IhmException {
+        LOGGER.debug("Initialisation...");
+
         super.initialize();
+
+        // Rien de plus... pour l'instant.
+
+        LOGGER.debug("Initialisé.");
     }
 
     // Surchargée juste pour pouvoir ajouter le @FXML.
     @FXML
     @Override
     protected void ajouterTache(ActionEvent event) {
+        LOGGER.debug("ajouterTache...");
+
         super.ajouterTache(event);
+
         planChargeBean.vientDEtreModifie();
+        getSuiviActionsUtilisateur().push(new AjoutTache());
+
         ihm.majBarreEtat();
+
+        LOGGER.debug("ajouterTache.");
     }
 
     @Override

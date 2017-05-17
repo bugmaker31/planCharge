@@ -2,6 +2,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationDateEtat;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
@@ -164,6 +166,8 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @FXML
     @Override
     void initialize() throws IhmException {
+        LOGGER.debug("Initialisation...");
+
         super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
@@ -277,6 +281,8 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         semaine10Column.setCellFactory(col -> new PlanificationChargeCellFactory(10));
         semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(11));
         semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(12));
+
+        LOGGER.debug("Initialisé.");
     }
 
     private void definirNomsPeriodes() {
@@ -334,6 +340,9 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         ihm.definirDateEtat(dateEtat);
         definirNomsPeriodes();
 
+        planChargeBean.vientDEtreModifie();
+        getSuiviActionsUtilisateur().push(new ModificationDateEtat());
+
         ihm.majBarreEtat();
     }
 
@@ -354,6 +363,10 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
 
         ihm.definirDateEtat(dateEtat);
+        definirNomsPeriodes();
+
+        planChargeBean.vientDEtreModifie();
+        getSuiviActionsUtilisateur().push(new ModificationDateEtat());
 
         ihm.majBarreEtat();
     }
@@ -378,6 +391,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         super.ajouterTache(event);
 
         planChargeBean.vientDEtreModifie();
+        getSuiviActionsUtilisateur().push(new AjoutTache());
 
         ihm.majBarreEtat();
 //        return planifBean;
@@ -386,20 +400,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @Override
     PlanificationBean nouveauBean() throws IhmException {
 
-        TacheBean tacheBean = new TacheBean(
-                idTacheSuivant(),
-                null,
-                null,
-                "(pas de ticket IDAL)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                0.0,
-                null,
-                null
-        );
+        TacheBean tacheBean = ihm.getTachesController().nouveauBean();
 
         assert planChargeBean.getDateEtat() != null;
         List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);

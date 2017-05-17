@@ -392,6 +392,4 @@ public class PlanChargeIhm extends Application {
     public void majBarreEtat() {
         getApplicationController().majBarreEtat();
     }
-
-
 }

@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
@@ -18,8 +19,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.Region;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +35,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 public class ApplicationController extends AbstractController {
 
@@ -94,11 +97,13 @@ public class ApplicationController extends AbstractController {
     private String moduleCourant;
 */
 
+
     // Les services métier :
 
 //    @Autowired
     @NotNull
     private PlanChargeService planChargeService = PlanChargeService.instance();
+
 
     // Les données métier :
 
@@ -146,6 +151,7 @@ public class ApplicationController extends AbstractController {
         }
 */
 
+/*
         // Cf. http://stackoverflow.com/questions/26915259/javafx-setting-a-tab-mnemonics
         {
             Button fakeLabel = new Button("_" + disponibilitesTab.getText());
@@ -177,6 +183,7 @@ public class ApplicationController extends AbstractController {
                 gestionTabPane.getSelectionModel().select(chargesTab);
             });
         }
+*/
 
         planChargeBean.getPlanificationsBeans().addListener(
                 (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
@@ -257,6 +264,7 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreCharge();
 
             ihm.getTachesController().populerReferentiels();
+            ihm.getTachesController().populerFiltres();
 
             ihm.definirDateEtat(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
@@ -296,6 +304,7 @@ public class ApplicationController extends AbstractController {
 
             planChargeService.sauver(planCharge);
 
+            getSuiviActionsUtilisateur().push(new SauvegardePlanCharge());
             planChargeBean.vientDEtreSauvegarde();
 
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
@@ -378,6 +387,7 @@ public class ApplicationController extends AbstractController {
         }
 
         planChargeBean.vientDEtreModifie();
+        getSuiviActionsUtilisateur().push(new ImportTaches());
 
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
@@ -469,6 +479,7 @@ public class ApplicationController extends AbstractController {
         planificationsBeans.setAll(planifBeans);
 
         planChargeBean.vientDEtreModifie();
+        getSuiviActionsUtilisateur().push(new ImportPlanCharge());
 
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
@@ -518,7 +529,7 @@ public class ApplicationController extends AbstractController {
      */
     @FXML
     private void annuler(@SuppressWarnings("unused") ActionEvent event) {
-        LOGGER.debug("> Editer > annuler");
+        LOGGER.debug("> Editer > Annuler");
         // TODO FDA 2017/03 Coder.
         throw new NotImplementedException();
     }
@@ -530,7 +541,7 @@ public class ApplicationController extends AbstractController {
      */
     @FXML
     private void refaire(@SuppressWarnings("unused") ActionEvent event) {
-        LOGGER.debug("> Editer > refaire");
+        LOGGER.debug("> Editer > Refaire");
         // TODO FDA 2017/03 Coder.
         throw new NotImplementedException();
     }
@@ -588,6 +599,7 @@ public class ApplicationController extends AbstractController {
 //        applicationView.setCenter(disponibilitesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(disponibilitesTab);
+        getSuiviActionsUtilisateur().push(new AffichageModuleDisponibilites());
 //        moduleCourant = "Disponibilités";
 //        ihm.majTitre();
     }
@@ -597,6 +609,7 @@ public class ApplicationController extends AbstractController {
 //        applicationView.setCenter(tachesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(tachesTab);
+        getSuiviActionsUtilisateur().push(new AffichageModuleTaches());
 //        moduleCourant = "Tâches";
 //        ihm.majTitre();
     }
@@ -606,6 +619,7 @@ public class ApplicationController extends AbstractController {
 //        applicationView.setCenter(chargesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(chargesTab);
+        getSuiviActionsUtilisateur().push(new AffichageModuleCharges());
 //        moduleCourant = "Charges";
 //        ihm.majTitre();
     }
