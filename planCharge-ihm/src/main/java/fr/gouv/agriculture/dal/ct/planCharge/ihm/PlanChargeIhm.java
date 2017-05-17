@@ -10,8 +10,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -27,6 +29,7 @@ import java.io.StringWriter;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class PlanChargeIhm extends Application {
 
@@ -209,14 +212,34 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    public void afficherPopUp(Alert.AlertType type, String titre, String message) {
-        afficherPopUp(type, titre, message, Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100));
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message) {
+        return afficherPopUp(type,
+                titre, message,
+                Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
+                null
+        );
     }
 
-    public void afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, ButtonType boutonParDefaut, ButtonType... bouttons) {
+        return afficherPopUp(type,
+                titre, message,
+                Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
+                boutonParDefaut, bouttons
+        );
+    }
+
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
+        return afficherPopUp(type,
+                titre, message,
+                width, height,
+                null
+        );
+    }
+
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
         Alert popUp = new Alert(type);
+
         popUp.setTitle(type.name());
-        popUp.setResizable(true);
         popUp.setHeaderText(titre);
         popUp.setContentText(message);
 /*
@@ -226,12 +249,23 @@ public class PlanChargeIhm extends Application {
         webView.setPrefSize(width, height);
         popUp.getDialogPane().setContent(webView);
 */
+
         popUp.getButtonTypes().setAll(ButtonType.OK);
+        popUp.getButtonTypes().addAll(buttons);
+        popUp.getButtonTypes()
+                .forEach(buttonType -> {
+                    Button bouton = (Button) popUp.getDialogPane().lookupButton(buttonType);
+                    bouton.setDefaultButton(buttonType == boutonParDefaut);
+                });
+
         popUp.getDialogPane().setPrefWidth(width);
         popUp.getDialogPane().setPrefHeight(height);
+        popUp.setResizable(true);
+
         Stage popUpStage = (Stage) popUp.getDialogPane().getScene().getWindow();
         popUpStage.getIcons().addAll(primaryStage.getIcons());
-        popUp.showAndWait();
+
+        return popUp.showAndWait();
     }
 
 /*
@@ -277,8 +311,9 @@ public class PlanChargeIhm extends Application {
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {
-            LOGGER.error("Impossible de démarrer l'IHM.", e);
-            throw e;
+            String erreur = "Impossible de démarrer l'IHM.";
+            LOGGER.error(erreur, e);
+            throw new Exception(erreur, e);
         }
     }
 

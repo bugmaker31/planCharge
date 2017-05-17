@@ -19,11 +19,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ApplicationController extends AbstractController {
 
@@ -100,14 +97,14 @@ public class ApplicationController extends AbstractController {
 
     // Les services métier :
 
-//    @Autowired
+    //    @Autowired
     @NotNull
     private PlanChargeService planChargeService = PlanChargeService.instance();
 
 
     // Les données métier :
 
-//    @Autowired
+    //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
@@ -260,11 +257,17 @@ public class ApplicationController extends AbstractController {
         try {
 
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
+
             planChargeBean.init(planCharge);
+
             planChargeBean.vientDEtreCharge();
+            getSuiviActionsUtilisateur().push(new ChargementPlanCharge());
 
             ihm.getTachesController().populerReferentiels();
+            ihm.getChargesController().populerReferentiels();
+
             ihm.getTachesController().populerFiltres();
+            ihm.getChargesController().populerFiltres();
 
             ihm.definirDateEtat(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
@@ -304,8 +307,8 @@ public class ApplicationController extends AbstractController {
 
             planChargeService.sauver(planCharge);
 
-            getSuiviActionsUtilisateur().push(new SauvegardePlanCharge());
             planChargeBean.vientDEtreSauvegarde();
+            getSuiviActionsUtilisateur().push(new SauvegardePlanCharge());
 
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
@@ -499,6 +502,26 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void quitter(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Quitter");
+
+        // TODO FDA 2017/05 Tester.
+        if (planChargeBean.necessiteEtreSauvegarde()) {
+            Optional<ButtonType> result = ihm.afficherPopUp(
+                    Alert.AlertType.CONFIRMATION,
+                    "Quitter sans sauvergarder ?",
+                    "Des données ont été modifiées. Si vous quittez sans sauvegarder, ces modifications seront perdues. Quitter sans sauvegarder auparavant ?",
+                    400, 200,
+                    ButtonType.CANCEL, ButtonType.CANCEL
+            );
+            if (!result.isPresent() || (result.get() == null)) {
+                // Ne devrait jamais arriver (je pense).
+                return;
+            }
+            if (result.get() == ButtonType.CANCEL) {
+                LOGGER.info("Demande de sauvegarde annulée par l'utilisateur, pour éviter de perdre des données.");
+                return;
+            }
+        }
+
         try {
             ihm.stop();
         } catch (Exception e) {

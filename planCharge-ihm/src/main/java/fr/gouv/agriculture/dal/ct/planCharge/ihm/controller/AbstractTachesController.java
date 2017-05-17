@@ -11,8 +11,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -44,9 +42,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
 
+/*
     //    @Autowired
     @NotNull
-    private PlanChargeBean planChargeBean =PlanChargeBean.instance();
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+*/
 
     //    @Autowired
     @NotNull
