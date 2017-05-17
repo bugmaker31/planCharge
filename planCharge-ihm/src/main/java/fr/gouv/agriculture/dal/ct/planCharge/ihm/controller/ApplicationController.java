@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class ApplicationController extends AbstractController {
 
@@ -73,10 +74,6 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private Tab chargesTab;
 
-    @FXML
-    @NotNull
-    private Region disponibilitesView;
-
 
     // La barre d'état :
 
@@ -98,11 +95,13 @@ public class ApplicationController extends AbstractController {
 */
 
     // Les services métier :
+
 //    @Autowired
     @NotNull
     private PlanChargeService planChargeService = PlanChargeService.instance();
 
     // Les données métier :
+
 //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
@@ -117,12 +116,6 @@ public class ApplicationController extends AbstractController {
             throw new IhmException("Instanciation à plus d'1 exemplaire.");
         }
         instance = this;
-    }
-
-
-    @NotNull
-    public Region getDisponibilitesView() {
-        return disponibilitesView;
     }
 
     public void initialize() throws IhmException {
@@ -191,7 +184,7 @@ public class ApplicationController extends AbstractController {
     }
 
 
-/*
+    /*
     Menu "Fichier" :
      */
 

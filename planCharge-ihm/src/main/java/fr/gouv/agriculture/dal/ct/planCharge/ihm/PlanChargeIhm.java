@@ -7,7 +7,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesControl
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +15,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,20 +71,6 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private ModuleChargesController chargesController;
 
-    /*
-     Les services métier :
-      */
-//    @Autowired
-    @NotNull
-    private PlanChargeService planChargeService = PlanChargeService.instance();
-
-    /*
-     Les données métier :
-      */
-//    @Autowired
-    @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }
@@ -107,9 +91,14 @@ public class PlanChargeIhm extends Application {
         return chargesController;
     }
 
+    @NotNull
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+
     public static void main(String[] args) {
         launch(args);
     }
+
 
     /**
      * Constructor
@@ -117,6 +106,7 @@ public class PlanChargeIhm extends Application {
     public PlanChargeIhm() {
         super();
     }
+
 
     @Override
     public void init() throws Exception {
@@ -186,12 +176,18 @@ public class PlanChargeIhm extends Application {
             disponibilitesView = disponibilitesLoader.load();
             disponibilitesController = disponibilitesLoader.getController();
         }
+*/
+        disponibilitesController = ModuleDisponibilitesController.instance();
+/*
         {
             FXMLLoader tachesLoader = new FXMLLoader();
             tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTachesView.fxml"));
             tachesView = tachesLoader.load();
             tachesController = tachesLoader.getController();
         }
+*/
+        tachesController = ModuleTachesController.instance();
+/*
         {
             FXMLLoader chargesLoader = new FXMLLoader();
             chargesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
@@ -199,8 +195,6 @@ public class PlanChargeIhm extends Application {
             chargesController = chargesLoader.getController();
         }
 */
-        disponibilitesController = ModuleDisponibilitesController.instance();
-        tachesController= ModuleTachesController.instance().instance();
         chargesController = ModuleChargesController.instance();
     }
 
@@ -337,7 +331,7 @@ public class PlanChargeIhm extends Application {
 
     */
 
-//    /**
+    //    /**
 //     * Sets the file path of the currently loaded file. The path is persisted in
 //     * the OS specific registry.
 //     *
@@ -398,4 +392,6 @@ public class PlanChargeIhm extends Application {
     public void majBarreEtat() {
         getApplicationController().majBarreEtat();
     }
+
+
 }
