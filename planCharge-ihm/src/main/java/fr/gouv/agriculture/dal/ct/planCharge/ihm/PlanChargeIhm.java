@@ -327,8 +327,7 @@ public class PlanChargeIhm extends Application {
         LOGGER.info("Application en cours d'arrêt...");
         super.stop();
         LOGGER.info("Application arrêtée.");
-//        Platform.exit();
-        System.exit(0);
+        Platform.exit();
     }
 
 /*
