@@ -15,6 +15,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,11 +34,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Created by frederic.danna on 09/04/2017.
+ *
+ * @author frederic.danna
+ */
 public class ApplicationController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
-    private static ApplicationController instance;
+    private static ApplicationController instance = null;
 
     public static ApplicationController instance() {
         return instance;
@@ -47,6 +53,15 @@ public class ApplicationController extends AbstractController {
 
     // Les menus :
 
+    @FXML
+    @NotNull
+    private MenuItem menuAnnuler;
+    @FXML
+    @NotNull
+    private MenuItem menuRetablir;
+    @FXML
+    @NotNull
+    private MenuItem menuRepeter;
 /*
     @FXML
     @NotNull
@@ -120,6 +135,7 @@ public class ApplicationController extends AbstractController {
         instance = this;
     }
 
+
     public void initialize() throws IhmException {
 //        super.initialize();
 
@@ -181,6 +197,8 @@ public class ApplicationController extends AbstractController {
             });
         }
 */
+
+        getSuiviActionsUtilisateur().initialiser(menuAnnuler, menuRetablir, menuRepeter);
 
         planChargeBean.getPlanificationsBeans().addListener(
                 (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
@@ -261,7 +279,7 @@ public class ApplicationController extends AbstractController {
             planChargeBean.init(planCharge);
 
             planChargeBean.vientDEtreCharge();
-            getSuiviActionsUtilisateur().push(new ChargementPlanCharge());
+            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBean));
 
             // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
             ihm.getTachesController().populerReferentiels();
@@ -310,7 +328,7 @@ public class ApplicationController extends AbstractController {
             planChargeService.sauver(planCharge);
 
             planChargeBean.vientDEtreSauvegarde();
-            getSuiviActionsUtilisateur().push(new SauvegardePlanCharge());
+            getSuiviActionsUtilisateur().historiser(new SauvegardePlanCharge());
 
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
@@ -329,7 +347,8 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de sauver le plan de charge",
-                    "Impossible de sauver le plan de charge en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
+                    "Impossible de sauver le plan de charge en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + " : "
+                            + "\n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     500, 200
             );
         }
@@ -382,37 +401,35 @@ public class ApplicationController extends AbstractController {
 
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void majTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
-
-        RapportMajTaches rapportMajTaches;
         try {
             PlanCharge planCharge = planChargeBean.extract();
-            rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
+
+            RapportMajTaches rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ImportTaches());
+
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Tâches mises à jour importées",
+                    "Les tâches ont été mises à jour : "
+                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                            + "\n- nombre de tâches initial : " + rapportMajTaches.getNbrTachePlanifiees()
+                            + "\n- nombre de tâches importées : " + rapportMajTaches.getNbrTachesImportees()
+                            + "\n- nombre de tâches mises à jour : " + rapportMajTaches.getNbrTachesMisesAJour()
+                            + "\n- nombre de tâches ajoutées : " + rapportMajTaches.getNbrTachesAjoutees()
+                            + "\n- nombre de tâches supprimées : " + rapportMajTaches.getNbrTachesSupprimees()
+                            + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
+                    700, 300
+            );
+
+            afficherModuleTaches();
+
+            majBarreEtat();
         } catch (IhmException | ServiceException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
-
-        planChargeBean.vientDEtreModifie();
-        getSuiviActionsUtilisateur().push(new ImportTaches());
-
-        ihm.afficherPopUp(
-                Alert.AlertType.INFORMATION,
-                "Tâches mises à jour importées",
-                "Les tâches ont été mises à jour : "
-                        + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                        + "\n- nombre de tâches initial : " + rapportMajTaches.getNbrTachePlanifiees()
-                        + "\n- nombre de tâches importées : " + rapportMajTaches.getNbrTachesImportees()
-                        + "\n- nombre de tâches mises à jour : " + rapportMajTaches.getNbrTachesMisesAJour()
-                        + "\n- nombre de tâches ajoutées : " + rapportMajTaches.getNbrTachesAjoutees()
-                        + "\n- nombre de tâches supprimées : " + rapportMajTaches.getNbrTachesSupprimees()
-                        + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
-                700, 300
-        );
-
-        afficherModuleTaches();
-
-        majBarreEtat();
     }
-
 
     @FXML
     private void importerPlanChargeDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
@@ -462,43 +479,43 @@ public class ApplicationController extends AbstractController {
 
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
-        PlanCharge planCharge;
         try {
-            planCharge = planChargeService.importerDepuisCalc(ficCalc);
-        } catch (ServiceException e) {
+
+            PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc);
+
+            ihm.definirDateEtat(planCharge.getDateEtat());
+
+            List<PlanificationBean> planifBeans = new ArrayList<>();
+            for (Tache tache : planCharge.getPlanifications().taches()) {
+                Map<LocalDate, Double> calendrier;
+                try {
+                    calendrier = planCharge.getPlanifications().calendrier(tache);
+                } catch (TacheSansPlanificationException e) {
+                    throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
+                }
+                planifBeans.add(new PlanificationBean(tache, calendrier));
+            }
+            planificationsBeans.setAll(planifBeans);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
+
+            ihm.afficherPopUp(
+                    Alert.AlertType.INFORMATION,
+                    "Données importées",
+                    "Le plan de charge a été importé : "
+                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                            + "\n- date d'état : " + planChargeBean.getDateEtat()
+                            + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size(),
+                    700, 300
+            );
+
+            afficherModuleCharges();
+
+            majBarreEtat();
+        } catch (ServiceException | IhmException e) {
             throw new ControllerException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
-
-        ihm.definirDateEtat(planCharge.getDateEtat());
-
-        List<PlanificationBean> planifBeans = new ArrayList<>();
-        for (Tache tache : planCharge.getPlanifications().taches()) {
-            Map<LocalDate, Double> calendrier;
-            try {
-                calendrier = planCharge.getPlanifications().calendrier(tache);
-            } catch (TacheSansPlanificationException e) {
-                throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
-            }
-            planifBeans.add(new PlanificationBean(tache, calendrier));
-        }
-        planificationsBeans.setAll(planifBeans);
-
-        planChargeBean.vientDEtreModifie();
-        getSuiviActionsUtilisateur().push(new ImportPlanCharge());
-
-        ihm.afficherPopUp(
-                Alert.AlertType.INFORMATION,
-                "Données importées",
-                "Le plan de charge a été importé : "
-                        + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                        + "\n- date d'état : " + planChargeBean.getDateEtat()
-                        + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size(),
-                700, 300
-        );
-
-        afficherModuleCharges();
-
-        majBarreEtat();
     }
 
     @FXML
@@ -547,26 +564,55 @@ public class ApplicationController extends AbstractController {
      */
 
     /**
-     * Undo
+     * Annuler (undo)
      *
      * @param event
      */
     @FXML
-    private void annuler(@SuppressWarnings("unused") ActionEvent event) {
+    private void annuler(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Annuler");
+        try {
+            assert !getSuiviActionsUtilisateur().auDebut();
+            undo(getSuiviActionsUtilisateur().actionCourante());
+            getSuiviActionsUtilisateur().revenirActionPrecedente();
+        } catch (IhmException e) {
+            throw new Exception("Impossible d'annuler l'action de l'utilisateur.", e);
+        }
+    }
+
+    private void undo(@NotNull ActionUtilisateur actionUtilisateur) {
+        LOGGER.debug("undo {}", actionUtilisateur.toString());
         // TODO FDA 2017/03 Coder.
+//        throw new NotImplementedException();
+    }
+
+    /**
+     * Rétablir (redo)
+     *
+     * @param event
+     */
+    @FXML
+    private void retablir(@SuppressWarnings("unused") ActionEvent event) {
+        LOGGER.debug("> Editer > Rétablir");
+
+        // TODO FDA 2017/03 Coder.
+        getSuiviActionsUtilisateur();
+
         throw new NotImplementedException();
     }
 
     /**
-     * Redo
+     * Répéter
      *
      * @param event
      */
     @FXML
-    private void refaire(@SuppressWarnings("unused") ActionEvent event) {
-        LOGGER.debug("> Editer > Refaire");
+    private void repeter(@SuppressWarnings("unused") ActionEvent event) {
+        LOGGER.debug("> Editer > Répéter");
+
         // TODO FDA 2017/03 Coder.
+        getSuiviActionsUtilisateur();
+
         throw new NotImplementedException();
     }
 
@@ -581,17 +627,20 @@ public class ApplicationController extends AbstractController {
     private void afficherModuleDisponibilites(ActionEvent event) {
         LOGGER.debug("> Disponibilites");
         afficherModuleDisponibilites();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites());
     }
 
     @FXML
     private void afficherModuleTaches(ActionEvent event) {
         LOGGER.debug("> Tâches");
         afficherModuleTaches();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches());
     }
 
     @FXML
     private void afficherModuleCharges(ActionEvent event) {
         afficherModuleCharges();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges());
     }
 
     private void afficherModuleCharges() {
@@ -623,7 +672,6 @@ public class ApplicationController extends AbstractController {
 //        applicationView.setCenter(disponibilitesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(disponibilitesTab);
-        getSuiviActionsUtilisateur().push(new AffichageModuleDisponibilites());
 //        moduleCourant = "Disponibilités";
 //        ihm.majTitre();
     }
@@ -633,7 +681,6 @@ public class ApplicationController extends AbstractController {
 //        applicationView.setCenter(tachesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(tachesTab);
-        getSuiviActionsUtilisateur().push(new AffichageModuleTaches());
 //        moduleCourant = "Tâches";
 //        ihm.majTitre();
     }
@@ -643,7 +690,6 @@ public class ApplicationController extends AbstractController {
 //        applicationView.setCenter(chargesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(chargesTab);
-        getSuiviActionsUtilisateur().push(new AffichageModuleCharges());
 //        moduleCourant = "Charges";
 //        ihm.majTitre();
     }

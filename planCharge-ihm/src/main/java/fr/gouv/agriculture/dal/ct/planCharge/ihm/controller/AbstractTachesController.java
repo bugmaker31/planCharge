@@ -132,28 +132,25 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return chargeColumn;
     }
 
-    protected void ajouterTache(ActionEvent event) {
+    protected void ajouterTache(ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
             TB nouvTache = nouveauBean();
             getTachesBeans().add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
-            getTachesTable().scrollTo(nouvTache);
+            int noLigNouvTache = getTachesTable().getItems().size();
+            getTachesTable().scrollTo(noLigNouvTache - 1);
             getTachesTable().scrollToColumn(descriptionColumn);
-            getTachesTable().getSelectionModel().select(nouvTache);
-//            getTachesTable().getSelectionModel().select(getTachesTable().getItems().size() - 1, descriptionColumn);
-            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
+            getTachesTable().getSelectionModel().select(noLigNouvTache - 1);
+            // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
+//            getTachesTable().getSelectionModel().select(noLigNouvTache - 1, descriptionColumn);
+//            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn);
+            getTachesTable().edit(noLigNouvTache - 1, descriptionColumn);
 
 //        return nouvTache;
         } catch (IhmException e) {
-            LOGGER.error("Impossible d'ajouter une tâche.", e);
-            ihm.afficherPopUp(
-                    Alert.AlertType.WARNING,
-                    "Impossible d'ajouter une tâche",
-                    "Impossible d'ajouter une tâche : " + e.getLocalizedMessage(),
-                    500, 200
-            );
+            throw new Exception("Impossible d'ajouter une tâche.", e);
         }
     }
 
@@ -246,7 +243,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             // 1. Wrap the ObservableList in a FilteredList
             FilteredList<TB> filteredTaches = new FilteredList<>(getTachesBeans());
             // 2. Set the filter Predicate whenever the filter changes.
-            ajouterListenersSurFiltres(filteredTaches);
+            enregistrerListenersSurFiltres(filteredTaches);
             // 3. Wrap the FilteredList in a SortedList.
             SortedList<TB> sortedPlanifBeans = new SortedList<>(filteredTaches);
             // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
@@ -254,10 +251,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             // 5. Add sorted (and filtered) data to the table.
             getTachesTable().setItems(sortedPlanifBeans);
         });
+
         LOGGER.debug("Initialisé.");
     }
 
-    void ajouterListenersSurFiltres(FilteredList<TB> filteredTaches) {
+    private void enregistrerListenersSurFiltres(FilteredList<TB> filteredTaches) {
+        LOGGER.debug("enregistrerListenersSurFiltres...");
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
@@ -314,7 +313,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreCategoriesField.getCheckModel().getCheckedItems().addListener(
                 (ListChangeListener<String>) change -> {
                     LOGGER.debug("Changement pour le filtre des catégories...");
-//                    change.reset();
                     filteredTaches.setPredicate(tache -> {
                         for (String categorieSelectionnee : change.getList()) {
                             if (!tache.codeCategorieProperty().isEmpty().get() && tache.matcheCategorie(categorieSelectionnee)) {
@@ -328,7 +326,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreSousCategoriesField.getCheckModel().getCheckedItems().addListener(
                 (ListChangeListener<String>) change -> {
                     LOGGER.debug("Changement pour le filtre des sous-catégories...");
-//                    change.reset();
                     filteredTaches.setPredicate(tache -> {
                         for (String sousCategorieSelectionnee : change.getList()) {
                             if (!tache.codeSousCategorieProperty().isEmpty().get() && tache.matcheSousCategorie(sousCategorieSelectionnee)) {
@@ -443,7 +440,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         filtreProjetsApplisField.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
             LOGGER.debug("Changement pour le filtre des projets/applis...");
-//                    change.reset();
             filteredTaches.setPredicate(tache -> {
                 for (String codeProjetAppliSelectionne : change.getList()) {
                     if (!tache.codeProjetAppliProperty().isEmpty().get() && tache.matcheProjetAppli(codeProjetAppliSelectionne)) {
@@ -455,7 +451,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         filtreImportancesField.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
             LOGGER.debug("Changement pour le filtre des importances...");
-//                    change.reset();
             filteredTaches.setPredicate(tache -> {
                 for (String codeImportanceSelectionne : change.getList()) {
                     if (!tache.codeImportanceProperty().isNull().get() && tache.matcheImportance(codeImportanceSelectionne)) {
@@ -467,7 +462,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         filtreRessourcesField.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
             LOGGER.debug("Changement pour le filtre des ressources...");
-//                    change.reset();
             filteredTaches.setPredicate(tache -> {
                 for (String codeRessourceSelectionne : change.getList()) {
                     if (!tache.codeRessourceProperty().isEmpty().get() && tache.matcheRessource(codeRessourceSelectionne)) {
@@ -479,7 +473,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         filtreProfilsField.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) change -> {
             LOGGER.debug("Changement pour le filtre des profils...");
-//                    change.reset();
             filteredTaches.setPredicate(tache -> {
                 for (String codeProfilSelectionne : change.getList()) {
                     if (!tache.codeProfilProperty().isEmpty().get() && tache.matcheProfil(codeProfilSelectionne)) {
@@ -576,6 +569,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreCategoriesField.getCheckModel().checkAll();
     }
 
@@ -588,6 +582,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreSousCategoriesField.getCheckModel().checkAll();
     }
 
@@ -600,6 +595,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreProjetsApplisField.getCheckModel().checkAll();
     }
 
@@ -612,6 +608,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreImportancesField.getCheckModel().checkAll();
     }
 
@@ -624,6 +621,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreRessourcesField.getCheckModel().checkAll();
     }
 
@@ -636,6 +634,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreProfilsField.getCheckModel().checkAll();
     }
 

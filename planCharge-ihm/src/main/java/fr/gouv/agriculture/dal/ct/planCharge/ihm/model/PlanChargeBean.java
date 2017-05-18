@@ -96,7 +96,7 @@ Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners 
     public void init(PlanCharge planCharge) {
         dateEtat = planCharge.getDateEtat();
         planificationsBeans.setAll(
-                planCharge.getPlanifications().entrySet().stream()
+                planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationBean(planif.getKey(), planif.getValue()))
                         .collect(Collectors.toList())
         );

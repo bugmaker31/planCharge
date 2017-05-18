@@ -58,7 +58,7 @@
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
-                <Button text="Ajouter"/>
+                <Button text="Ajouter" onAction="#ajouterRessource"/>
             </children>
         </AnchorPane>
     </bottom>

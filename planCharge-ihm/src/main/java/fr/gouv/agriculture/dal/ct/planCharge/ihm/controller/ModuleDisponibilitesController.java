@@ -1,10 +1,12 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 /**
  * Created by frederic.danna on 26/03/2017.
+ * @author frederic.danna
  */
 public class ModuleDisponibilitesController extends AbstractController {
 
@@ -33,5 +35,9 @@ public class ModuleDisponibilitesController extends AbstractController {
     @FXML
     void initialize() throws IhmException {
         // Rien... pour l'instant.
+    }
+
+    public void ajouterRessource(@SuppressWarnings("unused") ActionEvent actionEvent) {
+
     }
 }

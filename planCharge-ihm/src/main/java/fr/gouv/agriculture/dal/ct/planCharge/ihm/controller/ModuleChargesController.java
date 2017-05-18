@@ -33,6 +33,8 @@ import java.util.List;
 
 /**
  * Created by frederic.danna on 26/03/2017.
+ *
+ * @author frederic.danna
  */
 public class ModuleChargesController extends AbstractTachesController<PlanificationBean> {
 
@@ -328,73 +330,85 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
     @FXML
-    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) {
+    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("definirDateEtat...");
+        try {
+            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
 
-        LocalDate dateEtat = dateEtatPicker.getValue();
-        if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-            dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
-            dateEtatPicker.setValue(dateEtat);
+            LocalDate dateEtat = dateEtatPicker.getValue();
+            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                dateEtatPicker.setValue(dateEtat);
+            }
+
+            ihm.definirDateEtat(dateEtat);
+            definirNomsPeriodes();
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+            ihm.majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de définir la date d'état.", e);
         }
-
-        ihm.definirDateEtat(dateEtat);
-        definirNomsPeriodes();
-
-        planChargeBean.vientDEtreModifie();
-        getSuiviActionsUtilisateur().push(new ModificationDateEtat());
-
-        ihm.majBarreEtat();
     }
 
     @FXML
-    private void positionnerDateEtatAuLundiSuivant(@SuppressWarnings("unused") ActionEvent event) {
+    private void positionnerDateEtatAuLundiSuivant(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("positionnerDateEtatAuLundiSuivant...");
 
-        LocalDate dateEtat;
-        if (planChargeBean.getDateEtat() == null) {
-            dateEtat = LocalDate.now();
-            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+        try {
+            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
+
+            LocalDate dateEtat;
+            if (planChargeBean.getDateEtat() == null) {
+                dateEtat = LocalDate.now();
+                if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                    dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                }
+            } else {
+                assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
+                dateEtat = planChargeBean.getDateEtat().plusDays(7);
             }
-        } else {
-            assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
-            dateEtat = planChargeBean.getDateEtat().plusDays(7);
+            assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
+
+            ihm.definirDateEtat(dateEtat);
+            definirNomsPeriodes();
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+            ihm.majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de se positionner au lundi suivant.", e);
         }
-        assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
-
-        ihm.definirDateEtat(dateEtat);
-        definirNomsPeriodes();
-
-        planChargeBean.vientDEtreModifie();
-        getSuiviActionsUtilisateur().push(new ModificationDateEtat());
-
-        ihm.majBarreEtat();
     }
 
     @FXML
     @Override
-    protected void ajouterTache(@SuppressWarnings("unused") ActionEvent event) {
+    protected void ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
+        try {
+            if (planChargeBean.getDateEtat() == null) {
+                LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
+                ihm.afficherPopUp(
+                        Alert.AlertType.WARNING,
+                        "Impossible d'ajouter une tâche",
+                        "Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.",
+                        500, 200
+                );
+                return;
+            }
 
-        if (planChargeBean.getDateEtat() == null) {
-            LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
-            ihm.afficherPopUp(
-                    Alert.AlertType.WARNING,
-                    "Impossible d'ajouter une tâche",
-                    "Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.",
-                    500, 200
-            );
-            return;
+            super.ajouterTache(event);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new AjoutTache());
+
+            ihm.majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible d'ajouter une tâche.", e);
         }
-
-        /*PlanificationBean planifBean = */
-        super.ajouterTache(event);
-
-        planChargeBean.vientDEtreModifie();
-        getSuiviActionsUtilisateur().push(new AjoutTache());
-
-        ihm.majBarreEtat();
-//        return planifBean;
     }
 
     @Override

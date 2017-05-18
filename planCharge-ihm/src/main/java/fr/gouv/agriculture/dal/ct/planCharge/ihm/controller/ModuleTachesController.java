@@ -8,7 +8,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,8 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Created by frederic.danna on 26/03/2017.
+ *
+ * @author frederic.danna
  */
 public class ModuleTachesController extends AbstractTachesController<TacheBean> {
 
@@ -38,7 +39,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
 
     @NotNull
     @FXML
-    private TableView<TacheBean>  tachesTable;
+    private TableView<TacheBean> tachesTable;
 
     /*
      La couche métier :
@@ -49,7 +50,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
     @SuppressWarnings("unchecked")
     @NotNull
-    private ObservableList<TacheBean> planificationsBeans = (ObservableList)planChargeBean.getPlanificationsBeans();
+    private ObservableList<TacheBean> planificationsBeans = (ObservableList) planChargeBean.getPlanificationsBeans();
 
 
     /**
@@ -93,17 +94,18 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     // Surchargée juste pour pouvoir ajouter le @FXML.
     @FXML
     @Override
-    protected void ajouterTache(ActionEvent event) {
+    protected void ajouterTache(ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
+        try {
+            super.ajouterTache(event);
 
-        super.ajouterTache(event);
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new AjoutTache());
 
-        planChargeBean.vientDEtreModifie();
-        getSuiviActionsUtilisateur().push(new AjoutTache());
-
-        ihm.majBarreEtat();
-
-        LOGGER.debug("ajouterTache.");
+            ihm.majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible d'ajouter une tâche.", e);
+        }
     }
 
     @Override

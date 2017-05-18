@@ -10,7 +10,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -403,10 +402,6 @@ public class PlanChargeIhm extends Application {
             titre += (" - " + moduleCourant);
         }
 */
-        definirTitre(titre);
-    }
-
-    private void definirTitre(@Null String titre) {
         primaryStage.setTitle(titre);
     }
 

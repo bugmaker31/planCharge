@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
@@ -26,8 +25,9 @@
                 <MenuItem text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Editer">
-                <MenuItem accelerator="Shortcut+Z" onAction="#annuler" text="_Annuler/Défaire"/>
-                <MenuItem accelerator="Shortcut+Shift+Y" onAction="#refaire" text="_Refaire"/>
+                <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
+                <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
+                <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
             </Menu>
             <Menu text="_Suivi" disable="true"/>
             <Menu text="_Référentiels">
@@ -70,7 +70,7 @@
     <center>
         <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
             <Tab fx:id="disponibilitesTab" text="Disponibilités">
-                <fx:include fx:id="disponibilitesView" source="ModuleDisponibilitesView.fxml"/>
+                <fx:include source="ModuleDisponibilitesView.fxml"/>
             </Tab>
             <Tab fx:id="tachesTab" text="Tâches">
                 <fx:include source="ModuleTachesView.fxml"/>
