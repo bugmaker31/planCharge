@@ -220,7 +220,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
-                    e.getLocalizedMessage(),
+                    "Impossible de charger le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     400, 200
             );
         }
@@ -262,7 +262,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
-                    e.getLocalizedMessage(),
+                    "Impossible de charger le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     400, 200
             );
         }
@@ -346,9 +346,8 @@ public class ApplicationController extends AbstractController {
             LOGGER.error("Impossible de sauver le plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible de sauver le plan de charge",
-                    "Impossible de sauver le plan de charge en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + " : "
-                            + "\n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
+                    "Impossible de sauver",
+                    "Impossible de sauver le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     500, 200
             );
         }
@@ -364,7 +363,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer les tâches",
-                    e.getLocalizedMessage(),
+                    "Impossible d'importer les tâches : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     400, 200
             );
         }
@@ -441,7 +440,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer le plan de charge",
-                    e.getLocalizedMessage(),
+                    "Impossible d'importer le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     400, 200
             );
         }
@@ -547,7 +546,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de stopper l'application",
-                    "Erreur interne : " + e.getLocalizedMessage()
+                    "Impossible de stopper l'application, erreur interne : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage()
             );
         }
     }
