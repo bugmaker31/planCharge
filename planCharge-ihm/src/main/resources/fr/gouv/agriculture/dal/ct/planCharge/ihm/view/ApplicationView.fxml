@@ -13,20 +13,24 @@
         <MenuBar BorderPane.alignment="CENTER">
             <Menu text="_Fichier">
                 <MenuItem onAction="#charger" text="_Charger..."/>
-                <Menu text="_Importer...">
+                <Menu text="_Importer">
                     <MenuItem onAction="#majTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
                     <MenuItem onAction="#importerPlanChargeDepuisCalc"
                               text="Importer un plan de _charge depuis Calc..."/>
                 </Menu>
-                <MenuItem text="_Sauver..." onAction="#sauver" accelerator="Shortcut+S"/>
+                <MenuItem text="_Sauver" onAction="#sauver" accelerator="Shortcut+S"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="_Préférences..." onAction="#afficherPreferences" disable="true"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
             </Menu>
-            <Menu mnemonicParsing="false" text="Editer">
+            <Menu fx:id="menuEditer" text="Editer" mnemonicParsing="false">
                 <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
+                <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à" /> <!-- Sera populé par l'application.-->
+                <SeparatorMenuItem fx:id="separateurMenusAnnuler"/> <!--On met un séparateur car l'application ajoute dynamiquement des sous-menus.-->
                 <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
+                <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
+                <SeparatorMenuItem  fx:id="separateurMenusRetablir"/> <!--On met un séparateur car l'application ajoute dynamiquement des sous-menus.-->
                 <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
             </Menu>
             <Menu text="_Suivi" disable="true"/>
@@ -36,7 +40,7 @@
                 <MenuItem disable="true" text="_Ressources"/>
                 <MenuItem disable="true" text="_Profils"/>
                 <SeparatorMenuItem/>
-                <MenuItem disable="true" text="_Projets/Applis"/>
+                <MenuItem disable="true" text="Projets/_Applis"/>
                 <MenuItem disable="true" text="_Importances"/>
             </Menu>
             <!--
@@ -59,11 +63,10 @@
                                 </items>
                             </Menu>
             -->
-            <Menu disable="true" mnemonicParsing="false" text="TODOs">
-                <MenuItem mnemonicParsing="false" text="Action 1"/>
+            <Menu text="TODOs" disable="true" mnemonicParsing="false">
             </Menu>
             <Menu mnemonicParsing="false" text="Aide">
-                <MenuItem mnemonicParsing="false" onAction="#aPropos" text="A propos"/>
+                <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
             </Menu>
         </MenuBar>
     </top>

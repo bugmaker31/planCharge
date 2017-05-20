@@ -55,10 +55,25 @@ public class ApplicationController extends AbstractController {
 
     @FXML
     @NotNull
+    private Menu menuEditer;
+    @FXML
+    @NotNull
     private MenuItem menuAnnuler;
     @FXML
     @NotNull
+    private Menu sousMenuAnnuler;
+    @FXML
+    @NotNull
+    private SeparatorMenuItem separateurMenusAnnuler;
+    @FXML
+    @NotNull
     private MenuItem menuRetablir;
+    @FXML
+    @NotNull
+    private Menu sousMenuRetablir;
+    @FXML
+    @NotNull
+    private SeparatorMenuItem separateurMenusRetablir;
     @FXML
     @NotNull
     private MenuItem menuRepeter;
@@ -198,7 +213,12 @@ public class ApplicationController extends AbstractController {
         }
 */
 
-        getSuiviActionsUtilisateur().initialiser(menuAnnuler, menuRetablir, menuRepeter);
+        getSuiviActionsUtilisateur().initialiser(
+                menuEditer,
+                menuAnnuler, sousMenuAnnuler, separateurMenusAnnuler,
+                menuRetablir, sousMenuRetablir, separateurMenusRetablir,
+                menuRepeter
+        );
 
         planChargeBean.getPlanificationsBeans().addListener(
                 (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
@@ -572,15 +592,15 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Editer > Annuler");
         try {
             assert !getSuiviActionsUtilisateur().auDebut();
-            undo(getSuiviActionsUtilisateur().actionCourante());
-            getSuiviActionsUtilisateur().revenirActionPrecedente();
+            annuler(getSuiviActionsUtilisateur().actionCourante());
+            getSuiviActionsUtilisateur().actionPrecedente();
         } catch (IhmException e) {
             throw new Exception("Impossible d'annuler l'action de l'utilisateur.", e);
         }
     }
 
-    private void undo(@NotNull ActionUtilisateur actionUtilisateur) {
-        LOGGER.debug("undo {}", actionUtilisateur.toString());
+    private void annuler(@NotNull ActionUtilisateur actionUtilisateur) {
+        LOGGER.debug("annuler {}", actionUtilisateur.toString());
         // TODO FDA 2017/03 Coder.
 //        throw new NotImplementedException();
     }
@@ -591,13 +611,21 @@ public class ApplicationController extends AbstractController {
      * @param event
      */
     @FXML
-    private void retablir(@SuppressWarnings("unused") ActionEvent event) {
+    private void retablir(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Rétablir");
+        try {
+            assert !getSuiviActionsUtilisateur().aLaFin();
+            getSuiviActionsUtilisateur().actionSuivante();
+            retablir(getSuiviActionsUtilisateur().actionCourante());
+        } catch (IhmException e) {
+            throw new Exception("Impossible de rétablir l'action de l'utilisateur.", e);
+        }
+    }
 
-        // TODO FDA 2017/03 Coder.
-        getSuiviActionsUtilisateur();
-
-        throw new NotImplementedException();
+    private void retablir(ActionUtilisateur actionUtilisateur) {
+        LOGGER.debug("retablir {}", actionUtilisateur.toString());
+        // TODO FDA 2017/05 Coder.
+//        throw new NotImplementedException();
     }
 
     /**
