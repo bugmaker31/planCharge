@@ -38,7 +38,7 @@
                         <directory>${libreoffice.program.dir}</directory>
                         <includes>
                             <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
-                            <!--<include>soffice.exe</include>-->
+                            <include>soffice.exe</include>
                         </includes>
                     </resource>
 <!--
