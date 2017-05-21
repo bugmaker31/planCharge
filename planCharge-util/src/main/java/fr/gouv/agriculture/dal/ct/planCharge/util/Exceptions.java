@@ -1,9 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.util;
 
 /**
- * Created by Fred on 19/05/2017.
+ * Created by frederic.danna on 19/05/2017.
  *
- * @author Fred
+ * @author frederic.danna
  */
 public class Exceptions {
 

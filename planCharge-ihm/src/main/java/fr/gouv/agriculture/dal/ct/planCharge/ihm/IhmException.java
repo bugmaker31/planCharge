@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 /**
  * Created by frederic.danna on 16/04/2017.
+ * @author frederic.danna
  */
 public class IhmException extends Exception {
     public IhmException(Throwable cause) {
@@ -12,6 +13,7 @@ public class IhmException extends Exception {
         super(message);
     }
 
+    @SuppressWarnings("OverloadedVarargsMethod")
     public IhmException(String message, Object... args) {
         super(String.format(message, args));
     }
@@ -20,6 +22,7 @@ public class IhmException extends Exception {
         super(message, cause);
     }
 
+    @SuppressWarnings("OverloadedVarargsMethod")
     public IhmException(String message, Throwable cause, Object... args) {
         super(String.format(message, args), cause);
     }

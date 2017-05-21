@@ -27,11 +27,13 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
         this.planifications = planifications;
     }
 
-    public PlanCharge(LocalDate dateEtat) {
+    public PlanCharge(@NotNull LocalDate dateEtat) {
         this.dateEtat = dateEtat;
         this.planifications = new Planifications();
     }
 
+    @SuppressWarnings("SuspiciousGetterSetter")
+    @NotNull
     @Override
     public LocalDate getIdentity() {
         return dateEtat;
@@ -49,7 +51,6 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
 
     @NotNull
     public Set<Difference> differencesAvec(@NotNull PlanCharge autrePlan) throws TacheSansPlanificationException {
-        Set<Difference> differences = new HashSet<>();
 
         // On fusionne les 2 ensembles de tâches, pour supprimer les doublons,
         // en faisant bien attention de commencer par ses données plutôt que les
@@ -59,13 +60,16 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
         taches.addAll(autrePlan.getPlanifications().taches());
 
         // On précise/qualifie la différence, pour chaque tâche :
+        Set<Difference> differences = new HashSet<>();
         for (Tache tache : taches) {
 
             Double autreCharge = autrePlan.getPlanifications().chargePlanifiee(tache);
             Double cetteCharge = this.getPlanifications().chargePlanifiee(tache);
 
             Tache autreTache = autrePlan.getPlanifications().tache(tache.getId());
+            assert autreTache != null;
             Tache cetteTache = this.getPlanifications().tache(tache.getId());
+            assert cetteTache != null;
 
             if (autrePlan.getPlanifications().taches().contains(tache) && !this.getPlanifications().taches().contains(tache)) {
                 differences.add(new Difference(tache, StatutDifference.TacheRetiree, autreCharge, cetteCharge, autreTache.getEcheance(), null));

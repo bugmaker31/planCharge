@@ -6,17 +6,17 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{20} [%file:%line] - %msg%n</pattern>
+            <pattern>%date{HH:mm:ss.SSS} %-5level - %msg \(%file:%line\)%n%ex{full}</pattern>
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/${APP_NAME}.log</file>
         <encoder>
-            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level [%thread] %logger{20} [%file:%line] - %msg%n%ex{full}</pattern>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level %logger{20}:%line - %msg%n%ex{full}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOGS_DIR}/${APP_NAME}_%d{yyyy-MM-dd}.txt.zip</fileNamePattern>
+            <fileNamePattern>${LOGS_DIR}/${APP_NAME}_%d{yyyy-MM-dd}.log.zip</fileNamePattern>
         </rollingPolicy>
     </appender>
 

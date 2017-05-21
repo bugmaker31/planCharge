@@ -1,7 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by frederic.danna on 17/05/2017.
@@ -10,18 +13,25 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
  */
 public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
 
-    private PlanChargeBean planChargeBean;
+    private PlanChargeBean planChargeBeanPrecedent;
+
+    //@Autowired
+    @SuppressWarnings("unused")
+    @NotNull
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
 
-    public ChargementPlanCharge(PlanChargeBean planChargeBean) {
+    public ChargementPlanCharge(PlanChargeBean planChargeBeanPrecedent) throws SuiviActionsUtilisateurException {
         super();
-        this.planChargeBean = planChargeBean; // TODO FDA 2017/05 Vraiment besoin de mémoriser tout le plan de charge ?
+        try {
+            this.planChargeBeanPrecedent = planChargeBeanPrecedent.copier(); // TODO FDA 2017/05 Vraiment besoin de mémoriser tout le plan de charge ?
+        } catch (CopieException e) {
+            throw new SuiviActionsUtilisateurException("Impossible de mémoriser le plan de charge.", e);
+        }
     }
 
 
-    public PlanChargeBean getPlanChargeBean() {
-        return planChargeBean;
-    }
+
 
     @Override
     public String getTexte() {
@@ -29,8 +39,12 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
     }
 
     @Override
-    public void annuler() {
-        throw new NotImplementedException();
+    public void annuler() throws AnnulationActionException {
+        try {
+            PlanChargeBean.copier(planChargeBeanPrecedent, planChargeBean);
+        } catch (CopieException e) {
+            throw new AnnulationActionException("Impossible d'annuler l'action {}.", getTexte(), e);
+        }
     }
 
 }

@@ -3,11 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisa
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,10 +170,28 @@ public class SuiviActionsUtilisateur {
     // Délégations à #actionsUtilisateur :
 
     public void historiser(ActionUtilisateur item) throws IhmException {
+        LOGGER.debug("Historisation de l'action '{}' : {}", item.toString(), item.getTexte());
+
+        /*
+        Dès que l'utilisateur fait une action, les éventuelles actions Annulable's deviennent obsolètes.
+        Il faut donc les supprimer ("oublier").
+         */
+        oublierActionsNonRetablies();
+
         actionsUtilisateur.push(item);
         indexActionCourante++;
-        LOGGER.debug("++ {} : {}", item.toString(), item.getTexte());
+        LOGGER.debug("Action '{}' historisée : {}", item.toString(), item.getTexte());
+
         majMenus();
+    }
+
+    private void oublierActionsNonRetablies() {
+        LOGGER.debug("Suppression des actions devenues obsolètes suite à l'action de l'utilisateur :");
+        for (int indexActionAOublier = actionsUtilisateur.size() - 1; indexActionAOublier > indexActionCourante; indexActionAOublier--) {
+            ActionUtilisateur actionAOublier = actionsUtilisateur.get(indexActionAOublier);
+            LOGGER.debug("- action '{}' : {}", actionAOublier.toString(), actionAOublier.getTexte());
+            actionsUtilisateur.removeElementAt(indexActionAOublier);
+        }
     }
 
 }

@@ -1,7 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,7 +13,11 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class AjoutTache extends ModificationPlanification implements ActionAnnulable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AjoutTache.class);
+
 
     private TacheBean tacheBean;
 
@@ -18,9 +25,11 @@ public class AjoutTache extends ModificationPlanification implements ActionAnnul
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
+
     public AjoutTache(TacheBean tacheBean) {
         this.tacheBean = tacheBean;
     }
+
 
     @Override
     public String getTexte() {
@@ -29,6 +38,9 @@ public class AjoutTache extends ModificationPlanification implements ActionAnnul
 
     @Override
     public void annuler() {
+//        LOGGER.debug("Annulation de l'action : {}", getTexte());
+        //noinspection SuspiciousMethodCalls
         planChargeBean.getPlanificationsBeans().remove(tacheBean);
+        LOGGER.debug("Action annulée : {}", getTexte());
     }
 }

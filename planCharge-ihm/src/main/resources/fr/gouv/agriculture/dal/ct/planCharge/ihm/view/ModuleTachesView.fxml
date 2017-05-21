@@ -95,8 +95,7 @@
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
-            <Button alignment="BASELINE_CENTER" mnemonicParsing="false" onAction="#ajouterTache"
-                    text="Ajouter une tâche"/>
+            <Button text="_Ajouter une tâche" mnemonicParsing="false" onAction="#ajouterTache" />
         </AnchorPane>
     </bottom>
 </BorderPane>

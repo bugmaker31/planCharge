@@ -1,7 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -13,10 +15,16 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge {
 
     private LocalDate dateEtatPrecedente;
 
+    //@Autowired
+    @NotNull
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+
     public ModificationDateEtat(LocalDate dateEtatPrecedente) {
         super();
         this.dateEtatPrecedente = dateEtatPrecedente;
     }
+
 
     @Override
     public String getTexte() {
@@ -25,7 +33,7 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge {
 
     @Override
     public void annuler() {
-        throw new NotImplementedException();
+        planChargeBean.setDateEtat(dateEtatPrecedente);
     }
 
 }
