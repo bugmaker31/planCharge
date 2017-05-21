@@ -23,13 +23,13 @@
 }
 
 .incoherence {
-    -fx-background-color:darkred;
+    -fx-background-color: darkred;
     -fx-text-fill: white;
     /*-fx-opacity: 100%;*/
 }
 
 .erreurSaisie {
-    -fx-background-color:darkred;
+    -fx-background-color: darkred;
     -fx-text-fill: white;
 }
 
@@ -39,9 +39,8 @@
 }
 
 .messageErreurSaisie {
-    -fx-background-color:darkred;
+    -fx-background-color: darkred;
     -fx-text-fill: white;
-    -fx-opacity: 50%;
 }
 
 /*
@@ -49,22 +48,26 @@ Tâches
 */
 
 .importanceAvecEngagement {
-    -fx-background-color:darksalmon;
+    -fx-background-color: darksalmon;
     -fx-font-weight: bold;
 }
+
 .importanceMaximale {
-    -fx-background-color:darksalmon;
+    -fx-background-color: darksalmon;
     -fx-font-weight: normal;
 }
+
 .importanceHaute {
-    -fx-background-color:salmon;
+    -fx-background-color: salmon;
     -fx-font-weight: normal;
 }
+
 .importanceNormale {
-    -fx-background-color:inherit;
+    -fx-background-color: inherit;
 }
+
 .importanceBasse {
-    -fx-background-color:lightgray;
+    -fx-background-color: lightgray;
 }
 
 /*
@@ -101,7 +104,7 @@ Plan de charge
 }
 
 .chargeNonPlanifiee {
-    -fx-background-color:lightcoral;
+    -fx-background-color: lightcoral;
     /*-fx-text-fill: white;*/
     /*-fx-opacity: 50%;*/
 }
