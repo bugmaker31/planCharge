@@ -5,13 +5,12 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisa
  *
  * @author frederic.danna
  */
-public abstract class ActionUtilisateur {
+public abstract class ActionUtilisateur implements ActionAnnulable {
 
 
     /**
      * Texte notamment affiché dans les libellés des menus "Annuler", "Rétablir" et "Répéter.
-     * <p/>
-     * Gagne à être surchargé par chaque sous-classe.
+     * <p>Gagne à être surchargé par chaque sous-classe.</p>
      * @return Le texte décrivant cette action.
      */
     public String getTexte() {

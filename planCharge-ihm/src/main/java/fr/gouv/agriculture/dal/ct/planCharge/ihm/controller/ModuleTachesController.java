@@ -94,15 +94,17 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     // Surchargée juste pour pouvoir ajouter le @FXML.
     @FXML
     @Override
-    protected void ajouterTache(ActionEvent event) throws Exception {
+    @NotNull
+    protected TacheBean ajouterTache(ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
-            super.ajouterTache(event);
+            TacheBean tacheBean = super.ajouterTache(event);
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache());
+            getSuiviActionsUtilisateur().historiser(new AjoutTache(tacheBean));
 
             ihm.majBarreEtat();
+            return tacheBean;
         } catch (IhmException e) {
             throw new Exception("Impossible d'ajouter une tâche.", e);
         }

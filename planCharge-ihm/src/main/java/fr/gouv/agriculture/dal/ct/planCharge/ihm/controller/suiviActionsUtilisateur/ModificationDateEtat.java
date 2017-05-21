@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+
 import java.time.LocalDate;
 
 /**
@@ -9,15 +11,21 @@ import java.time.LocalDate;
  */
 public class ModificationDateEtat extends ModificationUnitairePlanCharge {
 
-    private LocalDate dateEtat;
+    private LocalDate dateEtatPrecedente;
 
-    public ModificationDateEtat(LocalDate dateEtat) {
+    public ModificationDateEtat(LocalDate dateEtatPrecedente) {
         super();
-        this.dateEtat = dateEtat;
+        this.dateEtatPrecedente = dateEtatPrecedente;
     }
 
     @Override
     public String getTexte() {
-        return "la modification de la date d'état (était " + dateEtat + ")";
+        return "la modification de la date d'état (était " + dateEtatPrecedente + ")";
     }
+
+    @Override
+    public void annuler() {
+        throw new NotImplementedException();
+    }
+
 }

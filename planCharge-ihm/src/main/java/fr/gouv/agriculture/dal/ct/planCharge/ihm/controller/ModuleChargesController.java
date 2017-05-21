@@ -394,26 +394,22 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
     @FXML
     @Override
-    protected void ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+    @NotNull
+    protected PlanificationBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
             if (planChargeBean.getDateEtat() == null) {
-                LOGGER.warn("Impossible d'ajouter une tâche car la date d'état n'est pas définie.");
-                ihm.afficherPopUp(
-                        Alert.AlertType.WARNING,
-                        "Impossible d'ajouter une tâche",
-                        "Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.",
-                        500, 200
-                );
-                return;
+                throw new IhmException("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
             }
 
-            super.ajouterTache(event);
+            PlanificationBean planifBean = super.ajouterTache(event);
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache());
+            getSuiviActionsUtilisateur().historiser(new AjoutTache(planifBean));
 
             ihm.majBarreEtat();
+
+            return planifBean;
         } catch (IhmException e) {
             throw new Exception("Impossible d'ajouter une tâche.", e);
         }

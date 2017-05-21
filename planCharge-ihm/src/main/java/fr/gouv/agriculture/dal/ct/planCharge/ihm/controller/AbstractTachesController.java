@@ -137,7 +137,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return chargeColumn;
     }
 
-    protected void ajouterTache(ActionEvent event) throws Exception {
+    @NotNull
+    protected TB ajouterTache(ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
             TB nouvTache = nouveauBean();
@@ -153,7 +154,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 //            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn);
             getTachesTable().edit(noLigNouvTache - 1, descriptionColumn);
 
-//        return nouvTache;
+            return nouvTache;
         } catch (IhmException e) {
             throw new Exception("Impossible d'ajouter une tâche.", e);
         }

@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 
 /**
@@ -26,4 +27,10 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
     public String getTexte() {
         return "le chargement du plan de charge";
     }
+
+    @Override
+    public void annuler() {
+        throw new NotImplementedException();
+    }
+
 }

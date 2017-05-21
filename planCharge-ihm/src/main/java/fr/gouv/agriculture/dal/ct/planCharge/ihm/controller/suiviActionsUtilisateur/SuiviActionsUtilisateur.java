@@ -7,6 +7,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +33,8 @@ public class SuiviActionsUtilisateur {
 
     private int indexActionCourante;
 
-    private Menu menuEditer;
     private MenuItem menuAnnuler;
-    private SeparatorMenuItem separateurMenusAnnuler;
     private MenuItem menuRetablir;
-    private SeparatorMenuItem separateurMenusRetablir;
     private MenuItem menuRepeter;
 
     private Menu sousMenuAnnuler;
@@ -54,19 +52,15 @@ public class SuiviActionsUtilisateur {
     }
 
 
-    public void initialiser(Menu menuEditer,
-                            MenuItem menuAnnuler, Menu sousMenuAnnuler, SeparatorMenuItem separateurMenusAnnuler,
-                            MenuItem menuRetablir, Menu sousMenuRetablir, SeparatorMenuItem separateurMenusRetablir,
+    @SuppressWarnings({"MethodWithTooManyParameters", "ParameterHidesMemberVariable"})
+    public void initialiser(MenuItem menuAnnuler, Menu sousMenuAnnuler,
+                            MenuItem menuRetablir, Menu sousMenuRetablir,
                             MenuItem menuRepeter) {
-        this.menuEditer = menuEditer;
-
         this.menuAnnuler = menuAnnuler;
         this.sousMenuAnnuler = sousMenuAnnuler;
-        this.separateurMenusAnnuler = separateurMenusAnnuler;
         //
         this.menuRetablir = menuRetablir;
         this.sousMenuRetablir = sousMenuRetablir;
-        this.separateurMenusRetablir = separateurMenusRetablir;
         //
         this.menuRepeter = menuRepeter;
 
@@ -75,11 +69,11 @@ public class SuiviActionsUtilisateur {
         this.texteMenuRepeter = menuRepeter.getText();
     }
 
-    public boolean auDebut() {
+    public boolean estAuDebut() {
         return indexActionCourante == 0;
     }
 
-    public boolean aLaFin() {
+    public boolean estALaFin() {
         return indexActionCourante == (actionsUtilisateur.size() - 1);
     }
 
@@ -93,6 +87,7 @@ public class SuiviActionsUtilisateur {
         return actionsUtilisateur.get(indexActionCourante);
     }
 
+    @Null
     public ActionUtilisateur actionSuivante() throws IhmException {
         if (indexActionCourante >= actionsUtilisateur.size()) {
             throw new IhmException("Impossible, déjà positionné après la toute dernière action (if any).");
@@ -102,6 +97,7 @@ public class SuiviActionsUtilisateur {
         return actionCourante();
     }
 
+    @Null
     public ActionUtilisateur actionPrecedente() throws IhmException {
         if (indexActionCourante == -1) {
             throw new IhmException("Impossible, déjà positionné avant la toute première action (if any).");

@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -214,9 +215,8 @@ public class ApplicationController extends AbstractController {
 */
 
         getSuiviActionsUtilisateur().initialiser(
-                menuEditer,
-                menuAnnuler, sousMenuAnnuler, separateurMenusAnnuler,
-                menuRetablir, sousMenuRetablir, separateurMenusRetablir,
+                menuAnnuler, sousMenuAnnuler,
+                menuRetablir, sousMenuRetablir,
                 menuRepeter
         );
 
@@ -549,11 +549,11 @@ public class ApplicationController extends AbstractController {
                     400, 200,
                     ButtonType.CANCEL, ButtonType.CANCEL
             );
-            if (!result.isPresent() || (result.get() == null)) {
+            if (!result.isPresent()) {
                 // Ne devrait jamais arriver (je pense).
                 return;
             }
-            if (result.get() == ButtonType.CANCEL) {
+            if (result.get().equals(ButtonType.CANCEL)) {
                 LOGGER.info("Demande de sauvegarde annulée par l'utilisateur, pour éviter de perdre des données.");
                 return;
             }
@@ -591,18 +591,14 @@ public class ApplicationController extends AbstractController {
     private void annuler(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Annuler");
         try {
-            assert !getSuiviActionsUtilisateur().auDebut();
-            annuler(getSuiviActionsUtilisateur().actionCourante());
+            assert !getSuiviActionsUtilisateur().estAuDebut();
+            ActionUtilisateur actionCourante = getSuiviActionsUtilisateur().actionCourante();
+            assert actionCourante != null;
+            actionCourante.annuler();
             getSuiviActionsUtilisateur().actionPrecedente();
         } catch (IhmException e) {
             throw new Exception("Impossible d'annuler l'action de l'utilisateur.", e);
         }
-    }
-
-    private void annuler(@NotNull ActionUtilisateur actionUtilisateur) {
-        LOGGER.debug("annuler {}", actionUtilisateur.toString());
-        // TODO FDA 2017/03 Coder.
-//        throw new NotImplementedException();
     }
 
     /**
@@ -614,7 +610,7 @@ public class ApplicationController extends AbstractController {
     private void retablir(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Rétablir");
         try {
-            assert !getSuiviActionsUtilisateur().aLaFin();
+            assert !getSuiviActionsUtilisateur().estALaFin();
             getSuiviActionsUtilisateur().actionSuivante();
             retablir(getSuiviActionsUtilisateur().actionCourante());
         } catch (IhmException e) {
@@ -629,7 +625,7 @@ public class ApplicationController extends AbstractController {
     }
 
     /**
-     * Répéter
+     * Répéter (repeat)
      *
      * @param event
      */
