@@ -14,35 +14,17 @@ import java.util.Map;
 
 /**
  * Created by frederic.danna on 03/04/2017.
+ * @author frederic.danna
  */
 public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Serializable> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDao.class);
 
-    protected abstract Map<EI, E> getCache();
-
-    protected abstract E newEntity(EI id) throws DaoException;
+/* TODO FDA 2017/05 Ajouter cette méthode (et d'autres) une fois débouchonné.
+    @NotNull
+    abstract public E load(@NotNull EI id) throws EntityNotFoundException, DaoException;
 
     @NotNull
-    public E load(EI id) throws EntityNotFoundException, DaoException {
-
-        if (getCache().containsKey(id)) {
-            LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");
-            return (E) getCache().get(id);
-        }
-
-        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence (thrower une EntityNotFoundException, si pas trouvé).
-        E nouvelleEntite = newEntity(id);
-
-        getCache().put(id, nouvelleEntite);
-        LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' ajoutée au cache : '" + id + "'.");
-
-        return nouvelleEntite;
-    }
-
-    @NotNull
-    public List<E> list() throws DaoException {
-        // TODO FDA 2017/03 Débouchonner : retrouver depuis la couche de persistence.
-        return new ArrayList<>(getCache().values());
-    }
+    abstract public List<E> list() throws DaoException;
+*/
 }

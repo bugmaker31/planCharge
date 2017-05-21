@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.util;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.Instant;
 import java.time.LocalDate;

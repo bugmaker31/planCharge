@@ -15,13 +15,13 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 
-    @NotNull
+    @SuppressWarnings("InstanceVariableNamingConvention")
     private int id;
     @NotNull
     private CategorieTache categorie;
-    @NotNull
+    @Null
     private SousCategorieTache sousCategorie;
-    @NotNull
+    @Null
     private String noTicketIdal;
     @NotNull
     private String description;
@@ -33,34 +33,43 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     private LocalDate echeance;
     @NotNull
     private Importance importance;
-    @NotNull
     private double charge;
     @NotNull
     private Ressource ressource;
     @NotNull
     private Profil profil;
 
-    public Tache(int id) {
+    /**
+     * Instancie une nouvelle tâche.
+     * @param id
+     * @param categorie
+     * @param sousCategorie
+     * @param noTicketIdal
+     * @param description
+     * @param projetAppli
+     * @param debut
+     * @param echeance
+     * @param importance
+     * @param charge
+     * @param ressource
+     * @param profil
+     * @throws ModeleException Si une donnée obligatoire manque (la {@link #categorie catégorie}, la {@link #description description}, etc.).
+     */
+    @SuppressWarnings("ConstructorWithTooManyParameters")
+    public Tache(int id, @Null CategorieTache categorie, @Null SousCategorieTache sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppli projetAppli, @Null LocalDate debut, @Null LocalDate echeance, @Null Importance importance, double charge, @Null Ressource ressource, @Null Profil profil) throws ModeleException {
         super();
+
         this.id = id;
-    }
-
-    public Tache(int id, CategorieTache categorie, SousCategorieTache sousCategorie, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil)
-            throws ModeleException {
-
-        this(id);
 
         if (categorie == null) {
             throw new ModeleException("Tache n°" + id + " : Catégorie de tâche non définie.");
         }
         this.categorie = categorie;
 
-        if (sousCategorie == null) {
+//        if (sousCategorie == null) {
 //            throw new ModeleException("Tache n°" + id + " : Sous-catégorie de tâche non définie.");
-            this.sousCategorie = null;
-        } else {
-            this.sousCategorie = sousCategorie;
-        }
+//        }
+        this.sousCategorie = sousCategorie;
 
         if (noTicketIdal == null) {
             throw new ModeleException("Tache n°" + id + " : N° de ticket IDAL non défini.");
@@ -73,7 +82,7 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         this.description = description;
 
         if (projetAppli == null) {
-            throw new ModeleException("Tache n°" + id + " : PROJET/Appli non défini(e).");
+            throw new ModeleException("Tache n°" + id + " : Projet/Appli non défini(e).");
         }
         this.projetAppli = projetAppli;
 
@@ -89,9 +98,11 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         }
         this.importance = importance;
 
-        if (importance == null) {
+/*
+        if (charge == null) {
             throw new ModeleException("Tache n°" + id + " : Charge non définie.");
         }
+*/
         this.charge = charge;
 
         if (ressource == null) {
@@ -105,7 +116,6 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         this.profil = profil;
     }
 
-    @NotNull
     public int getId() {
         return id;
     }
@@ -115,11 +125,12 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         return categorie;
     }
 
+    @Null
     public SousCategorieTache getSousCategorie() {
         return sousCategorie;
     }
 
-    @NotNull
+    @Null
     public String getNoTicketIdal() {
         return noTicketIdal;
     }
@@ -149,7 +160,6 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         return importance;
     }
 
-    @NotNull
     public double getCharge() {
         return charge;
     }
@@ -170,21 +180,19 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     }
 
     @NotNull
-    public static String noTache(@NotNull int id) {
+    public static String noTache(int id) {
         return String.format(FORMAT_NO_TACHE, id);
     }
 
     @Override
-    @NotNull
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
         Tache tache = (Tache) o;
         return id == tache.id;
     }
 
     @Override
-    @NotNull
     public int hashCode() {
         return id;
     }
@@ -210,7 +218,7 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
                 + " "
                 + noTache()
                 + " "
-                + ("(" + (noTicketIdal == null || noTicketIdal.isEmpty() ? "N/A" : noTicketIdal) + ")")
+                + ("(" + (noTicketIdal.isEmpty() ? "N/A" : noTicketIdal) + ")")
                 + " "
                 + ("<< " + description + " >> ")
                 ;

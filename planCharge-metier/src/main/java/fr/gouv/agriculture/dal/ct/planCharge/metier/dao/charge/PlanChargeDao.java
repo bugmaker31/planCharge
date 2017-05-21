@@ -101,17 +101,8 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         super();
     }
 
-    @Override
-    protected Map<LocalDate, PlanCharge> getCache() {
-        return CACHE;
-    }
-
-    @Override
-    protected PlanCharge newEntity(LocalDate dateEtat) {
-        return new PlanCharge(dateEtat);
-    }
-
-    @Override
+    @NotNull
+//    @Override
     public PlanCharge load(@NotNull LocalDate dateEtat) throws EntityNotFoundException, PlanChargeDaoException {
         PlanCharge plan;
 

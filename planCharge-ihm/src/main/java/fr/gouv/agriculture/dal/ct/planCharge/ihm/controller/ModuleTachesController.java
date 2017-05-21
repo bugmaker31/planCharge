@@ -109,22 +109,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     }
 
     @Override
-    TacheBean nouveauBean() {
-        TacheBean tacheBean;
-        tacheBean = new TacheBean(
-                idTacheSuivant(),
-                null,
-                null,
-                "(pas de ticket IDAL)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                0.0,
-                null,
-                null
-        );
-        return tacheBean;
+    TacheBean nouveauBean() throws IhmException {
+        return ihm.getChargesController().nouveauBean();
     }
 }

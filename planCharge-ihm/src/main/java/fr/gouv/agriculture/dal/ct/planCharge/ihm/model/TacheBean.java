@@ -34,6 +34,7 @@ public class TacheBean {
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    @SuppressWarnings("InstanceVariableNamingConvention")
     @NotNull
     private IntegerProperty id = new SimpleIntegerProperty();
     @NotNull
@@ -72,7 +73,8 @@ public class TacheBean {
     @NotNull
     private ProfilDao profilDao = ProfilDao.instance();
 
-    public TacheBean(int id, String codeCategorie, String codeSousCategorie, String noTicketIdal, String description, String codeProjetAppli, LocalDate debut, LocalDate echeance, String codeImportance, double charge, String codeRessource, String codeProfil) {
+    @SuppressWarnings("ConstructorWithTooManyParameters")
+    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, double charge, @Null String codeRessource, @Null String codeProfil) {
         this.id.set(id);
         this.codeCategorie.set(codeCategorie);
         this.codeSousCategorie.set(codeSousCategorie);
@@ -87,7 +89,7 @@ public class TacheBean {
         this.codeProfil.set(codeProfil);
     }
 
-    public TacheBean(TacheBean tacheBean) {
+    public TacheBean(@NotNull TacheBean tacheBean) {
         this(
                 tacheBean.getId(),
                 tacheBean.getCodeCategorie(),
@@ -112,21 +114,13 @@ public class TacheBean {
         }
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
-        if (tache.getProjetAppli() != null) {
-            this.codeProjetAppli.set(tache.getProjetAppli().getCode());
-        }
+        this.codeProjetAppli.set(tache.getProjetAppli().getCode());
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
-        if (tache.getImportance() != null) {
-            this.codeImportance.set(tache.getImportance().getCode());
-        }
+        this.codeImportance.set(tache.getImportance().getCode());
         this.charge.set(tache.getCharge());
-        if (tache.getRessource() != null) {
-            this.codeRessource.set(tache.getRessource().getTrigramme());
-        }
-        if (tache.getProfil() != null) {
-            this.codeProfil.set(tache.getProfil().getCode());
-        }
+        this.codeRessource.set(tache.getRessource().getTrigramme());
+        this.codeProfil.set(tache.getProfil().getCode());
     }
 
 /*
@@ -158,7 +152,6 @@ public class TacheBean {
     }
 */
 
-    @NotNull
     public int getId() {
         assert id != null;
         return id.get();
@@ -282,7 +275,7 @@ public class TacheBean {
 
     @Null
     public StringBinding noTacheProperty() {
-        return (idProperty() == null) ? null : idProperty().asString(Tache.FORMAT_NO_TACHE);
+        return idProperty().asString(Tache.FORMAT_NO_TACHE);
     }
 
     @NotNull

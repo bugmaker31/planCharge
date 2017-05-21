@@ -363,7 +363,7 @@ public class ApplicationController extends AbstractController {
             majBarreEtat();
 
         } catch (IhmException | ServiceException e) {
-            LOGGER.error("Impossible de sauver le plan de charge.", e);
+            LOGGER.warn("Impossible de sauver le plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de sauver",

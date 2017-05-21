@@ -59,9 +59,13 @@
                         <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0"
-                             text="N°"/>
-                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
+                <TableColumn text="identifiants">
+                    <columns>
+                        <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0"
+                                     text="N°"/>
+                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
+                    </columns>
+                </TableColumn>
                 <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
                 <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
                 <TableColumn text="Période souhaitée">
@@ -72,9 +76,21 @@
                 </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
                 <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
-                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
-                <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+                <TableColumn text="Ressource">
+                    <columns>
+                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>
+                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+                    </columns>
+                </TableColumn>
             </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du loaf du FXML !-->
+            <sortOrder>
+                <fx:reference source="categorieColumn"/>
+                <fx:reference source="sousCategorieColumn"/>
+                <fx:reference source="projetAppliColumn"/>
+                <fx:reference source="echeanceColumn"/>
+                <fx:reference source="descriptionColumn"/>
+            </sortOrder>
         </TableView>
     </center>
     <bottom>

@@ -6,7 +6,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
 
@@ -20,19 +19,17 @@ import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 28/04/2017.
+ *
+ * @author frederic.danna
  */
-public class PlanChargeBean {
+public final class PlanChargeBean {
 
-    private static PlanChargeBean instance;
+    private final static PlanChargeBean INSTANCE = new PlanChargeBean();
 
     public static PlanChargeBean instance() {
-        if (instance == null) {
-            instance = new PlanChargeBean();
-        }
-        return instance;
+        return INSTANCE;
     }
 
-    @NotNull
     private boolean isModifie;
 
     @Null
@@ -114,7 +111,12 @@ Personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners 
             planifications.ajouter(tache, calendrier);
         }
 
-        PlanCharge planCharge = new PlanCharge(dateEtat, planifications);
-        return planCharge;
+        return new PlanCharge(dateEtat, planifications);
+    }
+
+    // Pour déboguer, uniquement.
+    @Override
+    public String toString() {
+        return dateEtat + (isModifie ? " (modifié)" : "");
     }
 }

@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 01/05/2017.
+ * @author frederic.danna
  */
 public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
 

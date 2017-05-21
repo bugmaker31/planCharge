@@ -147,11 +147,13 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @Override
     ObservableList<PlanificationBean> getTachesBeans() {
         return planificationsBeans;
     }
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @Override
     TableView<PlanificationBean> getTachesTable() {
         return planificationsTable;
@@ -166,6 +168,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
+    @SuppressWarnings("OverlyLongMethod")
     @FXML
     @Override
     void initialize() throws IhmException {
@@ -176,6 +179,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         dateEtatPicker.setValue(planChargeBean.getDateEtat());
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        //noinspection ClassHasNoToStringMethod
         class ChargeSemaineCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
             private final int noSemaine;
 
@@ -183,8 +187,9 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 this.noSemaine = noSemaine;
             }
 
+            @Null
             @Override
-            public ObservableValue<Double> call(TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
+            public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
                 try {
                     PlanificationBean planifBean = cell.getValue();
                     Double nouvelleCharge = planifBean.charge(noSemaine).doubleValue();
@@ -212,6 +217,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
+        //noinspection OverlyComplexAnonymousInnerClass
         getChargeColumn().setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
             @Override
             protected void updateItem(Double charge, boolean empty) {
@@ -238,11 +244,12 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 }
             }
         });
-        class ChargeSemaineEditHandler implements EventHandler<TableColumn.CellEditEvent<PlanificationBean, Double>> {
+        //noinspection ClassHasNoToStringMethod
+        final class ChargeSemaineEditHandler implements EventHandler<TableColumn.CellEditEvent<PlanificationBean, Double>> {
 
             private final int noSemaine;
 
-            public ChargeSemaineEditHandler(int noSemaine) {
+            private ChargeSemaineEditHandler(int noSemaine) {
                 this.noSemaine = noSemaine;
             }
 
@@ -415,7 +422,20 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @Override
     PlanificationBean nouveauBean() throws IhmException {
 
-        TacheBean tacheBean = ihm.getTachesController().nouveauBean();
+        TacheBean tacheBean = new TacheBean(
+                idTacheSuivant(),
+                null,
+                null,
+                "(pas de ticket IDAL)",
+                null,
+                null,
+                null,
+                null,
+                null,
+                0.0,
+                null,
+                null
+        );
 
         assert planChargeBean.getDateEtat() != null;
         List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);

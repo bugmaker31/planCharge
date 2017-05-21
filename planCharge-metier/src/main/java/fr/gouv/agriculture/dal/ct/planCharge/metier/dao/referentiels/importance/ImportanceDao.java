@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.MockedDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ImportanceDao extends AbstractDao<Importance, String> {
+public class ImportanceDao extends MockedDao<Importance, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportanceDao.class);
 

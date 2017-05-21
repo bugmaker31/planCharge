@@ -79,7 +79,6 @@ public class PlanificationBean extends TacheBean {
         return calendrier;
     }
 
-    @NotNull
     public double getChargePlanifiee() {
         return chargePlanifiee.get();
     }
@@ -90,7 +89,7 @@ public class PlanificationBean extends TacheBean {
     }
 
     @NotNull
-    public Pair<LocalDate, DoubleProperty> chargePlanifiee(@NotNull int noSemaine) throws IhmException {
+    public Pair<LocalDate, DoubleProperty> chargePlanifiee(int noSemaine) throws IhmException {
         if (noSemaine < 1) {
             throw new IhmException("Le n° de semaine doit être supérieur ou égal à 1.");
         }
@@ -100,22 +99,24 @@ public class PlanificationBean extends TacheBean {
         return calendrier.get(noSemaine - 1);
     }
 
-    @NotNull
     private double chargePlanifiee() {
         return calendrier.stream().mapToDouble(elt -> elt.getValue().get()).sum();
     }
 
     @NotNull
-    public DoubleProperty charge(@NotNull int noSemaine) throws IhmException {
+    public DoubleProperty charge(int noSemaine) throws IhmException {
         return chargePlanifiee(noSemaine).getValue();
     }
 
-    @NotNull
+    /**
+     * Méthode à appeler à chaque fois que la planification change, pour mettre à jour la charge qui est planifiée pour {@link #getTacheBean() la tâche}.
+     */
     public void majChargePlanifiee() {
         chargePlanifiee.setValue(chargePlanifiee());
     }
 
     // Pour déboguer, uniquement.
+    @NotNull
     @Override
     public String toString() {
         return super.toString() + " : " + chargePlanifiee.get();

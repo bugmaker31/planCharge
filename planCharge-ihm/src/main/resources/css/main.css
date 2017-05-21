@@ -41,6 +41,7 @@
 .messageErreurSaisie {
     -fx-background-color: darkred;
     -fx-text-fill: white;
+    -fx-opacity: 75%;
 }
 
 /*

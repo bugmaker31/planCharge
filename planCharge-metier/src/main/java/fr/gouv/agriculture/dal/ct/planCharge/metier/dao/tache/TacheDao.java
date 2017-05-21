@@ -39,8 +39,6 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheDao.class);
 
-    private static final Map<Integer, Tache> CACHE = new HashMap<>();
-
     private static TacheDao instance;
 
     public static TacheDao instance() {
@@ -74,17 +72,6 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private TacheDao() {
         super();
-    }
-
-
-    @Override
-    protected Map<Integer, Tache> getCache() {
-        return CACHE;
-    }
-
-    @Override
-    protected Tache newEntity(Integer id) {
-        return new Tache(id);
     }
 
 
