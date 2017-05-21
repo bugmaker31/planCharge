@@ -11,6 +11,7 @@ import java.util.Comparator;
 
 /**
  * Created by frederic.danna on 22/04/2017.
+ * @author frederic.danna
  */
 public class CodeImportanceComparator implements Comparator<String> {
 

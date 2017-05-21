@@ -12,7 +12,7 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/${APP_NAME}.log</file>
         <encoder>
-            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level [%thread] %logger{20} [%file:%line] - %msg%n</pattern>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level [%thread] %logger{20} [%file:%line] - %msg%n%ex{full}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->

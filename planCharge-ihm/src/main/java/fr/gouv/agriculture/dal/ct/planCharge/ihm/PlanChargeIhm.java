@@ -9,13 +9,17 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesControll
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,35 +240,117 @@ public class PlanChargeIhm extends Application {
     }
 
     public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
-        Alert popUp = new Alert(type);
+        Alert alert = new Alert(type);
 
-        popUp.setTitle(type.name());
-        popUp.setHeaderText(titre);
-        popUp.setContentText(message);
+        alert.setTitle(type.name());
+        alert.setHeaderText(titre);
+        alert.setContentText(message);
 /*
         // Cf. http://stackoverflow.com/questions/29738083/javafx-alert-dialog-html
         WebView webView = new WebView();
         webView.getEngine().loadContent("<html>" + message + "</html>");
         webView.setPrefSize(width, height);
-        popUp.getDialogPane().setContent(webView);
+        alert.getDialogPane().setContent(webView);
 */
 
-        popUp.getButtonTypes().setAll(ButtonType.OK);
-        popUp.getButtonTypes().addAll(buttons);
-        popUp.getButtonTypes()
+        alert.getButtonTypes().setAll(ButtonType.OK);
+        alert.getButtonTypes().addAll(buttons);
+        alert.getButtonTypes()
                 .forEach(buttonType -> {
-                    Button bouton = (Button) popUp.getDialogPane().lookupButton(buttonType);
+                    Button bouton = (Button) alert.getDialogPane().lookupButton(buttonType);
                     bouton.setDefaultButton(buttonType == boutonParDefaut);
                 });
 
-        popUp.getDialogPane().setPrefWidth(width);
-        popUp.getDialogPane().setPrefHeight(height);
-        popUp.setResizable(true);
+        alert.getDialogPane().setPrefWidth(width);
+        alert.getDialogPane().setPrefHeight(height);
+        alert.setResizable(true);
 
-        Stage popUpStage = (Stage) popUp.getDialogPane().getScene().getWindow();
-        popUpStage.getIcons().addAll(primaryStage.getIcons());
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().addAll(primaryStage.getIcons());
 
-        return popUp.showAndWait();
+        return alert.showAndWait();
+    }
+
+    public void afficherErreurSaisie(@NotNull TextField field, @NotNull String message) throws IhmException {
+        field.getStyleClass().add("erreurSaisie");
+        afficherPopUpErreurSaisie(field, message);
+    }
+
+    public void enleverErreurSaisie(@NotNull TextField field) throws IhmException {
+        field.getStyleClass().remove("erreurSaisie");
+        masquerPopupErreurSaisie(field);
+    }
+
+    private void afficherPopUpErreurSaisie(@NotNull TextField field, @NotNull String message) throws IhmException {
+
+        Label label = new Label(message);
+        label.setId(idLabelErreurSaisie(field));
+        label.getStyleClass().setAll("messageErreurSaisie");
+
+        /* V1 Avec une Popup :
+        Popup popup = new Popup();
+        Bounds fieldBounds = field.getBoundsInLocal();
+        Point2D popupLocation = field.localToScreen(fieldBounds.getMinX(), fieldBounds.getMinY() + fieldBounds.getHeight());
+        Region hbox = new HBox(label);
+        popup.getContent().add(hbox);
+        popup.show(field, popupLocation.getX(), popupLocation.getY());
+        */
+        // V2 Avec un VBox ajouté/retiré dynamiquement :
+        VBox vbox = fieldVBox(field);
+        vbox.getChildren().add(label);
+    }
+
+    private void masquerPopupErreurSaisie(@NotNull TextField field) throws IhmException {
+        VBox vbox = fieldVBox(field);
+        FilteredList<Node> filtered = vbox.getChildren().filtered(node -> node.getId().equals(idLabelErreurSaisie(field)));
+        assert (filtered != null);
+        if (filtered.isEmpty()) {
+            return;
+        }
+        assert filtered.size() == 1;
+        Node node = filtered.get(0);
+        assert (node != null);
+        vbox.getChildren().remove(node);
+    }
+
+    @NotNull
+    private VBox fieldVBox(@NotNull TextField field) throws IhmException {
+        if (!(field.getParent() instanceof Pane)) {
+            throw new IhmException("Le parent du champ '{}' n'est pas un Pane, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.", field.getId());
+        }
+        VBox vbox;
+        Pane parent = (Pane) field.getParent();
+        if ((parent instanceof VBox) && (parent.getId().equals(idVBoxErreurSaisie(field)))) {
+            vbox = (VBox) parent;
+        } else { // La VBox n'a jamais encore été créée, on le fait :
+
+            // Rq : Le simple fait d'ajouter le Filed à la VBox "détache" ce Field du Parent, donc il faut récupérer son index avant.
+            int fieldIndex = parent.getChildren().indexOf(field);
+
+            // Création de la VBox, qui ne contient que le Field (pour l'instant, on ajoutera le Label avec le message d'erreur... qu'en cas d'erreur) :
+            vbox = new VBox();
+            vbox.getStyleClass().setAll("erreurSaisie-vbox");
+            //noinspection StringConcatenationMissingWhitespace
+            vbox.setId(idVBoxErreurSaisie(field));
+            vbox.getChildren().add(field);
+
+            // Ajout de la VBox au Parent :
+            parent.getChildren().add(fieldIndex, vbox);
+
+            // Rq : Pas besoin de supprimer le Field du Parent, le simple fait de l'ajouter à la VBox le "détache" du Parent.
+            //parent.getChildren().remove(field);
+        }
+        return vbox;
+    }
+
+    private String idLabelErreurSaisie(@NotNull TextField field) {
+        //noinspection StringConcatenationMissingWhitespace
+        return field.getId() + "ErreurSaisie-label";
+    }
+
+    private String idVBoxErreurSaisie(@NotNull TextField field) {
+        //noinspection StringConcatenationMissingWhitespace
+        return field.getId() + "ErreurSaisie-vbox";
     }
 
 /*
@@ -329,25 +415,6 @@ public class PlanChargeIhm extends Application {
         Platform.exit();
     }
 
-/*
-
-    private static final String PREF_KEY_FIC_PLANIF_CHARGE = "PREF_KEY_FIC_PLANIF_CHARGE";
-
-    private String clefPrefPlanifCharge(LocalDate dateEtat) {
-        return PREF_KEY_FIC_PLANIF_CHARGE + "-" + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-    }
-
-    // TODO FDA 2017/04 Coder pour enregistrer la date de dernière planif que l'utilisateur a travaillé.
-
-    */
-///**
-// * Returns the file preference, i.e. the file that was last opened.
-// * The preference is read from the OS specific registry. If no such
-// * preference can be found, null is returned.
-// *
-// * @param datePlanif Date de la planification.
-// * @return
-// */
 /*
 
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
@@ -420,5 +487,26 @@ public class PlanChargeIhm extends Application {
 
     public void majBarreEtat() {
         getApplicationController().majBarreEtat();
+
     }
+
+    /*
+
+        private static final String PREF_KEY_FIC_PLANIF_CHARGE = "PREF_KEY_FIC_PLANIF_CHARGE";
+
+        private String clefPrefPlanifCharge(LocalDate dateEtat) {
+            return PREF_KEY_FIC_PLANIF_CHARGE + "-" + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        }
+
+        // TODO FDA 2017/04 Coder pour enregistrer la date de dernière planif que l'utilisateur a travaillé.
+
+        */
+///**
+// * Returns the file preference, i.e. the file that was last opened.
+// * The preference is read from the OS specific registry. If no such
+// * preference can be found, null is returned.
+// *
+// * @param datePlanif Date de la planification.
+// * @return
+// */
 }

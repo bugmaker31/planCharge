@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeCategorieTacheComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
@@ -17,7 +18,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
@@ -227,6 +231,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProfils));
 
         // Paramétrage des ordres de tri :
+        categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
         importanceColumn.setComparator(CodeImportanceComparator.COMPARATEUR);
 
 /*
@@ -263,6 +268,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         //noinspection OverlyLongLambda
         filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre 'filtreGlobal'...");
+            //noinspection OverlyLongLambda
             filteredTaches.setPredicate(tache -> {
                 // If filter text is empty, display all data.
                 if ((newValue == null) || newValue.isEmpty()) {
@@ -287,7 +293,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         return true; // Filter matches
                     }
                 } catch (IhmException e) {
-                    LOGGER.error("Impossible de filtrer sur la description.", e);
+                    LOGGER.error("Impossible de filtrer sur la description, pour la tâche n° {}.", tache.getId(), e);
                 }
                 if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue)) {
                     return true; // Filter matches
@@ -371,21 +377,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre des descriptions...");
 
-            if ((newValue != null) && !newValue.isEmpty()) {
-                try {
-                    Pattern.compile(newValue);
-                } catch (PatternSyntaxException e) {
-/*
-                        ihm.afficherPopUp(
-                                Alert.AlertType.ERROR,
-                                "Valeur incorrecte",
-                                "Expression régulière incorrecte : '" + newValue + "'.",
-                                400, 200
-                        );
-                        filtreDescriptionField.clear();
-*/
-                    return;
+            try {
+                ihm.enleverErreurSaisie(filtreDescriptionField);
+                if ((newValue != null) && !newValue.isEmpty()) {
+                    //noinspection UnusedCatchParameter
+                    try {
+                        //noinspection ResultOfMethodCallIgnored
+                        Pattern.compile(newValue);
+                    } catch (PatternSyntaxException e) {
+                        ihm.afficherErreurSaisie(filtreDescriptionField, "Expression régulière incorrecte");
+                        return;
+                    }
                 }
+            } catch (IhmException e) {
+                LOGGER.error("Impossible de gérer la modification du filtre des descriptions.", e);
             }
 
             filteredTaches.setPredicate(tache -> {

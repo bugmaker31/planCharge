@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.DayOfWeek;

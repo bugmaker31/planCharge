@@ -475,13 +475,13 @@ public class TacheBean {
     public String toString() {
         return /*(codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
                 + " "
-                +*/ ("[" + codeProjetAppli.get() + "]")
+                +*/ ("[" + (codeProjetAppli.isEmpty().get() ? "N/A" : codeProjetAppli.get()) + "]")
                 + " "
                 + noTache()
                 + " "
                 + ("(" + (noTicketIdal.isEmpty().get() ? "N/A" : noTicketIdal.get()) + ")")
                 + " "
-                + ("<< " + description.get() + " >> ")
+                + ("<< " + (description.isEmpty().get() ? "N/A" : description.get()) + " >> ")
                 ;
     }
 }

@@ -170,7 +170,7 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     }
 
     @NotNull
-    public static String noTache(int id) {
+    public static String noTache(@NotNull int id) {
         return String.format(FORMAT_NO_TACHE, id);
     }
 

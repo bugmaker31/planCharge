@@ -64,20 +64,18 @@
         </VBox>
     </top>
     <center>
-        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
+                   BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn text="Tâche">
+                <TableColumn fx:id="tacheColumn" text="Tâche">
                     <columns>
-                        <TableColumn
-                                text="Catégories"> <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
+                        <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
+                        <TableColumn text="Catégories">
                             <columns>
                                 <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60" visible="false"/>
+                                <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                                 <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"
-                                             visible="false">
-                                    <graphic>
-                                        <Label text="Sous-catégorie" wrapText="true"/>
-                                    </graphic>
-                                </TableColumn>
+                                             visible="false" style="-fx-wrap-text: true" />
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55.0"
@@ -120,7 +118,7 @@
                         <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12" styleClass="periodeChargee"/>
 
-                        <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true.-->
+                        <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                         <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
                                      editable="false" styleClass="non-modifiable" style="-fx-wrap-text: true"/>
                         <!--
@@ -135,11 +133,19 @@
                     </columns>
                 </TableColumn>
             </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du loaf du FXML !-->
+            <sortOrder>
+                <fx:reference source="categorieColumn"/>
+                <fx:reference source="sousCategorieColumn"/>
+                <fx:reference source="projetAppliColumn"/>
+                <fx:reference source="echeanceColumn"/>
+                <fx:reference source="descriptionColumn"/>
+            </sortOrder>
         </TableView>
     </center>
     <bottom>
         <AnchorPane>
-            <Button text="Ajouter une tâche" onAction="#ajouterTache" />
+            <Button text="Ajouter une tâche" onAction="#ajouterTache"/>
         </AnchorPane>
     </bottom>
 </BorderPane>

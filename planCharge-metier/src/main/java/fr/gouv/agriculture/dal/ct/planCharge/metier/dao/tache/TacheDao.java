@@ -206,8 +206,8 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
 
             tache = new Tache(
                     id,
-                    CategorieTache.SERVICE,
-                    null,
+                    CategorieTache.SERVICE, // FIXME FDA 2017/05 La catégorie n'est pas TOUJOURS "service" !?
+                    null, // FIXME FDA 2017/05 La sous-catégorie n'est pas TOUJOURS vide !?
                     noTicketIdal,
                     description,
                     projetAppli,

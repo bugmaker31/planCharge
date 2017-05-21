@@ -6,11 +6,11 @@
 /*Cf. http://www.java2s.com/Code/Java/JavaFX/UsingCSStostyletheborder.htm*/
 .barreEtat {
     /*-fx-border-color: lightgray;*/
-    /*-fx-border-insets: 1;*/
-    /*-fx-border-width: 1;*/
+    /*-fx-border-insets: 1pt;*/
+    /*-fx-border-width: 1pt;*/
     /*-fx-border-style: solid;*/
-    /*-fx-spacing: 1;*/
-    -fx-border-insets: 2.0;
+    /*-fx-spacing: 1pt;*/
+    -fx-border-insets: 2pt;
     -fx-alignment: baseline-center;
 }
 
@@ -19,15 +19,30 @@
     -fx-border-color: lightgray;
     -fx-border-width: 1;
     -fx-border-style: solid;
-    -fx-spacing: 2;
+    -fx-spacing: 2pt;
 }
 
 .incoherence {
     -fx-background-color:darkred;
     -fx-text-fill: white;
-    /*-fx-opacity: 1.0;*/
+    /*-fx-opacity: 100%;*/
 }
 
+.erreurSaisie {
+    -fx-background-color:darkred;
+    -fx-text-fill: white;
+}
+
+.erreurSaisie-vbox {
+    /*-fx-border-insets: 5pt, 5pt, 5pt, 5pt;*/
+    /*-fx-spacing: 5pt;*/
+}
+
+.messageErreurSaisie {
+    -fx-background-color:darkred;
+    -fx-text-fill: white;
+    -fx-opacity: 50%;
+}
 
 /*
 Tâches
@@ -75,20 +90,20 @@ Plan de charge
 
 .tropTot {
     /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
-    -fx-opacity: 0.5;
+    -fx-opacity: 50%;
     -fx-background-image: url("/images/rayures.gif");
 }
 
 .tropTard {
     /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
-    -fx-opacity: 0.5;
+    -fx-opacity: 50%;
     -fx-background-image: url("/images/rayures.gif");
 }
 
 .chargeNonPlanifiee {
     -fx-background-color:lightcoral;
     /*-fx-text-fill: white;*/
-    /*-fx-opacity: 0.5;*/
+    /*-fx-opacity: 50%;*/
 }
 
 .periodeChargee {
