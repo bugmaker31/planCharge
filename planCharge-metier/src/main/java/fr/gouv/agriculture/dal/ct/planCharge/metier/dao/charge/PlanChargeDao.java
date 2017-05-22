@@ -230,8 +230,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         XSpreadsheetDocument docCalc = null;
         try {
             // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/jlop04/04.%20Spreadsheet%20Processing.pdf
-            XComponentLoader loader = Calc.getLoader();
-            docCalc = Calc.openDoc(ficCalc.getAbsolutePath(), loader);
+            docCalc = Calc.openDoc(ficCalc.getAbsolutePath());
             if (docCalc == null) {
                 throw new PlanChargeDaoException("Document introuvable : '" + ficCalc.getAbsolutePath() + "'.");
             }

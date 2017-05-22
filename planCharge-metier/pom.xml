@@ -16,10 +16,10 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jna.version>4.4.0</jna.version>
+        <jna.version>4.2.0</jna.version>
 
         <!--NB : La version de LibreOffice utilisée pour compiler doit être compatible avec la version de LibreOffice intallée sur le poste client qui exécutera ce pgm Java. -->
-        <libreoffice.version>5.1.6</libreoffice.version>
+        <libreoffice.version>5.2.0</libreoffice.version>
 
         <!--<libreoffice.dist.version>5.3.2-alfresco</libreoffice.dist.version>-->
     </properties>
@@ -43,7 +43,7 @@
                     </resource>
 <!--
                     <resource>
-                        <directory>${libreoffice.classes.basedir}</directory>
+                        <directory>${libreoffice.classes.dir}</directory>
                         <includes>
                             <include>*.jar</include>
                         </includes>
@@ -55,26 +55,22 @@
         <profile>
             <id>os_exec.unix</id>
             <properties>
-                <libreoffice.basedir>/usr/lib/libreoffice</libreoffice.basedir>
-                <libreoffice.program.basedir>${libreoffice.basedir}/program</libreoffice.program.basedir>
-                <libreoffice.classes.basedir>/usr/share/java</libreoffice.classes.basedir>
+                <libreoffice.dir>/usr/lib/libreoffice</libreoffice.dir>
+                <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
+                <libreoffice.classes.dir>/usr/share/java</libreoffice.classes.dir>
             </properties>
             <build>
                 <resources>
                     <resource>
-                        <directory>${libreoffice.program.basedir}</directory>
+                        <directory>${libreoffice.program.dir}</directory>
                         <includes>
-
                             <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
-                            <!--<include>soffice.exe</include>-->
-
-                            <!--<include>*.jar</include>-->
-                            <!--<include>*.so</include>-->
+                            <include>soffice.exe</include>
                         </includes>
                     </resource>
 <!--
                     <resource>
-                        <directory>${libreoffice.program.basedir}/classes</directory>
+                        <directory>${libreoffice.program.dir}/classes</directory>
                         <includes>
                             <include>*.jar</include>
                         </includes>
@@ -212,10 +208,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>jurt</artifactId>
             <version>${libreoffice.version}</version>
-<!--
             <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/jurt.jar</systemPath>
--->
+            <systemPath>${libreoffice.classes.dir}/jurt.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/ridl -->
@@ -223,10 +217,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>ridl</artifactId>
             <version>${libreoffice.version}</version>
-<!--
             <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/ridl.jar</systemPath>
--->
+            <systemPath>${libreoffice.classes.dir}/ridl.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/juh -->
@@ -234,10 +226,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>juh</artifactId>
             <version>${libreoffice.version}</version>
-<!--
             <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/juh.jar</systemPath>
--->
+            <systemPath>${libreoffice.classes.dir}/juh.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/unoloader -->
@@ -245,10 +235,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>unoloader</artifactId>
             <version>${libreoffice.version}</version>
-<!--
             <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/unoloader.jar</systemPath>
--->
+            <systemPath>${libreoffice.classes.dir}/unoloader.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/unoil -->
@@ -256,10 +244,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>unoil</artifactId>
             <version>${libreoffice.version}</version>
-<!--
             <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/unoil.jar</systemPath>
--->
+            <systemPath>${libreoffice.classes.dir}/unoil.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/officebean -->
@@ -267,10 +253,8 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>officebean</artifactId>
             <version>${libreoffice.version}</version>
-<!--
             <scope>system</scope>
-            <systemPath>${libreoffice.classes.basedir}/officebean.jar</systemPath>
--->
+            <systemPath>${libreoffice.classes.dir}/officebean.jar</systemPath>
         </dependency>
 
         <!--
@@ -288,9 +272,8 @@
                 </dependency>
         -->
 
-<!--
-        &lt;!&ndash;Certains binaires "soffice" doivent être dans le classpath, lors de l'exécution.&ndash;&gt;
-        &lt;!&ndash;T O D O FDA 2017/05 Vérifier qu'on a besoin de cette dépendance pour exécuter sous Unix.&ndash;&gt;
+        <!--Certains binaires "soffice" doivent être dans le classpath, lors de l'exécution.-->
+        <!--TODO FDA 2017/05 Vérifier qu'on a besoin de cette dépendance pour exécuter sous Unix.-->
         <dependency>
             <groupId>org.libreoffice</groupId>
             <artifactId>bsh</artifactId>
@@ -298,7 +281,6 @@
             <scope>system</scope>
             <systemPath>${libreoffice.classes.dir}/bsh.jar</systemPath>
         </dependency>
--->
 
     </dependencies>
 </project>

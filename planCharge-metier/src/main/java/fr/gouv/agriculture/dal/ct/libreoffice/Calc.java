@@ -11,6 +11,7 @@ import libreoffice.LOException;
 import libreoffice.Lo;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,11 +21,13 @@ import java.util.GregorianCalendar;
  *
  * @author frederic.danna
  */
+@SuppressWarnings({"ClassNamingConvention", "ClassWithTooManyMethods"})
 public class Calc {
 
     private static final int OFFICE_EPOCH_YEAR = 1900;
-    private static XComponentLoader loader;
+    private static XComponentLoader loader = null;
 
+    @NotNull
     public static XComponentLoader getLoader() throws LibreOfficeException {
         if (loader == null) {
             try {
@@ -44,35 +47,38 @@ public class Calc {
         }
     }
 
-    public static XSpreadsheetDocument openDoc(String docName, XComponentLoader loader) throws LibreOfficeException {
-        XSpreadsheetDocument ssd = libreoffice.Calc.openDoc(docName, loader);
+    @NotNull
+    public static XSpreadsheetDocument openDoc(@NotNull String docName) throws LibreOfficeException {
+        XSpreadsheetDocument ssd = libreoffice.Calc.openDoc(docName, getLoader());
         if (ssd == null) {
             throw new LibreOfficeException("Doc not found: '" + docName + "'.");
         }
         return ssd;
     }
 
-    public static XSpreadsheetDocument createDoc(XComponentLoader loader) throws LibreOfficeException {
-        XSpreadsheetDocument ssd = libreoffice.Calc.createDoc(loader);
+    @NotNull
+    public static XSpreadsheetDocument createDoc() throws LibreOfficeException {
+        XSpreadsheetDocument ssd = libreoffice.Calc.createDoc(getLoader());
         if (ssd == null) {
             throw new LibreOfficeException("Can't create Calc doc.");
         }
         return ssd;
     }
 
-    public static void closeDoc(XSpreadsheetDocument doc) throws LibreOfficeException {
+    public static void closeDoc(@NotNull XSpreadsheetDocument doc) throws LibreOfficeException {
         libreoffice.Calc.closeDoc(doc);
     }
 
-    public static void saveDoc(XSpreadsheetDocument doc, String docName) throws LibreOfficeException {
+    public static void saveDoc(@NotNull XSpreadsheetDocument doc, String docName) throws LibreOfficeException {
         libreoffice.Calc.saveDoc(doc, docName);
     }
 
-    public static void saveDoc(XSpreadsheetDocument doc) throws LibreOfficeException {
+    public static void saveDoc(@NotNull XSpreadsheetDocument doc) throws LibreOfficeException {
         libreoffice.Calc.saveDoc(doc);
     }
 
-    public static XSpreadsheet getSheet(XSpreadsheetDocument doc, String sheetName) throws LibreOfficeException {
+    @NotNull
+    public static XSpreadsheet getSheet(@NotNull XSpreadsheetDocument doc, @NotNull String sheetName) throws LibreOfficeException {
         XSpreadsheet ss = libreoffice.Calc.getSheet(doc, sheetName);
         if (ss == null) {
             throw new LibreOfficeException("Sheet not found: '" + sheetName + "'.");
@@ -80,8 +86,8 @@ public class Calc {
         return ss;
     }
 
-
-    public static XSpreadsheet getSheet(XSpreadsheetDocument doc, int sheetIndex) throws LibreOfficeException {
+    @NotNull
+    public static XSpreadsheet getSheet(@NotNull XSpreadsheetDocument doc, int sheetIndex) throws LibreOfficeException {
         XSpreadsheet ss = libreoffice.Calc.getSheet(doc, sheetIndex);
         if (ss == null) {
             throw new LibreOfficeException("Sheet not found: '" + sheetIndex + "'.");
@@ -89,37 +95,37 @@ public class Calc {
         return ss;
     }
 
-    public static boolean isEmpty(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static boolean isEmpty(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return isEmpty(cell);
     }
 
-    public static boolean isEmpty(XCell cell) throws LibreOfficeException {
+    public static boolean isEmpty(@NotNull XCell cell) throws LibreOfficeException {
         Object cellVal = getVal(cell);
         return (cellVal == null);
     }
 
-    public static void setString(XSpreadsheet sheet, int column, int row, String value) throws LibreOfficeException {
+    public static void setString(@NotNull XSpreadsheet sheet, int column, int row, @NotNull String value) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         setString(cell, value);
     }
 
-    public static void setDouble(XSpreadsheet sheet, int column, int row, Double value) throws LibreOfficeException {
+    public static void setDouble(@NotNull XSpreadsheet sheet, int column, int row, @NotNull Double value) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         setDouble(cell, value);
     }
 
-    public static void setInteger(XSpreadsheet sheet, int column, int row, int value) throws LibreOfficeException {
+    public static void setInteger(@NotNull XSpreadsheet sheet, int column, int row, int value) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         setInteger(cell, value);
     }
 
-    public static void setDate(XSpreadsheet sheet, int column, int row, Date value) throws LibreOfficeException {
+    public static void setDate(@NotNull XSpreadsheet sheet, int column, int row, @NotNull Date value) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         setDate(cell, value);
     }
 
-    public static void setDate(XCell cell, Date value) {
+    public static void setDate(@NotNull XCell cell, @NotNull Date value) {
 
         Calendar date = new GregorianCalendar();
         date.setTime(value);
@@ -130,20 +136,20 @@ public class Calc {
         setDouble(cell, doubleValue);
     }
 
-    public static void setInteger(XCell cell, int value) {
+    public static void setInteger(@NotNull XCell cell, int value) {
         setDouble(cell, Double.valueOf(value));
     }
 
-    private static void setString(XCell cell, String value) {
+    private static void setString(@NotNull XCell cell, @NotNull String value) {
         libreoffice.Calc.setVal(cell, value);
     }
 
-    private static void setDouble(XCell cell, Double value) {
+    private static void setDouble(@NotNull XCell cell, @NotNull Double value) {
         libreoffice.Calc.setVal(cell, value);
     }
 
     @NotNull
-    public static XCell getCell(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static XCell getCell(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = libreoffice.Calc.getCell(sheet, column, row);
         if (cell == null) {
             throw new LibreOfficeException("Cell not found.");
@@ -160,12 +166,12 @@ public class Calc {
 */
 
     @NotNull
-    public static Object getVal(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static Object getVal(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getVal(cell);
     }
 
-    @NotNull
+    @Null
     public static Object getVal(XCell cell) {
         Object val = libreoffice.Calc.getVal(cell);
         return val;

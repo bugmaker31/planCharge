@@ -148,6 +148,12 @@
             <artifactId>planCharge-metier</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--TODO FDA 2017/05 Comprendre pourquoi IntelliJ a besoin de cette dépendance (pas Maven).-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>planCharge-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!--Pour avoir notamment les combobox multi-sélection (CheckComboBox) :-->
         <dependency>
