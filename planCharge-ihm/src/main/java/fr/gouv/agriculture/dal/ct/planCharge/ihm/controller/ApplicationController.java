@@ -297,6 +297,7 @@ public class ApplicationController extends AbstractController {
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
             planChargeBean.init(planCharge);
+            ihm.definirDateEtat(planCharge.getDateEtat());
 
             planChargeBean.vientDEtreCharge();
             getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBean));
@@ -309,7 +310,6 @@ public class ApplicationController extends AbstractController {
             ihm.getTachesController().populerFiltres();
             ihm.getChargesController().populerFiltres();
 
-            ihm.definirDateEtat(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
                     "Chargement terminé",
