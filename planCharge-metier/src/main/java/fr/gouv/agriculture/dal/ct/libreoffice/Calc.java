@@ -165,31 +165,31 @@ public class Calc {
     }
 */
 
-    @NotNull
+    @Null
     public static Object getVal(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getVal(cell);
     }
 
     @Null
-    public static Object getVal(XCell cell) {
+    public static Object getVal(@NotNull XCell cell) {
         Object val = libreoffice.Calc.getVal(cell);
         return val;
     }
 
     @NotNull
-    public static Date getDate(XCell cell) throws LibreOfficeException {
+    public static Date getDate(@NotNull XCell cell) throws LibreOfficeException {
         Double cellValue = cell.getValue();
         return doubleToDate(cellValue);
     }
 
-    public static Date getDate(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static Date getDate(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getDate(cell);
     }
 
     @NotNull
-    public static Date getDate(XSpreadsheet sheet, String cellRangeName) throws LibreOfficeException {
+    public static Date getDate(@NotNull XSpreadsheet sheet, @NotNull String cellRangeName) throws LibreOfficeException {
         try {
             XCellRange cellRange = sheet.getCellRangeByName(cellRangeName);
             XCell cell = cellRange.getCellByPosition(0, 0);
@@ -200,7 +200,7 @@ public class Calc {
     }
 
     @NotNull
-    private static Date doubleToDate(Double val) throws LibreOfficeException {
+    private static Date doubleToDate(@NotNull Double val) throws LibreOfficeException {
         if (val == null) {
             throw new LibreOfficeException("Pas de date.");
         }
@@ -211,20 +211,20 @@ public class Calc {
     }
 
     @NotNull
-    public static Integer getInt(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static Integer getInt(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         Double val = (Double) getVal(sheet, column, row);
         Integer integer = val.intValue();
         return integer;
     }
 
     @NotNull
-    public static String getString(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static String getString(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getString(cell);
     }
 
     @NotNull
-    public static String getString(XCell cell) throws LibreOfficeException {
+    public static String getString(@NotNull XCell cell) throws LibreOfficeException {
         Object cellVal = getVal(cell);
         if (cellVal == null) {
             return "";
@@ -242,7 +242,7 @@ public class Calc {
         throw new LibreOfficeException("Type de contenu non géré : " + cell.getType().getValue());
     }
 
-    public static double getDouble(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static double getDouble(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         Double doubleVal = (Double) getVal(sheet, column, row);
         if (doubleVal == null) {
             throw new LibreOfficeException("La cellule (" + (row + 1) + ", " + (column + 1) + ") ne contient pas de nombre (vide).");
@@ -250,21 +250,21 @@ public class Calc {
         return doubleVal;
     }
 
-    public static boolean isNumericValue(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static boolean isNumericValue(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = libreoffice.Calc.getCell(sheet, column, row);
         return isNumericValue(cell);
     }
 
-    public static boolean isNumericValue(XCell cell) throws LibreOfficeException {
+    public static boolean isNumericValue(@NotNull XCell cell) throws LibreOfficeException {
         return (cell.getType() == CellContentType.VALUE);
     }
 
-    public static void clearCell(XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
+    public static void clearCell(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = libreoffice.Calc.getCell(sheet, column, row);
         clearCell(cell);
     }
 
-    public static void clearCell(XCell cell) throws LibreOfficeException {
+    public static void clearCell(@NotNull XCell cell) throws LibreOfficeException {
         // Cf. https://wiki.openoffice.org/wiki/Documentation/BASIC_Guide/Editing_Spreadsheet_Documents#Deleting_Cell_Contents
         setString(cell, "");
     }

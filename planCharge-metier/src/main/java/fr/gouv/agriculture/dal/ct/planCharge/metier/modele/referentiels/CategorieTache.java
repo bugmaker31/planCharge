@@ -16,7 +16,7 @@ public class CategorieTache implements Comparable<CategorieTache> {
 
     public static final CategorieTache PROJET = new CategorieTache("Projets");
     public static final CategorieTache SERVICE = new CategorieTache("Services");
-    public static final CategorieTache ORGANISATION_INTERNE = new CategorieTache("Organisation interne");
+    public static final CategorieTache ORGANISATION_INTERNE = new CategorieTache("Organisation interne CT");
 
     // Rq : L'ordre est important, car c'est cet ordre de tri (par défaut) qui est repris dans les IHMs.
     private static final CategorieTache[] VALUES =  {PROJET, SERVICE, ORGANISATION_INTERNE};
