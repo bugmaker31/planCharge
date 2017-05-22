@@ -33,14 +33,14 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     }
 
 
-    private boolean isModifie;
+    private boolean estModifie;
 
-    public boolean isModifie() {
-        return isModifie;
+    public boolean estModifie() {
+        return estModifie;
     }
 
-    private void setModifie(boolean modifie) {
-        isModifie = modifie;
+    private void setModifie(boolean estModifie) {
+        this.estModifie = estModifie;
     }
 
 
@@ -77,24 +77,24 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         super();
         dateEtat = null;
         planificationsBeans = FXCollections.observableArrayList();
-        isModifie = false;
+        estModifie = false;
     }
 
 
     public void vientDEtreCharge() {
-        this.isModifie = false;
+        this.estModifie = false;
     }
 
     public void vientDEtreSauvegarde() {
-        this.isModifie = false;
+        this.estModifie = false;
     }
 
     public void vientDEtreModifie() {
-        this.isModifie = true;
+        this.estModifie = true;
     }
 
-    public boolean necessiteEtreSauvegarde() {
-        return isModifie;
+    public boolean aBesoinEtreSauvegarde() {
+        return estModifie;
     }
 
 
@@ -135,7 +135,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     static public void copier(@NotNull PlanChargeBean pcbSource, @NotNull PlanChargeBean pcbDest) throws CopieException {
         pcbDest.setDateEtat(pcbSource.getDateEtat());
         pcbDest.getPlanificationsBeans().setAll(pcbSource.getPlanificationsBeans());
-        pcbDest.setModifie(pcbSource.isModifie());
+        pcbDest.setModifie(pcbSource.estModifie());
         /* Ajouter ici la copie des nouveaux attributs. */
     }
 
@@ -146,7 +146,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         //noinspection StringConcatenationMissingWhitespace
         return "[" + (dateEtat == null ? "N/A" : dateEtat.format(DateTimeFormatter.ISO_DATE)) + "]"
                 + " " + getPlanificationsBeans().size() + " tâches"
-                + " (" + (isModifie ? "" : "non ") + "modifié)";
+                + " (" + (estModifie ? "" : "non ") + "modifié)";
     }
 
 }

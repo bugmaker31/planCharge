@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -541,7 +540,7 @@ public class ApplicationController extends AbstractController {
     private void quitter(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Quitter");
 
-        if (planChargeBean.necessiteEtreSauvegarde()) {
+        if (planChargeBean.aBesoinEtreSauvegarde()) {
             Optional<ButtonType> result = ihm.afficherPopUp(
                     Alert.AlertType.CONFIRMATION,
                     "Quitter sans sauvergarder ?",
@@ -719,6 +718,6 @@ public class ApplicationController extends AbstractController {
 
     public void majBarreEtat() {
         LOGGER.debug("majBarreEtat...");
-        sauvegardeRequiseCheckbox.setSelected(planChargeBean.necessiteEtreSauvegarde());
+        sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
     }
 }
