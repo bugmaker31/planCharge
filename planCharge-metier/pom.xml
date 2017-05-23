@@ -41,16 +41,26 @@
                             <include>soffice.exe</include>
                         </includes>
                     </resource>
-<!--
-                    <resource>
-                        <directory>${libreoffice.classes.dir}</directory>
-                        <includes>
-                            <include>*.jar</include>
-                        </includes>
-                    </resource>
--->
+                    <!--
+                                        <resource>
+                                            <directory>${libreoffice.classes.dir}</directory>
+                                            <includes>
+                                                <include>*.jar</include>
+                                            </includes>
+                                        </resource>
+                    -->
                 </resources>
             </build>
+            <dependencies>
+                <!-- https://mvnrepository.com/artifact/org.libreoffice/officebean -->
+                <dependency>
+                    <groupId>org.libreoffice</groupId>
+                    <artifactId>officebean</artifactId>
+                    <version>${libreoffice.version}</version>
+                    <scope>system</scope>
+                    <systemPath>${libreoffice.classes.dir}/officebean.jar</systemPath>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>os_exec.unix</id>
@@ -68,14 +78,14 @@
                             <include>soffice.exe</include>
                         </includes>
                     </resource>
-<!--
-                    <resource>
-                        <directory>${libreoffice.program.dir}/classes</directory>
-                        <includes>
-                            <include>*.jar</include>
-                        </includes>
-                    </resource>
--->
+                    <!--
+                                        <resource>
+                                            <directory>${libreoffice.program.dir}/classes</directory>
+                                            <includes>
+                                                <include>*.jar</include>
+                                            </includes>
+                                        </resource>
+                    -->
                 </resources>
             </build>
         </profile>
@@ -246,15 +256,6 @@
             <version>${libreoffice.version}</version>
             <scope>system</scope>
             <systemPath>${libreoffice.classes.dir}/unoil.jar</systemPath>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.libreoffice/officebean -->
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>officebean</artifactId>
-            <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/officebean.jar</systemPath>
         </dependency>
 
         <!--
