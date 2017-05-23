@@ -101,7 +101,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
             TacheBean tacheBean = super.ajouterTache(event);
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache(tacheBean));
+            getSuiviActionsUtilisateur().historiser(new AjoutTache<>(tacheBean, getTachesBeans()));
 
             ihm.majBarreEtat();
             return tacheBean;

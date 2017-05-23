@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 
@@ -31,12 +33,11 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
     }
 
 
-
-
     @Override
     public String getTexte() {
         return "le chargement du plan de charge";
     }
+
 
     @Override
     public void annuler() throws AnnulationActionException {
@@ -45,6 +46,11 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
         } catch (CopieException e) {
             throw new AnnulationActionException("Impossible d'annuler l'action {}.", getTexte(), e);
         }
+    }
+
+    @Override
+    public void retablir() throws RetablissementActionException {
+        throw new NotImplementedException();
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Created by frederic.danna on 26/03/2017.
+ * @author frederic.danna
  */
 public class PlanificationBean extends TacheBean {
 

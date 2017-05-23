@@ -590,11 +590,7 @@ public class ApplicationController extends AbstractController {
     private void annuler(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Annuler");
         try {
-            assert !getSuiviActionsUtilisateur().estAuDebut();
-            ActionUtilisateur actionCourante = getSuiviActionsUtilisateur().actionCourante();
-            assert actionCourante != null;
-            actionCourante.annuler();
-            getSuiviActionsUtilisateur().actionPrecedente();
+            getSuiviActionsUtilisateur().annulerAction();
         } catch (IhmException e) {
             throw new Exception("Impossible d'annuler l'action de l'utilisateur.", e);
         }
@@ -609,18 +605,10 @@ public class ApplicationController extends AbstractController {
     private void retablir(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Rétablir");
         try {
-            assert !getSuiviActionsUtilisateur().estALaFin();
-            getSuiviActionsUtilisateur().actionSuivante();
-            retablir(getSuiviActionsUtilisateur().actionCourante());
+            getSuiviActionsUtilisateur().retablirAction();
         } catch (IhmException e) {
             throw new Exception("Impossible de rétablir l'action de l'utilisateur.", e);
         }
-    }
-
-    private void retablir(ActionUtilisateur actionUtilisateur) {
-        LOGGER.debug("retablir {}", actionUtilisateur.toString());
-        // TODO FDA 2017/05 Coder.
-//        throw new NotImplementedException();
     }
 
     /**

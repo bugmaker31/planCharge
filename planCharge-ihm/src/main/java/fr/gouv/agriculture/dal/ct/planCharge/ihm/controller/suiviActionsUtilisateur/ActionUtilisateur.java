@@ -1,13 +1,14 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 
 /**
  * Created by frederic.danna on 17/05/2017.
  *
  * @author frederic.danna
  */
-public abstract class ActionUtilisateur implements ActionAnnulable {
+public abstract class ActionUtilisateur implements ActionAnnulable, ActionRetablissable /*, ActionRepetable TODO FDA 2017/05 Décommenter, une fois codé. */ {
 
 
     /**

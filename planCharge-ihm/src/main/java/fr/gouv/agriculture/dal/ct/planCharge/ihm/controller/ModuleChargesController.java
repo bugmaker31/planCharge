@@ -405,7 +405,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             PlanificationBean planifBean = super.ajouterTache(event);
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache(planifBean));
+            getSuiviActionsUtilisateur().historiser(new AjoutTache<>(planifBean, planChargeBean.getPlanificationsBeans()));
 
             ihm.majBarreEtat();
 

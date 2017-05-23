@@ -1,8 +1,12 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.ActionRepetable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.RepetitionActionException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,23 +18,25 @@ import javax.validation.constraints.NotNull;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class AjoutTache extends ModificationPlanification implements ActionAnnulable {
+public class AjoutTache<TB extends TacheBean> extends ModificationPlanification implements ActionAnnulable, ActionRetablissable, ActionRepetable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AjoutTache.class);
 
 
-    private TacheBean tacheBean;
-
-    //@Autowired
     @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+    private TB tacheBean;
+
+    @NotNull
+    private final ObservableList<TB> tachesBeans;
 
 
-    public AjoutTache(TacheBean tacheBean) {
+    public AjoutTache(@NotNull TB tacheBean, @NotNull ObservableList<TB> tachesBeans) {
         this.tacheBean = tacheBean;
+        this.tachesBeans = tachesBeans;
     }
 
 
+    @NotNull
     @Override
     public String getTexte() {
         return "ajout de la tâche n° " + tacheBean.noTache();
@@ -40,7 +46,21 @@ public class AjoutTache extends ModificationPlanification implements ActionAnnul
     public void annuler() {
 //        LOGGER.debug("Annulation de l'action : {}", getTexte());
         //noinspection SuspiciousMethodCalls
-        planChargeBean.getPlanificationsBeans().remove(tacheBean);
+        tachesBeans.remove(tacheBean);
         LOGGER.debug("Action annulée : {}", getTexte());
+    }
+
+    @Override
+    public void retablir() throws RetablissementActionException{
+//        LOGGER.debug("Rétablissement de l'action : {}", getTexte());
+        tachesBeans.add(tacheBean);
+        LOGGER.debug("Action rétablie : {}", getTexte());
+    }
+
+    @Override
+    public void repeter() throws RepetitionActionException {
+        LOGGER.debug("Répétition de l'action : {}", getTexte());
+        tachesBeans.add(tacheBean);
+        LOGGER.debug("Action répétée : {}", getTexte());
     }
 }

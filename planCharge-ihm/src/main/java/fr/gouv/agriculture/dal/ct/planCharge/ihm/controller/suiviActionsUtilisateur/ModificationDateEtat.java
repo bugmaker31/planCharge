@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 
 import javax.validation.constraints.NotNull;
@@ -31,9 +32,14 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge {
         return "la modification de la date d'état (était " + dateEtatPrecedente + ")";
     }
 
+
     @Override
     public void annuler() {
         planChargeBean.setDateEtat(dateEtatPrecedente);
     }
 
+    @Override
+    public void retablir() throws RetablissementActionException {
+        throw new NotImplementedException();
+    }
 }

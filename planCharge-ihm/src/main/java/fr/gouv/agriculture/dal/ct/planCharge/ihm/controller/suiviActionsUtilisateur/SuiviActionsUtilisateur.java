@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import org.slf4j.Logger;
@@ -75,9 +74,40 @@ public class SuiviActionsUtilisateur {
         return indexActionCourante == (actionsUtilisateur.size() - 1);
     }
 
+    public boolean estVide() {
+        return indexActionCourante == -1;
+    }
+
+
+    public int nbrActionPrecedentes() {
+        return estVide() ? 0 : indexActionCourante;
+    }
+
+    public int nbrActionSuivantes() {
+        return estVide() ? 0 : (actionsUtilisateur.size() - indexActionCourante - 1);
+    }
+
+    public int nbrActionAnnulables() {
+        return nbrActionPrecedentes();
+    }
+
+    public int nbrActionRepetables() {
+        return nbrActionSuivantes();
+    }
+
+
     @Null
-    public ActionUtilisateur actionCourante() throws IhmException {
-        if (indexActionCourante == -1) {
+    public ActionUtilisateur actionPrecedente() throws SuiviActionsUtilisateurException {
+        if (nbrActionPrecedentes() == 0) {
+            return null;
+        }
+        assert indexActionCourante >= 1;
+        return actionsUtilisateur.get(indexActionCourante - 1);
+    }
+
+    @Null
+    public ActionUtilisateur actionCourante() throws SuiviActionsUtilisateurException {
+        if (estVide()) {
 //            throw new IhmException("Pas positionné sur une action (aucune action faite par l'utilisateur, encore ?).");
             return null;
         }
@@ -86,36 +116,43 @@ public class SuiviActionsUtilisateur {
     }
 
     @Null
-    public ActionUtilisateur actionSuivante() throws IhmException {
-        if (indexActionCourante >= actionsUtilisateur.size()) {
-            throw new IhmException("Impossible, déjà positionné après la toute dernière action (if any).");
+    public ActionUtilisateur actionSuivante() throws SuiviActionsUtilisateurException {
+        if (nbrActionSuivantes() == 0) {
+            return null;
         }
-        indexActionCourante++;
-        majMenus();
-        return actionCourante();
+        assert indexActionCourante < actionsUtilisateur.size();
+        return actionsUtilisateur.get(indexActionCourante + 1);
     }
 
-    @Null
-    public ActionUtilisateur actionPrecedente() throws IhmException {
-        if (indexActionCourante == -1) {
-            throw new IhmException("Impossible, déjà positionné avant la toute première action (if any).");
+
+    public void passerActionPrecedente() throws SuiviActionsUtilisateurException {
+        if (nbrActionPrecedentes() == 0) {
+            throw new SuiviActionsUtilisateurException("Impossible, pas d'action précédente (aucune action, ou déjà au début).");
         }
         indexActionCourante--;
         majMenus();
-        return actionCourante();
     }
 
-    private void majMenus() throws IhmException {
+    public void passerActionSuivante() throws SuiviActionsUtilisateurException {
+        if (nbrActionSuivantes() == 0) {
+            throw new SuiviActionsUtilisateurException("Impossible, pas d'action suivante (aucune action, ou déjà à la fin).");
+        }
+        indexActionCourante++;
+        majMenus();
+    }
+
+
+    private void majMenus() throws SuiviActionsUtilisateurException {
         majMenuAnnuler();
         majMenuRetablir();
         // TODO FDA 2017/05 Coder.
 //        majMenuRepeter();
     }
 
-    private void majMenuAnnuler() throws IhmException {
+    private void majMenuAnnuler() throws SuiviActionsUtilisateurException {
 
-        boolean rienAAnnuler = indexActionCourante < 0;
-        boolean plusDUneAnnulationPossible = indexActionCourante >= 1;
+        boolean rienAAnnuler = (nbrActionAnnulables() == 0);
+        boolean plusDUneAnnulationPossible = (nbrActionAnnulables() >= 2);
 
         menuAnnuler.setDisable(rienAAnnuler);
 
@@ -124,7 +161,10 @@ public class SuiviActionsUtilisateur {
             return;
         }
 
-        menuAnnuler.setText(texteMenuAnnuler + " " + actionCourante().getTexte());
+        ActionUtilisateur actionCourante = actionCourante();
+        assert actionCourante != null;
+
+        menuAnnuler.setText(texteMenuAnnuler + " " + actionCourante.getTexte());
 
         // Ajout des sous-menus, 1 pour chacune des 10 dernières actions annulables :
         sousMenuAnnuler.setVisible(plusDUneAnnulationPossible);
@@ -140,9 +180,9 @@ public class SuiviActionsUtilisateur {
         }
     }
 
-    private void majMenuRetablir() throws IhmException {
-        boolean rienARetablir = (indexActionCourante == -1) || (indexActionCourante == (actionsUtilisateur.size() - 1));
-        boolean plusDUnRetablissementPossible = indexActionCourante <= (actionsUtilisateur.size() - 2);
+    private void majMenuRetablir() throws SuiviActionsUtilisateurException {
+        boolean rienARetablir = (nbrActionRepetables() == 0);
+        boolean plusDUnRetablissementPossible = (nbrActionRepetables() >= 2);
 
         menuRetablir.setDisable(rienARetablir);
 
@@ -151,14 +191,17 @@ public class SuiviActionsUtilisateur {
             return;
         }
 
-        menuRetablir.setText(texteMenuRetablir + " " + actionCourante().getTexte());
+        ActionUtilisateur actionSuivante = actionSuivante();
+        assert actionSuivante != null;
+
+        menuRetablir.setText(texteMenuRetablir + " " + actionSuivante.getTexte());
 
         // Ajout des sous-menus, 1 pour chacune des 10 dernières actions rétablissables :
         sousMenuRetablir.setVisible(plusDUnRetablissementPossible);
 //        separateurMenusRetablir.setVisible(plusDUnRetablissementPossible);
         if (plusDUnRetablissementPossible) {
             List<MenuItem> menusRetablir = new ArrayList<>();
-            for (int i = indexActionCourante + 1; i < actionsUtilisateur.size(); i++) {
+            for (int i = indexActionCourante + 2; i < actionsUtilisateur.size(); i++) {
                 ActionUtilisateur actionUtilisateur = actionsUtilisateur.get(i);
                 MenuItem menuRetablirAction = new MenuItem(i + ") " + actionUtilisateur.getTexte());
                 menusRetablir.add(menuRetablirAction);
@@ -167,9 +210,8 @@ public class SuiviActionsUtilisateur {
         }
     }
 
-    // Délégations à #actionsUtilisateur :
 
-    public void historiser(ActionUtilisateur item) throws IhmException {
+    public void historiser(ActionUtilisateur item) throws SuiviActionsUtilisateurException {
         LOGGER.debug("Historisation de l'action '{}' : {}", item.toString(), item.getTexte());
 
         /*
@@ -194,4 +236,32 @@ public class SuiviActionsUtilisateur {
         }
     }
 
+
+    /**
+     * Annule {@link #actionCourante() l'action courante}.
+     *
+     * @throws SuiviActionsUtilisateurException
+     */
+    public void annulerAction() throws SuiviActionsUtilisateurException {
+        ActionUtilisateur actionCourante = actionCourante();
+        if (actionCourante == null) {
+            throw new SuiviActionsUtilisateurException("Impossible d'annuler, pas d'action courante.");
+        }
+        actionCourante.annuler();
+        passerActionPrecedente();
+    }
+
+    /**
+     * Rétablit {@link #actionCourante() l'action courante}.
+     *
+     * @throws SuiviActionsUtilisateurException
+     */
+    public void retablirAction() throws SuiviActionsUtilisateurException {
+        ActionUtilisateur actionSuivante = actionSuivante();
+        if (actionSuivante == null) {
+            throw new SuiviActionsUtilisateurException("Impossible de rétablir, pas d'action suivante.");
+        }
+        actionSuivante.retablir();
+        passerActionSuivante();
+    }
 }
