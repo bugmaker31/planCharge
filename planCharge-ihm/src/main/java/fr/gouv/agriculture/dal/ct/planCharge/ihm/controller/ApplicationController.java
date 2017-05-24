@@ -62,21 +62,29 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private Menu sousMenuAnnuler;
+/*
     @FXML
     @NotNull
     private SeparatorMenuItem separateurMenusAnnuler;
+*/
     @FXML
     @NotNull
     private MenuItem menuRetablir;
     @FXML
     @NotNull
     private Menu sousMenuRetablir;
+/*
     @FXML
     @NotNull
     private SeparatorMenuItem separateurMenusRetablir;
+*/
     @FXML
     @NotNull
     private MenuItem menuRepeter;
+    @FXML
+    @NotNull
+    private Menu sousMenuRepeter;
+
 /*
     @FXML
     @NotNull
@@ -216,7 +224,7 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().initialiser(
                 menuAnnuler, sousMenuAnnuler,
                 menuRetablir, sousMenuRetablir,
-                menuRepeter
+                menuRepeter, sousMenuRepeter
         );
 
         planChargeBean.getPlanificationsBeans().addListener(
@@ -287,10 +295,14 @@ public class ApplicationController extends AbstractController {
         }
     }
 
+    // TODO FDA 23017/02 Afficher une "progress bar".
     private void charger(@NotNull File ficPlanCharge) throws IhmException {
         if (ficPlanCharge == null) {
             throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
         }
+
+        // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
+
         try {
 
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
@@ -326,6 +338,8 @@ public class ApplicationController extends AbstractController {
         }
     }
 
+
+    // TODO FDA 23017/02 Afficher une "progress bar".
     @FXML
     private void sauver(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Sauver");
@@ -369,6 +383,7 @@ public class ApplicationController extends AbstractController {
                     "Impossible de sauver le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     500, 200
             );
+            // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
         }
     }
 
@@ -497,6 +512,9 @@ public class ApplicationController extends AbstractController {
 
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+
+        // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
+
         try {
 
             PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc);

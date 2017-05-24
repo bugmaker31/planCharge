@@ -336,7 +336,7 @@ public class TacheBean {
         try {
             patron = Pattern.compile(otherValue);
         } catch (PatternSyntaxException e) {
-            throw new IhmException("Patron de filtre incorrect : '" + otherValue + "'.", e);
+            throw new IhmException("Impossible de filtrer les descriptions des tâches à partir d'une expression régulière incorrecte : '" + otherValue + "'.", e);
         }
         Matcher matcher = patron.matcher(getDescription());
         if (matcher.find()) {

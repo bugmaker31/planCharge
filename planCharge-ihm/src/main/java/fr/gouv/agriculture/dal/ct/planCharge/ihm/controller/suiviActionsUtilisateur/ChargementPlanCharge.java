@@ -1,7 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -13,7 +15,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
-public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
+public class ChargementPlanCharge extends ModificationEnMassePlanCharge implements ActionAnnulable {
 
     private PlanChargeBean planChargeBeanPrecedent;
 
@@ -46,11 +48,6 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge {
         } catch (CopieException e) {
             throw new AnnulationActionException("Impossible d'annuler l'action {}.", getTexte(), e);
         }
-    }
-
-    @Override
-    public void retablir() throws RetablissementActionException {
-        throw new NotImplementedException();
     }
 
 }

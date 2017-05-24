@@ -1,14 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.ActionRepetable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 17/05/2017.
@@ -52,7 +57,7 @@ public class SuiviActionsUtilisateur {
     @SuppressWarnings({"MethodWithTooManyParameters", "ParameterHidesMemberVariable"})
     public void initialiser(MenuItem menuAnnuler, Menu sousMenuAnnuler,
                             MenuItem menuRetablir, Menu sousMenuRetablir,
-                            MenuItem menuRepeter) {
+                            MenuItem menuRepeter, Menu sousMenuRepeter) {
         this.menuAnnuler = menuAnnuler;
         this.sousMenuAnnuler = sousMenuAnnuler;
         //
@@ -60,44 +65,75 @@ public class SuiviActionsUtilisateur {
         this.sousMenuRetablir = sousMenuRetablir;
         //
         this.menuRepeter = menuRepeter;
+        this.sousMenuRepeter = sousMenuRepeter;
 
         this.texteMenuAnnuler = menuAnnuler.getText();
         this.texteMenuRetablir = menuRetablir.getText();
         this.texteMenuRepeter = menuRepeter.getText();
     }
 
-    public boolean estAuDebut() {
+
+    private boolean estAuDebut() {
         return indexActionCourante == 0;
     }
 
-    public boolean estALaFin() {
+    private boolean estALaFin() {
         return indexActionCourante == (actionsUtilisateur.size() - 1);
     }
 
-    public boolean estVide() {
+    private boolean estVide() {
         return indexActionCourante == -1;
     }
 
 
-    public int nbrActionPrecedentes() {
+    private int nbrActionPrecedentes() {
         return estVide() ? 0 : indexActionCourante;
     }
 
-    public int nbrActionSuivantes() {
+    private int nbrActionSuivantes() {
         return estVide() ? 0 : (actionsUtilisateur.size() - indexActionCourante - 1);
     }
 
-    public int nbrActionAnnulables() {
-        return nbrActionPrecedentes();
+
+    @NotNull
+    private List<ActionAnnulable> actionsAnnulables() {
+        List<ActionAnnulable> actionsAnnulables = new ArrayList<>();
+        for (int indexAction = indexActionCourante; indexAction >= 0; indexAction--) {
+            ActionUtilisateur action = actionsUtilisateur.get(indexAction);
+            if (action.estAnnulable()) {
+                actionsAnnulables.add((ActionAnnulable) action);
+            }
+        }
+        return actionsAnnulables;
     }
 
-    public int nbrActionRepetables() {
-        return nbrActionSuivantes();
+    @NotNull
+    private List<ActionRetablissable> actionsRetablissables() {
+        List<ActionRetablissable> actionsRetablissables = new ArrayList<>();
+        for (int indexAction = indexActionCourante + 1; indexAction < actionsUtilisateur.size(); indexAction++) {
+            ActionUtilisateur action = actionsUtilisateur.get(indexAction);
+            if (action.estRetablissable()) {
+                actionsRetablissables.add((ActionRetablissable) action);
+            }
+        }
+        return actionsRetablissables;
+    }
+
+    @NotNull
+    private List<ActionRepetable> actionsRepetables() {
+        List<ActionRepetable> actionsRepetables = new ArrayList<>();
+        for (int indexAction = indexActionCourante + 1; indexAction < actionsUtilisateur.size(); indexAction++) {
+            ActionUtilisateur action = actionsUtilisateur.get(indexAction);
+            if (action.estRepetable()) {
+                actionsRepetables.add((ActionRepetable) action);
+            }
+        }
+        return actionsRepetables;
     }
 
 
     @Null
-    public ActionUtilisateur actionPrecedente() throws SuiviActionsUtilisateurException {
+    private ActionUtilisateur actionPrecedente() throws SuiviActionsUtilisateurException {
         if (nbrActionPrecedentes() == 0) {
             return null;
         }
@@ -106,7 +142,7 @@ public class SuiviActionsUtilisateur {
     }
 
     @Null
-    public ActionUtilisateur actionCourante() throws SuiviActionsUtilisateurException {
+    private ActionUtilisateur actionCourante() throws SuiviActionsUtilisateurException {
         if (estVide()) {
 //            throw new IhmException("Pas positionné sur une action (aucune action faite par l'utilisateur, encore ?).");
             return null;
@@ -116,7 +152,7 @@ public class SuiviActionsUtilisateur {
     }
 
     @Null
-    public ActionUtilisateur actionSuivante() throws SuiviActionsUtilisateurException {
+    private ActionUtilisateur actionSuivante() throws SuiviActionsUtilisateurException {
         if (nbrActionSuivantes() == 0) {
             return null;
         }
@@ -125,7 +161,7 @@ public class SuiviActionsUtilisateur {
     }
 
 
-    public void passerActionPrecedente() throws SuiviActionsUtilisateurException {
+    private void passerActionPrecedente() throws SuiviActionsUtilisateurException {
         if (nbrActionPrecedentes() == 0) {
             throw new SuiviActionsUtilisateurException("Impossible, pas d'action précédente (aucune action, ou déjà au début).");
         }
@@ -133,7 +169,7 @@ public class SuiviActionsUtilisateur {
         majMenus();
     }
 
-    public void passerActionSuivante() throws SuiviActionsUtilisateurException {
+    private void passerActionSuivante() throws SuiviActionsUtilisateurException {
         if (nbrActionSuivantes() == 0) {
             throw new SuiviActionsUtilisateurException("Impossible, pas d'action suivante (aucune action, ou déjà à la fin).");
         }
@@ -145,69 +181,101 @@ public class SuiviActionsUtilisateur {
     private void majMenus() throws SuiviActionsUtilisateurException {
         majMenuAnnuler();
         majMenuRetablir();
-        // TODO FDA 2017/05 Coder.
-//        majMenuRepeter();
+        majMenuRepeter();
     }
 
     private void majMenuAnnuler() throws SuiviActionsUtilisateurException {
+        List<ActionAnnulable> actionsAnnulables = actionsAnnulables();
 
-        boolean rienAAnnuler = (nbrActionAnnulables() == 0);
-        boolean plusDUneAnnulationPossible = (nbrActionAnnulables() >= 2);
+        boolean rienAAnnuler = (actionsAnnulables.isEmpty());
+        boolean plusDUneAnnulationPossible = false; // (actionsAnnulables.size() >= 2);
 
         menuAnnuler.setDisable(rienAAnnuler);
+        sousMenuAnnuler.setDisable(!plusDUneAnnulationPossible);
+        sousMenuAnnuler.setVisible(plusDUneAnnulationPossible);
 
         if (rienAAnnuler) {
             menuAnnuler.setText(texteMenuAnnuler);
             return;
         }
 
-        ActionUtilisateur actionCourante = actionCourante();
-        assert actionCourante != null;
+        ActionAnnulable actionAnnulable = actionsAnnulables.get(0);
+        assert actionAnnulable != null;
 
-        menuAnnuler.setText(texteMenuAnnuler + " " + actionCourante.getTexte());
+        menuAnnuler.setText(texteMenuAnnuler + " " + actionAnnulable.getTexte());
 
-        // Ajout des sous-menus, 1 pour chacune des 10 dernières actions annulables :
-        sousMenuAnnuler.setVisible(plusDUneAnnulationPossible);
+/* TODO FDA 2017/05 Réactiver, une fois terminé de codé (évo pas priorisée).
+        // Ajout des sous-menus, 1 pour chacune des dernières actions annulables :
 //        separateurMenusAnnuler.setVisible(plusDUneAnnulationPossible);
         if (plusDUneAnnulationPossible) {
-            List<MenuItem> menusAnnuler = new ArrayList<>();
-            for (int i = indexActionCourante; i >= 0; i--) {
-                ActionUtilisateur actionUtilisateur = actionsUtilisateur.get(i);
-                MenuItem menuAnnulerAction = new MenuItem(i + ") " + actionUtilisateur.getTexte());
-                menusAnnuler.add(menuAnnulerAction);
-            }
+            final int[] indexActionAnnulable = {0};
+            List<MenuItem> menusAnnuler = actionsAnnulables().stream()
+                    .skip(1) // On ne retient pas la 1ère action, car déjà affichée dans le menu ci-dessus.
+                    .map(action -> new MenuItem((++(indexActionAnnulable[0])) + ") " + action.getTexte()))
+                    .collect(Collectors.toList());
             sousMenuAnnuler.getItems().setAll(menusAnnuler);
         }
+*/
     }
 
     private void majMenuRetablir() throws SuiviActionsUtilisateurException {
-        boolean rienARetablir = (nbrActionRepetables() == 0);
-        boolean plusDUnRetablissementPossible = (nbrActionRepetables() >= 2);
+        List<ActionRetablissable> actionRetablissables = actionsRetablissables();
+
+        boolean rienARetablir = (actionRetablissables.isEmpty());
+        boolean plusDUnRetablissementPossible = false; //(actionRetablissables.size() >= 2);
 
         menuRetablir.setDisable(rienARetablir);
+        sousMenuRetablir.setDisable(!plusDUnRetablissementPossible);
+        sousMenuRetablir.setVisible(plusDUnRetablissementPossible);
 
         if (rienARetablir) {
             menuRetablir.setText(texteMenuRetablir);
             return;
         }
 
-        ActionUtilisateur actionSuivante = actionSuivante();
+        ActionRetablissable actionSuivante = actionRetablissables.get(0);
         assert actionSuivante != null;
 
         menuRetablir.setText(texteMenuRetablir + " " + actionSuivante.getTexte());
 
-        // Ajout des sous-menus, 1 pour chacune des 10 dernières actions rétablissables :
-        sousMenuRetablir.setVisible(plusDUnRetablissementPossible);
+/* TODO FDA 2017/05 Réactiver, une fois terminé de codé (évo pas priorisée).
+        // Ajout des sous-menus, 1 pour chacune des dernières actions rétablissables :
 //        separateurMenusRetablir.setVisible(plusDUnRetablissementPossible);
         if (plusDUnRetablissementPossible) {
-            List<MenuItem> menusRetablir = new ArrayList<>();
-            for (int i = indexActionCourante + 2; i < actionsUtilisateur.size(); i++) {
-                ActionUtilisateur actionUtilisateur = actionsUtilisateur.get(i);
-                MenuItem menuRetablirAction = new MenuItem(i + ") " + actionUtilisateur.getTexte());
-                menusRetablir.add(menuRetablirAction);
-            }
+            final int[] indexActionRetablissable = {0};
+            List<MenuItem> menusRetablir = actionRetablissables.stream()
+                    .skip(1) // On ne retient pas la 1ère action, car déjà affichée dans le menu ci-dessus.
+                    .map(action -> new MenuItem((++(indexActionRetablissable[0])) + ") " + action.getTexte()))
+                    .collect(Collectors.toList());
             sousMenuRetablir.getItems().setAll(menusRetablir);
         }
+*/
+    }
+
+    private void majMenuRepeter() throws SuiviActionsUtilisateurException {
+        List<ActionRepetable> actionsRepetables = actionsRepetables();
+
+        boolean rienARepeter = (actionsRepetables.isEmpty());
+
+        menuRepeter.setDisable(rienARepeter);
+        // TODO Supprimer du code (si confirmé).
+        sousMenuRepeter.setDisable(false); // Jamais actif, n'aurait pas de sens.
+        sousMenuRepeter.setVisible(false); // Jamais affiché, n'aurait pas de sens.
+
+        if (rienARepeter) {
+            menuRepeter.setText(texteMenuRepeter);
+            return;
+        }
+
+        ActionRepetable actionRepetable = actionsRepetables.get(0);
+        assert actionRepetable != null;
+
+        menuRepeter.setText(texteMenuRepeter + " " + actionRepetable.getTexte());
+
+/* TODO FDA 2017/05 Réactiver, une fois terminé de codé (évo pas priorisée).
+        // Ajout des sous-menus, 1 pour chacune des dernières actions rétablissables :
+//        separateurMenusRetablir.setVisible(plusDUnRetablissementPossible);
+*/
     }
 
 
@@ -220,11 +288,14 @@ public class SuiviActionsUtilisateur {
          */
         oublierActionsNonRetablies();
 
+        // TODO FDA 2017/05 Mettre une limite à l'historisation (paramétrable par l'utilisateur), e.g. les 20 dernières actions.
+
         actionsUtilisateur.push(item);
         indexActionCourante++;
-        LOGGER.debug("Action '{}' historisée : {}", item.toString(), item.getTexte());
 
         majMenus();
+
+        LOGGER.debug("Action '{}' historisée : {}", item.toString(), item.getTexte());
     }
 
     private void oublierActionsNonRetablies() {
@@ -238,30 +309,47 @@ public class SuiviActionsUtilisateur {
 
 
     /**
-     * Annule {@link #actionCourante() l'action courante}.
+     * Annule {@link ActionAnnulable l'action annulable} en cours.
      *
      * @throws SuiviActionsUtilisateurException
      */
     public void annulerAction() throws SuiviActionsUtilisateurException {
-        ActionUtilisateur actionCourante = actionCourante();
-        if (actionCourante == null) {
-            throw new SuiviActionsUtilisateurException("Impossible d'annuler, pas d'action courante.");
+        List<ActionAnnulable> actionAnnulables = actionsAnnulables();
+        if (actionAnnulables.isEmpty()) {
+            throw new SuiviActionsUtilisateurException("Impossible d'annuler, pas d'action annulable.");
         }
-        actionCourante.annuler();
+        ActionAnnulable actionAnnulable = actionAnnulables.get(0);
+        actionAnnulable.annuler();
         passerActionPrecedente();
     }
 
     /**
-     * Rétablit {@link #actionCourante() l'action courante}.
+     * Rétablit {@link ActionRetablissable l'action rétablissable} en cours.
      *
      * @throws SuiviActionsUtilisateurException
      */
     public void retablirAction() throws SuiviActionsUtilisateurException {
-        ActionUtilisateur actionSuivante = actionSuivante();
-        if (actionSuivante == null) {
-            throw new SuiviActionsUtilisateurException("Impossible de rétablir, pas d'action suivante.");
+        List<ActionRetablissable> actionRetablissables = actionsRetablissables();
+        if (actionRetablissables.isEmpty()) {
+            throw new SuiviActionsUtilisateurException("Impossible de rétablir, pas d'action rétablissables.");
         }
-        actionSuivante.retablir();
+        ActionRetablissable actionRetablissable = actionRetablissables.get(0);
+        actionRetablissable.retablir();
+        passerActionSuivante();
+    }
+
+    /**
+     * Répète {@link ActionRepetable l'action répétable} en cours.
+     *
+     * @throws SuiviActionsUtilisateurException
+     */
+    public void repeterAction() throws SuiviActionsUtilisateurException {
+        List<ActionRepetable> actionsRepetables = actionsRepetables();
+        if (actionsRepetables.isEmpty()) {
+            throw new SuiviActionsUtilisateurException("Impossible de répéter, pas d'action répétables.");
+        }
+        ActionRepetable actionRepetable = actionsRepetables.get(0);
+        actionRepetable.repeter();
         passerActionSuivante();
     }
 }

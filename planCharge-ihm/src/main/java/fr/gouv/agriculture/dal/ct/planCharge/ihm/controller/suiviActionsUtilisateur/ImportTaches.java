@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 
 /**
@@ -8,7 +10,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
  *
  * @author frederic.danna
  */
-public class ImportTaches extends ModificationEnMassePlanCharge {
+public class ImportTaches extends ModificationEnMassePlanCharge implements ActionAnnulable, ActionRetablissable {
 
     @Override
     public void annuler() {

@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class AjoutTache<TB extends TacheBean> extends ModificationPlanification implements ActionAnnulable, ActionRetablissable, ActionRepetable {
+public class AjoutTache<TB extends TacheBean> extends ModificationPlanification implements ActionAnnulable, ActionRetablissable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AjoutTache.class);
 
@@ -39,7 +39,7 @@ public class AjoutTache<TB extends TacheBean> extends ModificationPlanification 
     @NotNull
     @Override
     public String getTexte() {
-        return "ajout de la tâche n° " + tacheBean.noTache();
+        return "l'ajout de la tâche n° " + tacheBean.noTache();
     }
 
     @Override
@@ -57,10 +57,4 @@ public class AjoutTache<TB extends TacheBean> extends ModificationPlanification 
         LOGGER.debug("Action rétablie : {}", getTexte());
     }
 
-    @Override
-    public void repeter() throws RepetitionActionException {
-        LOGGER.debug("Répétition de l'action : {}", getTexte());
-        tachesBeans.add(tacheBean);
-        LOGGER.debug("Action répétée : {}", getTexte());
-    }
 }

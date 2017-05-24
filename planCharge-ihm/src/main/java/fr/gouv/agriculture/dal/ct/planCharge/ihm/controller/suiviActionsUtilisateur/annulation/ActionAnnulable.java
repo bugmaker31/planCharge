@@ -7,7 +7,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
  *
  * @author frederic.danna
  */
-public interface ActionAnnulable {
+public interface ActionAnnulable extends ActionUtilisateur {
 
     /**
      * Annuler {@link ActionUtilisateur l'action de l'utilisateur.}
