@@ -145,7 +145,7 @@
     </center>
     <bottom>
         <AnchorPane>
-            <Button text="_Ajouter une tâche" mnemonicParsing="true" onAction="#ajouterTache"/>
+            <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
         </AnchorPane>
     </bottom>
 </BorderPane>
