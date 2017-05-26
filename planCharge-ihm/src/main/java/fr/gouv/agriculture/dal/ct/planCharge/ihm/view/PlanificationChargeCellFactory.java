@@ -29,6 +29,9 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
     public void updateItem(Double item, boolean empty) {
         super.updateItem(item, empty);
 
+        getStyleClass().remove("tropTot");
+        getStyleClass().remove("tropTard");
+
         if (empty) {
             return; // TODO FDA 2017/05 Confirmer.
         }
@@ -53,12 +56,12 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
 
         if (planifBean.getDebut() != null) {
             if (debutPeriode.isBefore(planifBean.getDebut())) {
-                getStyleClass().setAll("tropTot");
+                getStyleClass().add("tropTot");
             }
         }
         if ((finPeriode != null) && (planifBean.getEcheance() != null)) {
             if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7))) {
-                getStyleClass().setAll("tropTard");
+                getStyleClass().add("tropTard");
             }
         }
     }
