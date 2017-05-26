@@ -1,7 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by frederic.danna on 17/05/2017.
@@ -10,13 +11,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
  */
 public class AffichageModuleTaches extends AffichageModule {
 
-    @Override
-    public void annuler() {
-        throw new NotImplementedException();
+    public AffichageModuleTaches(ApplicationController.NomModule nomModulePrecedent) {
+        super(nomModulePrecedent);
     }
 
+    @NotNull
     @Override
-    public void retablir() throws RetablissementActionException {
-        throw new NotImplementedException();
+    ApplicationController.NomModule getNomModule() {
+        return ApplicationController.NomModule.taches;
     }
 }

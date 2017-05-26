@@ -18,6 +18,8 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge impleme
 
     private LocalDate dateEtatPrecedente;
 
+    private LocalDate dateEtatActuelle;
+
     //@Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
@@ -26,6 +28,7 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge impleme
     public ModificationDateEtat(LocalDate dateEtatPrecedente) {
         super();
         this.dateEtatPrecedente = dateEtatPrecedente;
+        this.dateEtatActuelle = planChargeBean.getDateEtat();
     }
 
 
@@ -42,6 +45,6 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge impleme
 
     @Override
     public void retablir() throws RetablissementActionException {
-        throw new NotImplementedException();
+        planChargeBean.setDateEtat(dateEtatActuelle);
     }
 }

@@ -75,56 +75,81 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     private ObservableList<String> codesProfils = FXCollections.observableArrayList();
 
     @FXML
+    @NotNull
     private TableColumn<TB, String> categorieColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> sousCategorieColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> noTacheColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> noTicketIdalColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> descriptionColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> projetAppliColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> debutColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> echeanceColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> importanceColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, Double> chargeColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> ressourceColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> profilColumn;
 
     // Les filtres :
     @FXML
+    @NotNull
     protected TextField filtreGlobalField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreCategoriesField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreSousCategoriesField;
     @FXML
+    @NotNull
     protected TextField filtreNoTacheField;
     @FXML
+    @NotNull
     protected TextField filtreNoTicketIdalField;
     @FXML
+    @NotNull
     protected TextField filtreDescriptionField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreProjetsApplisField;
     @FXML
+    @NotNull
     protected DatePicker filtreDebutField;
     @FXML
+    @NotNull
     protected DatePicker filtreEcheanceField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreImportancesField;
     @FXML
+    @NotNull
     protected TextField filtreChargeField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreRessourcesField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreProfilsField;
 
     @NotNull
@@ -133,6 +158,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     abstract TableView<TB> getTachesTable();
 
+    @NotNull
     TableColumn<TB, Double> getChargeColumn() {
         return chargeColumn;
     }
@@ -187,6 +213,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreProfilsField.getCheckModel().checkAll();
     }
 
+    @SuppressWarnings("OverlyLongMethod")
     @Override
     void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
@@ -201,6 +228,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().codeProjetAppliProperty());
         debutColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().debutProperty().isNull().get()) {
+                //noinspection ReturnOfNull
                 return null;
             }
             LocalDate debut = cellData.getValue().debutProperty().get();
@@ -208,6 +236,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         echeanceColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().echeanceProperty().isNull().get()) {
+                //noinspection ReturnOfNull
                 return null;
             }
             LocalDate echeance = cellData.getValue().echeanceProperty().get();
@@ -262,6 +291,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         LOGGER.debug("Initialisé.");
     }
 
+    @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
     private void enregistrerListenersSurFiltres(FilteredList<TB> filteredTaches) {
         LOGGER.debug("enregistrerListenersSurFiltres...");
 
@@ -382,7 +412,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             try {
                 ihm.enleverErreurSaisie(filtreDescriptionField);
                 if ((newValue != null) && !newValue.isEmpty()) {
-                    //noinspection UnusedCatchParameter
+                    //noinspection UnusedCatchParameter,NestedTryStatement
                     try {
                         //noinspection ResultOfMethodCallIgnored
                         Pattern.compile(newValue);

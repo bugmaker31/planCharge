@@ -66,11 +66,13 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     }
 
 
+    @NotNull
     @Override
     ObservableList<TacheBean> getTachesBeans() {
         return planificationsBeans;
     }
 
+    @NotNull
     @Override
     TableView<TacheBean> getTachesTable() {
         return tachesTable;

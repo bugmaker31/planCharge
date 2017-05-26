@@ -3,7 +3,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
@@ -51,6 +50,24 @@ public class ApplicationController extends AbstractController {
 
     private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
+    public enum NomModule {
+        disponibilites("Disponibilités"),
+        taches("Tâches"),
+        charges("Charges");
+
+        private String texte;
+
+        NomModule(String texte) {
+            this.texte = texte;
+        }
+
+        public String getTexte() {
+            return texte;
+        }
+    }
+
+    private NomModule nomModuleCourant = null;
+
     // Les menus :
 
     @FXML
@@ -62,22 +79,22 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private Menu sousMenuAnnuler;
-/*
-    @FXML
-    @NotNull
-    private SeparatorMenuItem separateurMenusAnnuler;
-*/
+    /*
+        @FXML
+        @NotNull
+        private SeparatorMenuItem separateurMenusAnnuler;
+    */
     @FXML
     @NotNull
     private MenuItem menuRetablir;
     @FXML
     @NotNull
     private Menu sousMenuRetablir;
-/*
-    @FXML
-    @NotNull
-    private SeparatorMenuItem separateurMenusRetablir;
-*/
+    /*
+        @FXML
+        @NotNull
+        private SeparatorMenuItem separateurMenusRetablir;
+    */
     @FXML
     @NotNull
     private MenuItem menuRepeter;
@@ -227,6 +244,35 @@ public class ApplicationController extends AbstractController {
                 menuRepeter, sousMenuRepeter
         );
 
+        // Cf. https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        gestionTabPane.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    try {
+                        if (newValue.equals(disponibilitesTab)) {
+                            afficherModuleDisponibilites();
+                            return;
+                        }
+                        if (newValue.equals(tachesTab)) {
+                            afficherModuleTaches();
+                            return;
+                        }
+                        if (newValue.equals(disponibilitesTab)) {
+                            afficherModuleDisponibilites();
+                            return;
+                        }
+                    } catch (IhmException e) {
+                        NomModule nomNouveauModule = (
+                                (newValue.equals(disponibilitesTab)) ? NomModule.disponibilites :
+                                        ((newValue.equals(tachesTab)) ? NomModule.taches :
+                                                ((newValue.equals(chargesTab)) ? NomModule.charges :
+                                                        null)
+                                        )
+                        );
+                        LOGGER.error("Impossible d'affichager le module {}.", nomNouveauModule, e);
+                    }
+                }
+        );
+
         planChargeBean.getPlanificationsBeans().addListener(
                 (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
         );
@@ -329,6 +375,7 @@ public class ApplicationController extends AbstractController {
                             + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches",
                     400, 200
             );
+
             afficherModuleCharges();
 
             majBarreEtat();
@@ -635,13 +682,13 @@ public class ApplicationController extends AbstractController {
      * @param event
      */
     @FXML
-    private void repeter(@SuppressWarnings("unused") ActionEvent event) {
+    private void repeter(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Répéter");
-
-        // TODO FDA 2017/03 Coder.
-        getSuiviActionsUtilisateur();
-
-        throw new NotImplementedException();
+        try {
+            getSuiviActionsUtilisateur().repeterAction();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de répéter l'action de l'utilisateur.", e);
+        }
     }
 
 /*
@@ -696,29 +743,32 @@ public class ApplicationController extends AbstractController {
     }
 
     //    @FXML
-    private void afficherModuleDisponibilites() {
+    public void afficherModuleDisponibilites() throws IhmException {
 //        applicationView.setCenter(disponibilitesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(disponibilitesTab);
-//        moduleCourant = "Disponibilités";
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModuleCourant));
+        nomModuleCourant = NomModule.disponibilites;
 //        ihm.majTitre();
     }
 
     //    @FXML
-    private void afficherModuleTaches() {
-//        applicationView.setCenter(tachesView);
+    public void afficherModuleTaches() throws IhmException {
+        //        applicationView.setCenter(tachesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(tachesTab);
-//        moduleCourant = "Tâches";
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModuleCourant));
+        nomModuleCourant = NomModule.taches;
 //        ihm.majTitre();
     }
 
     //    @FXML
-    private void afficherModuleCharges() {
-//        applicationView.setCenter(chargesView);
+    public void afficherModuleCharges() throws IhmException {
+        //        applicationView.setCenter(chargesView);
         // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
         gestionTabPane.getSelectionModel().select(chargesTab);
-//        moduleCourant = "Charges";
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModuleCourant));
+        nomModuleCourant = NomModule.charges;
 //        ihm.majTitre();
     }
 

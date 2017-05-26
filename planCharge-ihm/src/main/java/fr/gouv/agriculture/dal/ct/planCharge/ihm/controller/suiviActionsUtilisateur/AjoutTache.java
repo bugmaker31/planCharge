@@ -39,8 +39,9 @@ public class AjoutTache<TB extends TacheBean> extends ModificationPlanification 
     @NotNull
     @Override
     public String getTexte() {
-        return "l'ajout de la tâche n° " + tacheBean.noTache();
+        return "ajout de la tâche n° " + tacheBean.noTache();
     }
+
 
     @Override
     public void annuler() {

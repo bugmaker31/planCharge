@@ -147,12 +147,14 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
 
+    @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
     ObservableList<PlanificationBean> getTachesBeans() {
         return planificationsBeans;
     }
 
+    @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
     TableView<PlanificationBean> getTachesTable() {
