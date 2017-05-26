@@ -79,7 +79,7 @@
             <Tab fx:id="tachesTab" text="Tâches">
                 <fx:include source="ModuleTachesView.fxml"/>
             </Tab>
-            <Tab fx:id="chargesTab" text="Charge">
+            <Tab fx:id="chargesTab" text="Charges">
                 <fx:include source="ModuleChargesView.fxml"/>
             </Tab>
         </TabPane>

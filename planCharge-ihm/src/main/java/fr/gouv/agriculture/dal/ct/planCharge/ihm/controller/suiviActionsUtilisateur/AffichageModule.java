@@ -21,6 +21,11 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AffichageModule.class);
 
+//    @Autowired
+    @NotNull
+    private final ApplicationController applicationController = ApplicationController.instance();
+
+
     @Null
     private final ApplicationController.NomModule nomModulePrecedent;
 
@@ -43,7 +48,6 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
     public void annuler() throws AnnulationActionException {
-        ApplicationController appCtrl = ApplicationController.instance();
         try {
             if (nomModulePrecedent == null) {
                 // TODO FDA 2017/05 Quel module afficher, lorsqu'on annule l'affichage du tout 1er module affiché ? La page d'accueil ?
@@ -51,16 +55,15 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 return;
             }
             if (nomModulePrecedent == ApplicationController.NomModule.disponibilites) {
-                appCtrl.afficherModuleDisponibilites();
+                applicationController.afficherModuleDisponibilites();
                 return;
             }
             if (nomModulePrecedent == ApplicationController.NomModule.taches) {
-                appCtrl.afficherModuleTaches();
+                applicationController.afficherModuleTaches();
                 return;
             }
             if (nomModulePrecedent == ApplicationController.NomModule.charges) {
-                appCtrl.afficherModuleCharges();
-                //noinspection UnnecessaryReturnStatement
+                applicationController.afficherModuleCharges();
                 return;
             }
             throw new AnnulationActionException("Module non géré : '{]'.", nomModulePrecedent.getTexte());

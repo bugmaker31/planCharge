@@ -167,7 +167,7 @@ public class SuiviActionsUtilisateur {
             throw new SuiviActionsUtilisateurException("Impossible, pas d'action précédente (aucune action, ou déjà au début).");
         }
         indexActionCourante--;
-        majMenus();
+        logDebugActions();
     }
 
     private void passerActionSuivante() throws SuiviActionsUtilisateurException {
@@ -175,7 +175,27 @@ public class SuiviActionsUtilisateur {
             throw new SuiviActionsUtilisateurException("Impossible, pas d'action suivante (aucune action, ou déjà à la fin).");
         }
         indexActionCourante++;
-        majMenus();
+        logDebugActions();
+    }
+
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
+    private void logDebugActions() {
+        if (!LOGGER.isDebugEnabled()) {
+            return;
+        }
+        LOGGER.debug("Actions de l'utilisateur : ");
+        //noinspection ForLoopReplaceableByForEach
+        for (int indexAction = 0; indexAction < actionsUtilisateur.size(); indexAction++) {
+            ActionUtilisateur action = actionsUtilisateur.get(indexAction);
+            LOGGER.debug(
+                    " - "
+                    + "" + (action.estAnnulable() ? "A" : ".")
+                    + "" + (action.estRetablissable() ? "R" : ".")
+                    + "" + (action.estRepetable() ? "R" : ".")
+                    + " " + action.toString() + " '" + action.getTexte() + "'"
+                    + " " + (indexAction == indexActionCourante ? " <---" : "")
+            );
+        }
     }
 
 
@@ -289,17 +309,18 @@ public class SuiviActionsUtilisateur {
 
         actionsUtilisateur.push(item);
         indexActionCourante++;
+        logDebugActions();
 
         majMenus();
 
-        LOGGER.debug("Action '{}' historisée : {}", item.toString(), item.getTexte());
+//        LOGGER.debug("Action '{}' historisée : {}", item.toString(), item.getTexte());
     }
 
     private void oublierActionsAnnuléesNonRetablies() {
-        LOGGER.debug("Suppression des actions devenues obsolètes suite à l'action de l'utilisateur :");
+//        LOGGER.debug("Suppression des actions devenues obsolètes suite à l'action de l'utilisateur :");
         for (int indexActionAOublier = actionsUtilisateur.size() - 1; indexActionAOublier > indexActionCourante; indexActionAOublier--) {
             ActionUtilisateur actionAOublier = actionsUtilisateur.get(indexActionAOublier);
-            LOGGER.debug("- action '{}' : {}", actionAOublier.toString(), actionAOublier.getTexte());
+//            LOGGER.debug("- action '{}' : {}", actionAOublier.toString(), actionAOublier.getTexte());
             actionsUtilisateur.removeElementAt(indexActionAOublier);
         }
     }
@@ -315,9 +336,13 @@ public class SuiviActionsUtilisateur {
         if (actionAnnulables.isEmpty()) {
             throw new SuiviActionsUtilisateurException("Impossible d'annuler, pas d'action annulable.");
         }
+
         ActionAnnulable actionAnnulable = actionAnnulables.get(0);
         actionAnnulable.annuler();
+
         passerActionPrecedente();
+
+        majMenus();
     }
 
     /**
@@ -328,11 +353,15 @@ public class SuiviActionsUtilisateur {
     public void retablirAction() throws SuiviActionsUtilisateurException {
         List<ActionRetablissable> actionRetablissables = actionsRetablissables();
         if (actionRetablissables.isEmpty()) {
-            throw new SuiviActionsUtilisateurException("Impossible de rétablir, pas d'action rétablissables.");
+            throw new SuiviActionsUtilisateurException("Impossible de rétablir, pas d'action rétablissable.");
         }
+
         ActionRetablissable actionRetablissable = actionRetablissables.get(0);
         actionRetablissable.retablir();
+
         passerActionSuivante();
+
+        majMenus();
     }
 
     /**
@@ -343,10 +372,14 @@ public class SuiviActionsUtilisateur {
     public void repeterAction() throws SuiviActionsUtilisateurException {
         List<ActionRepetable> actionsRepetables = actionsRepetables();
         if (actionsRepetables.isEmpty()) {
-            throw new SuiviActionsUtilisateurException("Impossible de répéter, pas d'action répétables.");
+            throw new SuiviActionsUtilisateurException("Impossible de répéter, pas d'action répétable.");
         }
+
         ActionRepetable actionRepetable = actionsRepetables.get(0);
         actionRepetable.repeter();
+
         historiser(actionRepetable);
+
+        majMenus();
     }
 }
