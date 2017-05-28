@@ -55,15 +55,15 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 return;
             }
             if (nomModulePrecedent == ApplicationController.NomModule.disponibilites) {
-                applicationController.afficherModuleDisponibilites();
+                applicationController.activerModuleDisponibilites();
                 return;
             }
             if (nomModulePrecedent == ApplicationController.NomModule.taches) {
-                applicationController.afficherModuleTaches();
+                applicationController.activerModuleTaches();
                 return;
             }
             if (nomModulePrecedent == ApplicationController.NomModule.charges) {
-                applicationController.afficherModuleCharges();
+                applicationController.activerModuleCharges();
                 return;
             }
             throw new AnnulationActionException("Module non géré : '{]'.", nomModulePrecedent.getTexte());
@@ -77,15 +77,15 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
         ApplicationController appCtrl = ApplicationController.instance();
         try {
             if (getNomModule() == ApplicationController.NomModule.disponibilites) {
-                appCtrl.afficherModuleDisponibilites();
+                appCtrl.activerModuleDisponibilites();
                 return;
             }
             if (getNomModule() == ApplicationController.NomModule.taches) {
-                appCtrl.afficherModuleTaches();
+                appCtrl.activerModuleTaches();
                 return;
             }
             if (getNomModule() == ApplicationController.NomModule.charges) {
-                //noinspection UnnecessaryReturnStatement
+                appCtrl.activerModuleCharges();
                 return;
             }
             throw new RetablissementActionException("Module non géré : '{]'.", getNomModule().getTexte());

@@ -166,6 +166,10 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
+    public NomModule getNomModuleCourant() {
+        return nomModuleCourant;
+    }
+
 
     public ApplicationController() throws IhmException {
         super();
@@ -373,7 +377,7 @@ public class ApplicationController extends AbstractController {
                     400, 200
             );
 
-            afficherModuleCharges();
+            activerModuleCharges();
 
             majBarreEtat();
 
@@ -752,14 +756,22 @@ public class ApplicationController extends AbstractController {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
-        final NomModule nomModulePrecedent = nomModuleCourant;
+
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleDisponibilites();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
+    }
+
+    public void activerModuleDisponibilites() {
         nomModuleCourant = NomModule.disponibilites;
 
 //        applicationView.setCenter(disponibilitesView);
-        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-        gestionTabPane.getSelectionModel().select(disponibilitesTab); // Rq : Va déclencher cette méthode, donc il faut valuer nomModuleCourant avant pour éviter les boucles.
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
-//        ihm.majTitre();
+        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(disponibilitesTab)) {
+            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+            gestionTabPane.getSelectionModel().select(disponibilitesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
+        }
+
+        ihm.majTitre();
     }
 
     //    @FXML
@@ -770,14 +782,21 @@ public class ApplicationController extends AbstractController {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
-        final NomModule nomModulePrecedent = nomModuleCourant;
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleTaches();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
+    }
+
+    public void activerModuleTaches() {
         nomModuleCourant = NomModule.taches;
 
 //        applicationView.setCenter(tachesView);
-        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-        gestionTabPane.getSelectionModel().select(tachesTab); // Rq : Va déclencher cette méthode, donc il faut valuer nomModuleCourant avant pour éviter les boucles.
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
-//        ihm.majTitre();
+        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(tachesTab)) {
+            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+            gestionTabPane.getSelectionModel().select(tachesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
+        }
+
+        ihm.majTitre();
     }
 
     //    @FXML
@@ -788,14 +807,21 @@ public class ApplicationController extends AbstractController {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
-        final NomModule nomModulePrecedent = nomModuleCourant;
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleCharges();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
+    }
+
+    public void activerModuleCharges() {
         nomModuleCourant = NomModule.charges;
 
 //        applicationView.setCenter(chargesView);
-        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-        gestionTabPane.getSelectionModel().select(chargesTab); // Rq : Va déclencher cette méthode, donc il faut valuer nomModuleCourant avant pour éviter les boucles.
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
-//        ihm.majTitre();
+        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(chargesTab)) {
+            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+            gestionTabPane.getSelectionModel().select(chargesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
+        }
+
+        ihm.majTitre();
     }
 
 

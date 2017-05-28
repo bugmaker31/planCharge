@@ -464,11 +464,9 @@ public class PlanChargeIhm extends Application {
         if (planChargeBean.getDateEtat() != null) {
             titre += (" - " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         }
-/*
-        if (moduleCourant != null) {
-            titre += (" - " + moduleCourant);
+        if (applicationController.getNomModuleCourant() != null) {
+            titre += (" - " + applicationController.getNomModuleCourant().getTexte());
         }
-*/
         primaryStage.setTitle(titre);
     }
 

@@ -98,7 +98,8 @@ public class SuiviActionsUtilisateur {
     @NotNull
     private List<ActionAnnulable> actionsAnnulables() {
         List<ActionAnnulable> actionsAnnulables = new ArrayList<>();
-        for (int indexAction = indexActionCourante; indexAction >= 0; indexAction--) {
+        int indexDebut = Math.min(indexActionCourante, actionsUtilisateur.size() - 1);
+        for (int indexAction = indexDebut; indexAction >= 0; indexAction--) {
             ActionUtilisateur action = actionsUtilisateur.get(indexAction);
             if (action.estAnnulable()) {
                 actionsAnnulables.add((ActionAnnulable) action);
@@ -122,7 +123,7 @@ public class SuiviActionsUtilisateur {
     @NotNull
     private List<ActionRepetable> actionsRepetables() {
         List<ActionRepetable> actionsRepetables = new ArrayList<>();
-        int indexDebut = ((indexActionCourante == -1) ? 0 : indexActionCourante);
+        int indexDebut = Math.max(0, indexActionCourante);
         for (int indexAction = indexDebut; indexAction < actionsUtilisateur.size(); indexAction++) {
             ActionUtilisateur action = actionsUtilisateur.get(indexAction);
             if (action.estRepetable()) {
@@ -183,29 +184,29 @@ public class SuiviActionsUtilisateur {
         if (!LOGGER.isDebugEnabled()) {
             return;
         }
-        LOGGER.debug("Actions de l'utilisateur : ");
+        LOGGER.debug("Actions de l'utilisateur (index action en cours == " + indexActionCourante + ") : ");
         //noinspection ForLoopReplaceableByForEach
         for (int indexAction = 0; indexAction < actionsUtilisateur.size(); indexAction++) {
             ActionUtilisateur action = actionsUtilisateur.get(indexAction);
             LOGGER.debug(
                     " - "
-                    + "" + (action.estAnnulable() ? "A" : ".")
-                    + "" + (action.estRetablissable() ? "R" : ".")
-                    + "" + (action.estRepetable() ? "R" : ".")
-                    + " " + action.toString() + " '" + action.getTexte() + "'"
-                    + " " + (indexAction == indexActionCourante ? " <---" : "")
+                            + "" + (action.estAnnulable() ? "A" : ".")
+                            + "" + (action.estRetablissable() ? "R" : ".")
+                            + "" + (action.estRepetable() ? "R" : ".")
+                            + " " + action.toString() + " '" + action.getTexte() + "'"
+                            + " " + (indexAction == indexActionCourante ? " <---" : "")
             );
         }
     }
 
 
-    private void majMenus() throws SuiviActionsUtilisateurException {
+    private void majMenus() {
         majMenuAnnuler();
         majMenuRetablir();
         majMenuRepeter();
     }
 
-    private void majMenuAnnuler() throws SuiviActionsUtilisateurException {
+    private void majMenuAnnuler() {
         List<ActionAnnulable> actionsAnnulables = actionsAnnulables();
 
         boolean rienAAnnuler = (actionsAnnulables.isEmpty());
@@ -237,7 +238,7 @@ public class SuiviActionsUtilisateur {
         }
     }
 
-    private void majMenuRetablir() throws SuiviActionsUtilisateurException {
+    private void majMenuRetablir() {
         List<ActionRetablissable> actionRetablissables = actionsRetablissables();
 
         boolean rienARetablir = (actionRetablissables.isEmpty());
@@ -269,7 +270,7 @@ public class SuiviActionsUtilisateur {
         }
     }
 
-    private void majMenuRepeter() throws SuiviActionsUtilisateurException {
+    private void majMenuRepeter() {
         List<ActionRepetable> actionsRepetables = actionsRepetables();
 
         boolean rienARepeter = (actionsRepetables.isEmpty());
@@ -297,7 +298,7 @@ public class SuiviActionsUtilisateur {
 
 
     public void historiser(ActionUtilisateur item) throws SuiviActionsUtilisateurException {
-        LOGGER.debug("Historisation de l'action '{}' : {}", item.toString(), item.getTexte());
+        LOGGER.debug("historiser '{}' : {}", item.toString(), item.getTexte());
 
         /*
         Dès que l'utilisateur fait une action, les éventuelles actions Annulable's deviennent obsolètes.
@@ -319,8 +320,10 @@ public class SuiviActionsUtilisateur {
     private void oublierActionsAnnuléesNonRetablies() {
 //        LOGGER.debug("Suppression des actions devenues obsolètes suite à l'action de l'utilisateur :");
         for (int indexActionAOublier = actionsUtilisateur.size() - 1; indexActionAOublier > indexActionCourante; indexActionAOublier--) {
+/*
             ActionUtilisateur actionAOublier = actionsUtilisateur.get(indexActionAOublier);
-//            LOGGER.debug("- action '{}' : {}", actionAOublier.toString(), actionAOublier.getTexte());
+            LOGGER.debug("- action '{}' : {}", actionAOublier.toString(), actionAOublier.getTexte());
+*/
             actionsUtilisateur.removeElementAt(indexActionAOublier);
         }
     }
@@ -332,12 +335,14 @@ public class SuiviActionsUtilisateur {
      * @throws SuiviActionsUtilisateurException
      */
     public void annulerAction() throws SuiviActionsUtilisateurException {
+        LOGGER.debug("annulerAction...");
         List<ActionAnnulable> actionAnnulables = actionsAnnulables();
         if (actionAnnulables.isEmpty()) {
             throw new SuiviActionsUtilisateurException("Impossible d'annuler, pas d'action annulable.");
         }
 
         ActionAnnulable actionAnnulable = actionAnnulables.get(0);
+        LOGGER.debug("Annuler action {} '{}'", actionAnnulable.toString(), actionAnnulable.getTexte());
         actionAnnulable.annuler();
 
         passerActionPrecedente();
@@ -351,12 +356,14 @@ public class SuiviActionsUtilisateur {
      * @throws SuiviActionsUtilisateurException
      */
     public void retablirAction() throws SuiviActionsUtilisateurException {
+        LOGGER.debug("retablirAction...");
         List<ActionRetablissable> actionRetablissables = actionsRetablissables();
         if (actionRetablissables.isEmpty()) {
             throw new SuiviActionsUtilisateurException("Impossible de rétablir, pas d'action rétablissable.");
         }
 
         ActionRetablissable actionRetablissable = actionRetablissables.get(0);
+        LOGGER.debug("Rétablir action {} '{}'", actionRetablissable.toString(), actionRetablissable.getTexte());
         actionRetablissable.retablir();
 
         passerActionSuivante();
@@ -370,12 +377,14 @@ public class SuiviActionsUtilisateur {
      * @throws SuiviActionsUtilisateurException
      */
     public void repeterAction() throws SuiviActionsUtilisateurException {
+        LOGGER.debug("repeterAction...");
         List<ActionRepetable> actionsRepetables = actionsRepetables();
         if (actionsRepetables.isEmpty()) {
             throw new SuiviActionsUtilisateurException("Impossible de répéter, pas d'action répétable.");
         }
 
         ActionRepetable actionRepetable = actionsRepetables.get(0);
+        LOGGER.debug("Répéter action {} '{}'", actionRepetable.toString(), actionRepetable.getTexte());
         actionRepetable.repeter();
 
         historiser(actionRepetable);
