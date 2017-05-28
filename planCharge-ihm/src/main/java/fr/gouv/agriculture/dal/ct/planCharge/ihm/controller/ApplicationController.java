@@ -377,7 +377,7 @@ public class ApplicationController extends AbstractController {
                     400, 200
             );
 
-            activerModuleCharges();
+            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur.
 
             majBarreEtat();
 
