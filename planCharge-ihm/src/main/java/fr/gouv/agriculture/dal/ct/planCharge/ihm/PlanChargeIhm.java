@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationControlle
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -74,6 +75,11 @@ public class PlanChargeIhm extends Application {
     private ModuleTachesController tachesController;
     @NotNull
     private ModuleChargesController chargesController;
+
+    //    @Autowired
+    @NotNull
+    private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
+
 
     public Stage getPrimaryStage() {
         return primaryStage;

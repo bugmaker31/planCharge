@@ -37,6 +37,7 @@ import java.util.List;
  *
  * @author frederic.danna
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class ModuleChargesController extends AbstractTachesController<PlanificationBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargesController.class);

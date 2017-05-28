@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Pair;
@@ -15,16 +16,17 @@ import java.util.Map;
 
 /**
  * Created by frederic.danna on 26/03/2017.
+ *
  * @author frederic.danna
  */
 public class PlanificationBean extends TacheBean {
 
     @NotNull
-    private final List<Pair<LocalDate, DoubleProperty>> calendrier;
+    private List<Pair<LocalDate, DoubleProperty>> calendrier;
     @NotNull
     private DoubleProperty chargePlanifiee = new SimpleDoubleProperty();
 
-    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>>calendrier) throws IhmException {
+    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier) throws IhmException {
         super(tacheBean);
         this.calendrier = calendrier;
 
@@ -70,15 +72,18 @@ public class PlanificationBean extends TacheBean {
         majChargePlanifiee();
     }
 
+
     @NotNull
     public TacheBean getTacheBean() {
         return this;
     }
 
+
     @NotNull
     public List<Pair<LocalDate, DoubleProperty>> getCalendrier() {
         return calendrier;
     }
+
 
     public double getChargePlanifiee() {
         return chargePlanifiee.get();
@@ -115,6 +120,19 @@ public class PlanificationBean extends TacheBean {
     public void majChargePlanifiee() {
         chargePlanifiee.setValue(chargePlanifiee());
     }
+
+
+    public PlanificationBean copier(PlanificationBean original) throws CopieException {
+        try {
+            return new PlanificationBean(
+                    original.copier(),
+                    getCalendrier() // FIXME FDA 2017/05 Copier les éléments de la liste aussi.
+            );
+        } catch (IhmException e) {
+            throw new CopieException("Impossible de copier.", e);
+        }
+    }
+
 
     // Pour déboguer, uniquement.
     @NotNull

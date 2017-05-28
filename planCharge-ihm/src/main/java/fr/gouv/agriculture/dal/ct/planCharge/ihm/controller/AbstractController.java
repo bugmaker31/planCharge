@@ -19,7 +19,6 @@ public abstract class AbstractController implements Initializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
-
     //    @Autowired
     @NotNull
     private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();

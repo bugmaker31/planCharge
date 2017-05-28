@@ -124,18 +124,22 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     }
 
 
-    @Override
     @NotNull
-    public PlanChargeBean copier() throws CopieException {
+    public static PlanChargeBean copier(PlanChargeBean original) throws CopieException {
         PlanChargeBean copie = new PlanChargeBean();
-        copier(this, copie);
+        copier(original, copie);
         return copie;
     }
 
-    static public void copier(@NotNull PlanChargeBean pcbSource, @NotNull PlanChargeBean pcbDest) throws CopieException {
-        pcbDest.setDateEtat(pcbSource.getDateEtat());
-        pcbDest.getPlanificationsBeans().setAll(pcbSource.getPlanificationsBeans());
-        pcbDest.setModifie(pcbSource.estModifie());
+    @Override
+    public PlanChargeBean copier() throws CopieException {
+        return copier(this);
+    }
+
+    public static void copier(@NotNull PlanChargeBean original, @NotNull PlanChargeBean copie) throws CopieException {
+        copie.setDateEtat(original.getDateEtat()); // FIXME FDA 2017/05 Créer une copie de la LocalDate.
+        copie.getPlanificationsBeans().setAll(original.getPlanificationsBeans()); // FIXME FDA 2017/05 Créer des copies des TacheBean aussi.
+        copie.setModifie(original.estModifie());
         /* Ajouter ici la copie des nouveaux attributs. */
     }
 

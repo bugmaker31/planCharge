@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.util.cloning;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Inspiré de {@link Cloneable}.
  *

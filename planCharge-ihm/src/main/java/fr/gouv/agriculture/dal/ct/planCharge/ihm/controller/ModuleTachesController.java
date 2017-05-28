@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class ModuleTachesController extends AbstractTachesController<TacheBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleTachesController.class);

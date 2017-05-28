@@ -1,10 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 
@@ -20,18 +17,15 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge implemen
     private PlanChargeBean planChargeBeanPrecedent;
 
     //@Autowired
-    @SuppressWarnings("unused")
+    @SuppressWarnings("FieldCanBeLocal")
     @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
 
     public ChargementPlanCharge(PlanChargeBean planChargeBeanPrecedent) throws SuiviActionsUtilisateurException {
         super();
-        try {
-            this.planChargeBeanPrecedent = planChargeBeanPrecedent.copier(); // TODO FDA 2017/05 Vraiment besoin de mémoriser tout le plan de charge ?
-        } catch (CopieException e) {
-            throw new SuiviActionsUtilisateurException("Impossible de mémoriser le plan de charge.", e);
-        }
+        // TODO FDA 2017/05 Vraiment besoin de mémoriser tout le plan de charge ?
+        this.planChargeBeanPrecedent = planChargeBeanPrecedent;
     }
 
 

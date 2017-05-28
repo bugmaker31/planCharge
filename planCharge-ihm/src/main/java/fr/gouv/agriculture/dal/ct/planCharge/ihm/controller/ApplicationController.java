@@ -15,6 +15,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -352,13 +353,15 @@ public class ApplicationController extends AbstractController {
 
         try {
 
+            PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
+
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
             planChargeBean.init(planCharge);
             ihm.definirDateEtat(planCharge.getDateEtat());
 
             planChargeBean.vientDEtreCharge();
-            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBean));
+            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
 
             // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
             ihm.getTachesController().populerReferentiels();
@@ -381,7 +384,7 @@ public class ApplicationController extends AbstractController {
 
             majBarreEtat();
 
-        } catch (ServiceException e) {
+        } catch (CopieException | ServiceException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
     }

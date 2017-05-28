@@ -3,6 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeCategorieTacheComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
@@ -10,6 +12,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -17,6 +20,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -40,6 +44,7 @@ import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 01/05/2017.
+ *
  * @author frederic.danna
  */
 public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
@@ -286,6 +291,42 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             sortedPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
             // 5. Add sorted (and filtered) data to the table.
             getTachesTable().setItems(sortedPlanifBeans);
+        });
+
+        abstract class TacheTableCommitHandler<S extends TB, T> implements EventHandler<TableColumn.CellEditEvent<S, T>> {
+            @Override
+            public void handle(TableColumn.CellEditEvent<S, T> event) {
+                if (event.getOldValue().equals(event.getNewValue())) {
+                    return;
+                }
+
+                S tacheBean = event.getRowValue();
+
+                S tacheBeanAvant = null;
+                try {
+                    tacheBeanAvant = (S) tacheBean.copier();
+                } catch (CopieException e) {
+                    LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
+                }
+
+                modifierValeur(tacheBean, event.getNewValue());
+
+                if (tacheBeanAvant != null) {
+                    try {
+                        getSuiviActionsUtilisateur().historiser(new ModificationTache<>(tacheBeanAvant, tacheBean));
+                    } catch (SuiviActionsUtilisateurException e) {
+                        LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
+                    }
+                }
+            }
+
+            abstract void modifierValeur(S tacheBean, T nouvelleValeur);
+        }
+        descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<TB, String>() {
+            @Override
+            void modifierValeur(TB tacheBean, String nouvelleValeur) {
+                tacheBean.descriptionProperty().set(nouvelleValeur);
+            }
         });
 
         LOGGER.debug("Initialisé.");
