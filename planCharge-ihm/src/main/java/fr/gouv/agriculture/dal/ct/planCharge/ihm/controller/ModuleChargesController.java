@@ -37,6 +37,7 @@ import java.util.List;
  *
  * @author frederic.danna
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class ModuleChargesController extends AbstractTachesController<PlanificationBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargesController.class);
@@ -147,12 +148,14 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
 
+    @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
     ObservableList<PlanificationBean> getTachesBeans() {
         return planificationsBeans;
     }
 
+    @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
     TableView<PlanificationBean> getTachesTable() {
@@ -405,7 +408,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             PlanificationBean planifBean = super.ajouterTache(event);
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache(planifBean));
+            getSuiviActionsUtilisateur().historiser(new AjoutTache<>(planifBean, planChargeBean.getPlanificationsBeans()));
 
             ihm.majBarreEtat();
 

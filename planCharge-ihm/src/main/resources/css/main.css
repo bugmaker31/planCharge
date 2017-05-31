@@ -94,14 +94,16 @@ Plan de charge
 
 .tropTot {
     /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
-    -fx-opacity: 50%;
-    -fx-background-image: url("/images/rayures.gif");
+    -fx-opacity: 25%;
+    -fx-background-image: url("/images/tropTot.gif");
+    -fx-background-color: lightgray;
 }
 
 .tropTard {
     /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
-    -fx-opacity: 50%;
-    -fx-background-image: url("/images/rayures.gif");
+    -fx-opacity: 25%;
+    -fx-background-image: url("/images/tropTard.gif");
+    -fx-background-color: darkgray;
 }
 
 .chargeNonPlanifiee {

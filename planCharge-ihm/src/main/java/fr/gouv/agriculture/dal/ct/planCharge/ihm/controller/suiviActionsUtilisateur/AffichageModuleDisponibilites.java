@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by frederic.danna on 17/05/2017.
@@ -8,8 +10,15 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
  * @author frederic.danna
  */
 public class AffichageModuleDisponibilites extends AffichageModule {
-    @Override
-    public void annuler() {
-        throw new NotImplementedException();
+
+    public AffichageModuleDisponibilites(ApplicationController.NomModule nomModulePrecedent) {
+        super(nomModulePrecedent);
     }
+
+    @NotNull
+    @Override
+    ApplicationController.NomModule getNomModule() {
+        return ApplicationController.NomModule.disponibilites;
+    }
+
 }

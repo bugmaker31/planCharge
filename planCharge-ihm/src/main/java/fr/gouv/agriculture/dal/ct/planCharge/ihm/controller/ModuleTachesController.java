@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class ModuleTachesController extends AbstractTachesController<TacheBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleTachesController.class);
@@ -66,11 +67,13 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     }
 
 
+    @NotNull
     @Override
     ObservableList<TacheBean> getTachesBeans() {
         return planificationsBeans;
     }
 
+    @NotNull
     @Override
     TableView<TacheBean> getTachesTable() {
         return tachesTable;
@@ -101,7 +104,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
             TacheBean tacheBean = super.ajouterTache(event);
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache(tacheBean));
+            getSuiviActionsUtilisateur().historiser(new AjoutTache<>(tacheBean, getTachesBeans()));
 
             ihm.majBarreEtat();
             return tacheBean;

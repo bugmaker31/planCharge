@@ -27,11 +27,12 @@
             <Menu fx:id="menuEditer" text="Editer" mnemonicParsing="false">
                 <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
                 <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à" /> <!-- Sera populé par l'application.-->
-                <SeparatorMenuItem fx:id="separateurMenusAnnuler"/> <!--On met un séparateur car l'application ajoute dynamiquement des sous-menus.-->
+                <SeparatorMenuItem />
                 <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
                 <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
-                <SeparatorMenuItem  fx:id="separateurMenusRetablir"/> <!--On met un séparateur car l'application ajoute dynamiquement des sous-menus.-->
+                <SeparatorMenuItem />
                 <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
+                <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
             </Menu>
             <Menu text="_Suivi" disable="true"/>
             <Menu text="_Référentiels">
@@ -78,7 +79,7 @@
             <Tab fx:id="tachesTab" text="Tâches">
                 <fx:include source="ModuleTachesView.fxml"/>
             </Tab>
-            <Tab fx:id="chargesTab" text="Charge">
+            <Tab fx:id="chargesTab" text="Charges">
                 <fx:include source="ModuleChargesView.fxml"/>
             </Tab>
         </TabPane>

@@ -11,6 +11,7 @@
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/${APP_NAME}.log</file>
+        <append>false</append>
         <encoder>
             <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level %logger{20}:%line - %msg%n%ex{full}</pattern>
         </encoder>

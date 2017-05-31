@@ -3,7 +3,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
@@ -16,6 +15,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,6 +51,24 @@ public class ApplicationController extends AbstractController {
 
     private static ParametresApplicatifs params = ParametresApplicatifs.instance();
 
+    public enum NomModule {
+        disponibilites("Disponibilités"),
+        taches("Tâches"),
+        charges("Charges");
+
+        private String texte;
+
+        NomModule(String texte) {
+            this.texte = texte;
+        }
+
+        public String getTexte() {
+            return texte;
+        }
+    }
+
+    private NomModule nomModuleCourant = null;
+
     // Les menus :
 
     @FXML
@@ -62,21 +80,29 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private Menu sousMenuAnnuler;
-    @FXML
-    @NotNull
-    private SeparatorMenuItem separateurMenusAnnuler;
+    /*
+        @FXML
+        @NotNull
+        private SeparatorMenuItem separateurMenusAnnuler;
+    */
     @FXML
     @NotNull
     private MenuItem menuRetablir;
     @FXML
     @NotNull
     private Menu sousMenuRetablir;
-    @FXML
-    @NotNull
-    private SeparatorMenuItem separateurMenusRetablir;
+    /*
+        @FXML
+        @NotNull
+        private SeparatorMenuItem separateurMenusRetablir;
+    */
     @FXML
     @NotNull
     private MenuItem menuRepeter;
+    @FXML
+    @NotNull
+    private Menu sousMenuRepeter;
+
 /*
     @FXML
     @NotNull
@@ -140,6 +166,10 @@ public class ApplicationController extends AbstractController {
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+
+    public NomModule getNomModuleCourant() {
+        return nomModuleCourant;
+    }
 
 
     public ApplicationController() throws IhmException {
@@ -216,7 +246,33 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().initialiser(
                 menuAnnuler, sousMenuAnnuler,
                 menuRetablir, sousMenuRetablir,
-                menuRepeter
+                menuRepeter, sousMenuRepeter
+        );
+
+        // Cf. https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        gestionTabPane.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (oldValue != null) {
+                        assert !oldValue.equals(newValue);
+                    }
+                    try {
+                        if (newValue.equals(disponibilitesTab)) {
+                            afficherModuleDisponibilites();
+                            return;
+                        }
+                        if (newValue.equals(tachesTab)) {
+                            afficherModuleTaches();
+                            return;
+                        }
+                        if (newValue.equals(chargesTab)) {
+                            afficherModuleCharges();
+                            return;
+                        }
+                        throw new IhmException("Tab non géré : '{}'.", newValue.getText());
+                    } catch (IhmException e) {
+                        LOGGER.error("Impossible d'affichager le module {}.", disponibilitesTab.getText(), e);
+                    }
+                }
         );
 
         planChargeBean.getPlanificationsBeans().addListener(
@@ -287,11 +343,17 @@ public class ApplicationController extends AbstractController {
         }
     }
 
+    // TODO FDA 23017/02 Afficher une "progress bar".
     private void charger(@NotNull File ficPlanCharge) throws IhmException {
         if (ficPlanCharge == null) {
             throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
         }
+
+        // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
+
         try {
+
+            PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
 
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
@@ -299,7 +361,7 @@ public class ApplicationController extends AbstractController {
             ihm.definirDateEtat(planCharge.getDateEtat());
 
             planChargeBean.vientDEtreCharge();
-            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBean));
+            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
 
             // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
             ihm.getTachesController().populerReferentiels();
@@ -317,15 +379,18 @@ public class ApplicationController extends AbstractController {
                             + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches",
                     400, 200
             );
-            afficherModuleCharges();
+
+            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur.
 
             majBarreEtat();
 
-        } catch (ServiceException e) {
+        } catch (CopieException | ServiceException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
     }
 
+
+    // TODO FDA 23017/02 Afficher une "progress bar".
     @FXML
     private void sauver(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Sauver");
@@ -369,6 +434,7 @@ public class ApplicationController extends AbstractController {
                     "Impossible de sauver le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
                     500, 200
             );
+            // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
         }
     }
 
@@ -497,6 +563,9 @@ public class ApplicationController extends AbstractController {
 
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+
+        // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
+
         try {
 
             PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc);
@@ -590,11 +659,7 @@ public class ApplicationController extends AbstractController {
     private void annuler(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Annuler");
         try {
-            assert !getSuiviActionsUtilisateur().estAuDebut();
-            ActionUtilisateur actionCourante = getSuiviActionsUtilisateur().actionCourante();
-            assert actionCourante != null;
-            actionCourante.annuler();
-            getSuiviActionsUtilisateur().actionPrecedente();
+            getSuiviActionsUtilisateur().annulerAction();
         } catch (IhmException e) {
             throw new Exception("Impossible d'annuler l'action de l'utilisateur.", e);
         }
@@ -609,18 +674,10 @@ public class ApplicationController extends AbstractController {
     private void retablir(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Rétablir");
         try {
-            assert !getSuiviActionsUtilisateur().estALaFin();
-            getSuiviActionsUtilisateur().actionSuivante();
-            retablir(getSuiviActionsUtilisateur().actionCourante());
+            getSuiviActionsUtilisateur().retablirAction();
         } catch (IhmException e) {
             throw new Exception("Impossible de rétablir l'action de l'utilisateur.", e);
         }
-    }
-
-    private void retablir(ActionUtilisateur actionUtilisateur) {
-        LOGGER.debug("retablir {}", actionUtilisateur.toString());
-        // TODO FDA 2017/05 Coder.
-//        throw new NotImplementedException();
     }
 
     /**
@@ -629,13 +686,13 @@ public class ApplicationController extends AbstractController {
      * @param event
      */
     @FXML
-    private void repeter(@SuppressWarnings("unused") ActionEvent event) {
+    private void repeter(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("> Editer > Répéter");
-
-        // TODO FDA 2017/03 Coder.
-        getSuiviActionsUtilisateur();
-
-        throw new NotImplementedException();
+        try {
+            getSuiviActionsUtilisateur().repeterAction();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de répéter l'action de l'utilisateur.", e);
+        }
     }
 
 /*
@@ -689,32 +746,87 @@ public class ApplicationController extends AbstractController {
         );
     }
 
+
+    /*
+    Modules :
+     */
+
     //    @FXML
-    private void afficherModuleDisponibilites() {
+    public void afficherModuleDisponibilites() throws IhmException {
+        LOGGER.debug("> [...] > Module \"Disponibilités\"");
+
+        if (nomModuleCourant == NomModule.disponibilites) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleDisponibilites();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
+    }
+
+    public void activerModuleDisponibilites() {
+        nomModuleCourant = NomModule.disponibilites;
+
 //        applicationView.setCenter(disponibilitesView);
-        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-        gestionTabPane.getSelectionModel().select(disponibilitesTab);
-//        moduleCourant = "Disponibilités";
-//        ihm.majTitre();
+        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(disponibilitesTab)) {
+            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+            gestionTabPane.getSelectionModel().select(disponibilitesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
+        }
+
+        ihm.majTitre();
     }
 
     //    @FXML
-    private void afficherModuleTaches() {
+    public void afficherModuleTaches() throws IhmException {
+        LOGGER.debug("> [...] > Module \"Tâches\"");
+
+        if (nomModuleCourant == NomModule.taches) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleTaches();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
+    }
+
+    public void activerModuleTaches() {
+        nomModuleCourant = NomModule.taches;
+
 //        applicationView.setCenter(tachesView);
-        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-        gestionTabPane.getSelectionModel().select(tachesTab);
-//        moduleCourant = "Tâches";
-//        ihm.majTitre();
+        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(tachesTab)) {
+            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+            gestionTabPane.getSelectionModel().select(tachesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
+        }
+
+        ihm.majTitre();
     }
 
     //    @FXML
-    private void afficherModuleCharges() {
-//        applicationView.setCenter(chargesView);
-        // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-        gestionTabPane.getSelectionModel().select(chargesTab);
-//        moduleCourant = "Charges";
-//        ihm.majTitre();
+    public void afficherModuleCharges() throws IhmException {
+        LOGGER.debug("> [...] > Module \"Charges\"");
+
+        if (nomModuleCourant == NomModule.charges) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleCharges();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
     }
+
+    public void activerModuleCharges() {
+        nomModuleCourant = NomModule.charges;
+
+//        applicationView.setCenter(chargesView);
+        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(chargesTab)) {
+            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
+            gestionTabPane.getSelectionModel().select(chargesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
+        }
+
+        ihm.majTitre();
+    }
+
 
     public void majBarreEtat() {
         LOGGER.debug("majBarreEtat...");

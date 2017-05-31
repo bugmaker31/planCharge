@@ -8,6 +8,7 @@ import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 /**
@@ -29,10 +30,14 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
     public void updateItem(Double item, boolean empty) {
         super.updateItem(item, empty);
 
+        getStyleClass().remove("tropTot");
+        getStyleClass().remove("tropTard");
+
         if (empty) {
             return; // TODO FDA 2017/05 Confirmer.
         }
 
+        //noinspection unchecked
         TableRow<PlanificationBean> tableRow = this.getTableRow();
         PlanificationBean planifBean = tableRow.getItem();
         if (planifBean == null) {
@@ -42,23 +47,22 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         int indexCol = noPeriode - 1;
         Pair<LocalDate, DoubleProperty> periodePlanif = planifBean.getCalendrier().get(indexCol);
         LocalDate debutPeriode = periodePlanif.getKey();
-        Pair<LocalDate, DoubleProperty> periodePlanifSuivante;
         LocalDate finPeriode;
         if (planifBean.getCalendrier().size() <= (indexCol + 1)) {
             finPeriode = null;
         } else {
-            periodePlanifSuivante = planifBean.getCalendrier().get(indexCol + 1);
+            Pair<LocalDate, DoubleProperty> periodePlanifSuivante = planifBean.getCalendrier().get(indexCol + 1);
             finPeriode = periodePlanifSuivante.getKey();
         }
 
         if (planifBean.getDebut() != null) {
             if (debutPeriode.isBefore(planifBean.getDebut())) {
-                getStyleClass().setAll("tropTot");
+                getStyleClass().add("tropTot");
             }
         }
         if ((finPeriode != null) && (planifBean.getEcheance() != null)) {
             if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7))) {
-                getStyleClass().setAll("tropTard");
+                getStyleClass().add("tropTard");
             }
         }
     }

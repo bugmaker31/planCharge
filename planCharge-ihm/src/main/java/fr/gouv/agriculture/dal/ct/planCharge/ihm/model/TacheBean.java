@@ -11,6 +11,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Categori
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.SousCategorieTache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import org.slf4j.Logger;
@@ -26,8 +28,11 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by frederic.danna on 11/03/2017.
+ *
+ * @author frederic.danna
  */
-public class TacheBean {
+@SuppressWarnings("ClassWithTooManyMethods")
+public class TacheBean implements Copiable<TacheBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
 
@@ -72,6 +77,7 @@ public class TacheBean {
     //    @Autowired
     @NotNull
     private ProfilDao profilDao = ProfilDao.instance();
+
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, double charge, @Null String codeRessource, @Null String codeProfil) {
@@ -336,7 +342,7 @@ public class TacheBean {
         try {
             patron = Pattern.compile(otherValue);
         } catch (PatternSyntaxException e) {
-            throw new IhmException("Patron de filtre incorrect : '" + otherValue + "'.", e);
+            throw new IhmException("Impossible de filtrer les descriptions des tâches à partir d'une expression régulière incorrecte : '" + otherValue + "'.", e);
         }
         Matcher matcher = patron.matcher(getDescription());
         if (matcher.find()) {
@@ -447,6 +453,7 @@ public class TacheBean {
         return tache;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -461,6 +468,27 @@ public class TacheBean {
     public int hashCode() {
         return new Integer(getId()).hashCode();
     }
+
+
+    @Override
+    public TacheBean copier() throws CopieException {
+        return new TacheBean(this);
+    }
+
+    public void copier(@NotNull TacheBean original) throws CopieException {
+        this.idProperty().set(original.idProperty().get());
+        this.codeCategorieProperty().set(original.codeCategorieProperty().get());
+        this.codeSousCategorieProperty().set(original.codeSousCategorieProperty().get());
+        this.noTicketIdalProperty().set(original.noTicketIdalProperty().get());
+        this.descriptionProperty().set(original.descriptionProperty().get());
+        this.codeProjetAppliProperty().set(original.codeProjetAppliProperty().get());
+        this.debutProperty().set(original.debutProperty().get());
+        this.echeanceProperty().set(original.echeanceProperty().get());
+        this.chargeProperty().set(original.chargeProperty().get());
+        this.codeRessourceProperty().set(original.codeRessourceProperty().get());
+        this.codeProfilProperty().set(original.codeProfilProperty().get());
+    }
+
 
     // Pour les débug, uniquement.
     @Override

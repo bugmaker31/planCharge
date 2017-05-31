@@ -5,5 +5,5 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisa
  *
  * @author frederic.danna
  */
-public abstract class ModificationPlanCharge extends ActionUtilisateur {
+public abstract class ModificationPlanCharge extends ActionUtilisateurBase {
 }

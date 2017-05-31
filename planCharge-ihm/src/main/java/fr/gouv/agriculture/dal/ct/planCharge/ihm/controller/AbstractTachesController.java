@@ -3,6 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeCategorieTacheComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
@@ -10,6 +12,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -17,6 +20,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -40,6 +44,7 @@ import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 01/05/2017.
+ *
  * @author frederic.danna
  */
 public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
@@ -75,56 +80,81 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     private ObservableList<String> codesProfils = FXCollections.observableArrayList();
 
     @FXML
+    @NotNull
     private TableColumn<TB, String> categorieColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> sousCategorieColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> noTacheColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> noTicketIdalColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> descriptionColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> projetAppliColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> debutColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> echeanceColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> importanceColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, Double> chargeColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> ressourceColumn;
     @FXML
+    @NotNull
     private TableColumn<TB, String> profilColumn;
 
     // Les filtres :
     @FXML
+    @NotNull
     protected TextField filtreGlobalField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreCategoriesField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreSousCategoriesField;
     @FXML
+    @NotNull
     protected TextField filtreNoTacheField;
     @FXML
+    @NotNull
     protected TextField filtreNoTicketIdalField;
     @FXML
+    @NotNull
     protected TextField filtreDescriptionField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreProjetsApplisField;
     @FXML
+    @NotNull
     protected DatePicker filtreDebutField;
     @FXML
+    @NotNull
     protected DatePicker filtreEcheanceField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreImportancesField;
     @FXML
+    @NotNull
     protected TextField filtreChargeField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreRessourcesField;
     @FXML
+    @NotNull
     protected CheckComboBox<String> filtreProfilsField;
 
     @NotNull
@@ -133,6 +163,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     abstract TableView<TB> getTachesTable();
 
+    @NotNull
     TableColumn<TB, Double> getChargeColumn() {
         return chargeColumn;
     }
@@ -187,6 +218,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreProfilsField.getCheckModel().checkAll();
     }
 
+    @SuppressWarnings("OverlyLongMethod")
     @Override
     void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
@@ -201,6 +233,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().codeProjetAppliProperty());
         debutColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().debutProperty().isNull().get()) {
+                //noinspection ReturnOfNull
                 return null;
             }
             LocalDate debut = cellData.getValue().debutProperty().get();
@@ -208,6 +241,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         echeanceColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().echeanceProperty().isNull().get()) {
+                //noinspection ReturnOfNull
                 return null;
             }
             LocalDate echeance = cellData.getValue().echeanceProperty().get();
@@ -259,9 +293,46 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesTable().setItems(sortedPlanifBeans);
         });
 
+        abstract class TacheTableCommitHandler<S extends TB, T> implements EventHandler<TableColumn.CellEditEvent<S, T>> {
+            @Override
+            public void handle(TableColumn.CellEditEvent<S, T> event) {
+                if (event.getOldValue().equals(event.getNewValue())) {
+                    return;
+                }
+
+                S tacheBean = event.getRowValue();
+
+                S tacheBeanAvant = null;
+                try {
+                    tacheBeanAvant = (S) tacheBean.copier();
+                } catch (CopieException e) {
+                    LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
+                }
+
+                modifierValeur(tacheBean, event.getNewValue());
+
+                if (tacheBeanAvant != null) {
+                    try {
+                        getSuiviActionsUtilisateur().historiser(new ModificationTache<>(tacheBeanAvant, tacheBean));
+                    } catch (SuiviActionsUtilisateurException e) {
+                        LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
+                    }
+                }
+            }
+
+            abstract void modifierValeur(S tacheBean, T nouvelleValeur);
+        }
+        descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<TB, String>() {
+            @Override
+            void modifierValeur(TB tacheBean, String nouvelleValeur) {
+                tacheBean.descriptionProperty().set(nouvelleValeur);
+            }
+        });
+
         LOGGER.debug("Initialisé.");
     }
 
+    @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
     private void enregistrerListenersSurFiltres(FilteredList<TB> filteredTaches) {
         LOGGER.debug("enregistrerListenersSurFiltres...");
 
@@ -382,7 +453,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             try {
                 ihm.enleverErreurSaisie(filtreDescriptionField);
                 if ((newValue != null) && !newValue.isEmpty()) {
-                    //noinspection UnusedCatchParameter
+                    //noinspection UnusedCatchParameter,NestedTryStatement
                     try {
                         //noinspection ResultOfMethodCallIgnored
                         Pattern.compile(newValue);

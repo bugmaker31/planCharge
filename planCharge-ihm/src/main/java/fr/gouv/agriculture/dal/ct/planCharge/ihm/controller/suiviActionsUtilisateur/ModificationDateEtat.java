@@ -1,6 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 
 import javax.validation.constraints.NotNull;
@@ -11,9 +14,11 @@ import java.time.LocalDate;
  *
  * @author frederic.danna
  */
-public class ModificationDateEtat extends ModificationUnitairePlanCharge {
+public class ModificationDateEtat extends ModificationUnitairePlanCharge implements ActionAnnulable, ActionRetablissable {
 
     private LocalDate dateEtatPrecedente;
+
+    private LocalDate dateEtatActuelle;
 
     //@Autowired
     @NotNull
@@ -23,6 +28,7 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge {
     public ModificationDateEtat(LocalDate dateEtatPrecedente) {
         super();
         this.dateEtatPrecedente = dateEtatPrecedente;
+        this.dateEtatActuelle = planChargeBean.getDateEtat();
     }
 
 
@@ -31,9 +37,14 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge {
         return "la modification de la date d'état (était " + dateEtatPrecedente + ")";
     }
 
+
     @Override
     public void annuler() {
         planChargeBean.setDateEtat(dateEtatPrecedente);
     }
 
+    @Override
+    public void retablir() throws RetablissementActionException {
+        planChargeBean.setDateEtat(dateEtatActuelle);
+    }
 }
