@@ -11,9 +11,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -377,8 +375,24 @@ public class PlanChargeIhm extends Application {
             this.primaryStage = primaryStage;
 
             primaryStage.setTitle(APP_NAME);
+            //
             primaryStage.setScene(new Scene(applicationView));
+            //
             primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
+            //
+//            primaryStage.setMaximized(true);
+/*
+            // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
+            final double screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+            final double screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
+            primaryStage.setMaxWidth(screenWidth);
+            primaryStage.setWidth(screenWidth);
+            primaryStage.setMaxHeight(screenHeight);
+            primaryStage.setHeight(screenHeight);
+            primaryStage.setResizable(true);
+*/
+            primaryStage.setFullScreen(true);
+            //
             primaryStage.show();
 
             // Chargement des données utilisées dernièrement (if any) :
