@@ -55,7 +55,11 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>false</filtering>
+                <!--
+                On "filtre" les ressources de type "properties",
+                notamment pour subsituer la variable maven "project.version" dans le fichier "ihm-conf.properties :
+                -->
+                <filtering>true</filtering>
                 <includes>
                     <include>**/**</include>
                 </includes>

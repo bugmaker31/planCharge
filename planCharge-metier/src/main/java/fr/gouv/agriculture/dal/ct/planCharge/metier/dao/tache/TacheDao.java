@@ -1,10 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache;
 
-import com.sun.star.frame.XComponentLoader;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.XCell;
-import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
@@ -27,9 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,7 +47,7 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
 
     //    @Inject
     @NotNull
-    private ParametresApplicatifs params = ParametresApplicatifs.instance();
+    private ParametresMetiers params = ParametresMetiers.instance();
 
     @NotNull
 //    @Autowired

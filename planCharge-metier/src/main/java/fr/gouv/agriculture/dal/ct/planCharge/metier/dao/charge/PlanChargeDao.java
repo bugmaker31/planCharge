@@ -1,11 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
-import com.sun.star.frame.XComponentLoader;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.XCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
-import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
@@ -60,7 +59,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     //    @Inject
     @NotNull
-    private ParametresApplicatifs params = ParametresApplicatifs.instance();
+    private ParametresMetiers params = ParametresMetiers.instance();
 
 /*
 //    @Inject

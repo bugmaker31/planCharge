@@ -7,15 +7,15 @@ import java.util.Properties;
 /**
  * Created by frederic.danna on 30/04/2017.
  */
-public class ParametresApplicatifs {
+public class ParametresMetiers {
 
     private static final String PROPERTIES_FILE_RSRC_NAME = "/metier-conf.properties";
 
-    private static ParametresApplicatifs instance;
+    private static ParametresMetiers instance;
 
-    public static ParametresApplicatifs instance() {
+    public static ParametresMetiers instance() {
         if (instance == null) {
-            instance = new ParametresApplicatifs();
+            instance = new ParametresMetiers();
         }
         return instance;
     }
@@ -23,7 +23,7 @@ public class ParametresApplicatifs {
     private Properties properties= new Properties();
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
-    private ParametresApplicatifs() {
+    private ParametresMetiers() {
         super();
     }
 

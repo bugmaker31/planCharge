@@ -1,7 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
-import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
@@ -49,7 +50,8 @@ public class ApplicationController extends AbstractController {
         return instance;
     }
 
-    private static ParametresApplicatifs params = ParametresApplicatifs.instance();
+    private static ParametresIhm paramsIhm = ParametresIhm.instance();
+    private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
     public enum NomModule {
         disponibilites("Disponibilités"),
@@ -310,7 +312,7 @@ public class ApplicationController extends AbstractController {
                 new FileChooser.ExtensionFilter("Fichier XML", "*.xml")
         );
         try {
-            fileChooser.setInitialDirectory(new File(params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
+            fileChooser.setInitialDirectory(new File(paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
         } catch (KernelException e) {
             throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
         }
@@ -464,7 +466,7 @@ public class ApplicationController extends AbstractController {
         String nomRepFicCalc;
         try {
             // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
-            nomRepFicCalc = params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
+            nomRepFicCalc = paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
             throw new IhmException("Impossible de déterminer le répertoire de persistance des tâches.", e);
         }
@@ -541,7 +543,7 @@ public class ApplicationController extends AbstractController {
         String nomRepFicCalc;
         try {
             // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
-            nomRepFicCalc = params.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
+            nomRepFicCalc = paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
             throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge.", e);
         }
@@ -733,16 +735,23 @@ public class ApplicationController extends AbstractController {
      */
 
     @FXML
-    private void aPropos(ActionEvent event) {
+    private void aPropos(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Aide > A propos");
+
+        String versionApp = null;
+        try {
+            versionApp = paramsIhm.getParametrage("application.version");
+        } catch (KernelException e) {
+            LOGGER.error("Impossible de récupérer la version de l'application.", e);
+        }
 
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
                 "A propos de l'application \"" + PlanChargeIhm.APP_NAME + "\"",
-                "Gestion du plan de charge d'une équipe d'un centre de service."
-                        + "\n"
-                        + "\n(C) Frédéric Danna - 2017",
-                400, 200
+                "Version : " + (versionApp == null ? "N/C" : versionApp)
+                        + "\n" + "Fonctionnalité : Gestion du plan de charge d'une équipe d'un centre de service."
+                        + "\nAuteur : Frédéric Danna - (C)2017",
+                500, 200
         );
     }
 

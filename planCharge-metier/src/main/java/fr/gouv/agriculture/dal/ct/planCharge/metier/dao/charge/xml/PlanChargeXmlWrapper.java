@@ -1,7 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
-import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
@@ -27,7 +27,7 @@ public class PlanChargeXmlWrapper {
     @NotNull
 //    @Autowired
 //    private Contexte contexte = Contexte.instance();
-    private ParametresApplicatifs params = ParametresApplicatifs.instance();
+    private ParametresMetiers params = ParametresMetiers.instance();
 
     private String versionFormat = VERSION_FORMAT;
 

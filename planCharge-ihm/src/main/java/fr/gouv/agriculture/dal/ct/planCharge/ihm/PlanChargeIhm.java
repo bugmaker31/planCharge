@@ -1,7 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
+import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
-import fr.gouv.agriculture.dal.ct.kernel.ParametresApplicatifs;
+import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
@@ -19,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,8 @@ public class PlanChargeIhm extends Application {
     }
 
     //    private static Contexte contexte = Contexte.instance();
-    private static ParametresApplicatifs params = ParametresApplicatifs.instance();
+    private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
+    private static ParametresIhm paramsIhm = ParametresIhm.instance();
 
     @NotNull
     private Stage primaryStage;
@@ -140,7 +141,8 @@ public class PlanChargeIhm extends Application {
 
     private void chargerParametresApplicatifs() throws Exception {
         try {
-            params.init();
+            paramsMetier.init();
+            paramsIhm.init();
         } catch (KernelException e) {
             throw new Exception("Impossible de charger les paramètres applicatifs.", e);
         }
