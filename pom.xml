@@ -7,7 +7,7 @@
     <artifactId>planCharge</artifactId>
     <name>Plan de charge</name>
 
-    <version>1.0-m2</version>
+    <version>1.0-m3-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -53,7 +53,7 @@
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
             scm:git:file:///D/Dvlpt/_MAAP/workspace_IDEA/planCharge
         </developerConnection>
-      <tag>planCharge-1.0-m2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
