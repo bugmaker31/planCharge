@@ -5,7 +5,7 @@
     <parent>
         <artifactId>planCharge</artifactId>
         <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
-        <version>1.0-m1</version>
+        <version>1.0-m2-SNAPSHOT</version>
     </parent>
 
     <artifactId>planCharge-ihm</artifactId>
