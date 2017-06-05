@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>planCharge</artifactId>
         <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
-        <version>1.0-m1-SNAPSHOT</version>
+        <version>1.0-m1</version>
     </parent>
 
     <artifactId>planCharge-metier</artifactId>
@@ -28,7 +26,7 @@
         <profile>
             <id>os_exec.windows</id>
             <properties>
-                <libreoffice.dir>C:/Program Files/LibreOffice 5</libreoffice.dir>
+                <libreoffice.dir>/C:/Program Files/LibreOffice 5</libreoffice.dir>
                 <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
                 <libreoffice.classes.dir>${libreoffice.program.dir}/classes</libreoffice.classes.dir>
             </properties>
