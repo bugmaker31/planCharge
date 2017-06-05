@@ -102,7 +102,6 @@
                     </Label>
                 </HBox>
                 <HBox styleClass="itemBarreEtat">
-                    <!--TODO FDA 2017/05 Afficher le nbr de tâches.-->
                     <Label fx:id="nbrTachesField"/>
                     <Label text="tâches"/>
                 </HBox>

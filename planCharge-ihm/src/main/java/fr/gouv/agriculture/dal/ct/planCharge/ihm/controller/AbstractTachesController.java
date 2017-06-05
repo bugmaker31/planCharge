@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeCategorieTacheComparator;
@@ -34,8 +35,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.regex.Pattern;
@@ -237,7 +240,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return null;
             }
             LocalDate debut = cellData.getValue().debutProperty().get();
-            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(PlanChargeIhm.FORMAT_DATE)));
+            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(TacheBean.FORMAT_DATE)));
         });
         echeanceColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().echeanceProperty().isNull().get()) {
@@ -245,7 +248,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return null;
             }
             LocalDate echeance = cellData.getValue().echeanceProperty().get();
-            return new SimpleStringProperty(echeance.format(DateTimeFormatter.ofPattern(PlanChargeIhm.FORMAT_DATE)));
+            return new SimpleStringProperty(echeance.format(DateTimeFormatter.ofPattern(TacheBean.FORMAT_DATE)));
         });
         importanceColumn.setCellValueFactory(cellData -> cellData.getValue().codeImportanceProperty());
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
@@ -259,8 +262,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplis));
-        debutColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
-        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
+        debutColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE));
+        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(codesImportances));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessources));
@@ -293,41 +296,111 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesTable().setItems(sortedPlanifBeans);
         });
 
-        abstract class TacheTableCommitHandler<S extends TB, T> implements EventHandler<TableColumn.CellEditEvent<S, T>> {
+        abstract class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
             @Override
-            public void handle(TableColumn.CellEditEvent<S, T> event) {
-                if (event.getOldValue().equals(event.getNewValue())) {
+            public void handle(TableColumn.CellEditEvent<TB, T> event) {
+                if ((event.getOldValue() != null) && event.getOldValue().equals(event.getNewValue())) {
                     return;
                 }
 
-                S tacheBean = event.getRowValue();
+                TB tacheBean = event.getRowValue();
 
-                S tacheBeanAvant = null;
+                TB tacheBeanAvant = null;
                 try {
-                    tacheBeanAvant = (S) tacheBean.copier();
+                    tacheBeanAvant = (TB) tacheBean.copier();
                 } catch (CopieException e) {
                     LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
                 }
 
-                modifierValeur(tacheBean, event.getNewValue());
+                try {
+                    modifierValeur(tacheBean, event.getNewValue());
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de modifier la tâche.", e);
+                }
 
                 if (tacheBeanAvant != null) {
                     try {
-                        getSuiviActionsUtilisateur().historiser(new ModificationTache<>(tacheBeanAvant, tacheBean));
+                        ModificationTache actionModif = actionModification(tacheBeanAvant, tacheBean);
+                        getSuiviActionsUtilisateur().historiser(actionModif);
                     } catch (SuiviActionsUtilisateurException e) {
                         LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
                     }
                 }
             }
 
-            abstract void modifierValeur(S tacheBean, T nouvelleValeur);
+            abstract void modifierValeur(@NotNull TB tacheBean, @NotNull T nouvelleValeur) throws IhmException;
+
+            protected abstract ModificationTache actionModification(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException;
         }
-        descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<TB, String>() {
+        noTicketIdalColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
             @Override
-            void modifierValeur(TB tacheBean, String nouvelleValeur) {
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur) {
+                tacheBean.noTicketIdalProperty().set(nouvelleValeur);
+            }
+
+            @Override
+            protected ModificationTache actionModification(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
+                return new ModificationNoTicketIdal(tacheBeanAvant, tacheBean);
+            }
+        });
+/*
+        descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.descriptionProperty().set(nouvelleValeur);
             }
         });
+        projetAppliColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
+                tacheBean.codeProjetAppliProperty().set(nouvelleValeur);
+            }
+        });
+        debutColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) throws IhmException {
+                try {
+                    tacheBean.debutProperty().set(LocalDate.parse(nouvelleValeur, TacheBean.DATE_FORMATTER));
+                } catch (DateTimeParseException e) {
+                    throw new IhmException("Impossible de parser la date de début de la tâche.", e);
+                }
+            }
+        });
+        echeanceColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) throws IhmException {
+                try {
+                    tacheBean.echeanceProperty().set(LocalDate.parse(nouvelleValeur));
+                } catch (DateTimeParseException e) {
+                    throw new IhmException("Impossible de parser la date d'échéance de la tâche.", e);
+                }
+            }
+        });
+        importanceColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
+                tacheBean.codeImportanceProperty().set(nouvelleValeur);
+            }
+        });
+        chargeColumn.setOnEditCommit(new TacheTableCommitHandler<Double>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull Double nouvelleValeur, @Null TB tacheBeanAvant) {
+                tacheBean.chargeProperty().set(nouvelleValeur);
+            }
+        });
+        ressourceColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
+                tacheBean.codeRessourceProperty().set(nouvelleValeur);
+            }
+        });
+        profilColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+            @Override
+            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
+                tacheBean.codeProfilProperty().set(nouvelleValeur);
+            }
+        });
+*/
 
         LOGGER.debug("Initialisé.");
     }

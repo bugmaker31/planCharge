@@ -15,7 +15,7 @@ import javax.validation.constraints.Null;
  *
  * @author frederic.danna
  */
-public class ModificationTache<TB extends TacheBean> extends ModificationPlanification {
+public abstract class ModificationTache<TB extends TacheBean> extends ModificationPlanification {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModificationTache.class);
 
@@ -27,8 +27,17 @@ public class ModificationTache<TB extends TacheBean> extends ModificationPlanifi
     @Null
     private TB sauvegardeTacheBean;
 
+    @NotNull
+    TB getTacheBean() {
+        return tacheBean;
+    }
+    @NotNull
+    TB getTacheBeanAvant() {
+        return tacheBeanAvant;
+    }
 
-    public ModificationTache(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
+
+    ModificationTache(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
         this.tacheBean = tacheBean;
         this.tacheBeanAvant = tacheBeanAvant;
         this.sauvegardeTacheBean = null;
