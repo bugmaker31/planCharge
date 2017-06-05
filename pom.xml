@@ -49,12 +49,12 @@
         <connection>
             <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
-            scm:git:https://github.com/bugmaker31/planCharge/tree/master
+            scm:git:https://github.com/bugmaker31/planCharge/master
         </connection>
         <developerConnection>
             <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
-            scm:git:https://github.com/bugmaker31/planCharge/tree/master
+            scm:git:https://github.com/bugmaker31/planCharge/master
         </developerConnection>
       <tag>planCharge-1.0-m1</tag>
   </scm>
