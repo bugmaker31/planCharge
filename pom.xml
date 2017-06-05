@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
@@ -8,7 +7,7 @@
     <artifactId>planCharge</artifactId>
     <name>Plan de charge</name>
 
-    <version>1.0-m2-SNAPSHOT</version>
+    <version>1.0-m2</version>
 
     <packaging>pom</packaging>
 
@@ -54,7 +53,8 @@
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
             scm:git:file:///D/Dvlpt/_MAAP/workspace_IDEA/planCharge
         </developerConnection>
-    </scm>
+      <tag>planCharge-1.0-m2</tag>
+  </scm>
 
     <distributionManagement>
         <repository>
