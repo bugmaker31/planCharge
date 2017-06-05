@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.gouv.agriculture.dal.ct.planCharge</groupId>
@@ -46,18 +47,21 @@
     dans le source. (URL à changer pour les équipes externes)
     -->
     <scm>
-        <connection>
-            <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
-            <!--TODO FDA 2017/04 Tester le repo GIT.-->
-            scm:git:https://github.com/bugmaker31/planCharge/master
-        </connection>
+        <!--Cf. http://www.sonatype.org/nexus/2015/04/07/maven-release-plugin-setup-guide-for-git-revisited/-->
         <developerConnection>
             <!--scm:svn:https://scm.forge.national.agri/${departement}/${si}/${project.artifactId}/branches/${project.artifactId}-1.0-->
+            <!--scm:git:https://github.com/bugmaker31/planCharge/master-->
             <!--TODO FDA 2017/04 Tester le repo GIT.-->
-            scm:git:https://github.com/bugmaker31/planCharge/master
+            scm:git:file:///D/Dvlpt/_MAAP/workspace_IDEA/planCharge
         </developerConnection>
-      <tag>planCharge-1.0-m1</tag>
-  </scm>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>MinAgri</id>
+            <!--TODO FDA 2017/04 Précisér les repo Archiva "work" et "private".-->
+        </repository>
+    </distributionManagement>
 
     <build>
         <plugins>
