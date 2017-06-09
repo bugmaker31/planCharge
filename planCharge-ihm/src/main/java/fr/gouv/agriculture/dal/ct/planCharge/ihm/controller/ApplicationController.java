@@ -774,6 +774,9 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
     }
 
+    /**
+     * NB : Simule une action de l'utilisateur.
+     */
     public void activerModuleDisponibilites() {
         nomModuleCourant = NomModule.disponibilites;
 
@@ -799,6 +802,9 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
     }
 
+    /**
+     * NB : Simule une action de l'utilisateur.
+     */
     public void activerModuleTaches() {
         nomModuleCourant = NomModule.taches;
 
@@ -824,6 +830,9 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
     }
 
+    /**
+     * NB : Simule une action de l'utilisateur.
+     */
     public void activerModuleCharges() {
         nomModuleCourant = NomModule.charges;
 

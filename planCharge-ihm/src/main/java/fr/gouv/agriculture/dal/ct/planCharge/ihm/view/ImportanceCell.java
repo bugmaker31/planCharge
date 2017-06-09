@@ -25,13 +25,15 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, String> {
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
 
+        getStyleClass().clear();
+
         if (empty || (getItem() == null)) {
             return;
         }
 
         try {
             String styleClass = importanceStyleClass();
-            getStyleClass().setAll(styleClass);
+            getStyleClass().add(styleClass);
         } catch (IhmException e) {
             LOGGER.error("Impossible de màj le style de la cellule Importance de la ligne n°'" + (getIndex() + 1) + "'.", e);
         }

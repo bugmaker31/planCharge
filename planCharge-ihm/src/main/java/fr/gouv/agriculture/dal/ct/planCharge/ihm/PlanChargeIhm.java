@@ -501,8 +501,61 @@ public class PlanChargeIhm extends Application {
             getChargesController().getDateEtatPicker().setValue(dateEtat);
         }
 
+        majPlanificationCharge();
         majTitre();
     }
+
+    private void majPlanificationCharge() {
+        definirNomsPeriodes();
+        majPlanification();
+    }
+
+    private void definirNomsPeriodes() {
+
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
+
+        LocalDate date = planChargeBean.getDateEtat();
+
+        getChargesController().getSemaine1Column().setText("S+1\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine2Column().setText("S+2\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine3Column().setText("S+3\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine4Column().setText("S+4\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine5Column().setText("S+5\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine6Column().setText("S+6\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine7Column().setText("S+7\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine8Column().setText("S+8\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine9Column().setText("S+9\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine10Column().setText("S+10\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine11Column().setText("S+11\n" + date.format(dateFormatter));
+        date = date.plusDays(7);
+
+        getChargesController().getSemaine12Column().setText("S+12\n" + date.format(dateFormatter));
+    }
+
+    private void majPlanification() {
+        getChargesController().afficherPlanification();
+    }
+
 
     public void majBarreEtat() {
         getApplicationController().majBarreEtat();
