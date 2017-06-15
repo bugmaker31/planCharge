@@ -21,7 +21,7 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AffichageModule.class);
 
-//    @Autowired
+    //    @Autowired
     @NotNull
     private final ApplicationController applicationController = ApplicationController.instance();
 
@@ -66,9 +66,9 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 applicationController.activerModuleCharges();
                 return;
             }
-            throw new AnnulationActionException("Module non géré : '{]'.", nomModulePrecedent.getTexte());
+            throw new AnnulationActionException("Module non géré : '" + nomModulePrecedent.getTexte() + "'.");
         } catch (IhmException e) {
-            throw new AnnulationActionException("Impossible d'annuler l'action '{}'.", getTexte(), e);
+            throw new AnnulationActionException("Impossible d'annuler l'action '" + getTexte() + "'.", e);
         }
     }
 
@@ -88,9 +88,9 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 appCtrl.activerModuleCharges();
                 return;
             }
-            throw new RetablissementActionException("Module non géré : '{]'.", getNomModule().getTexte());
+            throw new RetablissementActionException("Module non géré : '" + getNomModule().getTexte() + "'.");
         } catch (IhmException e) {
-            throw new RetablissementActionException("Impossible d'annuler l'action '{}'.", getTexte(), e);
+            throw new RetablissementActionException("Impossible d'annuler l'action '" + getTexte() + "'.", e);
         }
     }
 }

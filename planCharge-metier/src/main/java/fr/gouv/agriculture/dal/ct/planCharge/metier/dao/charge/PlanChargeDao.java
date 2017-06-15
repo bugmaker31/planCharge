@@ -35,6 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -46,7 +47,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeDao.class);
 
-    private static final Map<LocalDate, PlanCharge> CACHE = new HashMap<>();
+    private static final Map<LocalDate, PlanCharge> CACHE = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
 
     private static PlanChargeDao instance;
 
@@ -289,7 +290,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         final int noLigDebut = 4;
         final int noColDebut = 12;
 
-        Map<Tache, Map<LocalDate, Double>> calendrier = new HashMap<>();
+        Map<Tache, Map<LocalDate, Double>> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
         {
             int cptLig = noLigDebut;
             CategorieTache categorieTache = null;
@@ -333,7 +334,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
                 Tache tache = importerTache(feuille, cptLig, categorieTache, sousCategorieTache);
 
-                calendrier.put(tache, new HashMap<>());
+                calendrier.put(tache, new TreeMap<>()); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
                 {
                     int cptCol = noColDebut;
                     COL:

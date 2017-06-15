@@ -5,14 +5,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.util.Pair;
+import javafx.beans.value.ObservableDoubleValue;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -22,15 +21,15 @@ import java.util.Map;
 public class PlanificationBean extends TacheBean {
 
     @NotNull
-    private List<Pair<LocalDate, DoubleProperty>> calendrier;
+    private Map<LocalDate, DoubleProperty> calendrier;
     @NotNull
-    private DoubleProperty chargePlanifiee = new SimpleDoubleProperty();
+    private DoubleProperty chargePlanifieeTotale = new SimpleDoubleProperty();
 
-    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier) throws IhmException {
+    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws IhmException {
         super(tacheBean);
         this.calendrier = calendrier;
 
-        majChargePlanifiee();
+        majChargePlanifieeTotale();
     }
 
 /*
@@ -54,22 +53,22 @@ public class PlanificationBean extends TacheBean {
         );
         this.calendrier = calendrier;
 
-        majChargePlanifiee();
+        majChargePlanifieeTotale();
     }
 */
 
     public PlanificationBean(@NotNull Tache tache, @NotNull Map<LocalDate, Double> calendrier) {
         super(tache);
-        this.calendrier = new ArrayList<>();
+
+        this.calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
         calendrier.entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getKey))
                 .forEach(entry -> {
                     LocalDate dateSemaine = entry.getKey();
                     Double charge = entry.getValue();
-                    this.calendrier.add(new Pair<>(dateSemaine, new SimpleDoubleProperty(charge)));
+                    this.calendrier.put(dateSemaine, new SimpleDoubleProperty(charge));
                 });
 
-        majChargePlanifiee();
+        majChargePlanifieeTotale();
     }
 
 
@@ -80,49 +79,49 @@ public class PlanificationBean extends TacheBean {
 
 
     @NotNull
-    public List<Pair<LocalDate, DoubleProperty>> getCalendrier() {
+    public Map<LocalDate, DoubleProperty> getCalendrier() {
         return calendrier;
     }
 
 
-    public double getChargePlanifiee() {
-        return chargePlanifiee.get();
+    public double getChargePlanifieeTotale() {
+        return chargePlanifieeTotale.get();
     }
 
     @NotNull
-    public DoubleProperty chargePlanifieeProperty() {
-        return chargePlanifiee;
+    public DoubleProperty chargePlanifieeTotaleProperty() {
+        return chargePlanifieeTotale;
     }
 
     @NotNull
-    public Pair<LocalDate, DoubleProperty> chargePlanifiee(int noSemaine) throws IhmException {
-        if (noSemaine < 1) {
-            throw new IhmException("Le n° de semaine doit être supérieur ou égal à 1.");
+    public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode) {
+        return calendrier.containsKey(dateDebutPeriode);
+    }
+
+    @NotNull
+    public DoubleProperty chargePlanifiee(@NotNull LocalDate dateDebutPeriode) throws IhmException {
+        if (!aChargePlanifiee(dateDebutPeriode)) {
+            throw new IhmException("Pas de calendrier pour la tâche " + noTache() + " sur la période qui commence le " + dateDebutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
         }
-        if (noSemaine > calendrier.size()) {
-            throw new IhmException("Pas de calendrier pour la semaine n°" + noSemaine + ".");
-        }
-        return calendrier.get(noSemaine - 1);
+        return calendrier.get(dateDebutPeriode);
     }
 
-    private double chargePlanifiee() {
-        return calendrier.stream().mapToDouble(elt -> elt.getValue().get()).sum();
-    }
-
-    @NotNull
-    public DoubleProperty charge(int noSemaine) throws IhmException {
-        return chargePlanifiee(noSemaine).getValue();
+    private double chargePlanifieeTotale() {
+        return calendrier.values().stream()
+                .mapToDouble(ObservableDoubleValue::get)
+                .sum();
     }
 
     /**
-     * Méthode à appeler à chaque fois que la planification change, pour mettre à jour la charge qui est planifiée pour {@link #getTacheBean() la tâche}.
+     * Méthode à appeler à chaque fois que la planification change, pour mettre à jour la charge totale qui est planifiée pour {@link #getTacheBean() la tâche}.
      */
-    public void majChargePlanifiee() {
-        chargePlanifiee.setValue(chargePlanifiee());
+    public void majChargePlanifieeTotale() {
+        chargePlanifieeTotale.setValue(chargePlanifieeTotale());
     }
 
 
-    public PlanificationBean copier(PlanificationBean original) throws CopieException {
+    @NotNull
+    public PlanificationBean copier(@NotNull PlanificationBean original) throws CopieException {
         try {
             return new PlanificationBean(
                     original.copier(),
@@ -138,6 +137,6 @@ public class PlanificationBean extends TacheBean {
     @NotNull
     @Override
     public String toString() {
-        return super.toString() + " : " + chargePlanifiee.get();
+        return super.toString() + " : " + chargePlanifieeTotale.get();
     }
 }

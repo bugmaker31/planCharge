@@ -19,18 +19,8 @@ public class AnnulationActionException extends SuiviActionsUtilisateurException 
         super(message);
     }
 
-    @SuppressWarnings({"unused", "OverloadedVarargsMethod"})
-    public AnnulationActionException(String message, Object... args) {
-        super(message, args);
-    }
-
     @SuppressWarnings("unused")
     public AnnulationActionException(String message, Exception cause) {
         super(message, cause);
-    }
-
-    @SuppressWarnings({"unused", "OverloadedVarargsMethod"})
-    public AnnulationActionException(String message, Throwable cause, Object... args) {
-        super(message, cause, args);
     }
 }

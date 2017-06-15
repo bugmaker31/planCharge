@@ -18,7 +18,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +27,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -256,10 +255,15 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
                 try {
                     PlanificationBean planifBean = cell.getValue();
-                    Double nouvelleCharge = planifBean.charge(noSemaine).doubleValue();
+                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    if (!planifBean.aChargePlanifiee(dateDebutPeriode)) {
+                        // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
+                        return null;
+                    }
+                    Double nouvelleCharge = planifBean.chargePlanifiee(dateDebutPeriode).doubleValue();
                     return nouvelleCharge.equals(0.0) ? null : new SimpleDoubleProperty(nouvelleCharge).asObject();
                 } catch (IhmException e) {
-                    LOGGER.error("Impossible de formatter la cellule contenant la charge d'une semaine.", e);
+                    LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°{} pour la tâche {}.", noSemaine, cell.getValue().noTache(), e);
                     return null;
                 }
             }
@@ -276,7 +280,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         semaine10Column.setCellValueFactory(new ChargeSemaineCellCallback(10));
         semaine11Column.setCellValueFactory(new ChargeSemaineCellCallback(11));
         semaine12Column.setCellValueFactory(new ChargeSemaineCellCallback(12));
-        chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeProperty().asObject());
+        chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeTotaleProperty().asObject());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
@@ -347,12 +351,13 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
                 PlanificationBean planifBean = event.getRowValue();
                 try {
-                    planifBean.charge(noSemaine).setValue(event.getNewValue());
+                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    planifBean.chargePlanifiee(dateDebutPeriode).setValue(event.getNewValue());
                 } catch (IhmException e) {
                     LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
                 }
 
-                planifBean.majChargePlanifiee();
+                planifBean.majChargePlanifieeTotale();
             }
         }
         semaine1Column.setOnEditCommit(new ChargeSemaineEditHandler(1));
@@ -368,18 +373,18 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         semaine11Column.setOnEditCommit(new ChargeSemaineEditHandler(11));
         semaine12Column.setOnEditCommit(new ChargeSemaineEditHandler(12));
         //
-        semaine1Column.setCellFactory(col -> new PlanificationChargeCellFactory(1));
-        semaine2Column.setCellFactory(col -> new PlanificationChargeCellFactory(2));
-        semaine3Column.setCellFactory(col -> new PlanificationChargeCellFactory(3));
-        semaine4Column.setCellFactory(col -> new PlanificationChargeCellFactory(4));
-        semaine5Column.setCellFactory(col -> new PlanificationChargeCellFactory(5));
-        semaine6Column.setCellFactory(col -> new PlanificationChargeCellFactory(6));
-        semaine7Column.setCellFactory(col -> new PlanificationChargeCellFactory(7));
-        semaine8Column.setCellFactory(col -> new PlanificationChargeCellFactory(8));
-        semaine9Column.setCellFactory(col -> new PlanificationChargeCellFactory(9));
-        semaine10Column.setCellFactory(col -> new PlanificationChargeCellFactory(10));
-        semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(11));
-        semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(12));
+        semaine1Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 1));
+        semaine2Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 2));
+        semaine3Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 3));
+        semaine4Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 4));
+        semaine5Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 5));
+        semaine6Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 6));
+        semaine7Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 7));
+        semaine8Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 8));
+        semaine9Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 9));
+        semaine10Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 10));
+        semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 11));
+        semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 12));
 
         LOGGER.debug("Initialisé.");
     }
@@ -480,10 +485,11 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         );
 
         assert planChargeBean.getDateEtat() != null;
-        List<Pair<LocalDate, DoubleProperty>> calendrier = new ArrayList<>(Planifications.NBR_SEMAINES_PLANIFIEES);
+
+        Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
         LocalDate dateSemaine = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calendrier.add(new Pair<>(dateSemaine, new SimpleDoubleProperty(0.0)));
+            calendrier.put(dateSemaine, new SimpleDoubleProperty(0.0));
             dateSemaine = dateSemaine.plusDays(7);
         }
 
@@ -503,13 +509,31 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         }
         assert dateEtat != null;
 
-        for (PlanificationBean planificationBean : planChargeBean.getPlanificationsBeans()) {
-            TacheBean tacheBean = planificationBean.getTacheBean();
-            for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-                LocalDate debutPeriode = dateEtat.plusDays(noSemaine * 7);
-                Double charge = 0.0; // FIXME planificationBean.calendrier(tache).;
-//                planificationBean.getCalendrier().add(new Pair<>(debutPeriode, new SimpleDoubleProperty(charge));
-            }
+        try {
+            afficherPlanification(dateEtat);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher la planification.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la planification",
+                    e.getLocalizedMessage()
+            );
         }
+    }
+
+    private void afficherPlanification(@NotNull LocalDate dateEtat) throws IhmException {
+        for (PlanificationBean planificationBean : planChargeBean.getPlanificationsBeans()) {
+//            TacheBean tacheBean = planificationBean.getTacheBean();
+            Map<LocalDate, DoubleProperty> calendrierTache = planificationBean.getCalendrier();
+//            for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+//                LocalDate debutPeriode = dateEtat.plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+//                calendrierTache.add(new Pair<>(debutPeriode, new SimpleDoubleProperty(charge)));
+//            }
+        }
+    }
+
+    @FXML
+    public void filtrerTachesNonPlanifieesDansLeMois(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        // TODO FDA 2017/07 Coder.
     }
 }

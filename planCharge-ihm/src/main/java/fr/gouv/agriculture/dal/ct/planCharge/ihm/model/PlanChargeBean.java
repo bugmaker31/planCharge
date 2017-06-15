@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -112,9 +113,10 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         Planifications planifications = new Planifications();
         for (PlanificationBean planificationBean : planificationsBeans) {
             Tache tache = planificationBean.getTacheBean().extract();
-            Map<LocalDate, Double> calendrier = new HashMap<>();
-            List<Pair<LocalDate, DoubleProperty>> ligne = planificationBean.getCalendrier();
-            ligne.forEach(semaine -> calendrier.put(semaine.getKey(), semaine.getValue().doubleValue()));
+
+            Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
+            Map<LocalDate, DoubleProperty> ligne = planificationBean.getCalendrier();
+            ligne.forEach((date, charge) -> calendrier.put(date, charge.getValue()));
 
             planifications.ajouter(tache, calendrier);
         }

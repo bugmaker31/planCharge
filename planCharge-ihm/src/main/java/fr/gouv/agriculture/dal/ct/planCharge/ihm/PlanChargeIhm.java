@@ -323,7 +323,7 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private VBox fieldVBox(@NotNull TextField field) throws IhmException {
         if (!(field.getParent() instanceof Pane)) {
-            throw new IhmException("Le parent du champ '{}' n'est pas un Pane, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.", field.getId());
+            throw new IhmException("Le parent du champ '" + field.getId() + "' n'est pas un Pane, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.");
         }
         VBox vbox;
         Pane parent = (Pane) field.getParent();
@@ -514,42 +514,41 @@ public class PlanChargeIhm extends Application {
 
         final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
-        LocalDate date = planChargeBean.getDateEtat();
+        LocalDate dateDebutPeriode = planChargeBean.getDateEtat();
+        getChargesController().getSemaine1Column().setText("S+1\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine1Column().setText("S+1\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine2Column().setText("S+2\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine2Column().setText("S+2\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine3Column().setText("S+3\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine3Column().setText("S+3\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine4Column().setText("S+4\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine4Column().setText("S+4\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine5Column().setText("S+5\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine5Column().setText("S+5\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine6Column().setText("S+6\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine6Column().setText("S+6\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine7Column().setText("S+7\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine7Column().setText("S+7\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine8Column().setText("S+8\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine8Column().setText("S+8\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine9Column().setText("S+9\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine9Column().setText("S+9\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine10Column().setText("S+10\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine10Column().setText("S+10\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine11Column().setText("S+11\n" + dateDebutPeriode.format(dateFormatter));
 
-        getChargesController().getSemaine11Column().setText("S+11\n" + date.format(dateFormatter));
-        date = date.plusDays(7);
-
-        getChargesController().getSemaine12Column().setText("S+12\n" + date.format(dateFormatter));
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        getChargesController().getSemaine12Column().setText("S+12\n" + dateDebutPeriode.format(dateFormatter));
     }
 
     private void majPlanification() {

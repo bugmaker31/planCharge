@@ -1,15 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 11/05/2017.
@@ -18,11 +22,16 @@ import java.time.LocalDate;
  */
 public class PlanificationChargeCellFactory extends TextFieldTableCell<PlanificationBean, Double> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCellFactory.class);
+
+
+    private PlanChargeBean planChargeBean;
     private final int noPeriode;
 
 
-    public PlanificationChargeCellFactory(@NotNull int noPeriode) {
+    public PlanificationChargeCellFactory(@NotNull PlanChargeBean planChargeBean, @NotNull int noPeriode) {
         super();
+        this.planChargeBean = planChargeBean;
         this.noPeriode = noPeriode;
         setConverter(new DoubleStringConverter()); // TODO FDA 2017/04 Mieux formater les charges ?
     }
@@ -49,21 +58,25 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         if (planifBean == null) {
             return;
         }
-        int indexCol = noPeriode - 1;
-        Pair<LocalDate, DoubleProperty> periodePlanif = planifBean.getCalendrier().get(indexCol);
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noPeriode - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
 
         // Formatage du texte de la cellule :
-        double charge = periodePlanif.getValue().get();
+        Double charge;
+        try {
+            DoubleProperty chargeProperty = planifBean.chargePlanifiee(debutPeriode);
+            charge = chargeProperty.get();
+        } catch (IhmException e) {
+//            LOGGER.error("Impossible de déterminer la charge planifiée pour la tâche " + planifBean.noTache() + " sur la période qui commence le " + debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".", e);
+            // TODO FDA 2017/06 Gérer les périodes trimestrielles (en + des périodes hebdomadaires).
+            charge = 0.0;
+        }
         setText((charge == 0.0) ? "" : ModuleChargesController.FORMAT_CHARGE.format(charge));
 
         // Formatage du style (CSS) de la cellule :
-        LocalDate debutPeriode = periodePlanif.getKey();
-        LocalDate finPeriode;
-        if (planifBean.getCalendrier().size() <= (indexCol + 1)) {
-            finPeriode = null;
-        } else {
-            Pair<LocalDate, DoubleProperty> periodePlanifSuivante = planifBean.getCalendrier().get(indexCol + 1);
-            finPeriode = periodePlanifSuivante.getKey();
+        LocalDate finPeriode = null;
+        LocalDate dateFinPeriode = debutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+        if (planifBean.getCalendrier().containsKey(dateFinPeriode)) {
+            finPeriode = dateFinPeriode;
         }
         if (planifBean.getDebut() != null) {
             if (debutPeriode.isBefore(planifBean.getDebut())) {

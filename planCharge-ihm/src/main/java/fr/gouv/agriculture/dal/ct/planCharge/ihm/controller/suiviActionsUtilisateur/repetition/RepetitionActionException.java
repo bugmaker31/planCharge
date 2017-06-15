@@ -19,18 +19,9 @@ public class RepetitionActionException extends SuiviActionsUtilisateurException 
         super(message);
     }
 
-    @SuppressWarnings({"unused", "OverloadedVarargsMethod"})
-    public RepetitionActionException(String message, Object... args) {
-        super(message, args);
-    }
-
     @SuppressWarnings("unused")
     public RepetitionActionException(String message, Exception cause) {
         super(message, cause);
     }
 
-    @SuppressWarnings({"unused", "OverloadedVarargsMethod"})
-    public RepetitionActionException(String message, Throwable cause, Object... args) {
-        super(message, cause, args);
-    }
 }

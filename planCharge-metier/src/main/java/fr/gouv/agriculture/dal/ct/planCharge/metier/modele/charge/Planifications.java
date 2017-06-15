@@ -19,7 +19,7 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
     private Map<Tache, Map<LocalDate, Double>> plan;
 
     public Planifications() {
-        this.plan = new HashMap<>();
+        this.plan = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
     }
 
     public Planifications(@NotNull Map<Tache, Map<LocalDate, Double>> plan) {
@@ -67,7 +67,7 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
 
     public void ajouter(@NotNull Tache tache, LocalDate dateEtat) {
 
-        Map<LocalDate, Double> planification = new HashMap<>(NBR_SEMAINES_PLANIFIEES);
+        Map<LocalDate, Double> planification = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
         LocalDate dateSemaine = dateEtat;
         for (int noSemaine = 1; noSemaine <= NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             planification.put(dateSemaine, 0.0);

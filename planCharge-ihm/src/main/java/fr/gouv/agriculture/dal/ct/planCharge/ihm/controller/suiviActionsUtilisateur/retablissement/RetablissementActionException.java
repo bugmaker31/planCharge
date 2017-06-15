@@ -19,18 +19,10 @@ public class RetablissementActionException extends SuiviActionsUtilisateurExcept
         super(message);
     }
 
-    @SuppressWarnings({"unused", "OverloadedVarargsMethod"})
-    public RetablissementActionException(String message, Object... args) {
-        super(message, args);
-    }
 
     @SuppressWarnings("unused")
     public RetablissementActionException(String message, Exception cause) {
         super(message, cause);
     }
 
-    @SuppressWarnings({"unused", "OverloadedVarargsMethod"})
-    public RetablissementActionException(String message, Throwable cause, Object... args) {
-        super(message, cause, args);
-    }
 }

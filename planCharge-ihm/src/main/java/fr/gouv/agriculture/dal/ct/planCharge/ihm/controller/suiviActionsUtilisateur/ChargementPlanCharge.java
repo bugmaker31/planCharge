@@ -40,7 +40,7 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge implemen
         try {
             PlanChargeBean.copier(planChargeBeanPrecedent, planChargeBean);
         } catch (CopieException e) {
-            throw new AnnulationActionException("Impossible d'annuler l'action {}.", getTexte(), e);
+            throw new AnnulationActionException("Impossible d'annuler l'action " + getTexte() + ".", e);
         }
     }
 

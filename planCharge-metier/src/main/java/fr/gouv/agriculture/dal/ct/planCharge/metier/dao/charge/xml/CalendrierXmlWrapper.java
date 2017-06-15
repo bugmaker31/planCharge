@@ -7,13 +7,14 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by frederic.danna on 26/04/2017.
  */
 public class CalendrierXmlWrapper {
 
-    private Map<Date, Double> semaines = new HashMap<>();
+    private Map<Date, Double> semaines = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
 
     /**
      * Constructeur vide (appelé notamment par JAXB).

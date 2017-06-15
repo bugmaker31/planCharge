@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
  * @author frederic.danna
  */
 public class SuiviActionsUtilisateurException extends IhmException {
+
     public SuiviActionsUtilisateurException(Throwable cause) {
         super(cause);
     }
@@ -16,17 +17,8 @@ public class SuiviActionsUtilisateurException extends IhmException {
         super(message);
     }
 
-    @SuppressWarnings("OverloadedVarargsMethod")
-    public SuiviActionsUtilisateurException(String message, Object... args) {
-        super(message, args);
-    }
-
     public SuiviActionsUtilisateurException(String message, Exception cause) {
         super(message, cause);
     }
 
-    @SuppressWarnings("OverloadedVarargsMethod")
-    public SuiviActionsUtilisateurException(String message, Throwable cause, Object... args) {
-        super(message, cause, args);
-    }
 }

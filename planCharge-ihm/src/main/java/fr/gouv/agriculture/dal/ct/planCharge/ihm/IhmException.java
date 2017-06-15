@@ -13,17 +13,8 @@ public class IhmException extends Exception {
         super(message);
     }
 
-    @SuppressWarnings("OverloadedVarargsMethod")
-    public IhmException(String message, Object... args) {
-        super(String.format(message, args));
-    }
-
     public IhmException(String message, Exception cause) {
         super(message, cause);
     }
 
-    @SuppressWarnings("OverloadedVarargsMethod")
-    public IhmException(String message, Throwable cause, Object... args) {
-        super(String.format(message, args), cause);
-    }
 }

@@ -22,42 +22,42 @@
             <Accordion>
                 <panes>
                     <TitledPane animated="false" text="Filtres">
-                        <BorderPane>
-                            <center>
-                                <VBox>
-                                    <HBox>
-                                        <Label text="Filtre global : "/>
-                                        <TextField fx:id="filtreGlobalField" prefWidth="200.0"/>
-                                    </HBox>
-                                    <HBox>
-                                        <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50.0"/>
-                                        <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50.0"/>
-                                        <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
-                                        <TextField fx:id="filtreNoTicketIdalField"
-                                                   prefWidth="70.0"/>
-                                        <TextField fx:id="filtreDescriptionField"
-                                                   prefWidth="300.0"/>
-                                        <CheckComboBox fx:id="filtreProjetsApplisField"
-                                                       prefWidth="100.0"/>
-                                        <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
-                                        <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
-                                        <CheckComboBox fx:id="filtreImportancesField"
-                                                       prefWidth="75.0"/>
-                                        <TextField fx:id="filtreChargeField" prefWidth="50.0"/>
-                                        <CheckComboBox fx:id="filtreRessourcesField"
-                                                       prefWidth="75.0"/>
-                                        <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
-                                    </HBox>
-                                </VBox>
-                            </center>
-                            <right>
-                                <Button text="RAZ"
-                                        onAction="#razFiltres"
-                                        styleClass="erase-button"
-                                        alignment="CENTER_RIGHT"
-                                />
-                            </right>
-                        </BorderPane>
+                        <HBox>
+                            <VBox>
+                                <HBox>
+                                    <Label text="Filtre global : "/>
+                                    <TextField fx:id="filtreGlobalField" prefWidth="200.0"/>
+                                </HBox>
+                                <HBox>
+                                    <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50.0"/>
+                                    <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50.0"/>
+                                    <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
+                                    <TextField fx:id="filtreNoTicketIdalField"
+                                               prefWidth="70.0"/>
+                                    <TextField fx:id="filtreDescriptionField"
+                                               prefWidth="300.0"/>
+                                    <CheckComboBox fx:id="filtreProjetsApplisField"
+                                                   prefWidth="100.0"/>
+                                    <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
+                                    <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
+                                    <CheckComboBox fx:id="filtreImportancesField"
+                                                   prefWidth="75.0"/>
+                                    <TextField fx:id="filtreChargeField" prefWidth="50.0"/>
+                                    <CheckComboBox fx:id="filtreRessourcesField"
+                                                   prefWidth="75.0"/>
+                                    <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
+                                </HBox>
+                            </VBox>
+                            <Button text="Planifiées dans le mois"
+                                    onAction="#filtrerTachesNonPlanifieesDansLeMois"
+                                    alignment="CENTER_RIGHT"
+                            />
+                            <Button text="RAZ"
+                                    onAction="#razFiltres"
+                                    styleClass="erase-button"
+                                    alignment="CENTER_RIGHT"
+                            />
+                        </HBox>
                     </TitledPane>
                 </panes>
             </Accordion>
@@ -75,7 +75,7 @@
                                 <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60" visible="false"/>
                                 <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                                 <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"
-                                             visible="false" style="-fx-wrap-text: true" />
+                                             visible="false" style="-fx-wrap-text: true"/>
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55.0"

@@ -270,7 +270,7 @@ public class ApplicationController extends AbstractController {
                             afficherModuleCharges();
                             return;
                         }
-                        throw new IhmException("Tab non géré : '{}'.", newValue.getText());
+                        throw new IhmException("Tab non géré : '" + newValue.getText() + "'.");
                     } catch (IhmException e) {
                         LOGGER.error("Impossible d'affichager le module {}.", disponibilitesTab.getText(), e);
                     }
