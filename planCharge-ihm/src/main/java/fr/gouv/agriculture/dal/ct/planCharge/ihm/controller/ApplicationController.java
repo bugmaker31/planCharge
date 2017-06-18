@@ -27,7 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.File;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -117,6 +119,12 @@ public class ApplicationController extends AbstractController {
     private Menu menuCharges;
 */
 
+    @FXML
+    @NotNull
+    private DatePicker dateEtatPicker;
+
+
+
     // Les onglets :
 
     @FXML
@@ -171,6 +179,11 @@ public class ApplicationController extends AbstractController {
 
     public NomModule getNomModuleCourant() {
         return nomModuleCourant;
+    }
+
+    @NotNull
+    public DatePicker getDateEtatPicker() {
+        return dateEtatPicker;
     }
 
 
@@ -283,6 +296,23 @@ public class ApplicationController extends AbstractController {
     }
 
 
+    public void majTitre() {
+        String titre = PlanChargeIhm.APP_NAME;
+        if (planChargeBean.getDateEtat() != null) {
+            titre += (" - " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        }
+        if (nomModuleCourant != null) {
+            titre += (" - " + nomModuleCourant.getTexte());
+        }
+        ihm.definirTitre(titre);
+    }
+
+    public void majBarreEtat() {
+        LOGGER.debug("majBarreEtat...");
+        sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
+    }
+
+
     /*
     Menu "Fichier" :
      */
@@ -360,7 +390,7 @@ public class ApplicationController extends AbstractController {
             PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
 
             planChargeBean.init(planCharge);
-            ihm.definirDateEtat(planCharge.getDateEtat());
+            definirDateEtat(planCharge.getDateEtat());
 
             planChargeBean.vientDEtreCharge();
             getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
@@ -572,7 +602,7 @@ public class ApplicationController extends AbstractController {
 
             PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc);
 
-            ihm.definirDateEtat(planCharge.getDateEtat());
+            definirDateEtat(planCharge.getDateEtat());
 
             List<PlanificationBean> planifBeans = new ArrayList<>();
             for (Tache tache : planCharge.getPlanifications().taches()) {
@@ -786,7 +816,7 @@ public class ApplicationController extends AbstractController {
             gestionTabPane.getSelectionModel().select(disponibilitesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
         }
 
-        ihm.majTitre();
+        majTitre();
     }
 
     //    @FXML
@@ -814,7 +844,7 @@ public class ApplicationController extends AbstractController {
             gestionTabPane.getSelectionModel().select(tachesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
         }
 
-        ihm.majTitre();
+        majTitre();
     }
 
     //    @FXML
@@ -842,12 +872,158 @@ public class ApplicationController extends AbstractController {
             gestionTabPane.getSelectionModel().select(chargesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
         }
 
-        ihm.majTitre();
+        majTitre();
     }
 
 
-    public void majBarreEtat() {
-        LOGGER.debug("majBarreEtat...");
-        sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
+    @FXML
+    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+        LOGGER.debug("definirDateEtat...");
+        try {
+            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
+
+            LocalDate dateEtat = dateEtatPicker.getValue();
+            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                dateEtatPicker.setValue(dateEtat);
+            }
+
+            definirDateEtat(dateEtat);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+            majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de définir la date d'état.", e);
+        }
     }
+
+    public void definirDateEtat(@Null LocalDate dateEtat) {
+        assert (dateEtat == null) || (dateEtat.getDayOfWeek() == DayOfWeek.MONDAY);
+
+        if ((dateEtat == null) || !dateEtat.equals(planChargeBean.getDateEtat())) {
+            planChargeBean.setDateEtat(dateEtat);
+        }
+        if ((dateEtat == null) || !dateEtat.equals(getDateEtatPicker().getValue())) {
+            getDateEtatPicker().setValue(dateEtat);
+        }
+
+        majPlanificationCharge();
+        majTitre();
+    }
+
+
+    private void majPlanificationCharge() {
+        definirNomsPeriodes();
+        majPlanification();
+    }
+
+    private void definirNomsPeriodes() {
+
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
+
+        LocalDate dateDebutPeriode = planChargeBean.getDateEtat();
+        ihm.getChargesController().getSemaine1Column().setText("S+1\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine2Column().setText("S+2\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine3Column().setText("S+3\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine4Column().setText("S+4\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine5Column().setText("S+5\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine6Column().setText("S+6\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine7Column().setText("S+7\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine8Column().setText("S+8\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine9Column().setText("S+9\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine10Column().setText("S+10\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine11Column().setText("S+11\n" + dateDebutPeriode.format(dateFormatter));
+
+        dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getChargesController().getSemaine12Column().setText("S+12\n" + dateDebutPeriode.format(dateFormatter));
+    }
+
+    private void majPlanification() {
+        ihm.getChargesController().afficherPlanification();
+    }
+
+
+    @FXML
+    private void positionnerDateEtatAuLundiPrecedent(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+        LOGGER.debug("positionnerDateEtatAuLundiPrecedent...");
+
+        try {
+            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
+
+            LocalDate dateEtat;
+            if (planChargeBean.getDateEtat() == null) {
+                dateEtat = LocalDate.now();
+                if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                    dateEtat = dateEtat.minusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                }
+            } else {
+                assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
+                dateEtat = planChargeBean.getDateEtat().minusDays(7);
+            }
+            assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
+
+            definirDateEtat(dateEtat);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+            majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de se positionner au lundi précédent.", e);
+        }
+    }
+
+    @FXML
+    private void positionnerDateEtatAuLundiSuivant(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+        LOGGER.debug("positionnerDateEtatAuLundiSuivant...");
+
+        try {
+            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
+
+            LocalDate dateEtat;
+            if (planChargeBean.getDateEtat() == null) {
+                dateEtat = LocalDate.now();
+                if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                    dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                }
+            } else {
+                assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
+                dateEtat = planChargeBean.getDateEtat().plusDays(7);
+            }
+            assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
+
+            definirDateEtat(dateEtat);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+            majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de se positionner au lundi suivant.", e);
+        }
+    }
+
+
 }

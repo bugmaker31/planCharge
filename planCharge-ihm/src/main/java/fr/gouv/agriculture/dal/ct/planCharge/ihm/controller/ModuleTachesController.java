@@ -106,7 +106,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new AjoutTache<>(tacheBean, getTachesBeans()));
 
-            ihm.majBarreEtat();
+            ihm.getApplicationController().majBarreEtat();
             return tacheBean;
         } catch (IhmException e) {
             throw new Exception("Impossible d'ajouter une tâche.", e);

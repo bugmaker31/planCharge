@@ -83,10 +83,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
     // Les paramètres (TabedPane "Paramètres") :
 
-    @FXML
-    @NotNull
-    private DatePicker dateEtatPicker;
-
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
@@ -224,34 +220,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         return planificationsTable;
     }
 
-    @NotNull
-    public DatePicker getDateEtatPicker() {
-        return dateEtatPicker;
-    }
-
-    @FXML
-    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
-        LOGGER.debug("definirDateEtat...");
-        try {
-            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
-
-            LocalDate dateEtat = dateEtatPicker.getValue();
-            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
-                dateEtatPicker.setValue(dateEtat);
-            }
-
-            ihm.definirDateEtat(dateEtat);
-
-            planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
-
-            ihm.majBarreEtat();
-        } catch (IhmException e) {
-            throw new Exception("Impossible de définir la date d'état.", e);
-        }
-    }
-
 
     /**
      * Initializes the controller class. This method is automatically called
@@ -265,7 +233,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
         super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
-        dateEtatPicker.setValue(planChargeBean.getDateEtat());
+//        ihm.getApplicationController().getDateEtatPicker().setValue(planChargeBean.getDateEtat());
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //noinspection ClassHasNoToStringMethod
@@ -417,36 +385,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
     @FXML
-    private void positionnerDateEtatAuLundiSuivant(@SuppressWarnings("unused") ActionEvent event) throws Exception {
-        LOGGER.debug("positionnerDateEtatAuLundiSuivant...");
-
-        try {
-            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
-
-            LocalDate dateEtat;
-            if (planChargeBean.getDateEtat() == null) {
-                dateEtat = LocalDate.now();
-                if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                    dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
-                }
-            } else {
-                assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
-                dateEtat = planChargeBean.getDateEtat().plusDays(7);
-            }
-            assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
-
-            ihm.definirDateEtat(dateEtat);
-
-            planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
-
-            ihm.majBarreEtat();
-        } catch (IhmException e) {
-            throw new Exception("Impossible de se positionner au lundi suivant.", e);
-        }
-    }
-
-    @FXML
     @Override
     @NotNull
     protected PlanificationBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
@@ -461,7 +399,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new AjoutTache<>(planifBean, planChargeBean.getPlanificationsBeans()));
 
-            ihm.majBarreEtat();
+            ihm.getApplicationController().majBarreEtat();
 
             return planifBean;
         } catch (IhmException e) {

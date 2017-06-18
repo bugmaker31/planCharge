@@ -95,7 +95,11 @@
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
-            <Button text="_Ajouter une tâche" onAction="#ajouterTache" />
+            <ButtonBar>
+                <buttons>
+                    <Button text="_Ajouter une tâche" onAction="#ajouterTache" />
+                </buttons>
+            </ButtonBar>
         </AnchorPane>
     </bottom>
 </BorderPane>

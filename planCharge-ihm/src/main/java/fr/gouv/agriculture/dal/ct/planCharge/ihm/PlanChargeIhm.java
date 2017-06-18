@@ -436,6 +436,10 @@ public class PlanChargeIhm extends Application {
         Platform.exit();
     }
 
+    public void definirTitre(String titre) {
+        primaryStage.setTitle(titre);
+    }
+
 /*
 
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
@@ -480,86 +484,6 @@ public class PlanChargeIhm extends Application {
         }
     }
 */
-    public void majTitre() {
-        String titre = PlanChargeIhm.APP_NAME;
-        if (planChargeBean.getDateEtat() != null) {
-            titre += (" - " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-        }
-        if (applicationController.getNomModuleCourant() != null) {
-            titre += (" - " + applicationController.getNomModuleCourant().getTexte());
-        }
-        primaryStage.setTitle(titre);
-    }
-
-    public void definirDateEtat(@Null LocalDate dateEtat) {
-        assert (dateEtat == null) || (dateEtat.getDayOfWeek() == DayOfWeek.MONDAY);
-
-        if ((dateEtat == null) || !dateEtat.equals(planChargeBean.getDateEtat())) {
-            planChargeBean.setDateEtat(dateEtat);
-        }
-        if ((dateEtat == null) || !dateEtat.equals(getChargesController().getDateEtatPicker().getValue())) {
-            getChargesController().getDateEtatPicker().setValue(dateEtat);
-        }
-
-        majPlanificationCharge();
-        majTitre();
-    }
-
-    private void majPlanificationCharge() {
-        definirNomsPeriodes();
-        majPlanification();
-    }
-
-    private void definirNomsPeriodes() {
-
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
-
-        LocalDate dateDebutPeriode = planChargeBean.getDateEtat();
-        getChargesController().getSemaine1Column().setText("S+1\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine2Column().setText("S+2\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine3Column().setText("S+3\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine4Column().setText("S+4\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine5Column().setText("S+5\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine6Column().setText("S+6\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine7Column().setText("S+7\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine8Column().setText("S+8\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine9Column().setText("S+9\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine10Column().setText("S+10\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine11Column().setText("S+11\n" + dateDebutPeriode.format(dateFormatter));
-
-        dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        getChargesController().getSemaine12Column().setText("S+12\n" + dateDebutPeriode.format(dateFormatter));
-    }
-
-    private void majPlanification() {
-        getChargesController().afficherPlanification();
-    }
-
-
-    public void majBarreEtat() {
-        getApplicationController().majBarreEtat();
-
-    }
 
     /*
 

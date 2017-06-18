@@ -10,66 +10,82 @@
         <URL value="@/css/main.css"/>
     </stylesheets>
     <top>
-        <MenuBar BorderPane.alignment="CENTER">
-            <Menu text="_Fichier">
-                <MenuItem onAction="#charger" text="_Charger..."/>
-                <Menu text="_Importer">
-                    <MenuItem onAction="#majTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
-                    <MenuItem onAction="#importerPlanChargeDepuisCalc"
-                              text="Importer un plan de _charge depuis Calc..."/>
+        <VBox>
+            <MenuBar BorderPane.alignment="CENTER">
+                <Menu text="_Fichier">
+                    <MenuItem onAction="#charger" text="_Charger..."/>
+                    <Menu text="_Importer">
+                        <MenuItem onAction="#majTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
+                        <MenuItem onAction="#importerPlanChargeDepuisCalc"
+                                  text="Importer un plan de _charge depuis Calc..."/>
+                    </Menu>
+                    <MenuItem text="_Sauver" onAction="#sauver" accelerator="Shortcut+S"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="_Préférences..." onAction="#afficherPreferences" disable="true"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
                 </Menu>
-                <MenuItem text="_Sauver" onAction="#sauver" accelerator="Shortcut+S"/>
-                <SeparatorMenuItem/>
-                <MenuItem text="_Préférences..." onAction="#afficherPreferences" disable="true"/>
-                <SeparatorMenuItem/>
-                <MenuItem text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
-            </Menu>
-            <Menu fx:id="menuEditer" text="Editer" mnemonicParsing="false">
-                <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
-                <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à" /> <!-- Sera populé par l'application.-->
-                <SeparatorMenuItem />
-                <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
-                <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
-                <SeparatorMenuItem />
-                <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
-                <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
-            </Menu>
-            <Menu text="_Suivi" disable="true"/>
-            <Menu text="_Référentiels">
-                <MenuItem disable="true" text="Jours _fériés"/>
-                <SeparatorMenuItem/>
-                <MenuItem disable="true" text="_Ressources"/>
-                <MenuItem disable="true" text="_Profils"/>
-                <SeparatorMenuItem/>
-                <MenuItem disable="true" text="Projets/_Applis"/>
-                <MenuItem disable="true" text="_Importances"/>
-            </Menu>
-            <!--
-                            <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDisponibilites">
-                                <items>
-                                    <MenuItem mnemonicParsing="false" text="Afficher dispo"
-                                              onAction="#afficherModuleDisponibilites"/>
-                                </items>
-                            </Menu>
-                            <Menu mnemonicParsing="true" onAction="#afficherModuleTaches" text="_Tâches" fx:id="menuTaches">
-                                <items>
-                                    <MenuItem mnemonicParsing="false" text="Afficher tâches"
-                                              onAction="#afficherModuleTaches"/>
-                                </items>
-                            </Menu>
-                            <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
-                                <items>
-                                    <MenuItem mnemonicParsing="false" text="Afficher charges"
-                                              onAction="#afficherModuleCharges"/>
-                                </items>
-                            </Menu>
-            -->
-            <Menu text="TODOs" disable="true" mnemonicParsing="false">
-            </Menu>
-            <Menu mnemonicParsing="false" text="Aide">
-                <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
-            </Menu>
-        </MenuBar>
+                <Menu fx:id="menuEditer" text="Editer" mnemonicParsing="false">
+                    <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
+                    <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à" /> <!-- Sera populé par l'application.-->
+                    <SeparatorMenuItem />
+                    <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
+                    <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
+                    <SeparatorMenuItem />
+                    <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
+                    <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
+                </Menu>
+                <Menu text="_Suivi" disable="true"/>
+                <Menu text="_Référentiels">
+                    <MenuItem disable="true" text="Jours _fériés"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem disable="true" text="_Ressources"/>
+                    <MenuItem disable="true" text="_Profils"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem disable="true" text="Projets/_Applis"/>
+                    <MenuItem disable="true" text="_Importances"/>
+                </Menu>
+                <!--
+                                <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDisponibilites">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Afficher dispo"
+                                                  onAction="#afficherModuleDisponibilites"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="true" onAction="#afficherModuleTaches" text="_Tâches" fx:id="menuTaches">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Afficher tâches"
+                                                  onAction="#afficherModuleTaches"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Afficher charges"
+                                                  onAction="#afficherModuleCharges"/>
+                                    </items>
+                                </Menu>
+                -->
+                <Menu text="TODOs" disable="true" mnemonicParsing="false">
+                </Menu>
+                <Menu mnemonicParsing="false" text="Aide">
+                    <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
+                </Menu>
+            </MenuBar>
+            <Accordion>
+                <panes>
+                    <TitledPane animated="false" text="Paramètres">
+                        <HBox spacing="2" alignment="BASELINE_LEFT">
+                            <Label text="Date d'état : "/>
+                            <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Lundi précédent"/>
+                            <Label text="Lundi"/>
+                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
+                                        showWeekNumbers="true"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="Lundi suivant"/>
+                        </HBox>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </VBox>
     </top>
     <center>
         <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
