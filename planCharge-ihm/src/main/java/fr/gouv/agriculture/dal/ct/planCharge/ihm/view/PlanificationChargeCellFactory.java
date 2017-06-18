@@ -59,6 +59,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
             return;
         }
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noPeriode - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+        LocalDate finPeriode = debutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
 
         // Formatage du texte de la cellule :
         Double charge;
@@ -73,17 +74,12 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         setText((charge == 0.0) ? "" : ModuleChargesController.FORMAT_CHARGE.format(charge));
 
         // Formatage du style (CSS) de la cellule :
-        LocalDate finPeriode = null;
-        LocalDate dateFinPeriode = debutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-        if (planifBean.getCalendrier().containsKey(dateFinPeriode)) {
-            finPeriode = dateFinPeriode;
-        }
         if (planifBean.getDebut() != null) {
             if (debutPeriode.isBefore(planifBean.getDebut())) {
                 getStyleClass().add("tropTot");
             }
         }
-        if ((finPeriode != null) && (planifBean.getEcheance() != null)) {
+        if (planifBean.getEcheance() != null) {
             if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7))) {
                 getStyleClass().add("tropTard");
             }

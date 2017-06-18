@@ -61,12 +61,7 @@ public class PlanificationBean extends TacheBean {
         super(tache);
 
         this.calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-        calendrier.entrySet().stream()
-                .forEach(entry -> {
-                    LocalDate dateSemaine = entry.getKey();
-                    Double charge = entry.getValue();
-                    this.calendrier.put(dateSemaine, new SimpleDoubleProperty(charge));
-                });
+        calendrier.forEach((debutPeriode, charge) -> this.calendrier.put(debutPeriode, new SimpleDoubleProperty(charge)));
 
         majChargePlanifieeTotale();
     }

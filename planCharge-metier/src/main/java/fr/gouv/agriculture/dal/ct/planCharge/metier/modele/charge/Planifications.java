@@ -9,9 +9,11 @@ import java.util.*;
 import java.util.function.*;
 
 /**
+ * Inspiré de {@link Map}.
+ *
  * Created by frederic.danna on 20/03/2017.
  */
-public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
+public class Planifications {
 
     public static final int NBR_SEMAINES_PLANIFIEES = 12;
 
@@ -90,15 +92,11 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
         return plan.isEmpty();
     }
 
-    public boolean containsKey(Object key) {
+    public boolean containsKey(Tache key) {
         return plan.containsKey(key);
     }
 
-    public boolean containsValue(Object value) {
-        return plan.containsValue(value);
-    }
-
-    public Map<LocalDate, Double> get(Object key) {
+    public Map<LocalDate, Double> get(Tache key) {
         return plan.get(key);
     }
 
@@ -106,20 +104,12 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
         return plan.put(key, value);
     }
 
-    public Map<LocalDate, Double> remove(Object key) {
+    public Map<LocalDate, Double> remove(Tache key) {
         return plan.remove(key);
-    }
-
-    public void putAll(Map<? extends Tache, ? extends Map<LocalDate, Double>> m) {
-        plan.putAll(m);
     }
 
     public void clear() {
         plan.clear();
-    }
-
-    public Set<Tache> keySet() {
-        return plan.keySet();
     }
 
     public Collection<Map<LocalDate, Double>> values() {
@@ -130,47 +120,19 @@ public class Planifications implements Map<Tache, Map<LocalDate, Double>> {
         return plan.entrySet();
     }
 
-    public Map<LocalDate, Double> getOrDefault(Object key, Map<LocalDate, Double> defaultValue) {
-        return plan.getOrDefault(key, defaultValue);
+    public boolean remove(Tache key, Map<LocalDate, Double> value) {
+        return plan.remove(key, value);
+    }
+
+    public Set<Tache> keySet() {
+        return plan.keySet();
     }
 
     public void forEach(BiConsumer<? super Tache, ? super Map<LocalDate, Double>> action) {
         plan.forEach(action);
     }
 
-    public void replaceAll(BiFunction<? super Tache, ? super Map<LocalDate, Double>, ? extends Map<LocalDate, Double>> function) {
-        plan.replaceAll(function);
-    }
-
-    public Map<LocalDate, Double> putIfAbsent(Tache key, Map<LocalDate, Double> value) {
-        return plan.putIfAbsent(key, value);
-    }
-
-    public boolean remove(Object key, Object value) {
-        return plan.remove(key, value);
-    }
-
-    public boolean replace(Tache key, Map<LocalDate, Double> oldValue, Map<LocalDate, Double> newValue) {
-        return plan.replace(key, oldValue, newValue);
-    }
-
-    public Map<LocalDate, Double> replace(Tache key, Map<LocalDate, Double> value) {
-        return plan.replace(key, value);
-    }
-
-    public Map<LocalDate, Double> computeIfAbsent(Tache key, Function<? super Tache, ? extends Map<LocalDate, Double>> mappingFunction) {
-        return plan.computeIfAbsent(key, mappingFunction);
-    }
-
-    public Map<LocalDate, Double> computeIfPresent(Tache key, BiFunction<? super Tache, ? super Map<LocalDate, Double>, ? extends Map<LocalDate, Double>> remappingFunction) {
-        return plan.computeIfPresent(key, remappingFunction);
-    }
-
-    public Map<LocalDate, Double> compute(Tache key, BiFunction<? super Tache, ? super Map<LocalDate, Double>, ? extends Map<LocalDate, Double>> remappingFunction) {
-        return plan.compute(key, remappingFunction);
-    }
-
-    public Map<LocalDate, Double> merge(Tache key, Map<LocalDate, Double> value, BiFunction<? super Map<LocalDate, Double>, ? super Map<LocalDate, Double>, ? extends Map<LocalDate, Double>> remappingFunction) {
-        return plan.merge(key, value, remappingFunction);
+    public void putAll(Map<? extends Tache, ? extends Map<LocalDate, Double>> m) {
+        plan.putAll(m);
     }
 }

@@ -9,10 +9,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,6 +31,7 @@ import java.text.DecimalFormatSymbols;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 /**
@@ -58,11 +62,9 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
      La couche métier :
       */
 
-/*
-//    @Autowired
+    //    @Autowired
     @NotNull
     private PlanChargeService planChargeService = PlanChargeService.instance();
-*/
 
     //    @Autowired
     @NotNull
@@ -227,6 +229,30 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         return dateEtatPicker;
     }
 
+    @FXML
+    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+        LOGGER.debug("definirDateEtat...");
+        try {
+            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
+
+            LocalDate dateEtat = dateEtatPicker.getValue();
+            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                dateEtatPicker.setValue(dateEtat);
+            }
+
+            ihm.definirDateEtat(dateEtat);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+            ihm.majBarreEtat();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de définir la date d'état.", e);
+        }
+    }
+
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -255,13 +281,13 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
                 try {
                     PlanificationBean planifBean = cell.getValue();
-                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    if (!planifBean.aChargePlanifiee(dateDebutPeriode)) {
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    if (!planifBean.aChargePlanifiee(debutPeriode)) {
                         // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
                         return null;
                     }
-                    Double nouvelleCharge = planifBean.chargePlanifiee(dateDebutPeriode).doubleValue();
-                    return nouvelleCharge.equals(0.0) ? null : new SimpleDoubleProperty(nouvelleCharge).asObject();
+                    DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode);
+                    return nouvelleCharge.getValue().equals(0.0) ? null : nouvelleCharge.asObject();
                 } catch (IhmException e) {
                     LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°{} pour la tâche {}.", noSemaine, cell.getValue().noTache(), e);
                     return null;
@@ -314,6 +340,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 }
             }
         });
+        //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
             @Override
             protected void updateItem(Double chargePlanifiee, boolean empty) {
@@ -387,30 +414,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 12));
 
         LOGGER.debug("Initialisé.");
-    }
-
-
-    @FXML
-    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
-        LOGGER.debug("definirDateEtat...");
-        try {
-            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
-
-            LocalDate dateEtat = dateEtatPicker.getValue();
-            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
-                dateEtatPicker.setValue(dateEtat);
-            }
-
-            ihm.definirDateEtat(dateEtat);
-
-            planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
-
-            ihm.majBarreEtat();
-        } catch (IhmException e) {
-            throw new Exception("Impossible de définir la date d'état.", e);
-        }
     }
 
     @FXML
@@ -522,14 +525,21 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
     private void afficherPlanification(@NotNull LocalDate dateEtat) throws IhmException {
-        for (PlanificationBean planificationBean : planChargeBean.getPlanificationsBeans()) {
-//            TacheBean tacheBean = planificationBean.getTacheBean();
-            Map<LocalDate, DoubleProperty> calendrierTache = planificationBean.getCalendrier();
-//            for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-//                LocalDate debutPeriode = dateEtat.plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-//                calendrierTache.add(new Pair<>(debutPeriode, new SimpleDoubleProperty(charge)));
-//            }
-        }
+        LOGGER.debug("Affichage de la planification : ");
+        Planifications planifications = planChargeService.planification(planChargeBean.extract(), dateEtat);
+        planifications
+                .forEach((tache, planifTache) -> {
+                    Optional<PlanificationBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
+                            .filter(planificationBean -> planificationBean.getId() == tache.getId())
+                            .findAny();
+                    assert planifBeanOpt.isPresent();
+                    PlanificationBean planifBean = planifBeanOpt.get();
+                    Map<LocalDate, DoubleProperty> calendrierTache = planifBean.getCalendrier();
+                    calendrierTache.clear();
+                    planifTache.forEach((debutPeriode, charge) -> calendrierTache.put(debutPeriode, new SimpleDoubleProperty(charge)));
+                });
+        planificationsTable.refresh();
+        LOGGER.debug("Planification affichée.");
     }
 
     @FXML
