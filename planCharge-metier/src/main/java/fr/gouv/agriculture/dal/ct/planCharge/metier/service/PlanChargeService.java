@@ -160,28 +160,20 @@ public class PlanChargeService {
     }
 
     /**
-     * @param planCharge Le plan de charge actuel, pour une certaine date d'état, et la planification qui va avec.
+     * @param planifications La planification actuelle, qu'on doit calculer pour la nouvelle date d'état.
      * @param dateEtat   La (nouvelle) date d'état de la planification.
      * @return La (nouvelle) planification pour la (nouvelle) date d'état fournie.
      */
     @NotNull
-    public Planifications planification(@NotNull PlanCharge planCharge, @NotNull LocalDate dateEtat) {
-
-/*
-        // Si la date d'état n'a pas changé, la planification non plus :
-        if (dateEtat.equals(planCharge.getDateEtat())) {
-            return planCharge.getPlanifications();
-        }
-*/
+    public Planifications replanifier(@NotNull Planifications planifications, @NotNull LocalDate dateEtat) {
 
         // Si la date d'état a changé, la planification change forcément aussi : il faut ajouter ou retirer des périodes de planification,
         // et initialiser les charges de chaque tâche en cas d'ajout :
         final LocalDate debutPlanif = dateEtat;
         final LocalDate finPlanif = dateEtat.plusDays(Planifications.NBR_SEMAINES_PLANIFIEES * 7); // FIXME FDA 2017/07  Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-        Planifications planifications = planCharge.getPlanifications();
         planifications.keySet().parallelStream()
                 .forEach(tache -> {
-                    Map<LocalDate, Double> planifTache = planCharge.getPlanifications().get(tache);
+                    Map<LocalDate, Double> planifTache = planifications.get(tache);
 
                     // On supprime les périodes qui sont en dehors du calendrier de planification :
                     Set<LocalDate> periodesASupprimer = new TreeSet<>(); // Un TreeSet pour garder le tri (par date), juste pour faciliter le débogage.
@@ -192,7 +184,7 @@ public class PlanChargeService {
                     }
                     periodesASupprimer.forEach(debutPeriodeTache -> {
                         planifTache.remove(debutPeriodeTache);
-                        LOGGER.debug("Période commençant le {} supprimée pour la tâche {}.", debutPeriodeTache, tache.noTache());
+//                        LOGGER.debug("Période commençant le {} supprimée pour la tâche {}.", debutPeriodeTache, tache.noTache());
                     });
 
                     // On ajoute les planifications qui manquent au calendrier :
@@ -201,7 +193,7 @@ public class PlanChargeService {
                         if (!planifTache.containsKey(debutPeriodeTache)) {
                             double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache);
                             planifTache.put(debutPeriodeTache, chargeTachePeriode);
-                            LOGGER.debug("Période commençant le {} ajoutée pour la tâche {} (chargée à {}).", debutPeriodeTache, tache.noTache(), chargeTachePeriode);
+//                            LOGGER.debug("Période commençant le {} ajoutée pour la tâche {}, chargée à {}.", debutPeriodeTache, tache.noTache(), chargeTachePeriode);
                         }
                     }
                 });

@@ -32,10 +32,7 @@ import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -122,7 +119,6 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private DatePicker dateEtatPicker;
-
 
 
     // Les onglets :
@@ -881,32 +877,36 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("definirDateEtat...");
         try {
             LocalDate dateEtatPrec = planChargeBean.getDateEtat();
+            LocalDate dateEtatNouv = dateEtatPicker.getValue();
 
-            LocalDate dateEtat = dateEtatPicker.getValue();
-            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
-                dateEtatPicker.setValue(dateEtat);
+            if (!Objects.equals(dateEtatPrec, dateEtatNouv)) {
+
+                definirDateEtat(dateEtatNouv);
+
+                planChargeBean.vientDEtreModifie();
+                getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
+
+                majBarreEtat();
             }
 
-            definirDateEtat(dateEtat);
-
-            planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
-
-            majBarreEtat();
         } catch (IhmException e) {
             throw new Exception("Impossible de définir la date d'état.", e);
         }
     }
 
     public void definirDateEtat(@Null LocalDate dateEtat) {
+        if (dateEtat != null) {
+            if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+            }
+        }
         assert (dateEtat == null) || (dateEtat.getDayOfWeek() == DayOfWeek.MONDAY);
 
         if ((dateEtat == null) || !dateEtat.equals(planChargeBean.getDateEtat())) {
             planChargeBean.setDateEtat(dateEtat);
         }
-        if ((dateEtat == null) || !dateEtat.equals(getDateEtatPicker().getValue())) {
-            getDateEtatPicker().setValue(dateEtat);
+        if ((dateEtat == null) || !dateEtat.equals(dateEtatPicker.getValue())) {
+            dateEtatPicker.setValue(dateEtat);
         }
 
         majPlanificationCharge();

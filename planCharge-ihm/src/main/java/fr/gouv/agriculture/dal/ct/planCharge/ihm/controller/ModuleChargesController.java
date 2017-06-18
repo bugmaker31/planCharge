@@ -464,7 +464,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
     private void afficherPlanification(@NotNull LocalDate dateEtat) throws IhmException {
         LOGGER.debug("Affichage de la planification : ");
-        Planifications planifications = planChargeService.planification(planChargeBean.extract(), dateEtat);
+        Planifications planifications = planChargeService.replanifier(planChargeBean.extract().getPlanifications(), dateEtat);
         planifications
                 .forEach((tache, planifTache) -> {
                     Optional<PlanificationBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
