@@ -286,9 +286,9 @@ public class ApplicationController extends AbstractController {
                 }
         );
 
-        planChargeBean.getPlanificationsBeans().addListener(
-                (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
-        );
+//        planChargeBean.getPlanificationsBeans().addListener(
+//                (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
+//        );
     }
 
 
@@ -306,6 +306,7 @@ public class ApplicationController extends AbstractController {
     public void majBarreEtat() {
         LOGGER.debug("majBarreEtat...");
         sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
+        nbrTachesField.setText(String.valueOf(planChargeBean.getPlanificationsBeans().size()));
     }
 
 
@@ -876,18 +877,19 @@ public class ApplicationController extends AbstractController {
     private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("definirDateEtat...");
         try {
-            LocalDate dateEtatPrec = planChargeBean.getDateEtat();
-            LocalDate dateEtatNouv = dateEtatPicker.getValue();
+            LocalDate dateEtatActuelle = planChargeBean.getDateEtat();
+            LocalDate dateEtatNouvelle = dateEtatPicker.getValue();
 
-            if (!Objects.equals(dateEtatPrec, dateEtatNouv)) {
-
-                definirDateEtat(dateEtatNouv);
-
-                planChargeBean.vientDEtreModifie();
-                getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
-
-                majBarreEtat();
+            if (Objects.equals(dateEtatActuelle, dateEtatNouvelle)) {
+                return;
             }
+
+            definirDateEtat(dateEtatNouvelle);
+
+            planChargeBean.vientDEtreModifie();
+            getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatActuelle));
+
+            majBarreEtat();
 
         } catch (IhmException e) {
             throw new Exception("Impossible de définir la date d'état.", e);
