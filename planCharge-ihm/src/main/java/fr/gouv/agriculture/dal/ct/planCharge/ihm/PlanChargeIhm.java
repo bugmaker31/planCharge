@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
+import fr.gouv.agriculture.dal.ct.ihm.javafx.WorkProgressController;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
@@ -9,9 +10,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilites
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,7 +22,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +34,9 @@ import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class PlanChargeIhm extends Application {
 
@@ -58,19 +62,25 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private Stage primaryStage;
 
+
+    @NotNull
+    private BorderPane applicationView;
     /*
         @NotNull
         private BorderPane errorView;
     */
     @NotNull
-    private BorderPane applicationView;
+    private Region workProgressView;
 
-    /*
-        @NotNull
-        private ErrorController errorController;
-    */
+
     @NotNull
     private ApplicationController applicationController;
+    /*
+    @NotNull
+    private ErrorController errorController;
+    */
+    @NotNull
+    private WorkProgressController workProgressController;
     @NotNull
     private ModuleDisponibilitesController disponibilitesController;
     @NotNull
@@ -177,6 +187,12 @@ public class PlanChargeIhm extends Application {
         }
 */
         {
+            FXMLLoader workProgressLoader = new FXMLLoader();
+            workProgressLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/WorkProgressView.fxml"));
+            workProgressView = workProgressLoader.load();
+            workProgressController = workProgressLoader.getController();
+        }
+        {
             FXMLLoader appLoader = new FXMLLoader();
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = appLoader.load();
@@ -211,6 +227,7 @@ public class PlanChargeIhm extends Application {
         chargesController = ModuleChargesController.instance();
     }
 
+
     public void showError(Thread thread, Throwable throwable) {
         LOGGER.error("An (uncaught) error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
@@ -221,6 +238,7 @@ public class PlanChargeIhm extends Application {
             afficherPopUp(Alert.AlertType.ERROR, "Erreur interne", errorMsg.toString());
         }
     }
+
 
     public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message) {
         return afficherPopUp(type,
@@ -277,6 +295,7 @@ public class PlanChargeIhm extends Application {
 
         return alert.showAndWait();
     }
+
 
     public void afficherErreurSaisie(@NotNull TextField field, @NotNull String message) throws IhmException {
         field.getStyleClass().add("erreurSaisie");
@@ -375,6 +394,23 @@ public class PlanChargeIhm extends Application {
         }
     }
 */
+
+    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull String message, @NotNull Task<R> task) throws ExecutionException, InterruptedException {
+        final Stage workProgressStage = new Stage();
+//        workProgressStage.initStyle(StageStyle.UTILITY);
+        workProgressStage.setResizable(true);
+        workProgressStage.initModality(Modality.APPLICATION_MODAL);
+        workProgressStage.getIcons().addAll(primaryStage.getIcons());
+
+        workProgressStage.setScene(new Scene(workProgressView));
+
+        workProgressController.start(titre, message, task, workProgressStage);
+
+        workProgressStage.showAndWait();
+
+        return task.get();
+    }
+
 
     @Override
     public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {

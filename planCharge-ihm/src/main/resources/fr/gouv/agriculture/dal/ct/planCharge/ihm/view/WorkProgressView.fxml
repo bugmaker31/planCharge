@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<AnchorPane prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.ihm.javafx.WorkProgressController">
+    <children>
+        <VBox>
+            <Label fx:id="titreLabel"/>
+            <Label fx:id="messageLabel"/>
+            <ProgressBar fx:id="workProgressBar"/>
+            <Label fx:id="termineLabel" text="Terminé" visible="false"/>
+            <Button fx:id="closeButton" text="Fermer" visible="false"/>
+        </VBox>
+    </children>
+</AnchorPane>

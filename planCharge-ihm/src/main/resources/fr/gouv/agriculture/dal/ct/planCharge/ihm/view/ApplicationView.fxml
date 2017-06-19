@@ -15,7 +15,7 @@
                 <Menu text="_Fichier">
                     <MenuItem onAction="#charger" text="_Charger..."/>
                     <Menu text="_Importer">
-                        <MenuItem onAction="#majTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
+                        <MenuItem onAction="#importerTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
                         <MenuItem onAction="#importerPlanChargeDepuisCalc"
                                   text="Importer un plan de _charge depuis Calc..."/>
                     </Menu>
@@ -103,6 +103,8 @@
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
             <HBox styleClass="barreEtat">
+                <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
+                <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
                 <HBox styleClass="itemBarreEtat">
                     <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
                         <tooltip>

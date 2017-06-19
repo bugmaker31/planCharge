@@ -17,8 +17,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -33,6 +33,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -468,10 +469,10 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void majTachesDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
+    private void importerTachesDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
         try {
-            majTachesDepuisCalc();
+            importerTachesDepuisCalc();
         } catch (IhmException e) {
             LOGGER.error("Impossible d'importer les tâches.", e);
             ihm.afficherPopUp(
@@ -483,7 +484,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void majTachesDepuisCalc() throws IhmException {
+    private void importerTachesDepuisCalc() throws IhmException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LibreOffice) qui contient les tâches ('suivi des demandes'') : ");
@@ -495,29 +496,43 @@ public class ApplicationController extends AbstractController {
             // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
             nomRepFicCalc = paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
-            throw new IhmException("Impossible de déterminer le répertoire de persistance des tâches.", e);
+            throw new IhmException("Impossible de déterminer le répertoire de persistance.", e);
         }
         fileChooser.setInitialDirectory(new File(nomRepFicCalc));
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
-                    "MàJ annulé",
+                    "MàJ annulée",
                     "La mise à jour des tâches depuis un fichier Calc a été annulé par l'utilisateur.",
                     400, 200
             );
             return;
         }
 
-        majTachesDepuisCalc(ficCalc);
+        importerTachesDepuisCalc(ficCalc);
     }
 
     // TODO FDA 23017/02 Afficher une "progress bar".
-    private void majTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
-        try {
-            PlanCharge planCharge = planChargeBean.extract();
+    private void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-            RapportMajTaches rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
+        Task<RapportMajTaches> importerTachesDepuisCalc = new Task<RapportMajTaches>() {
+            @Override
+            protected RapportMajTaches call() throws Exception {
+                PlanCharge planCharge = planChargeBean.extract();
+                RapportMajTaches rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
+                updateProgress(1,1);
+                return rapportMajTaches;
+            }
+        };
+
+        try {
+
+            RapportMajTaches rapportMajTaches = ihm.afficherProgression(
+                    "Import des tâches",
+                    "Import et mise à jour des tâches depuis le fichier '" + ficCalc.getName() + "'...",
+                    importerTachesDepuisCalc
+            );
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());
@@ -539,7 +554,7 @@ public class ApplicationController extends AbstractController {
             afficherModuleTaches();
 
             majBarreEtat();
-        } catch (IhmException | ServiceException e) {
+        } catch (IhmException | InterruptedException | ExecutionException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
     }
