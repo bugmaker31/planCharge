@@ -520,8 +520,10 @@ public class ApplicationController extends AbstractController {
             @Override
             protected RapportMajTaches call() throws Exception {
                 PlanCharge planCharge = planChargeBean.extract();
+                updateMessage("Import en cours...");
                 RapportMajTaches rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
                 updateProgress(1,1);
+                updateMessage("Import terminé");
                 return rapportMajTaches;
             }
         };
@@ -533,6 +535,7 @@ public class ApplicationController extends AbstractController {
                     "Import et mise à jour des tâches depuis le fichier '" + ficCalc.getName() + "'...",
                     importerTachesDepuisCalc
             );
+            assert rapportMajTaches != null;
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());

@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
-import fr.gouv.agriculture.dal.ct.ihm.javafx.WorkProgressController;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
@@ -8,7 +7,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationControlle
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
@@ -26,6 +24,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,8 +68,10 @@ public class PlanChargeIhm extends Application {
         @NotNull
         private BorderPane errorView;
     */
+/*
     @NotNull
     private Region workProgressView;
+*/
 
 
     @NotNull
@@ -79,8 +80,10 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private ErrorController errorController;
     */
+/*
     @NotNull
     private WorkProgressController workProgressController;
+*/
     @NotNull
     private ModuleDisponibilitesController disponibilitesController;
     @NotNull
@@ -88,9 +91,11 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private ModuleChargesController chargesController;
 
+/*
     //    @Autowired
     @NotNull
     private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
+*/
 
 
     public Stage getPrimaryStage() {
@@ -186,12 +191,14 @@ public class PlanChargeIhm extends Application {
             errorController = errorLoader.getController();
         }
 */
+/*
         {
             FXMLLoader workProgressLoader = new FXMLLoader();
             workProgressLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/WorkProgressView.fxml"));
             workProgressView = workProgressLoader.load();
             workProgressController = workProgressLoader.getController();
         }
+*/
         {
             FXMLLoader appLoader = new FXMLLoader();
             appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
@@ -267,7 +274,7 @@ public class PlanChargeIhm extends Application {
     public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
         Alert alert = new Alert(type);
 
-        alert.setTitle(type.name());
+        alert.setTitle(titre);
         alert.setHeaderText(titre);
         alert.setContentText(message);
 /*
@@ -395,20 +402,27 @@ public class PlanChargeIhm extends Application {
     }
 */
 
-    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull String message, @NotNull Task<R> task) throws ExecutionException, InterruptedException {
-        final Stage workProgressStage = new Stage();
-//        workProgressStage.initStyle(StageStyle.UTILITY);
-        workProgressStage.setResizable(true);
-        workProgressStage.initModality(Modality.APPLICATION_MODAL);
-        workProgressStage.getIcons().addAll(primaryStage.getIcons());
+    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull String message, @NotNull Task<R> task) throws ExecutionException, InterruptedException, IhmException {
+        final ProgressDialog progressDialog = new ProgressDialog(task);
+        progressDialog.setTitle(titre);
+        progressDialog.setHeaderText(titre);
+        progressDialog.setContentText(message);
+        progressDialog.setResizable(true);
+        progressDialog.setWidth(800);
+        progressDialog.setHeight(500);
+        Stage progressStage = (Stage) progressDialog.getDialogPane().getScene().getWindow();
+        progressStage.getIcons().addAll(primaryStage.getIcons());
 
-        workProgressStage.setScene(new Scene(workProgressView));
+        // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
+        Thread th = new Thread(task, "progressDialog");
+        th.start();
+        progressDialog.initModality(Modality.APPLICATION_MODAL);
+        progressDialog.showAndWait();
 
-        workProgressController.start(titre, message, task, workProgressStage);
+        R resultat = task.get(); // Waits until task is succeeded.
+        th.join(); // Pas nécessaire.
 
-        workProgressStage.showAndWait();
-
-        return task.get();
+        return resultat;
     }
 
 
