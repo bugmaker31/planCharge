@@ -19,6 +19,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
     }
 
 
-    public Set<Tache> importerDepuisCalc(@NotNull File ficCalc) throws TacheDaoException {
+    public Set<Tache> importerDepuisCalc(@NotNull File ficCalc, @NotNull RapportImportTaches rapport) throws TacheDaoException {
         Set<Tache> taches;
 
         if (!ficCalc.exists()) {
@@ -82,12 +83,14 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
         try {
 
             // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/jlop04/04.%20Spreadsheet%20Processing.pdf
+            rapport.setAvancement("Ouverture du fichier Calc...");
             docCalc = Calc.openDoc(ficCalc.getAbsolutePath());
             if (docCalc == null) {
                 throw new TacheDaoException("Document introuvable : '" + ficCalc.getAbsolutePath() + "'.");
             }
 
-            taches = importer(docCalc);
+            rapport.setAvancement("Import des tâches...");
+            taches = importer(docCalc, rapport);
 
         } catch (LibreOfficeException e) {
             throw new TacheDaoException("Impossible d'importer les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
@@ -104,12 +107,12 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
         return taches;
     }
 
-    private Set<Tache> importer(XSpreadsheetDocument calc) throws TacheDaoException, LibreOfficeException {
+    private Set<Tache> importer(XSpreadsheetDocument calc, @NotNull RapportImportTaches rapport) throws TacheDaoException, LibreOfficeException {
         Set<Tache> taches;
 
         try {
             XSpreadsheet feuilleCharge = Calc.getSheet(calc, "Tâches");
-            taches = importerTaches(feuilleCharge);
+            taches = importerTaches(feuilleCharge, rapport);
         } catch (LibreOfficeException e) {
             throw new TacheDaoException("Impossible d'importer les tâches depuis le doc OOCalc.", e);
         }
@@ -117,7 +120,7 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
         return taches;
     }
 
-    private Set<Tache> importerTaches(XSpreadsheet feuille) throws TacheDaoException, LibreOfficeException {
+    private Set<Tache> importerTaches(XSpreadsheet feuille, @NotNull RapportImportTaches rapport) throws TacheDaoException, LibreOfficeException {
         Set<Tache> taches = new HashSet<>();
 
         final int noLigDebut = 4;
@@ -127,6 +130,8 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
             LIG:
             while (true) {
                 LOGGER.debug("Ligne n°" + cptLig);
+                rapport.setAvancement("Import de la ligne n°" + cptLig + "...");
+                rapport.incrNbrTachesImportees();
                 PARSE_LIG:
                 {
                     XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
@@ -151,6 +156,7 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
                     Tache tache = importerTache(feuille, cptLig);
 
                     taches.add(tache);
+                    rapport.incrNbrTachesPlanifiees();
                 }
                 cptLig++;
             }

@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
-import com.sun.deploy.util.OrderedHashSet;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
@@ -83,13 +82,12 @@ public class PlanChargeService {
     }
 
     @NotNull
-    public RapportMajTaches majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches) throws ServiceException {
-        RapportMajTaches rapport;
+    public RapportImportTaches majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches, @NotNull final RapportImportTaches rapport) throws ServiceException {
         try {
 
-            Set<Tache> tachesImportees = tacheDao.importerDepuisCalc(ficCalcTaches);
+            Set<Tache> tachesImportees = tacheDao.importerDepuisCalc(ficCalcTaches, rapport);
 
-            rapport = new RapportMajTaches(planCharge.getPlanifications().size(), tachesImportees.size());
+//            rapport = new RapportImportTaches(planCharge.getPlanifications().size(), tachesImportees.size());
 
             // MàJ du plan de charge :
             // - suppression des tâches qui n'existent plus (terminée/annulée/etc.)
@@ -101,8 +99,8 @@ public class PlanChargeService {
 
                     // Ajout des tâches qui ont été créées depuis :
                     planCharge.getPlanifications().ajouter(tacheImportee, planCharge.getDateEtat());
-                    LOGGER.debug("Tâche " + tacheImportee + " ajoutée.");
                     rapport.incrNbrTachesAjoutees();
+                    LOGGER.debug("Tâche " + tacheImportee + " ajoutée.");
                 } else {
                     assert planCharge.getPlanifications().taches().contains(tacheImportee);
 
@@ -110,8 +108,8 @@ public class PlanChargeService {
                     Tache tacheActuelle = planCharge.getPlanifications().tache(tacheImportee.getId());
                     Map<LocalDate, Double> calendrierTache = planCharge.getPlanifications().calendrier(tacheActuelle);
                     planCharge.getPlanifications().put(tacheImportee, calendrierTache);
-                    LOGGER.debug("Tâche " + tacheActuelle + " màj.");
                     rapport.incrNbrTachesMisesAJour();
+                    LOGGER.debug("Tâche " + tacheActuelle + " màj.");
                 }
             }
             // Suppression des tâches qui n'existent plus (terminée/annulée/etc.) :

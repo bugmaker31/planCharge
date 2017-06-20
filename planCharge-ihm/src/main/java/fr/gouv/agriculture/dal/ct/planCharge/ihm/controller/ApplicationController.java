@@ -13,7 +13,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportMajTaches;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -516,26 +516,46 @@ public class ApplicationController extends AbstractController {
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-        Task<RapportMajTaches> importerTachesDepuisCalc = new Task<RapportMajTaches>() {
+        final RapportImportTachesAvecProgression rapportMajTaches = new RapportImportTachesAvecProgression();
+
+        //noinspection AnonymousInnerClassWithTooManyMethods
+        Task<RapportImportTachesAvecProgression> importerTachesDepuisCalc = new Task<RapportImportTachesAvecProgression>() {
+
             @Override
-            protected RapportMajTaches call() throws Exception {
+            protected RapportImportTachesAvecProgression call() throws Exception {
+
+                updateTitle("Préparation de l'import...");
                 PlanCharge planCharge = planChargeBean.extract();
-                updateMessage("Import en cours...");
-                RapportMajTaches rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge, ficCalc);
-                updateProgress(1,1);
-                updateMessage("Import terminé");
+
+                updateTitle("Import et mise à jour des tâches depuis le fichier '" + ficCalc.getName() + "'...");
+                rapportMajTaches.avancementProperty().addListener((observable, oldValue, newValue) -> majMessage());
+                rapportMajTaches.nbrTachesImporteesProperty().addListener((observable, oldValue, newValue) -> majMessage());
+//                rapportMajTaches.nbrTachePlanifieesProperty().addListener((observable, oldValue, newValue) -> majMessage()); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
+                planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapportMajTaches);
+
+                updateProgress(1, 1);
+                //updateTitle("Import terminé"); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
                 return rapportMajTaches;
+            }
+
+            private void majMessage() {
+                updateMessage(
+                        rapportMajTaches.getAvancement()
+//                                + "\n" + rapportMajTaches.getNbrTachesImportees() + " tâches importées" N'apporte rien , donc pas affiché.
+/* Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
+                                + "\n" + "- " + rapportMajTaches.getNbrTachesPlanifiees() + " tâches planifiées"
+                                + "\n" + "- " + rapportMajTaches.getNbrTachesAjoutees() + " tâches ajoutées"
+                                + "\n" + "- " + rapportMajTaches.getNbrTachesSupprimees() + " tâches supprimées"
+                                + "\n" + "- " + rapportMajTaches.getNbrTachesMisesAJour() + " tâches mises à jours"
+*/
+                );
             }
         };
 
         try {
 
-            RapportMajTaches rapportMajTaches = ihm.afficherProgression(
-                    "Import des tâches",
-                    "Import et mise à jour des tâches depuis le fichier '" + ficCalc.getName() + "'...",
-                    importerTachesDepuisCalc
-            );
-            assert rapportMajTaches != null;
+            RapportImportTaches rapport = ihm.afficherProgression("Import des tâches...", importerTachesDepuisCalc);
+            assert rapport != null;
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());
@@ -545,11 +565,11 @@ public class ApplicationController extends AbstractController {
                     "Tâches mises à jour importées",
                     "Les tâches ont été mises à jour : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                            + "\n- nombre de tâches initial : " + rapportMajTaches.getNbrTachePlanifiees()
-                            + "\n- nombre de tâches importées : " + rapportMajTaches.getNbrTachesImportees()
-                            + "\n- nombre de tâches mises à jour : " + rapportMajTaches.getNbrTachesMisesAJour()
-                            + "\n- nombre de tâches ajoutées : " + rapportMajTaches.getNbrTachesAjoutees()
-                            + "\n- nombre de tâches supprimées : " + rapportMajTaches.getNbrTachesSupprimees()
+                            + "\n- nombre de tâches initial : " + rapport.getNbrTachesPlanifiees()
+                            + "\n- nombre de lignes importées : " + rapport.getNbrTachesImportees()
+                            + "\n- nombre de tâches mises à jour : " + rapport.getNbrTachesMisesAJour()
+                            + "\n- nombre de tâches ajoutées : " + rapport.getNbrTachesAjoutees()
+                            + "\n- nombre de tâches supprimées : " + rapport.getNbrTachesSupprimees()
                             + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
                     700, 300
             );

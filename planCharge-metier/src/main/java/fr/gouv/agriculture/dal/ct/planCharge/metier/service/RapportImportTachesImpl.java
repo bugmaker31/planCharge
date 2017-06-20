@@ -1,54 +1,73 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
 /**
- * Created by frederic.danna on 05/05/2017.
+ * Created by frederic.danna on 20/06/2017.
  */
-public class RapportMajTaches implements RapportService {
+public class RapportImportTachesImpl implements RapportImportTaches {
 
-    private final int nbrTachePlanifiees;
-    private final int nbrTachesImportees;
+    private int nbrTachePlanifiees;
+    private int nbrTachesImportees;
     private int nbrTachesSupprimees;
     private int nbrTachesAjoutees;
     private int nbrTachesMisesAJour;
-
-    public RapportMajTaches(int nbrTachePlanifiees, int nbrTachesImportees) {
-        this.nbrTachePlanifiees = nbrTachePlanifiees;
-        this.nbrTachesImportees = nbrTachesImportees;
-
-        nbrTachesSupprimees = 0;
-        nbrTachesAjoutees = 0;
-        nbrTachesMisesAJour = 0;
-    }
+    private String avancement;
 
     public int getNbrTachePlanifiees() {
         return nbrTachePlanifiees;
     }
 
+    @Override
     public int getNbrTachesImportees() {
         return nbrTachesImportees;
     }
 
+    @Override
     public int getNbrTachesSupprimees() {
         return nbrTachesSupprimees;
     }
 
+    @Override
     public int getNbrTachesAjoutees() {
         return nbrTachesAjoutees;
     }
 
+    @Override
     public int getNbrTachesMisesAJour() {
         return nbrTachesMisesAJour;
     }
 
+    @Override
+    public int getNbrTachesPlanifiees() {
+        return nbrTachePlanifiees;
+    }
+
+    @Override
+    public void incrNbrTachesPlanifiees() {
+        nbrTachePlanifiees++;
+    }
+
+    @Override
+    public void incrNbrTachesImportees() {
+        nbrTachesImportees++;
+    }
+
+    @Override
     public void incrNbrTachesSupprimees() {
         nbrTachesSupprimees++;
     }
 
+    @Override
     public void incrNbrTachesAjoutees() {
         nbrTachesAjoutees++;
     }
 
+    @Override
     public void incrNbrTachesMisesAJour() {
         nbrTachesMisesAJour++;
+    }
+
+    @Override
+    public void setAvancement(String avancement) {
+        this.avancement = avancement;
     }
 }

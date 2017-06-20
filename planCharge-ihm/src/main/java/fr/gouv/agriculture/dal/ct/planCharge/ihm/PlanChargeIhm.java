@@ -414,16 +414,15 @@ public class PlanChargeIhm extends Application {
     }
 */
 
-    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull String message, @NotNull Task<R> task) throws ExecutionException, InterruptedException, IhmException {
+    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws ExecutionException, InterruptedException, IhmException {
         final ProgressDialog progressDialog = new ProgressDialog(task);
         progressDialog.setTitle(titre);
         progressDialog.setHeaderText(titre);
-        progressDialog.setContentText(message);
+//        task.messageProperty().addListener((observable, oldValue, newValue) -> progressDialog.setContentText(newValue)); Redondant, car le ProgressDialog doit déjà le faire (ou un autre compsant JavaFX)
         progressDialog.setResizable(true);
-        progressDialog.setWidth(100);
-        progressDialog.setHeight(700);
-        Stage progressStage = (Stage) progressDialog.getDialogPane().getScene().getWindow();
-        progressStage.getIcons().addAll(primaryStage.getIcons());
+        progressDialog.getDialogPane().setPrefWidth(500);
+        progressDialog.getDialogPane().setPrefHeight(200);
+        ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
 
         // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
         Thread taskThread = new Thread(task, "progressDialog");
