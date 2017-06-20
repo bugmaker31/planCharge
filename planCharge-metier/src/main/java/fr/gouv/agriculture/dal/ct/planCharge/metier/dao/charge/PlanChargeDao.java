@@ -20,6 +20,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportChargementPlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +104,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     @NotNull
 //    @Override
-    public PlanCharge load(@NotNull LocalDate dateEtat) throws EntityNotFoundException, PlanChargeDaoException {
+    public PlanCharge load(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundException, PlanChargeDaoException {
         PlanCharge plan;
 
         File fichierPlanif = fichierPlanCharge(dateEtat);
@@ -112,7 +113,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         }
 
         try {
-            plan = load(fichierPlanif);
+            plan = load(fichierPlanif, rapport);
         } catch (PlanChargeDaoException e) {
             throw new EntityNotFoundException("Impossible de charger le plan de charge en dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
         }
@@ -121,11 +122,11 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
     }
 
     @NotNull
-    public PlanCharge load(@NotNull File ficCalc) throws EntityNotFoundException, PlanChargeDaoException {
+    public PlanCharge load(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundException, PlanChargeDaoException {
         PlanCharge plan;
 
         try {
-            plan = plan(ficCalc);
+            plan = plan(ficCalc, rapport);
         } catch (PlanChargeDaoException e) {
             throw new EntityNotFoundException("Impossible de charger le plan de charge depuis le fichier " + ficCalc.getAbsolutePath() + ".", e);
         }
@@ -179,17 +180,20 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
      * Loads data from the specified file.
      *
      * @param ficCalc
+     * @param rapport
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private PlanCharge plan(@NotNull File ficCalc) throws PlanChargeDaoException {
+    private PlanCharge plan(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge plan;
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
+            rapport.setAvancement("Lecture du fichier XML...");
             wrapper = (PlanChargeXmlWrapper) um.unmarshal(ficCalc);
 
+            rapport.setAvancement("Transformation du XML en objets métier...");
             plan = wrapper.extract();
 
         } catch (Exception e) {

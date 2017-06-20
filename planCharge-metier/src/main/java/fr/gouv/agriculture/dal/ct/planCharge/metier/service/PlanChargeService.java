@@ -48,9 +48,9 @@ public class PlanChargeService {
     }
 
     @NotNull
-    public PlanCharge charger(@NotNull LocalDate dateEtat) throws ServiceException {
+    public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.load(dateEtat);
+            return planChargeDao.load(dateEtat, rapport);
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de charger le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
@@ -59,9 +59,9 @@ public class PlanChargeService {
     }
 
     @NotNull
-    public PlanCharge charger(@NotNull File ficPlanCharge) throws ServiceException {
+    public PlanCharge charger(@NotNull File ficPlanCharge, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.load(ficPlanCharge);
+            return planChargeDao.load(ficPlanCharge, rapport);
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.",

@@ -373,7 +373,6 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    // TODO FDA 23017/02 Afficher une "progress bar".
     private void charger(@NotNull File ficPlanCharge) throws IhmException {
         if (ficPlanCharge == null) {
             throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
@@ -381,17 +380,37 @@ public class ApplicationController extends AbstractController {
 
         // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
 
+        RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
+
+        //noinspection AnonymousInnerClassWithTooManyMethods
+        Task<RapportChargementAvecProgression> chargerPlanCharge = new Task<RapportChargementAvecProgression>() {
+
+            @Override
+            protected RapportChargementAvecProgression call() throws Exception {
+
+                PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
+
+                rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(rapport.getAvancement()));
+                PlanCharge planCharge = planChargeService.charger(ficPlanCharge, rapport);
+
+                planChargeBean.init(planCharge);
+
+                planChargeBean.vientDEtreCharge();
+                getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
+
+                updateProgress(1, 1);
+                //updateTitle("Import terminé"); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
+                return rapport;
+            }
+        };
+
         try {
 
-            PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
+            /*RapportChargementAvecProgression rapportFinal = */
+            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
+//            assert rapportFinal != null;
 
-            PlanCharge planCharge = planChargeService.charger(ficPlanCharge);
-
-            planChargeBean.init(planCharge);
-            definirDateEtat(planCharge.getDateEtat());
-
-            planChargeBean.vientDEtreCharge();
-            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
+            definirDateEtat(planChargeBean.getDateEtat());
 
             // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
             ihm.getTachesController().populerReferentiels();
@@ -414,7 +433,7 @@ public class ApplicationController extends AbstractController {
 
             majBarreEtat();
 
-        } catch (CopieException | ServiceException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
     }
@@ -529,7 +548,7 @@ public class ApplicationController extends AbstractController {
 
                 updateTitle("Import et mise à jour des tâches depuis le fichier '" + ficCalc.getName() + "'...");
                 rapportMajTaches.avancementProperty().addListener((observable, oldValue, newValue) -> majMessage());
-                rapportMajTaches.nbrTachesImporteesProperty().addListener((observable, oldValue, newValue) -> majMessage());
+//                rapportMajTaches.nbrTachesImporteesProperty().addListener((observable, oldValue, newValue) -> majMessage()); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
 //                rapportMajTaches.nbrTachePlanifieesProperty().addListener((observable, oldValue, newValue) -> majMessage()); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
                 planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapportMajTaches);
 
