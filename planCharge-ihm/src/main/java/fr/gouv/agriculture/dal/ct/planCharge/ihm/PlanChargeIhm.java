@@ -11,9 +11,16 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,8 +29,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +46,8 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.function.ToIntFunction;
 
 public class PlanChargeIhm extends Application {
 
@@ -408,19 +420,20 @@ public class PlanChargeIhm extends Application {
         progressDialog.setHeaderText(titre);
         progressDialog.setContentText(message);
         progressDialog.setResizable(true);
-        progressDialog.setWidth(800);
-        progressDialog.setHeight(500);
+        progressDialog.setWidth(100);
+        progressDialog.setHeight(700);
         Stage progressStage = (Stage) progressDialog.getDialogPane().getScene().getWindow();
         progressStage.getIcons().addAll(primaryStage.getIcons());
 
-        // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
-        Thread th = new Thread(task, "progressDialog");
-        th.start();
-        progressDialog.initModality(Modality.APPLICATION_MODAL);
-        progressDialog.showAndWait();
+        // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
+        Thread taskThread = new Thread(task, "progressDialog");
+        taskThread.start();
+
+        progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
+        progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce dialog, "on succeeded".
 
         R resultat = task.get(); // Waits until task is succeeded.
-        th.join(); // Pas nécessaire.
+        taskThread.join(); // Pas nécessaire.
 
         return resultat;
     }
@@ -554,4 +567,5 @@ public class PlanChargeIhm extends Application {
 // * @param datePlanif Date de la planification.
 // * @return
 // */
+
 }
