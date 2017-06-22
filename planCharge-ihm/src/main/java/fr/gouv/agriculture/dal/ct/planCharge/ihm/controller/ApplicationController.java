@@ -393,7 +393,6 @@ public class ApplicationController extends AbstractController {
 
         RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
 
-        //noinspection AnonymousInnerClassWithTooManyMethods
         Task<RapportChargementAvecProgression> chargerPlanCharge = new Task<RapportChargementAvecProgression>() {
 
             @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
@@ -485,15 +484,20 @@ public class ApplicationController extends AbstractController {
 
         final RapportSauvegardeAvecProgression rapport = new RapportSauvegardeAvecProgression();
 
-        //noinspection AnonymousInnerClassWithTooManyMethods
         Task<RapportSauvegardeAvecProgression> sauvegarder = new Task<RapportSauvegardeAvecProgression>() {
 
             @Override
             protected RapportSauvegardeAvecProgression call() throws Exception {
 
-                PlanCharge planCharge = planChargeBean.extract();
+                rapport.setProgressionMax(1);
 
+                rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+
+                PlanCharge planCharge = planChargeBean.extract();
                 planChargeService.sauver(planCharge, rapport);
+
+                rapport.setProgressionCourante(1);
 
                 return rapport;
             }
@@ -581,7 +585,6 @@ public class ApplicationController extends AbstractController {
 
         final RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
 
-        //noinspection AnonymousInnerClassWithTooManyMethods
         Task<RapportImportTachesAvecProgression> importerTachesDepuisCalc = new Task<RapportImportTachesAvecProgression>() {
 
             @Override
@@ -595,8 +598,6 @@ public class ApplicationController extends AbstractController {
                 PlanCharge planCharge = planChargeBean.extract();
 
                 planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapport);
-
-                rapport.setProgressionCourante(1);
 
                 return rapport;
             }

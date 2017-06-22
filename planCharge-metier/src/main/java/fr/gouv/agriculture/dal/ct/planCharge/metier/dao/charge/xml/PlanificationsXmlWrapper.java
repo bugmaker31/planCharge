@@ -40,8 +40,12 @@ public class PlanificationsXmlWrapper {
     public PlanificationsXmlWrapper init(@NotNull Planifications planifs, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
             this.planifications.clear();
+            rapport.setProgressionMax(planifs.taches().size());
+            int cptTache = 0;
             for (Tache tache : planifs.taches()) {
                 rapport.setAvancement("Sauvegarde de la tâche " + tache.noTache() + "...");
+                //noinspection ValueOfIncrementOrDecrementUsed
+                rapport.setProgressionCourante(++cptTache);
                 PlanificationXmlWrapper planificationXmlWrapper = new PlanificationXmlWrapper().init(tache, planifs.calendrier(tache));
                 this.planifications.add(planificationXmlWrapper);
             }
