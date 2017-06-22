@@ -1,11 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
 /**
- * Created by frederic.danna on 05/05/2017.
+ * Created by frederic.danna on 20/06/2017.
  */
 public interface RapportImportTaches extends RapportService {
-
-    int getNbrTachesPlanifiees();
 
     int getNbrTachesImportees();
 
@@ -14,6 +12,8 @@ public interface RapportImportTaches extends RapportService {
     int getNbrTachesAjoutees();
 
     int getNbrTachesMisesAJour();
+
+    int getNbrTachesPlanifiees();
 
     void incrNbrTachesPlanifiees();
 
@@ -24,6 +24,4 @@ public interface RapportImportTaches extends RapportService {
     void incrNbrTachesAjoutees();
 
     void incrNbrTachesMisesAJour();
-
-    void setAvancement(String avancement);
 }

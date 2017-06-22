@@ -7,6 +7,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoExce
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
 import javax.validation.constraints.NotNull;
@@ -96,7 +97,7 @@ public class PlanChargeXmlWrapper {
         this.planificationsXmlWrapper = planifications;
     }
 
-    public PlanChargeXmlWrapper init(PlanCharge planCharge) throws PlanChargeDaoException {
+    public PlanChargeXmlWrapper init(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
             versionApplication = params.getParametrage("application.version");
         } catch (KernelException e) {
@@ -104,8 +105,8 @@ public class PlanChargeXmlWrapper {
         }
 
         dateEtat = Dates.asDate(planCharge.getDateEtat());
-        referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getPlanifications());
-        planificationsXmlWrapper = planificationsXmlWrapper.init(planCharge.getPlanifications());
+        referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getPlanifications(), rapport);
+        planificationsXmlWrapper = planificationsXmlWrapper.init(planCharge.getPlanifications(), rapport);
 
         return this;
     }

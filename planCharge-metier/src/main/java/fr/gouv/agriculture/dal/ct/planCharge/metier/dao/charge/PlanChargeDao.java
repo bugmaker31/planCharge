@@ -21,6 +21,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportChargementPlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +135,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         return plan;
     }
 
-    public void sauver(PlanCharge planCharge) throws PlanChargeDaoException {
+    public void sauver(PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
 
         LocalDate dateEtat = planCharge.getDateEtat();
 
@@ -149,7 +150,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
         }
 
-        serialiserPlanCharge(fichierPlanif, planCharge);
+        serialiserPlanCharge(fichierPlanif, planCharge, rapport);
     }
 
     @NotNull
@@ -206,9 +207,10 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
      * Saves the current data to the specified file.
      *
      * @param ficCalc
+     * @param rapport
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private void serialiserPlanCharge(File ficCalc, PlanCharge planCharge) throws PlanChargeDaoException {
+    private void serialiserPlanCharge(@NotNull File ficCalc, @NotNull PlanCharge planCharge,@NotNull  RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Marshaller m = context.createMarshaller();
@@ -216,7 +218,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our data.
-            wrapper.init(planCharge);
+            wrapper.init(planCharge, rapport);
 
             // Marshalling and saving XML to the file.
             m.marshal(wrapper, ficCalc);

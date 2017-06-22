@@ -11,23 +11,5 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by frederic.danna on 20/06/2017.
  */
-public class RapportChargementAvecProgression implements RapportChargementPlanCharge {
-
-    private StringProperty avancement = new SimpleStringProperty();
-
-    public RapportChargementAvecProgression() {
-        super();
-    }
-
-    public String getAvancement() {
-        return avancement.get();
-    }
-
-    public StringProperty avancementProperty() {
-        return avancement;
-    }
-
-    public void setAvancement(String avancement) {
-        this.avancement.set(avancement);
-    }
+public class RapportChargementAvecProgression extends RapportServiceAvecProgression implements RapportChargementPlanCharge {
 }

@@ -5,7 +5,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoExce
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,11 +37,12 @@ public class PlanificationsXmlWrapper {
         super();
     }
 
-    public PlanificationsXmlWrapper init(Planifications planifications) throws PlanChargeDaoException {
+    public PlanificationsXmlWrapper init(@NotNull Planifications planifs, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
             this.planifications.clear();
-            for (Tache tache : planifications.taches()) {
-                PlanificationXmlWrapper planificationXmlWrapper = new PlanificationXmlWrapper().init(tache, planifications.calendrier(tache));
+            for (Tache tache : planifs.taches()) {
+                rapport.setAvancement("Sauvegarde de la tâche " + tache.noTache() + "...");
+                PlanificationXmlWrapper planificationXmlWrapper = new PlanificationXmlWrapper().init(tache, planifs.calendrier(tache));
                 this.planifications.add(planificationXmlWrapper);
             }
             this.planifications.sort(Comparator.comparing(p -> p.getTache().getIdTache()));
@@ -59,12 +62,12 @@ public class PlanificationsXmlWrapper {
     }
 
     public Planifications extract() throws DaoException {
-        Planifications planifications = new Planifications();
+        Planifications planifs = new Planifications();
         for (PlanificationXmlWrapper pw : this.planifications) {
             Tache tache = pw.getTache().extract();
             Map<LocalDate, Double> calendrier = pw.getCalendrier().extract();
-            planifications.ajouter(tache, calendrier);
+            planifs.ajouter(tache, calendrier);
         }
-        return planifications;
+        return planifs;
     }
 }

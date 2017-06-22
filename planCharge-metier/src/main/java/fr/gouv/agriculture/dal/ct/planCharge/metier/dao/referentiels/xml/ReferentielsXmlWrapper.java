@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,7 +27,8 @@ public class ReferentielsXmlWrapper {
         super();
     }
 
-    public ReferentielsXmlWrapper init(@NotNull Planifications planifications) {
+    public ReferentielsXmlWrapper init(@NotNull Planifications planifications, @NotNull RapportSauvegarde rapport) {
+        rapport.setAvancement("Sauvegarde du référentiel des importances...");
         this.importancesXmlWrapper.init(
                 planifications.taches().stream()
                         .map(Tache::getImportance)
@@ -35,6 +37,7 @@ public class ReferentielsXmlWrapper {
                         .map(importance -> new ImportanceXmlWrapper().init(importance))
                         .collect(Collectors.toList())
         );
+        rapport.setAvancement("Sauvegarde du référentiel des profils...");
         this.profilsXmlWrapper.init(
                 planifications.taches().stream()
                         .map(Tache::getProfil)
@@ -43,6 +46,8 @@ public class ReferentielsXmlWrapper {
                         .map(profil -> new ProfilXmlWrapper().init(profil))
                         .collect(Collectors.toList())
         );
+        //noinspection HardcodedFileSeparator
+        rapport.setAvancement("Sauvegarde du référentiel des projets/applis...");
         this.projetsApplisXmlWrapper.init(
                 planifications.taches().stream()
                         .map(Tache::getProjetAppli)
@@ -51,6 +56,7 @@ public class ReferentielsXmlWrapper {
                         .map(projetAppli -> new ProjetAppliXmlWrapper().init(projetAppli))
                         .collect(Collectors.toList())
         );
+        rapport.setAvancement("Sauvegarde du référentiel des ressrouces...");
         this.ressourcesXmlWrapper.init(
                 planifications.taches().stream()
                         .map(Tache::getRessource)

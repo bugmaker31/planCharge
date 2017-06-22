@@ -206,18 +206,23 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         razFiltres();
     }
 
-    private void razFiltres() {
+    public void razFiltres() {
         LOGGER.debug("RAZ des filtres...");
         filtreGlobalField.clear();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreCategoriesField.getCheckModel().checkAll();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreSousCategoriesField.getCheckModel().checkAll();
         filtreNoTacheField.clear();
         filtreNoTicketIdalField.clear();
         filtreDescriptionField.clear();
         filtreDebutField.setValue(null);
         filtreEcheanceField.setValue(null);
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreProjetsApplisField.getCheckModel().checkAll();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreImportancesField.getCheckModel().checkAll();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreProfilsField.getCheckModel().checkAll();
     }
 
@@ -720,7 +725,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
         filtreCategoriesField.getCheckModel().checkAll();
     }
 
@@ -733,8 +737,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreSousCategoriesField.getCheckModel().checkAll();
     }
 
     private void populerFiltreProjetsApplis() {
@@ -746,8 +748,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreProjetsApplisField.getCheckModel().checkAll();
     }
 
     private void populerFiltreImportances() {
@@ -759,8 +759,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreImportancesField.getCheckModel().checkAll();
     }
 
     private void populerFiltreRessources() {
@@ -772,8 +770,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreRessourcesField.getCheckModel().checkAll();
     }
 
     private void populerFiltreProfils() {
@@ -785,8 +781,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         .sorted(String::compareTo)
                         .collect(Collectors.toList())
         );
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreProfilsField.getCheckModel().checkAll();
     }
 
 }

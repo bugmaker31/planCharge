@@ -102,7 +102,7 @@
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
-            <HBox styleClass="barreEtat">
+            <HBox fx:id="barreEtatRegion" styleClass="barreEtat">
                 <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
                 <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
                 <HBox styleClass="itemBarreEtat">
@@ -123,6 +123,10 @@
                     <Label fx:id="nbrTachesField"/>
                     <Label text="tâches"/>
                 </HBox>
+            </HBox>
+            <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
+                <Label fx:id="avancementLabel" />
+                <ProgressBar fx:id="progressionBar"/>
             </HBox>
         </AnchorPane>
     </bottom>

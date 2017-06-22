@@ -3,10 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
@@ -16,6 +13,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -286,7 +284,7 @@ public class PlanChargeIhm extends Application {
     public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
         Alert alert = new Alert(type);
 
-        alert.setTitle(titre);
+        alert.setTitle(APP_NAME + " - " + titre);
         alert.setHeaderText(titre);
         alert.setContentText(message);
 /*
@@ -414,7 +412,8 @@ public class PlanChargeIhm extends Application {
     }
 */
 
-    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws ExecutionException, InterruptedException, IhmException {
+    @NotNull
+    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws IhmException {
         final ProgressDialog progressDialog = new ProgressDialog(task);
         progressDialog.setTitle(titre);
         progressDialog.setHeaderText(titre);
@@ -431,8 +430,13 @@ public class PlanChargeIhm extends Application {
         progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
         progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce dialog, "on succeeded".
 
-        R resultat = task.get(); // Waits until task is succeeded.
-        taskThread.join(); // Pas nécessaire.
+        R resultat;
+        try {
+            resultat = task.get(); // Waits until task is completed.
+            taskThread.join(); // Pas nécessaire.
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IhmException("Impossible d'exécuter le traitement.", e);
+        }
 
         return resultat;
     }

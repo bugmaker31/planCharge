@@ -12,16 +12,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,6 +145,19 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private Label nbrTachesField;
+
+/*
+    @FXML
+    @NotNull
+    private Region progressionRegion;
+    @FXML
+    @NotNull
+    private Label avancementLabel;
+    @FXML
+    @NotNull
+    private ProgressBar progressionBar;
+*/
+
 
     //    @Autowired
     @NotNull
@@ -318,6 +329,11 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void charger(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Charger");
+
+        if (!perteDonneesAceeptee()) {
+            return;
+        }
+
         try {
             charger();
         } catch (IhmException e) {
@@ -374,32 +390,49 @@ public class ApplicationController extends AbstractController {
     }
 
     private void charger(@NotNull File ficPlanCharge) throws IhmException {
-        if (ficPlanCharge == null) {
-            throw new IhmException("Impossible de charger le plan de charge, pas de fichier XML indiqué.");
-        }
-
-        // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
 
         RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
 
         //noinspection AnonymousInnerClassWithTooManyMethods
         Task<RapportChargementAvecProgression> chargerPlanCharge = new Task<RapportChargementAvecProgression>() {
 
+            @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
             @Override
             protected RapportChargementAvecProgression call() throws Exception {
 
-                PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
+                rapport.setProgressionMax(8);
+                int cptEtapeSauvegarde = 0;
 
-                rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(rapport.getAvancement()));
+                rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+
+                PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
+
                 PlanCharge planCharge = planChargeService.charger(ficPlanCharge, rapport);
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 planChargeBean.init(planCharge);
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 planChargeBean.vientDEtreCharge();
                 getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
-                updateProgress(1, 1);
-                //updateTitle("Import terminé"); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
+                // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                ihm.getTachesController().populerReferentiels();
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
+                ihm.getChargesController().populerReferentiels();
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
+
+                // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                ihm.getTachesController().populerFiltres();
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
+                ihm.getChargesController().populerFiltres();
+                rapport.setProgressionCourante(++cptEtapeSauvegarde);
+
+                assert cptEtapeSauvegarde == rapport.getProgressionMax();
+
                 return rapport;
             }
         };
@@ -412,13 +445,8 @@ public class ApplicationController extends AbstractController {
 
             definirDateEtat(planChargeBean.getDateEtat());
 
-            // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-            ihm.getTachesController().populerReferentiels();
-            ihm.getChargesController().populerReferentiels();
-
-            // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-            ihm.getTachesController().populerFiltres();
-            ihm.getChargesController().populerFiltres();
+            ihm.getTachesController().razFiltres();
+            ihm.getChargesController().razFiltres();
 
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
@@ -433,7 +461,7 @@ public class ApplicationController extends AbstractController {
 
             majBarreEtat();
 
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (IhmException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
     }
@@ -444,7 +472,7 @@ public class ApplicationController extends AbstractController {
     private void sauver(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Sauver");
 
-        if ((planChargeBean.getDateEtat() == null) || (planChargeBean.getPlanificationsBeans() == null)) {
+        if ((planChargeBean.getDateEtat() == null) || planChargeBean.getPlanificationsBeans().isEmpty()) {
             LOGGER.warn("Impossible de sauver un plan de charge non défini.");
             ihm.afficherPopUp(
                     Alert.AlertType.WARNING,
@@ -455,10 +483,27 @@ public class ApplicationController extends AbstractController {
             return;
         }
 
-        try {
-            PlanCharge planCharge = planChargeBean.extract();
+        final RapportSauvegardeAvecProgression rapport = new RapportSauvegardeAvecProgression();
 
-            planChargeService.sauver(planCharge);
+        //noinspection AnonymousInnerClassWithTooManyMethods
+        Task<RapportSauvegardeAvecProgression> sauvegarder = new Task<RapportSauvegardeAvecProgression>() {
+
+            @Override
+            protected RapportSauvegardeAvecProgression call() throws Exception {
+
+                PlanCharge planCharge = planChargeBean.extract();
+
+                planChargeService.sauver(planCharge, rapport);
+
+                return rapport;
+            }
+        };
+
+        try {
+
+            //noinspection unused
+            RapportSauvegarde rapportFinal = ihm.afficherProgression("Sauvegarde...", sauvegarder);
+            assert rapport != null;
 
             planChargeBean.vientDEtreSauvegarde();
             getSuiviActionsUtilisateur().historiser(new SauvegardePlanCharge());
@@ -466,9 +511,9 @@ public class ApplicationController extends AbstractController {
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
-                    "Sauvegarder terminée",
-                    "Les " + planCharge.getPlanifications().size() + " lignes du plan de charge"
-                            + " en date du " + planCharge.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                    "Sauvegarde terminée",
+                    "Les " + planChargeBean.getPlanificationsBeans().size() + " lignes du plan de charge"
+                            + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
                             + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
                     500, 300
             );
@@ -532,10 +577,9 @@ public class ApplicationController extends AbstractController {
         importerTachesDepuisCalc(ficCalc);
     }
 
-    // TODO FDA 23017/02 Afficher une "progress bar".
     private void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-        final RapportImportTachesAvecProgression rapportMajTaches = new RapportImportTachesAvecProgression();
+        final RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
 
         //noinspection AnonymousInnerClassWithTooManyMethods
         Task<RapportImportTachesAvecProgression> importerTachesDepuisCalc = new Task<RapportImportTachesAvecProgression>() {
@@ -543,37 +587,24 @@ public class ApplicationController extends AbstractController {
             @Override
             protected RapportImportTachesAvecProgression call() throws Exception {
 
-                updateTitle("Préparation de l'import...");
+                rapport.setProgressionMax(1);
+
+                rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+
                 PlanCharge planCharge = planChargeBean.extract();
 
-                updateTitle("Import et mise à jour des tâches depuis le fichier '" + ficCalc.getName() + "'...");
-                rapportMajTaches.avancementProperty().addListener((observable, oldValue, newValue) -> majMessage());
-//                rapportMajTaches.nbrTachesImporteesProperty().addListener((observable, oldValue, newValue) -> majMessage()); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
-//                rapportMajTaches.nbrTachePlanifieesProperty().addListener((observable, oldValue, newValue) -> majMessage()); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
-                planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapportMajTaches);
+                planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapport);
 
-                updateProgress(1, 1);
-                //updateTitle("Import terminé"); Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
-                return rapportMajTaches;
-            }
+                rapport.setProgressionCourante(1);
 
-            private void majMessage() {
-                updateMessage(
-                        rapportMajTaches.getAvancement()
-//                                + "\n" + rapportMajTaches.getNbrTachesImportees() + " tâches importées" N'apporte rien , donc pas affiché.
-/* Trop rapide pour être visible par l'utilisateur, donc on n'affiche pas.
-                                + "\n" + "- " + rapportMajTaches.getNbrTachesPlanifiees() + " tâches planifiées"
-                                + "\n" + "- " + rapportMajTaches.getNbrTachesAjoutees() + " tâches ajoutées"
-                                + "\n" + "- " + rapportMajTaches.getNbrTachesSupprimees() + " tâches supprimées"
-                                + "\n" + "- " + rapportMajTaches.getNbrTachesMisesAJour() + " tâches mises à jours"
-*/
-                );
+                return rapport;
             }
         };
 
         try {
 
-            RapportImportTaches rapport = ihm.afficherProgression("Import des tâches...", importerTachesDepuisCalc);
+            RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
             assert rapport != null;
 
             planChargeBean.vientDEtreModifie();
@@ -584,11 +615,11 @@ public class ApplicationController extends AbstractController {
                     "Tâches mises à jour importées",
                     "Les tâches ont été mises à jour : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                            + "\n- nombre de tâches initial : " + rapport.getNbrTachesPlanifiees()
-                            + "\n- nombre de lignes importées : " + rapport.getNbrTachesImportees()
-                            + "\n- nombre de tâches mises à jour : " + rapport.getNbrTachesMisesAJour()
-                            + "\n- nombre de tâches ajoutées : " + rapport.getNbrTachesAjoutees()
-                            + "\n- nombre de tâches supprimées : " + rapport.getNbrTachesSupprimees()
+                            + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
+                            + "\n- nombre de lignes importées : " + rapportFinal.getNbrTachesImportees()
+                            + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
+                            + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
+                            + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
                             + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
                     700, 300
             );
@@ -596,7 +627,7 @@ public class ApplicationController extends AbstractController {
             afficherModuleTaches();
 
             majBarreEtat();
-        } catch (IhmException | InterruptedException | ExecutionException e) {
+        } catch (IhmException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
     }
@@ -604,6 +635,11 @@ public class ApplicationController extends AbstractController {
     @FXML
     private void importerPlanChargeDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Plan charge depuis Calc");
+
+        if (!perteDonneesAceeptee()) {
+            return;
+        }
+
         try {
             importerPlanChargeDepuisCalc();
         } catch (IhmException e) {
@@ -695,22 +731,8 @@ public class ApplicationController extends AbstractController {
     private void quitter(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Quitter");
 
-        if (planChargeBean.aBesoinEtreSauvegarde()) {
-            Optional<ButtonType> result = ihm.afficherPopUp(
-                    Alert.AlertType.CONFIRMATION,
-                    "Quitter sans sauvergarder ?",
-                    "Des données ont été modifiées. Si vous quittez sans sauvegarder, ces modifications seront perdues. Quitter sans sauvegarder auparavant ?",
-                    400, 200,
-                    ButtonType.CANCEL, ButtonType.CANCEL
-            );
-            if (!result.isPresent()) {
-                // Ne devrait jamais arriver (je pense).
-                return;
-            }
-            if (result.get().equals(ButtonType.CANCEL)) {
-                LOGGER.info("Demande de sauvegarde annulée par l'utilisateur, pour éviter de perdre des données.");
-                return;
-            }
+        if (!perteDonneesAceeptee()) {
+            return;
         }
 
         try {
@@ -1084,5 +1106,30 @@ public class ApplicationController extends AbstractController {
         }
     }
 
+
+    private boolean perteDonneesAceeptee() {
+        if (!planChargeBean.aBesoinEtreSauvegarde()) {
+            return true;
+        }
+        Optional<ButtonType> result = ihm.afficherPopUp(
+                Alert.AlertType.CONFIRMATION,
+                "Perdre les modifications ?",
+                "Des données ont été modifiées. Si vous continuez, ces modifications seront perdues."
+                        + "\nContinuez-vous tout de même (en perdant les modifications) ?",
+                400, 200,
+                ButtonType.CANCEL, ButtonType.CANCEL
+        );
+/*
+        if (!result.isPresent()) {
+            // Ne devrait jamais arriver (je pense).
+            return;
+        }
+*/
+        if (result.get().equals(ButtonType.CANCEL)) {
+            LOGGER.info("Action annulée par l'utilisateur, pour éviter de perdre des données.");
+            return false;
+        }
+        return true;
+    }
 
 }

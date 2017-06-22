@@ -20,7 +20,7 @@ import java.util.*;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class PlanChargeService {
+public class PlanChargeService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeService.class);
 
@@ -70,10 +70,10 @@ public class PlanChargeService {
     }
 
 
-    public void sauver(@NotNull PlanCharge planCharge) throws ServiceException {
+    public void sauver(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws ServiceException {
         LocalDate dateEtat = planCharge.getDateEtat();
         try {
-            planChargeDao.sauver(planCharge);
+            planChargeDao.sauver(planCharge, rapport);
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
@@ -146,6 +146,7 @@ public class PlanChargeService {
         }
     }
 
+    @NotNull
     public File fichierPersistancePlanCharge(@NotNull LocalDate dateEtat) throws ServiceException {
         try {
             return planChargeDao.fichierPlanCharge(dateEtat);

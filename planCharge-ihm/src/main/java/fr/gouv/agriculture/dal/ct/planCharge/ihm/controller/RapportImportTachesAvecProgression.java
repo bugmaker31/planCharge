@@ -9,18 +9,13 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by frederic.danna on 20/06/2017.
  */
-public class RapportImportTachesAvecProgression implements RapportImportTaches {
+public class RapportImportTachesAvecProgression extends RapportServiceAvecProgression implements RapportImportTaches {
 
     private IntegerProperty nbrTachePlanifiees = new SimpleIntegerProperty();
     private IntegerProperty nbrTachesImportees = new SimpleIntegerProperty();
     private IntegerProperty nbrTachesSupprimees = new SimpleIntegerProperty();
     private IntegerProperty nbrTachesAjoutees = new SimpleIntegerProperty();
     private IntegerProperty nbrTachesMisesAJour = new SimpleIntegerProperty();
-    private StringProperty avancement = new SimpleStringProperty();
-
-    public RapportImportTachesAvecProgression() {
-        super();
-    }
 
     @Override
     public int getNbrTachesPlanifiees() {
@@ -92,15 +87,4 @@ public class RapportImportTachesAvecProgression implements RapportImportTaches {
         nbrTachesMisesAJour.set(nbrTachesMisesAJour.get() + 1);
     }
 
-    public String getAvancement() {
-        return avancement.get();
-    }
-
-    public StringProperty avancementProperty() {
-        return avancement;
-    }
-
-    public void setAvancement(String avancement) {
-        this.avancement.set(avancement);
-    }
 }
