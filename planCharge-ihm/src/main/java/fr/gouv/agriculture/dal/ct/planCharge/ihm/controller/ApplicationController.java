@@ -599,6 +599,8 @@ public class ApplicationController extends AbstractController {
 
                 planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapport);
 
+                planChargeBean.init(planCharge);
+
                 return rapport;
             }
         };
