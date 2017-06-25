@@ -9,16 +9,19 @@ import javax.validation.constraints.NotNull;
  */
 public class Ressource extends AbstractEntity<String> implements Comparable<Ressource> {
 
+    @NotNull
     private final String trigramme;
 
-    public Ressource(String trigramme) {
+    public Ressource(@NotNull String trigramme) {
         this.trigramme = trigramme;
     }
 
+    @NotNull
     public String getTrigramme() {
         return trigramme;
     }
 
+    @NotNull
     @Override
     public String getIdentity() {
         return getTrigramme();

@@ -420,6 +420,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 null,
                 null,
                 null,
+                null,
                 0.0,
                 null,
                 null

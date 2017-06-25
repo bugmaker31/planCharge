@@ -27,6 +27,8 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     private String description;
     @NotNull
     private ProjetAppli projetAppli;
+    @NotNull
+    private Statut statut;
     @Null
     private LocalDate debut;
     @NotNull
@@ -41,6 +43,7 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
 
     /**
      * Instancie une nouvelle tâche.
+     *
      * @param id
      * @param categorie
      * @param sousCategorie
@@ -56,65 +59,55 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
      * @throws ModeleException Si une donnée obligatoire manque (la {@link #categorie catégorie}, la {@link #description description}, etc.).
      */
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public Tache(int id, @Null CategorieTache categorie, @Null SousCategorieTache sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppli projetAppli, @Null LocalDate debut, @Null LocalDate echeance, @Null Importance importance, double charge, @Null Ressource ressource, @Null Profil profil) throws ModeleException {
+    public Tache(int id, @Null CategorieTache categorie, @Null SousCategorieTache sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppli projetAppli, @Null Statut statut, @Null LocalDate debut, @Null LocalDate echeance, @Null Importance importance, double charge, @Null Ressource ressource, @Null Profil profil) throws ModeleException {
         super();
 
         this.id = id;
 
-        if (categorie == null) {
-            throw new ModeleException("Tache n°" + id + " : Catégorie de tâche non définie.");
-        }
+        ctrlNonNull(id, categorie, "catégorie");
         this.categorie = categorie;
 
-//        if (sousCategorie == null) {
-//            throw new ModeleException("Tache n°" + id + " : Sous-catégorie de tâche non définie.");
-//        }
+//        ctrlNonNull(id, sousCategorie, "sous-catégorie");
         this.sousCategorie = sousCategorie;
 
-        if (noTicketIdal == null) {
-            throw new ModeleException("Tache n°" + id + " : N° de ticket IDAL non défini.");
-        }
+        ctrlNonNull(id, noTicketIdal, "n° de ticket IDAL");
         this.noTicketIdal = noTicketIdal;
 
-        if (description == null) {
-            throw new ModeleException("Tache n°" + id + " : Description non définie.");
-        }
+        ctrlNonNull(id, description, "description");
         this.description = description;
 
-        if (projetAppli == null) {
-            throw new ModeleException("Tache n°" + id + " : Projet/Appli non défini(e).");
-        }
+        //noinspection HardcodedFileSeparator
+        ctrlNonNull(id, projetAppli, "projet/appli");
         this.projetAppli = projetAppli;
 
+        ctrlNonNull(id, statut, "statut");
+        this.statut = statut;
+
+//        ctrlNonNull(id, debut, "date de début");
         this.debut = debut;
 
-        if (echeance == null) {
-            throw new ModeleException("Tache n°" + id + " : Echéance non définie.");
-        }
+        ctrlNonNull(id, echeance, "date d'échéance");
         this.echeance = echeance;
 
-        if (importance == null) {
-            throw new ModeleException("Tache n°" + id + " : Importance non définie.");
-        }
+        ctrlNonNull(id, importance, "importance");
         this.importance = importance;
 
-/*
-        if (charge == null) {
-            throw new ModeleException("Tache n°" + id + " : Charge non définie.");
-        }
-*/
+//        ctrlNonNull(id, charge, "charge");
         this.charge = charge;
 
-        if (ressource == null) {
-            throw new ModeleException("Tache n°" + id + " : Ressource non définie.");
-        }
+        ctrlNonNull(id, ressource, "ressource");
         this.ressource = ressource;
 
-        if (profil == null) {
-            throw new ModeleException("Tache n°" + id + " : Profil non défini.");
-        }
+        ctrlNonNull(id, profil, "profil");
         this.profil = profil;
     }
+
+    private void ctrlNonNull(int idTache, @Null Object propriete, @NotNull String nomPropriete) throws ModeleException {
+        if (propriete == null) {
+            throw new ModeleException("Tache n°" + idTache + " : " + nomPropriete + " de tâche non défini(e).");
+        }
+    }
+
 
     public int getId() {
         return id;
@@ -143,6 +136,11 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     @NotNull
     public ProjetAppli getProjetAppli() {
         return projetAppli;
+    }
+
+    @NotNull
+    public Statut getStatut() {
+        return statut;
     }
 
     @Null
@@ -212,15 +210,13 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     @Override
     @NotNull
     public String toString() {
+        //noinspection HardcodedFileSeparator
         return /*(categorie.getCode() + (sousCategorie == null ? "" : ("::" + sousCategorie.getCode())))
-                + " "
-                +*/ ("[" + projetAppli + "]")
-                + " "
-                + noTache()
-                + " "
-                + ("(" + (noTicketIdal.isEmpty() ? "N/A" : noTicketIdal) + ")")
-                + " "
-                + ("<< " + description + " >> ")
+                + " " +*/ noTache()
+                + " " + ("(" + (noTicketIdal.isEmpty() ? "N/A" : noTicketIdal) + ")")
+                + " " + ("[" + projetAppli + "]")
+                + " " + ("{" + statut.getIdentity() + "}")
+                + " " + ("<< " + description + " >> ")
                 ;
     }
 }

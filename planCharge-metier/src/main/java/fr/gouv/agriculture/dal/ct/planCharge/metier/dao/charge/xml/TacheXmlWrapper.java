@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
@@ -19,6 +20,7 @@ import java.util.Date;
 
 /**
  * Created by frederic.danna on 26/04/2017.
+ *
  * @author frederic.danna
  */
 @SuppressWarnings({"DesignForExtension", "unused", "UseOfObsoleteDateTimeApi", "WeakerAccess", "PublicMethodWithoutLogging"})
@@ -38,6 +40,8 @@ public class TacheXmlWrapper {
     private String description;
     @NotNull
     private String codeProjetAppli;
+    @NotNull
+    private String codeStatut;
     @Null
     private Date debut;
     @NotNull
@@ -54,6 +58,9 @@ public class TacheXmlWrapper {
     //    @Autowired
     @NotNull
     private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+    //    @Autowired
+    @NotNull
+    private StatutDao statutDao = StatutDao.instance();
     //    @Autowired
     @NotNull
     private RessourceDao ressourceDao = RessourceDao.instance();
@@ -78,13 +85,14 @@ public class TacheXmlWrapper {
         noTache = tache.noTache();
         noTicketIdal = tache.getNoTicketIdal();
         description = tache.getDescription();
-        codeProjetAppli = tache.getProjetAppli().getIdentity();
+        codeProjetAppli = tache.getProjetAppli().getCode();
+        codeStatut = tache.getStatut().getCode();
         debut = Dates.asDate(tache.getDebut());
         echeance = Dates.asDate(tache.getEcheance());
-        codeImportance = tache.getImportance().getIdentity();
+        codeImportance = tache.getImportance().getCodeInterne();
         charge = tache.getCharge();
-        codeRessource = tache.getRessource().getIdentity();
-        codeProfil = tache.getProfil().getIdentity();
+        codeRessource = tache.getRessource().getTrigramme();
+        codeProfil = tache.getProfil().getCode();
         return this;
     }
 
@@ -121,6 +129,11 @@ public class TacheXmlWrapper {
     @XmlElement(name = "codeProjetAppli", required = true)
     public String getCodeProjetAppli() {
         return codeProjetAppli;
+    }
+
+    @XmlElement(name = "codeStatut", required = true)
+    public String getCodeStatut() {
+        return codeStatut;
     }
 
     @XmlElement(name = "debut", required = false)
@@ -181,6 +194,10 @@ public class TacheXmlWrapper {
         this.codeProjetAppli = codeProjetAppli;
     }
 
+    public void setCodeStatut(String codeStatut) {
+        this.codeStatut = codeStatut;
+    }
+
     public void setDebut(Date debut) {
         this.debut = debut;
     }
@@ -216,6 +233,7 @@ public class TacheXmlWrapper {
                     noTicketIdal,
                     description,
                     projetAppliDao.load(codeProjetAppli),
+                    statutDao.load(codeStatut),
                     Dates.asLocalDate(debut),
                     Dates.asLocalDate(echeance),
                     importanceDao.load(codeImportance),
@@ -223,8 +241,8 @@ public class TacheXmlWrapper {
                     ressourceDao.load(codeRessource),
                     profilDao.load(codeProfil)
             );
-        } catch (ModeleException e) {
-            throw new DaoException("Impossible d'extraire la tâche depuis le XML.", e);
+        } catch (Exception e) {
+            throw new DaoException("Impossible d'extraire la tâche n°" + idTache + " depuis le XML.", e);
         }
         return tache;
     }

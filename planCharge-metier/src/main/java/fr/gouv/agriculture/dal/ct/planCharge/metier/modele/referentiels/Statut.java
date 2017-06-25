@@ -5,14 +5,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by frederic.danna on 25/03/2017.
+ * Created by frederic.danna on 24/06/2017.
  */
-public class ProjetAppli extends AbstractEntity<String> implements Comparable<ProjetAppli> {
+public class Statut  extends AbstractEntity<String> implements Comparable<Statut> {
 
     @NotNull
     private final String code;
 
-    public ProjetAppli(@NotNull String code) {
+    public Statut(@NotNull String code) {
         this.code = code;
     }
 
@@ -24,18 +24,12 @@ public class ProjetAppli extends AbstractEntity<String> implements Comparable<Pr
     @NotNull
     @Override
     public String getIdentity() {
-        return getCode();
-    }
-
-    // pour déboguer, uniquement.
-    @Override
-    public String toString() {
         return code;
     }
 
     @NotNull
     @Override
-    public int compareTo(@NotNull ProjetAppli o) {
+    public int compareTo(@NotNull Statut o) {
         return code.compareTo(o.getCode());
     }
 }

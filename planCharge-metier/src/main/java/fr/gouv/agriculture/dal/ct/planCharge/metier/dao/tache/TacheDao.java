@@ -11,13 +11,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
@@ -53,6 +50,10 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
     @NotNull
 //    @Autowired
     private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+
+    @NotNull
+//    @Autowired
+    private StatutDao statutDao = StatutDao.instance();
 
     @NotNull
 //    @Autowired
@@ -180,6 +181,9 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
             String codeProjetAppli = Calc.getString(feuille, 12 - 1, noLig - 1);
             ProjetAppli projetAppli = projetAppliDao.load(codeProjetAppli);
 
+            String codeStatut = Calc.getString(feuille, 13 - 1, noLig - 1);
+            Statut statut = statutDao.load(codeStatut);
+
             final int noColDebut = 8;
             Date debut = (Calc.isEmpty(feuille, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuille, noColDebut - 1, noLig - 1));
 
@@ -200,6 +204,7 @@ public class TacheDao extends AbstractDao<Tache, Integer> {
                     noTicketIdal,
                     description,
                     projetAppli,
+                    statut,
                     Dates.asLocalDate(debut), Dates.asLocalDate(echeance),
                     importance,
                     charge,

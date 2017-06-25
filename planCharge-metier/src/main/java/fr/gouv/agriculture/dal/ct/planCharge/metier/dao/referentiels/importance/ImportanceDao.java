@@ -51,9 +51,9 @@ public class ImportanceDao extends MockedDao<Importance, String> {
         }
     }
 
-    public Importance loadByCode(String code) throws ImportanceDaoException, ImportanceInexistanteException, ImportanceNonUniqueException, EntityNotFoundException, DaoException {
+    public Importance loadByCode(String code) throws ImportanceInexistanteException, ImportanceNonUniqueException {
         List<Importance> importances = findByCode(code);
-        if (importances.size() == 0) {
+        if (importances.isEmpty()) {
             throw new ImportanceInexistanteException(code);
         }
         if (importances.size() >= 2) {

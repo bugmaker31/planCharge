@@ -16,6 +16,7 @@ public class ReferentielsXmlWrapper {
     private ImportancesXmlWrapper importancesXmlWrapper = new ImportancesXmlWrapper();
     private ProfilsXmlWrapper profilsXmlWrapper = new ProfilsXmlWrapper();
     private ProjetsApplisXmlWrapper projetsApplisXmlWrapper = new ProjetsApplisXmlWrapper();
+    private StatutsXmlWrapper statutsXmlWrapper = new StatutsXmlWrapper();
     private RessourcesXmlWrapper ressourcesXmlWrapper = new RessourcesXmlWrapper();
 
     /**
@@ -56,6 +57,15 @@ public class ReferentielsXmlWrapper {
                         .map(projetAppli -> new ProjetAppliXmlWrapper().init(projetAppli))
                         .collect(Collectors.toList())
         );
+        rapport.setAvancement("Sauvegarde du référentiel des statuts...");
+        this.statutsXmlWrapper.init(
+                planifications.taches().stream()
+                        .map(Tache::getStatut)
+                        .distinct()
+                        .sorted()
+                        .map(statut -> new StatutXmlWrapper().init(statut))
+                        .collect(Collectors.toList())
+        );
         rapport.setAvancement("Sauvegarde du référentiel des ressrouces...");
         this.ressourcesXmlWrapper.init(
                 planifications.taches().stream()
@@ -81,6 +91,11 @@ public class ReferentielsXmlWrapper {
     @XmlElement(name = "projetsApplis", required = true)
     public ProjetsApplisXmlWrapper getProjetsApplis() {
         return projetsApplisXmlWrapper;
+    }
+
+    @XmlElement(name = "statuts", required = true)
+    public StatutsXmlWrapper getStatuts() {
+        return statutsXmlWrapper;
     }
 
     @XmlElement(name = "ressources", required = true)

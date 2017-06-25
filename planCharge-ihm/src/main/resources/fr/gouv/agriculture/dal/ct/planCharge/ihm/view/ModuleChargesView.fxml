@@ -56,6 +56,9 @@
                    BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn fx:id="tacheColumn" text="Tâche">
+
+                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
+
                     <columns>
                         <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
                         <TableColumn text="Catégories">
@@ -73,6 +76,7 @@
                         <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
                         <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"
                                      style="-fx-alignment: baseline-center"/>
+                        <TableColumn fx:id="statutColumn" prefWidth="75.0" text="Statut"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
                                 <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"

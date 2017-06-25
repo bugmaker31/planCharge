@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import org.slf4j.Logger;
@@ -20,12 +21,14 @@ import java.util.List;
  */
 public class ReferentielsService {
 
+    @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferentielsService.class);
 
     private static class InstanceHolder {
         private static final ReferentielsService INSTANCE = new ReferentielsService();
     }
 
+    @NotNull
     public static ReferentielsService instance() {
         return InstanceHolder.INSTANCE;
     }
@@ -35,6 +38,9 @@ public class ReferentielsService {
     //    @Autowired
     @NotNull
     private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+    //    @Autowired
+    @NotNull
+    private StatutDao statutDao = StatutDao.instance();
     //    @Autowired
     @NotNull
     private RessourceDao ressourceDao = RessourceDao.instance();
@@ -49,6 +55,7 @@ public class ReferentielsService {
     }
 
 
+    @NotNull
     public List<CategorieTache> categoriesTache() throws ServiceException {
         CategorieTache[] categories = CategorieTache.values();
 /*
@@ -59,6 +66,7 @@ public class ReferentielsService {
         return Arrays.asList(categories);
     }
 
+    @NotNull
     public List<SousCategorieTache> sousCategoriesTache() throws ServiceException {
         SousCategorieTache[] sousCategories = SousCategorieTache.values();
 /*
@@ -69,6 +77,7 @@ public class ReferentielsService {
         return Arrays.asList(sousCategories);
     }
 
+    @NotNull
     public List<Importance> importances() throws ServiceException {
         try {
             return importanceDao.list();
@@ -77,6 +86,7 @@ public class ReferentielsService {
         }
     }
 
+    @NotNull
     public List<ProjetAppli> projetsApplis() throws ServiceException {
         try {
             List<ProjetAppli> projetApplis = projetAppliDao.list();
@@ -87,6 +97,17 @@ public class ReferentielsService {
         }
     }
 
+    @NotNull
+    public List<Statut> statuts() throws ServiceException {
+        try {
+            List<Statut> statuts = statutDao.list();
+            return statuts;
+        } catch (DaoException e) {
+            throw new ServiceException("Impossible de lister les statuts.", e);
+        }
+    }
+
+    @NotNull
     public List<Ressource> ressources() throws ServiceException {
         try {
             return ressourceDao.list();
@@ -95,6 +116,7 @@ public class ReferentielsService {
         }
     }
 
+    @NotNull
     public List<Profil> profils() throws ServiceException {
         try {
             return profilDao.list();

@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * Created by frederic.danna on 03/04/2017.
+ *
  * @author frederic.danna
  */
 public abstract class MockedDao<E extends AbstractEntity<EI>, EI extends Serializable> extends AbstractDao<E, EI> {
@@ -27,10 +28,15 @@ public abstract class MockedDao<E extends AbstractEntity<EI>, EI extends Seriali
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");
-            return (E) getCache().get(id);
+            return getCache().get(id);
         }
 
-        E nouvelleEntite = newEntity(id);
+        E nouvelleEntite;
+        try {
+            nouvelleEntite = newEntity(id);
+        } catch (DaoException e) {
+            throw new DaoException("Impossible de créer une instance ayant l'ID '" + id + "'.", e);
+        }
 
         getCache().put(id, nouvelleEntite);
         LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' ajoutée au cache : '" + id + "'.");

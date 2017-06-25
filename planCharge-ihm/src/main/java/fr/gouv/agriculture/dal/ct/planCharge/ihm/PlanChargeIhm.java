@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -295,16 +296,20 @@ public class PlanChargeIhm extends Application {
         alert.getDialogPane().setContent(webView);
 */
 
+        ScrollPane scroll = new ScrollPane(alert.getDialogPane().getContent());
+        alert.getDialogPane().getChildren().add(scroll);
+
         alert.getButtonTypes().setAll(ButtonType.OK);
         alert.getButtonTypes().addAll(buttons);
         alert.getButtonTypes()
                 .forEach(buttonType -> {
                     Button bouton = (Button) alert.getDialogPane().lookupButton(buttonType);
-                    bouton.setDefaultButton(buttonType == boutonParDefaut);
+                    bouton.setDefaultButton(Objects.equals(buttonType, boutonParDefaut));
                 });
 
         alert.getDialogPane().setPrefWidth(width);
         alert.getDialogPane().setPrefHeight(height);
+
         alert.setResizable(true);
 
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();

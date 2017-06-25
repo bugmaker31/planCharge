@@ -341,7 +341,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
-                    "Impossible de charger le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
+                    "Impossible de charger le plan de charge : \n" + Exceptions.causes(e, "\n- "),
                     400, 200
             );
         }
@@ -383,7 +383,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
-                    "Impossible de charger le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
+                    Exceptions.causes(e, "\nCause : "),
                     400, 200
             );
         }
@@ -456,7 +456,7 @@ public class ApplicationController extends AbstractController {
                     400, 200
             );
 
-            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur.
+            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
 
             majBarreEtat();
 
@@ -529,7 +529,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de sauver",
-                    "Impossible de sauver le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
+                    "Impossible de sauver le plan de charge : \n" + Exceptions.causes(e, "\n- "),
                     500, 200
             );
             // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
@@ -546,7 +546,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer les tâches",
-                    "Impossible d'importer les tâches : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
+                    "Impossible d'importer les tâches : \n" + Exceptions.causes(e, "\n- "),
                     400, 200
             );
         }
@@ -650,7 +650,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer le plan de charge",
-                    "Impossible d'importer le plan de charge : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage(),
+                    "Impossible d'importer le plan de charge : \n" + Exceptions.causes(e, "\n- "),
                     400, 200
             );
         }
@@ -745,7 +745,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de stopper l'application",
-                    "Impossible de stopper l'application, erreur interne : \n" + Exceptions.causeOriginelle(e).getLocalizedMessage()
+                    "Impossible de stopper l'application, erreur interne : \n" + Exceptions.causes(e, "\n- ")
             );
         }
     }

@@ -9,12 +9,14 @@ import javax.validation.constraints.NotNull;
  */
 public class Profil extends AbstractEntity<String> implements Comparable<Profil> {
 
+    @NotNull
     private final String code;
 
-    public Profil(String code) {
+    public Profil(@NotNull String code) {
         this.code = code;
     }
 
+    @NotNull
     public String getCode() {
         return code;
     }

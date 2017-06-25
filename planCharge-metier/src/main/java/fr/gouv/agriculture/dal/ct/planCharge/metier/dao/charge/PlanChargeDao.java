@@ -14,6 +14,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXml
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
@@ -88,6 +89,10 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
     @NotNull
 //    @Autowired
+    private StatutDao statutDao = StatutDao.instance();
+
+    @NotNull
+//    @Autowired
     private ImportanceDao importanceDao = ImportanceDao.instance();
 
     @NotNull
@@ -110,26 +115,26 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
         File fichierPlanif = fichierPlanCharge(dateEtat);
         if (fichierPlanif == null) {
-            throw new EntityNotFoundException("Fichier inexistant pour la dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            throw new EntityNotFoundException("Fichier inexistant pour la date d'état du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
         }
 
         try {
             plan = load(fichierPlanif, rapport);
         } catch (PlanChargeDaoException e) {
-            throw new EntityNotFoundException("Impossible de charger le plan de charge en dateEtat du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
+            throw new PlanChargeDaoException("Impossible de charger le plan de charge en date d'état du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
         }
 
         return plan;
     }
 
     @NotNull
-    public PlanCharge load(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundException, PlanChargeDaoException {
+    public PlanCharge load(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge plan;
 
         try {
             plan = plan(ficCalc, rapport);
         } catch (PlanChargeDaoException e) {
-            throw new EntityNotFoundException("Impossible de charger le plan de charge depuis le fichier " + ficCalc.getAbsolutePath() + ".", e);
+            throw new PlanChargeDaoException("Impossible de charger le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
 
         return plan;
@@ -390,6 +395,9 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             String codeProjetAppli = Calc.getString(feuille, 4 - 1, noLig - 1);
             ProjetAppli projetAppli = projetAppliDao.load(codeProjetAppli);
 
+            String codeStatut = Calc.getString(feuille, 5 - 1, noLig - 1);
+            Statut statut = statutDao.load(codeStatut);
+
             int noColDebut = 5;
             Date debut = (Calc.isEmpty(feuille, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuille, noColDebut - 1, noLig - 1));
 
@@ -413,6 +421,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                     noTicketIdal,
                     description,
                     projetAppli,
+                    statut,
                     Dates.asLocalDate(debut), Dates.asLocalDate(echeance),
                     importance,
                     charge,

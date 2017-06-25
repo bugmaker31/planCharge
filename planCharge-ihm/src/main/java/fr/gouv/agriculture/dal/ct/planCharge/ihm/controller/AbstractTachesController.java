@@ -78,6 +78,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     private ObservableList<String> codesProjetsApplis = FXCollections.observableArrayList();
     @NotNull
+    private ObservableList<String> codesStatuts = FXCollections.observableArrayList();
+    @NotNull
     private ObservableList<String> codesRessources = FXCollections.observableArrayList();
     @NotNull
     private ObservableList<String> codesProfils = FXCollections.observableArrayList();
@@ -100,6 +102,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     private TableColumn<TB, String> projetAppliColumn;
+    @FXML
+    @NotNull
+    private TableColumn<TB, String> statutColumn;
     @FXML
     @NotNull
     private TableColumn<TB, String> debutColumn;
@@ -239,6 +244,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         noTicketIdalColumn.setCellValueFactory(cellData -> cellData.getValue().noTicketIdalProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().codeProjetAppliProperty());
+        statutColumn.setCellValueFactory(cellData -> cellData.getValue().codeStatutProperty());
         debutColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().debutProperty().isNull().get()) {
                 //noinspection ReturnOfNull
@@ -267,6 +273,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplis));
+        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesStatuts));
         debutColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE));
         echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(codesImportances));
@@ -345,7 +352,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
             @Override
             protected ModificationTache actionModification(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
-                return new ModificationNoTicketIdal(tacheBeanAvant, tacheBean);
+                return new ModificationNoTicketIdal<>(tacheBeanAvant, tacheBean);
             }
         });
 /*
@@ -683,6 +690,16 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         } catch (ServiceException e) {
             //noinspection HardcodedFileSeparator
             throw new IhmException("Impossible de populer la liste des projets/applis.", e);
+        }
+        try {
+            List<Statut> statuts = referentielsService.statuts();
+            codesStatuts.setAll(statuts.parallelStream()
+                    .sorted(Statut::compareTo)
+                    .map(Statut::getCode)
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de populer la liste des ressources.", e);
         }
         try {
             List<Ressource> ressources = referentielsService.ressources();

@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
@@ -55,6 +56,8 @@ public class TacheBean implements Copiable<TacheBean> {
     @NotNull
     private StringProperty codeProjetAppli = new SimpleStringProperty();
     @NotNull
+    private StringProperty codeStatut = new SimpleStringProperty();
+    @NotNull
     private ObjectProperty<LocalDate> debut = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
     private ObjectProperty<LocalDate> echeance = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
@@ -72,6 +75,9 @@ public class TacheBean implements Copiable<TacheBean> {
     private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
     //    @Autowired
     @NotNull
+    private StatutDao statutDao = StatutDao.instance();
+    //    @Autowired
+    @NotNull
     private RessourceDao ressourceDao = RessourceDao.instance();
     //    @Autowired
     @NotNull
@@ -82,13 +88,14 @@ public class TacheBean implements Copiable<TacheBean> {
 
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, double charge, @Null String codeRessource, @Null String codeProfil) {
+    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null String codeStatut, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, double charge, @Null String codeRessource, @Null String codeProfil) {
         this.id.set(id);
         this.codeCategorie.set(codeCategorie);
         this.codeSousCategorie.set(codeSousCategorie);
         this.noTicketIdal.set(noTicketIdal);
         this.description.set(description);
         this.codeProjetAppli.set(codeProjetAppli);
+        this.codeStatut.set(codeStatut);
         this.debut.set(debut);
         this.echeance.set(echeance);
         this.codeImportance.set(codeImportance);
@@ -105,6 +112,7 @@ public class TacheBean implements Copiable<TacheBean> {
                 tacheBean.getNoTicketIdal(),
                 tacheBean.getDescription(),
                 tacheBean.getCodeProjetAppli(),
+                tacheBean.getCodeStatut(),
                 tacheBean.getDebut(),
                 tacheBean.getEcheance(),
                 tacheBean.getCodeImportance(),
@@ -123,6 +131,7 @@ public class TacheBean implements Copiable<TacheBean> {
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
         this.codeProjetAppli.set(tache.getProjetAppli().getCode());
+        this.codeStatut.set(tache.getStatut().getCode());
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
         this.codeImportance.set(tache.getImportance().getCode());
@@ -218,6 +227,16 @@ public class TacheBean implements Copiable<TacheBean> {
     @NotNull
     public StringProperty codeProjetAppliProperty() {
         return codeProjetAppli;
+    }
+
+    @Null
+    public String getCodeStatut() {
+        return codeStatut.get();
+    }
+
+    @NotNull
+    public StringProperty codeStatutProperty() {
+        return codeStatut;
     }
 
     @Null
@@ -441,13 +460,14 @@ public class TacheBean implements Copiable<TacheBean> {
                     (codeSousCategorie.isEmpty().get() ? null : SousCategorieTache.valeur(codeSousCategorie.get())),
                     noTicketIdal.get(),
                     description.get(),
-                    (codeProjetAppli.isEmpty().get() ? null : projetAppliDao.load(codeProjetAppli.get())),
+                    projetAppliDao.load(codeProjetAppli.get()),
+                    statutDao.load(codeStatut.get()),
                     debut.get(),
                     echeance.get(),
-                    (codeImportance.isEmpty().get() ? null : importanceDao.loadByCode(codeImportance.get())),
+                    importanceDao.loadByCode(codeImportance.get()),
                     charge.get(),
-                    (codeRessource.isEmpty().get() ? null : ressourceDao.load(codeRessource.get())),
-                    (codeProfil.isEmpty().get() ? null : profilDao.load(codeProfil.get()))
+                    ressourceDao.load(codeRessource.get()),
+                    profilDao.load(codeProfil.get())
             );
         } catch (ModeleException | DaoException e) {
             throw new IhmException("Impossible d'extraire la tâche depuis le bean.", e);

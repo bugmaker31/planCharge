@@ -48,6 +48,9 @@
     <center>
         <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
             <columns>
+
+                <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
+
                 <TableColumn text="Catégories">
                     <columns>
                         <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60"/>
@@ -63,6 +66,7 @@
                 </TableColumn>
                 <TableColumn fx:id="descriptionColumn" prefWidth="500.0" text="Description"/>
                 <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
+                <TableColumn fx:id="statutColumn" prefWidth="75.0" text="Statut"/>
                 <TableColumn text="Période souhaitée">
                     <columns>
                         <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
