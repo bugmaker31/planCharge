@@ -25,4 +25,9 @@ public class Exceptions {
             return e.getLocalizedMessage() + separateur + causes(e.getCause(), separateur);
         }
     }
+
+    public static String causes(@NotNull Throwable e) {
+        //noinspection HardcodedLineSeparator
+        return causes(e, "\nCause : ");
+    }
 }

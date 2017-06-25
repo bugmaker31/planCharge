@@ -7,7 +7,9 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by frederic.danna on 24/06/2017.
  */
-public class Statut  extends AbstractEntity<String> implements Comparable<Statut> {
+public class Statut extends AbstractEntity<String> implements Comparable<Statut> {
+
+    public static final Statut PROVISION = new Statut("80-Récurrente");
 
     @NotNull
     private final String code;

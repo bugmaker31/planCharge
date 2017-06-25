@@ -43,8 +43,9 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
 
         // Réinit du texte et du style de la cellule :
         setText("");
-        getStyleClass().remove("tropTot");
-        getStyleClass().remove("tropTard");
+        getStyleClass().remove("avantPeriodeDemandee");
+        getStyleClass().remove("pendantPeriodeDemandee");
+        getStyleClass().remove("apresPeriodeDemandee");
 
         // Stop, si cellule vide :
         if (empty) {
@@ -76,13 +77,16 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         // Formatage du style (CSS) de la cellule :
         if (planifBean.getDebut() != null) {
             if (debutPeriode.isBefore(planifBean.getDebut())) {
-                getStyleClass().add("tropTot");
+                getStyleClass().add("avantPeriodeDemandee");
+                return;
             }
         }
         if (planifBean.getEcheance() != null) {
             if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7))) {
-                getStyleClass().add("tropTard");
+                getStyleClass().add("apresPeriodeDemandee");
+                return;
             }
         }
+        getStyleClass().add("pendantPeriodeDemandee");
     }
 }

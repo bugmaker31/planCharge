@@ -182,6 +182,10 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
         return String.format(FORMAT_NO_TACHE, id);
     }
 
+    public boolean estProvision() {
+        return statut.equals(Statut.PROVISION);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

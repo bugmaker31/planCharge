@@ -97,6 +97,7 @@
             <ButtonBar>
                 <buttons>
                     <Button text="_Ajouter une tâche" onAction="#ajouterTache" />
+                    <Button text="Voir _plan charge" onAction="#afficherPlanification" />
                 </buttons>
             </ButtonBar>
         </AnchorPane>

@@ -140,6 +140,7 @@
             <ButtonBar>
                 <buttons>
                     <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
+                    <Button text="Voir _tâche" onAction="#afficherTache"/>
                 </buttons>
             </ButtonBar>
         </AnchorPane>

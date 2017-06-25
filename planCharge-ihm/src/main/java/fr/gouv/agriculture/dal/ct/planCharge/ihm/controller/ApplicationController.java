@@ -341,7 +341,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
-                    "Impossible de charger le plan de charge : \n" + Exceptions.causes(e, "\n- "),
+                    "Impossible de charger le plan de charge : \n" + Exceptions.causes(e),
                     400, 200
             );
         }
@@ -383,7 +383,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
-                    Exceptions.causes(e, "\nCause : "),
+                    Exceptions.causes(e),
                     400, 200
             );
         }
@@ -447,6 +447,7 @@ public class ApplicationController extends AbstractController {
             ihm.getTachesController().razFiltres();
             ihm.getChargesController().razFiltres();
 
+/*
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
                     "Chargement terminé",
@@ -455,6 +456,7 @@ public class ApplicationController extends AbstractController {
                             + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches",
                     400, 200
             );
+*/
 
             afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
 
@@ -528,8 +530,8 @@ public class ApplicationController extends AbstractController {
             LOGGER.warn("Impossible de sauver le plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible de sauver",
-                    "Impossible de sauver le plan de charge : \n" + Exceptions.causes(e, "\n- "),
+                    "Impossible de sauver le plan de charge.",
+                    Exceptions.causes(e),
                     500, 200
             );
             // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
@@ -546,7 +548,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer les tâches",
-                    "Impossible d'importer les tâches : \n" + Exceptions.causes(e, "\n- "),
+                    "Impossible d'importer les tâches : \n" + Exceptions.causes(e),
                     400, 200
             );
         }
@@ -650,7 +652,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer le plan de charge",
-                    "Impossible d'importer le plan de charge : \n" + Exceptions.causes(e, "\n- "),
+                    "Impossible d'importer le plan de charge : \n" + Exceptions.causes(e),
                     400, 200
             );
         }
@@ -689,25 +691,44 @@ public class ApplicationController extends AbstractController {
     // TODO FDA 23017/02 Afficher une "progress bar".
     private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-        // TODO FDA 2017/05 Demander confirmation à l'utilisateur, notamment si le plan de charge actuel a été modifié.
+        final RapportImportPlanChargeAvecProgression rapport = new RapportImportPlanChargeAvecProgression();
+
+        Task<RapportImportPlanChargeAvecProgression> importerPlanChargeDepuisCalc = new Task<RapportImportPlanChargeAvecProgression>() {
+
+            @Override
+            protected RapportImportPlanChargeAvecProgression call() throws Exception {
+
+                rapport.setProgressionMax(1);
+
+                rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+
+                PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc, rapport);
+
+                planChargeBean.setDateEtat(planCharge.getDateEtat());
+
+                List<PlanificationBean> planifBeans = new ArrayList<>();
+                for (Tache tache : planCharge.getPlanifications().taches()) {
+                    Map<LocalDate, Double> calendrier;
+                    try {
+                        calendrier = planCharge.getPlanifications().calendrier(tache);
+                    } catch (TacheSansPlanificationException e) {
+                        throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
+                    }
+                    planifBeans.add(new PlanificationBean(tache, calendrier));
+                }
+                planificationsBeans.setAll(planifBeans);
+
+                return rapport;
+            }
+        };
 
         try {
 
-            PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc);
+            RapportImportPlanCharge rapportFinal = ihm.afficherProgression("Import du plan de charge", importerPlanChargeDepuisCalc);
+            assert rapportFinal != null;
 
-            definirDateEtat(planCharge.getDateEtat());
-
-            List<PlanificationBean> planifBeans = new ArrayList<>();
-            for (Tache tache : planCharge.getPlanifications().taches()) {
-                Map<LocalDate, Double> calendrier;
-                try {
-                    calendrier = planCharge.getPlanifications().calendrier(tache);
-                } catch (TacheSansPlanificationException e) {
-                    throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
-                }
-                planifBeans.add(new PlanificationBean(tache, calendrier));
-            }
-            planificationsBeans.setAll(planifBeans);
+            definirDateEtat(planChargeBean.getDateEtat());
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
@@ -725,7 +746,7 @@ public class ApplicationController extends AbstractController {
             afficherModuleCharges();
 
             majBarreEtat();
-        } catch (ServiceException | IhmException e) {
+        } catch (IhmException e) {
             throw new ControllerException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
     }
@@ -745,7 +766,7 @@ public class ApplicationController extends AbstractController {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de stopper l'application",
-                    "Impossible de stopper l'application, erreur interne : \n" + Exceptions.causes(e, "\n- ")
+                    "Erreur interne : \n" + Exceptions.causes(e)
             );
         }
     }

@@ -212,7 +212,13 @@ public class Calc {
 
     @NotNull
     public static Integer getInt(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
-        Double val = (Double) getVal(sheet, column, row);
+        XCell cell =  getCell(sheet, column, row);
+        return getInt(cell);
+    }
+
+    @NotNull
+    public static Integer getInt(@NotNull XCell cell) throws LibreOfficeException {
+        Double val = (Double) getVal(cell);
         Integer integer = val.intValue();
         return integer;
     }

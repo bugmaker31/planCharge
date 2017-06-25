@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -136,9 +137,9 @@ public class PlanChargeService extends AbstractService {
     }
 
     @NotNull
-    public PlanCharge importerDepuisCalc(@NotNull File ficCalc) throws ServiceException {
+    public PlanCharge importerDepuisCalc(@NotNull File ficCalc, @NotNull RapportImportPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.importerDepuisCalc(ficCalc);
+            return planChargeDao.importerDepuisCalc(ficCalc, rapport);
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible d'importer le plan de charge depuis le fichier Calc '" + ficCalc.getAbsolutePath() + "'.",
@@ -160,7 +161,7 @@ public class PlanChargeService extends AbstractService {
 
     /**
      * @param planifications La planification actuelle, qu'on doit calculer pour la nouvelle date d'état.
-     * @param dateEtat   La (nouvelle) date d'état de la planification.
+     * @param dateEtat       La (nouvelle) date d'état de la planification.
      * @return La (nouvelle) planification pour la (nouvelle) date d'état fournie.
      */
     @NotNull
@@ -190,9 +191,11 @@ public class PlanChargeService extends AbstractService {
                     for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
                         LocalDate debutPeriodeTache = dateEtat.plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/07  Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
                         if (!planifTache.containsKey(debutPeriodeTache)) {
-                            double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache);
-                            planifTache.put(debutPeriodeTache, chargeTachePeriode);
+                            Double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache);
+                            if (chargeTachePeriode != null) {
+                                planifTache.put(debutPeriodeTache, chargeTachePeriode);
 //                            LOGGER.debug("Période commençant le {} ajoutée pour la tâche {}, chargée à {}.", debutPeriodeTache, tache.noTache(), chargeTachePeriode);
+                            }
                         }
                     }
                 });
@@ -200,7 +203,20 @@ public class PlanChargeService extends AbstractService {
         return planifications;
     }
 
-    private double nouvelleCharge(@NotNull Tache tache, @NotNull LocalDate debutPeriodeTache) {
-        return 0.0; // FIXME FDA 2017/07 Coder (si la tâche est une provision, retourner la charge pour la période, sinon retourner zéro.
+    @Null
+    private Double nouvelleCharge(@NotNull Tache tache, @NotNull LocalDate debutPeriode) {
+
+        if (!tache.estProvision()) {
+            return null;
+        }
+
+        assert tache.estProvision();
+        if ((tache.getDebut() != null) && tache.getDebut().isAfter(debutPeriode)) {
+            return null;
+        }
+        if (tache.getEcheance().isBefore(debutPeriode)) {
+            return null;
+        }
+        return 77.75; // FIXME FDA 2017/07 Retourner la charge pour la période.
     }
 }

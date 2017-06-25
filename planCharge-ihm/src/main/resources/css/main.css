@@ -25,6 +25,9 @@
 .incoherence {
     -fx-background-color: darkred;
     -fx-text-fill: white;
+    -fx-border-color: red;
+    -fx-border-width: 2pt;
+    /*-fx-text-fill: white;*/
     /*-fx-opacity: 100%;*/
 }
 
@@ -39,7 +42,7 @@
 }
 
 .messageErreurSaisie {
-    -fx-background-color: darkred;
+    -fx-background-color: #EA4335;
     -fx-text-fill: white;
     -fx-opacity: 75%;
 }
@@ -49,27 +52,31 @@ Tâches
 */
 
 .importanceAvecEngagement {
-    -fx-background-color: darksalmon;
+    -fx-background-color: #bc5a45;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
 .importanceMaximale {
-    -fx-background-color: darksalmon;
+    -fx-background-color: #f18973;
+    -fx-text-fill: white;
     -fx-font-weight: normal;
 }
 
 .importanceHaute {
-    -fx-background-color: salmon;
+    -fx-background-color: #f4e1d2;
     -fx-font-weight: normal;
 }
 
 .importanceNormale {
-    -fx-background-color: inherit;
+    /*-fx-background-color: #fdf3f3;*/
 }
 
 .importanceBasse {
-    -fx-background-color: lightgray;
+    -fx-background-color: #b2b2b2;
+    -fx-text-fill: white;
 }
+
 
 /*
 Plan de charge
@@ -92,22 +99,30 @@ Plan de charge
     */
 }
 
-.tropTot {
+
+.avantPeriodeDemandee {
     /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
-    -fx-opacity: 25%;
+    -fx-background-color: #DCDCDC;
+    -fx-opacity: 50%;
     -fx-background-image: url("/images/tropTot.gif");
-    -fx-background-color: lightgray;
 }
 
-.tropTard {
-    /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
-    -fx-opacity: 25%;
-    -fx-background-image: url("/images/tropTard.gif");
-    -fx-background-color: darkgray;
+.pendantPeriodeDemandee {
+    -fx-background-color: #778899;
+    -fx-text-fill: white;
 }
+
+.apresPeriodeDemandee {
+    /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
+    -fx-background-color: #696969;
+    -fx-text-fill: white;
+    -fx-opacity: 50%;
+    -fx-background-image: url("/images/tropTard.gif");
+}
+
 
 .chargeNonPlanifiee {
-    -fx-background-color: lightcoral;
+    -fx-background-color: #EA4335;
     /*-fx-text-fill: white;*/
     /*-fx-opacity: 50%;*/
 }

@@ -1,8 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 
+import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.XCell;
+import com.sun.star.table.XCellRange;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
@@ -22,12 +24,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportChargementPlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -215,7 +219,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
      * @param rapport
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private void serialiserPlanCharge(@NotNull File ficCalc, @NotNull PlanCharge planCharge,@NotNull  RapportSauvegarde rapport) throws PlanChargeDaoException {
+    private void serialiserPlanCharge(@NotNull File ficCalc, @NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
             Marshaller m = context.createMarshaller();
@@ -232,7 +236,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         }
     }
 
-    public PlanCharge importerDepuisCalc(@NotNull File ficCalc) throws PlanChargeDaoException {
+    public PlanCharge importerDepuisCalc(@NotNull File ficCalc, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge planCharge;
 
         if (!ficCalc.exists()) {
@@ -240,13 +244,16 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         }
         XSpreadsheetDocument docCalc = null;
         try {
+
+            rapport.setAvancement("Ouverture du fichier Calc...");
             // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/jlop04/04.%20Spreadsheet%20Processing.pdf
             docCalc = Calc.openDoc(ficCalc.getAbsolutePath());
             if (docCalc == null) {
                 throw new PlanChargeDaoException("Document introuvable : '" + ficCalc.getAbsolutePath() + "'.");
             }
 
-            planCharge = importer(docCalc);
+            rapport.setAvancement("Import des données...");
+            planCharge = importer(docCalc, rapport);
 
         } catch (LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
@@ -263,12 +270,13 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         return planCharge;
     }
 
-    private PlanCharge importer(XSpreadsheetDocument calc) throws PlanChargeDaoException, LibreOfficeException {
+    private PlanCharge importer(@NotNull XSpreadsheetDocument calc, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
         PlanCharge planCharge;
 
         try {
-            XSpreadsheet feuilleCharge = Calc.getSheet(calc, "Charge");
-            planCharge = importer(feuilleCharge);
+            XSpreadsheet feuilleCharges = Calc.getSheet(calc, "Charge");
+            XSpreadsheet feuilleTaches = Calc.getSheet(calc, "Tâches");
+            planCharge = importer(feuilleCharges, feuilleTaches, rapport);
         } catch (LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer le plan de charge depuis le doc OOCalc.", e);
         }
@@ -276,25 +284,25 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         return planCharge;
     }
 
-    private PlanCharge importer(XSpreadsheet feuille) throws PlanChargeDaoException, LibreOfficeException {
+    private PlanCharge importer(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
         PlanCharge planDeCharge;
 
         final int noLigDateEtat = 1;
         final int noColDateEtat = 4;
 
-        Date dateEtat = Calc.getDate(feuille, noColDateEtat - 1, noLigDateEtat - 1);
+        Date dateEtat = Calc.getDate(feuilleCharges, noColDateEtat - 1, noLigDateEtat - 1);
         if (dateEtat == null) {
             throw new PlanChargeDaoException("Impossible de retrouver la date d'état.");
         }
 
-        Planifications planifications = importerPlanifications(feuille);
+        Planifications planifications = importerPlanifications(feuilleCharges, feuilleTaches, rapport);
 
         planDeCharge = new PlanCharge(Dates.asLocalDate(dateEtat), planifications);
 
         return planDeCharge;
     }
 
-    private Planifications importerPlanifications(XSpreadsheet feuille) throws PlanChargeDaoException, LibreOfficeException {
+    private Planifications importerPlanifications(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
         Planifications planification;
 
         final int noLigPeriodes = 1;
@@ -309,8 +317,9 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             LIG:
             while (true) {
                 LOGGER.debug("Ligne n°" + cptLig);
+                rapport.setAvancement("Import de la ligne " + cptLig + "...");
 
-                XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
+                XCell cell = Calc.getCell(feuilleCharges, 0, cptLig - 1);
 
                 if (Calc.isEmpty(cell)) {
                     LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
@@ -343,7 +352,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                     continue LIG;
                 }
 
-                Tache tache = importerTache(feuille, cptLig, categorieTache, sousCategorieTache);
+                Tache tache = importerTache(feuilleCharges, feuilleTaches, cptLig, categorieTache, sousCategorieTache);
 
                 calendrier.put(tache, new TreeMap<>()); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
                 {
@@ -352,13 +361,13 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
                     while (true) {
                         LOGGER.debug("Colonne n°" + cptCol);
 
-                        if (Calc.isEmpty(feuille, cptCol - 1, noLigPeriodes - 1)) {
+                        if (Calc.isEmpty(feuilleCharges, cptCol - 1, noLigPeriodes - 1)) {
                             break COL;
                         }
 
-                        Date debutPeriode = Calc.getDate(feuille, cptCol - 1, noLigPeriodes - 1);
+                        Date debutPeriode = Calc.getDate(feuilleCharges, cptCol - 1, noLigPeriodes - 1);
 
-                        Double chargePlanifiee = (Double) Calc.getVal(feuille, cptCol - 1, cptLig - 1);
+                        Double chargePlanifiee = (Double) Calc.getVal(feuilleCharges, cptCol - 1, cptLig - 1);
                         if (chargePlanifiee == null) {
                             chargePlanifiee = 0.0;
                         } else {
@@ -378,40 +387,40 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         return planification;
     }
 
-    private Double chargeArrondie(Double charge) {
+    private Double chargeArrondie(@NotNull Double charge) {
         return Math.round(charge * 8.0) / 8.0;
     }
 
-    private Tache importerTache(XSpreadsheet feuille, int noLig, CategorieTache categorie, SousCategorieTache sousCategorie) throws PlanChargeDaoException, LibreOfficeException {
+    private Tache importerTache(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, int noLig, @NotNull CategorieTache categorie, @Null SousCategorieTache sousCategorie) throws PlanChargeDaoException, LibreOfficeException {
         Tache tache;
         try {
 
-            int id = Calc.getInt(feuille, 1 - 1, noLig - 1);
+            int id = Calc.getInt(feuilleCharges, 1 - 1, noLig - 1);
 
-            String noTicketIdal = Calc.getString(feuille, 2 - 1, noLig - 1);
+            String noTicketIdal = Calc.getString(feuilleCharges, 2 - 1, noLig - 1);
 
-            String description = Calc.getString(feuille, 3 - 1, noLig - 1);
+            String description = Calc.getString(feuilleCharges, 3 - 1, noLig - 1);
 
-            String codeProjetAppli = Calc.getString(feuille, 4 - 1, noLig - 1);
+            String codeProjetAppli = Calc.getString(feuilleCharges, 4 - 1, noLig - 1);
             ProjetAppli projetAppli = projetAppliDao.load(codeProjetAppli);
 
-            String codeStatut = Calc.getString(feuille, 5 - 1, noLig - 1);
+            String codeStatut = codeStatut(id, feuilleTaches);
             Statut statut = statutDao.load(codeStatut);
 
             int noColDebut = 5;
-            Date debut = (Calc.isEmpty(feuille, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuille, noColDebut - 1, noLig - 1));
+            Date debut = (Calc.isEmpty(feuilleCharges, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuilleCharges, noColDebut - 1, noLig - 1));
 
-            Date echeance = Calc.getDate(feuille, 6 - 1, noLig - 1);
+            Date echeance = Calc.getDate(feuilleCharges, 6 - 1, noLig - 1);
 
-            String codeImportance = Calc.getString(feuille, 7 - 1, noLig - 1);
+            String codeImportance = Calc.getString(feuilleCharges, 7 - 1, noLig - 1);
             Importance importance = importanceDao.load(codeImportance);
 
-            double charge = Calc.getDouble(feuille, 8 - 1, noLig - 1);
+            double charge = Calc.getDouble(feuilleCharges, 8 - 1, noLig - 1);
 
-            String codeRessource = Calc.getString(feuille, 9 - 1, noLig - 1);
+            String codeRessource = Calc.getString(feuilleCharges, 9 - 1, noLig - 1);
             Ressource ressource = ressourceDao.load(codeRessource);
 
-            String codeProfil = Calc.getString(feuille, 10 - 1, noLig - 1);
+            String codeProfil = Calc.getString(feuilleCharges, 10 - 1, noLig - 1);
             Profil profil = profilDao.load(codeProfil);
 
             tache = new Tache(
@@ -433,5 +442,41 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             throw new PlanChargeDaoException("Impossible d'importer la tâche.", e);
         }
         return tache;
+    }
+
+    @NotNull
+    private String codeStatut(int idTache, @NotNull XSpreadsheet feuilleTaches) throws PlanChargeDaoException {
+
+        final int noColIndexes = 1;
+        final int noColStatuts = 13;
+
+        final int noLigDebut = 4;
+        final int noLigFin = 200;
+
+        try {
+
+            // Recherche de la tâche, identifiée par son ID :
+            Integer noLigTache = null;
+            for (int cptLig = noLigDebut; cptLig <= noLigFin; cptLig++) {
+                XCell idCell = feuilleTaches.getCellByPosition(noColIndexes - 1, cptLig - 1);
+                Integer idCourant = Calc.getInt(idCell);
+                if (idCourant.equals(idTache)) {
+                    noLigTache = cptLig;
+                    break;
+                }
+            }
+            if (noLigTache == null) {
+                throw new PlanChargeDaoException("impossible de trouver la tâche n°" + idTache + " dans la feuille Calc.");
+            }
+            assert noLigTache != null;
+
+            // Recherche du statut de la tâche :
+            String codeStatut = Calc.getString(feuilleTaches, noColStatuts - 1, noLigTache - 1);
+
+            return codeStatut;
+
+        } catch (IndexOutOfBoundsException | LibreOfficeException e) {
+            throw new PlanChargeDaoException("Impossible de retrouver le statut de la tâche n°" + idTache + ".", e);
+        }
     }
 }

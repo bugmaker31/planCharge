@@ -4,10 +4,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,5 +119,33 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     @Override
     TacheBean nouveauBean() throws IhmException {
         return ihm.getChargesController().nouveauBean();
+    }
+
+    @FXML
+    public void afficherPlanification(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        TacheBean tacheBean = tacheSelectionnee();
+        if (tacheBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la planification pour la tâche",
+                    "Aucune tâche n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une tâche (ligne), puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+        try {
+            ihm.getApplicationController().afficherModuleCharges();
+            ihm.getTachesController().mettreFocusSurTache(tacheBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher la planification pour la tâche", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la planification pour la tâche",
+                    Exceptions.causes(e)
+            );
+        }
+
     }
 }

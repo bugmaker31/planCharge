@@ -800,4 +800,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         );
     }
 
+    @Null
+    TB tacheSelectionnee() {
+        return getTachesTable().getSelectionModel().getSelectedItem();
+    }
+
+    void mettreFocusSurTache(@NotNull TB tacheBean) {
+        getTachesTable().getSelectionModel().select(tacheBean);
+    }
 }

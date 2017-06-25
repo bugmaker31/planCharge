@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFac
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -458,7 +459,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification",
-                    e.getLocalizedMessage()
+                    Exceptions.causes(e)
             );
         }
     }
@@ -485,4 +486,34 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     public void filtrerTachesNonPlanifieesDansLeMois(@SuppressWarnings("unused") ActionEvent actionEvent) {
         // TODO FDA 2017/07 Coder.
     }
+
+    @FXML
+    public void afficherTache(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        PlanificationBean tacheBean = tacheSelectionnee();
+        if (tacheBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la tâche",
+                    "Aucune ligne du plan de charge n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        try {
+            ihm.getApplicationController().afficherModuleTaches();
+            ihm.getTachesController().mettreFocusSurTache(tacheBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher la tâche", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la tâche",
+                    Exceptions.causes(e),
+                    400, 200
+            );
+        }
+    }
+
 }
