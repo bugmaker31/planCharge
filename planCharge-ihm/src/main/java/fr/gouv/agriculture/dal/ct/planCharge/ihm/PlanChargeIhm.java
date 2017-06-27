@@ -3,35 +3,27 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleTachesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +37,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.function.ToIntFunction;
 
 public class PlanChargeIhm extends Application {
 
@@ -448,7 +438,8 @@ public class PlanChargeIhm extends Application {
 
 
     @Override
-    public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
+    public void
+    start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
         try {
             LOGGER.info("Application en cours de démarrage...");
 
@@ -460,14 +451,13 @@ public class PlanChargeIhm extends Application {
             //
             primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
             //
-/*
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
-            final double screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
-            final double screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
-            primaryStage.setMaxWidth(screenWidth);
-            primaryStage.setMaxHeight(screenHeight);
-*/
-            primaryStage.setResizable(true);
+            Screen ecranParDefaut = Screen.getScreens().get(1); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+            final double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
+            final double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
+            primaryStage.setWidth(screenWidth);
+            primaryStage.setHeight(screenHeight);
+//            primaryStage.setResizable(true);
 //            primaryStage.setFullScreen(true);
             primaryStage.setMaximized(true);
             //
