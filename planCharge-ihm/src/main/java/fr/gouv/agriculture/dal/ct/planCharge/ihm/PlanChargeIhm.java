@@ -517,6 +517,8 @@ public class PlanChargeIhm extends Application {
 //        afficherModuleCharges();
             //
 //        chargesController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+            //
+            applicationController.afficherModuleJoursFeries();
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {
@@ -528,7 +530,9 @@ public class PlanChargeIhm extends Application {
 
     @Null
     private LocalDate dateEtatPrecedente() {
-        return LocalDate.of(2017, 4, 17); // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur (pas une constante !).;
+        // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
+//        return LocalDate.of(2017, 4, 17);
+        return null;
     }
 
     @Override

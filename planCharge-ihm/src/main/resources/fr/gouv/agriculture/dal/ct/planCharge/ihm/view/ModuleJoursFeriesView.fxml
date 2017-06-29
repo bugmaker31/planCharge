@@ -2,13 +2,23 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
-            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleJoursFeriesController"
-            prefWidth="Infinity" prefHeight="Infinity">
-    <TableView fx:id="joursFeriesTable" editable="true" BorderPane.alignment="CENTER">
-        <columns>
-            <TableColumn fx:id="date" prefWidth="35" text="Date"/>
-            <TableColumn fx:id="raison" prefWidth="100" text="Raison"/>
-        </columns>
-    </TableView>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleJoursFeriesController">
+    <center>
+        <TableView fx:id="joursFeriesTable" editable="true" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="date" prefWidth="35" text="Date"/>
+                <TableColumn fx:id="raison" prefWidth="100" text="Raison"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <AnchorPane>
+            <ButtonBar>
+                <buttons>
+                    <Button text="_Ajouter un jour férié"/> <!--onAction="#ajouterJourFerie"/>-->
+                </buttons>
+            </ButtonBar>
+        </AnchorPane>
+    </bottom>
+</BorderPane>
