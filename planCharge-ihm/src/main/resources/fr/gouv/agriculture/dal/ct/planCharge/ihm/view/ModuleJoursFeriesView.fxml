@@ -10,6 +10,10 @@
                 <TableColumn fx:id="date" prefWidth="35" text="Date"/>
                 <TableColumn fx:id="raison" prefWidth="100" text="Raison"/>
             </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+            <sortOrder>
+                <fx:reference source="date"/>
+            </sortOrder>
         </TableView>
     </center>
     <bottom>

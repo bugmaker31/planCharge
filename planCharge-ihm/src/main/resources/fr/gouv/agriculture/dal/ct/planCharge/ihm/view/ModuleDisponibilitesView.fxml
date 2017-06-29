@@ -20,13 +20,13 @@
                                 <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
                             </HBox>
                         </VBox>
-<!--
-                        <Button text="RAZ"
-                                onAction="#razFiltres"
-                                styleClass="erase-button"
-                                alignment="CENTER_RIGHT"
-                        />
--->
+                        <!--
+                                                <Button text="RAZ"
+                                                        onAction="#razFiltres"
+                                                        styleClass="erase-button"
+                                                        alignment="CENTER_RIGHT"
+                                                />
+                        -->
                     </HBox>
                 </TitledPane>
             </panes>
@@ -58,13 +58,11 @@
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
-            <children>
-                <ButtonBar>
-                    <buttons>
-                        <Button text="Ajouter" onAction="#ajouterRessource"/>
-                    </buttons>
-                </ButtonBar>
-            </children>
+            <ButtonBar>
+                <buttons>
+                    <Button text="Ajouter" onAction="#ajouterRessource"/>
+                </buttons>
+            </ButtonBar>
         </AnchorPane>
     </bottom>
 </BorderPane>
