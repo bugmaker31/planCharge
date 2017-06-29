@@ -83,6 +83,14 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private Region workProgressView;
 */
+    @NotNull
+    private Region joursFeriesView;
+    @NotNull
+    private Region disponibilitesView;
+    @NotNull
+    private Region tachesView;
+    @NotNull
+    private Region chargesView;
 
 
     @NotNull
@@ -95,6 +103,8 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private WorkProgressController workProgressController;
 */
+    @NotNull
+    private ModuleJoursFeriesController joursFeriesController;
     @NotNull
     private ModuleDisponibilitesController disponibilitesController;
     @NotNull
@@ -111,6 +121,31 @@ public class PlanChargeIhm extends Application {
 
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    @NotNull
+    public BorderPane getApplicationView() {
+        return applicationView;
+    }
+
+    @NotNull
+    public Region getJoursFeriesView() {
+        return joursFeriesView;
+    }
+
+    @NotNull
+    public Region getDisponibilitesView() {
+        return disponibilitesView;
+    }
+
+    @NotNull
+    public Region getTachesView() {
+        return tachesView;
+    }
+
+    @NotNull
+    public Region getChargesView() {
+        return chargesView;
     }
 
     public ApplicationController getApplicationController() {
@@ -216,33 +251,30 @@ public class PlanChargeIhm extends Application {
             applicationView = appLoader.load();
             applicationController = appLoader.getController();
         }
-/*
+        {
+            FXMLLoader joursFeriesLoader = new FXMLLoader();
+            joursFeriesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleJoursFeriesView.fxml"));
+            joursFeriesView = joursFeriesLoader.load();
+            joursFeriesController = joursFeriesLoader.getController();
+        }
         {
             FXMLLoader disponibilitesLoader = new FXMLLoader();
             disponibilitesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
             disponibilitesView = disponibilitesLoader.load();
             disponibilitesController = disponibilitesLoader.getController();
         }
-*/
-        disponibilitesController = ModuleDisponibilitesController.instance();
-/*
         {
             FXMLLoader tachesLoader = new FXMLLoader();
             tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTachesView.fxml"));
             tachesView = tachesLoader.load();
             tachesController = tachesLoader.getController();
         }
-*/
-        tachesController = ModuleTachesController.instance();
-/*
         {
             FXMLLoader chargesLoader = new FXMLLoader();
             chargesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
             chargesView = chargesLoader.load();
             chargesController = chargesLoader.getController();
         }
-*/
-        chargesController = ModuleChargesController.instance();
     }
 
 

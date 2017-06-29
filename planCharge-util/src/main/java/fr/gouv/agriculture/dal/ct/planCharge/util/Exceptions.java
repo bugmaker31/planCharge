@@ -19,7 +19,7 @@ public class Exceptions {
     @NotNull
     public static String causes(@NotNull Throwable e, @NotNull String separateur) {
         if (e.getCause() == null) {
-            return e.getLocalizedMessage();
+            return (e.getLocalizedMessage() == null) ? "null" : e.getLocalizedMessage();
         } else {
             //noinspection StringConcatenationMissingWhitespace
             return e.getLocalizedMessage() + separateur + causes(e.getCause(), separateur);
