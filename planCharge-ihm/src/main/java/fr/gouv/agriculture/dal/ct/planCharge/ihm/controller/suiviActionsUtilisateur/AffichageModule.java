@@ -54,6 +54,10 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 LOGGER.warn("Impossible d'annuler l'affichage du tout premier module (quel autre module afficher ?).");
                 return;
             }
+            if (nomModulePrecedent == ApplicationController.NomModule.joursFeries) {
+                applicationController.activerModuleJoursFeries();
+                return;
+            }
             if (nomModulePrecedent == ApplicationController.NomModule.disponibilites) {
                 applicationController.activerModuleDisponibilites();
                 return;
@@ -76,6 +80,10 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
     public void retablir() throws RetablissementActionException {
         ApplicationController appCtrl = ApplicationController.instance();
         try {
+            if (getNomModule() == ApplicationController.NomModule.joursFeries) {
+                appCtrl.activerModuleJoursFeries();
+                return;
+            }
             if (getNomModule() == ApplicationController.NomModule.disponibilites) {
                 appCtrl.activerModuleDisponibilites();
                 return;

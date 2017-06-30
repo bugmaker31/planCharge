@@ -27,17 +27,17 @@
                 </Menu>
                 <Menu fx:id="menuEditer" text="Editer" mnemonicParsing="false">
                     <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
-                    <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à" /> <!-- Sera populé par l'application.-->
-                    <SeparatorMenuItem />
+                    <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à"/> <!-- Sera populé par l'application.-->
+                    <SeparatorMenuItem/>
                     <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
                     <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
-                    <SeparatorMenuItem />
+                    <SeparatorMenuItem/>
                     <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
                     <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
                 </Menu>
                 <Menu text="_Suivi" disable="true"/>
                 <Menu text="_Référentiels">
-                    <MenuItem disable="true" text="Jours _fériés"/>
+                    <MenuItem text="Jours _fériés" onAction="#afficherModuleJoursFeries"/>
                     <SeparatorMenuItem/>
                     <MenuItem disable="true" text="_Ressources"/>
                     <MenuItem disable="true" text="_Profils"/>
@@ -45,26 +45,11 @@
                     <MenuItem disable="true" text="Projets/_Applis"/>
                     <MenuItem disable="true" text="_Importances"/>
                 </Menu>
-                <!--
-                                <Menu mnemonicParsing="true" text="_Disponibilités" fx:id="menuDisponibilites">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="Afficher dispo"
-                                                  onAction="#afficherModuleDisponibilites"/>
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="true" onAction="#afficherModuleTaches" text="_Tâches" fx:id="menuTaches">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="Afficher tâches"
-                                                  onAction="#afficherModuleTaches"/>
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="true" text="_Charges" accelerator="Shortcut+C" fx:id="menuCharges">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="Afficher charges"
-                                                  onAction="#afficherModuleCharges"/>
-                                    </items>
-                                </Menu>
-                -->
+                <Menu text="_Gestion">
+                    <MenuItem text="_Disponibilités" onAction="#afficherModuleDisponibilites" accelerator="Shortcut+Shift+D"/>
+                    <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
+                    <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
+                </Menu>
                 <Menu text="TODOs" disable="true" mnemonicParsing="false">
                 </Menu>
                 <Menu mnemonicParsing="false" text="Aide">
@@ -87,22 +72,24 @@
             </Accordion>
         </VBox>
     </top>
-    <center>
-        <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
-            <Tab fx:id="disponibilitesTab" text="Disponibilités">
-                <fx:include source="ModuleDisponibilitesView.fxml"/>
-            </Tab>
-            <Tab fx:id="tachesTab" text="Tâches">
-                <fx:include source="ModuleTachesView.fxml"/>
-            </Tab>
-            <Tab fx:id="chargesTab" text="Charges">
-                <fx:include source="ModuleChargesView.fxml"/>
-            </Tab>
-        </TabPane>
+    <!--
+        <center>
+            <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
+                <Tab fx:id="disponibilitesTab" text="Disponibilités">
+                    <fx:include source="ModuleDisponibilitesView.fxml"/>
+                </Tab>
+                <Tab fx:id="tachesTab" text="Tâches">
+                    <fx:include source="ModuleTachesView.fxml"/>
+                </Tab>
+                <Tab fx:id="chargesTab" text="Charges">
+                    <fx:include source="ModuleChargesView.fxml"/>
+                </Tab>
+            </TabPane>
     </center>
+    -->
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
-            <HBox fx:id="barreEtatRegion" styleClass="barreEtat">
+            <HBox styleClass="barreEtat">
                 <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
                 <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
                 <HBox styleClass="itemBarreEtat">
@@ -124,10 +111,12 @@
                     <Label text="tâches"/>
                 </HBox>
             </HBox>
+<!--
             <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
-                <Label fx:id="avancementLabel" />
+                <Label fx:id="avancementLabel"/>
                 <ProgressBar fx:id="progressionBar"/>
             </HBox>
+-->
         </AnchorPane>
     </bottom>
 </BorderPane>

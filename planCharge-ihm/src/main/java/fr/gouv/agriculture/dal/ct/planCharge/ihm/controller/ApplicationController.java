@@ -52,6 +52,7 @@ public class ApplicationController extends AbstractController {
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
     public enum NomModule {
+        joursFeries("Jours fériés"),
         disponibilites("Disponibilités"),
         taches("Tâches"),
         charges("Charges");
@@ -118,22 +119,6 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private DatePicker dateEtatPicker;
-
-
-    // Les onglets :
-
-    @FXML
-    @NotNull
-    private TabPane gestionTabPane;
-    @FXML
-    @NotNull
-    private Tab disponibilitesTab;
-    @FXML
-    @NotNull
-    private Tab tachesTab;
-    @FXML
-    @NotNull
-    private Tab chargesTab;
 
 
     // La barre d'état :
@@ -270,32 +255,6 @@ public class ApplicationController extends AbstractController {
                 menuAnnuler, sousMenuAnnuler,
                 menuRetablir, sousMenuRetablir,
                 menuRepeter, sousMenuRepeter
-        );
-
-        // Cf. https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
-        gestionTabPane.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (oldValue != null) {
-                        assert !oldValue.equals(newValue);
-                    }
-                    try {
-                        if (newValue.equals(disponibilitesTab)) {
-                            afficherModuleDisponibilites();
-                            return;
-                        }
-                        if (newValue.equals(tachesTab)) {
-                            afficherModuleTaches();
-                            return;
-                        }
-                        if (newValue.equals(chargesTab)) {
-                            afficherModuleCharges();
-                            return;
-                        }
-                        throw new IhmException("Tab non géré : '" + newValue.getText() + "'.");
-                    } catch (IhmException e) {
-                        LOGGER.error("Impossible d'affichager le module {}.", disponibilitesTab.getText(), e);
-                    }
-                }
         );
 
 //        planChargeBean.getPlanificationsBeans().addListener(
@@ -890,8 +849,48 @@ public class ApplicationController extends AbstractController {
     Modules :
      */
 
+
     //    @FXML
-    public void afficherModuleDisponibilites() throws IhmException {
+    public void afficherModuleJoursFeries(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        try {
+            afficherModuleJoursFeries();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le module des jours fériés.", e);
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des jours fériés", Exceptions.causes(e));
+        }
+    }
+
+    public void afficherModuleJoursFeries() throws IhmException {
+        LOGGER.debug("> [...] > Module \"Jours fériés\"");
+
+        if (nomModuleCourant == NomModule.joursFeries) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleJoursFeries();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+    }
+
+    public void activerModuleJoursFeries() {
+        nomModuleCourant = NomModule.joursFeries;
+        ihm.getApplicationView().setCenter(ihm.getJoursFeriesView());
+        majTitre();
+    }
+
+
+    //    @FXML
+    public void afficherModuleDisponibilites(@SuppressWarnings("unused") ActionEvent event) {
+        try {
+            afficherModuleDisponibilites();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le module des disponibilités.", e);
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des disponibilités", Exceptions.causes(e));
+        }
+    }
+
+    void afficherModuleDisponibilites() throws IhmException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
         if (nomModuleCourant == NomModule.disponibilites) {
@@ -904,74 +903,67 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
     }
 
-    /**
-     * NB : Simule une action de l'utilisateur.
-     */
     public void activerModuleDisponibilites() {
         nomModuleCourant = NomModule.disponibilites;
-
-//        applicationView.setCenter(disponibilitesView);
-        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(disponibilitesTab)) {
-            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-            gestionTabPane.getSelectionModel().select(disponibilitesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
-        }
-
+        ihm.getApplicationView().setCenter(ihm.getDisponibilitesView());
         majTitre();
     }
 
     //    @FXML
-    public void afficherModuleTaches() throws IhmException {
+    public void afficherModuleTaches(@SuppressWarnings("unused") ActionEvent event) {
+        try {
+            afficherModuleTaches();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le module des tâches.", e);
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des tâches", Exceptions.causes(e));
+        }
+    }
+
+    void afficherModuleTaches() throws IhmException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
         if (nomModuleCourant == NomModule.taches) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
+
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleTaches();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
     }
 
-    /**
-     * NB : Simule une action de l'utilisateur.
-     */
     public void activerModuleTaches() {
         nomModuleCourant = NomModule.taches;
-
-//        applicationView.setCenter(tachesView);
-        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(tachesTab)) {
-            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-            gestionTabPane.getSelectionModel().select(tachesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
-        }
-
+        ihm.getApplicationView().setCenter(ihm.getTachesView());
         majTitre();
     }
 
     //    @FXML
-    public void afficherModuleCharges() throws IhmException {
+    public void afficherModuleCharges(@SuppressWarnings("unused") ActionEvent event) {
+        try {
+            afficherModuleCharges();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le module des charges.", e);
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des charges", Exceptions.causes(e));
+        }
+    }
+
+    void afficherModuleCharges() throws IhmException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
         if (nomModuleCourant == NomModule.charges) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
+
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleCharges();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
     }
 
-    /**
-     * NB : Simule une action de l'utilisateur.
-     */
     public void activerModuleCharges() {
         nomModuleCourant = NomModule.charges;
-
-//        applicationView.setCenter(chargesView);
-        if (!gestionTabPane.getSelectionModel().getSelectedItem().equals(chargesTab)) {
-            // Cf. http://stackoverflow.com/questions/6902377/javafx-tabpane-how-to-set-the-selected-tab
-            gestionTabPane.getSelectionModel().select(chargesTab); // Rq : Va déclencher cette méthode 'activermodule...', donc il faut valuer 'nomModuleCourant' avant, pour éviter les boucles.
-        }
-
+        ihm.getApplicationView().setCenter(ihm.getChargesView());
         majTitre();
     }
 
