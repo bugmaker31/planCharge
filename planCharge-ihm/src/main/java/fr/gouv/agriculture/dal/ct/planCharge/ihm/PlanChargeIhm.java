@@ -485,7 +485,7 @@ public class PlanChargeIhm extends Application {
             primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
             //
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
-            Screen ecranParDefaut = Screen.getScreens().get(1); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+            Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
             final double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
             final double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
             primaryStage.setWidth(screenWidth);
