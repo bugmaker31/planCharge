@@ -386,7 +386,6 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
     @FXML
-    @Override
     @NotNull
     protected PlanificationBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
@@ -395,7 +394,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
                 throw new IhmException("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
             }
 
-            PlanificationBean planifBean = super.ajouterTache(event);
+            PlanificationBean planifBean = super.ajouterTache();
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new AjoutTache<>(planifBean, planChargeBean.getPlanificationsBeans()));
@@ -430,10 +429,10 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         assert planChargeBean.getDateEtat() != null;
 
         Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-        LocalDate dateSemaine = planChargeBean.getDateEtat();
+        LocalDate debutPeriode = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calendrier.put(dateSemaine, new SimpleDoubleProperty(0.0));
-            dateSemaine = dateSemaine.plusDays(7);
+            calendrier.put(debutPeriode, new SimpleDoubleProperty(0.0));
+            debutPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/07 Ne fonctionne que pour des périodes hebdomadaire, pas trimestrielle.
         }
 
         return new PlanificationBean(tacheBean, calendrier);
@@ -483,12 +482,12 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     }
 
     @FXML
-    public void filtrerTachesNonPlanifieesDansLeMois(@SuppressWarnings("unused") ActionEvent actionEvent) {
+    private void filtrerTachesNonPlanifieesDansLeMois(@SuppressWarnings("unused") ActionEvent actionEvent) {
         // TODO FDA 2017/07 Coder.
     }
 
     @FXML
-    public void afficherTache(@SuppressWarnings("unused") ActionEvent actionEvent) {
+    private void afficherTache(@SuppressWarnings("unused") ActionEvent actionEvent) {
         PlanificationBean tacheBean = tacheSelectionnee();
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator

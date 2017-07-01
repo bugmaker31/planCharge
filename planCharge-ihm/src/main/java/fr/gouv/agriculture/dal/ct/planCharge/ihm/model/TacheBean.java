@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
@@ -38,7 +40,7 @@ public class TacheBean implements Copiable<TacheBean> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
 
     @NotNull
-    public static final String FORMAT_DATE = "dd/MM/yyyy";
+    public static final String FORMAT_DATE = PlanChargeIhm.FORMAT_DATE;
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 

@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -282,10 +283,12 @@ public class PlanChargeIhm extends Application {
         LOGGER.error("An (uncaught) error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
 
+/*
             StringWriter errorMsg = new StringWriter();
             throwable.printStackTrace(new PrintWriter(errorMsg));
+*/
 
-            afficherPopUp(Alert.AlertType.ERROR, "Erreur interne", errorMsg.toString());
+            afficherPopUp(Alert.AlertType.ERROR, "Erreur interne", Exceptions.causes(throwable));
         }
     }
 

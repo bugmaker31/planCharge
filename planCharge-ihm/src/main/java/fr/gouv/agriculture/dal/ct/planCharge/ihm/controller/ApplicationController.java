@@ -834,12 +834,13 @@ public class ApplicationController extends AbstractController {
             LOGGER.error("Impossible de récupérer la version de l'application.", e);
         }
 
+        //noinspection HardcodedFileSeparator
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
                 "A propos de l'application \"" + PlanChargeIhm.APP_NAME + "\"",
-                "Version : " + (versionApp == null ? "N/C" : versionApp)
-                        + "\n" + "Fonctionnalité : Gestion du plan de charge d'une équipe d'un centre de service."
-                        + "\nAuteur : Frédéric Danna - (C)2017",
+                "Fonctionnalité : Gestion du plan de charge d'une équipe d'un centre de service."
+                        + "\n" + "Version : " + (versionApp == null ? "N/C" : versionApp)
+                        + "\nAuteur : Frédéric Danna",
                 500, 200
         );
     }
@@ -850,8 +851,8 @@ public class ApplicationController extends AbstractController {
      */
 
 
-    //    @FXML
-    public void afficherModuleJoursFeries(@SuppressWarnings("unused") ActionEvent actionEvent) {
+    @FXML
+    private void afficherModuleJoursFeries(@SuppressWarnings("unused") ActionEvent actionEvent) {
         try {
             afficherModuleJoursFeries();
         } catch (IhmException e) {

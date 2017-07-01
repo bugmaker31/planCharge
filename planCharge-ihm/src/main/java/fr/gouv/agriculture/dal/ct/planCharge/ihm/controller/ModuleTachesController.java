@@ -99,12 +99,11 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
 
     // Surchargée juste pour pouvoir ajouter le @FXML.
     @FXML
-    @Override
     @NotNull
-    protected TacheBean ajouterTache(ActionEvent event) throws Exception {
+    protected TacheBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
-            TacheBean tacheBean = super.ajouterTache(event);
+            TacheBean tacheBean = super.ajouterTache();
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new AjoutTache<>(tacheBean, getTachesBeans()));
@@ -122,7 +121,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
     }
 
     @FXML
-    public void afficherPlanification(@SuppressWarnings("unused") ActionEvent actionEvent) {
+    private void afficherPlanification(@SuppressWarnings("unused") ActionEvent actionEvent) {
         TacheBean tacheBean = tacheSelectionnee();
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator

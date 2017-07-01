@@ -177,7 +177,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @NotNull
-    protected TB ajouterTache(ActionEvent event) throws Exception {
+    protected TB ajouterTache() throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
             TB nouvTache = nouveauBean();

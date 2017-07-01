@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.NotImplementedException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -37,7 +38,9 @@ public class ModuleDisponibilitesController extends AbstractController {
         // Rien... pour l'instant.
     }
 
-    public void ajouterRessource(@SuppressWarnings("unused") ActionEvent actionEvent) {
-
+    @FXML
+    private void ajouterRessource(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        // TODO FDA 2017/07 Coder.
+        throw new NotImplementedException();
     }
 }
