@@ -97,7 +97,7 @@
                 </TableColumn>
                 <TableColumn text="Planification">
                     <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee" />
                         <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4" styleClass="periodeChargee"/>
