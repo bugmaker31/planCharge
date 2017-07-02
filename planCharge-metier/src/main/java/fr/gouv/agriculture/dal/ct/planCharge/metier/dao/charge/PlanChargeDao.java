@@ -112,7 +112,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     @NotNull
 //    @Override
-    public PlanCharge load(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundException, PlanChargeDaoException {
+    public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundException, PlanChargeDaoException {
         PlanCharge plan;
 
         File fichierPlanif = fichierPlanCharge(dateEtat);
@@ -121,7 +121,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         }
 
         try {
-            plan = load(fichierPlanif, rapport);
+            plan = charger(fichierPlanif, rapport);
         } catch (PlanChargeDaoException e) {
             throw new PlanChargeDaoException("Impossible de charger le plan de charge en date d'état du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), e);
         }
@@ -130,7 +130,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     }
 
     @NotNull
-    public PlanCharge load(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws PlanChargeDaoException {
+    public PlanCharge charger(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge plan;
 
         try {
@@ -238,6 +238,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
             // Marshalling and saving XML to the file.
             m.marshal(wrapper, ficCalc);
+
         } catch (Exception e) {
             throw new PlanChargeDaoException("Impossible de sérialiser le plan de charge dans le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
         }

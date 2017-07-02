@@ -51,7 +51,7 @@ public class PlanChargeService extends AbstractService {
     @NotNull
     public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.load(dateEtat, rapport);
+            return planChargeDao.charger(dateEtat, rapport);
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de charger le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
@@ -62,7 +62,7 @@ public class PlanChargeService extends AbstractService {
     @NotNull
     public PlanCharge charger(@NotNull File ficPlanCharge, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.load(ficPlanCharge, rapport);
+            return planChargeDao.charger(ficPlanCharge, rapport);
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.",

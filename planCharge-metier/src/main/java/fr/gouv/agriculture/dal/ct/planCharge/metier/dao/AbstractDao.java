@@ -8,10 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static javax.swing.UIManager.get;
 
 /**
  * Created by frederic.danna on 03/04/2017.
@@ -25,16 +28,24 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
 
     protected abstract Map<EI, E> getCache();
 
-
-    @NotNull
-    public E load(@NotNull EI id) throws EntityNotFoundException {
+    @Null
+    public E get(@NotNull EI id) throws EntityNotFoundException {
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");
             return getCache().get(id);
         }
+        return null;
+    }
 
-        throw new EntityNotFoundException("Entité '" + this.getClass().getCanonicalName() + "' n'existe pas avec l'ID '" + id + "'.");
+
+    @NotNull
+    public E load(@NotNull EI id) throws EntityNotFoundException {
+        E entity = get(id);
+        if (entity == null) {
+            throw new EntityNotFoundException("Entité '" + this.getClass().getCanonicalName() + "' n'existe pas avec l'ID '" + id + "'.");
+        }
+        return entity;
     }
 
     @NotNull
@@ -43,6 +54,10 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
         return new ArrayList<>(getCache().values());
     }
 
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean exists(@NotNull EI id) throws DaoException {
+        return get(id) != null;
+    }
 
     public void saveOrUpdate(@NotNull E entity) throws DaoException {
         getCache().put(entity.getIdentity(), entity);
