@@ -14,10 +14,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
@@ -100,6 +97,9 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     @NotNull
 //    @Autowired
     private RessourceDao ressourceDao = RessourceDao.instance();
+    @NotNull
+//    @Autowired
+    private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
 
     @NotNull
 //    @Autowired
@@ -553,9 +553,9 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 );
                 LocalDate debutMissionLocale = Dates.asLocalDate(debutMission);
                 LocalDate finMissionLocale = Dates.asLocalDate(finMission);
-                Ressource ressource = new Ressource(trigramme, nom, prenom, societe, debutMissionLocale, finMissionLocale);
+                RessourceHumaine ressource = new RessourceHumaine(trigramme, nom, prenom, societe, debutMissionLocale, finMissionLocale);
                 ressources.add(ressource);
-                ressourceDao.saveOrUpdate(ressource);
+                ressourceHumaineDao.saveOrUpdate(ressource);
 
                 noLig++;
             }
@@ -684,7 +684,10 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             Ressource ressource = ressourceDao.load(codeRessource);
 
             String codeProfil = Calc.getString(feuilleCharges, 10 - 1, noLig - 1);
-            Profil profil = profilDao.load(codeProfil);
+            Profil profil = (
+                    codeProfil.equals(Profil.TOUS.getCode()) ? Profil.TOUS :
+                            profilDao.load(codeProfil)
+            );
 
             tache = new Tache(
                     id,

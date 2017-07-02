@@ -10,7 +10,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHumaineDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
@@ -61,7 +61,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
 
     @NotNull
 //    @Autowired
-    private RessourceDao ressourceDao = RessourceDao.instance();
+    private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
 
     @NotNull
 //    @Autowired
@@ -195,7 +195,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
             double charge = Calc.getDouble(feuille, 18 - 1, noLig - 1);
 
             String codeRessource = Calc.getString(feuille, 7 - 1, noLig - 1);
-            Ressource ressource = ressourceDao.load(codeRessource);
+            Ressource ressource = ressourceHumaineDao.load(codeRessource);
 
             tache = new Tache(
                     id,

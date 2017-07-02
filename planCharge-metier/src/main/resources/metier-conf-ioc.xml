@@ -32,7 +32,7 @@
     <bean id="projetAppliDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao"/>
     <bean id="importanceDao"
           class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referenticodeImportanceance.ImportanceDao"/>
-    <bean id="ressourceDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao"/>
+    <bean id="ressourceDao" clafr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHumaineDaoaineDaoeDao"/>
     <bean id="profilDao" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao"/>
 
     &lt;!&ndash;Les wrappers XML :&ndash;&gt;

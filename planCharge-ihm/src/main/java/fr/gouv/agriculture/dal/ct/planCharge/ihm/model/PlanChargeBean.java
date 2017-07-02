@@ -85,7 +85,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<RessourceBean> ressourcesBeans;
+    private final ObservableList<RessourceHumaineBean> ressourcesBeans;
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
@@ -154,7 +154,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         Set<Profil> profils = profilsBeans.parallelStream().map(Profil::new).collect(Collectors.toSet());
         Set<ProjetAppli> projetsApplis = projetsApplisBeans.parallelStream().map(ProjetAppli::new).collect(Collectors.toSet());
         Set<Statut> statuts = statutsBeans.parallelStream().map(Statut::new).collect(Collectors.toSet());
-        Set<Ressource> ressources = ressourcesBeans.parallelStream().map(RessourceBean::extract).collect(Collectors.toSet());
+        Set<Ressource> ressources = ressourcesBeans.parallelStream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
         Referentiels referentiels = new Referentiels(joursFeries, importances, profils, projetsApplis, statuts, ressources);
 
         Planifications planifications = new Planifications();

@@ -3,7 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHumaineDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
@@ -43,7 +43,7 @@ public class ReferentielsService {
     private StatutDao statutDao = StatutDao.instance();
     //    @Autowired
     @NotNull
-    private RessourceDao ressourceDao = RessourceDao.instance();
+    private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
     //    @Autowired
     @NotNull
     private ProfilDao profilDao = ProfilDao.instance();
@@ -108,9 +108,9 @@ public class ReferentielsService {
     }
 
     @NotNull
-    public List<Ressource> ressources() throws ServiceException {
+    public List<RessourceHumaine> ressources() throws ServiceException {
         try {
-            return ressourceDao.list();
+            return ressourceHumaineDao.list();
         } catch (DaoException e) {
             throw new ServiceException("Impossible de lister les ressources.", e);
         }

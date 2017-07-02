@@ -10,11 +10,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +58,7 @@ public class ModuleJoursFeriesController extends AbstractController {
     private TableView<JourFerieBean> joursFeriesTable;
 
     @FXML
-    private TableColumn<JourFerieBean, String> dateColumn;
+    private TableColumn<JourFerieBean, LocalDate> dateColumn;
 
     @FXML
     private TableColumn<JourFerieBean, String> descriptionColumn;
@@ -81,23 +85,21 @@ public class ModuleJoursFeriesController extends AbstractController {
         LOGGER.debug("Initialisation...");
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        dateColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().dateProperty().isNull().get()) {
-                //noinspection ReturnOfNull
-                return null;
-            }
-            LocalDate debut = cellData.getValue().dateProperty().get();
-            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(PlanChargeIhm.FORMAT_DATE)));
-        });
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        dateColumn.setCellFactory(cell -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE));
+        dateColumn.setCellFactory(p -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE, joursFeriesBeans, JourFerieBean::setDate));
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Association (binding) entre la liste et la table des jours fériés :
         joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
-            joursFeriesTable.setItems(joursFeriesBeans);
+            // Wrap the FilteredList in a SortedList.
+            SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
+            // Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
+            sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
+            // Add sorted data to the table.
+            joursFeriesTable.setItems(sortedBeans);
         });
 
         LOGGER.debug("Initialisé.");

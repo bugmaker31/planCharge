@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class RessourceBean {
+public class RessourceHumaineBean {
 
     @NotNull
     private StringProperty trigramme = new SimpleStringProperty();
@@ -31,11 +32,11 @@ public class RessourceBean {
     private ObjectProperty<LocalDate> finMission = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object;
 
 
-    public RessourceBean() {
+    public RessourceHumaineBean() {
         super();
     }
 
-    public RessourceBean(@NotNull Ressource ressource) {
+    public RessourceHumaineBean(@NotNull RessourceHumaine ressource) {
         this.trigramme.set(ressource.getTrigramme());
         this.nom.set(ressource.getNom());
         this.prenom.set(ressource.getPrenom());
@@ -108,7 +109,7 @@ public class RessourceBean {
 
     @NotNull
     public Ressource extract() {
-        return new Ressource(trigramme.get(), nom.get(), prenom.get(), societe.get(), debutMission.get(), finMission.get());
+        return new RessourceHumaine(trigramme.get(), nom.get(), prenom.get(), societe.get(), debutMission.get(), finMission.get());
     }
 
 

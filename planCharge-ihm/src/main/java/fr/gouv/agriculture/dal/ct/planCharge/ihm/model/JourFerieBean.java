@@ -42,6 +42,10 @@ public class JourFerieBean {
         return date;
     }
 
+    public void setDate(@NotNull LocalDate date) {
+        this.date.set(date);
+    }
+
     @NotNull
     public String getDescription() {
         return description.get();

@@ -2,12 +2,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
@@ -251,6 +247,10 @@ public class TacheBean implements Copiable<TacheBean> {
         return debut;
     }
 
+    public void setDebut(@NotNull LocalDate debut) {
+        this.debut.set(debut);
+    }
+
     @Null
     public LocalDate getEcheance() {
         return echeance.get();
@@ -259,6 +259,10 @@ public class TacheBean implements Copiable<TacheBean> {
     @NotNull
     public ObjectProperty<LocalDate> echeanceProperty() {
         return echeance;
+    }
+
+    public void setEcheance(@NotNull LocalDate echeance) {
+        this.echeance.set(echeance);
     }
 
     @Null

@@ -1,17 +1,21 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.PseudoRessource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class RessourceDao extends AbstractDao<Ressource,String> {
+public class RessourceDao  implements DataAcessObject<RessourceHumaine,String> {
 
-    private static final Map<String, Ressource> CACHE = new HashMap<>();
 
     private static RessourceDao instance;
 
@@ -22,14 +26,25 @@ public class RessourceDao extends AbstractDao<Ressource,String> {
         return instance;
     }
 
+
+    @NotNull
+//    @Autowired
+    private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
+
+
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private RessourceDao() {
         super();
     }
 
-    @Override
-    protected Map<String, Ressource> getCache() {
-        return CACHE;
-    }
 
+    @NotNull
+    public Ressource load(@NotNull String codeRessource) throws EntityNotFoundException {
+        Ressource ressource = (
+                codeRessource.equals(PseudoRessource.NIMPORTE_QUI.getTrigramme()) ? PseudoRessource.NIMPORTE_QUI :
+                        (codeRessource.equals(PseudoRessource.TOUS.getTrigramme()) ? PseudoRessource.TOUS :
+                                ressourceHumaineDao.load(codeRessource))
+        );
+        return ressource;
+    }
 }

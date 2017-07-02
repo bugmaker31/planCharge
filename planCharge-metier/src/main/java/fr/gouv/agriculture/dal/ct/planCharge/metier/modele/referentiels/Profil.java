@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
  */
 public class Profil extends AbstractEntity<String> implements Comparable<Profil> {
 
+    public static final Profil TOUS = new Profil("*");
+
+
     @NotNull
     private final String code;
 

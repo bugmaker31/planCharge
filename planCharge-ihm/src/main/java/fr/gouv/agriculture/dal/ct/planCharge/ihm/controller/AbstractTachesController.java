@@ -28,6 +28,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.CheckComboBox;
@@ -107,10 +108,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     private TableColumn<TB, String> statutColumn;
     @FXML
     @NotNull
-    private TableColumn<TB, String> debutColumn;
+    private TableColumn<TB, LocalDate> debutColumn;
     @FXML
     @NotNull
-    private TableColumn<TB, String> echeanceColumn;
+    private TableColumn<TB, LocalDate> echeanceColumn;
     @FXML
     @NotNull
     private TableColumn<TB, String> importanceColumn;
@@ -245,22 +246,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         projetAppliColumn.setCellValueFactory(cellData -> cellData.getValue().codeProjetAppliProperty());
         statutColumn.setCellValueFactory(cellData -> cellData.getValue().codeStatutProperty());
-        debutColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().debutProperty().isNull().get()) {
-                //noinspection ReturnOfNull
-                return null;
-            }
-            LocalDate debut = cellData.getValue().debutProperty().get();
-            return new SimpleStringProperty((debut == null) ? "" : debut.format(DateTimeFormatter.ofPattern(TacheBean.FORMAT_DATE)));
-        });
-        echeanceColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().echeanceProperty().isNull().get()) {
-                //noinspection ReturnOfNull
-                return null;
-            }
-            LocalDate echeance = cellData.getValue().echeanceProperty().get();
-            return new SimpleStringProperty(echeance.format(DateTimeFormatter.ofPattern(TacheBean.FORMAT_DATE)));
-        });
+        debutColumn.setCellValueFactory(cellData -> cellData.getValue().debutProperty());
+        echeanceColumn.setCellValueFactory(cellData -> cellData.getValue().echeanceProperty());
         importanceColumn.setCellValueFactory(cellData -> cellData.getValue().codeImportanceProperty());
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().codeRessourceProperty());
@@ -274,8 +261,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplis));
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesStatuts));
-        debutColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE));
-        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE));
+        debutColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE, getTachesBeans(), TacheBean::setDebut));
+        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE, getTachesBeans(), TacheBean::setEcheance));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(codesImportances));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessources));
@@ -702,7 +689,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             throw new IhmException("Impossible de populer la liste des ressources.", e);
         }
         try {
-            List<Ressource> ressources = referentielsService.ressources();
+            List<RessourceHumaine> ressources = referentielsService.ressources();
             codesRessources.setAll(ressources.parallelStream()
                     .sorted(Ressource::compareTo)
                     .map(Ressource::getTrigramme)

@@ -362,38 +362,27 @@ public class ApplicationController extends AbstractController {
             @Override
             protected RapportChargementAvecProgression call() throws Exception {
 
-                rapport.setProgressionMax(8);
-                int cptEtapeSauvegarde = 0;
-
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
                 PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 PlanCharge planCharge = planChargeService.charger(ficPlanCharge, rapport);
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 planChargeBean.init(planCharge);
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 planChargeBean.vientDEtreCharge();
                 getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                rapport.setAvancement("Alimentation des référentiels...");
                 ihm.getTachesController().populerReferentiels();
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
                 ihm.getChargesController().populerReferentiels();
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
 
                 // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                rapport.setAvancement("Alimentation des filtres...");
                 ihm.getTachesController().populerFiltres();
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
                 ihm.getChargesController().populerFiltres();
-                rapport.setProgressionCourante(++cptEtapeSauvegarde);
-
-                assert cptEtapeSauvegarde == rapport.getProgressionMax();
 
                 return rapport;
             }
@@ -567,6 +556,16 @@ public class ApplicationController extends AbstractController {
 
                 planChargeBean.init(planCharge);
 
+                // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                rapport.setAvancement("Alimentation des référentiels...");
+                ihm.getTachesController().populerReferentiels();
+                ihm.getChargesController().populerReferentiels();
+
+                // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                rapport.setAvancement("Alimentation des filtres...");
+                ihm.getTachesController().populerFiltres();
+                ihm.getChargesController().populerFiltres();
+
                 return rapport;
             }
         };
@@ -575,6 +574,8 @@ public class ApplicationController extends AbstractController {
 
             RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
             assert rapport != null;
+
+            definirDateEtat(planChargeBean.getDateEtat());
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());
@@ -658,6 +659,7 @@ public class ApplicationController extends AbstractController {
 
         Task<RapportImportPlanChargeAvecProgression> importerPlanChargeDepuisCalc = new Task<RapportImportPlanChargeAvecProgression>() {
 
+            @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
             @Override
             protected RapportImportPlanChargeAvecProgression call() throws Exception {
 
@@ -666,21 +668,20 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
+                rapport.setAvancement("Import depuis Calc...");
                 PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc, rapport);
 
-                planChargeBean.setDateEtat(planCharge.getDateEtat());
+                planChargeBean.init(planCharge);
 
-                List<PlanificationBean> planifBeans = new ArrayList<>();
-                for (Tache tache : planCharge.getPlanifications().taches()) {
-                    Map<LocalDate, Double> calendrier;
-                    try {
-                        calendrier = planCharge.getPlanifications().calendrier(tache);
-                    } catch (TacheSansPlanificationException e) {
-                        throw new ControllerException("Impossible de définir la planification de la tâche " + tache.noTache() + ".", e);
-                    }
-                    planifBeans.add(new PlanificationBean(tache, calendrier));
-                }
-                planificationsBeans.setAll(planifBeans);
+                // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                rapport.setAvancement("Alimentation des référentiels...");
+                ihm.getTachesController().populerReferentiels();
+                ihm.getChargesController().populerReferentiels();
+
+                // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
+                rapport.setAvancement("Alimentation des filtres...");
+                ihm.getTachesController().populerFiltres();
+                ihm.getChargesController().populerFiltres();
 
                 return rapport;
             }

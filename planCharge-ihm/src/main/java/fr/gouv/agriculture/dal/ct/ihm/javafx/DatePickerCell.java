@@ -1,114 +1,112 @@
 package fr.gouv.agriculture.dal.ct.ihm.javafx;
 
-import javafx.beans.binding.Bindings;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 
+import javax.validation.constraints.NotNull;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.function.BiConsumer;
 
-/**
- * Created by frederic.danna on 11/05/2017.
- * <p>
- * Inspiré de james-d/TableViewSampleWithBirthday.java (https://gist.github.com/james-d/9776485).
- *
- * @author frederic.danna
- */
-public class DatePickerCell<T> extends TableCell<T, String> {
+// Cf. http://physalix.com/javafx8-render-a-datepicker-cell-in-a-tableview/
+@SuppressWarnings("ClassHasNoToStringMethod")
+public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
-    private final DateTimeFormatter formatter;
-    private final DatePicker datePicker;
+    @NotNull
+    private final String format;
+    @NotNull
+    private final ObservableList<S> data;
+    @NotNull
+    private final BiConsumer<S, LocalDate> dateSetter;
+    @NotNull
+    private final DateTimeFormatter dateFormatter;
 
-    public DatePickerCell(String dateTimePattern) {
+    @NotNull
+    private DatePicker datePicker;
 
-        formatter = DateTimeFormatter.ofPattern(dateTimePattern);
-        datePicker = new DatePicker();
 
-        // Commit edit on Enter and cancel on Escape.
-        // Note that the default behavior consumes key events, so we must
-        // register this as an event filter to capture it.
-        // Consequently, with Enter, the datePicker's value won't yet have been updated,
-        // so commit will sent the wrong value. So we must update it ourselves from the
-        // editor's text value.
+    public DatePickerCell(@NotNull String format, @NotNull ObservableList<S> data, @NotNull BiConsumer<S, LocalDate> dateSetter) {
 
-        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if ((event.getCode() == KeyCode.ENTER) || (event.getCode() == KeyCode.TAB)) {
-                datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
-                LocalDate date = datePicker.getValue();
-                commitEdit(date.format(formatter));
-            }
-            if (event.getCode() == KeyCode.ESCAPE) {
-                cancelEdit();
-            }
-        });
+        super();
 
-        // Modify default mouse behavior on date picker:
-        // Don't hide popup on single click, just set date
-        // On double-click, hide popup and commit edit for editor
-        // Must consume event to prevent default hiding behavior, so
-        // must update date picker value ourselves.
+        this.format = format;
+        this.data = data;
+        this.dateSetter = dateSetter;
 
-        // Modify key behavior so that enter on a selected cell commits the edit
-        // on that cell's date.
+        this.dateFormatter = DateTimeFormatter.ofPattern(format);
 
-        datePicker.setDayCellFactory(picker -> {
-            DateCell cell = new DateCell();
-            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-                LocalDate date = cell.getItem();
-                datePicker.setValue(date);
-                if (event.getClickCount() == 2) {
-                    datePicker.hide();
-                    commitEdit(date.format(formatter));
-                }
-                event.consume();
-            });
-            cell.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                if (event.getCode() == KeyCode.ENTER) {
-                    LocalDate date = datePicker.getValue();
-                    commitEdit(date.format(formatter));
-                }
-            });
-            return cell;
-        });
+//        if (datePicker == null) {
+        datePicker = createDatePicker();
+//        }
+        setGraphic(datePicker);
+        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-        contentDisplayProperty().bind(Bindings.when(editingProperty())
-                .then(ContentDisplay.GRAPHIC_ONLY)
-                .otherwise(ContentDisplay.TEXT_ONLY));
+        Platform.runLater(() -> datePicker.requestFocus());
     }
 
+
     @Override
-    public void updateItem(String item, boolean empty) {
+    public void updateItem(LocalDate item, boolean empty) {
         super.updateItem(item, empty);
-        if (empty) {
+
+        if (empty || (item == null)) {
             setText(null);
             setGraphic(null);
-        } else {
-            setText(item);
-            setGraphic(datePicker);
+            return;
         }
+
+        if (isEditing()) {
+            setContentDisplay(ContentDisplay.TEXT_ONLY);
+            return;
+        }
+
+        datePicker.setValue(item);
+        setText(dateFormatter.format(item));
+        setGraphic(this.datePicker);
+        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+    }
+
+    private DatePicker createDatePicker() {
+        DatePicker newDatePicker = new DatePicker();
+        newDatePicker.setPromptText(format);
+        newDatePicker.setEditable(true);
+
+        newDatePicker.setOnAction(t -> {
+            LocalDate date = newDatePicker.getValue();
+
+            commitEdit(date);
+
+            if (getData() != null) {
+                int index = getIndex();
+                S data = getData().get(index);
+                dateSetter.accept(data, date);
+            }
+        });
+
+        setAlignment(Pos.CENTER);
+
+        return newDatePicker;
     }
 
     @Override
     public void startEdit() {
         super.startEdit();
-
-        String dateStr = getItem();
-        if (emptyProperty().get() || isEmpty() || (dateStr == null)) {
-            return;
-        }
-
-        try {
-            datePicker.setValue(LocalDate.parse(dateStr, formatter));
-        } catch (DateTimeParseException e) {
-            // TODO FDA 2017/05 Trouver mieux qu'un RuntimeException.
-            throw new RuntimeException("Can't parse date '" + dateStr + "', thus can't set DatePicker value.", e);
-        }
     }
+
+    @Override
+    public void cancelEdit() {
+        super.cancelEdit();
+        setContentDisplay(ContentDisplay.TEXT_ONLY);
+    }
+
+    public ObservableList<S> getData() {
+        return data;
+    }
+
 
 }
