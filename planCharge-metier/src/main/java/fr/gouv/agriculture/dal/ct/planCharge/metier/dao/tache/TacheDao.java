@@ -6,8 +6,8 @@ import com.sun.star.table.XCell;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class TacheDao extends AbstractDao<Tache, Integer> {
+public class TacheDao implements DataAcessObject<Tache, Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheDao.class);
 

@@ -7,6 +7,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoExce
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
@@ -14,7 +16,9 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 22/04/2017.
@@ -30,14 +34,17 @@ public class PlanChargeXmlWrapper {
 //    private Contexte contexte = Contexte.instance();
     private ParametresMetiers params = ParametresMetiers.instance();
 
+    @NotNull
     private String versionFormat = VERSION_FORMAT;
 
     /*
         @Inject
         @Property("application.version")
     */
+    @NotNull
     private String versionApplication;
 
+    @NotNull
     private Date dateEtat;
 
     //    @Autowired
@@ -105,20 +112,26 @@ public class PlanChargeXmlWrapper {
         }
 
         dateEtat = Dates.asDate(planCharge.getDateEtat());
-        referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getPlanifications(), rapport);
+        referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getReferentiels(), rapport);
         planificationsXmlWrapper = planificationsXmlWrapper.init(planCharge.getPlanifications(), rapport);
 
         return this;
     }
 
     public PlanCharge extract() throws DaoException {
-        PlanCharge planCharge;
+
+        LocalDate dateEtatLocale = Dates.asLocalDate(dateEtat);
+        assert dateEtatLocale != null;
+
+        Referentiels referentiels = referentielsXmlWrapper.extract();
+
         Planifications planifications = planificationsXmlWrapper.extract();
-        planCharge = new PlanCharge(
-                Dates.asLocalDate(dateEtat),
+
+        return new PlanCharge(
+                dateEtatLocale,
+                referentiels,
                 planifications
         );
-        return planCharge;
     }
 
 }

@@ -1294,7 +1294,7 @@ public class Draw
     else if (combineOp == COMBINE)
       Lo.dispatchCmd("Combine"); 
     else {
-       System.out.println("Did not recognize op: " + combineOp + "; using merge");
+       System.out.println("Did not recognize op: " + combineOp + "; using saveOrUpdate");
        Lo.dispatchCmd("Merge");
     }
     Lo.delay(500);   // give time for dispatches to arrive and be processed

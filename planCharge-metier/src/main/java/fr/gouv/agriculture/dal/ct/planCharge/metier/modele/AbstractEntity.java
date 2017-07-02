@@ -13,6 +13,7 @@ public abstract class AbstractEntity<I extends Serializable> /* implements Compa
     @NotNull
     abstract public I getIdentity();
 
+
 /* TODO FDA 2017/07 Faire fonctionner dans cette calssse, plutîot que dans chaque classe fille.
     @NotNull
     @Override
@@ -21,9 +22,11 @@ public abstract class AbstractEntity<I extends Serializable> /* implements Compa
     }
 */
 
+
     public boolean equals(AbstractEntity<I> obj) {
         return getIdentity().equals(obj.getIdentity());
     }
+
 
     @Override
     public String toString() {

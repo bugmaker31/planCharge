@@ -37,6 +37,8 @@ import com.sun.star.frame.XComponentLoader;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XFrame;
 import com.sun.star.frame.XModel;
+import com.sun.star.lang.IndexOutOfBoundsException;
+import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.sheet.*;
 import com.sun.star.style.XStyle;
@@ -937,12 +939,13 @@ public class Calc {
     }  // end of getCellRange()
 
 
-    public static XCellRange getCellRange(XSpreadsheet sheet, String rangeName)
+    public static XCellRange getCellRange(XSpreadsheet sheet, String rangeName) throws LOException
     // no need to wrap getCellRangeByName(), but have one anyway
     {
         XCellRange cellRange = sheet.getCellRangeByName(rangeName);
         if (cellRange == null)
-            System.out.println("Could not access cell range : \"" + rangeName + "\"");
+//            System.out.println("Could not access cell range : \"" + rangeName + "\"");
+            throw new LOException("Could not access cell range : \"" + rangeName + "\"");
         return cellRange;
     }
 
@@ -1232,14 +1235,14 @@ public class Calc {
     // --------------------- search -----------------------------
 
 
-    public static XCellRange[] findAll(XSearchable srch, XSearchDescriptor sd) {
+    public static XCellRange[] findAll(XSearchable srch, XSearchDescriptor sd) throws LOException {
         XIndexAccess con = srch.findAll(sd);
         if (con == null) {
-            System.out.println("Match result is null");
+//            System.out.println("Match result is null");
             return null;
         }
         if (con.getCount() == 0) {
-            System.out.println("No matches found");
+//            System.out.println("No matches found");
             return null;
         }
 
@@ -1248,7 +1251,8 @@ public class Calc {
             try {
                 crs[i] = Lo.qi(XCellRange.class, con.getByIndex(i));
             } catch (Exception e) {
-                System.out.println("Could not access match index " + i);
+//                System.out.println("Could not access match index " + i);
+                throw new LOException("Could not access match index " + i, e);
             }
         }
         return crs;

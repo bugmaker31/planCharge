@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
@@ -166,6 +167,9 @@ public class ApplicationController extends AbstractController {
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+    @NotNull
+    private ObservableList<JourFerieBean> joursFeriesBeans = planChargeBean.getJoursFeriesBeans();
 
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
@@ -456,6 +460,7 @@ public class ApplicationController extends AbstractController {
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
                 PlanCharge planCharge = planChargeBean.extract();
+
                 planChargeService.sauver(planCharge, rapport);
 
                 rapport.setProgressionCourante(1);
@@ -647,8 +652,7 @@ public class ApplicationController extends AbstractController {
         importerPlanChargeDepuisCalc(ficCalc);
     }
 
-    // TODO FDA 23017/02 Afficher une "progress bar".
-    private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    public void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
         final RapportImportPlanChargeAvecProgression rapport = new RapportImportPlanChargeAvecProgression();
 

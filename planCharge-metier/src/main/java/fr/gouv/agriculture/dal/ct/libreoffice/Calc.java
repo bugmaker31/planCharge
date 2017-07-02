@@ -1,12 +1,20 @@
 package fr.gouv.agriculture.dal.ct.libreoffice;
 
+import com.sun.star.beans.PropertyVetoException;
+import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.frame.XComponentLoader;
 import com.sun.star.lang.IndexOutOfBoundsException;
+import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.sheet.XCellAddressable;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
+import com.sun.star.table.CellAddress;
 import com.sun.star.table.CellContentType;
 import com.sun.star.table.XCell;
 import com.sun.star.table.XCellRange;
+import com.sun.star.util.XSearchDescriptor;
+import com.sun.star.util.XSearchable;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import libreoffice.LOException;
 import libreoffice.Lo;
 
@@ -212,7 +220,7 @@ public class Calc {
 
     @NotNull
     public static Integer getInt(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
-        XCell cell =  getCell(sheet, column, row);
+        XCell cell = getCell(sheet, column, row);
         return getInt(cell);
     }
 
@@ -273,6 +281,55 @@ public class Calc {
     public static void clearCell(@NotNull XCell cell) throws LibreOfficeException {
         // Cf. https://wiki.openoffice.org/wiki/Documentation/BASIC_Guide/Editing_Spreadsheet_Documents#Deleting_Cell_Contents
         setString(cell, "");
+    }
+
+    public static XCell findFirst(@NotNull String cellContents, @NotNull XCellRange searchRange) throws LibreOfficeException {
+        // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/chaps/26.%20Search%20&%20Replace.pdf
+
+        XSearchable srch = Lo.qi(XSearchable.class, searchRange);
+
+        // set up search string and properties
+        XSearchDescriptor sd = srch.createSearchDescriptor();
+        sd.setSearchString(cellContents);
+        try {
+            sd.setPropertyValue("SearchWords", true);
+        } catch (Exception e) {
+            throw new LibreOfficeException("Impossible de rechercher.", e);
+        }
+
+        XCellRange[] cellRanges = libreoffice.Calc.findAll(srch, sd);
+
+        if ((cellRanges == null) || (cellRanges.length == 0)) {
+            return null;//throw new LibreOfficeException("Impossible de retrouver les cellules.");
+        }
+
+/*
+        if (cellRanges.length >= 2) {
+            throw new LibreOfficeException("Le texte '" + cellContents + "' est trouvé dans plus d'une cellule de la plage de recherche.");
+        }
+*/
+
+        XCellRange cellRange = cellRanges[0];
+        XCell cell = libreoffice.Calc.getCell(cellRange, 0, 0);
+        assert cell.getFormula().equals(cellContents);
+
+        return cell;
+    }
+
+    public static XCellRange getCellRange(@NotNull XSpreadsheet sheet, @NotNull String rangeName) throws LibreOfficeException {
+        try {
+            return libreoffice.Calc.getCellRange(sheet, rangeName);
+        } catch (LOException e) {
+            throw new LibreOfficeException("Impossible de déterminer la plage de cellules.", e);
+        }
+    }
+
+    public static CellAddress getCellAddress(@NotNull XCell cell) throws LibreOfficeException {
+        try {
+            return libreoffice.Calc.getCellAddress(cell);
+        } catch (LOException e) {
+            throw new LibreOfficeException("Impossible de retrouver l'adresse de la cellule.", e);
+        }
     }
 
 }

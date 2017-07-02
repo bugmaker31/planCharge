@@ -4,6 +4,8 @@ import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -31,8 +33,22 @@ public class ModuleJoursFeriesController extends AbstractController {
 
     private static ModuleJoursFeriesController instance;
 
+    public static ModuleJoursFeriesController instance() {
+        return instance;
+    }
+
+
+    // Couche "métier" :
+
+    //    @Autowired
     @NotNull
-    private ObservableList<JourFerieBean> joursFeriesBeans = FXCollections.observableArrayList();
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+    @NotNull
+    private ObservableList<JourFerieBean> joursFeriesBeans = planChargeBean.getJoursFeriesBeans();
+
+
+    // Couche "vue" :
 
     @FXML
     private TableView<JourFerieBean> joursFeriesTable;
@@ -43,9 +59,6 @@ public class ModuleJoursFeriesController extends AbstractController {
     @FXML
     private TableColumn<JourFerieBean, String> descriptionColumn;
 
-    public static ModuleJoursFeriesController instance() {
-        return instance;
-    }
 
     /**
      * The constructor.

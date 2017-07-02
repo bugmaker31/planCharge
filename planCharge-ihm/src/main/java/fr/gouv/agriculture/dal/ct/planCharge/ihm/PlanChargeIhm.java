@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -490,7 +491,7 @@ public class PlanChargeIhm extends Application {
             final double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
             primaryStage.setWidth(screenWidth);
             primaryStage.setHeight(screenHeight);
-//            primaryStage.setResizable(true);
+            primaryStage.setResizable(true);
 //            primaryStage.setFullScreen(true);
             primaryStage.setMaximized(true);
             //
@@ -502,13 +503,11 @@ public class PlanChargeIhm extends Application {
                 applicationController.charger(dateEtatPrec);
             }
 
-            // TODO FDA 2017/04 Pour accélérer les tests. A supprimer avant de livrer.
-//        afficherModuleDisponibilites();
-//        afficherModuleTaches();
-//        afficherModuleCharges();
-            //
-//        chargesController.importerDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-            //
+            // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
+//        applicationController.afficherModuleDisponibilites();
+//        applicationController.afficherModuleTaches();
+//        applicationController.afficherModuleCharges();
+            applicationController.importerPlanChargeDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
             applicationController.afficherModuleJoursFeries();
 
             LOGGER.info("Application démarrée.");
@@ -522,8 +521,8 @@ public class PlanChargeIhm extends Application {
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-//        return LocalDate.of(2017, 4, 17);
         return null;
+//        return LocalDate.of(2017, 4, 17);
     }
 
     @Override

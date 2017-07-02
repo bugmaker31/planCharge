@@ -19,9 +19,11 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
         }
 
     }
+
     public static final OrdreImportanceComparator COMPARATOR_ORDRE = new OrdreImportanceComparator();
 
     public static final Comparator<Importance> COMPARATOR_DEFAUT = COMPARATOR_ORDRE;
+
 
     @NotNull
     private final String codeInterne;
@@ -29,6 +31,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
     private int ordre;
     @NotNull
     private final String code;
+
 
     public Importance(@NotNull int ordre, @NotNull String code) {
         this.codeInterne = ordre + "-" + code;
@@ -55,6 +58,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
         }
     }
 
+
     @NotNull
     public String getCodeInterne() {
         return codeInterne;
@@ -70,6 +74,8 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
         return code;
     }
 
+    @SuppressWarnings("SuspiciousGetterSetter")
+    @NotNull
     @Override
     public String getIdentity() {
 //        return getOrdre() + "";
@@ -77,7 +83,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
     }
 
     @Override
-    public int compareTo(@NotNull Importance other) {
+    public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull Importance other) {
         return COMPARATOR_DEFAUT.compare(this, other);
     }
 }

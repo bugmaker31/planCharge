@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 
 import javax.validation.constraints.NotNull;
@@ -12,6 +11,8 @@ import java.util.stream.Collectors;
  * Created by frederic.danna on 30/04/2017.
  */
 public class ReferentielsXmlWrapper {
+
+    private JoursFeriesXmlWrapper joursFeriesXmlWrapper = new JoursFeriesXmlWrapper();
 
     private ImportancesXmlWrapper importancesXmlWrapper = new ImportancesXmlWrapper();
     private ProfilsXmlWrapper profilsXmlWrapper = new ProfilsXmlWrapper();
@@ -28,50 +29,84 @@ public class ReferentielsXmlWrapper {
         super();
     }
 
-    public ReferentielsXmlWrapper init(@NotNull Planifications planifications, @NotNull RapportSauvegarde rapport) {
+    @SuppressWarnings("OverlyCoupledMethod")
+    public ReferentielsXmlWrapper init(@NotNull Referentiels referentiels, @NotNull RapportSauvegarde rapport) {
+
+        rapport.setAvancement("Sauvegarde du référentiel des jours fériés...");
+        this.joursFeriesXmlWrapper.init(
+                referentiels.getJoursFeries().stream()
+                        .map(jourFerie -> new JourFerieXmlWrapper().init(jourFerie))
+                        .collect(Collectors.toList())
+        );
+
         rapport.setAvancement("Sauvegarde du référentiel des importances...");
         this.importancesXmlWrapper.init(
-                planifications.taches().stream()
+/*
+                planCharge.getPlanifications().taches().stream()
                         .map(Tache::getImportance)
                         .distinct()
                         .sorted()
                         .map(importance -> new ImportanceXmlWrapper().init(importance))
                         .collect(Collectors.toList())
+*/
+                referentiels.getImportances().stream()
+                        .map(importance -> new ImportanceXmlWrapper().init(importance))
+                        .collect(Collectors.toList())
         );
         rapport.setAvancement("Sauvegarde du référentiel des profils...");
         this.profilsXmlWrapper.init(
-                planifications.taches().stream()
+/*
+                planCharge.getPlanifications().taches().stream()
                         .map(Tache::getProfil)
                         .distinct()
                         .sorted()
+                        .map(profil -> new ProfilXmlWrapper().init(profil))
+                        .collect(Collectors.toList())
+*/
+                referentiels.getProfils().stream()
                         .map(profil -> new ProfilXmlWrapper().init(profil))
                         .collect(Collectors.toList())
         );
         //noinspection HardcodedFileSeparator
         rapport.setAvancement("Sauvegarde du référentiel des projets/applis...");
         this.projetsApplisXmlWrapper.init(
-                planifications.taches().stream()
+/*
+                planCharge.getPlanifications().taches().stream()
                         .map(Tache::getProjetAppli)
                         .distinct()
                         .sorted()
                         .map(projetAppli -> new ProjetAppliXmlWrapper().init(projetAppli))
                         .collect(Collectors.toList())
+*/
+                referentiels.getProjetsApplis().stream()
+                        .map(projetAppli -> new ProjetAppliXmlWrapper().init(projetAppli))
+                        .collect(Collectors.toList())
         );
         rapport.setAvancement("Sauvegarde du référentiel des statuts...");
         this.statutsXmlWrapper.init(
-                planifications.taches().stream()
+/*
+                planCharge.getPlanifications().taches().stream()
                         .map(Tache::getStatut)
                         .distinct()
                         .sorted()
                         .map(statut -> new StatutXmlWrapper().init(statut))
                         .collect(Collectors.toList())
+*/
+                referentiels.getStatuts().stream()
+                        .map(statut -> new StatutXmlWrapper().init(statut))
+                        .collect(Collectors.toList())
         );
         rapport.setAvancement("Sauvegarde du référentiel des ressrouces...");
         this.ressourcesXmlWrapper.init(
-                planifications.taches().stream()
+/*
+                planCharge.getPlanifications().taches().stream()
                         .map(Tache::getRessource)
                         .distinct()
                         .sorted()
+                        .map(ressource -> new RessourceXmlWrapper().init(ressource))
+                        .collect(Collectors.toList())
+*/
+                referentiels.getRessources().stream()
                         .map(ressource -> new RessourceXmlWrapper().init(ressource))
                         .collect(Collectors.toList())
         );
@@ -119,4 +154,8 @@ public class ReferentielsXmlWrapper {
         this.ressourcesXmlWrapper = ressources;
     }
 
+    @NotNull
+    public Referentiels extract() {
+        return null;
+    }
 }

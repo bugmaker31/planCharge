@@ -3,14 +3,15 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge;
 import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
+import com.sun.star.table.CellAddress;
 import com.sun.star.table.XCell;
 import com.sun.star.table.XCellRange;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
@@ -39,15 +40,12 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
+public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     public static final String CLEF_PARAM_REP_PERSISTANCE = "persistance.repertoire";
     public static final String CLEF_PARAM_PATRON_FICHIER = "persistance.patronFichier";
@@ -150,13 +148,22 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
 
         File fichierPlanif = fichierPlanCharge(dateEtat);
         if (fichierPlanif.exists()) {
-            // TODO FDA 2017/04 Demander confirmation à l'utilisateur, avant.
-            fichierPlanif.delete();
+            // TODO FDA 2017/04 Demander confirmation à l'utilisateur, avant. (Donc dans la couche View, avant d'appeler la couche métier.)
+            boolean isFileDeleted = fichierPlanif.delete();
+            if (!isFileDeleted) {
+                throw new PlanChargeDaoException("Impossible de suprimer le fichier '" + fichierPlanif.getAbsolutePath() + "'.");
+            }
         }
+
+        //noinspection BooleanVariableAlwaysNegated
+        boolean isNewFileCreated;
         try {
-            fichierPlanif.createNewFile();
+            isNewFileCreated = fichierPlanif.createNewFile();
         } catch (IOException e) {
             throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+        }
+        if (!isNewFileCreated) {
+            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.");
         }
 
         serialiserPlanCharge(fichierPlanif, planCharge, rapport);
@@ -274,9 +281,10 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         PlanCharge planCharge;
 
         try {
+            XSpreadsheet feuilleParams = Calc.getSheet(calc, "param");
             XSpreadsheet feuilleCharges = Calc.getSheet(calc, "Charge");
             XSpreadsheet feuilleTaches = Calc.getSheet(calc, "Tâches");
-            planCharge = importer(feuilleCharges, feuilleTaches, rapport);
+            planCharge = importer(feuilleParams, feuilleCharges, feuilleTaches, rapport);
         } catch (LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer le plan de charge depuis le doc OOCalc.", e);
         }
@@ -284,7 +292,7 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
         return planCharge;
     }
 
-    private PlanCharge importer(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
+    private PlanCharge importer(@NotNull XSpreadsheet feuilleParams, @NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
         PlanCharge planDeCharge;
 
         final int noLigDateEtat = 1;
@@ -295,11 +303,265 @@ public class PlanChargeDao extends AbstractDao<PlanCharge, LocalDate> {
             throw new PlanChargeDaoException("Impossible de retrouver la date d'état.");
         }
 
+        Referentiels referentiels = importerReferentiels(feuilleParams, rapport);
+
+        // TODO FDA 2017/07 Créer méthode "importerTaches", à appeler avant "importerPlanifications" (+ logique).
+
         Planifications planifications = importerPlanifications(feuilleCharges, feuilleTaches, rapport);
 
-        planDeCharge = new PlanCharge(Dates.asLocalDate(dateEtat), planifications);
+        planDeCharge = new PlanCharge(Dates.asLocalDate(dateEtat), referentiels, planifications);
 
         return planDeCharge;
+    }
+
+    @NotNull
+    private Referentiels importerReferentiels(@NotNull XSpreadsheet feuilleParams, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
+        rapport.setAvancement("Import des jours fériés...");
+        Set<JourFerie> joursferies = importerJoursFeries(feuilleParams);
+        rapport.setAvancement("Import des importances...");
+        Set<Importance> importances = importerImportances(feuilleParams);
+        rapport.setAvancement("Import des profils...");
+        Set<Profil> profils = importerProfils(feuilleParams);
+        //noinspection HardcodedFileSeparator
+        rapport.setAvancement("Import des projets/applis...");
+        Set<ProjetAppli> projetsApplis = importerProjetsApplis(feuilleParams);
+        rapport.setAvancement("Import des statuts...");
+        Set<Statut> statuts = importerStatuts(feuilleParams);
+        rapport.setAvancement("Import des ressources...");
+        Set<Ressource> ressources = importerRessources(feuilleParams);
+        return new Referentiels(
+                joursferies,
+                importances,
+                profils,
+                projetsApplis,
+                statuts,
+                ressources
+        );
+    }
+
+    @NotNull
+    private Set<JourFerie> importerJoursFeries(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<JourFerie> joursFeries = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCell cellule = Calc.findFirst("Congés et fêtes", plageRecherche);
+            if (cellule == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver les jours fériés.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(cellule);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Date");
+            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Raison");
+            int noLig = noLigTitre + 2;
+            while (true) {
+                XCell dateCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(dateCell)) {
+                    break;
+                }
+                Date date = Calc.getDate(dateCell);
+                assert date != null;
+                LocalDate dateLocale = Dates.asLocalDate(date);
+                assert dateLocale != null;
+                String raison = Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1);
+                JourFerie jourFerie = new JourFerie(dateLocale, raison);
+                joursFeries.add(jourFerie);
+
+                noLig++;
+            }
+            return joursFeries;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les jours fériés.", e);
+        }
+    }
+
+
+    @NotNull
+    private Set<Importance> importerImportances(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<Importance> importances = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCell cellule = Calc.findFirst("Importances", plageRecherche);
+            if (cellule == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver les importances.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(cellule);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Code");
+            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Poids");
+            int noLig = noLigTitre + 2;
+            while (true) {
+                XCell codeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(codeCell)) {
+                    break;
+                }
+                String codeInterne = Calc.getString(codeCell);
+                Importance importance = new Importance(codeInterne);
+                importances.add(importance);
+                importanceDao.saveOrUpdate(importance);
+
+                noLig++;
+            }
+            return importances;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les importances.", e);
+        }
+    }
+
+    @NotNull
+    private Set<Profil> importerProfils(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<Profil> profils = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCell cellule = Calc.findFirst("Profils", plageRecherche);
+            if (cellule == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver les profils.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(cellule);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Code");
+            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Libellé");
+//            assert Calc.getString(feuilleParams, (noColTitre + 2) - 1, (noLigTitre + 1) - 1).equals("Rôle CT");
+            int noLig = noLigTitre + 2;
+            while (true) {
+                XCell codeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(codeCell)) {
+                    break;
+                }
+                String code = Calc.getString(codeCell);
+                Profil profil = new Profil(code);
+                profils.add(profil);
+                profilDao.saveOrUpdate(profil);
+
+                noLig++;
+            }
+            return profils;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les profils.", e);
+        }
+    }
+
+    @NotNull
+    private Set<ProjetAppli> importerProjetsApplis(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<ProjetAppli> projetsApplis = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            //noinspection HardcodedFileSeparator
+            XCell cellule = Calc.findFirst("Projets / Applications", plageRecherche);
+            if (cellule == null) {
+                //noinspection HardcodedFileSeparator
+                throw new PlanChargeDaoException("Impossible de retrouver les projets/applications.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(cellule);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Code");
+            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Nom");
+            int noLig = noLigTitre + 2;
+            while (true) {
+                XCell codeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(codeCell)) {
+                    break;
+                }
+                String code = Calc.getString(codeCell);
+                ProjetAppli projetAppli = new ProjetAppli(code);
+                projetsApplis.add(projetAppli);
+                projetAppliDao.saveOrUpdate(projetAppli);
+
+                noLig++;
+            }
+            return projetsApplis;
+        } catch (Exception e) {
+            //noinspection HardcodedFileSeparator
+            throw new PlanChargeDaoException("Impossible d'importer les projets/applis.", e);
+        }
+    }
+
+    @NotNull
+    private Set<Statut> importerStatuts(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<Statut> statuts = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCell cellule = Calc.findFirst("Statuts", plageRecherche);
+            if (cellule == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver les statuts.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(cellule);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Code");
+            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Description");
+            int noLig = noLigTitre + 2;
+            while (true) {
+                XCell codeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(codeCell)) {
+                    break;
+                }
+                String code = Calc.getString(codeCell);
+                Statut statut = new Statut(code);
+                statuts.add(statut);
+                statutDao.saveOrUpdate(statut);
+
+                noLig++;
+            }
+            return statuts;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les statuts.", e);
+        }
+    }
+
+    @NotNull
+    private Set<Ressource> importerRessources(XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<Ressource> ressources = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCell cellule = Calc.findFirst("Ressources", plageRecherche);
+            if (cellule == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver les ressources.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(cellule);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Trigramme");
+            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Prénom");
+            assert Calc.getString(feuilleParams, (noColTitre + 2) - 1, (noLigTitre + 1) - 1).equals("Nom");
+            assert Calc.getString(feuilleParams, (noColTitre + 3) - 1, (noLigTitre + 1) - 1).equals("Société");
+            assert Calc.getString(feuilleParams, (noColTitre + 4) - 1, (noLigTitre + 1) - 1).equals("Début");
+            assert Calc.getString(feuilleParams, (noColTitre + 5) - 1, (noLigTitre + 1) - 1).equals("Fin");
+            int noLig = noLigTitre + 2;
+            while (true) {
+                XCell trigrammeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(trigrammeCell)) {
+                    break;
+                }
+                String trigramme = Calc.getString(trigrammeCell);
+                String prenom = Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1);
+                String nom = Calc.getString(feuilleParams, (noColTitre + 2) - 1, noLig - 1);
+                String societe = Calc.getString(feuilleParams, (noColTitre + 3) - 1, noLig - 1);
+                //noinspection HardcodedFileSeparator
+                Date debutMission = (
+                        Calc.getString(feuilleParams, (noColTitre + 4) - 1, noLig - 1).equals("N/A") ? null
+                                : Calc.getDate(feuilleParams, (noColTitre + 4) - 1, noLig - 1)
+                );
+                //noinspection HardcodedFileSeparator
+                Date finMission = (
+                        Calc.getString(feuilleParams, (noColTitre + 5) - 1, noLig - 1).equals("N/A") ? null
+                                : Calc.getDate(feuilleParams, (noColTitre + 5) - 1, noLig - 1)
+                );
+                LocalDate debutMissionLocale = Dates.asLocalDate(debutMission);
+                LocalDate finMissionLocale = Dates.asLocalDate(finMission);
+                Ressource ressource = new Ressource(trigramme, nom, prenom, societe, debutMissionLocale, finMissionLocale);
+                ressources.add(ressource);
+                ressourceDao.saveOrUpdate(ressource);
+
+                noLig++;
+            }
+            return ressources;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les ressources.", e);
+        }
     }
 
     private Planifications importerPlanifications(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {

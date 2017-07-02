@@ -3,12 +3,16 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by frederic.danna on 11/03/2017.
@@ -20,17 +24,17 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
     @NotNull
     private LocalDate dateEtat;
     @NotNull
+    private Referentiels referentiels;
+    @NotNull
     private Planifications planifications;
 
-    public PlanCharge(@NotNull LocalDate dateEtat, @NotNull Planifications planifications) {
+
+    public PlanCharge(@NotNull LocalDate dateEtat, @NotNull Referentiels referentiels, @NotNull Planifications planifications) {
         this.dateEtat = dateEtat;
+        this.referentiels = referentiels;
         this.planifications = planifications;
     }
 
-    public PlanCharge(@NotNull LocalDate dateEtat) {
-        this.dateEtat = dateEtat;
-        this.planifications = new Planifications();
-    }
 
     @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
@@ -42,6 +46,11 @@ public class PlanCharge extends AbstractEntity<LocalDate> {
     @NotNull
     public LocalDate getDateEtat() {
         return dateEtat;
+    }
+
+    @NotNull
+    public Referentiels getReferentiels() {
+        return referentiels;
     }
 
     @NotNull

@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.MockedDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,7 @@ import java.util.Map;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class ProjetAppliDao extends MockedDao<ProjetAppli, String> {
+public class ProjetAppliDao extends AbstractDao<ProjetAppli,String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjetAppliDao.class);
 
@@ -37,8 +36,4 @@ public class ProjetAppliDao extends MockedDao<ProjetAppli, String> {
         return CACHE;
     }
 
-    @Override
-    protected ProjetAppli newEntity(String id) {
-        return new ProjetAppli(id);
-    }
 }
