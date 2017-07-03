@@ -31,8 +31,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
@@ -507,7 +505,7 @@ public class PlanChargeIhm extends Application {
 //        applicationController.afficherModuleDisponibilites();
 //        applicationController.afficherModuleTaches();
 //        applicationController.afficherModuleCharges();
-            applicationController.importerPlanChargeDepuisCalc(new File("D:\\Dvlpt\\_MAAP\\workspace_IDEA\\planCharge\\donnees\\DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
             applicationController.afficherModuleJoursFeries();
 
             LOGGER.info("Application démarrée.");
