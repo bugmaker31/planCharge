@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class JourFerieBean {
+public class JourFerieBean implements Comparable<JourFerieBean> {
 
     @NotNull
     private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object;
@@ -22,13 +22,14 @@ public class JourFerieBean {
     private StringProperty description = new SimpleStringProperty();
 
 
-    public JourFerieBean() {
-        super();
-    }
-
     public JourFerieBean(@NotNull JourFerie jourFerie) {
         this.date.set(jourFerie.getDate());
         this.description.set(jourFerie.getDescription());
+    }
+
+    public JourFerieBean(@NotNull LocalDate date, @NotNull String description) {
+        this.date.set(date);
+        this.description.set(description);
     }
 
 
@@ -63,6 +64,29 @@ public class JourFerieBean {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JourFerieBean that = (JourFerieBean) o;
+
+        return date.equals(that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return date.hashCode();
+    }
+
+
+    @Override
+    public int compareTo(@NotNull JourFerieBean o) {
+        return this.getDate().compareTo(o.getDate());
+    }
+
+
+    // Juste pour faciliter le débogage.
     @Override
     public String toString() {
         return date.get().format(DateTimeFormatter.BASIC_ISO_DATE)

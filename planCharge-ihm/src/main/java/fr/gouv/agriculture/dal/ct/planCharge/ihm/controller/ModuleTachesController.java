@@ -4,14 +4,17 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,5 +149,21 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
             );
         }
 
+    }
+
+    @FXML
+    private void afficherTacheDansOutilTicketing(@SuppressWarnings("unused") ActionEvent mouseEvent) {
+        LOGGER.debug("afficherTacheDansOutilTicketing...");
+
+        // Cf. http://www.java2s.com/Tutorials/Java/JavaFX/1510__JavaFX_WebView.htm
+        // Cf. https://docs.oracle.com/javase/8/javafx/embedded-browser-tutorial/overview.htm
+        final WebView browser = new WebView();
+        final WebEngine webEngine = browser.getEngine();
+
+        final ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(browser);
+        webEngine.load("http://alim-prod-iws-1.zsg.agri/isilogwebsystem/homepage.aspx");
+
+        ihm.getPrimaryStage().setScene(new Scene(scrollPane));
     }
 }

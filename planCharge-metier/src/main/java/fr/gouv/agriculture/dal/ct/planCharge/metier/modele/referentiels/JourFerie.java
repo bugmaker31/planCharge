@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -12,6 +11,22 @@ import java.util.Comparator;
  * Created by frederic.danna on 26/03/2017.
  */
 public class JourFerie extends AbstractEntity<String> implements Comparable<JourFerie> {
+
+
+    private static class DateJourFerieComparator implements Comparator<JourFerie> {
+
+        @Override
+        public int compare(@NotNull JourFerie jf1, @NotNull JourFerie jf2) {
+            return jf1.getDate().compareTo(jf2.getDate());
+        }
+
+    }
+
+    public static final DateJourFerieComparator COMPARATOR_DATE = new DateJourFerieComparator();
+
+    public static final Comparator<JourFerie> COMPARATOR_DEFAUT = COMPARATOR_DATE;
+
+
 
     @NotNull
     private LocalDate date;
@@ -39,8 +54,8 @@ public class JourFerie extends AbstractEntity<String> implements Comparable<Jour
     }
 
     @Override
-    public int compareTo(JourFerie o) {
-        return date.compareTo(o.getDate());
+    public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull JourFerie other) {
+        return COMPARATOR_DEFAUT.compare(this, other);
     }
 
     // Juste pour faciliter le débogage.

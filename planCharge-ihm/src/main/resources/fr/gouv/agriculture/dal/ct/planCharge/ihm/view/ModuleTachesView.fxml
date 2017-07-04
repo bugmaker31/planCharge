@@ -18,7 +18,7 @@
                             <HBox>
                                 <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50.0"/>
                                 <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50.0"/>
-                                <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
+                                <TextField fx:id="filtreNoTacheField" prefWidth="50.0" />
                                 <TextField fx:id="filtreNoTicketIdalField"
                                            prefWidth="70.0"/>
                                 <TextField fx:id="filtreDescriptionField"
@@ -98,6 +98,7 @@
                 <buttons>
                     <Button text="_Ajouter une tâche" onAction="#ajouterTache" />
                     <Button text="Voir _plan charge" onAction="#afficherPlanification" />
+                    <Button text="Voir dans l'outil de ticketing" onAction="#afficherTacheDansOutilTicketing" />
                 </buttons>
             </ButtonBar>
         </AnchorPane>

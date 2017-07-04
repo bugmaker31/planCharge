@@ -5,26 +5,19 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -93,14 +86,14 @@ public class ModuleJoursFeriesController extends AbstractController {
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Association (binding) entre la liste et la table des jours fériés :
-        joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
+//        joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
             // Wrap the FilteredList in a SortedList.
-            SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
+            final SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
             // Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
             sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
             // Add sorted data to the table.
             joursFeriesTable.setItems(sortedBeans);
-        });
+//        });
 
         LOGGER.debug("Initialisé.");
     }
@@ -109,17 +102,14 @@ public class ModuleJoursFeriesController extends AbstractController {
     private void ajouterJourFerie(@SuppressWarnings("unused") ActionEvent actionEvent) {
         LOGGER.debug("ajouterJourFerie...");
 
-        JourFerieBean nouvJourFerie = new JourFerieBean();
-        joursFeriesBeans.add(nouvJourFerie);
+        JourFerieBean nouvJourFerieBean = new JourFerieBean(LocalDate.now(), "A RENSEIGNER");
+        joursFeriesBeans.add(nouvJourFerieBean);
 
         // Positionnement sur la tâche qu'on vient d'ajouter :
-        int noLigNouvBean = joursFeriesTable.getItems().size();
+        int noLigNouvBean = joursFeriesBeans.indexOf(nouvJourFerieBean) + 1;
         joursFeriesTable.scrollTo(noLigNouvBean - 1);
-        joursFeriesTable.scrollToColumn(dateColumn);
         joursFeriesTable.getSelectionModel().select(noLigNouvBean - 1);
         // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
-//            joursFeriesTable.getSelectionModel().select(noLigNouvBean - 1, descriptionColumn);
-//            joursFeriesTable.edit(joursFeriesTable.getSelectionModel().getFocusedIndex(), descriptionColumn);
         joursFeriesTable.edit(noLigNouvBean - 1, dateColumn);
     }
 }
