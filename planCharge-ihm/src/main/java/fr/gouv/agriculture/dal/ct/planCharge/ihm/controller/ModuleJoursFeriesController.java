@@ -105,11 +105,11 @@ public class ModuleJoursFeriesController extends AbstractController {
         JourFerieBean nouvJourFerieBean = new JourFerieBean(LocalDate.now(), "A RENSEIGNER");
         joursFeriesBeans.add(nouvJourFerieBean);
 
-        // Positionnement sur la tâche qu'on vient d'ajouter :
-        int noLigNouvBean = joursFeriesBeans.indexOf(nouvJourFerieBean) + 1;
-        joursFeriesTable.scrollTo(noLigNouvBean - 1);
-        joursFeriesTable.getSelectionModel().select(noLigNouvBean - 1);
-        // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
-        joursFeriesTable.edit(noLigNouvBean - 1, dateColumn);
+        // Positionnement sur le jour férié qu'on vient d'ajouter :
+        int idxLigNouvBean = joursFeriesBeans.indexOf(nouvJourFerieBean);
+        joursFeriesTable.scrollTo(idxLigNouvBean);
+        joursFeriesTable.getSelectionModel().select(idxLigNouvBean);
+        // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
+        joursFeriesTable.edit(idxLigNouvBean, dateColumn);
     }
 }

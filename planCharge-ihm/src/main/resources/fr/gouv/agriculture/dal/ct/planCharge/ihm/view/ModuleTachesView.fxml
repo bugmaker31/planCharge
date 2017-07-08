@@ -18,7 +18,7 @@
                             <HBox>
                                 <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50.0"/>
                                 <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50.0"/>
-                                <TextField fx:id="filtreNoTacheField" prefWidth="50.0" />
+                                <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
                                 <TextField fx:id="filtreNoTicketIdalField"
                                            prefWidth="70.0"/>
                                 <TextField fx:id="filtreDescriptionField"
@@ -46,7 +46,10 @@
         </Accordion>
     </top>
     <center>
-        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER"
+                   styleClass="charge-cell"
+                   >
+                   <!--contextMenu="tachesTableContextMenu"-->
             <columns>
 
                 <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
@@ -96,9 +99,7 @@
         <AnchorPane BorderPane.alignment="CENTER">
             <ButtonBar>
                 <buttons>
-                    <Button text="_Ajouter une tâche" onAction="#ajouterTache" />
-                    <Button text="Voir _plan charge" onAction="#afficherPlanification" />
-                    <Button text="Voir dans l'outil de ticketing" onAction="#afficherTacheDansOutilTicketing" />
+                    <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
                 </buttons>
             </ButtonBar>
         </AnchorPane>

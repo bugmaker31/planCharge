@@ -48,7 +48,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         getStyleClass().remove("apresPeriodeDemandee");
 
         // Stop, si cellule vide :
-        if (empty) {
+        if (empty || (item == null)) {
             return; // TODO FDA 2017/05 Confirmer.
         }
 
@@ -63,15 +63,8 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         LocalDate finPeriode = debutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
 
         // Formatage du texte de la cellule :
-        Double charge;
-        try {
-            DoubleProperty chargeProperty = planifBean.chargePlanifiee(debutPeriode);
-            charge = chargeProperty.get();
-        } catch (IhmException e) {
-//            LOGGER.error("Impossible de déterminer la charge planifiée pour la tâche " + planifBean.noTache() + " sur la période qui commence le " + debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".", e);
-            // TODO FDA 2017/06 Gérer les périodes trimestrielles (en + des périodes hebdomadaires).
-            charge = 0.0;
-        }
+        //noinspection UnnecessaryLocalVariable
+        Double charge = item;
         setText((charge == 0.0) ? "" : ModuleChargesController.FORMAT_CHARGE.format(charge));
 
         // Formatage du style (CSS) de la cellule :

@@ -8,9 +8,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.web.WebEngine;
@@ -100,6 +102,17 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
         LOGGER.debug("Initialisé.");
     }
 
+    @Override
+    public void definirMenuContextuel() {
+        MenuItem menuVoirTacheDansPlanCharge = new MenuItem("Voir dans le plan de charge");
+        menuVoirTacheDansPlanCharge.setOnAction(event -> afficherPlanification());
+
+        MenuItem menuVoirOutilTicketing = new MenuItem("Voir dans l'outil de ticketing");
+        menuVoirOutilTicketing.setOnAction(event -> afficherTacheDansOutilTicketing());
+
+        tachesTableContextMenu.getItems().setAll(menuVoirTacheDansPlanCharge, menuVoirOutilTicketing);
+    }
+
     // Surchargée juste pour pouvoir ajouter le @FXML.
     @FXML
     @NotNull
@@ -125,6 +138,10 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
 
     @FXML
     private void afficherPlanification(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        afficherPlanification();
+    }
+
+    private void afficherPlanification() {
         TacheBean tacheBean = tacheSelectionnee();
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
@@ -141,29 +158,13 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
             ihm.getApplicationController().afficherModuleCharges();
             ihm.getTachesController().mettreFocusSurTache(tacheBean);
         } catch (IhmException e) {
-            LOGGER.error("Impossible d'afficher la planification pour la tâche", e);
+            LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification pour la tâche",
                     Exceptions.causes(e)
             );
         }
-
     }
 
-    @FXML
-    private void afficherTacheDansOutilTicketing(@SuppressWarnings("unused") ActionEvent mouseEvent) {
-        LOGGER.debug("afficherTacheDansOutilTicketing...");
-
-        // Cf. http://www.java2s.com/Tutorials/Java/JavaFX/1510__JavaFX_WebView.htm
-        // Cf. https://docs.oracle.com/javase/8/javafx/embedded-browser-tutorial/overview.htm
-        final WebView browser = new WebView();
-        final WebEngine webEngine = browser.getEngine();
-
-        final ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(browser);
-        webEngine.load("http://alim-prod-iws-1.zsg.agri/isilogwebsystem/homepage.aspx");
-
-        ihm.getPrimaryStage().setScene(new Scene(scrollPane));
-    }
 }

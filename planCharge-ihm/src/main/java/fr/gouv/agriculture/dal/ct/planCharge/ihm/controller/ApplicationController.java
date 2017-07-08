@@ -940,6 +940,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleTaches() {
         nomModuleCourant = NomModule.taches;
+        ihm.getTachesController().definirMenuContextuel();
         ihm.getApplicationView().setCenter(ihm.getTachesView());
         majTitre();
     }
@@ -969,6 +970,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleCharges() {
         nomModuleCourant = NomModule.charges;
+        ihm.getChargesController().definirMenuContextuel();
         ihm.getApplicationView().setCenter(ihm.getChargesView());
         majTitre();
     }

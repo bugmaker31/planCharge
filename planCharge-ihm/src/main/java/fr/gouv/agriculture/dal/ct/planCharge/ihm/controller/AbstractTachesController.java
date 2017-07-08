@@ -14,7 +14,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -23,13 +22,12 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
@@ -38,8 +36,6 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.regex.Pattern;
@@ -177,60 +173,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return chargeColumn;
     }
 
-    @NotNull
-    protected TB ajouterTache() throws Exception {
-        LOGGER.debug("ajouterTache...");
-        try {
-            TB nouvTache = nouveauBean();
-            getTachesBeans().add(nouvTache);
-
-            // Positionnement sur la tâche qu'on vient d'ajouter :
-            int noLigNouvTache = getTachesTable().getItems().size();
-            getTachesTable().scrollTo(noLigNouvTache - 1);
-            getTachesTable().scrollToColumn(descriptionColumn);
-            getTachesTable().getSelectionModel().select(noLigNouvTache - 1);
-            // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en modé édition de la cellule.
-//            getTachesTable().getSelectionModel().select(noLigNouvTache - 1, descriptionColumn);
-//            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn);
-            getTachesTable().edit(noLigNouvTache - 1, descriptionColumn);
-
-            return nouvTache;
-        } catch (IhmException e) {
-            throw new Exception("Impossible d'ajouter une tâche.", e);
-        }
-    }
-
-    abstract TB nouveauBean() throws IhmException;
-
-    int idTacheSuivant() {
-        OptionalInt max = getTachesBeans().stream().mapToInt(TacheBean::getId).max();
-        return max.isPresent() ? (max.getAsInt() + 1) : 1;
-    }
-
     @FXML
-    protected void razFiltres(@SuppressWarnings("unused") ActionEvent event) {
-        razFiltres();
-    }
+    @NotNull
+    protected ContextMenu tachesTableContextMenu;
 
-    public void razFiltres() {
-        LOGGER.debug("RAZ des filtres...");
-        filtreGlobalField.clear();
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreCategoriesField.getCheckModel().checkAll();
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreSousCategoriesField.getCheckModel().checkAll();
-        filtreNoTacheField.clear();
-        filtreNoTicketIdalField.clear();
-        filtreDescriptionField.clear();
-        filtreDebutField.setValue(null);
-        filtreEcheanceField.setValue(null);
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreProjetsApplisField.getCheckModel().checkAll();
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreImportancesField.getCheckModel().checkAll();
-        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
-        filtreProfilsField.getCheckModel().checkAll();
-    }
 
     @SuppressWarnings("OverlyLongMethod")
     @Override
@@ -342,7 +288,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return new ModificationNoTicketIdal<>(tacheBeanAvant, tacheBean);
             }
         });
-/*
+        /*
+        TODO FDA 2017/07 Tester le undo/redo/repeat de la modif du n° de ticket IDAL, puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
         descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
@@ -399,9 +346,70 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 tacheBean.codeProfilProperty().set(nouvelleValeur);
             }
         });
-*/
+        */
+
+        // Cf. http://o7planning.org/en/11115/javafx-contextmenu-tutorial
+        tachesTableContextMenu = new ContextMenu();
+        getTachesTable().setContextMenu(tachesTableContextMenu);
 
         LOGGER.debug("Initialisé.");
+    }
+
+    public abstract void definirMenuContextuel();
+
+    @NotNull
+    protected TB ajouterTache() throws Exception {
+        LOGGER.debug("ajouterTache...");
+        try {
+            TB nouvTache = nouveauBean();
+            getTachesBeans().add(nouvTache);
+
+            // Positionnement sur la tâche qu'on vient d'ajouter :
+            int idxLigNouvTache = getTachesTable().getItems().indexOf(nouvTache);
+            getTachesTable().scrollTo(idxLigNouvTache);
+            getTachesTable().scrollToColumn(descriptionColumn);
+            getTachesTable().getSelectionModel().select(idxLigNouvTache);
+            // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
+//            getTachesTable().getSelectionModel().select(idxLigNouvTache, descriptionColumn);
+//            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn);
+            getTachesTable().edit(idxLigNouvTache, descriptionColumn);
+
+            return nouvTache;
+        } catch (IhmException e) {
+            throw new Exception("Impossible d'ajouter une tâche.", e);
+        }
+    }
+
+    abstract TB nouveauBean() throws IhmException;
+
+    int idTacheSuivant() {
+        OptionalInt max = getTachesBeans().stream().mapToInt(TacheBean::getId).max();
+        return max.isPresent() ? (max.getAsInt() + 1) : 1;
+    }
+
+    @FXML
+    private void razFiltres(@SuppressWarnings("unused") ActionEvent event) {
+        razFiltres();
+    }
+
+    void razFiltres() {
+        LOGGER.debug("RAZ des filtres...");
+        filtreGlobalField.clear();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
+        filtreCategoriesField.getCheckModel().checkAll();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
+        filtreSousCategoriesField.getCheckModel().checkAll();
+        filtreNoTacheField.clear();
+        filtreNoTicketIdalField.clear();
+        filtreDescriptionField.clear();
+        filtreDebutField.setValue(null);
+        filtreEcheanceField.setValue(null);
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
+        filtreProjetsApplisField.getCheckModel().checkAll();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
+        filtreImportancesField.getCheckModel().checkAll();
+        // TODO FDA 2017/05 Optimiser le temps d'exécution en ne simulant la coche 1 par 1 comme le fait org.controlsfx.control.CheckBitSetModelBase#checkAll, ce qui déclenche N fois le Listener du CheckComboBox#getCheckModel#getCheckedItems.
+        filtreProfilsField.getCheckModel().checkAll();
     }
 
     @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
@@ -793,6 +801,34 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     void mettreFocusSurTache(@NotNull TB tacheBean) {
-        getTachesTable().getSelectionModel().select(tacheBean);
+        int idxTacheBean = getTachesTable().getItems().indexOf(tacheBean);
+        assert idxTacheBean != -1;
+        // FIXME FDA 2017/07 Ok qd on bascule du plan charge vers la liste des tâches, mais sans effet dans l'autre sens.
+        getTachesTable().getSelectionModel().clearAndSelect(idxTacheBean);
+//        getTachesTable().getSelectionModel().focus(idxTacheBean); Ne change rien.
     }
+
+
+    @FXML
+    private void afficherTacheDansOutilTicketing(@SuppressWarnings("unused") ActionEvent mouseEvent) {
+        afficherTacheDansOutilTicketing();
+    }
+
+    void afficherTacheDansOutilTicketing() {
+        LOGGER.debug("afficherTacheDansOutilTicketing...");
+
+        // Cf. http://www.java2s.com/Tutorials/Java/JavaFX/1510__JavaFX_WebView.htm
+        // Cf. https://docs.oracle.com/javase/8/javafx/embedded-browser-tutorial/overview.htm
+        final WebView browser = new WebView();
+        final WebEngine webEngine = browser.getEngine();
+
+        final ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(browser);
+        webEngine.load("http://alim-prod-iws-1.zsg.agri/isilogwebsystem/homepage.aspx");
+
+        // TODO FDA 2017/07 Terminer de coder.
+
+        ihm.getPrimaryStage().setScene(new Scene(scrollPane));
+    }
+
 }

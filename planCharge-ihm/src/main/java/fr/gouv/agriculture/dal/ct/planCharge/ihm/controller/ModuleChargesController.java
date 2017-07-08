@@ -385,6 +385,17 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         LOGGER.debug("Initialisé.");
     }
 
+    @Override
+    public void definirMenuContextuel() {
+        MenuItem menuVoirTache = new MenuItem("Voir le détail de la tâche");
+        menuVoirTache.setOnAction(event -> afficherTache());
+
+        MenuItem menuVoirOutilTicketing = new MenuItem("Voir dans l'outil de ticketing");
+        menuVoirOutilTicketing.setOnAction(event -> afficherTacheDansOutilTicketing());
+
+        tachesTableContextMenu.getItems().setAll(menuVoirTache, menuVoirOutilTicketing);
+    }
+
     @FXML
     @NotNull
     protected PlanificationBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
@@ -486,8 +497,13 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
         // TODO FDA 2017/07 Coder.
     }
 
+
     @FXML
     private void afficherTache(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        afficherTache();
+    }
+
+    private void afficherTache() {
         PlanificationBean tacheBean = tacheSelectionnee();
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
@@ -505,7 +521,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
             ihm.getApplicationController().afficherModuleTaches();
             ihm.getTachesController().mettreFocusSurTache(tacheBean);
         } catch (IhmException e) {
-            LOGGER.error("Impossible d'afficher la tâche", e);
+            LOGGER.error("Impossible d'afficher la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la tâche",

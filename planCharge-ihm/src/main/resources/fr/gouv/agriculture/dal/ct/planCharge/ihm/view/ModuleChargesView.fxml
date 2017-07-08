@@ -53,9 +53,12 @@
     </top>
     <center>
         <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
-                   BorderPane.alignment="CENTER">
+                   BorderPane.alignment="CENTER"
+                   styleClass="charge-cell"
+                   >
+                   <!--contextMenu="tachesTableContextMenu">-->
             <columns>
-                <TableColumn fx:id="tacheColumn" text="Tâche">
+                <TableColumn text="Tâche">
 
                     <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
 
@@ -70,29 +73,21 @@
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55.0"
-                                     editable="false" styleClass="non-modifiable"
-                                     style="-fx-alignment: baseline-center"/>
+                                     editable="false" styleClass="non-modifiable"/>
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                         <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"
-                                     style="-fx-alignment: baseline-center"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
                         <TableColumn fx:id="statutColumn" prefWidth="75.0" text="Statut"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"
-                                             style="-fx-alignment: baseline-center"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"
-                                             style="-fx-alignment: baseline-center"/>
+                                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
                             </columns>
                         </TableColumn>
-                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"
-                                     style="-fx-alignment: baseline-center"/>
-                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"
-                                     style="-fx-alignment: baseline-center"/>
-                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"
-                                     style="-fx-alignment: baseline-center"/>
-                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"
-                                     style="-fx-alignment: baseline-center"/>
+                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
+                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
+                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
                     </columns>
                 </TableColumn>
                 <TableColumn text="Planification">
@@ -140,7 +135,6 @@
             <ButtonBar>
                 <buttons>
                     <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
-                    <Button text="Voir _tâche" onAction="#afficherTache"/>
                 </buttons>
             </ButtonBar>
         </AnchorPane>
