@@ -108,7 +108,7 @@ public class RessourceHumaineBean {
 
 
     @NotNull
-    public Ressource extract() {
+    public RessourceHumaine extract() {
         return new RessourceHumaine(trigramme.get(), nom.get(), prenom.get(), societe.get(), debutMission.get(), finMission.get());
     }
 

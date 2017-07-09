@@ -1,5 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +17,12 @@ import java.util.TreeSet;
  */
 public class ProjetsApplisXmlWrapper {
 
-    private List<ProjetAppliXmlWrapper> projetsApplis = new ArrayList<>();
+    @NotNull
+    private List<ProjetAppliXmlWrapper> projetsApplisXmlWrapper = new ArrayList<>();
+
+    @NotNull
+    private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
+
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
@@ -29,24 +37,28 @@ public class ProjetsApplisXmlWrapper {
     @XmlElement(name = "projetAppli", required = true)
     @NotNull
     public List<ProjetAppliXmlWrapper> getProjetsApplis() {
-        return projetsApplis;
+        return projetsApplisXmlWrapper;
     }
 
     public void setProjetsApplis(List<ProjetAppliXmlWrapper> projetsApplis) {
-        this.projetsApplis = projetsApplis;
+        this.projetsApplisXmlWrapper = projetsApplis;
     }
 
 
     public ProjetsApplisXmlWrapper init(List<ProjetAppliXmlWrapper> projetsApplis) {
-        this.projetsApplis.clear();
-        this.projetsApplis.addAll(projetsApplis);
+        this.projetsApplisXmlWrapper.clear();
+        this.projetsApplisXmlWrapper.addAll(projetsApplis);
         return this;
     }
 
     @NotNull
-    public Set<ProjetAppli> extract() {
+    public Set<ProjetAppli> extract() throws DaoException {
         Set<ProjetAppli> projetsApplis = new TreeSet<>(); // TreeSet pour trier, juste pour faciliter le débogage.
-        // TODO FDA 2017/07
+        for (ProjetAppliXmlWrapper projetAppliXmlWrapper : projetsApplisXmlWrapper) {
+            ProjetAppli projetAppli = projetAppliXmlWrapper.extract();
+            projetsApplis.add(projetAppli);
+            projetAppliDao.createOrUpdate(projetAppli);
+        }
         return projetsApplis;
     }
 

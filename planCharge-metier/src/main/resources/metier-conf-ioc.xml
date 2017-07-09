@@ -59,10 +59,10 @@
           class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ProjetAppliXmlWrapper"
           scope="prototype"/>
     <bean id="ressourcesXmlWrapper"
-          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.RessourcesXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourcesHumainesXmlWrapperpper"
           scope="prototype"/>
     <bean id="ressourceXmlWrapper"
-          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.RessourceXmlWrapper"
+          class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHumaineXmlWrapperpper"
           scope="prototype"/>
     <bean id="planChargeXmlWrapper"
           class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper"

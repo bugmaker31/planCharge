@@ -1,11 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import javafx.collections.ObservableList;
-
 import javax.validation.constraints.NotNull;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 01/07/2017.
@@ -24,7 +20,7 @@ public class Referentiels {
     @NotNull
     private Set<Statut> statuts;
     @NotNull
-    private Set<Ressource> ressources;
+    private Set<RessourceHumaine> ressourcesHumaines;
 
 
 /*
@@ -33,13 +29,13 @@ public class Referentiels {
     }
 */
 
-    public Referentiels(@NotNull Set<JourFerie> joursFeries, @NotNull Set<Importance> importances, @NotNull Set<Profil> profils, @NotNull Set<ProjetAppli> projetsApplis, @NotNull Set<Statut> statuts, @NotNull Set<Ressource> ressources) {
+    public Referentiels(@NotNull Set<JourFerie> joursFeries, @NotNull Set<Importance> importances, @NotNull Set<Profil> profils, @NotNull Set<ProjetAppli> projetsApplis, @NotNull Set<Statut> statuts, @NotNull Set<RessourceHumaine> ressourcesHumaines) {
         this.joursFeries = joursFeries;
         this.importances = importances;
         this.profils = profils;
         this.projetsApplis = projetsApplis;
         this.statuts = statuts;
-        this.ressources = ressources;
+        this.ressourcesHumaines = ressourcesHumaines;
     }
 
 
@@ -69,8 +65,8 @@ public class Referentiels {
     }
 
     @NotNull
-    public Set<Ressource> getRessources() {
-        return ressources;
+    public Set<RessourceHumaine> getRessourcesHumaines() {
+        return ressourcesHumaines;
     }
 
 }

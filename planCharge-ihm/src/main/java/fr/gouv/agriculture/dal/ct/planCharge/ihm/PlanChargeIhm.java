@@ -500,13 +500,12 @@ public class PlanChargeIhm extends Application {
             if (dateEtatPrec != null) {
                 applicationController.charger(dateEtatPrec);
             }
-
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
 //        applicationController.afficherModuleDisponibilites();
 //        applicationController.afficherModuleTaches();
 //        applicationController.afficherModuleCharges();
-            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-            applicationController.afficherModuleJoursFeries();
+//            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//            applicationController.afficherModuleJoursFeries();
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {
@@ -519,8 +518,7 @@ public class PlanChargeIhm extends Application {
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-        return null;
-//        return LocalDate.of(2017, 4, 17);
+        return LocalDate.of(2017, 4, 17);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.JourFerieDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +16,12 @@ import java.util.TreeSet;
  */
 public class JoursFeriesXmlWrapper {
 
+    @NotNull
     private List<JourFerieXmlWrapper> joursFeriesWrappers = new ArrayList<>();
+
+    //@AutoWired
+    @NotNull
+    private JourFerieDao jourFerieDao = JourFerieDao.instance();
 
 
     /**
@@ -45,11 +52,12 @@ public class JoursFeriesXmlWrapper {
     }
 
     @NotNull
-    public Set<JourFerie> extract() {
+    public Set<JourFerie> extract() throws DaoException {
         Set<JourFerie> joursFeries = new TreeSet<>(); // TreeSet pour trier, juste pour faciliter le débogage.
         for (JourFerieXmlWrapper joursFeriesWrapper : joursFeriesWrappers) {
             JourFerie jf = joursFeriesWrapper.extract();
             joursFeries.add(jf);
+            jourFerieDao.createOrUpdate(jf);
         }
         return joursFeries;
     }

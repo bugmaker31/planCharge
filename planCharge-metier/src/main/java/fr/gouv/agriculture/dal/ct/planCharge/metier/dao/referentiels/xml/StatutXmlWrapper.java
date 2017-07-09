@@ -14,6 +14,7 @@ public class StatutXmlWrapper {
     private String id;
     private String code;
 
+
     /**
      * Constructeur vide (appelé notamment par JAXB).
      *
@@ -23,11 +24,6 @@ public class StatutXmlWrapper {
         super();
     }
 
-    public StatutXmlWrapper init(Statut statut) {
-        this.id = statut.getIdentity();
-        this.code = statut.getCode();
-        return this;
-    }
 
     @XmlAttribute(name = "id", required = true)
     public String getId() {
@@ -46,5 +42,16 @@ public class StatutXmlWrapper {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+
+    public StatutXmlWrapper init(Statut statut) {
+        this.id = statut.getIdentity();
+        this.code = statut.getCode();
+        return this;
+    }
+
+    public Statut extract() {
+        return new Statut(code);
     }
 }

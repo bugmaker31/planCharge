@@ -136,6 +136,8 @@ public class PlanChargeXmlWrapper {
         LocalDate dateEtatLocale = Dates.asLocalDate(dateEtat);
         assert dateEtatLocale != null;
 
+        // Rq : Les méthodes "extract" alimentent les DAOs, donc il faut extraire les référentiels avant les données métier (qui utilisent les valeurs des référentiels).
+
         Referentiels referentiels = referentielsXmlWrapper.extract();
 
         Planifications planifications = planificationsXmlWrapper.extract();

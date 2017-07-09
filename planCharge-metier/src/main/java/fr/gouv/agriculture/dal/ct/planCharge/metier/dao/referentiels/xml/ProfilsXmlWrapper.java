@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 
@@ -15,7 +17,13 @@ import java.util.TreeSet;
  */
 public class ProfilsXmlWrapper {
 
+    @NotNull
     private List<ProfilXmlWrapper> profilsXmlWrapper = new ArrayList<>();
+
+    //@AutoWired
+    @NotNull
+    private ProfilDao profilDao = ProfilDao.instance();
+
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
@@ -26,11 +34,6 @@ public class ProfilsXmlWrapper {
         super();
     }
 
-    public ProfilsXmlWrapper init(List<ProfilXmlWrapper> profils) {
-        this.profilsXmlWrapper.clear();
-        this.profilsXmlWrapper.addAll(profils);
-        return this;
-    }
 
     @XmlElement(name = "profil", required = true)
     @NotNull
@@ -43,12 +46,19 @@ public class ProfilsXmlWrapper {
     }
 
 
+    public ProfilsXmlWrapper init(List<ProfilXmlWrapper> profils) {
+        this.profilsXmlWrapper.clear();
+        this.profilsXmlWrapper.addAll(profils);
+        return this;
+    }
+
     @NotNull
-    public Set<Profil> extract() {
+    public Set<Profil> extract() throws DaoException {
         Set<Profil> profils = new TreeSet<>(); // TreeSet pour trier, juste pour faciliter le débogage.
         for (ProfilXmlWrapper profilWrapper : profilsXmlWrapper) {
-            Profil imp = profilWrapper.extract();
-            profils.add(imp);
+            Profil profil = profilWrapper.extract();
+            profils.add(profil);
+            profilDao.createOrUpdate(profil);
         }
         return profils;
     }

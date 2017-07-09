@@ -10,7 +10,7 @@ import java.util.Comparator;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class JourFerie extends AbstractEntity<String> implements Comparable<JourFerie> {
+public class JourFerie extends AbstractEntity<LocalDate> implements Comparable<JourFerie> {
 
 
     private static class DateJourFerieComparator implements Comparator<JourFerie> {
@@ -48,15 +48,18 @@ public class JourFerie extends AbstractEntity<String> implements Comparable<Jour
         return description;
     }
 
+
     @Override
-    public String getIdentity() {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    public LocalDate getIdentity() {
+        return date;
     }
+
 
     @Override
     public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull JourFerie other) {
         return COMPARATOR_DEFAUT.compare(this, other);
     }
+
 
     // Juste pour faciliter le débogage.
     @Override

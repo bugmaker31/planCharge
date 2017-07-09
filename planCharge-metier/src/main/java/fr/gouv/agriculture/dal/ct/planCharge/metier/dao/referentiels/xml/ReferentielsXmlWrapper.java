@@ -1,6 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 
 import javax.validation.constraints.NotNull;
@@ -18,7 +21,7 @@ public class ReferentielsXmlWrapper {
     private ProfilsXmlWrapper profilsXmlWrapper = new ProfilsXmlWrapper();
     private ProjetsApplisXmlWrapper projetsApplisXmlWrapper = new ProjetsApplisXmlWrapper();
     private StatutsXmlWrapper statutsXmlWrapper = new StatutsXmlWrapper();
-    private RessourcesXmlWrapper ressourcesXmlWrapper = new RessourcesXmlWrapper();
+    private RessourcesHumainesXmlWrapper ressourcesHumainesXmlWrapper = new RessourcesHumainesXmlWrapper();
 
 
     /**
@@ -63,8 +66,8 @@ public class ReferentielsXmlWrapper {
 
     @XmlElement(name = "ressources", required = true)
     @NotNull
-    public RessourcesXmlWrapper getRessources() {
-        return ressourcesXmlWrapper;
+    public RessourcesHumainesXmlWrapper getRessources() {
+        return ressourcesHumainesXmlWrapper;
     }
 
 
@@ -86,6 +89,10 @@ public class ReferentielsXmlWrapper {
 
     public void setStatuts(@NotNull StatutsXmlWrapper statutsXmlWrapper) {
         this.statutsXmlWrapper = statutsXmlWrapper;
+    }
+
+    public void setRessources(@NotNull RessourcesHumainesXmlWrapper ressourcesHumainesXmlWrapper) {
+        this.ressourcesHumainesXmlWrapper = ressourcesHumainesXmlWrapper;
     }
 
 
@@ -124,23 +131,23 @@ public class ReferentielsXmlWrapper {
                         .map(statut -> new StatutXmlWrapper().init(statut))
                         .collect(Collectors.toList())
         );
-        rapport.setAvancement("Sauvegarde du référentiel des ressrouces...");
-        this.ressourcesXmlWrapper.init(
-                referentiels.getRessources().stream()
-                        .map(ressource -> new RessourceXmlWrapper().init(ressource))
+        rapport.setAvancement("Sauvegarde du référentiel des ressources...");
+        this.ressourcesHumainesXmlWrapper.init(
+                referentiels.getRessourcesHumaines().stream()
+                        .map(ressource -> new RessourceHumaineXmlWrapper().init(ressource))
                         .collect(Collectors.toList())
         );
         return this;
     }
 
-    public Referentiels extract() {
+    public Referentiels extract() throws DaoException {
         return new Referentiels(
                 joursFeriesXmlWrapper.extract(),
                 importancesXmlWrapper.extract(),
                 profilsXmlWrapper.extract(),
                 projetsApplisXmlWrapper.extract(),
                 statutsXmlWrapper.extract(),
-                ressourcesXmlWrapper.extract()
+                ressourcesHumainesXmlWrapper.extract()
                 );
     }
 }

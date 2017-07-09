@@ -28,6 +28,7 @@ public class PlanificationsXmlWrapper {
     private PlanificationXmlWrapper planificationXmlWrapper = new PlanificationXmlWrapper();
 */
 
+
     /**
      * Constructeur vide (appelé notamment par JAXB).
      *
@@ -36,6 +37,17 @@ public class PlanificationsXmlWrapper {
     public PlanificationsXmlWrapper() {
         super();
     }
+
+
+    @XmlElement(name = "planification", required = true)
+    public List<PlanificationXmlWrapper> getPlanifications() {
+        return planifications;
+    }
+
+    public void setPlanifications(List<PlanificationXmlWrapper> planifications) {
+        this.planifications = planifications;
+    }
+
 
     public PlanificationsXmlWrapper init(@NotNull Planifications planifs, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
@@ -54,15 +66,6 @@ public class PlanificationsXmlWrapper {
             throw new PlanChargeDaoException("Impossible de wrapper les planifications.", e);
         }
         return this;
-    }
-
-    @XmlElement(name = "planification", required = true)
-    public List<PlanificationXmlWrapper> getPlanifications() {
-        return planifications;
-    }
-
-    public void setPlanifications(List<PlanificationXmlWrapper> planifications) {
-        this.planifications = planifications;
     }
 
     public Planifications extract() throws DaoException {

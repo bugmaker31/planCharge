@@ -358,14 +358,14 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         rapport.setAvancement("Import des statuts...");
         Set<Statut> statuts = importerStatuts(feuilleParams);
         rapport.setAvancement("Import des ressources...");
-        Set<Ressource> ressources = importerRessources(feuilleParams);
+        Set<RessourceHumaine> ressourcesHumaines = importerRessourcesHumaines(feuilleParams);
         return new Referentiels(
                 joursferies,
                 importances,
                 profils,
                 projetsApplis,
                 statuts,
-                ressources
+                ressourcesHumaines
         );
     }
 
@@ -429,7 +429,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 String codeInterne = Calc.getString(codeCell);
                 Importance importance = new Importance(codeInterne);
                 importances.add(importance);
-                importanceDao.saveOrUpdate(importance);
+                importanceDao.createOrUpdate(importance);
 
                 noLig++;
             }
@@ -463,7 +463,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 String code = Calc.getString(codeCell);
                 Profil profil = new Profil(code);
                 profils.add(profil);
-                profilDao.saveOrUpdate(profil);
+                profilDao.createOrUpdate(profil);
 
                 noLig++;
             }
@@ -498,7 +498,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 String code = Calc.getString(codeCell);
                 ProjetAppli projetAppli = new ProjetAppli(code);
                 projetsApplis.add(projetAppli);
-                projetAppliDao.saveOrUpdate(projetAppli);
+                projetAppliDao.createOrUpdate(projetAppli);
 
                 noLig++;
             }
@@ -532,7 +532,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 String code = Calc.getString(codeCell);
                 Statut statut = new Statut(code);
                 statuts.add(statut);
-                statutDao.saveOrUpdate(statut);
+                statutDao.createOrUpdate(statut);
 
                 noLig++;
             }
@@ -543,8 +543,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     }
 
     @NotNull
-    private Set<Ressource> importerRessources(XSpreadsheet feuilleParams) throws PlanChargeDaoException {
-        Set<Ressource> ressources = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+    private Set<RessourceHumaine> importerRessourcesHumaines(XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        Set<RessourceHumaine> ressourcesHumaines = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
             XCell cellule = Calc.findFirst("Ressources", plageRecherche);
@@ -583,14 +583,14 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 LocalDate debutMissionLocale = Dates.asLocalDate(debutMission);
                 LocalDate finMissionLocale = Dates.asLocalDate(finMission);
                 RessourceHumaine ressource = new RessourceHumaine(trigramme, nom, prenom, societe, debutMissionLocale, finMissionLocale);
-                ressources.add(ressource);
-                ressourceHumaineDao.saveOrUpdate(ressource);
+                ressourcesHumaines.add(ressource);
+                ressourceHumaineDao.createOrUpdate(ressource);
 
                 noLig++;
             }
-            return ressources;
+            return ressourcesHumaines;
         } catch (Exception e) {
-            throw new PlanChargeDaoException("Impossible d'importer les ressources.", e);
+            throw new PlanChargeDaoException("Impossible d'importer les ressources humaines.", e);
         }
     }
 

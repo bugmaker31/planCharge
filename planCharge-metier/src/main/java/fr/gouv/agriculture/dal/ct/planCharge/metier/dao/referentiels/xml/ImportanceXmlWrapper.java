@@ -27,6 +27,7 @@ public class ImportanceXmlWrapper {
 
 
     @XmlAttribute(name="id", required = true)
+    @NotNull
     public String getId() {
         return id;
     }
@@ -45,9 +46,10 @@ public class ImportanceXmlWrapper {
 
     @XmlElement(name="ordre", required = true)
     @NotNull
-    public Integer getOrder() {
+    public Integer getOrdre() {
         return ordre;
     }
+
 
     public void setId(String id) {
         this.id = id;

@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
 
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ public class ProjetAppliXmlWrapper {
     private String id;
     private String code;
 
+
     /**
      * Constructeur vide (appelé notamment par JAXB).
      *
@@ -23,11 +25,6 @@ public class ProjetAppliXmlWrapper {
         super();
     }
 
-    public ProjetAppliXmlWrapper init(ProjetAppli projetAppli) {
-        this.id = projetAppli.getIdentity();
-        this.code = projetAppli.getCode();
-        return this;
-    }
 
     @XmlAttribute(name = "id", required = true)
     public String getId() {
@@ -46,5 +43,16 @@ public class ProjetAppliXmlWrapper {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+
+    public ProjetAppliXmlWrapper init(ProjetAppli projetAppli) {
+        this.id = projetAppli.getIdentity();
+        this.code = projetAppli.getCode();
+        return this;
+    }
+
+    public ProjetAppli extract() {
+        return new ProjetAppli(code);
     }
 }

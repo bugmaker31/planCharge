@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 
@@ -15,7 +17,13 @@ import java.util.TreeSet;
  */
 public class ImportancesXmlWrapper {
 
+    @NotNull
     private List<ImportanceXmlWrapper> importancesXmlWrapper = new ArrayList<>();
+
+    //@AutoWired
+    @NotNull
+    private ImportanceDao importanceDao = ImportanceDao.instance();
+
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
@@ -25,6 +33,7 @@ public class ImportancesXmlWrapper {
     public ImportancesXmlWrapper() {
         super();
     }
+
 
     @XmlElement(name = "importance", required = true)
     @NotNull
@@ -44,11 +53,12 @@ public class ImportancesXmlWrapper {
     }
 
     @NotNull
-    public Set<Importance> extract() {
+    public Set<Importance> extract() throws DaoException {
         Set<Importance> importances = new TreeSet<>(); // TreeSet pour trier, juste pour faciliter le débogage.
         for (ImportanceXmlWrapper importanceWrapper : importancesXmlWrapper) {
-            Importance imp = importanceWrapper.extract();
-            importances.add(imp);
+            Importance importance = importanceWrapper.extract();
+            importances.add(importance);
+            importanceDao.createOrUpdate(importance);
         }
         return importances;
     }

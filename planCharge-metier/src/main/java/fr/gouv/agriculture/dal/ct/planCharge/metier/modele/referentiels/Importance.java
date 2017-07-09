@@ -74,6 +74,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
         return code;
     }
 
+
     @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
     @Override
@@ -81,6 +82,7 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
 //        return getOrdre() + "";
         return codeInterne;
     }
+
 
     @Override
     public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull Importance other) {

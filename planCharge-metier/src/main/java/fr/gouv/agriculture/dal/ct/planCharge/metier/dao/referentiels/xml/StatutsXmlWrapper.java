@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Statut;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +16,12 @@ import java.util.TreeSet;
  */
 public class StatutsXmlWrapper {
 
-    private List<StatutXmlWrapper> statuts = new ArrayList<>();
+    @NotNull
+    private List<StatutXmlWrapper> statutsXmlWrapper = new ArrayList<>();
+
+//    @AutoWired
+    @NotNull
+    private StatutDao statutDao = StatutDao.instance();
 
 
     /**
@@ -30,24 +37,28 @@ public class StatutsXmlWrapper {
     @XmlElement(name = "statut", required = true)
     @NotNull
     public List<StatutXmlWrapper> getStatuts() {
-        return statuts;
+        return statutsXmlWrapper;
     }
 
     public void setStatuts(List<StatutXmlWrapper> statuts) {
-        this.statuts = statuts;
+        this.statutsXmlWrapper = statuts;
     }
 
 
     public StatutsXmlWrapper init(List<StatutXmlWrapper> statuts) {
-        this.statuts.clear();
-        this.statuts.addAll(statuts);
+        this.statutsXmlWrapper.clear();
+        this.statutsXmlWrapper.addAll(statuts);
         return this;
     }
 
     @NotNull
-    public Set<Statut> extract() {
+    public Set<Statut> extract() throws DaoException {
         Set<Statut> statuts = new TreeSet<>(); // TreeSet pour trier, juste pour faciliter le débogage.
-        // TODO FDA 2017/07
+        for (StatutXmlWrapper statutXmlWrapper : statutsXmlWrapper) {
+            Statut statut = statutXmlWrapper.extract();
+            statuts.add(statut);
+            statutDao.createOrUpdate(statut);
+        }
         return statuts;
     }
 }

@@ -59,7 +59,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Seria
         return get(id) != null;
     }
 
-    public void saveOrUpdate(@NotNull E entity) throws DaoException {
+    public void createOrUpdate(@NotNull E entity) throws DaoException {
         getCache().put(entity.getIdentity(), entity);
     }
 }

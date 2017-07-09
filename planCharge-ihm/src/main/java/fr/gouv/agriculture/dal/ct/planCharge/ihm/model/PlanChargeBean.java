@@ -85,7 +85,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<RessourceHumaineBean> ressourcesBeans;
+    private final ObservableList<RessourceHumaineBean> ressourcesHumainesBeans;
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
@@ -111,7 +111,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         profilsBeans = FXCollections.observableArrayList();
         projetsApplisBeans = FXCollections.observableArrayList();
         statutsBeans = FXCollections.observableArrayList();
-        ressourcesBeans = FXCollections.observableArrayList();
+        ressourcesHumainesBeans = FXCollections.observableArrayList();
         planificationsBeans = FXCollections.observableArrayList();
         estModifie = false;
     }
@@ -161,10 +161,10 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
                         .map(Statut::getCode)
                         .collect(Collectors.toList())
         );
-        ressourcesBeans.clear();
-        planCharge.getReferentiels().getRessources().stream()
+        ressourcesHumainesBeans.clear();
+        planCharge.getReferentiels().getRessourcesHumaines().stream()
                 .filter(Ressource::estHumain)
-                .forEach(ressource -> ressourcesBeans.add(new RessourceHumaineBean((RessourceHumaine) ressource)));
+                .forEach(ressource -> ressourcesHumainesBeans.add(new RessourceHumaineBean((RessourceHumaine) ressource)));
         planificationsBeans.setAll(
                 planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationBean(planif.getKey(), planif.getValue()))
@@ -178,8 +178,8 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         Set<Profil> profils = profilsBeans.stream().map(Profil::new).collect(Collectors.toSet());
         Set<ProjetAppli> projetsApplis = projetsApplisBeans.stream().map(ProjetAppli::new).collect(Collectors.toSet());
         Set<Statut> statuts = statutsBeans.stream().map(Statut::new).collect(Collectors.toSet());
-        Set<Ressource> ressources = ressourcesBeans.stream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
-        Referentiels referentiels = new Referentiels(joursFeries, importances, profils, projetsApplis, statuts, ressources);
+        Set<RessourceHumaine> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
+        Referentiels referentiels = new Referentiels(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
 
         Planifications planifications = extractPlanifications();
 
