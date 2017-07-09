@@ -210,6 +210,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             rapport.setAvancement("Lecture du fichier XML...");
             wrapper = (PlanChargeXmlWrapper) um.unmarshal(ficCalc);
 
+            ctrlVersionsEntreXmlEtAppli(wrapper.getVersionApplication(), wrapper.getVersionFormat());
+
             rapport.setAvancement("Transformation du XML en objets métier...");
             plan = wrapper.extract();
 
@@ -217,6 +219,33 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             throw new PlanChargeDaoException("Impossible de dé-sérialiser le plan de charge depuis le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
         }
         return plan;
+    }
+
+    private void ctrlVersionsEntreXmlEtAppli(@NotNull String versionApplication, @NotNull String versionFormat) throws PlanChargeDaoException {
+        ctrlVersionsCodeEntreXmlEtAppli(versionApplication);
+        ctrlVersionsFichierEntreXmlEtAppli(versionFormat);
+    }
+
+    // TODO FDA 2017/07 Tester.
+    private void ctrlVersionsFichierEntreXmlEtAppli(@NotNull String versionFormatRequis) throws PlanChargeDaoException {
+        String versionFormat = PlanChargeXmlWrapper.VERSION_FORMAT;
+        if (versionFormat.compareTo(versionFormatRequis) < 0) {
+            throw new PlanChargeDaoException("Le fichier XML a un format en version " + versionFormatRequis + ", or l'application gère la version de format " + versionFormat + ".");
+        }
+
+    }
+
+    // TODO FDA 2017/07 Tester.
+    private void ctrlVersionsCodeEntreXmlEtAppli(@NotNull String versionApplicationRequise) throws PlanChargeDaoException {
+        String versionApplication;
+        try {
+            versionApplication = params.getParametrage("application.version");
+        } catch (KernelException e) {
+            throw new PlanChargeDaoException("Impossible de déterminer la version de l'application.", e);
+        }
+        if (versionApplication.compareTo(versionApplicationRequise) < 0) {
+            throw new PlanChargeDaoException("Le fichier XML requiert une version de l'application >= " + versionApplicationRequise + ". Or l'application est en version " + versionApplication + ".");
+        }
     }
 
     /**

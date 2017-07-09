@@ -89,7 +89,7 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return date.get().format(DateTimeFormatter.BASIC_ISO_DATE)
+        return date.get().format(DateTimeFormatter.ISO_LOCAL_DATE)
                 + " " + description.get();
     }
 }

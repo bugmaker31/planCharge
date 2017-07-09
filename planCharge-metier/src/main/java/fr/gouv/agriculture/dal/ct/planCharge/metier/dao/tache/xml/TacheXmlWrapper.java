@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;

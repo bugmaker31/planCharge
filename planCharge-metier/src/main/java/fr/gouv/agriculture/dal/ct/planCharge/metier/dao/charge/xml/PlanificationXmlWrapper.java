@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.xml.TacheXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 
 import javax.validation.constraints.NotNull;

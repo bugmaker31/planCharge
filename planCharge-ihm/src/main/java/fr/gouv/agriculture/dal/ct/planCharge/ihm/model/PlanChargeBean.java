@@ -138,9 +138,33 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         setDateEtat(planCharge.getDateEtat());
         joursFeriesBeans.setAll(
                 planCharge.getReferentiels().getJoursFeries().stream()
-                        .map(jourFerie -> new JourFerieBean(jourFerie))
-                        .collect(Collectors.toSet())
+                        .map(JourFerieBean::new)
+                        .collect(Collectors.toList())
         );
+        importancesBeans.setAll(
+                planCharge.getReferentiels().getImportances().stream()
+                        .map(ImportanceBean::new)
+                        .collect(Collectors.toList())
+        );
+        profilsBeans.setAll(
+                planCharge.getReferentiels().getProfils().stream()
+                        .map(Profil::getCode)
+                        .collect(Collectors.toList())
+        );
+        projetsApplisBeans.setAll(
+                planCharge.getReferentiels().getProjetsApplis().stream()
+                        .map(ProjetAppli::getCode)
+                        .collect(Collectors.toList())
+        );
+        statutsBeans.setAll(
+                planCharge.getReferentiels().getStatuts().stream()
+                        .map(Statut::getCode)
+                        .collect(Collectors.toList())
+        );
+        ressourcesBeans.clear();
+        planCharge.getReferentiels().getRessources().stream()
+                .filter(Ressource::estHumain)
+                .forEach(ressource -> ressourcesBeans.add(new RessourceHumaineBean((RessourceHumaine) ressource)));
         planificationsBeans.setAll(
                 planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationBean(planif.getKey(), planif.getValue()))
@@ -149,16 +173,24 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     }
 
     public PlanCharge extract() throws IhmException {
-        Set<JourFerie> joursFeries = joursFeriesBeans.parallelStream().map(JourFerieBean::extract).collect(Collectors.toSet());
-        Set<Importance> importances = importancesBeans.parallelStream().map(ImportanceBean::extract).collect(Collectors.toSet());
-        Set<Profil> profils = profilsBeans.parallelStream().map(Profil::new).collect(Collectors.toSet());
-        Set<ProjetAppli> projetsApplis = projetsApplisBeans.parallelStream().map(ProjetAppli::new).collect(Collectors.toSet());
-        Set<Statut> statuts = statutsBeans.parallelStream().map(Statut::new).collect(Collectors.toSet());
-        Set<Ressource> ressources = ressourcesBeans.parallelStream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
+        Set<JourFerie> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::extract).collect(Collectors.toSet());
+        Set<Importance> importances = importancesBeans.stream().map(ImportanceBean::extract).collect(Collectors.toSet());
+        Set<Profil> profils = profilsBeans.stream().map(Profil::new).collect(Collectors.toSet());
+        Set<ProjetAppli> projetsApplis = projetsApplisBeans.stream().map(ProjetAppli::new).collect(Collectors.toSet());
+        Set<Statut> statuts = statutsBeans.stream().map(Statut::new).collect(Collectors.toSet());
+        Set<Ressource> ressources = ressourcesBeans.stream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
         Referentiels referentiels = new Referentiels(joursFeries, importances, profils, projetsApplis, statuts, ressources);
 
+        Planifications planifications = extractPlanifications();
+
+        assert dateEtat != null;
+        return new PlanCharge(dateEtat, referentiels, planifications);
+    }
+
+    @NotNull
+    public Planifications extractPlanifications() throws IhmException {
         Planifications planifications = new Planifications();
-        for (PlanificationBean planificationBean : planificationsBeans) {
+        for (PlanificationBean planificationBean : this.planificationsBeans) {
             Tache tache = planificationBean.getTacheBean().extract();
 
             Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
@@ -167,9 +199,7 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
 
             planifications.ajouter(tache, calendrier);
         }
-
-        assert dateEtat != null;
-        return new PlanCharge(dateEtat, referentiels, planifications);
+        return planifications;
     }
 
 
@@ -185,13 +215,14 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         return copier(this);
     }
 
+
     public static void copier(@NotNull PlanChargeBean original, @NotNull PlanChargeBean copie) throws CopieException {
-        copie.setDateEtat(original.getDateEtat()); // FIXME FDA 2017/05 Créer une copie de la LocalDate.
-        copie.getPlanificationsBeans().setAll(original.getPlanificationsBeans()); // FIXME FDA 2017/05 Créer des copies des TacheBean aussi.
+        LocalDate dateEtatOriginale = original.getDateEtat();
+        copie.setDateEtat(LocalDate.of(dateEtatOriginale.getYear(), dateEtatOriginale.getMonth(), dateEtatOriginale.getDayOfMonth()));
+        copie.getPlanificationsBeans().setAll(original.getPlanificationsBeans()); // FIXME FDA 2017/05 Créer des copies des TacheBean.
         copie.setModifie(original.estModifie());
         /* Ajouter ici la copie des nouveaux attributs. */
     }
-
 
     // Pour déboguer, uniquement.
     @Override
@@ -201,5 +232,4 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
                 + " " + getPlanificationsBeans().size() + " tâches"
                 + " (" + (estModifie ? "" : "non ") + "modifié)";
     }
-
 }

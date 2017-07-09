@@ -25,13 +25,6 @@ public class ImportanceXmlWrapper {
         super();
     }
 
-    public ImportanceXmlWrapper init(Importance importance) {
-        this.id = importance.getIdentity();
-        this.codeInterne = importance.getCodeInterne();
-        this.code = importance.getCode();
-        this.ordre = importance.getOrdre();
-        return this;
-    }
 
     @XmlAttribute(name="id", required = true)
     public String getId() {
@@ -70,5 +63,19 @@ public class ImportanceXmlWrapper {
 
     public void setOrdre(Integer ordre) {
         this.ordre = ordre;
+    }
+
+
+    public ImportanceXmlWrapper init(@NotNull Importance importance) {
+        this.id = importance.getIdentity();
+        this.codeInterne = importance.getCodeInterne();
+        this.ordre = importance.getOrdre();
+        this.code = importance.getCode();
+        return this;
+    }
+
+    @NotNull
+    public Importance extract() {
+        return new Importance(ordre, code);
     }
 }

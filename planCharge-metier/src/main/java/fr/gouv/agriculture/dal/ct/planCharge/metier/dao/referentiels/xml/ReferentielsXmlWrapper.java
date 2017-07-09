@@ -20,6 +20,7 @@ public class ReferentielsXmlWrapper {
     private StatutsXmlWrapper statutsXmlWrapper = new StatutsXmlWrapper();
     private RessourcesXmlWrapper ressourcesXmlWrapper = new RessourcesXmlWrapper();
 
+
     /**
      * Constructeur vide (appelé notamment par JAXB).
      *
@@ -28,6 +29,65 @@ public class ReferentielsXmlWrapper {
     public ReferentielsXmlWrapper() {
         super();
     }
+
+
+    @XmlElement(name = "joursFeries", required = true)
+    @NotNull
+    public JoursFeriesXmlWrapper getJoursFeries() {
+        return joursFeriesXmlWrapper;
+    }
+
+    @XmlElement(name = "importances", required = true)
+    @NotNull
+    public ImportancesXmlWrapper getImportances() {
+        return importancesXmlWrapper;
+    }
+
+    @XmlElement(name = "profils", required = true)
+    @NotNull
+    public ProfilsXmlWrapper getProfils() {
+        return profilsXmlWrapper;
+    }
+
+    @XmlElement(name = "projetsApplis", required = true)
+    @NotNull
+    public ProjetsApplisXmlWrapper getProjetsApplis() {
+        return projetsApplisXmlWrapper;
+    }
+
+    @XmlElement(name = "statuts", required = true)
+    @NotNull
+    public StatutsXmlWrapper getStatuts() {
+        return statutsXmlWrapper;
+    }
+
+    @XmlElement(name = "ressources", required = true)
+    @NotNull
+    public RessourcesXmlWrapper getRessources() {
+        return ressourcesXmlWrapper;
+    }
+
+
+    public void setJoursFeries(@NotNull JoursFeriesXmlWrapper joursFeriesXmlWrapper) {
+        this.joursFeriesXmlWrapper = joursFeriesXmlWrapper;
+    }
+
+    public void setImportances(@NotNull ImportancesXmlWrapper importances) {
+        this.importancesXmlWrapper = importances;
+    }
+
+    public void setProfils(@NotNull ProfilsXmlWrapper profils) {
+        this.profilsXmlWrapper = profils;
+    }
+
+    public void setProjetsApplis(@NotNull ProjetsApplisXmlWrapper projetsApplis) {
+        this.projetsApplisXmlWrapper = projetsApplis;
+    }
+
+    public void setStatuts(@NotNull StatutsXmlWrapper statutsXmlWrapper) {
+        this.statutsXmlWrapper = statutsXmlWrapper;
+    }
+
 
     @SuppressWarnings("OverlyCoupledMethod")
     public ReferentielsXmlWrapper init(@NotNull Referentiels referentiels, @NotNull RapportSauvegarde rapport) {
@@ -41,28 +101,12 @@ public class ReferentielsXmlWrapper {
 
         rapport.setAvancement("Sauvegarde du référentiel des importances...");
         this.importancesXmlWrapper.init(
-/*
-                planCharge.getPlanifications().taches().stream()
-                        .map(Tache::getImportance)
-                        .distinct()
-                        .sorted()
-                        .map(importance -> new ImportanceXmlWrapper().init(importance))
-                        .collect(Collectors.toList())
-*/
                 referentiels.getImportances().stream()
                         .map(importance -> new ImportanceXmlWrapper().init(importance))
                         .collect(Collectors.toList())
         );
         rapport.setAvancement("Sauvegarde du référentiel des profils...");
         this.profilsXmlWrapper.init(
-/*
-                planCharge.getPlanifications().taches().stream()
-                        .map(Tache::getProfil)
-                        .distinct()
-                        .sorted()
-                        .map(profil -> new ProfilXmlWrapper().init(profil))
-                        .collect(Collectors.toList())
-*/
                 referentiels.getProfils().stream()
                         .map(profil -> new ProfilXmlWrapper().init(profil))
                         .collect(Collectors.toList())
@@ -70,42 +114,18 @@ public class ReferentielsXmlWrapper {
         //noinspection HardcodedFileSeparator
         rapport.setAvancement("Sauvegarde du référentiel des projets/applis...");
         this.projetsApplisXmlWrapper.init(
-/*
-                planCharge.getPlanifications().taches().stream()
-                        .map(Tache::getProjetAppli)
-                        .distinct()
-                        .sorted()
-                        .map(projetAppli -> new ProjetAppliXmlWrapper().init(projetAppli))
-                        .collect(Collectors.toList())
-*/
                 referentiels.getProjetsApplis().stream()
                         .map(projetAppli -> new ProjetAppliXmlWrapper().init(projetAppli))
                         .collect(Collectors.toList())
         );
         rapport.setAvancement("Sauvegarde du référentiel des statuts...");
         this.statutsXmlWrapper.init(
-/*
-                planCharge.getPlanifications().taches().stream()
-                        .map(Tache::getStatut)
-                        .distinct()
-                        .sorted()
-                        .map(statut -> new StatutXmlWrapper().init(statut))
-                        .collect(Collectors.toList())
-*/
                 referentiels.getStatuts().stream()
                         .map(statut -> new StatutXmlWrapper().init(statut))
                         .collect(Collectors.toList())
         );
         rapport.setAvancement("Sauvegarde du référentiel des ressrouces...");
         this.ressourcesXmlWrapper.init(
-/*
-                planCharge.getPlanifications().taches().stream()
-                        .map(Tache::getRessource)
-                        .distinct()
-                        .sorted()
-                        .map(ressource -> new RessourceXmlWrapper().init(ressource))
-                        .collect(Collectors.toList())
-*/
                 referentiels.getRessources().stream()
                         .map(ressource -> new RessourceXmlWrapper().init(ressource))
                         .collect(Collectors.toList())
@@ -113,49 +133,14 @@ public class ReferentielsXmlWrapper {
         return this;
     }
 
-    @XmlElement(name = "importances", required = true)
-    public ImportancesXmlWrapper getImportances() {
-        return importancesXmlWrapper;
-    }
-
-    @XmlElement(name = "profils", required = true)
-    public ProfilsXmlWrapper getProfils() {
-        return profilsXmlWrapper;
-    }
-
-    @XmlElement(name = "projetsApplis", required = true)
-    public ProjetsApplisXmlWrapper getProjetsApplis() {
-        return projetsApplisXmlWrapper;
-    }
-
-    @XmlElement(name = "statuts", required = true)
-    public StatutsXmlWrapper getStatuts() {
-        return statutsXmlWrapper;
-    }
-
-    @XmlElement(name = "ressources", required = true)
-    public RessourcesXmlWrapper getRessources() {
-        return ressourcesXmlWrapper;
-    }
-
-    public void setImportances(ImportancesXmlWrapper importances) {
-        this.importancesXmlWrapper = importances;
-    }
-
-    public void setProfils(ProfilsXmlWrapper profils) {
-        this.profilsXmlWrapper = profils;
-    }
-
-    public void setProjetsApplis(ProjetsApplisXmlWrapper projetsApplis) {
-        this.projetsApplisXmlWrapper = projetsApplis;
-    }
-
-    public void setRessources(RessourcesXmlWrapper ressources) {
-        this.ressourcesXmlWrapper = ressources;
-    }
-
-    @NotNull
     public Referentiels extract() {
-        return null;
+        return new Referentiels(
+                joursFeriesXmlWrapper.extract(),
+                importancesXmlWrapper.extract(),
+                profilsXmlWrapper.extract(),
+                projetsApplisXmlWrapper.extract(),
+                statutsXmlWrapper.extract(),
+                ressourcesXmlWrapper.extract()
+                );
     }
 }

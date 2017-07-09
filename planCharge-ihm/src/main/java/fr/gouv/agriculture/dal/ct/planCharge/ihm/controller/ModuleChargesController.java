@@ -3,20 +3,17 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationDateEtat;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,7 +26,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
@@ -476,7 +472,8 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
 
     private void afficherPlanification(@NotNull LocalDate dateEtat) throws IhmException {
         LOGGER.debug("Affichage de la planification : ");
-        Planifications planifications = planChargeService.replanifier(planChargeBean.extract().getPlanifications(), dateEtat);
+        Planifications planificationsInitiales = planChargeBean.extractPlanifications();
+        Planifications planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
         planifications
                 .forEach((tache, planifTache) -> {
                     Optional<PlanificationBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()

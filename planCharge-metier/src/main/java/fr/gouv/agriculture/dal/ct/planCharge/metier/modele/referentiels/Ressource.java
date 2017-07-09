@@ -34,6 +34,12 @@ public class Ressource extends AbstractEntity<String> implements Comparable<Ress
     }
 
 
+    @NotNull
+    public boolean estHumain() {
+        return this instanceof RessourceHumaine;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

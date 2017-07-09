@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 
 import javax.validation.constraints.NotNull;
@@ -24,28 +23,36 @@ public class ProfilXmlWrapper {
         super();
     }
 
-    public ProfilXmlWrapper init (Profil profil) {
-        this.id = profil.getIdentity();
-        this.code = profil.getCode();
-        return this;
-    }
 
-    @XmlAttribute(name="id", required = true)
+    @XmlAttribute(name = "id", required = true)
+    @NotNull
     public String getId() {
         return id;
     }
 
-    @XmlElement(name="code", required = true)
+    @XmlElement(name = "code", required = true)
     @NotNull
     public String getCode() {
         return code;
     }
 
-    public void setId(String id) {
+
+    public void setId(@NotNull String id) {
         this.id = id;
     }
 
-    public void setCode(String code) {
+    public void setCode(@NotNull String code) {
         this.code = code;
+    }
+
+
+    public ProfilXmlWrapper init(@NotNull Profil profil) {
+        this.id = profil.getIdentity();
+        this.code = profil.getCode();
+        return this;
+    }
+
+    public Profil extract() {
+        return new Profil(code);
     }
 }

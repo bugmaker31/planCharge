@@ -27,7 +27,7 @@ import java.util.Set;
 @XmlRootElement(name = "planCharge")
 public class PlanChargeXmlWrapper {
 
-    private static final String VERSION_FORMAT = "1.0";
+    public static final String VERSION_FORMAT = "1.0";
 
     @NotNull
 //    @Autowired
@@ -50,6 +50,7 @@ public class PlanChargeXmlWrapper {
     //    @Autowired
     @NotNull
     private ReferentielsXmlWrapper referentielsXmlWrapper = new ReferentielsXmlWrapper();
+
     //    @Autowired
     @NotNull
     private PlanificationsXmlWrapper planificationsXmlWrapper = new PlanificationsXmlWrapper();
@@ -63,46 +64,58 @@ public class PlanChargeXmlWrapper {
         super();
     }
 
+
     @XmlAttribute(name = "versionFormat", required = true)
+    @NotNull
     public String getVersionFormat() {
         return versionFormat;
     }
 
-    public void setVersionFormat(String versionFormat) {
-        this.versionFormat = versionFormat;
-    }
-
     @XmlAttribute(name = "versionApplication", required = true)
+    @NotNull
     public String getVersionApplication() {
         return versionApplication;
     }
 
-    public void setVersionApplication(String versionApplication) {
-        this.versionApplication = versionApplication;
-    }
-
-    @XmlElement(name = "referentiels", required = true)
-    public ReferentielsXmlWrapper getReferentiels() {
-        return referentielsXmlWrapper;
-    }
-
     @XmlElement(name = "dateEtat", required = true)
+    @NotNull
     public Date getDateEtat() {
         return dateEtat;
     }
 
-    public void setDateEtat(Date dateEtat) {
-        this.dateEtat = dateEtat;
+    @XmlElement(name = "referentiels", required = true)
+    @NotNull
+    public ReferentielsXmlWrapper getReferentiels() {
+        return referentielsXmlWrapper;
     }
 
     @XmlElement(name = "planifications", required = true)
+    @NotNull
     public PlanificationsXmlWrapper getPlanifications() {
         return planificationsXmlWrapper;
     }
 
-    public void setPlanifications(PlanificationsXmlWrapper planifications) {
+
+    public void setVersionFormat(@NotNull String versionFormat) {
+        this.versionFormat = versionFormat;
+    }
+
+    public void setVersionApplication(@NotNull String versionApplication) {
+        this.versionApplication = versionApplication;
+    }
+
+    public void setDateEtat(@NotNull Date dateEtat) {
+        this.dateEtat = dateEtat;
+    }
+
+    public void setReferentiels(@NotNull ReferentielsXmlWrapper referentielsXmlWrapper) {
+        this.referentielsXmlWrapper = referentielsXmlWrapper;
+    }
+
+    public void setPlanifications(@NotNull PlanificationsXmlWrapper planifications) {
         this.planificationsXmlWrapper = planifications;
     }
+
 
     public PlanChargeXmlWrapper init(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {

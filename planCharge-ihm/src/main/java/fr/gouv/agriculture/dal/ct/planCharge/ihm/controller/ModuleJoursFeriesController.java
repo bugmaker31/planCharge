@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -86,14 +87,14 @@ public class ModuleJoursFeriesController extends AbstractController {
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Association (binding) entre la liste et la table des jours fériés :
-//        joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
+        joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
             // Wrap the FilteredList in a SortedList.
             final SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
             // Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
             sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
             // Add sorted data to the table.
             joursFeriesTable.setItems(sortedBeans);
-//        });
+        });
 
         LOGGER.debug("Initialisé.");
     }
@@ -107,9 +108,12 @@ public class ModuleJoursFeriesController extends AbstractController {
 
         // Positionnement sur le jour férié qu'on vient d'ajouter :
         int idxLigNouvBean = joursFeriesBeans.indexOf(nouvJourFerieBean);
+        assert idxLigNouvBean != -1;
         joursFeriesTable.scrollTo(idxLigNouvBean);
-        joursFeriesTable.getSelectionModel().select(idxLigNouvBean);
+        joursFeriesTable.getSelectionModel().clearAndSelect(idxLigNouvBean);
+//        joursFeriesTable.getSelectionModel().focus(idxLigNouvBean);
         // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
         joursFeriesTable.edit(idxLigNouvBean, dateColumn);
+//        joursFeriesTable.refresh();
     }
 }

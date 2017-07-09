@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Statut;
 
 import javax.validation.constraints.NotNull;

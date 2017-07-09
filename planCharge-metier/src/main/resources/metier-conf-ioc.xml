@@ -73,7 +73,7 @@
     <bean id="planificationXmlWrapper"
           class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanificationXmlWrapper"
           scope="prototype"/>
-    <bean id="tacheXmlWrapper" class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.TacheXmlWrapper"
+    <bean id="tacheXmlWrapper" clafr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.xml.TacheXmlWrapperpper"
           scope="prototype"/>
     <bean id="calendrierXmlWrapper"
           class="fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.CalendrierXmlWrapper"
