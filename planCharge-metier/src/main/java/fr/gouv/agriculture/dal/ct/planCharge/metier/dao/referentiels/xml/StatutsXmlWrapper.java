@@ -27,7 +27,7 @@ public class StatutsXmlWrapper {
     }
 
 
-//    @XmlElement(name = "statut", required = true)
+    @XmlElement(name = "statut", required = true)
     @NotNull
     public List<StatutXmlWrapper> getStatuts() {
         return statuts;

@@ -32,7 +32,7 @@ public class ProfilsXmlWrapper {
         return this;
     }
 
-    @XmlElement(name = "profils", required = true)
+    @XmlElement(name = "profil", required = true)
     @NotNull
     public List<ProfilXmlWrapper> getProfils() {
         return profilsXmlWrapper;

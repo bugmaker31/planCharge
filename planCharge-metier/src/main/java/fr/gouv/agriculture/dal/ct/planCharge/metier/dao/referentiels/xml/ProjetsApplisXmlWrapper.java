@@ -26,7 +26,7 @@ public class ProjetsApplisXmlWrapper {
     }
 
 
-//    @XmlElement(name = "projetAppli", required = true)
+    @XmlElement(name = "projetAppli", required = true)
     @NotNull
     public List<ProjetAppliXmlWrapper> getProjetsApplis() {
         return projetsApplis;

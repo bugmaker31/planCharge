@@ -955,7 +955,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    void afficherModuleCharges() throws IhmException {
+    public void afficherModuleCharges() throws IhmException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
         if (nomModuleCourant == NomModule.charges) {

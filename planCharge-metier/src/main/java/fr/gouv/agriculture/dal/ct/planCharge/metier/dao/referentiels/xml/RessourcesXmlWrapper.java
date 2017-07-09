@@ -27,7 +27,7 @@ public class RessourcesXmlWrapper {
     }
 
 
-//    @XmlElement(name = "ressource", required = true)
+    @XmlElement(name = "ressource", required = true)
     @NotNull
     public List<RessourceXmlWrapper> getRessources() {
         return ressources;

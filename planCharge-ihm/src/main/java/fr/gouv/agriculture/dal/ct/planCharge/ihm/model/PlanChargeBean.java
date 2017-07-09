@@ -216,11 +216,11 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     }
 
 
-    public static void copier(@NotNull PlanChargeBean original, @NotNull PlanChargeBean copie) throws CopieException {
-        LocalDate dateEtatOriginale = original.getDateEtat();
-        copie.setDateEtat(LocalDate.of(dateEtatOriginale.getYear(), dateEtatOriginale.getMonth(), dateEtatOriginale.getDayOfMonth()));
-        copie.getPlanificationsBeans().setAll(original.getPlanificationsBeans()); // FIXME FDA 2017/05 Créer des copies des TacheBean.
-        copie.setModifie(original.estModifie());
+    public static void copier(@NotNull PlanChargeBean planChargeOriginal, @NotNull PlanChargeBean copiePlanCharge) throws CopieException {
+        LocalDate dateEtatOriginale = planChargeOriginal.getDateEtat();
+        copiePlanCharge.setDateEtat((dateEtatOriginale == null) ? null : LocalDate.of(dateEtatOriginale.getYear(), dateEtatOriginale.getMonth(), dateEtatOriginale.getDayOfMonth()));
+        copiePlanCharge.getPlanificationsBeans().setAll(planChargeOriginal.getPlanificationsBeans()); // FIXME FDA 2017/05 Créer des copies des TacheBean.
+        copiePlanCharge.setModifie(planChargeOriginal.estModifie());
         /* Ajouter ici la copie des nouveaux attributs. */
     }
 
