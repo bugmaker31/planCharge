@@ -8,15 +8,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +23,13 @@ import javax.validation.constraints.NotNull;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ModuleTachesController extends AbstractTachesController<TacheBean> {
+public class TachesController extends AbstractTachesController<TacheBean> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModuleTachesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TachesController.class);
 
-    private static ModuleTachesController instance;
+    private static TachesController instance;
 
-    public static ModuleTachesController instance() {
+    public static TachesController instance() {
         return instance;
     }
 
@@ -66,7 +61,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleTachesController() throws IhmException {
+    public TachesController() throws IhmException {
         super();
         if (instance != null) {
             throw new IhmException("Instanciation à plus d'1 exemplaire.");
@@ -92,7 +87,7 @@ public class ModuleTachesController extends AbstractTachesController<TacheBean> 
      * after the fxml file has been loaded.
      */
     @FXML
-    void initialize() throws IhmException {
+    protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 
         super.initialize();

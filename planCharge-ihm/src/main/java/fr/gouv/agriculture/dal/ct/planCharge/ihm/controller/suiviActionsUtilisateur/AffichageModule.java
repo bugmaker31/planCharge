@@ -54,19 +54,19 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 LOGGER.warn("Impossible d'annuler l'affichage du tout premier module (quel autre module afficher ?).");
                 return;
             }
-            if (nomModulePrecedent == ApplicationController.NomModule.joursFeries) {
+            if (nomModulePrecedent == ApplicationController.NomModule.JOURS_FERIES) {
                 applicationController.activerModuleJoursFeries();
                 return;
             }
-            if (nomModulePrecedent == ApplicationController.NomModule.disponibilites) {
+            if (nomModulePrecedent == ApplicationController.NomModule.DISPONIBILITES) {
                 applicationController.activerModuleDisponibilites();
                 return;
             }
-            if (nomModulePrecedent == ApplicationController.NomModule.taches) {
+            if (nomModulePrecedent == ApplicationController.NomModule.TACHES) {
                 applicationController.activerModuleTaches();
                 return;
             }
-            if (nomModulePrecedent == ApplicationController.NomModule.charges) {
+            if (nomModulePrecedent == ApplicationController.NomModule.CHARGES) {
                 applicationController.activerModuleCharges();
                 return;
             }
@@ -80,19 +80,19 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
     public void retablir() throws RetablissementActionException {
         ApplicationController appCtrl = ApplicationController.instance();
         try {
-            if (getNomModule() == ApplicationController.NomModule.joursFeries) {
+            if (getNomModule() == ApplicationController.NomModule.JOURS_FERIES) {
                 appCtrl.activerModuleJoursFeries();
                 return;
             }
-            if (getNomModule() == ApplicationController.NomModule.disponibilites) {
+            if (getNomModule() == ApplicationController.NomModule.DISPONIBILITES) {
                 appCtrl.activerModuleDisponibilites();
                 return;
             }
-            if (getNomModule() == ApplicationController.NomModule.taches) {
+            if (getNomModule() == ApplicationController.NomModule.TACHES) {
                 appCtrl.activerModuleTaches();
                 return;
             }
-            if (getNomModule() == ApplicationController.NomModule.charges) {
+            if (getNomModule() == ApplicationController.NomModule.CHARGES) {
                 appCtrl.activerModuleCharges();
                 return;
             }

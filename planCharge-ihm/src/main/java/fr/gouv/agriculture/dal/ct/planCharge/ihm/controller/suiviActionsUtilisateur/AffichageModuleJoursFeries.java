@@ -18,7 +18,7 @@ public class AffichageModuleJoursFeries extends AffichageModule {
     @NotNull
     @Override
     ApplicationController.NomModule getNomModule() {
-        return ApplicationController.NomModule.joursFeries;
+        return ApplicationController.NomModule.JOURS_FERIES;
     }
 
 }

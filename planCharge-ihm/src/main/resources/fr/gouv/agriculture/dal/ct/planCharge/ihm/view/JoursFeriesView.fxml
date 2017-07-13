@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleJoursFeriesController">
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.JoursFeriesController">
     <center>
         <TableView fx:id="joursFeriesTable" editable="true" BorderPane.alignment="CENTER">
             <columns>

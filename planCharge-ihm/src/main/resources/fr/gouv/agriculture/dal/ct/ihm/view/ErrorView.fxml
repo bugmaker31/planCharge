@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ErrorController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.ihm.controller.ErrorController">
     <center>
         <ScrollPane>
             <content>

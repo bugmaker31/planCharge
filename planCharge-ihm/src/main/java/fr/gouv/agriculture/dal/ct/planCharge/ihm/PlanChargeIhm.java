@@ -9,29 +9,26 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.stage.*;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -48,6 +45,9 @@ public class PlanChargeIhm extends Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
     private static PlanChargeIhm instance;
+
+    @NotNull
+    private Map<String, Popup> popups = new HashMap<>();
 
     public static PlanChargeIhm instance() {
         return instance;
@@ -74,6 +74,8 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private Region joursFeriesView;
     @NotNull
+    private Region ressourcesHumainesView;
+    @NotNull
     private Region disponibilitesView;
     @NotNull
     private Region tachesView;
@@ -92,13 +94,15 @@ public class PlanChargeIhm extends Application {
     private WorkProgressController workProgressController;
 */
     @NotNull
-    private ModuleJoursFeriesController joursFeriesController;
+    private JoursFeriesController joursFeriesController;
     @NotNull
-    private ModuleDisponibilitesController disponibilitesController;
+    private RessourcesHumainesController ressourcesHumainesController;
     @NotNull
-    private ModuleTachesController tachesController;
+    private DisponibilitesController disponibilitesController;
     @NotNull
-    private ModuleChargesController chargesController;
+    private TachesController tachesController;
+    @NotNull
+    private ChargesController chargesController;
 
 /*
     //    @Autowired
@@ -122,6 +126,11 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
+    public Region getRessourcesHumainesView() {
+        return ressourcesHumainesView;
+    }
+
+    @NotNull
     public Region getDisponibilitesView() {
         return disponibilitesView;
     }
@@ -140,15 +149,15 @@ public class PlanChargeIhm extends Application {
         return applicationController;
     }
 
-    public ModuleDisponibilitesController getDisponibilitesController() {
+    public DisponibilitesController getDisponibilitesController() {
         return disponibilitesController;
     }
 
-    public ModuleTachesController getTachesController() {
+    public TachesController getTachesController() {
         return tachesController;
     }
 
-    public ModuleChargesController getChargesController() {
+    public ChargesController getChargesController() {
         return chargesController;
     }
 
@@ -234,34 +243,40 @@ public class PlanChargeIhm extends Application {
         }
 */
         {
-            FXMLLoader appLoader = new FXMLLoader();
-            appLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
-            applicationView = appLoader.load();
-            applicationController = appLoader.getController();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
+            applicationView = loader.load();
+            applicationController = loader.getController();
         }
         {
-            FXMLLoader joursFeriesLoader = new FXMLLoader();
-            joursFeriesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleJoursFeriesView.fxml"));
-            joursFeriesView = joursFeriesLoader.load();
-            joursFeriesController = joursFeriesLoader.getController();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/JoursFeriesView.fxml"));
+            joursFeriesView = loader.load();
+            joursFeriesController = loader.getController();
         }
         {
-            FXMLLoader disponibilitesLoader = new FXMLLoader();
-            disponibilitesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleDisponibilitesView.fxml"));
-            disponibilitesView = disponibilitesLoader.load();
-            disponibilitesController = disponibilitesLoader.getController();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/RessourcesHumainesView.fxml"));
+            ressourcesHumainesView = loader.load();
+            ressourcesHumainesController = loader.getController();
         }
         {
-            FXMLLoader tachesLoader = new FXMLLoader();
-            tachesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleTachesView.fxml"));
-            tachesView = tachesLoader.load();
-            tachesController = tachesLoader.getController();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/DisponibilitesView.fxml"));
+            disponibilitesView = loader.load();
+            disponibilitesController = loader.getController();
         }
         {
-            FXMLLoader chargesLoader = new FXMLLoader();
-            chargesLoader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ModuleChargesView.fxml"));
-            chargesView = chargesLoader.load();
-            chargesController = chargesLoader.getController();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/TachesView.fxml"));
+            tachesView = loader.load();
+            tachesController = loader.getController();
+        }
+        {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ChargesView.fxml"));
+            chargesView = loader.load();
+            chargesController = loader.getController();
         }
     }
 
@@ -269,12 +284,6 @@ public class PlanChargeIhm extends Application {
     public void showError(Thread thread, Throwable throwable) {
         LOGGER.error("An (uncaught) error occurred in thread " + thread + ".", throwable);
         if (Platform.isFxApplicationThread()) {
-
-/*
-            StringWriter errorMsg = new StringWriter();
-            throwable.printStackTrace(new PrintWriter(errorMsg));
-*/
-
             afficherPopUp(Alert.AlertType.ERROR, "Erreur interne", Exceptions.causes(throwable));
         }
     }
@@ -341,36 +350,45 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    public void afficherErreurSaisie(@NotNull TextField field, @NotNull String message) throws IhmException {
+    public void afficherErreurSaisie(@NotNull Control field, @NotNull String message) /*throws IhmException*/ {
         field.getStyleClass().add("erreurSaisie");
-        afficherPopUpErreurSaisie(field, message);
+        try {
+            afficherPopUpErreurSaisie(field, message);
+        } catch (IhmException e) {
+            throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+        }
     }
 
-    public void enleverErreurSaisie(@NotNull TextField field) throws IhmException {
+    public void enleverErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
         field.getStyleClass().remove("erreurSaisie");
-        masquerPopupErreurSaisie(field);
+        try {
+            masquerPopupErreurSaisie(field);
+        } catch (IhmException e) {
+            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
+        }
     }
 
-    private void afficherPopUpErreurSaisie(@NotNull TextField field, @NotNull String message) throws IhmException {
+    private void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String message) throws IhmException {
 
-        Label label = new Label(message);
-        label.setId(idLabelErreurSaisie(field));
-        label.getStyleClass().setAll("messageErreurSaisie");
-
-        /* V1 Avec une Popup :
-        Popup popup = new Popup();
-        Bounds fieldBounds = field.getBoundsInLocal();
-        Point2D popupLocation = field.localToScreen(fieldBounds.getMinX(), fieldBounds.getMinY() + fieldBounds.getHeight());
-        Region hbox = new HBox(label);
-        popup.getContent().add(hbox);
-        popup.show(field, popupLocation.getX(), popupLocation.getY());
-        */
+        // V1 Avec une Popup :
+        Popup popup = createFieldPopup(field, message);
+        popup.show(primaryStage);
+/*
         // V2 Avec un VBox ajouté/retiré dynamiquement :
         VBox vbox = fieldVBox(field);
         vbox.getChildren().add(label);
+*/
     }
 
-    private void masquerPopupErreurSaisie(@NotNull TextField field) throws IhmException {
+    private void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
+        // V1 Avec une Popup :
+        if (! popups.containsKey(idVBoxErreurSaisie(field))) {
+            return;
+        }
+        Popup popup = popups.get(idVBoxErreurSaisie(field));
+        popup.hide();
+/*
+        // V2 Avec un VBox ajouté/retiré dynamiquement :
         VBox vbox = fieldVBox(field);
         FilteredList<Node> filtered = vbox.getChildren().filtered(node -> node.getId().equals(idLabelErreurSaisie(field)));
         assert (filtered != null);
@@ -381,44 +399,76 @@ public class PlanChargeIhm extends Application {
         Node node = filtered.get(0);
         assert (node != null);
         vbox.getChildren().remove(node);
+*/
     }
 
     @NotNull
-    private VBox fieldVBox(@NotNull TextField field) throws IhmException {
-        if (!(field.getParent() instanceof Pane)) {
-            throw new IhmException("Le parent du champ '" + field.getId() + "' n'est pas un Pane, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.");
-        }
-        VBox vbox;
-        Pane parent = (Pane) field.getParent();
+    private Popup createFieldPopup(@NotNull Control field, String message) throws IhmException {
+        Popup popup = new Popup();
+
+        Bounds fieldBounds = field.getBoundsInLocal();
+        Point2D popupLocation = field.localToScreen(fieldBounds.getMinX(), fieldBounds.getMinY() + fieldBounds.getHeight());
+        popup.setAnchorX(popupLocation.getX());
+        popup.setAnchorY(popupLocation.getY());
+
+        Label label = new Label(message);
+        label.setId(idLabelErreurSaisie(field));
+        label.getStyleClass().setAll("messageErreurSaisie");
+
+        Region hbox = new HBox(label);
+        popup.getContent().add(hbox);
+        popups.put(idVBoxErreurSaisie(field), popup);
+        return popup;
+    }
+
+    @NotNull
+    private VBox fieldVBox(@NotNull Control field) throws IhmException {
+        Parent parent = field.getParent();
+
         if ((parent instanceof VBox) && (parent.getId().equals(idVBoxErreurSaisie(field)))) {
-            vbox = (VBox) parent;
-        } else { // La VBox n'a jamais encore été créée, on le fait :
+            // La VBox a déjà été créée, on la réutilise :
+            return (VBox) parent;
+        }
 
-            // Rq : Le simple fait d'ajouter le Filed à la VBox "détache" ce Field du Parent, donc il faut récupérer son index avant.
-            int fieldIndex = parent.getChildren().indexOf(field);
+        // La VBox n'a jamais encore été créée, on la créée maintenant,
+        // qui ne contient que le Field (pour l'instant, on ajoutera le Label avec le message d'erreur... qu'en cas d'erreur) :
+        VBox vbox = new VBox();
+        vbox.getStyleClass().setAll("erreurSaisie-vbox");
+        //noinspection StringConcatenationMissingWhitespace
+        vbox.setId(idVBoxErreurSaisie(field));
+        vbox.getChildren().add(field);
 
-            // Création de la VBox, qui ne contient que le Field (pour l'instant, on ajoutera le Label avec le message d'erreur... qu'en cas d'erreur) :
-            vbox = new VBox();
-            vbox.getStyleClass().setAll("erreurSaisie-vbox");
-            //noinspection StringConcatenationMissingWhitespace
-            vbox.setId(idVBoxErreurSaisie(field));
-            vbox.getChildren().add(field);
+        // On ajoute la VBox au graphe existant :
+        if (parent instanceof Pane) {
+            Pane paneParent = (Pane) field.getParent();
+
+            // Rq : Le simple fait d'ajouter le Field à la VBox "détache" ce Field du Parent, donc il faut récupérer son index avant.
+            int fieldIndex = paneParent.getChildren().indexOf(field);
 
             // Ajout de la VBox au Parent :
-            parent.getChildren().add(fieldIndex, vbox);
+            paneParent.getChildren().add(fieldIndex, vbox);
 
             // Rq : Pas besoin de supprimer le Field du Parent, le simple fait de l'ajouter à la VBox le "détache" du Parent.
             //parent.getChildren().remove(field);
+
+            return vbox;
         }
-        return vbox;
+        if (field.getParent() instanceof TableRow) {
+            TableRow rowParent = (TableRow) field.getParent();
+
+            TableView tableView = rowParent.getTableView();
+            TablePosition focusedCell = tableView.getFocusModel().getFocusedCell();
+            // TODO FDA 2017/07 Contnuer de coder, si utilisé finalement.
+        }
+        throw new IhmException("Le parent du champ '" + field.getId() + "' n'est pas d'un type géré, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.");
     }
 
-    private String idLabelErreurSaisie(@NotNull TextField field) {
+    private String idLabelErreurSaisie(@NotNull Control field) {
         //noinspection StringConcatenationMissingWhitespace
         return field.getId() + "ErreurSaisie-label";
     }
 
-    private String idVBoxErreurSaisie(@NotNull TextField field) {
+    private String idVBoxErreurSaisie(@NotNull Control field) {
         //noinspection StringConcatenationMissingWhitespace
         return field.getId() + "ErreurSaisie-vbox";
     }
@@ -506,6 +556,7 @@ public class PlanChargeIhm extends Application {
 //        applicationController.afficherModuleCharges();
 //            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 //            applicationController.afficherModuleJoursFeries();
+            applicationController.afficherModuleRessourcesHumaines();
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {

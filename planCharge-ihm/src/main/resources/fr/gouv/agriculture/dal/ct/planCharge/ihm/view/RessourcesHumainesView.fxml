@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RessourcesHumainesController">
+    <center>
+        <TableView fx:id="ressourcesHumainesTable" editable="true" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="trigrammeColumn" text="Trigramme" prefWidth="100" />
+                <TableColumn fx:id="nomColumn" text="Nom" prefWidth="150" />
+                <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="100" />
+                <TableColumn fx:id="societeColumn" text="Société" prefWidth="75" />
+                <TableColumn fx:id="debutMissionColumn" text="Début" prefWidth="100" />
+                <TableColumn fx:id="finMissionColumn" text="Fin" prefWidth="100" />
+            </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+            <sortOrder>
+                <fx:reference source="trigrammeColumn"/>
+            </sortOrder>
+        </TableView>
+    </center>
+    <bottom>
+        <AnchorPane>
+            <ButtonBar>
+                <buttons>
+                    <Button text="_Ajouter une ressource humaine" onAction="#ajouterRessourceHumaine"/>
+                </buttons>
+            </ButtonBar>
+        </AnchorPane>
+    </bottom>
+</BorderPane>

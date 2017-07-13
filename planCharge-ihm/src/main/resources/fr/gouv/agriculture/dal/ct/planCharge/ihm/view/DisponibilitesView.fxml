@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.CheckComboBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
-            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleDisponibilitesController">
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController">
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>

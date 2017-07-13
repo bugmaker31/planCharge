@@ -37,13 +37,13 @@ import java.util.TreeMap;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ModuleChargesController extends AbstractTachesController<PlanificationBean> {
+public class ChargesController extends AbstractTachesController<PlanificationBean> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModuleChargesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
 
-    private static ModuleChargesController instance;
+    private static ChargesController instance;
 
-    public static ModuleChargesController instance() {
+    public static ChargesController instance() {
         return instance;
     }
 
@@ -194,7 +194,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleChargesController() throws IhmException {
+    public ChargesController() throws IhmException {
         super();
         if (instance != null) {
             throw new IhmException("Instanciation à plus d'1 exemplaire.");
@@ -225,7 +225,7 @@ public class ModuleChargesController extends AbstractTachesController<Planificat
     @SuppressWarnings("OverlyLongMethod")
     @FXML
     @Override
-    void initialize() throws IhmException {
+    protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 
         super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.

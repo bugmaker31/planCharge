@@ -1,10 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ModuleChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 11/05/2017.
@@ -65,7 +62,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         // Formatage du texte de la cellule :
         //noinspection UnnecessaryLocalVariable
         Double charge = item;
-        setText((charge == 0.0) ? "" : ModuleChargesController.FORMAT_CHARGE.format(charge));
+        setText((charge == 0.0) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
 
         // Formatage du style (CSS) de la cellule :
         if (planifBean.getDebut() != null) {

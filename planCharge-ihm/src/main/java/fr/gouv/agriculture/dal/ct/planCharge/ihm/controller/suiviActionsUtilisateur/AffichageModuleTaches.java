@@ -18,6 +18,6 @@ public class AffichageModuleTaches extends AffichageModule {
     @NotNull
     @Override
     ApplicationController.NomModule getNomModule() {
-        return ApplicationController.NomModule.taches;
+        return ApplicationController.NomModule.TACHES;
     }
 }

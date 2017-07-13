@@ -19,6 +19,14 @@ public abstract class AbstractController implements Initializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
+     /*
+     La couche "View" :
+      */
+
+    //    @Autowired
+    @NotNull
+    private PlanChargeIhm ihm = PlanChargeIhm.instance();
+
     //    @Autowired
     @NotNull
     private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
@@ -35,7 +43,13 @@ public abstract class AbstractController implements Initializable {
         }
     }
 
-    abstract void initialize() throws IhmException;
+    protected abstract void initialize() throws IhmException;
+
+
+    @NotNull
+    public PlanChargeIhm getIhm() {
+        return ihm;
+    }
 
 
     // Suivi des actions de l'utilisateur :

@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
+package fr.gouv.agriculture.dal.ct.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 

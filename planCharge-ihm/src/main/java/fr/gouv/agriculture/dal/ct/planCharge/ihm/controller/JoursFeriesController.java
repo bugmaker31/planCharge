@@ -12,7 +12,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +24,13 @@ import java.time.LocalDate;
  *
  * @author frederic.danna
  */
-public class ModuleJoursFeriesController extends AbstractController {
+public class JoursFeriesController extends AbstractController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModuleJoursFeriesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JoursFeriesController.class);
 
-    private static ModuleJoursFeriesController instance;
+    private static JoursFeriesController instance;
 
-    public static ModuleJoursFeriesController instance() {
+    public static JoursFeriesController instance() {
         return instance;
     }
 
@@ -62,7 +61,7 @@ public class ModuleJoursFeriesController extends AbstractController {
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleJoursFeriesController() throws IhmException {
+    public JoursFeriesController() throws IhmException {
         super();
         if (instance != null) {
             throw new IhmException("Instanciation à plus d'1 exemplaire.");
@@ -75,11 +74,11 @@ public class ModuleJoursFeriesController extends AbstractController {
      * after the fxml file has been loaded.
      */
     @FXML
-    void initialize() throws IhmException {
+    protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :

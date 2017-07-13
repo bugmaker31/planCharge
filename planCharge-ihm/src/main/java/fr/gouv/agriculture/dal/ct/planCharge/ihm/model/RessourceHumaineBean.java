@@ -46,7 +46,7 @@ public class RessourceHumaineBean {
     }
 
 
-    @NotNull
+    @Null
     public String getTrigramme() {
         return trigramme.get();
     }
@@ -56,7 +56,7 @@ public class RessourceHumaineBean {
         return trigramme;
     }
 
-    @NotNull
+    @Null
     public String getNom() {
         return nom.get();
     }
@@ -66,7 +66,7 @@ public class RessourceHumaineBean {
         return nom;
     }
 
-    @NotNull
+    @Null
     public String getPrenom() {
         return prenom.get();
     }
@@ -76,7 +76,7 @@ public class RessourceHumaineBean {
         return prenom;
     }
 
-    @NotNull
+    @Null
     public String getSociete() {
         return societe.get();
     }
@@ -86,7 +86,7 @@ public class RessourceHumaineBean {
         return societe;
     }
 
-    @NotNull
+    @Null
     public LocalDate getDebutMission() {
         return debutMission.get();
     }
@@ -96,14 +96,39 @@ public class RessourceHumaineBean {
         return debutMission;
     }
 
-    @NotNull
+    @Null
     public LocalDate getFinMission() {
         return finMission.get();
     }
 
-    @NotNull
+    @Null
     public ObjectProperty<LocalDate> finMissionProperty() {
         return finMission;
+    }
+
+
+    public void setTrigramme(@Null String trigramme) {
+        this.trigramme.set(trigramme);
+    }
+
+    public void setNom(@Null String nom) {
+        this.nom.set(nom);
+    }
+
+    public void setPrenom(@Null String prenom) {
+        this.prenom.set(prenom);
+    }
+
+    public void setSociete(@Null String societe) {
+        this.societe.set(societe);
+    }
+
+    public void setDebutMission(@Null LocalDate debutMission) {
+        this.debutMission.set(debutMission);
+    }
+
+    public void setFinMission(@Null LocalDate finMission) {
+        this.finMission.set(finMission);
     }
 
 

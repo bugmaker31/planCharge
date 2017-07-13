@@ -18,6 +18,6 @@ public class AffichageModuleCharges extends AffichageModule {
     @NotNull
     @Override
     ApplicationController.NomModule getNomModule() {
-        return ApplicationController.NomModule.charges;
+        return ApplicationController.NomModule.CHARGES;
     }
 }

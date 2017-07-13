@@ -180,7 +180,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @SuppressWarnings("OverlyLongMethod")
     @Override
-    void initialize() throws IhmException {
+    protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 //        super.initialize();
 
@@ -530,7 +530,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre des descriptions...");
 
-            try {
+//            try {
                 ihm.enleverErreurSaisie(filtreDescriptionField);
                 if ((newValue != null) && !newValue.isEmpty()) {
                     //noinspection UnusedCatchParameter,NestedTryStatement
@@ -542,9 +542,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         return;
                     }
                 }
-            } catch (IhmException e) {
-                LOGGER.error("Impossible de gérer la modification du filtre des descriptions.", e);
-            }
+//            } catch (IhmException e) {
+//                LOGGER.error("Impossible de gérer la modification du filtre des descriptions.", e);
+//            }
 
             filteredTaches.setPredicate(tache -> {
 

@@ -39,8 +39,8 @@
                 <Menu text="_Référentiels">
                     <MenuItem text="Jours _fériés" onAction="#afficherModuleJoursFeries"/>
                     <SeparatorMenuItem/>
-                    <MenuItem disable="true" text="_Ressources"/>
-                    <MenuItem disable="true" text="_Profils"/>
+                    <MenuItem text="_Ressources" onAction="#afficherModuleRessourcesHumaines"/>
+                    <MenuItem text="_Profils"/>
                     <SeparatorMenuItem/>
                     <MenuItem disable="true" text="Projets/_Applis"/>
                     <MenuItem disable="true" text="_Importances"/>
@@ -76,13 +76,13 @@
         <center>
             <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
                 <Tab fx:id="disponibilitesTab" text="Disponibilités">
-                    <fx:include source="ModuleDisponibilitesView.fxml"/>
+                    <fx:include sourDisponibilitesView.fxmlfxml"/>
                 </Tab>
                 <Tab fx:id="tachesTab" text="Tâches">
-                    <fx:include source="ModuleTachesView.fxml"/>
+                    <fx:include sourTachesView.fxmlfxml"/>
                 </Tab>
                 <Tab fx:id="chargesTab" text="Charges">
-                    <fx:include source="ModuleChargesView.fxml"/>
+                    <fx:include sourChargesView.fxmlfxml"/>
                 </Tab>
             </TabPane>
     </center>

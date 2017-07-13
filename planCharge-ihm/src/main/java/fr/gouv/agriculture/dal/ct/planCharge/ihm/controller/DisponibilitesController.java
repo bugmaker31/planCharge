@@ -9,11 +9,11 @@ import javafx.fxml.FXML;
  * Created by frederic.danna on 26/03/2017.
  * @author frederic.danna
  */
-public class ModuleDisponibilitesController extends AbstractController {
+public class DisponibilitesController extends AbstractController {
 
-    private static ModuleDisponibilitesController instance;
+    private static DisponibilitesController instance;
 
-    public static ModuleDisponibilitesController instance() {
+    public static DisponibilitesController instance() {
         return instance;
     }
 
@@ -21,7 +21,7 @@ public class ModuleDisponibilitesController extends AbstractController {
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ModuleDisponibilitesController() throws IhmException {
+    public DisponibilitesController() throws IhmException {
         super();
         if (instance != null) {
             throw new IhmException("Instanciation à plus d'1 exemplaire.");
@@ -34,7 +34,7 @@ public class ModuleDisponibilitesController extends AbstractController {
      * after the fxml file has been loaded.
      */
     @FXML
-    void initialize() throws IhmException {
+    protected void initialize() throws IhmException {
         // Rien... pour l'instant.
     }
 

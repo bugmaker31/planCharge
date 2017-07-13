@@ -62,11 +62,6 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     @NotNull
     private final ObservableList<JourFerieBean> joursFeriesBeans;
 
-    @NotNull
-    public ObservableList<JourFerieBean> getJoursFeriesBeans() {
-        return joursFeriesBeans;
-    }
-
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<ImportanceBean> importancesBeans;
@@ -96,10 +91,19 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
         return planificationsBeans;
     }
 
-
     /*
     NB : Tout attribut ajouté à cette classe doit être répercuté dans la méthode {@link #copier(PlanChargeBean, PlanChargeBean)}.
     */
+
+    @NotNull
+    public ObservableList<JourFerieBean> getJoursFeriesBeans() {
+        return joursFeriesBeans;
+    }
+
+    @NotNull
+    public ObservableList<RessourceHumaineBean> getRessourcesHumainesBeans() {
+        return ressourcesHumainesBeans;
+    }
 
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").

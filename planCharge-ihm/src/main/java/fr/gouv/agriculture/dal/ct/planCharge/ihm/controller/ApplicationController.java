@@ -5,14 +5,17 @@ import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportChargementAvecProgression;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportPlanChargeAvecProgression;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportSauvegardeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
@@ -20,7 +23,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -53,10 +54,13 @@ public class ApplicationController extends AbstractController {
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
     public enum NomModule {
-        joursFeries("Jours fériés"),
-        disponibilites("Disponibilités"),
-        taches("Tâches"),
-        charges("Charges");
+        // Référentiels :
+        JOURS_FERIES("Jours fériés"),
+        RESSOURCES_HUMAINES("Ressources humaines"),
+        // Gestion :
+        DISPONIBILITES("Disponibilités"),
+        TACHES("Tâches"),
+        CHARGES("Charges");
 
         private String texte;
 
@@ -866,10 +870,10 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleJoursFeries() throws IhmException {
+    private void afficherModuleJoursFeries() throws IhmException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
 
-        if (nomModuleCourant == NomModule.joursFeries) {
+        if (nomModuleCourant == NomModule.JOURS_FERIES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -880,10 +884,40 @@ public class ApplicationController extends AbstractController {
     }
 
     public void activerModuleJoursFeries() {
-        nomModuleCourant = NomModule.joursFeries;
+        nomModuleCourant = NomModule.JOURS_FERIES;
         ihm.getApplicationView().setCenter(ihm.getJoursFeriesView());
         majTitre();
     }
+
+    @FXML
+    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        try {
+            afficherModuleRessourcesHumaines();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le module des ressrouces humaines.", e);
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des ressources humaines", Exceptions.causes(e));
+        }
+    }
+
+    public void afficherModuleRessourcesHumaines() throws IhmException {
+        LOGGER.debug("> [...] > Module \"Ressources humaines\"");
+
+        if (nomModuleCourant == NomModule.RESSOURCES_HUMAINES) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        activerModuleRessourcesHumaines();
+        getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+    }
+
+    public void activerModuleRessourcesHumaines() {
+        nomModuleCourant = NomModule.RESSOURCES_HUMAINES;
+        ihm.getApplicationView().setCenter(ihm.getRessourcesHumainesView());
+        majTitre();
+    }
+
 
 
     //    @FXML
@@ -899,7 +933,7 @@ public class ApplicationController extends AbstractController {
     void afficherModuleDisponibilites() throws IhmException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
-        if (nomModuleCourant == NomModule.disponibilites) {
+        if (nomModuleCourant == NomModule.DISPONIBILITES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -910,7 +944,7 @@ public class ApplicationController extends AbstractController {
     }
 
     public void activerModuleDisponibilites() {
-        nomModuleCourant = NomModule.disponibilites;
+        nomModuleCourant = NomModule.DISPONIBILITES;
         ihm.getApplicationView().setCenter(ihm.getDisponibilitesView());
         majTitre();
     }
@@ -928,7 +962,7 @@ public class ApplicationController extends AbstractController {
     void afficherModuleTaches() throws IhmException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
-        if (nomModuleCourant == NomModule.taches) {
+        if (nomModuleCourant == NomModule.TACHES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -939,7 +973,7 @@ public class ApplicationController extends AbstractController {
     }
 
     public void activerModuleTaches() {
-        nomModuleCourant = NomModule.taches;
+        nomModuleCourant = NomModule.TACHES;
         ihm.getTachesController().definirMenuContextuel();
         ihm.getApplicationView().setCenter(ihm.getTachesView());
         majTitre();
@@ -955,10 +989,10 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleCharges() throws IhmException {
+    void afficherModuleCharges() throws IhmException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
-        if (nomModuleCourant == NomModule.charges) {
+        if (nomModuleCourant == NomModule.CHARGES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -969,7 +1003,7 @@ public class ApplicationController extends AbstractController {
     }
 
     public void activerModuleCharges() {
-        nomModuleCourant = NomModule.charges;
+        nomModuleCourant = NomModule.CHARGES;
         ihm.getChargesController().definirMenuContextuel();
         ihm.getApplicationView().setCenter(ihm.getChargesView());
         majTitre();

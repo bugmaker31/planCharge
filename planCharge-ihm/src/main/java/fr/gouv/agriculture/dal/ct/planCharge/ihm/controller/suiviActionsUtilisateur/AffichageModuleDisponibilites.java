@@ -18,7 +18,7 @@ public class AffichageModuleDisponibilites extends AffichageModule {
     @NotNull
     @Override
     ApplicationController.NomModule getNomModule() {
-        return ApplicationController.NomModule.disponibilites;
+        return ApplicationController.NomModule.DISPONIBILITES;
     }
 
 }
