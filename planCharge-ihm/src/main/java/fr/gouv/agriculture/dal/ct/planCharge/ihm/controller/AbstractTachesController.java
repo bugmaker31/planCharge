@@ -13,6 +13,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,6 +31,9 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationResult;
+import org.controlsfx.validation.ValidationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +42,6 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 /**
@@ -176,6 +178,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     protected ContextMenu tachesTableContextMenu;
+
+
+    @NotNull
+    private final ValidationSupport validationSupport = PlanChargeIhm.validationSupport();
 
 
     @SuppressWarnings("OverlyLongMethod")
@@ -527,24 +533,16 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return false; // Does not match.
             });
         });
+        validationSupport.<String>registerValidator(filtreDescriptionField, false, (control, s) -> {
+            boolean saisieIncorrecte = !Strings.estExpressionReguliere(s);
+            return ValidationResult.fromMessageIf(control, "Expression régulière incorrecte", Severity.ERROR, saisieIncorrecte);
+        });
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre des descriptions...");
 
-//            try {
-                ihm.enleverErreurSaisie(filtreDescriptionField);
-                if ((newValue != null) && !newValue.isEmpty()) {
-                    //noinspection UnusedCatchParameter,NestedTryStatement
-                    try {
-                        //noinspection ResultOfMethodCallIgnored
-                        Pattern.compile(newValue);
-                    } catch (PatternSyntaxException e) {
-                        ihm.afficherErreurSaisie(filtreDescriptionField, "Expression régulière incorrecte");
-                        return;
-                    }
-                }
-//            } catch (IhmException e) {
-//                LOGGER.error("Impossible de gérer la modification du filtre des descriptions.", e);
-//            }
+            if ((newValue == null) || !Strings.estExpressionReguliere(newValue)) {
+                return;
+            }
 
             filteredTaches.setPredicate(tache -> {
 

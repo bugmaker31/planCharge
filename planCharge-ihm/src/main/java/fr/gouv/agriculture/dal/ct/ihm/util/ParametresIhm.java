@@ -11,6 +11,7 @@ import java.util.Properties;
  */
 public class ParametresIhm {
 
+    @SuppressWarnings("HardcodedFileSeparator")
     private static final String PROPERTIES_FILE_RSRC_NAME = "/ihm-conf.properties";
 
     private static ParametresIhm instance;

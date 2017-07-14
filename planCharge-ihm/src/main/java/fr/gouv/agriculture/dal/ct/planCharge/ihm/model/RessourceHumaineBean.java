@@ -36,6 +36,11 @@ public class RessourceHumaineBean {
         super();
     }
 
+    public RessourceHumaineBean(@NotNull String trigramme) {
+        super();
+        this.trigramme.set(trigramme);
+    }
+
     public RessourceHumaineBean(@NotNull RessourceHumaine ressource) {
         this.trigramme.set(ressource.getTrigramme());
         this.nom.set(ressource.getNom());

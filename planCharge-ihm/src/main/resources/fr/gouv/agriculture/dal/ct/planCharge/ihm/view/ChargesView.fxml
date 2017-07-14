@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController">
     <top>
@@ -36,10 +38,23 @@
                                     <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
                                 </HBox>
                             </VBox>
-                            <Button text="Planifiées dans le mois"
-                                    onAction="#filtrerTachesNonPlanifieesDansLeMois"
-                                    alignment="CENTER_RIGHT"
-                            />
+                            <SegmentedButton>
+                                <buttons>
+                                    <fx:define>
+                                        <ToggleGroup fx:id="filtreSelonPlanificationToggleGroup"/>
+                                    </fx:define>
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
+                                                  toggleGroup="$filtreSelonPlanificationToggleGroup"/>
+                                    <ToggleButton text="Planifiées dans le mois" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonPlanificationToggleGroup"
+                                                  onAction="#filtrerTachesNonPlanifieesDansLeMois"
+                                    />
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Demandées dans le semestre" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonPlanificationToggleGroup"/>
+                                </buttons>
+                            </SegmentedButton>
                             <Button text="RAZ"
                                     onAction="#razFiltres"
                                     styleClass="erase-button"
@@ -55,8 +70,8 @@
         <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
                    BorderPane.alignment="CENTER"
                    styleClass="charge-cell"
-                   >
-                   <!--contextMenu="tachesTableContextMenu">-->
+        >
+            <!--contextMenu="tachesTableContextMenu">-->
             <columns>
                 <TableColumn text="Tâche">
 
@@ -72,16 +87,16 @@
                                              visible="false" style="-fx-wrap-text: true"/>
                             </columns>
                         </TableColumn>
-                        <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55.0"
-                                     editable="false" styleClass="non-modifiable"/>
+                        <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55"
+                                     editable="false" styleClass="non-modifiable" />
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
-                        <TableColumn fx:id="statutColumn" prefWidth="75.0" text="Statut"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="500" text="Description"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"/>
+                        <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                                <TableColumn fx:id="debutColumn" prefWidth="100.0" text="Début"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="100.0" text="Echéance"/>
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
@@ -92,7 +107,7 @@
                 </TableColumn>
                 <TableColumn text="Planification">
                     <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee" />
+                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" styleClass="periodeChargee"/>
                         <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4" styleClass="periodeChargee"/>

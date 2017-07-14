@@ -3,22 +3,19 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +78,9 @@ public class RessourcesHumainesController extends AbstractController {
     @NotNull
     private TableColumn<RessourceHumaineBean, LocalDate> finMissionColumn;
 
+    @NotNull
+    private final ValidationSupport validationSupport = PlanChargeIhm.validationSupport();
+
 
     /**
      * The constructor.
@@ -111,10 +111,16 @@ public class RessourcesHumainesController extends AbstractController {
         finMissionColumn.setCellValueFactory(cellData -> cellData.getValue().finMissionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        class TrigrammeFieldTableCell extends TextFieldTableCell<RessourceHumaineBean,String> {
+        class TrigrammeFieldTableCell extends TextFieldTableCell<RessourceHumaineBean, String> {
 
             public TrigrammeFieldTableCell() {
-                super(new DefaultStringConverter());
+                super(new DefaultStringConverter() {
+                    @Null
+                    @Override
+                    public String fromString(String value) {
+                        return ((value == null) ? null : value.toUpperCase());
+                    }
+                });
             }
 
             @Override
@@ -128,7 +134,19 @@ public class RessourcesHumainesController extends AbstractController {
                 super.commitEdit(newValue);
             }
         }
-        trigrammeColumn.setCellFactory(param -> new TrigrammeFieldTableCell());
+        trigrammeColumn.setCellFactory(column -> {
+            TrigrammeFieldTableCell trigrammeFieldTableCell = new TrigrammeFieldTableCell();
+            validationSupport.<String>registerValidator(trigrammeFieldTableCell, true, Validator.createEmptyValidator("Trigramme obligatoire"));
+            validationSupport.<String>registerValidator(trigrammeFieldTableCell, true, Validator.createPredicateValidator(trigramme -> {
+                        Set<String> trigrammes = ressourceHumainesBeans.parallelStream()
+                                .map(RessourceHumaineBean::getTrigramme)
+                                .collect(Collectors.toSet());
+                        return (!trigrammes.contains(trigramme));
+                    },
+                    "Deux ressources ne peuvent avoir le même trigramme")
+            );
+            return trigrammeFieldTableCell;
+        });
         nomColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         prenomColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         societeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -139,7 +157,7 @@ public class RessourcesHumainesController extends AbstractController {
         trigrammeColumn.setOnEditCommit((TableColumn.CellEditEvent<RessourceHumaineBean, String> change) -> {
             String erreur = validerTrigramme(change.getNewValue());
             if (erreur != null) {
-                TextFieldTableCell<RessourceHumaineBean, String> cell = change.getTablePosition();
+//                TextFieldTableCell<RessourceHumaineBean, String> cell = change.getTablePosition();
                 ihm.afficherErreurSaisie(cell, erreur);
                 RessourceHumaineBean rhb = change.getRowValue();
                 rhb.setTrigramme(change.getOldValue());
@@ -157,13 +175,18 @@ public class RessourcesHumainesController extends AbstractController {
             // Add sorted data to the table.
             ressourcesHumainesTable.setItems(sortedBeans);
         });
+/*
+        trigrammeColumn.setOnEditCommit((TableColumn.CellEditEvent<RessourceHumaineBean, String> change) -> {
+            ressourcesHumainesTable.refresh(); // Pour trier.
+        });
+*/
 
         LOGGER.debug("Initialisé.");
     }
 
     @Null
     private String validerTrigramme(@Null String trigramme) {
-        if (trigramme == null) {
+        if ((trigramme == null) || trigramme.isEmpty()) {
             return "Un trigramme est obligatoire.";
         }
         Set<String> trigrammes = ressourceHumainesBeans.parallelStream()
@@ -183,7 +206,7 @@ public class RessourcesHumainesController extends AbstractController {
         ressourceHumainesBeans.add(nouvRsrcHumaine);
 
         // Positionnement sur la ressource qu'on vient d'ajouter :
-        int idxLigNouvBean = ressourceHumainesBeans.indexOf(nouvRsrcHumaine);
+        int idxLigNouvBean = ressourcesHumainesTable.getItems().indexOf(nouvRsrcHumaine);
         assert idxLigNouvBean != -1;
         ressourcesHumainesTable.scrollTo(idxLigNouvBean);
         ressourcesHumainesTable.getSelectionModel().clearAndSelect(idxLigNouvBean);

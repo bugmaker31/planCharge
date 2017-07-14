@@ -6,26 +6,44 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.*;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.controlsfx.control.decoration.Decoration;
+import org.controlsfx.control.decoration.Decorator;
+import org.controlsfx.control.decoration.GraphicDecoration;
+import org.controlsfx.control.decoration.StyleClassDecoration;
 import org.controlsfx.dialog.ProgressDialog;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.decoration.CompoundValidationDecoration;
+import org.controlsfx.validation.decoration.GraphicValidationDecoration;
+import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
+import org.controlsfx.validation.decoration.ValidationDecoration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +58,18 @@ public class PlanChargeIhm extends Application {
 
     @NotNull
     public static final String FORMAT_DATE = "dd/MM/yy";
+
+
+    @NotNull
+    public static ValidationSupport validationSupport() {
+        ValidationSupport validationSupport = new ValidationSupport();
+        validationSupport.setValidationDecorator(new CompoundValidationDecoration(
+                new StyleClassValidationDecoration("erreurSaisie", "warningSaisie"),
+                new GraphicValidationDecoration()
+        ));
+        return validationSupport;
+    }
+
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
@@ -56,6 +86,8 @@ public class PlanChargeIhm extends Application {
     //    private static Contexte contexte = Contexte.instance();
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
     private static ParametresIhm paramsIhm = ParametresIhm.instance();
+
+    private static boolean estEnDeveloppement = false; // Par défaut.
 
     @NotNull
     private Stage primaryStage;
@@ -201,6 +233,8 @@ public class PlanChargeIhm extends Application {
         try {
             paramsMetier.init();
             paramsIhm.init();
+
+            estEnDeveloppement = paramsIhm.getParametrage("execution.mode").equalsIgnoreCase("developpement");
         } catch (KernelException e) {
             throw new Exception("Impossible de charger les paramètres applicatifs.", e);
         }
@@ -280,11 +314,44 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-
-    public void showError(Thread thread, Throwable throwable) {
-        LOGGER.error("An (uncaught) error occurred in thread " + thread + ".", throwable);
+    public void showError(@NotNull Thread thread, @NotNull Throwable throwable) {
+        LOGGER.error("An (uncaught) error occurred (in thread " + thread.getName() + ").", throwable);
         if (Platform.isFxApplicationThread()) {
-            afficherPopUp(Alert.AlertType.ERROR, "Erreur interne", Exceptions.causes(throwable));
+
+            // Cf. http://code.makery.ch/blog/javafx-dialogs-official/
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur interne");
+            alert.setHeaderText("Une erreur non gérée est survenue.");
+            alert.setContentText(throwable.getLocalizedMessage());
+
+            // TODO FDA 2017/07 A n'afficher que pour le développement, pas pour la production (car peut contenuir des informations sensibles comme les mots de passe, etc.).
+            if (estEnDeveloppement) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                throwable.printStackTrace(pw);
+                String exceptionText = sw.toString();
+
+                Label label = new Label("Information sur l'exception :");
+
+                TextArea textArea = new TextArea(exceptionText);
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+
+                textArea.setMaxWidth(Double.MAX_VALUE);
+                textArea.setMaxHeight(Double.MAX_VALUE);
+                GridPane.setVgrow(textArea, Priority.ALWAYS);
+                GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+                GridPane expContent = new GridPane();
+                expContent.setMaxWidth(Double.MAX_VALUE);
+                expContent.add(label, 0, 0);
+                expContent.add(textArea, 0, 1);
+
+                // Set expandable Exception into the dialog pane.
+                alert.getDialogPane().setExpandableContent(expContent);
+            }
+
+            alert.showAndWait();
         }
     }
 
@@ -351,7 +418,17 @@ public class PlanChargeIhm extends Application {
 
 
     public void afficherErreurSaisie(@NotNull Control field, @NotNull String message) /*throws IhmException*/ {
+/*
         field.getStyleClass().add("erreurSaisie");
+        try {
+            afficherPopUpErreurSaisie(field, message);
+        } catch (IhmException e) {
+            throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+        }
+*/
+        //noinspection HardcodedFileSeparator
+        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(new Image("/images/warning.png")), Pos.BOTTOM_RIGHT));
+        Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
         try {
             afficherPopUpErreurSaisie(field, message);
         } catch (IhmException e) {
@@ -360,7 +437,15 @@ public class PlanChargeIhm extends Application {
     }
 
     public void enleverErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
+/*
         field.getStyleClass().remove("erreurSaisie");
+        try {
+            masquerPopupErreurSaisie(field);
+        } catch (IhmException e) {
+            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
+        }
+*/
+        Decorator.removeAllDecorations(field);
         try {
             masquerPopupErreurSaisie(field);
         } catch (IhmException e) {
@@ -421,6 +506,7 @@ public class PlanChargeIhm extends Application {
         return popup;
     }
 
+/*
     @NotNull
     private VBox fieldVBox(@NotNull Control field) throws IhmException {
         Parent parent = field.getParent();
@@ -462,6 +548,7 @@ public class PlanChargeIhm extends Application {
         }
         throw new IhmException("Le parent du champ '" + field.getId() + "' n'est pas d'un type géré, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.");
     }
+*/
 
     private String idLabelErreurSaisie(@NotNull Control field) {
         //noinspection StringConcatenationMissingWhitespace

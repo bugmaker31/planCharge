@@ -38,15 +38,23 @@
             <id>env_exec.local</id>
             <properties>
                 <env.dir>env/local</env.dir>
+                <exec.mode>developpement</exec.mode>
             </properties>
         </profile>
         <profile>
             <id>env_exec.recette</id>
             <properties>
-                <env.dir>env/recette</env.dir>
+                <env.dir>env/private/recette</env.dir>
+                <exec.mode>developpement</exec.mode>
             </properties>
         </profile>
-
+        <profile>
+            <id>env_exec.production</id>
+            <properties>
+                <env.dir>env/private/production</env.dir>
+                <exec.mode>production</exec.mode>
+            </properties>
+        </profile>
     </profiles>
 
     <build>

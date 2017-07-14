@@ -3,6 +3,16 @@
     -fx-font-style: italic;
 }
 
+/* Cf. https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message */
+/*
+.popup {
+    -fx-background-color: cornsilk;
+    -fx-padding: 10;
+    -fx-border-color: black;
+    -fx-border-width: 3;
+}
+*/
+
 /*Cf. http://www.java2s.com/Code/Java/JavaFX/UsingCSStostyletheborder.htm*/
 .barreEtat {
     /*-fx-border-color: lightgray;*/
@@ -31,9 +41,14 @@
     /*-fx-opacity: 100%;*/
 }
 
+
 .erreurSaisie {
+/*
     -fx-background-color: darkred;
     -fx-text-fill: white;
+*/
+    /*Cf. ControlsFX*/
+    -fx-effect: dropshadow(three-pass-box, darkred, 7, 0, 0, 0);
 }
 
 .erreurSaisie-vbox {
@@ -41,11 +56,11 @@
     /*-fx-spacing: 5pt;*/
 }
 
-.messageErreurSaisie {
-    -fx-background-color: #EA4335;
-    -fx-text-fill: white;
-    -fx-opacity: 75%;
+.warningSaisie {
+    /*Cf. ControlsFX*/
+    -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
 }
+
 
 /*
 Tâches

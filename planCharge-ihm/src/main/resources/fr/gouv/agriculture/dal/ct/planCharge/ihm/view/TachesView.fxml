@@ -35,6 +35,28 @@
                                 <CheckComboBox fx:id="filtreProfilsField" prefWidth="75.0"/>
                             </HBox>
                         </VBox>
+                        <SegmentedButton>
+                            <buttons>
+                                <fx:define>
+                                    <ToggleGroup fx:id="filtreSelonStatutDiffToggleGroup"/>
+                                </fx:define>
+                                <!--TODO FDA 2017/07 Coder l'action.-->
+                                <ToggleButton text="Nouvelles" mnemonicParsing="false" selected="true"
+                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
+                                <!--TODO FDA 2017/07 Coder l'action.-->
+                                <ToggleButton text="Fermées" mnemonicParsing="false"
+                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"
+                                />
+                                <!--TODO FDA 2017/07 Coder l'action.-->
+                                <ToggleButton text="Priorisées" mnemonicParsing="false"
+                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"
+                                />
+                                <!--TODO FDA 2017/07 Coder l'action.-->
+                                <ToggleButton text="Reportées" mnemonicParsing="false"
+                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"
+                                />
+                            </buttons>
+                        </SegmentedButton>
                         <Button text="RAZ"
                                 onAction="#razFiltres"
                                 styleClass="erase-button"
@@ -67,13 +89,13 @@
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="descriptionColumn" prefWidth="500.0" text="Description"/>
-                <TableColumn fx:id="projetAppliColumn" prefWidth="100.0" text="Projet/Appli"/>
-                <TableColumn fx:id="statutColumn" prefWidth="75.0" text="Statut"/>
+                <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description"/>
+                <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"/>
+                <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                 <TableColumn text="Période souhaitée">
                     <columns>
-                        <TableColumn fx:id="debutColumn" prefWidth="75.0" text="Début"/>
-                        <TableColumn fx:id="echeanceColumn" prefWidth="75.0" text="Echéance"/>
+                        <TableColumn fx:id="debutColumn" prefWidth="100" text="Début"/>
+                        <TableColumn fx:id="echeanceColumn" prefWidth="100" text="Echéance"/>
                     </columns>
                 </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
