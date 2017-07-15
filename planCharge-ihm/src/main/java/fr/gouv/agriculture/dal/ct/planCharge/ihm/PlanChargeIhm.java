@@ -22,10 +22,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.stage.*;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.decoration.Decoration;
 import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
@@ -77,7 +75,7 @@ public class PlanChargeIhm extends Application {
     private static PlanChargeIhm instance;
 
     @NotNull
-    private Map<String, Popup> popups = new HashMap<>();
+    private Map<String, PopupWindow> popups = new HashMap<>();
 
     public static PlanChargeIhm instance() {
         return instance;
@@ -417,138 +415,58 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    public void afficherErreurSaisie(@NotNull Control field, @NotNull String message) /*throws IhmException*/ {
-/*
-        field.getStyleClass().add("erreurSaisie");
-        try {
-            afficherPopUpErreurSaisie(field, message);
-        } catch (IhmException e) {
-            throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
-        }
-*/
+    public void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
+        // Cf. ControlsFX
         //noinspection HardcodedFileSeparator
         Decorator.addDecoration(field, new GraphicDecoration(new ImageView(new Image("/images/warning.png")), Pos.BOTTOM_RIGHT));
         Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
         try {
-            afficherPopUpErreurSaisie(field, message);
+            afficherPopUpErreurSaisie(field, titre, message);
         } catch (IhmException e) {
+            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
             throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
         }
     }
 
     public void enleverErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
-/*
-        field.getStyleClass().remove("erreurSaisie");
-        try {
-            masquerPopupErreurSaisie(field);
-        } catch (IhmException e) {
-            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
-        }
-*/
+        // Cf. ControlsFX
         Decorator.removeAllDecorations(field);
         try {
             masquerPopupErreurSaisie(field);
         } catch (IhmException e) {
+            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
             throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
         }
     }
 
-    private void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String message) throws IhmException {
-
-        // V1 Avec une Popup :
-        Popup popup = createFieldPopup(field, message);
-        popup.show(primaryStage);
-/*
-        // V2 Avec un VBox ajouté/retiré dynamiquement :
-        VBox vbox = fieldVBox(field);
-        vbox.getChildren().add(label);
-*/
+    private void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        PopupWindow popup = createFieldPopup(field, titre, message);
+        ((PopOver)popup).show(field);
     }
 
     private void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
-        // V1 Avec une Popup :
         if (! popups.containsKey(idVBoxErreurSaisie(field))) {
             return;
         }
-        Popup popup = popups.get(idVBoxErreurSaisie(field));
+        PopupWindow popup = popups.get(idVBoxErreurSaisie(field));
         popup.hide();
-/*
-        // V2 Avec un VBox ajouté/retiré dynamiquement :
-        VBox vbox = fieldVBox(field);
-        FilteredList<Node> filtered = vbox.getChildren().filtered(node -> node.getId().equals(idLabelErreurSaisie(field)));
-        assert (filtered != null);
-        if (filtered.isEmpty()) {
-            return;
-        }
-        assert filtered.size() == 1;
-        Node node = filtered.get(0);
-        assert (node != null);
-        vbox.getChildren().remove(node);
-*/
     }
 
     @NotNull
-    private Popup createFieldPopup(@NotNull Control field, String message) throws IhmException {
-        Popup popup = new Popup();
-
-        Bounds fieldBounds = field.getBoundsInLocal();
-        Point2D popupLocation = field.localToScreen(fieldBounds.getMinX(), fieldBounds.getMinY() + fieldBounds.getHeight());
-        popup.setAnchorX(popupLocation.getX());
-        popup.setAnchorY(popupLocation.getY());
+    private PopupWindow createFieldPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        PopOver popup = new PopOver();
 
         Label label = new Label(message);
         label.setId(idLabelErreurSaisie(field));
-        label.getStyleClass().setAll("messageErreurSaisie");
 
-        Region hbox = new HBox(label);
-        popup.getContent().add(hbox);
+        popup.setTitle(titre);
+        popup.setContentNode(label);
+
+        popup.getRoot().getStylesheets().add("messageErreurSaisie");
+
         popups.put(idVBoxErreurSaisie(field), popup);
         return popup;
     }
-
-/*
-    @NotNull
-    private VBox fieldVBox(@NotNull Control field) throws IhmException {
-        Parent parent = field.getParent();
-
-        if ((parent instanceof VBox) && (parent.getId().equals(idVBoxErreurSaisie(field)))) {
-            // La VBox a déjà été créée, on la réutilise :
-            return (VBox) parent;
-        }
-
-        // La VBox n'a jamais encore été créée, on la créée maintenant,
-        // qui ne contient que le Field (pour l'instant, on ajoutera le Label avec le message d'erreur... qu'en cas d'erreur) :
-        VBox vbox = new VBox();
-        vbox.getStyleClass().setAll("erreurSaisie-vbox");
-        //noinspection StringConcatenationMissingWhitespace
-        vbox.setId(idVBoxErreurSaisie(field));
-        vbox.getChildren().add(field);
-
-        // On ajoute la VBox au graphe existant :
-        if (parent instanceof Pane) {
-            Pane paneParent = (Pane) field.getParent();
-
-            // Rq : Le simple fait d'ajouter le Field à la VBox "détache" ce Field du Parent, donc il faut récupérer son index avant.
-            int fieldIndex = paneParent.getChildren().indexOf(field);
-
-            // Ajout de la VBox au Parent :
-            paneParent.getChildren().add(fieldIndex, vbox);
-
-            // Rq : Pas besoin de supprimer le Field du Parent, le simple fait de l'ajouter à la VBox le "détache" du Parent.
-            //parent.getChildren().remove(field);
-
-            return vbox;
-        }
-        if (field.getParent() instanceof TableRow) {
-            TableRow rowParent = (TableRow) field.getParent();
-
-            TableView tableView = rowParent.getTableView();
-            TablePosition focusedCell = tableView.getFocusModel().getFocusedCell();
-            // TODO FDA 2017/07 Contnuer de coder, si utilisé finalement.
-        }
-        throw new IhmException("Le parent du champ '" + field.getId() + "' n'est pas d'un type géré, donc on ne peut pas dynamiquement ajouter le Label servant à afficher le message d'erreur.");
-    }
-*/
 
     private String idLabelErreurSaisie(@NotNull Control field) {
         //noinspection StringConcatenationMissingWhitespace
@@ -559,6 +477,7 @@ public class PlanChargeIhm extends Application {
         //noinspection StringConcatenationMissingWhitespace
         return field.getId() + "ErreurSaisie-vbox";
     }
+
 
 /*
     private void showErrorDialog(@NotNull String titre,  String errorMsg) {

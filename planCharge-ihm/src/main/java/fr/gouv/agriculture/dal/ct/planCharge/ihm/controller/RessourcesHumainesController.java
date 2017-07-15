@@ -126,16 +126,19 @@ public class RessourcesHumainesController extends AbstractController {
             @Override
             public void commitEdit(String newValue) {
                 ihm.enleverErreurSaisie(this);
+
                 String erreur = validerTrigramme(newValue);
                 if (erreur != null) {
-                    ihm.afficherErreurSaisie(this, erreur);
+                    ihm.afficherErreurSaisie(this, "Trigramme incorrect : '" + newValue + "'", erreur);
                     return;
                 }
+
                 super.commitEdit(newValue);
             }
         }
         trigrammeColumn.setCellFactory(column -> {
             TrigrammeFieldTableCell trigrammeFieldTableCell = new TrigrammeFieldTableCell();
+            // TODO FDA 2017/07 Comprendre pourquoi les Validator ne sont pas déclenchés. Ensuite, supprimer le déclenchement fait dans TrigrammeFieldTableCell#commitEdit.
             validationSupport.<String>registerValidator(trigrammeFieldTableCell, true, Validator.createEmptyValidator("Trigramme obligatoire"));
             validationSupport.<String>registerValidator(trigrammeFieldTableCell, true, Validator.createPredicateValidator(trigramme -> {
                         Set<String> trigrammes = ressourceHumainesBeans.parallelStream()

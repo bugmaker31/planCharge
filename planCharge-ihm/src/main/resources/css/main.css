@@ -47,7 +47,7 @@
     -fx-background-color: darkred;
     -fx-text-fill: white;
 */
-    /*Cf. ControlsFX*/
+    /* Cf. ControlsFX */
     -fx-effect: dropshadow(three-pass-box, darkred, 7, 0, 0, 0);
 }
 
@@ -57,10 +57,14 @@
 }
 
 .warningSaisie {
-    /*Cf. ControlsFX*/
+    /* Cf. ControlsFX */
     -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
 }
 
+.messageErreurSaisie {
+    /* Cf. ControlsFX */
+    -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
+}
 
 /*
 Tâches

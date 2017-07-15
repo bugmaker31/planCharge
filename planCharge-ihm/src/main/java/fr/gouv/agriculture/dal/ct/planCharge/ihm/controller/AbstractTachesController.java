@@ -533,14 +533,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return false; // Does not match.
             });
         });
+        // TODO FDA 2017/07 Comprendre pourquoi les Validator sont déclenchés mais n'affichent pas le message. Ensuite, supprimer le déclenchement fait dans filtreDescriptionField.textProperty()#listeners.
+/*
         validationSupport.<String>registerValidator(filtreDescriptionField, false, (control, s) -> {
             boolean saisieIncorrecte = !Strings.estExpressionReguliere(s);
             return ValidationResult.fromMessageIf(control, "Expression régulière incorrecte", Severity.ERROR, saisieIncorrecte);
         });
+*/
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre des descriptions...");
 
-            if ((newValue == null) || !Strings.estExpressionReguliere(newValue)) {
+            ihm.enleverErreurSaisie(filtreDescriptionField);
+            String erreur = (Strings.estExpressionReguliere(newValue) ? null : "La valeur saisie n'est pas une expression régulière.");
+            if (erreur != null) {
+                ihm.afficherErreurSaisie(filtreDescriptionField, "Expression régulière incorrecte : '" + newValue + "'", erreur);
                 return;
             }
 
