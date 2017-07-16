@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCells;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
@@ -31,9 +32,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.CheckComboBox;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,10 +178,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     protected ContextMenu tachesTableContextMenu;
 
 
-    @NotNull
-    private final ValidationSupport validationSupport = PlanChargeIhm.validationSupport();
-
-
     @SuppressWarnings("OverlyLongMethod")
     @Override
     protected void initialize() throws IhmException {
@@ -213,8 +207,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplis));
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesStatuts));
-        debutColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE, getTachesBeans(), TacheBean::setDebut));
-        echeanceColumn.setCellFactory(cell -> new DatePickerCell<>(TacheBean.FORMAT_DATE, getTachesBeans(), TacheBean::setEcheance));
+        debutColumn.setCellFactory(DatePickerCells.forTableColumn(TacheBean::setDebut));
+        echeanceColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(TacheBean::setEcheance));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(codesImportances));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessources));
@@ -448,11 +442,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     return true; // Filter matches
                 }
                 try {
-                    if (!tache.descriptionProperty().isEmpty().get() && tache.matcheDescription(newValue)) {
+                    if (!tache.descriptionProperty().isEmpty().get() && Strings.estExpressionReguliere(newValue) && tache.matcheDescription(newValue)) {
                         return true; // Filter matches
                     }
                 } catch (IhmException e) {
-                    LOGGER.error("Impossible de filtrer sur la description, pour la tâche n° {}.", tache.getId(), e);
+                    LOGGER.error("Impossible de filtrer sur la description '" + newValue + "' pour la tâche n° " + tache.getId() + ".", e);
                 }
                 if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue)) {
                     return true; // Filter matches
@@ -533,20 +527,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return false; // Does not match.
             });
         });
-        // TODO FDA 2017/07 Comprendre pourquoi les Validator sont déclenchés mais n'affichent pas le message. Ensuite, supprimer le déclenchement fait dans filtreDescriptionField.textProperty()#listeners.
-/*
-        validationSupport.<String>registerValidator(filtreDescriptionField, false, (control, s) -> {
-            boolean saisieIncorrecte = !Strings.estExpressionReguliere(s);
-            return ValidationResult.fromMessageIf(control, "Expression régulière incorrecte", Severity.ERROR, saisieIncorrecte);
-        });
-*/
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre des descriptions...");
 
-            ihm.enleverErreurSaisie(filtreDescriptionField);
-            String erreur = (Strings.estExpressionReguliere(newValue) ? null : "La valeur saisie n'est pas une expression régulière.");
-            if (erreur != null) {
-                ihm.afficherErreurSaisie(filtreDescriptionField, "Expression régulière incorrecte : '" + newValue + "'", erreur);
+            if (!Strings.estExpressionReguliere(newValue)) {
+                ihm.afficherErreurSaisie(filtreDescriptionField, "Filtre incorrect : '" + newValue + "'", "Expression régulière incorrecte : '" + newValue + "'.");
                 return;
             }
 
@@ -554,6 +539,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
                 // If filter text is empty, display all data.
                 if ((newValue == null) || newValue.isEmpty()) {
+                    return true;
+                }
+
+                if (!Strings.estExpressionReguliere(newValue)) {
                     return true;
                 }
 

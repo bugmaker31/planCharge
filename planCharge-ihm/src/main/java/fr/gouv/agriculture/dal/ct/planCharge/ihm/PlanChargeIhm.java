@@ -1,39 +1,42 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
+import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.stage.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.stage.Modality;
+import javafx.stage.PopupWindow;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.decoration.Decoration;
 import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
 import org.controlsfx.control.decoration.StyleClassDecoration;
 import org.controlsfx.dialog.ProgressDialog;
+import org.controlsfx.tools.ValueExtractor;
 import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.decoration.CompoundValidationDecoration;
-import org.controlsfx.validation.decoration.GraphicValidationDecoration;
-import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
-import org.controlsfx.validation.decoration.ValidationDecoration;
+import org.controlsfx.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
 public class PlanChargeIhm extends Application {
 
@@ -58,15 +62,22 @@ public class PlanChargeIhm extends Application {
     public static final String FORMAT_DATE = "dd/MM/yy";
 
 
+/*
     @NotNull
     public static ValidationSupport validationSupport() {
+        // Cf. https://stackoverflow.com/questions/29607080/textfield-component-validation-with-controls-fx
         ValidationSupport validationSupport = new ValidationSupport();
+*/
+/* TODO FDA 2017/07 Personnaliser la décoration (... ou pas ?).
         validationSupport.setValidationDecorator(new CompoundValidationDecoration(
                 new StyleClassValidationDecoration("erreurSaisie", "warningSaisie"),
                 new GraphicValidationDecoration()
         ));
+*//*
+
         return validationSupport;
     }
+*/
 
 
     @NotNull
@@ -75,7 +86,7 @@ public class PlanChargeIhm extends Application {
     private static PlanChargeIhm instance;
 
     @NotNull
-    private Map<String, PopupWindow> popups = new HashMap<>();
+    private static Map<String, PopupWindow> popups = new HashMap<>();
 
     public static PlanChargeIhm instance() {
         return instance;
@@ -224,6 +235,10 @@ public class PlanChargeIhm extends Application {
 
         initialiserViewsEtControllers();
 
+        // Cf. https://controlsfx.bitbucket.io/org/controlsfx/validation/ValidationSupport.html
+        ValueExtractor.addObservableValueExtractor(control -> control instanceof TextFieldTableCell, control -> ((TextFieldTableCell) control).textProperty());
+        ValueExtractor.addObservableValueExtractor(control -> control instanceof DatePickerCell, control -> ((DatePickerCell) control).textProperty());
+
         LOGGER.info("Application initialisée.");
     }
 
@@ -320,16 +335,16 @@ public class PlanChargeIhm extends Application {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur interne");
             alert.setHeaderText("Une erreur non gérée est survenue.");
-            alert.setContentText(throwable.getLocalizedMessage());
 
-            // TODO FDA 2017/07 A n'afficher que pour le développement, pas pour la production (car peut contenuir des informations sensibles comme les mots de passe, etc.).
+            // TODO FDA 2017/07 Tester (à n'afficher que pour le développement, pas pour la production car peut contenuir des informations sensibles comme les mots de passe, etc.).
             if (estEnDeveloppement) {
+                alert.setContentText(throwable.getLocalizedMessage());
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 throwable.printStackTrace(pw);
                 String exceptionText = sw.toString();
 
-                Label label = new Label("Information sur l'exception :");
+                Label label = new Label("Exception Java : ");
 
                 TextArea textArea = new TextArea(exceptionText);
                 textArea.setEditable(false);
@@ -415,10 +430,36 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    public void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
-        // Cf. ControlsFX
-        //noinspection HardcodedFileSeparator
-        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(new Image("/images/warning.png")), Pos.BOTTOM_RIGHT));
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final Image REQUIRED_INDICATOR_IMAGE = new Image("/images/required-indicator.png");
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final Image ERROR_INDICATOR_IMAGE = new Image("/images/decoration-error.png");
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final Image WARNING_INDICATOR_IMAGE = new Image("/images/decoration-warning.png");
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final Image SECURED_INDICATOR_IMAGE = new Image("/images/decoration-shield.png");
+
+    public static void symboliserChampObligatoire(@NotNull Control field) /*throws IhmException*/ {
+        // TODO FDA 2017/07 Comprendre pourquoi la ligne commentée ci-dessous n'affiche pas le symbole rouge dans le coin haut gauche du champ.
+//        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
+        new ValidationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+    }
+
+    public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
+        cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) ->
+                Platform.runLater(() -> {
+                            masquerErreurSaisie(cell);
+                            String error = validator.apply(newValue);
+                            if (error != null) {
+                                afficherErreurSaisie(cell, title, error);
+                            }
+                        }
+                )
+        );
+    }
+
+    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
+        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
         Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
         try {
             afficherPopUpErreurSaisie(field, titre, message);
@@ -426,10 +467,11 @@ public class PlanChargeIhm extends Application {
             // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
             throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
         }
+        //        new ValidationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+
     }
 
-    public void enleverErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
-        // Cf. ControlsFX
+    public static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
         Decorator.removeAllDecorations(field);
         try {
             masquerPopupErreurSaisie(field);
@@ -439,22 +481,31 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    private void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+    private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
         PopupWindow popup = createFieldPopup(field, titre, message);
-        ((PopOver)popup).show(field);
+        field.setOnMouseEntered(event -> ((PopOver) popup).show(field));
+        field.setOnMouseExited(event -> popup.hide());
+        ((PopOver) popup).show(field);
     }
 
-    private void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
-        if (! popups.containsKey(idVBoxErreurSaisie(field))) {
+    private static void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
+        if (!popups.containsKey(idVBoxErreurSaisie(field))) {
+            // TODO FDA 2017/07 Thrower une erreur, plutôt ?
+            LOGGER.error("Impossible de retrouver la popup associée au control " + field.getId() + " (pour afficher l'erreur de saisie).");
             return;
         }
         PopupWindow popup = popups.get(idVBoxErreurSaisie(field));
+        field.setOnMouseEntered(event -> {
+        });
+        field.setOnMouseExited(event -> {
+        });
         popup.hide();
     }
 
     @NotNull
-    private PopupWindow createFieldPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+    private static PopupWindow createFieldPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
         PopOver popup = new PopOver();
+        popup.setHeaderAlwaysVisible(true);
 
         Label label = new Label(message);
         label.setId(idLabelErreurSaisie(field));
@@ -462,18 +513,18 @@ public class PlanChargeIhm extends Application {
         popup.setTitle(titre);
         popup.setContentNode(label);
 
-        popup.getRoot().getStylesheets().add("messageErreurSaisie");
+        popup.getStyleClass().add("messageErreurSaisie");
 
         popups.put(idVBoxErreurSaisie(field), popup);
         return popup;
     }
 
-    private String idLabelErreurSaisie(@NotNull Control field) {
+    private static String idLabelErreurSaisie(@NotNull Control field) {
         //noinspection StringConcatenationMissingWhitespace
         return field.getId() + "ErreurSaisie-label";
     }
 
-    private String idVBoxErreurSaisie(@NotNull Control field) {
+    private static String idVBoxErreurSaisie(@NotNull Control field) {
         //noinspection StringConcatenationMissingWhitespace
         return field.getId() + "ErreurSaisie-vbox";
     }
@@ -525,9 +576,16 @@ public class PlanChargeIhm extends Application {
     }
 
 
+    public static void notifier(@NotNull String titre, @NotNull String message) {
+        Notifications.create()
+                .title(titre)
+                .text(message)
+                .showInformation();
+    }
+
+
     @Override
-    public void
-    start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
+    public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
         try {
             LOGGER.info("Application en cours de démarrage...");
 
@@ -589,6 +647,7 @@ public class PlanChargeIhm extends Application {
     public void definirTitre(String titre) {
         primaryStage.setTitle(titre);
     }
+
 
 /*
 

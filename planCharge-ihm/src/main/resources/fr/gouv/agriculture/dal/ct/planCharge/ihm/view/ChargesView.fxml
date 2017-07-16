@@ -3,10 +3,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
-<?import org.controlsfx.glyphfont.Glyph?>
-<?import javafx.geometry.Insets?>
+
+
+<?import java.lang.Double?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController">
+    <fx:define>
+        <Double fx:id="descriptionFieldPrefWidth" fx:value="500"/>
+        <!--TODO FDA 2017/07 Continuer à paramétrer les prefWidth.-->
+    </fx:define>
     <top>
         <VBox>
             <Accordion>
@@ -16,20 +21,42 @@
                             <VBox>
                                 <HBox>
                                     <Label text="Filtre global : "/>
-                                    <TextField fx:id="filtreGlobalField" prefWidth="200.0"/>
+                                    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
+                                        <tooltip>
+                                            <Tooltip
+                                                    text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+                                        </tooltip>
+                                    </TextField>
                                 </HBox>
                                 <HBox>
-                                    <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50.0"/>
-                                    <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50.0"/>
-                                    <TextField fx:id="filtreNoTacheField" prefWidth="50.0"/>
-                                    <TextField fx:id="filtreNoTicketIdalField"
-                                               prefWidth="70.0"/>
-                                    <TextField fx:id="filtreDescriptionField"
-                                               prefWidth="300.0"/>
+                                    <CheckComboBox fx:id="filtreCategoriesField" prefWidth="50">
+                                        <tooltip>
+                                            <!--FIXME FDA 2017/07 Non affiché (même en codant en Java). Bug dans ControlsFX ?-->
+                                            <Tooltip text="Filtre les tâches sur leur catégorie."/>
+                                        </tooltip>
+                                    </CheckComboBox>
+                                    <CheckComboBox fx:id="filtreSousCategoriesField" prefWidth="50"/>
+                                    <TextField fx:id="filtreNoTacheField" prefWidth="50">
+                                        <tooltip>
+                                            <Tooltip text="Filtre les tâches sur le numéro (l'ID)."/>
+                                        </tooltip>
+                                    </TextField>
+                                    <TextField fx:id="filtreNoTicketIdalField" prefWidth="70">
+                                        <tooltip>
+                                            <Tooltip text="Filtre les tâches sur le numéro de ticket IDAL."/>
+                                        </tooltip>
+                                    </TextField>
+                                    <TextField fx:id="filtreDescriptionField" promptText="filtre sur description"
+                                               prefWidth="$descriptionFieldPrefWidth">
+                                        <tooltip>
+                                            <Tooltip
+                                                    text="Filtre les tâches sur la description. Expression régulière acceptée."/>
+                                        </tooltip>
+                                    </TextField>
                                     <CheckComboBox fx:id="filtreProjetsApplisField"
                                                    prefWidth="100.0"/>
-                                    <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
-                                    <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
+                                    <DatePicker fx:id="filtreDebutField" prefWidth="100"/>
+                                    <DatePicker fx:id="filtreEcheanceField" prefWidth="100"/>
                                     <CheckComboBox fx:id="filtreImportancesField"
                                                    prefWidth="75.0"/>
                                     <TextField fx:id="filtreChargeField" prefWidth="50.0"/>
@@ -88,15 +115,16 @@
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55"
-                                     editable="false" styleClass="non-modifiable" />
+                                     editable="false" styleClass="non-modifiable"/>
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="500" text="Description"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionFieldPrefWidth"
+                                     text="Description"/>
                         <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"/>
                         <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="100.0" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="100.0" text="Echéance"/>
+                                <TableColumn fx:id="debutColumn" prefWidth="100" text="Début"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="100" text="Echéance"/>
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>

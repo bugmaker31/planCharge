@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.ihm.javafx;
+package fr.gouv.agriculture.dal.ct.ihm.view;
 
 /**
  * Created by frederic.danna on 02/07/2017.

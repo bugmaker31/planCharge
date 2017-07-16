@@ -403,16 +403,12 @@ public class ApplicationController extends AbstractController {
             ihm.getTachesController().razFiltres();
             ihm.getChargesController().razFiltres();
 
-/*
-            ihm.afficherPopUp(
-                    Alert.AlertType.INFORMATION,
+            ihm.notifier(
                     "Chargement terminé",
                     "Le chargement est terminé :"
                             + "\n- date d'état : " + planChargeBean.getDateEtat()
-                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches",
-                    400, 200
+                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches"
             );
-*/
 
             afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
 
@@ -472,13 +468,21 @@ public class ApplicationController extends AbstractController {
             getSuiviActionsUtilisateur().historiser(new SauvegardePlanCharge());
 
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
+/*
             ihm.afficherPopUp(
                     Alert.AlertType.INFORMATION,
                     "Sauvegarde terminée",
                     "Les " + planChargeBean.getPlanificationsBeans().size() + " lignes du plan de charge"
                             + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
                             + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
+
                     500, 300
+            );
+*/
+            ihm.notifier("Sauvegarde effectuée.",
+                    "Les " + planChargeBean.getPlanificationsBeans().size() + " lignes du plan de charge"
+                            + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                            + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')."
             );
 
             majBarreEtat();
@@ -584,9 +588,7 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());
 
-            ihm.afficherPopUp(
-                    Alert.AlertType.INFORMATION,
-                    "Tâches mises à jour importées",
+            ihm.notifier("Tâches mises à jour importées",
                     "Les tâches ont été mises à jour : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                             + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
@@ -594,8 +596,7 @@ public class ApplicationController extends AbstractController {
                             + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
                             + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
                             + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
-                            + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
-                    700, 300
+                            + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size()
             );
 
             afficherModuleTaches();
@@ -701,14 +702,11 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
 
-            ihm.afficherPopUp(
-                    Alert.AlertType.INFORMATION,
-                    "Données importées",
+            ihm.notifier("Données importées",
                     "Le plan de charge a été importé : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                             + "\n- date d'état : " + planChargeBean.getDateEtat()
-                            + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size(),
-                    700, 300
+                            + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size()
             );
 
             afficherModuleCharges();
@@ -917,7 +915,6 @@ public class ApplicationController extends AbstractController {
         ihm.getApplicationView().setCenter(ihm.getRessourcesHumainesView());
         majTitre();
     }
-
 
 
     //    @FXML

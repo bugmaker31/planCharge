@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.ihm.javafx;
+package fr.gouv.agriculture.dal.ct.ihm.view;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -20,8 +20,6 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
     @NotNull
     private final String format;
     @NotNull
-    private final ObservableList<S> data;
-    @NotNull
     private final BiConsumer<S, LocalDate> dateSetter;
     @NotNull
     private final DateTimeFormatter dateFormatter;
@@ -30,12 +28,11 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
     private DatePicker datePicker;
 
 
-    public DatePickerCell(@NotNull String format, @NotNull ObservableList<S> data, @NotNull BiConsumer<S, LocalDate> dateSetter) {
+    public DatePickerCell(@NotNull String format, @NotNull BiConsumer<S, LocalDate> dateSetter) {
 
         super();
 
         this.format = format;
-        this.data = data;
         this.dateSetter = dateSetter;
 
         this.dateFormatter = DateTimeFormatter.ofPattern(format);
@@ -78,14 +75,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
         newDatePicker.setOnAction(t -> {
             LocalDate date = newDatePicker.getValue();
-
             commitEdit(date);
-
-            if (getData() != null) {
-                int index = getIndex();
-                S data = getData().get(index);
-                dateSetter.accept(data, date);
-            }
         });
 
         setAlignment(Pos.CENTER);
@@ -103,10 +93,4 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
         super.cancelEdit();
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
-
-    public ObservableList<S> getData() {
-        return data;
-    }
-
-
 }

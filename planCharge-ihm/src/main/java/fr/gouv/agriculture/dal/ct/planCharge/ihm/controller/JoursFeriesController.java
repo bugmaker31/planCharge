@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.javafx.DatePickerCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCells;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
@@ -82,7 +83,7 @@ public class JoursFeriesController extends AbstractController {
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        dateColumn.setCellFactory(p -> new DatePickerCell<>(PlanChargeIhm.FORMAT_DATE, joursFeriesBeans, JourFerieBean::setDate));
+        dateColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(JourFerieBean::setDate));
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Association (binding) entre la liste et la table des jours fériés :

@@ -1,3 +1,8 @@
+
+/*
+Généralités :
+*/
+
 /*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
 .non-modifiable {
     -fx-font-style: italic;
@@ -11,6 +16,11 @@
     -fx-border-color: black;
     -fx-border-width: 3;
 }
+*/
+
+
+/*
+Barre d'état :
 */
 
 /*Cf. http://www.java2s.com/Code/Java/JavaFX/UsingCSStostyletheborder.htm*/
@@ -42,6 +52,10 @@
 }
 
 
+/*
+Validation de la saisie depuis l'IHM :
+*/
+
 .erreurSaisie {
 /*
     -fx-background-color: darkred;
@@ -66,8 +80,9 @@
     -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
 }
 
+
 /*
-Tâches
+Tâches :
 */
 
 .importanceAvecEngagement {
@@ -98,7 +113,7 @@ Tâches
 
 
 /*
-Plan de charge
+Plan de charge :
 */
 
 .erase-button {
