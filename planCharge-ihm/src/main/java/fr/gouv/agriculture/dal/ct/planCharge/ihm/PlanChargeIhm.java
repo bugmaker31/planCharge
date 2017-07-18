@@ -14,22 +14,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
 import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
 import org.controlsfx.control.decoration.StyleClassDecoration;
@@ -46,10 +46,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
@@ -144,6 +141,9 @@ public class PlanChargeIhm extends Application {
     private TachesController tachesController;
     @NotNull
     private ChargesController chargesController;
+
+    @NotNull
+    private Pane contentPane;
 
 /*
     //    @Autowired
@@ -294,6 +294,7 @@ public class PlanChargeIhm extends Application {
             loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ApplicationView.fxml"));
             applicationView = loader.load();
             applicationController = loader.getController();
+            contentPane = applicationController.getContentPane();
         }
         {
             FXMLLoader loader = new FXMLLoader();
@@ -440,9 +441,16 @@ public class PlanChargeIhm extends Application {
     private static final Image SECURED_INDICATOR_IMAGE = new Image("/images/decoration-shield.png");
 
     public static void symboliserChampObligatoire(@NotNull Control field) /*throws IhmException*/ {
-        // TODO FDA 2017/07 Comprendre pourquoi la ligne commentée ci-dessous n'affiche pas le symbole rouge dans le coin haut gauche du champ.
-//        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
+        // TODO FDA 2017/07 Comprendre pourquoi la ligne ci-dessous n'affiche pas le symbole rouge dans le coin haut gauche des TextFieldTableCell (mais ok pour les TableColumn).
+        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
         new ValidationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+    }
+
+    public static <S, T> void symboliserChampObligatoire(@NotNull TableColumn<S, T> tableColumn) /*throws IhmException*/ {
+        // TODO FDA 2017/07 Confirmer que c'est la bonne façon de coder.
+        Label label = new Label("");
+        symboliserChampObligatoire(label);
+        tableColumn.setGraphic(label);
     }
 
     public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
@@ -456,6 +464,13 @@ public class PlanChargeIhm extends Application {
                         }
                 )
         );
+    }
+
+    public void notifier(@NotNull String titre, @NotNull String message) {
+        Notifications.create()
+                .title(titre)
+                .text(message)
+                .showInformation();
     }
 
     public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
@@ -573,14 +588,6 @@ public class PlanChargeIhm extends Application {
         }
 
         return resultat;
-    }
-
-
-    public static void notifier(@NotNull String titre, @NotNull String message) {
-        Notifications.create()
-                .title(titre)
-                .text(message)
-                .showInformation();
     }
 
 

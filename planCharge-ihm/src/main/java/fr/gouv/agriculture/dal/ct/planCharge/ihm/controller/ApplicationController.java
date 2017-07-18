@@ -23,7 +23,9 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import org.controlsfx.control.NotificationPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,7 @@ public class ApplicationController extends AbstractController {
 
     private static ParametresIhm paramsIhm = ParametresIhm.instance();
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
+
 
     public enum NomModule {
         // Référentiels :
@@ -123,6 +126,10 @@ public class ApplicationController extends AbstractController {
 
     @FXML
     @NotNull
+    private Pane contentPane;
+
+    @FXML
+    @NotNull
     private DatePicker dateEtatPicker;
 
 
@@ -147,6 +154,16 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private ProgressBar progressionBar;
 */
+
+    @NotNull
+    public Pane getContentPane() {
+        return contentPane;
+    }
+
+    @NotNull
+    public DatePicker getDateEtatPicker() {
+        return dateEtatPicker;
+    }
 
 
     //    @Autowired
@@ -180,11 +197,6 @@ public class ApplicationController extends AbstractController {
 
     public NomModule getNomModuleCourant() {
         return nomModuleCourant;
-    }
-
-    @NotNull
-    public DatePicker getDateEtatPicker() {
-        return dateEtatPicker;
     }
 
 
@@ -467,22 +479,14 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreSauvegarde();
             getSuiviActionsUtilisateur().historiser(new SauvegardePlanCharge());
 
+            //noinspection unused
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
-/*
-            ihm.afficherPopUp(
-                    Alert.AlertType.INFORMATION,
-                    "Sauvegarde terminée",
-                    "Les " + planChargeBean.getPlanificationsBeans().size() + " lignes du plan de charge"
-                            + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
-                            + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "').",
-
-                    500, 300
-            );
-*/
             ihm.notifier("Sauvegarde effectuée.",
-                    "Les " + planChargeBean.getPlanificationsBeans().size() + " lignes du plan de charge"
+                    "Le plan de charge"
                             + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
-                            + " ont été sauvées (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')."
+                            + " a été sauvegardé"
+//                            +" (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')"
+                            + "."
             );
 
             majBarreEtat();
@@ -883,7 +887,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleJoursFeries() {
         nomModuleCourant = NomModule.JOURS_FERIES;
-        ihm.getApplicationView().setCenter(ihm.getJoursFeriesView());
+        contentPane.getChildren().setAll(ihm.getJoursFeriesView());
         majTitre();
     }
 
@@ -912,7 +916,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleRessourcesHumaines() {
         nomModuleCourant = NomModule.RESSOURCES_HUMAINES;
-        ihm.getApplicationView().setCenter(ihm.getRessourcesHumainesView());
+        contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
         majTitre();
     }
 
@@ -942,7 +946,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleDisponibilites() {
         nomModuleCourant = NomModule.DISPONIBILITES;
-        ihm.getApplicationView().setCenter(ihm.getDisponibilitesView());
+        contentPane.getChildren().setAll(ihm.getDisponibilitesView());
         majTitre();
     }
 
@@ -972,7 +976,7 @@ public class ApplicationController extends AbstractController {
     public void activerModuleTaches() {
         nomModuleCourant = NomModule.TACHES;
         ihm.getTachesController().definirMenuContextuel();
-        ihm.getApplicationView().setCenter(ihm.getTachesView());
+        contentPane.getChildren().setAll(ihm.getTachesView());
         majTitre();
     }
 
@@ -1002,7 +1006,7 @@ public class ApplicationController extends AbstractController {
     public void activerModuleCharges() {
         nomModuleCourant = NomModule.CHARGES;
         ihm.getChargesController().definirMenuContextuel();
-        ihm.getApplicationView().setCenter(ihm.getChargesView());
+        contentPane.getChildren().setAll(ihm.getChargesView());
         majTitre();
     }
 

@@ -18,7 +18,7 @@ public class DatePickerCells {
     public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forRequiredTableColumn(@NotNull BiConsumer<S, LocalDate> dateSetter) {
         return (TableColumn<S, LocalDate> p) -> {
             TableCell<S, LocalDate> datePickerCell = forTableColumn(dateSetter).call(p);
-            PlanChargeIhm.symboliserChampObligatoire(datePickerCell);
+//            PlanChargeIhm.symboliserChampObligatoire(datePickerCell);
             return datePickerCell;
         };
     }

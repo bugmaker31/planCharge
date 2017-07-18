@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
+<?import org.controlsfx.control.NotificationPane?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
@@ -46,7 +47,8 @@
                     <MenuItem disable="true" text="_Importances"/>
                 </Menu>
                 <Menu text="_Gestion">
-                    <MenuItem text="_Disponibilités" onAction="#afficherModuleDisponibilites" accelerator="Shortcut+Shift+D"/>
+                    <MenuItem text="_Disponibilités" onAction="#afficherModuleDisponibilites"
+                              accelerator="Shortcut+Shift+D"/>
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
                 </Menu>
@@ -72,23 +74,24 @@
             </Accordion>
         </VBox>
     </top>
-    <!--
-        <center>
-            <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
-                <Tab fx:id="disponibilitesTab" text="Disponibilités">
-                    <fx:include sourDisponibilitesView.fxmlfxml"/>
-                </Tab>
-                <Tab fx:id="tachesTab" text="Tâches">
-                    <fx:include sourTachesView.fxmlfxml"/>
-                </Tab>
-                <Tab fx:id="chargesTab" text="Charges">
-                    <fx:include sourChargesView.fxmlfxml"/>
-                </Tab>
-            </TabPane>
+    <center>
+        <!--
+                <TabPane fx:id="gestionTabPane" tabClosingPolicy="UNAVAILABLE">
+                    <Tab fx:id="disponibilitesTab" text="Disponibilités">
+                        <fx:include "sourDisponibilitesView.fxmlfxml"/>
+                        </Tab>
+                        <Tab fx:id="tachesTab" text="Tâches">
+                            <fx:include sourTachesView.fxmlfxml"/>
+                    </Tab>
+                    <Tab fx:id="chargesTab" text="Charges">
+                        <fx:include "sourChargesView.fxmlfxml"/>
+                        </Tab>
+                    </TabPane>
+        -->
+        <AnchorPane fx:id="contentPane"/>
     </center>
-    -->
     <bottom>
-        <AnchorPane BorderPane.alignment="CENTER">
+        <AnchorPane>
             <HBox styleClass="barreEtat">
                 <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
                 <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
@@ -111,12 +114,12 @@
                     <Label text="tâches"/>
                 </HBox>
             </HBox>
-<!--
-            <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
-                <Label fx:id="avancementLabel"/>
-                <ProgressBar fx:id="progressionBar"/>
-            </HBox>
--->
+            <!--
+                        <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
+                            <Label fx:id="avancementLabel"/>
+                            <ProgressBar fx:id="progressionBar"/>
+                        </HBox>
+            -->
         </AnchorPane>
     </bottom>
 </BorderPane>

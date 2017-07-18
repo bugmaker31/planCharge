@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,9 +85,12 @@ public class JoursFeriesController extends AbstractController {
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        PlanChargeIhm.symboliserChampObligatoire(dateColumn); // FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
         dateColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(JourFerieBean::setDate));
+        PlanChargeIhm.symboliserChampObligatoire(descriptionColumn); // FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
+/*
         // Association (binding) entre la liste et la table des jours fériés :
         joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
             // Wrap the FilteredList in a SortedList.
@@ -95,6 +100,13 @@ public class JoursFeriesController extends AbstractController {
             // Add sorted data to the table.
             joursFeriesTable.setItems(sortedBeans);
         });
+*/
+        joursFeriesTable.setItems(joursFeriesBeans);
+
+        TableFilter.Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
+//        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
+        //noinspection unused
+        TableFilter<JourFerieBean> ressourcesHumainesTableFilter = filter.apply();
 
         LOGGER.debug("Initialisé.");
     }

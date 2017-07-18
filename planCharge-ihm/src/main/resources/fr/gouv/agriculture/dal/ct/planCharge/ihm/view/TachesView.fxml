@@ -4,7 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TachesController">
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TachesController"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+>
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>

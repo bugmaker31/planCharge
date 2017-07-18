@@ -9,13 +9,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,35 +104,40 @@ public class RessourcesHumainesController extends AbstractController {
         finMissionColumn.setCellValueFactory(cellData -> cellData.getValue().finMissionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        PlanChargeIhm.symboliserChampObligatoire(trigrammeColumn);
         trigrammeColumn.setCellFactory(param -> {
             TextFieldTableCell<RessourceHumaineBean, String> trigrammeCell = new UpperCaseTextFieldTableCell<>();
-            PlanChargeIhm.symboliserChampObligatoire(trigrammeCell);
+//            PlanChargeIhm.symboliserChampObligatoire(trigrammeCell);
             PlanChargeIhm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
             return trigrammeCell;
         });
+        PlanChargeIhm.symboliserChampObligatoire(nomColumn);
         nomColumn.setCellFactory(param -> {
-            TableCell<RessourceHumaineBean, String> nomCell = TextFieldTableCells.<RessourceHumaineBean, String>forRequiredTableColumn().call(param);
-            PlanChargeIhm.symboliserChampObligatoire(nomCell);
+            TableCell<RessourceHumaineBean, String> nomCell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(nomCell, "Nom incorrect", this::validerNom);
             return nomCell;
         });
+        PlanChargeIhm.symboliserChampObligatoire(prenomColumn);
         prenomColumn.setCellFactory(TextFieldTableCells.forRequiredTableColumn());
+        PlanChargeIhm.symboliserChampObligatoire(societeColumn);
         societeColumn.setCellFactory(TextFieldTableCells.forRequiredTableColumn());
-        debutMissionColumn.setCellFactory(param -> {
-            TableCell<RessourceHumaineBean, LocalDate> debutMissionCell = DatePickerCells.forRequiredTableColumn(RessourceHumaineBean::setDebutMission).call(param);
-            return debutMissionCell;
-        });
+        PlanChargeIhm.symboliserChampObligatoire(debutMissionColumn);
+        debutMissionColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(RessourceHumaineBean::setDebutMission));
         finMissionColumn.setCellFactory(DatePickerCells.forTableColumn(RessourceHumaineBean::setFinMission));
 
-        // Association (binding) entre la liste et la table des jours fériés :
+        ressourcesHumainesTable.setItems(ressourceHumainesBeans);
+
+        TableFilter.Builder<RessourceHumaineBean> filter = TableFilter.forTableView(ressourcesHumainesTable);
+//        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
+        //noinspection unused
+        TableFilter<RessourceHumaineBean> ressourcesHumainesTableFilter = filter.apply();
+
+/*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
-            // Wrap the FilteredList in a SortedList.
-            final SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
-            // Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
-            sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
-            // Add sorted data to the table.
-            ressourcesHumainesTable.setItems(sortedBeans);
+//            ressourcesHumainesTable.setPrefHeight(Region.USE_COMPUTED_SIZE);
+//            ressourcesHumainesTableFilter.executeFilter();
         });
+*/
 
         LOGGER.debug("Initialisé.");
     }

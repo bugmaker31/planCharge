@@ -11,12 +11,16 @@ import javafx.util.Callback;
  */
 public class TextFieldTableCells {
 
-    public static <S, T> Callback<TableColumn<S, T>, TableCell<S, String>> forRequiredTableColumn() {
-        return (TableColumn<S, T> list) -> {
+    public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forRequiredTableColumn() {
+        return (TableColumn<S, String> list) -> {
             //noinspection unchecked
-            TableCell<S, String> textFieldCell = TextFieldTableCell.<S>forTableColumn().call((TableColumn<S, String>) list);
-            PlanChargeIhm.symboliserChampObligatoire(textFieldCell);
+            TableCell<S, String> textFieldCell = TextFieldTableCell.<S>forTableColumn().call(list);
+//            PlanChargeIhm.symboliserChampObligatoire(textFieldCell);
             return textFieldCell;
         };
+    }
+
+    public static  <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
+        return TextFieldTableCell.forTableColumn();
     }
 }
