@@ -22,6 +22,10 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
     private StringProperty description = new SimpleStringProperty();
 
 
+    public JourFerieBean() {
+        super();
+    }
+
     public JourFerieBean(@NotNull JourFerie jourFerie) {
         this.date.set(jourFerie.getDate());
         this.description.set(jourFerie.getDescription());

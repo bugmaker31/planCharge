@@ -1,13 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCells;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -113,17 +113,29 @@ public class RessourcesHumainesController extends AbstractController {
         });
         PlanChargeIhm.symboliserChampObligatoire(nomColumn);
         nomColumn.setCellFactory(param -> {
-            TableCell<RessourceHumaineBean, String> nomCell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            PlanChargeIhm.controler(nomCell, "Nom incorrect", this::validerNom);
-            return nomCell;
+            TableCell<RessourceHumaineBean, String> cell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+            PlanChargeIhm.controler(cell, "Nom incorrect", this::validerNom);
+            return cell;
         });
         PlanChargeIhm.symboliserChampObligatoire(prenomColumn);
-        prenomColumn.setCellFactory(TextFieldTableCells.forRequiredTableColumn());
+        prenomColumn.setCellFactory(param -> {
+            TableCell<RessourceHumaineBean, String> cell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+            PlanChargeIhm.controler(cell, "Prénom incorrect", this::validerPrenom);
+            return cell;
+        });
         PlanChargeIhm.symboliserChampObligatoire(societeColumn);
-        societeColumn.setCellFactory(TextFieldTableCells.forRequiredTableColumn());
+        societeColumn.setCellFactory(param -> {
+            TableCell<RessourceHumaineBean, String> cell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+            PlanChargeIhm.controler(cell, "Société incorrecte", this::validerSociete);
+            return cell;
+        });
         PlanChargeIhm.symboliserChampObligatoire(debutMissionColumn);
-        debutMissionColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(RessourceHumaineBean::setDebutMission));
-        finMissionColumn.setCellFactory(DatePickerCells.forTableColumn(RessourceHumaineBean::setFinMission));
+        debutMissionColumn.setCellFactory(param -> {
+            TableCell<RessourceHumaineBean, LocalDate> cell = DatePickerTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+            PlanChargeIhm.controler(cell, "Date de début incorrecte", this::validerDebutMission);
+            return cell;
+        });
+        finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
         ressourcesHumainesTable.setItems(ressourceHumainesBeans);
 
@@ -160,8 +172,32 @@ public class RessourcesHumainesController extends AbstractController {
 
     @Null
     private String validerNom(@Null String nom) {
-        if ((nom == null) || nom.isEmpty()) {
+        if ((nom == null) || nom.trim().isEmpty()) {
             return "Un nom est obligatoire.";
+        }
+        return null;
+    }
+
+    @Null
+    private String validerPrenom(@Null String prenom) {
+        if ((prenom == null) || prenom.trim().isEmpty()) {
+            return "Un prénom est obligatoire.";
+        }
+        return null;
+    }
+
+    @Null
+    private String validerSociete(@Null String societe) {
+        if ((societe == null) || societe.trim().isEmpty()) {
+            return "La société est obligatoire.";
+        }
+        return null;
+    }
+
+    @Null
+    private String validerDebutMission(@Null LocalDate debutMission) {
+        if (debutMission == null) {
+            return "Le début de mission est obligatoire.";
         }
         return null;
     }

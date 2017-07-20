@@ -27,8 +27,8 @@
                                            prefWidth="300.0"/>
                                 <CheckComboBox fx:id="filtreProjetsApplisField"
                                                prefWidth="100.0"/>
-                                <DatePicker fx:id="filtreDebutField" prefWidth="75.0"/>
-                                <DatePicker fx:id="filtreEcheanceField" prefWidth="75.0"/>
+                                <DatePicker fx:id="filtreDebutField" showWeekNumbers="true" prefWidth="100"/>
+                                <DatePicker fx:id="filtreEcheanceField" showWeekNumbers="true" prefWidth="100"/>
                                 <CheckComboBox fx:id="filtreImportancesField"
                                                prefWidth="75.0"/>
                                 <TextField fx:id="filtreChargeField" prefWidth="50.0"/>

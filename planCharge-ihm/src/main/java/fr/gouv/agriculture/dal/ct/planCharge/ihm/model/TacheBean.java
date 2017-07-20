@@ -36,7 +36,7 @@ public class TacheBean implements Copiable<TacheBean> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
 
     @NotNull
-    public static final String FORMAT_DATE = PlanChargeIhm.FORMAT_DATE;
+    public static final String FORMAT_DATE = PlanChargeIhm.PATRON_FORMAT_DATE;
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 

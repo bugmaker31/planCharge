@@ -1,21 +1,18 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
-import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -26,10 +23,8 @@ import javafx.stage.Modality;
 import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.Action;
 import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
 import org.controlsfx.control.decoration.StyleClassDecoration;
@@ -37,15 +32,20 @@ import org.controlsfx.dialog.ProgressDialog;
 import org.controlsfx.tools.ValueExtractor;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
+import org.controlsfx.validation.decoration.CompoundValidationDecoration;
+import org.controlsfx.validation.decoration.GraphicValidationDecoration;
+import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -56,25 +56,24 @@ public class PlanChargeIhm extends Application {
     public static final String APP_NAME = "Plan de charge";
 
     @NotNull
-    public static final String FORMAT_DATE = "dd/MM/yy";
+    public static final String PATRON_FORMAT_DATE = "dd/MM/yy";
+
+    @NotNull
+    public static final DateTimeFormatter FORMAT_DATE = DateTimeFormatter.ofPattern(PATRON_FORMAT_DATE);
 
 
-/*
     @NotNull
     public static ValidationSupport validationSupport() {
         // Cf. https://stackoverflow.com/questions/29607080/textfield-component-validation-with-controls-fx
         ValidationSupport validationSupport = new ValidationSupport();
-*/
-/* TODO FDA 2017/07 Personnaliser la décoration (... ou pas ?).
+        // TODO FDA 2017/07 Personnaliser la décoration (... ou pas ?).
         validationSupport.setValidationDecorator(new CompoundValidationDecoration(
                 new StyleClassValidationDecoration("erreurSaisie", "warningSaisie"),
                 new GraphicValidationDecoration()
         ));
-*//*
 
         return validationSupport;
     }
-*/
 
 
     @NotNull
@@ -237,7 +236,7 @@ public class PlanChargeIhm extends Application {
 
         // Cf. https://controlsfx.bitbucket.io/org/controlsfx/validation/ValidationSupport.html
         ValueExtractor.addObservableValueExtractor(control -> control instanceof TextFieldTableCell, control -> ((TextFieldTableCell) control).textProperty());
-        ValueExtractor.addObservableValueExtractor(control -> control instanceof DatePickerCell, control -> ((DatePickerCell) control).textProperty());
+        ValueExtractor.addObservableValueExtractor(control -> control instanceof DatePickerTableCell, control -> ((DatePickerTableCell) control).textProperty());
 
         LOGGER.info("Application initialisée.");
     }
@@ -441,9 +440,9 @@ public class PlanChargeIhm extends Application {
     private static final Image SECURED_INDICATOR_IMAGE = new Image("/images/decoration-shield.png");
 
     public static void symboliserChampObligatoire(@NotNull Control field) /*throws IhmException*/ {
-        // TODO FDA 2017/07 Comprendre pourquoi la ligne ci-dessous n'affiche pas le symbole rouge dans le coin haut gauche des TextFieldTableCell (mais ok pour les TableColumn).
+        // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les TextFieldTableCell, la 2nde fait l'inverse).
         Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
-        new ValidationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+        validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
     }
 
     public static <S, T> void symboliserChampObligatoire(@NotNull TableColumn<S, T> tableColumn) /*throws IhmException*/ {
@@ -482,8 +481,6 @@ public class PlanChargeIhm extends Application {
             // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
             throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
         }
-        //        new ValidationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
-
     }
 
     public static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
@@ -622,12 +619,12 @@ public class PlanChargeIhm extends Application {
                 applicationController.charger(dateEtatPrec);
             }
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
+            applicationController.afficherModuleJoursFeries();
+//            applicationController.afficherModuleRessourcesHumaines();
+//            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 //        applicationController.afficherModuleDisponibilites();
 //        applicationController.afficherModuleTaches();
 //        applicationController.afficherModuleCharges();
-//            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-//            applicationController.afficherModuleJoursFeries();
-            applicationController.afficherModuleRessourcesHumaines();
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {

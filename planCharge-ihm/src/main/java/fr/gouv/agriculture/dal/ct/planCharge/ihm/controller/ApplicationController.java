@@ -872,7 +872,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void afficherModuleJoursFeries() throws IhmException {
+    public void afficherModuleJoursFeries() throws IhmException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
 
         if (nomModuleCourant == NomModule.JOURS_FERIES) {

@@ -1,17 +1,15 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCell;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCells;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -20,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 /**
@@ -86,8 +85,12 @@ public class JoursFeriesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         PlanChargeIhm.symboliserChampObligatoire(dateColumn); // FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
-        dateColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(JourFerieBean::setDate));
-        PlanChargeIhm.symboliserChampObligatoire(descriptionColumn); // FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
+        dateColumn.setCellFactory(param -> {
+            TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
+            PlanChargeIhm.controler(cell, "Date incorrecte", this::validerDateFeriee);
+            return cell;
+        });
+//        PlanChargeIhm.symboliserChampObligatoire(descriptionColumn);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
 /*
@@ -111,11 +114,19 @@ public class JoursFeriesController extends AbstractController {
         LOGGER.debug("Initialisé.");
     }
 
+    @Null
+    private String validerDateFeriee(@Null LocalDate dateFeriee) {
+        if (dateFeriee == null) {
+            return "Le date du jour fériée est obligatoire.";
+        }
+        return null;
+    }
+
     @FXML
     private void ajouterJourFerie(@SuppressWarnings("unused") ActionEvent actionEvent) {
         LOGGER.debug("ajouterJourFerie...");
 
-        JourFerieBean nouvJourFerieBean = new JourFerieBean(LocalDate.now(), "A RENSEIGNER");
+        JourFerieBean nouvJourFerieBean = new JourFerieBean();
         joursFeriesBeans.add(nouvJourFerieBean);
 
         // Positionnement sur le jour férié qu'on vient d'ajouter :

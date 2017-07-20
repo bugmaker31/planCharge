@@ -9,15 +9,15 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.function.BiConsumer;
 
-public class DatePickerCells {
+public class DatePickerTableCells {
 
-    public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forTableColumn(@NotNull BiConsumer<S, LocalDate> dateSetter) {
-        return p -> new DatePickerCell<S>(PlanChargeIhm.FORMAT_DATE, dateSetter);
+    public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forTableColumn() {
+        return p -> new DatePickerTableCell<>(PlanChargeIhm.PATRON_FORMAT_DATE);
     }
 
-    public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forRequiredTableColumn(@NotNull BiConsumer<S, LocalDate> dateSetter) {
+    public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forRequiredTableColumn() {
         return (TableColumn<S, LocalDate> p) -> {
-            TableCell<S, LocalDate> datePickerCell = forTableColumn(dateSetter).call(p);
+            TableCell<S, LocalDate> datePickerCell = DatePickerTableCells.<S>forTableColumn().call(p);
 //            PlanChargeIhm.symboliserChampObligatoire(datePickerCell);
             return datePickerCell;
         };

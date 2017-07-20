@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCell;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerCells;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
@@ -207,8 +206,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesProjetsApplis));
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesStatuts));
-        debutColumn.setCellFactory(DatePickerCells.forTableColumn(TacheBean::setDebut));
-        echeanceColumn.setCellFactory(DatePickerCells.forRequiredTableColumn(TacheBean::setEcheance));
+        debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
+        echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(codesImportances));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(codesRessources));
