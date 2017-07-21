@@ -143,7 +143,7 @@ public class RessourcesHumainesController extends AbstractController {
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         //noinspection unused
         TableFilter<RessourceHumaineBean> ressourcesHumainesTableFilter = filter.apply();
-
+        getIhm().symboliserFiltrable(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
 //            ressourcesHumainesTable.setPrefHeight(Region.USE_COMPUTED_SIZE);

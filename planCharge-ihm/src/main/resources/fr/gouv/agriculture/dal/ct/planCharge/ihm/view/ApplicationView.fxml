@@ -35,13 +35,24 @@
                     <SeparatorMenuItem/>
                     <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
                     <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
+                    <SeparatorMenuItem/>
+                    <SeparatorMenuItem/>
+<!--
+                    TODO FDA 2017/07 Coder.
+                    <MenuItem text="Couper" onAction="#couper" accelerator="Shortcut+X"/>
+                    <MenuItem text="Copier" onAction="#copier" accelerator="Shortcut+C"/>
+                    <MenuItem text="Coller" onAction="#coller" accelerator="Shortcut+V"/>
+-->
+                    <MenuItem text="Supprimer" onAction="#supprimer" />
                 </Menu>
                 <Menu text="_Suivi" disable="true"/>
                 <Menu text="_Référentiels">
+                    <!--suppress JavaFxEventHandler -->
                     <MenuItem text="Jours _fériés" onAction="#afficherModuleJoursFeries"/>
                     <SeparatorMenuItem/>
+                    <!--suppress JavaFxEventHandler -->
                     <MenuItem text="_Ressources" onAction="#afficherModuleRessourcesHumaines"/>
-                    <MenuItem text="_Profils"/>
+                    <MenuItem disable="true" text="_Profils"/>
                     <SeparatorMenuItem/>
                     <MenuItem disable="true" text="Projets/_Applis"/>
                     <MenuItem disable="true" text="_Importances"/>

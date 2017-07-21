@@ -86,7 +86,7 @@ public class TacheBean implements Copiable<TacheBean> {
 
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null String codeStatut, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, double charge, @Null String codeRessource, @Null String codeProfil) {
+    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null String codeStatut, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, @Null Double charge, @Null String codeRessource, @Null String codeProfil) {
         this.id.set(id);
         this.codeCategorie.set(codeCategorie);
         this.codeSousCategorie.set(codeSousCategorie);

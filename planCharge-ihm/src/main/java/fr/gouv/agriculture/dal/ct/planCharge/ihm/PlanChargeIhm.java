@@ -5,14 +5,17 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -438,18 +441,45 @@ public class PlanChargeIhm extends Application {
     private static final Image WARNING_INDICATOR_IMAGE = new Image("/images/decoration-warning.png");
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image SECURED_INDICATOR_IMAGE = new Image("/images/decoration-shield.png");
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
-    public static void symboliserChampObligatoire(@NotNull Control field) /*throws IhmException*/ {
-        // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les TextFieldTableCell, la 2nde fait l'inverse).
-        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
-        validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+    public void symboliserFiltrable(@NotNull TableColumn... columns) {
+        Platform.runLater(() -> {
+            for (TableColumn column : columns) {
+                if (column.getGraphic() == null) {
+                    Label label = new Label();
+                    column.setGraphic(label);
+                }
+                symboliserFiltrable(column.getGraphic());
+            }
+        });
     }
 
-    public static <S, T> void symboliserChampObligatoire(@NotNull TableColumn<S, T> tableColumn) /*throws IhmException*/ {
-        // TODO FDA 2017/07 Confirmer que c'est la bonne façon de coder.
-        Label label = new Label("");
-        symboliserChampObligatoire(label);
-        tableColumn.setGraphic(label);
+    public void symboliserFiltrable(@NotNull Node... nodes) {
+//        Platform.runLater(() -> {
+        for (Node node : nodes) {
+            Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
+        }
+//        });
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static void symboliserChampObligatoire(@NotNull Control... fields) /*throws IhmException*/ {
+        for (Control field : fields) {
+            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les TextFieldTableCell, la 2nde fait l'inverse).
+            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
+            validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+        }
+    }
+
+    public static void symboliserChampObligatoire(@NotNull TableColumn... columns) /*throws IhmException*/ {
+        for (TableColumn column : columns) {
+            // TODO FDA 2017/07 Confirmer qu'utiliser un Label vide est une bonne façon de faire.
+            Label label = new Label();
+            symboliserChampObligatoire(label);
+            column.setGraphic(label);
+        }
     }
 
     public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
@@ -459,6 +489,19 @@ public class PlanChargeIhm extends Application {
                             String error = validator.apply(newValue);
                             if (error != null) {
                                 afficherErreurSaisie(cell, title, error);
+                            }
+                        }
+                )
+        );
+    }
+
+    public static void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
+        field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+                Platform.runLater(() -> {
+                            masquerErreurSaisie(field);
+                            String error = validator.apply(newValue);
+                            if (error != null) {
+                                afficherErreurSaisie(field, title, error);
                             }
                         }
                 )
@@ -483,7 +526,7 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    public static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
+    private static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
         Decorator.removeAllDecorations(field);
         try {
             masquerPopupErreurSaisie(field);

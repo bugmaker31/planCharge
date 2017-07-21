@@ -143,6 +143,22 @@ public class RessourceHumaineBean {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if ((o == null) || (getClass() != o.getClass())) return false;
+
+        RessourceHumaineBean that = (RessourceHumaineBean) o;
+
+        return (getTrigramme() != null) ? getTrigramme().equals(that.getTrigramme()) : (that.getTrigramme() == null);
+    }
+
+    @Override
+    public int hashCode() {
+        return (getTrigramme() != null) ? getTrigramme().hashCode() : 0;
+    }
+
+
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {

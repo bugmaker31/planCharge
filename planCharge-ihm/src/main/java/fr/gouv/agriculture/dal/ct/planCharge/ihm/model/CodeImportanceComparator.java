@@ -24,7 +24,7 @@ public class CodeImportanceComparator implements Comparator<String> {
     private ImportanceDao importanceDao = ImportanceDao.instance();
 
     @Override
-    public int compare(@NotNull String codeImportance1, @NotNull String codeImportance2) {
+    public int compare(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull String codeImportance1, @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull String codeImportance2) {
         try {
             Importance i1 = importanceDao.loadByCode(codeImportance1);
             Importance i2 = importanceDao.loadByCode(codeImportance2);

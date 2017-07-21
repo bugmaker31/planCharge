@@ -9,9 +9,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
@@ -110,8 +108,26 @@ public class JoursFeriesController extends AbstractController {
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         //noinspection unused
         TableFilter<JourFerieBean> ressourcesHumainesTableFilter = filter.apply();
+        getIhm().symboliserFiltrable(dateColumn, descriptionColumn);
+
+        definirMenuContextuel();
+
+        joursFeriesTable.setOnKeyTyped(event -> {
+            // TODO FDA 2017/07 Coder la gestion de la touge "Suppr" -> #supprimer.
+        });
 
         LOGGER.debug("Initialisé.");
+    }
+
+    private void definirMenuContextuel() {
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem menuVoirTache = new MenuItem("Supprimer");
+        menuVoirTache.setOnAction(this::supprimerJourFerie);
+
+        contextMenu.getItems().setAll(menuVoirTache);
+
+        joursFeriesTable.setContextMenu(contextMenu);
     }
 
     @Null
@@ -138,5 +154,13 @@ public class JoursFeriesController extends AbstractController {
         // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
         joursFeriesTable.edit(idxLigNouvBean, dateColumn);
 //        joursFeriesTable.refresh();
+    }
+
+    @FXML
+    private void supprimerJourFerie(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        LOGGER.debug("supprimerJourFerie...");
+
+        JourFerieBean focusedItem = joursFeriesTable.getFocusModel().getFocusedItem();
+        joursFeriesBeans.remove(focusedItem);
     }
 }

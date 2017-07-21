@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -37,7 +38,7 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
     }
 
 
-    @NotNull
+    @Null
     public LocalDate getDate() {
         return date.get();
     }
@@ -51,7 +52,7 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
         this.date.set(date);
     }
 
-    @NotNull
+    @Null
     public String getDescription() {
         return description.get();
     }
@@ -71,24 +72,28 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
 
         JourFerieBean that = (JourFerieBean) o;
 
-        return date.equals(that.date);
+        return (getDate() != null) ? getDate().equals(that.getDate()) : (that.getDate() == null);
     }
 
     @Override
     public int hashCode() {
-        return date.hashCode();
+        return (getDate() != null) ? getDate().hashCode() : 0;
     }
 
 
     @Override
     public int compareTo(@NotNull JourFerieBean o) {
-        return this.getDate().compareTo(o.getDate());
+        return (
+                (this.getDate() == null) && (o.getDate() == null)) ? 0
+                : (((this.getDate() == null) && (o.getDate() != null)) ? -1
+                : (((this.getDate() != null) && (o.getDate() == null)) ? 1
+                : this.getDate().compareTo(o.getDate()))
+        );
     }
-
 
     // Juste pour faciliter le débogage.
     @Override

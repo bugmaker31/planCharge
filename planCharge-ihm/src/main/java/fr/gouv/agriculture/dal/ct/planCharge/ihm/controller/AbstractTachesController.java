@@ -529,8 +529,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre des descriptions...");
 
+/* TODO FDA 2017/07 Comprendre pourquoi ne fonctionne pas.
+            ihm.controler(filtreDescriptionField,
+                    "Filtre sur description incorrect : '" + newValue + "'",
+                    s -> Strings.estExpressionReguliere(newValue) ? null : ("Expression régulière incorrecte : '" + newValue + "'.")
+            );
+*/
             if (!Strings.estExpressionReguliere(newValue)) {
-                ihm.afficherErreurSaisie(filtreDescriptionField, "Filtre incorrect : '" + newValue + "'", "Expression régulière incorrecte : '" + newValue + "'.");
+                ihm.afficherErreurSaisie(filtreDescriptionField, "Filtre sur description incorrect : '" + newValue + "'", "Expression régulière incorrecte : '" + newValue + "'.");
                 return;
             }
 

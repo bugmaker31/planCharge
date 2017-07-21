@@ -54,6 +54,24 @@ public class ImportanceBean {
 
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ImportanceBean that = (ImportanceBean) o;
+
+        if (getOrdre() != that.getOrdre()) return false;
+        return getCode().equals(that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = new Integer(getOrdre()).hashCode();
+        result = 31 * result + getCode().hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return ordre.get() + "-" + code.get();
     }

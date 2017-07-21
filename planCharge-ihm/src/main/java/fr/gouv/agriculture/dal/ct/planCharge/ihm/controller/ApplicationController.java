@@ -797,11 +797,30 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-/*
-    */
-/*
+    /**
+     * Supprimer
+     *
+     * @param event
+     */
+    @FXML
+    private void supprimer(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+        LOGGER.debug("> Editer > Supprimer");
+        try {
+            supprimer();
+        } catch (IhmException e) {
+            throw new Exception("Impossible de supprimer.", e);
+        }
+    }
+
+    private void supprimer() throws IhmException {
+        // TODO FDA 2017/04 Coder.
+    }
+
+
+    /*
     Menu "Gérer" :
-     *//*
+     */
+    /*
 
 
     @FXML
@@ -1190,5 +1209,4 @@ public class ApplicationController extends AbstractController {
         }
         return true;
     }
-
 }
