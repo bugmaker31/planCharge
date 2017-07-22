@@ -63,8 +63,6 @@
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
                 </Menu>
-                <Menu text="TODOs" disable="true" mnemonicParsing="false">
-                </Menu>
                 <Menu mnemonicParsing="false" text="Aide">
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
                 </Menu>

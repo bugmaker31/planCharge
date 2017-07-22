@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+
+import static javafx.scene.input.KeyCode.DELETE;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -112,8 +115,15 @@ public class JoursFeriesController extends AbstractController {
 
         definirMenuContextuel();
 
-        joursFeriesTable.setOnKeyTyped(event -> {
-            // TODO FDA 2017/07 Coder la gestion de la touge "Suppr" -> #supprimer.
+        // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
+        joursFeriesTable.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case DELETE:
+                    supprimerJourFerie(joursFeriesTable.getSelectionModel().getSelectedItem());
+                    break;
+                default:
+                    LOGGER.debug("Touche ignorée : '" + event.getCode() + "'.");
+            }
         });
 
         LOGGER.debug("Initialisé.");
@@ -161,6 +171,15 @@ public class JoursFeriesController extends AbstractController {
         LOGGER.debug("supprimerJourFerie...");
 
         JourFerieBean focusedItem = joursFeriesTable.getFocusModel().getFocusedItem();
+        if (focusedItem == null) {
+            LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");
+            return;
+        }
+        supprimerJourFerie(focusedItem);
+    }
+
+    private void supprimerJourFerie(@NotNull JourFerieBean focusedItem) {
+        LOGGER.debug("supprimerJourFerie...");
         joursFeriesBeans.remove(focusedItem);
     }
 }
