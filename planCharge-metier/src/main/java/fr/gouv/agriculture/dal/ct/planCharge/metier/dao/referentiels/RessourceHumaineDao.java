@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class RessourceHumaineDao extends AbstractDao<RessourceHumaine,String> {
+public class RessourceHumaineDao extends AbstractDao<RessourceHumaine, String> {
 
     private static final Map<String, RessourceHumaine> CACHE = new HashMap<>();
 

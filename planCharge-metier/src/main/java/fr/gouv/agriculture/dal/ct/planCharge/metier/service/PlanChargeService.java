@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
@@ -8,6 +9,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ControleurRegle;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,11 +79,29 @@ public class PlanChargeService extends AbstractService {
     public void sauver(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws ServiceException {
         LocalDate dateEtat = planCharge.getDateEtat();
         try {
+
+            List<ViolationRegleGestion<?>> violationsRegles = controlerReglesGestion(planCharge);
+            if (!violationsRegles.isEmpty()) {
+                // TODO FDA 2017/07 Trouver mieux que ne remonter que la 1ère violation.
+                ViolationRegleGestion premiereViolation = violationsRegles.iterator().next();
+                throw new ServiceException(premiereViolation.getRegle().getMessageErreur());
+            }
+
             planChargeDao.sauver(planCharge, rapport);
+
         } catch (DaoException e) {
             throw new ServiceException(
                     "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
                     e);
+        }
+    }
+
+    @NotNull
+    private List<ViolationRegleGestion<?>> controlerReglesGestion(PlanCharge planCharge) throws ServiceException {
+        try {
+            return ControleurRegle.violations();
+        } catch (MetierException e) {
+            throw new ServiceException("Impossible de contrôler les règles de gestion.", e);
         }
     }
 

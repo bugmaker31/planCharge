@@ -1,19 +1,23 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 25/03/2017.
  */
-public class ProjetAppli extends AbstractEntity<String> implements Comparable<ProjetAppli> {
+public class ProjetAppli extends AbstractEntity<String, ProjetAppli> implements Comparable<ProjetAppli> {
 
     @NotNull
     private final String code;
 
 
     public ProjetAppli(@NotNull String code) {
+        super();
         this.code = code;
     }
 
@@ -31,10 +35,10 @@ public class ProjetAppli extends AbstractEntity<String> implements Comparable<Pr
     }
 
 
-    // pour déboguer, uniquement.
+    @NotNull
     @Override
-    public String toString() {
-        return code;
+    public Set<RegleGestion<ProjetAppli>> getReglesGestion() {
+        return new HashSet<>(); // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 
@@ -59,4 +63,12 @@ public class ProjetAppli extends AbstractEntity<String> implements Comparable<Pr
     public int compareTo(@NotNull ProjetAppli o) {
         return code.compareTo(o.getCode());
     }
+
+
+    // pour déboguer, uniquement.
+    @Override
+    public String toString() {
+        return code;
+    }
+
 }

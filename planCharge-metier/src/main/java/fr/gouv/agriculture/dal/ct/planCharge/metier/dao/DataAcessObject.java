@@ -7,5 +7,5 @@ import java.io.Serializable;
 /**
  * Created by frederic.danna on 02/07/2017.
  */
-public interface DataAcessObject<E extends AbstractEntity<EI>, EI extends Serializable> {
+public interface DataAcessObject<E extends AbstractEntity<EI, E>, EI extends Serializable> {
 }

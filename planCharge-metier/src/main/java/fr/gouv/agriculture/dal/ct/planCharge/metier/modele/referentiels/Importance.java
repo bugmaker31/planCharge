@@ -2,14 +2,17 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class Importance extends AbstractEntity<String> implements Comparable<Importance> {
+public class Importance extends AbstractEntity<String, Importance> implements Comparable<Importance> {
 
     private static class OrdreImportanceComparator implements Comparator<Importance> {
 
@@ -34,12 +37,14 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
 
 
     public Importance(@NotNull int ordre, @NotNull String code) {
+        super();
         this.codeInterne = ordre + "-" + code;
         this.ordre = ordre;
         this.code = code;
     }
 
     public Importance(@NotNull String codeInterne) throws ModeleException {
+        super();
         this.codeInterne = codeInterne;
 
         if (codeInterne == null) {
@@ -81,6 +86,12 @@ public class Importance extends AbstractEntity<String> implements Comparable<Imp
     public String getIdentity() {
 //        return getOrdre() + "";
         return codeInterne;
+    }
+
+
+    @Override
+    public boolean estValide(@NotNull RegleGestion<Importance> regleGestion) {
+        return false;
     }
 
 

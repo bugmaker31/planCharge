@@ -1,16 +1,22 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RGRefJourFerieDateObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class JourFerie extends AbstractEntity<LocalDate> implements Comparable<JourFerie> {
+public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements Comparable<JourFerie> {
 
 
     private static class DateJourFerieComparator implements Comparator<JourFerie> {
@@ -28,17 +34,18 @@ public class JourFerie extends AbstractEntity<LocalDate> implements Comparable<J
 
 
 
-    @NotNull
+    @Null
     private LocalDate date;
-    @NotNull
+    @Null
     private String description;
 
-    public JourFerie(@NotNull LocalDate date, @NotNull String description) {
+    public JourFerie(@Null LocalDate date, @Null String description) {
+        super();
         this.date = date;
         this.description = description;
     }
 
-    @NotNull
+    @Null
     public LocalDate getDate() {
         return date;
     }
@@ -52,6 +59,15 @@ public class JourFerie extends AbstractEntity<LocalDate> implements Comparable<J
     @Override
     public LocalDate getIdentity() {
         return date;
+    }
+
+
+    @NotNull
+    public Set<RegleGestion<JourFerie>> getReglesGestion() {
+        Set<RegleGestion<JourFerie>> regles = new HashSet<>();
+        regles.add(RGRefJourFerieDateObligatoire.INSTANCE);
+        // TODO FDA 2017/07 Ajouter les autres règles de gestion.
+        return regles;
     }
 
 

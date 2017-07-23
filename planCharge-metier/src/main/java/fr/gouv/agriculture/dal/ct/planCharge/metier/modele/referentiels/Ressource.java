@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by frederic.danna on 25/03/2017.
  */
-public class Ressource extends AbstractEntity<String> implements Comparable<Ressource> {
+public abstract class Ressource<T extends Ressource<T>> extends AbstractEntity<String, T> implements Comparable<T> {
 
     @NotNull
     private final String trigramme;

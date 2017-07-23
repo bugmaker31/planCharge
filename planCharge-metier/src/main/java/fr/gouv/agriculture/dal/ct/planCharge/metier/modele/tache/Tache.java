@@ -3,15 +3,18 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 11/03/2017.
  */
-public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> {
+public class Tache extends AbstractEntity<Integer, Tache> implements Comparable<Tache> {
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 
@@ -185,6 +188,14 @@ public class Tache extends AbstractEntity<Integer> implements Comparable<Tache> 
     public boolean estProvision() {
         return statut.equals(Statut.PROVISION);
     }
+
+
+    @NotNull
+    @Override
+    public Set<RegleGestion<Tache>> getReglesGestion() {
+        return new HashSet<>(); // TODO FDA 2017/07 Coder les règles de gestion.
+    }
+
 
     @Override
     public boolean equals(Object o) {

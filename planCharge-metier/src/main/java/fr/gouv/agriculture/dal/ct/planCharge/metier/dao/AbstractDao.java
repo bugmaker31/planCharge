@@ -21,7 +21,7 @@ import static javax.swing.UIManager.get;
  *
  * @author frederic.danna
  */
-public abstract class AbstractDao<E extends AbstractEntity<EI>, EI extends Serializable> implements DataAcessObject {
+public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Serializable> implements DataAcessObject {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDao.class);
 
