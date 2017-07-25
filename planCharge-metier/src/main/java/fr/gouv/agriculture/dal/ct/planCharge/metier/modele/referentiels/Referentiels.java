@@ -1,13 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
+
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Created by frederic.danna on 01/07/2017.
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class Referentiels {
+public class Referentiels implements Controlable {
 
     @NotNull
     private Set<JourFerie> joursFeries;
@@ -69,4 +75,29 @@ public class Referentiels {
         return ressourcesHumaines;
     }
 
+
+    @NotNull
+    @Override
+    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
+        List<ViolationRegleGestion> violations = new ArrayList<>();
+        for (JourFerie jourFerie : joursFeries) {
+            violations.addAll(jourFerie.controlerReglesGestion());
+        }
+        for (Importance importance : importances) {
+            violations.addAll(importance.controlerReglesGestion());
+        }
+        for (Profil profil : profils) {
+            violations.addAll(profil.controlerReglesGestion());
+        }
+        for (ProjetAppli projetAppli : projetsApplis) {
+            violations.addAll(projetAppli.controlerReglesGestion());
+        }
+        for (Statut statut : statuts) {
+            violations.addAll(statut.controlerReglesGestion());
+        }
+        for (RessourceHumaine ressourceHumaine : ressourcesHumaines) {
+            violations.addAll(ressourceHumaine.controlerReglesGestion());
+        }
+        return violations;
+    }
 }

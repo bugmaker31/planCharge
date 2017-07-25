@@ -1,15 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -60,12 +64,20 @@ public class PlanCharge extends AbstractEntity<LocalDate, PlanCharge> {
 
     @NotNull
     @Override
-    public Set<RegleGestion<PlanCharge>> getReglesGestion() {
+    protected Set<RegleGestion<PlanCharge>> getReglesGestion() {
         Set<RegleGestion<PlanCharge>> regles = new HashSet<>();
         // TODO FDA 2017/07 Spécifier les règles de gestion.
         return regles;
     }
 
+    @NotNull
+    @Override
+    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
+        List<ViolationRegleGestion> violations = super.controlerReglesGestion();
+        violations.addAll(referentiels.controlerReglesGestion());
+        violations.addAll(planifications.controlerReglesGestion());
+        return violations;
+    }
 
     @NotNull
     public Set<Difference> differencesAvec(@NotNull PlanCharge autrePlan) throws TacheSansPlanificationException {

@@ -1,6 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -13,7 +16,7 @@ import java.util.function.*;
  *
  * Created by frederic.danna on 20/03/2017.
  */
-public class Planifications {
+public class Planifications implements Controlable {
 
     public static final int NBR_SEMAINES_PLANIFIEES = 12;
 
@@ -134,5 +137,14 @@ public class Planifications {
 
     public void putAll(Map<? extends Tache, ? extends Map<LocalDate, Double>> m) {
         plan.putAll(m);
+    }
+
+
+    @NotNull
+    @Override
+    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
+        List<ViolationRegleGestion> violations = new ArrayList<>();
+        // TODO FDA 2017/07 Coder les RG.
+        return violations;
     }
 }

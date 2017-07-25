@@ -4,7 +4,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 
 import javax.validation.constraints.NotNull;
 
-public class ViolationRegleGestion<T extends AbstractEntity<?, ?>> {
+public class ViolationRegleGestion<T extends AbstractEntity> {
 
     @NotNull
     private RegleGestion<T> regle;

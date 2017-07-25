@@ -1,10 +1,18 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 
 import javax.validation.constraints.NotNull;
 
 public abstract class RegleGestion<T extends AbstractEntity> {
+
+    /**
+     * Nom de l'attribut (statique) qui permet de récupérer dynamiquement l'instance (singleton) de chaque classe qui
+     * étend {@link RegleGestion}.
+     */
+    public static final String INSTANCE_FIELD_NAME = "INSTANCE";
+
 
     @NotNull
     private String code;
@@ -12,6 +20,8 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     private String libelle;
     @NotNull
     private String messageErreur;
+    @NotNull
+    private PlanCharge planCharge;
 
 
     public RegleGestion(@NotNull String code, @NotNull String libelle, @NotNull String messageErreur) {
@@ -34,6 +44,15 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     @NotNull
     public String getMessageErreur() {
         return messageErreur;
+    }
+
+    @NotNull
+    public PlanCharge getPlanCharge() {
+        return planCharge;
+    }
+
+    public void setPlanCharge(@NotNull PlanCharge planCharge) {
+        this.planCharge = planCharge;
     }
 
 

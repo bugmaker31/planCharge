@@ -9,9 +9,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ControleurRegle;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ControleurRegles;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +78,7 @@ public class PlanChargeService extends AbstractService {
         LocalDate dateEtat = planCharge.getDateEtat();
         try {
 
-            List<ViolationRegleGestion<?>> violationsRegles = controlerReglesGestion(planCharge);
+            List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planCharge);
             if (!violationsRegles.isEmpty()) {
                 // TODO FDA 2017/07 Trouver mieux que ne remonter que la 1ère violation.
                 ViolationRegleGestion premiereViolation = violationsRegles.iterator().next();
@@ -89,21 +87,13 @@ public class PlanChargeService extends AbstractService {
 
             planChargeDao.sauver(planCharge, rapport);
 
-        } catch (DaoException e) {
+        } catch (Exception e) {
             throw new ServiceException(
                     "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
                     e);
         }
     }
 
-    @NotNull
-    private List<ViolationRegleGestion<?>> controlerReglesGestion(PlanCharge planCharge) throws ServiceException {
-        try {
-            return ControleurRegle.violations();
-        } catch (MetierException e) {
-            throw new ServiceException("Impossible de contrôler les règles de gestion.", e);
-        }
-    }
 
     @NotNull
     public RapportImportTaches majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches, @NotNull final RapportImportTaches rapport) throws ServiceException {

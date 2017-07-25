@@ -23,15 +23,25 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
 
         @Override
         public int compare(@NotNull JourFerie jf1, @NotNull JourFerie jf2) {
+            if ((jf1.getDate() == null) && (jf2.getDate() == null)) {
+                return 0;
+            }
+            if ((jf1.getDate() == null) && (jf2.getDate() != null)) {
+                return 1;
+            }
+            if ((jf1.getDate() != null) && (jf2.getDate() == null)) {
+                return -1;
+            }
             return jf1.getDate().compareTo(jf2.getDate());
         }
 
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static final DateJourFerieComparator COMPARATOR_DATE = new DateJourFerieComparator();
 
+    @SuppressWarnings("WeakerAccess")
     public static final Comparator<JourFerie> COMPARATOR_DEFAUT = COMPARATOR_DATE;
-
 
 
     @Null
@@ -50,12 +60,14 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
         return date;
     }
 
-    @NotNull
+    @Null
     public String getDescription() {
         return description;
     }
 
 
+    @SuppressWarnings("SuspiciousGetterSetter")
+    @Null
     @Override
     public LocalDate getIdentity() {
         return date;
@@ -65,6 +77,7 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
     @NotNull
     public Set<RegleGestion<JourFerie>> getReglesGestion() {
         Set<RegleGestion<JourFerie>> regles = new HashSet<>();
+        regles.add(RGRefJourFerieDateObligatoire.INSTANCE);
         regles.add(RGRefJourFerieDateObligatoire.INSTANCE);
         // TODO FDA 2017/07 Ajouter les autres règles de gestion.
         return regles;
@@ -80,6 +93,7 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE) + " " + ('"' + description + '"');
+        return (date == null ? "N/C" : date.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                + " " + (description == null ? "N/C" : ('"' + description + '"'));
     }
 }

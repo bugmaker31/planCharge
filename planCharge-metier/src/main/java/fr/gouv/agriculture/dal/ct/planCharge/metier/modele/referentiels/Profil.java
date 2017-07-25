@@ -1,10 +1,14 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
+import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**

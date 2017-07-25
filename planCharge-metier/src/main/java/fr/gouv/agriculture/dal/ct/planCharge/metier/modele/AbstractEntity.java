@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
@@ -40,10 +41,12 @@ public abstract class AbstractEntity<I extends Serializable, T extends AbstractE
     }
 
 
-    @Override
+    // Controlable<T>
+
     @NotNull
-    public List<ViolationRegleGestion<T>> controlerReglesGestion() throws MetierException {
-        List<ViolationRegleGestion<T>> violations = new ArrayList<>();
+    @Override
+    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
+        List<ViolationRegleGestion> violations = new ArrayList<>();
 
         for (RegleGestion<T> regleGestion : getReglesGestion()) {
             if (!regleGestion.estValide((T) this)) {
@@ -53,6 +56,9 @@ public abstract class AbstractEntity<I extends Serializable, T extends AbstractE
 
         return violations;
     }
+
+    @NotNull
+    protected abstract Set<RegleGestion<T>> getReglesGestion();
 
 
     @Override

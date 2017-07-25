@@ -7,12 +7,17 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
-public interface Controlable<T extends AbstractEntity<?, ?>> {
+public interface Controlable<T extends AbstractEntity> {
 
+/*
     @NotNull
     Set<RegleGestion<T>> getReglesGestion();
 
     @NotNull
     List<ViolationRegleGestion<T>> controlerReglesGestion() throws MetierException;
+*/
+
+    @NotNull
+    List<ViolationRegleGestion> controlerReglesGestion() throws MetierException;
 
 }

@@ -89,9 +89,10 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
     }
 
 
+    @NotNull
     @Override
-    public boolean estValide(@NotNull RegleGestion<Importance> regleGestion) {
-        return false;
+    public Set<RegleGestion<Importance>> getReglesGestion() {
+        return new HashSet<>(); // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 
