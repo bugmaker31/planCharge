@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 
 import javax.validation.constraints.NotNull;
+import java.util.function.Function;
 
 public abstract class RegleGestion<T extends AbstractEntity> {
 
@@ -19,12 +20,13 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     @NotNull
     private String libelle;
     @NotNull
-    private String messageErreur;
+    private Function<T, String> messageErreur;
+
     @NotNull
     private PlanCharge planCharge;
 
 
-    public RegleGestion(@NotNull String code, @NotNull String libelle, @NotNull String messageErreur) {
+    public RegleGestion(@NotNull String code, @NotNull String libelle, @NotNull Function<T, String> messageErreur) {
         this.code = code;
         this.libelle = libelle;
         this.messageErreur = messageErreur;
@@ -42,9 +44,10 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     }
 
     @NotNull
-    public String getMessageErreur() {
+    public Function<T, String> getMessageErreur() {
         return messageErreur;
     }
+
 
     @NotNull
     public PlanCharge getPlanCharge() {
@@ -56,5 +59,15 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     }
 
 
+    abstract public boolean estApplicable(@NotNull T entity);
+
     abstract public boolean estValide(@NotNull T entity);
+
+
+    // Juste pour faciliter le débogage.
+    @Override
+    public String toString() {
+        return "[" + code + "]" +
+                " " + libelle;
+    }
 }

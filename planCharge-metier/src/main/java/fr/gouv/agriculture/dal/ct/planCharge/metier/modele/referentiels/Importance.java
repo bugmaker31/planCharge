@@ -5,32 +5,43 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class Importance extends AbstractEntity<String, Importance> implements Comparable<Importance> {
 
     private static class OrdreImportanceComparator implements Comparator<Importance> {
 
         @Override
-        public int compare(@NotNull Importance i1, @NotNull Importance i2) {
+        public int compare(Importance i1, Importance i2) {
+            if (i1 == null && i2 == null) {
+                return 0;
+            }
+            if (i1 == null && i2 != null) {
+                return -1;
+            }
+            if (i1 != null && i2 == null) {
+                return 1;
+            }
             return i2.getOrdre().compareTo(i1.getOrdre());
         }
 
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static final OrdreImportanceComparator COMPARATOR_ORDRE = new OrdreImportanceComparator();
 
+    @SuppressWarnings("WeakerAccess")
     public static final Comparator<Importance> COMPARATOR_DEFAUT = COMPARATOR_ORDRE;
 
 
     @NotNull
     private final String codeInterne;
-    @NotNull
     private int ordre;
     @NotNull
     private final String code;
@@ -91,8 +102,8 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
 
     @NotNull
     @Override
-    public Set<RegleGestion<Importance>> getReglesGestion() {
-        return new HashSet<>(); // TODO FDA 2017/07 Coder les règles de gestion.
+    public List<RegleGestion<Importance>> getReglesGestion() {
+        return new ArrayList<>(); // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 

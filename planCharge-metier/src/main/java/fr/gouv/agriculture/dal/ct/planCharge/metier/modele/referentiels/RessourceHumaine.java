@@ -1,14 +1,12 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 25/03/2017.
@@ -72,8 +70,8 @@ public class RessourceHumaine extends Ressource<RessourceHumaine> {
 
     @NotNull
     @Override
-    public Set<RegleGestion<RessourceHumaine>> getReglesGestion() {
-        return new HashSet<>(); // TODO FDA 2017/07 Coder les règles de gestion.
+    public List<RegleGestion<RessourceHumaine>> getReglesGestion() {
+        return Collections.EMPTY_LIST; // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 

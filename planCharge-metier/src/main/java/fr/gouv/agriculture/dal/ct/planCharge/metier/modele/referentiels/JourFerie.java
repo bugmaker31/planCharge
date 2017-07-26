@@ -1,17 +1,15 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RGRefJourFerieDateObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieDateObligatoire;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieUniciteJour;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -75,12 +73,12 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
 
 
     @NotNull
-    public Set<RegleGestion<JourFerie>> getReglesGestion() {
-        Set<RegleGestion<JourFerie>> regles = new HashSet<>();
-        regles.add(RGRefJourFerieDateObligatoire.INSTANCE);
-        regles.add(RGRefJourFerieDateObligatoire.INSTANCE);
-        // TODO FDA 2017/07 Ajouter les autres règles de gestion.
-        return regles;
+    public List<RegleGestion<JourFerie>> getReglesGestion() {
+        return Arrays.asList(
+                RGRefJourFerieDateObligatoire.INSTANCE,
+                RGRefJourFerieUniciteJour.INSTANCE
+                // Ajouter ici les futures règles de gestion.
+        );
     }
 
 

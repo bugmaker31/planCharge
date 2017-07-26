@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -177,12 +178,12 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     }
 
     public PlanCharge extract() throws IhmException {
-        Set<JourFerie> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::extract).collect(Collectors.toSet());
-        Set<Importance> importances = importancesBeans.stream().map(ImportanceBean::extract).collect(Collectors.toSet());
-        Set<Profil> profils = profilsBeans.stream().map(Profil::new).collect(Collectors.toSet());
-        Set<ProjetAppli> projetsApplis = projetsApplisBeans.stream().map(ProjetAppli::new).collect(Collectors.toSet());
-        Set<Statut> statuts = statutsBeans.stream().map(Statut::new).collect(Collectors.toSet());
-        Set<RessourceHumaine> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
+        Collection<JourFerie> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::extract).collect(Collectors.toSet());
+        Collection<Importance> importances = importancesBeans.stream().map(ImportanceBean::extract).collect(Collectors.toSet());
+        Collection<Profil> profils = profilsBeans.stream().map(Profil::new).collect(Collectors.toSet());
+        Collection<ProjetAppli> projetsApplis = projetsApplisBeans.stream().map(ProjetAppli::new).collect(Collectors.toSet());
+        Collection<Statut> statuts = statutsBeans.stream().map(Statut::new).collect(Collectors.toSet());
+        Collection<RessourceHumaine> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
         Referentiels referentiels = new Referentiels(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
 
         Planifications planifications = extractPlanifications();

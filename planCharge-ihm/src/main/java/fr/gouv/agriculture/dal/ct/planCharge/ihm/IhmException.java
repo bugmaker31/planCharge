@@ -13,7 +13,7 @@ public class IhmException extends Exception {
         super(message);
     }
 
-    public IhmException(String message, Exception cause) {
+    public IhmException(String message, Throwable cause) {
         super(message, cause);
     }
 

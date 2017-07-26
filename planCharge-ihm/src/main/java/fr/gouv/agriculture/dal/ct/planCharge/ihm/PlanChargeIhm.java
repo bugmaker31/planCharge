@@ -5,14 +5,15 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -26,6 +27,7 @@ import javafx.stage.Modality;
 import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.decoration.Decorator;
@@ -43,13 +45,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
@@ -508,13 +510,6 @@ public class PlanChargeIhm extends Application {
         );
     }
 
-    public void notifier(@NotNull String titre, @NotNull String message) {
-        Notifications.create()
-                .title(titre)
-                .text(message)
-                .showInformation();
-    }
-
     public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
         Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
         Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
@@ -602,7 +597,7 @@ public class PlanChargeIhm extends Application {
 */
 
     @NotNull
-    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws IhmException {
+    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws IhmException, ViolationsReglesGestionException {
         final ProgressDialog progressDialog = new ProgressDialog(task);
         progressDialog.setTitle(titre);
         progressDialog.setHeaderText(titre);
@@ -622,12 +617,40 @@ public class PlanChargeIhm extends Application {
         R resultat;
         try {
             resultat = task.get(); // Waits until task is completed.
-            taskThread.join(); // Pas nécessaire.
-        } catch (InterruptedException | ExecutionException e) {
+//            taskThread.join(); // Pas nécessaire.
+        } catch (CancellationException | InterruptedException | ExecutionException e) {
+            if (e.getCause() instanceof ViolationsReglesGestionException) {
+                throw (ViolationsReglesGestionException)e.getCause();
+            }
             throw new IhmException("Impossible d'exécuter le traitement.", e);
         }
 
+        /// Utile ? Impossible d'arriver à passer dans ce cas...
+        if ((task.getState() != Worker.State.SUCCEEDED) || (task.getException() != null)) {
+            throw new IhmException("Impossible d'exécuter le traitement.", task.getException());
+        }
+
         return resultat;
+    }
+
+
+    public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
+        for (ViolationRegleGestion violation : violations) {
+            // TODO FDA 2017/07 Améliorer l'affichage.
+            Notifications.create()
+                    .title(titre)
+                    .text(violation.getRegle().getMessageErreur() + " : " + violation.getEntity().toString())
+                    .hideAfter(Duration.INDEFINITE)
+                    .showError();
+        }
+    }
+
+
+    public static void afficherNotification(@NotNull String titre, @NotNull String message) {
+        Notifications.create()
+                .title(titre)
+                .text(message)
+                .showInformation();
     }
 
 

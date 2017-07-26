@@ -16,6 +16,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
@@ -25,7 +26,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import org.controlsfx.control.NotificationPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -406,16 +406,15 @@ public class ApplicationController extends AbstractController {
 
         try {
 
-            /*RapportChargementAvecProgression rapportFinal = */
-            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
-//            assert rapportFinal != null;
+            RapportChargementAvecProgression rapportFinal = ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
+            assert rapportFinal != null;
 
             definirDateEtat(planChargeBean.getDateEtat());
 
             ihm.getTachesController().razFiltres();
             ihm.getChargesController().razFiltres();
 
-            ihm.notifier(
+            ihm.afficherNotification(
                     "Chargement terminé",
                     "Le chargement est terminé :"
                             + "\n- date d'état : " + planChargeBean.getDateEtat()
@@ -426,6 +425,11 @@ public class ApplicationController extends AbstractController {
 
             majBarreEtat();
 
+        } catch (ViolationsReglesGestionException e) {
+            ihm.afficherViolationsReglesGestion(
+                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                    e.getViolations()
+            );
         } catch (IhmException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
@@ -472,16 +476,15 @@ public class ApplicationController extends AbstractController {
 
         try {
 
-            //noinspection unused
             RapportSauvegarde rapportFinal = ihm.afficherProgression("Sauvegarde...", sauvegarder);
-            assert rapport != null;
+            assert rapportFinal != null;
 
             planChargeBean.vientDEtreSauvegarde();
             getSuiviActionsUtilisateur().historiser(new SauvegardePlanCharge());
 
             //noinspection unused
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
-            ihm.notifier("Sauvegarde effectuée.",
+            ihm.afficherNotification("Sauvegarde effectuée.",
                     "Le plan de charge"
                             + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
                             + " a été sauvegardé"
@@ -491,6 +494,13 @@ public class ApplicationController extends AbstractController {
 
             majBarreEtat();
 
+        } catch (ViolationsReglesGestionException e) {
+            ihm.afficherViolationsReglesGestion(
+                    "Impossible de sauver le plan de charge.",
+                    e.getLocalizedMessage(),
+                    e.getViolations()
+            );
+            // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
         } catch (IhmException | ServiceException e) {
             LOGGER.warn("Impossible de sauver le plan de charge.", e);
             ihm.afficherPopUp(
@@ -499,7 +509,6 @@ public class ApplicationController extends AbstractController {
                     Exceptions.causes(e),
                     500, 200
             );
-            // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
         }
     }
 
@@ -592,7 +601,7 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());
 
-            ihm.notifier("Tâches mises à jour importées",
+            ihm.afficherNotification("Tâches mises à jour importées",
                     "Les tâches ont été mises à jour : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                             + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
@@ -606,6 +615,11 @@ public class ApplicationController extends AbstractController {
             afficherModuleTaches();
 
             majBarreEtat();
+        } catch (ViolationsReglesGestionException e) {
+            ihm.afficherViolationsReglesGestion(
+                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                    e.getViolations()
+            );
         } catch (IhmException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
@@ -706,7 +720,7 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
 
-            ihm.notifier("Données importées",
+            ihm.afficherNotification("Données importées",
                     "Le plan de charge a été importé : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                             + "\n- date d'état : " + planChargeBean.getDateEtat()
@@ -716,6 +730,11 @@ public class ApplicationController extends AbstractController {
             afficherModuleCharges();
 
             majBarreEtat();
+        } catch (ViolationsReglesGestionException e) {
+            ihm.afficherViolationsReglesGestion(
+                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                    e.getViolations()
+            );
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }

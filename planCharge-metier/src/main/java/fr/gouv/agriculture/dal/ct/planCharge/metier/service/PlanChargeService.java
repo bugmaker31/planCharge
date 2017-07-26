@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlani
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ControleurRegles;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationsReglesGestionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,20 +75,18 @@ public class PlanChargeService extends AbstractService {
     }
 
 
-    public void sauver(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws ServiceException {
+    public void sauver(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws ServiceException, ViolationsReglesGestionException {
         LocalDate dateEtat = planCharge.getDateEtat();
         try {
 
             List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planCharge);
             if (!violationsRegles.isEmpty()) {
-                // TODO FDA 2017/07 Trouver mieux que ne remonter que la 1ère violation.
-                ViolationRegleGestion premiereViolation = violationsRegles.iterator().next();
-                throw new ServiceException(premiereViolation.getRegle().getMessageErreur());
+                throw new ViolationsReglesGestionException("Sauvegarde impossible", violationsRegles);
             }
 
             planChargeDao.sauver(planCharge, rapport);
 
-        } catch (Exception e) {
+        } catch (MetierException e) {
             throw new ServiceException(
                     "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
                     e);

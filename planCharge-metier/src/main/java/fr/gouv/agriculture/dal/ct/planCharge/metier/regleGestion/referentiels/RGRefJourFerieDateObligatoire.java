@@ -1,7 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
+package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,6 +11,11 @@ public final class RGRefJourFerieDateObligatoire extends RegleGestion<JourFerie>
 
     private RGRefJourFerieDateObligatoire() {
         super("RG_REF_JF001_DateObligatoire", "Date obligatoire", "Le jour férié est requis.");
+    }
+
+    @Override
+    public boolean estApplicable(@NotNull JourFerie jf) {
+        return true; // Toujours applicable.
     }
 
     @Override

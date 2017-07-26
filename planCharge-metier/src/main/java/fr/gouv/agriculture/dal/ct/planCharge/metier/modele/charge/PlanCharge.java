@@ -4,7 +4,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
@@ -12,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleG
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,8 +64,8 @@ public class PlanCharge extends AbstractEntity<LocalDate, PlanCharge> {
 
     @NotNull
     @Override
-    protected Set<RegleGestion<PlanCharge>> getReglesGestion() {
-        Set<RegleGestion<PlanCharge>> regles = new HashSet<>();
+    protected List<RegleGestion<PlanCharge>> getReglesGestion() {
+        List<RegleGestion<PlanCharge>> regles = new ArrayList<>();
         // TODO FDA 2017/07 Spécifier les règles de gestion.
         return regles;
     }

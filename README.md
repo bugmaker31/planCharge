@@ -6,4 +6,4 @@ Le projet est géré sous [GitHub](https://github.com/bugmaker31/planCharge) :
 - [pilotage des dév](https://github.com/bugmaker31/planCharge/projects) (kanban)
 - Documentation :
     - [wiki GitHub](https://github.com/bugmaker31/planCharge/wiki)
-    - Fichier "INSTALL.md" : procédure d'installation (initiale + migration).
+    - [fichier "INSTALL.md"](https://github.com/bugmaker31/planCharge/blob/master/INSTALL.md) : procédure d'installation (initiale + migration).

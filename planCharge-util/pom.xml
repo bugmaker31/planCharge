@@ -14,13 +14,12 @@
     <packaging>jar</packaging>
 
     <properties>
-        <!--<springframework.version>4.2.0.RELEASE</springframework.version>-->
+        <springframework.version>4.2.0.RELEASE</springframework.version>
     </properties>
 
     <dependencies>
 
-<!--
-        &lt;!&ndash;Notamment pour la recherche par réflection des règles de gestion (ClassPathScanningCandidateComponentProvider)&ndash;&gt;
+        <!--Notamment pour la recherche par réflection des règles de gestion (ClassPathScanningCandidateComponentProvider)-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -36,7 +35,6 @@
             <artifactId>spring-beans</artifactId>
             <version>${springframework.version}</version>
         </dependency>
--->
 
         <!--Notamment pour WordUtil-->
         <dependency>

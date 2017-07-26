@@ -1,25 +1,34 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.util.reflect.InheritageFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 
 import javax.validation.constraints.NotNull;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class ControleurRegles {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControleurRegles.class);
 
+    private static boolean REGLES_INITIALISEES = false;
+
     public static List<ViolationRegleGestion> violations(@NotNull PlanCharge planCharge) throws MetierException {
         List<ViolationRegleGestion> violationsRegles = new ArrayList<>();
+
+        if (!REGLES_INITIALISEES) {
+            // TODO FDA 2017/07 Gérer les accès concurrents (avec bloc 'synchronized')... si a un sens ? vu que l'appli est mono-utilisateur et mono-thread... à moins que JavaFX soit pmulti-thread ?
+            initReglesGestion(planCharge);
+            REGLES_INITIALISEES = true;
+        }
 
 /*
         List<Controlable> instancesControlables = instancesControlables(planCharge);
@@ -32,11 +41,9 @@ public class ControleurRegles {
         return violationsRegles;
     }
 
-/*
-    @NotNull
-    private static List<RegleGestion> reglesGestion(@NotNull PlanCharge planCharge) throws ModeleException {
+    private static void initReglesGestion(@NotNull PlanCharge planCharge) throws ModeleException {
         LOGGER.debug("Chargement des règles de gestion :");
-        List<RegleGestion> reglesGestion = new ArrayList<>();
+//        List<RegleGestion> reglesGestion = new ArrayList<>();
         try {
             // Cf. http://stackoverflow.com/questions/492184/how-do-you-find-all-subclasses-of-a-given-class-in-java
             ClassPathScanningCandidateComponentProvider regleGestionCPSCPP = new ClassPathScanningCandidateComponentProvider(false);
@@ -58,16 +65,16 @@ public class ControleurRegles {
                 RegleGestion regleGestion = (RegleGestion) instanceField.get(null);
                 regleGestion.setPlanCharge(planCharge);
 
-                reglesGestion.add(regleGestion);
+//                reglesGestion.add(regleGestion);
             }
         } catch (Exception e) {
             throw new ModeleException("Impossible de déterminer dynamiquement les règles de gestion.", e);
         }
         LOGGER.debug("Règles de gestion chargées.");
-        return reglesGestion;
+//        return reglesGestion;
     }
-*/
 
+/*
     @NotNull
     private static List<Controlable> instancesControlables(@NotNull PlanCharge planCharge) throws MetierException {
         List<Controlable> instancesControlables = new ArrayList<>();
@@ -78,12 +85,14 @@ public class ControleurRegles {
     private static Collection<? extends Controlable> instancesControlables(Object o, @NotNull Package packageFilter) throws MetierException {
         List<Controlable> instancesControlables = new ArrayList<>();
 
+*/
 /*
         Class<?> cls = o.getClass();
         if (!cls.getPackage().getName().startsWith(packageFilter.getName() + ".")) {
             return instancesControlables;
         }
-*/
+*//*
+
 
         if (o instanceof Controlable) {
             Controlable c = (Controlable) o;
@@ -140,5 +149,6 @@ public class ControleurRegles {
 
         return instancesControlables;
     }
+*/
 
 }

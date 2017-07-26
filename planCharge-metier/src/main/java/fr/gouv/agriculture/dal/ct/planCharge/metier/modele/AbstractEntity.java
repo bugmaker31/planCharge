@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
@@ -11,7 +10,6 @@ import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by frederic.danna on 03/04/2017.
@@ -49,6 +47,11 @@ public abstract class AbstractEntity<I extends Serializable, T extends AbstractE
         List<ViolationRegleGestion> violations = new ArrayList<>();
 
         for (RegleGestion<T> regleGestion : getReglesGestion()) {
+
+            if (!regleGestion.estApplicable((T) this)) {
+                continue;
+            }
+
             if (!regleGestion.estValide((T) this)) {
                 violations.add(new ViolationRegleGestion(regleGestion, this));
             }
@@ -57,8 +60,11 @@ public abstract class AbstractEntity<I extends Serializable, T extends AbstractE
         return violations;
     }
 
+    /**
+     * @return La liste des {@link RegleGestion règles de gestion}, dans l'ordre où elles doivent être vérifiées.
+     */
     @NotNull
-    protected abstract Set<RegleGestion<T>> getReglesGestion();
+    protected abstract List<RegleGestion<T>> getReglesGestion();
 
 
     @Override

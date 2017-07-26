@@ -1,15 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by frederic.danna on 25/03/2017.
@@ -42,8 +40,8 @@ public class Profil extends AbstractEntity<String, Profil> implements Comparable
 
     @NotNull
     @Override
-    public Set<RegleGestion<Profil>> getReglesGestion() {
-        return new HashSet<>(); // TODO FDA 2017/07 Coder les règles de gestion.
+    public List<RegleGestion<Profil>> getReglesGestion() {
+        return Collections.EMPTY_LIST; // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 
