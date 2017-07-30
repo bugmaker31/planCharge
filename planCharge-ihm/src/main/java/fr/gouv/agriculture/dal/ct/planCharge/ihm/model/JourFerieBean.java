@@ -116,8 +116,8 @@ public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> imp
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return date.get().format(DateTimeFormatter.ISO_LOCAL_DATE)
-                + " " + description.get();
+        return (date.get() == null ? "N/C" : date.get().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                + (" " + (description.get() == null ? "N/C" : description.get()));
     }
 
 }

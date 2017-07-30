@@ -31,7 +31,7 @@ public class RessourceDao<R extends Ressource<R>> implements DataAcessObject<Res
 
     @NotNull
 //    @Autowired
-    private static RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
+    private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
 
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").

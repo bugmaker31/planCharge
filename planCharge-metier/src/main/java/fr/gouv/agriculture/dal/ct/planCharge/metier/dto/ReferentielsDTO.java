@@ -7,6 +7,7 @@ import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,25 +18,27 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, ReferentielsDTO> {
 
-    @NotNull
-    private Collection<JourFerieDTO> joursFeries;
-    @NotNull
-    private Collection<ImportanceDTO> importances;
-    @NotNull
-    private Collection<ProfilDTO> profils;
-    @NotNull
-    private Collection<ProjetAppliDTO> projetsApplis;
-    @NotNull
-    private Collection<StatutDTO> statuts;
-    @NotNull
-    private Collection<RessourceHumaineDTO> ressourcesHumaines;
+    /* Rq : Contrairement à l'entité associée (Referentiels) qui utilise des Set, on utilise des List pour pouvoi g&rer les éventuels doublons dans la saisie. */
+
+    @Null
+    private List<JourFerieDTO> joursFeries;
+    @Null
+    private List<ImportanceDTO> importances;
+    @Null
+    private List<ProfilDTO> profils;
+    @Null
+    private List<ProjetAppliDTO> projetsApplis;
+    @Null
+    private List<StatutDTO> statuts;
+    @Null
+    private List<RessourceHumaineDTO> ressourcesHumaines;
 
 
-    public ReferentielsDTO() {
-        this(new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>()); // TreeSet (au lieu de HasHset) pour trier, juste pour faciliter le débogage.
+    private ReferentielsDTO() {
+        super();
     }
 
-    public ReferentielsDTO(@NotNull Collection<JourFerieDTO> joursFeries, @NotNull Collection<ImportanceDTO> importances, @NotNull Collection<ProfilDTO> profils, @NotNull Collection<ProjetAppliDTO> projetsApplis, @NotNull Collection<StatutDTO> statuts, @NotNull Collection<RessourceHumaineDTO> ressourcesHumaines) {
+    public ReferentielsDTO(@Null List<JourFerieDTO> joursFeries, @Null List<ImportanceDTO> importances, @Null List<ProfilDTO> profils, @Null List<ProjetAppliDTO> projetsApplis, @Null List<StatutDTO> statuts, @Null List<RessourceHumaineDTO> ressourcesHumaines) {
         this.joursFeries = joursFeries;
         this.importances = importances;
         this.profils = profils;
@@ -44,62 +47,50 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
         this.ressourcesHumaines = ressourcesHumaines;
     }
 
-
     @NotNull
-    public Collection<JourFerieDTO> getJoursFeries() {
+    public static ReferentielsDTO from(Referentiels referentiels) {
+        return new ReferentielsDTO().fromEntity(referentiels);
+    }
+
+    @Null
+    public List<JourFerieDTO> getJoursFeries() {
         return joursFeries;
     }
 
-    @NotNull
-    public Collection<ImportanceDTO> getImportances() {
+    @Null
+    public List<ImportanceDTO> getImportances() {
         return importances;
     }
 
-    @NotNull
-    public Collection<ProfilDTO> getProfils() {
+    @Null
+    public List<ProfilDTO> getProfils() {
         return profils;
     }
 
-    @NotNull
-    public Collection<ProjetAppliDTO> getProjetsApplis() {
+    @Null
+    public List<ProjetAppliDTO> getProjetsApplis() {
         return projetsApplis;
     }
 
-    @NotNull
-    public Collection<StatutDTO> getStatuts() {
+    @Null
+    public List<StatutDTO> getStatuts() {
         return statuts;
     }
 
-    @NotNull
-    public Collection<RessourceHumaineDTO> getRessourcesHumaines() {
+    @Null
+    public List<RessourceHumaineDTO> getRessourcesHumaines() {
         return ressourcesHumaines;
     }
 
-
-    @NotNull
+    @Null
     @Override
     public Serializable getIdentity() {
         return null; // TODO FDA 2017/07 Trouver mieux comme code.
     }
 
-
     @Override
-    public int compareTo(ReferentielsDTO o) {
+    public int compareTo(@Null ReferentielsDTO o) {
         return 0; // TODO FDA 2017/07 Trouver mieux comme code.
-    }
-
-
-    @NotNull
-    @Override
-    public Referentiels toEntity() {
-        return new Referentiels(
-                getJoursFeries().stream().map(JourFerieDTO::toEntity).collect(Collectors.toList()),
-                getImportances().stream().map(ImportanceDTO::toEntity).collect(Collectors.toList()),
-                getProfils().stream().map(ProfilDTO::toEntity).collect(Collectors.toList()),
-                getProjetsApplis().stream().map(ProjetAppliDTO::toEntity).collect(Collectors.toList()),
-                getStatuts().stream().map(StatutDTO::toEntity).collect(Collectors.toList()),
-                getRessourcesHumaines().stream().map(RessourceHumaineDTO::toEntity).collect(Collectors.toList())
-                );
     }
 
     @NotNull
@@ -115,26 +106,52 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
         );
     }
 
+    @NotNull
+    @Override
+    public Referentiels toEntity() {
+        /* Rq : La transformation des List en Set enlève les éventuels doublons. */
+        assert joursFeries != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        assert importances != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        assert profils != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        assert projetsApplis != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        assert statuts != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        assert ressourcesHumaines != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        return new Referentiels(
+                joursFeries.stream().map(JourFerieDTO::toEntity).collect(Collectors.toSet()),
+                importances.stream().map(ImportanceDTO::toEntity).collect(Collectors.toSet()),
+                profils.stream().map(ProfilDTO::toEntity).collect(Collectors.toSet()),
+                projetsApplis.stream().map(ProjetAppliDTO::toEntity).collect(Collectors.toSet()),
+                statuts.stream().map(StatutDTO::toEntity).collect(Collectors.toSet()),
+                ressourcesHumaines.stream().map(RessourceHumaineDTO::toEntity).collect(Collectors.toSet())
+                );
+    }
 
+    @SuppressWarnings("MethodWithMultipleLoops")
     @NotNull
     @Override
     public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
-        List<ViolationRegleGestion> violations = new ArrayList<>();
+        List<ViolationRegleGestion> violations = super.controlerReglesGestion();
+        assert joursFeries != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         for (JourFerieDTO jourFerie : joursFeries) {
             violations.addAll(jourFerie.controlerReglesGestion());
         }
+        assert importances != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         for (ImportanceDTO importance : importances) {
             violations.addAll(importance.controlerReglesGestion());
         }
+        assert profils != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         for (ProfilDTO profil : profils) {
             violations.addAll(profil.controlerReglesGestion());
         }
+        assert projetsApplis != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         for (ProjetAppliDTO projetAppli : projetsApplis) {
             violations.addAll(projetAppli.controlerReglesGestion());
         }
+        assert statuts != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         for (StatutDTO statut : statuts) {
             violations.addAll(statut.controlerReglesGestion());
         }
+        assert ressourcesHumaines != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         for (RessourceHumaineDTO ressourceHumaine : ressourcesHumaines) {
             violations.addAll(ressourceHumaine.controlerReglesGestion());
         }
@@ -144,7 +161,7 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
     @NotNull
     @Override
     protected List<RegleGestion<ReferentielsDTO>> getReglesGestion() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 }

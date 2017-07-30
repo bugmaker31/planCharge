@@ -16,6 +16,7 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -181,12 +182,12 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     @Override
     public PlanChargeDTO toDto() throws BeanException {
-        Collection<JourFerieDTO> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::toDTO).collect(Collectors.toList());
-        Collection<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::toDTO).collect(Collectors.toList());
-        Collection<ProfilDTO> profils = profilsBeans.stream().map(ProfilDTO::new).collect(Collectors.toList());
-        Collection<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliDTO::new).collect(Collectors.toList());
-        Collection<StatutDTO> statuts = statutsBeans.stream().map(StatutDTO::new).collect(Collectors.toList());
-        Collection<RessourceHumaineDTO> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::toDTO).collect(Collectors.toList());
+        List<JourFerieDTO> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::toDTO).collect(Collectors.toList());
+        List<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::toDTO).collect(Collectors.toList());
+        List<ProfilDTO> profils = profilsBeans.stream().map(ProfilDTO::new).collect(Collectors.toList());
+        List<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliDTO::new).collect(Collectors.toList());
+        List<StatutDTO> statuts = statutsBeans.stream().map(StatutDTO::new).collect(Collectors.toList());
+        List<RessourceHumaineDTO> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::toDTO).collect(Collectors.toList());
         ReferentielsDTO referentiels = new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
 
         PlanificationsDTO planifications = toPlanificationDTOs();

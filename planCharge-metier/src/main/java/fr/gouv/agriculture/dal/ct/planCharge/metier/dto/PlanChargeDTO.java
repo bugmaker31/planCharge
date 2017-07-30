@@ -1,21 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanDateEtatObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanPlanificationsObligatoires;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanReferentielsObligatoires;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 11/03/2017.
@@ -26,9 +24,9 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
 
     @Null
     private LocalDate dateEtat;
-    @Null
+    @NotNull
     private ReferentielsDTO referentiels;
-    @Null
+    @NotNull
     private PlanificationsDTO planifications;
 
 
@@ -36,7 +34,7 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
         super();
     }
 
-    public PlanChargeDTO(@Null LocalDate dateEtat, @Null ReferentielsDTO referentiels, @Null PlanificationsDTO planifications) {
+    public PlanChargeDTO(@Null LocalDate dateEtat, @NotNull ReferentielsDTO referentiels, @NotNull PlanificationsDTO planifications) {
         this();
         this.dateEtat = dateEtat;
         this.referentiels = referentiels;
@@ -56,12 +54,12 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
         return dateEtat;
     }
 
-    @Null
+    @NotNull
     public ReferentielsDTO getReferentiels() {
         return referentiels;
     }
 
-    @Null
+    @NotNull
     public PlanificationsDTO getPlanifications() {
         return planifications;
     }
@@ -70,6 +68,7 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
     @NotNull
     @Override
     public PlanCharge toEntity() throws DTOException {
+        assert getDateEtat() != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         return new PlanCharge(getDateEtat(), getReferentiels().toEntity(), getPlanifications().toEntity());
     }
 
@@ -78,8 +77,8 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
     public PlanChargeDTO fromEntity(@NotNull PlanCharge entity) throws DTOException {
         return new PlanChargeDTO(
                 entity.getDateEtat(),
-                new ReferentielsDTO().fromEntity(entity.getReferentiels()),
-                new PlanificationsDTO().fromEntity(entity.getPlanifications())
+                ReferentielsDTO.from(entity.getReferentiels()),
+                PlanificationsDTO.from(entity.getPlanifications())
         );
     }
 
@@ -97,8 +96,23 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
 
     @NotNull
     @Override
+    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
+        List<ViolationRegleGestion> violations = super.controlerReglesGestion();
+//        assert referentiels != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        violations.addAll(referentiels.controlerReglesGestion());
+//        assert planifications != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        violations.addAll(planifications.controlerReglesGestion());
+        return violations;
+    }
+
+    @NotNull
+    @Override
     protected List<RegleGestion<PlanChargeDTO>> getReglesGestion() {
-        return Collections.emptyList(); // TODO FDA 2017/07 Coder les RG.
+        return Arrays.asList(
+                RGChargePlanDateEtatObligatoire.INSTANCE,
+                RGChargePlanReferentielsObligatoires.INSTANCE,
+                RGChargePlanPlanificationsObligatoires.INSTANCE
+        );
     }
 
 

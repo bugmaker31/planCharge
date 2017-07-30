@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFeri
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.time.LocalDate;
@@ -14,7 +15,9 @@ import java.util.Date;
  */
 public class JourFerieXmlWrapper {
 
+    @NotNull
     private Date date;
+    @Null
     private String description;
 
     /**
@@ -33,12 +36,13 @@ public class JourFerieXmlWrapper {
     }
 
     @XmlAttribute(name="date", required = true)
+    @NotNull
     public Date getDate() {
         return date;
     }
 
     @XmlElement(name="description", required = true)
-    @NotNull
+    @Null
     public String getDescription() {
         return description;
     }
@@ -47,7 +51,7 @@ public class JourFerieXmlWrapper {
         this.date = date;
     }
 
-    public void setDescription(@NotNull String description) {
+    public void setDescription(@Null String description) {
         this.description = description;
     }
 

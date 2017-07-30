@@ -112,17 +112,7 @@ public class JoursFeriesController extends AbstractController {
         getIhm().symboliserFiltrable(dateColumn, descriptionColumn);
 
         definirMenuContextuel();
-
-        // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
-        joursFeriesTable.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case DELETE:
-                    supprimerJourFerie(joursFeriesTable.getSelectionModel().getSelectedItem());
-                    break;
-                default:
-                    LOGGER.debug("Touche ignorée : '" + event.getCode() + "'.");
-            }
-        });
+        definirTouches();
 
         LOGGER.debug("Initialisé.");
     }
@@ -136,6 +126,19 @@ public class JoursFeriesController extends AbstractController {
         contextMenu.getItems().setAll(menuVoirTache);
 
         joursFeriesTable.setContextMenu(contextMenu);
+    }
+
+    private void definirTouches() {
+        // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
+        joursFeriesTable.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case DELETE:
+                    supprimerJourFerie(joursFeriesTable.getSelectionModel().getSelectedItem());
+                    break;
+                default:
+                    LOGGER.debug("Touche ignorée : '" + event.getCode() + "'.");
+            }
+        });
     }
 
     @Null

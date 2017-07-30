@@ -72,6 +72,22 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
 
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JourFerie jourFerie = (JourFerie) o;
+
+        return date.equals(jourFerie.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return date.hashCode();
+    }
+
+
+    @Override
     public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull JourFerie other) {
         return COMPARATOR_DEFAUT.compare(this, other);
     }

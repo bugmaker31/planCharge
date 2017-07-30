@@ -10,7 +10,7 @@ public final class RGRefJourFerieDateObligatoire extends RegleGestion<JourFerieD
     public static final RGRefJourFerieDateObligatoire INSTANCE = new RGRefJourFerieDateObligatoire();
 
     private RGRefJourFerieDateObligatoire() {
-        super("RG_REF_JF001_DateObligatoire", "Date obligatoire", jourFerie -> "La date du jour férié est requise.");
+        super("RG_Ref_JourFerie_DateObligatoire", "Date non définie", jourFerie -> "La date du jour férié est requise.");
     }
 
     @Override

@@ -27,11 +27,12 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
     @NotNull
     protected abstract Map<EI, E> getCache();
 
+
     @Null
     public E get(@NotNull EI id) throws EntityNotFoundException {
 
         if (getCache().containsKey(id)) {
-            LOGGER.debug("Entité '" + this.getClass().getCanonicalName() + "' retrouvée dans le cache : '" + id + "'.");
+            LOGGER.debug("Entité retrouvée dans le cache : '" + id + "'.");
             return getCache().get(id);
         }
         return null;
@@ -42,7 +43,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
     public E load(@NotNull EI id) throws EntityNotFoundException {
         E entity = get(id);
         if (entity == null) {
-            throw new EntityNotFoundException("Entité '" + this.getClass().getCanonicalName() + "' n'existe pas avec l'ID '" + id + "'.");
+            throw new EntityNotFoundException("Aucune entité connue avec l'ID '" + id + "'.");
         }
         return entity;
     }
@@ -60,5 +61,6 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
 
     public void createOrUpdate(@NotNull E entity) throws DaoException {
         getCache().put(entity.getIdentity(), entity);
+        LOGGER.info("Entité '{}' créée/màj : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
     }
 }

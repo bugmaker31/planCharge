@@ -22,10 +22,12 @@ public class RessourceHumaineDao extends /*RessourceDao*/ AbstractDao<RessourceH
         return instance;
     }
 
+
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private RessourceHumaineDao() {
         super();
     }
+
 
 //    @Override
     protected Map<String, RessourceHumaine> getCache() {

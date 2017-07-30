@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -14,24 +15,24 @@ import java.util.TreeSet;
 public class Referentiels extends AbstractEntity {
 
     @NotNull
-    private Collection<JourFerie> joursFeries;
+    private Set<JourFerie> joursFeries;
     @NotNull
-    private Collection<Importance> importances;
+    private Set<Importance> importances;
     @NotNull
-    private Collection<Profil> profils;
+    private Set<Profil> profils;
     @NotNull
-    private Collection<ProjetAppli> projetsApplis;
+    private Set<ProjetAppli> projetsApplis;
     @NotNull
-    private Collection<Statut> statuts;
+    private Set<Statut> statuts;
     @NotNull
-    private Collection<RessourceHumaine> ressourcesHumaines;
+    private Set<RessourceHumaine> ressourcesHumaines;
 
 
     public Referentiels() {
         this(new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>()); // TreeSet (au lieu de HasHset) pour trier, juste pour faciliter le débogage.
     }
 
-    public Referentiels(@NotNull Collection<JourFerie> joursFeries, @NotNull Collection<Importance> importances, @NotNull Collection<Profil> profils, @NotNull Collection<ProjetAppli> projetsApplis, @NotNull Collection<Statut> statuts, @NotNull Collection<RessourceHumaine> ressourcesHumaines) {
+    public Referentiels(@NotNull Set<JourFerie> joursFeries, @NotNull Set<Importance> importances, @NotNull Set<Profil> profils, @NotNull Set<ProjetAppli> projetsApplis, @NotNull Set<Statut> statuts, @NotNull Set<RessourceHumaine> ressourcesHumaines) {
         this.joursFeries = joursFeries;
         this.importances = importances;
         this.profils = profils;
@@ -42,32 +43,32 @@ public class Referentiels extends AbstractEntity {
 
 
     @NotNull
-    public Collection<JourFerie> getJoursFeries() {
+    public Set<JourFerie> getJoursFeries() {
         return joursFeries;
     }
 
     @NotNull
-    public Collection<Importance> getImportances() {
+    public Set<Importance> getImportances() {
         return importances;
     }
 
     @NotNull
-    public Collection<Profil> getProfils() {
+    public Set<Profil> getProfils() {
         return profils;
     }
 
     @NotNull
-    public Collection<ProjetAppli> getProjetsApplis() {
+    public Set<ProjetAppli> getProjetsApplis() {
         return projetsApplis;
     }
 
     @NotNull
-    public Collection<Statut> getStatuts() {
+    public Set<Statut> getStatuts() {
         return statuts;
     }
 
     @NotNull
-    public Collection<RessourceHumaine> getRessourcesHumaines() {
+    public Set<RessourceHumaine> getRessourcesHumaines() {
         return ressourcesHumaines;
     }
 
@@ -77,6 +78,7 @@ public class Referentiels extends AbstractEntity {
     public Serializable getIdentity() {
         return null; // TODO FDA 2017/07 Trouver mieux comme code.
     }
+
 
     @Override
     public int compareTo(Object o) {

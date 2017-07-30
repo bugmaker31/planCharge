@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.metier.regleGestion;
 import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestionPackage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.reflect.InheritageFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +22,13 @@ public class ControleurRegles {
 
     private static boolean REGLES_INITIALISEES = false;
 
+    private static Set<BeanDefinition> reglesGestionBDs = null;
+
     public static List<ViolationRegleGestion> violations(@NotNull PlanChargeDTO planChargeDTO) throws MetierException {
         List<ViolationRegleGestion> violationsRegles = new ArrayList<>();
 
-        if (!REGLES_INITIALISEES) {
-            // TODO FDA 2017/07 Gérer les accès concurrents (avec bloc 'synchronized')... si a un sens ? vu que l'appli est mono-utilisateur et mono-thread... à moins que JavaFX soit pmulti-thread ?
-            initReglesGestion(planChargeDTO);
-            REGLES_INITIALISEES = true;
-        }
+        // TODO FDA 2017/07 Optimiser pour ne plus avoir  : passer un Observable plutôt ?
+        initReglesGestion(planChargeDTO);
 
 /*
         List<Controlable> instancesControlables = instancesControlables(planCharge);
@@ -45,11 +45,7 @@ public class ControleurRegles {
         LOGGER.debug("Chargement des règles de gestion :");
 //        List<RegleGestion> reglesGestion = new ArrayList<>();
         try {
-            // Cf. http://stackoverflow.com/questions/492184/how-do-you-find-all-subclasses-of-a-given-class-in-java
-            ClassPathScanningCandidateComponentProvider regleGestionCPSCPP = new ClassPathScanningCandidateComponentProvider(false);
-            // On considère toutes les classes qui héritent de RegleGestion :
-            regleGestionCPSCPP.addIncludeFilter(new InheritageFilter(RegleGestion.class));
-            Set<BeanDefinition> reglesGestionBDs = regleGestionCPSCPP.findCandidateComponents(RegleGestion.class.getPackage().getName());
+            Set<BeanDefinition> reglesGestionBDs = getReglesGestionBDs();
             LOGGER.debug(reglesGestionBDs.size() + " règles de gestion trouvées.");
 
             for (BeanDefinition regleGestionBD : reglesGestionBDs) {
@@ -72,6 +68,18 @@ public class ControleurRegles {
         }
         LOGGER.debug("Règles de gestion chargées.");
 //        return reglesGestion;
+    }
+
+    private static Set<BeanDefinition> getReglesGestionBDs() {
+        if (reglesGestionBDs == null) {
+            ClassPathScanningCandidateComponentProvider regleGestionCPSCPP = new ClassPathScanningCandidateComponentProvider(false);
+            // On considère toutes les classes qui héritent de RegleGestion :
+            regleGestionCPSCPP.addIncludeFilter(new InheritageFilter(RegleGestion.class));
+            Package pack = RegleGestionPackage.class.getPackage();
+            reglesGestionBDs = regleGestionCPSCPP.findCandidateComponents(pack.getName());
+            LOGGER.debug(reglesGestionBDs.size() + " règles de gestion trouvées.");
+        }
+        return reglesGestionBDs;
     }
 
 /*

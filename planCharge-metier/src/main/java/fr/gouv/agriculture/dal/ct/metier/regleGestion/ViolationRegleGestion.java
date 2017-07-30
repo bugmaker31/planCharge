@@ -25,4 +25,9 @@ public class ViolationRegleGestion<T extends AbstractDTO> {
     public T getEntity() {
         return entity;
     }
+
+    @Override
+    public String toString() {
+        return regle.toString() + " / " + entity.toString();
+    }
 }

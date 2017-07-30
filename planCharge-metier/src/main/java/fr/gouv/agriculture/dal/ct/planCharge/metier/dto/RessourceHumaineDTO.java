@@ -34,7 +34,7 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
         super();
     }
 
-    public RessourceHumaineDTO(@NotNull String trigramme, @NotNull String nom, @NotNull String prenom, @NotNull String societe, @Null LocalDate debutMission, @Null LocalDate finMission) {
+    public RessourceHumaineDTO(@Null String trigramme, @Null String nom, @Null String prenom, @Null String societe, @Null LocalDate debutMission, @Null LocalDate finMission) {
         super(trigramme);
         this.nom = nom;
         this.prenom = prenom;
@@ -81,11 +81,9 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
         return getCode();
     }
 
-
     @NotNull
-    @Override
-    public RessourceHumaine toEntity() {
-        return new RessourceHumaine(getCode(), nom, prenom, societe, debutMission, finMission);
+    public static RessourceHumaineDTO from(@NotNull RessourceHumaine entity) {
+        return new RessourceHumaineDTO().fromEntity(entity);
     }
 
     @NotNull
@@ -95,8 +93,13 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
     }
 
     @NotNull
-    static public RessourceHumaineDTO from(@NotNull RessourceHumaine entity) {
-        return new RessourceHumaineDTO().fromEntity(entity);
+    @Override
+    public RessourceHumaine toEntity() {
+        assert getTrigramme() != null; // TODO FDA 201/07 Préciser la RG qui n'est pas respectée.
+        assert nom != null; // TODO FDA 201/07 Préciser la RG qui n'est pas respectée.
+        assert prenom != null; // TODO FDA 201/07 Préciser la RG qui n'est pas respectée.
+        assert societe != null; // TODO FDA 201/07 Préciser la RG qui n'est pas respectée.
+        return new RessourceHumaine(getTrigramme(), nom, prenom, societe, debutMission, finMission);
     }
 
 
@@ -106,12 +109,11 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
         return Collections.emptyList(); // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
-
     // Juste pour faciliter le debogage.
     @Override
     public String toString() {
-        return ("[" + getCode() + "]")
-                + " " + nom.toUpperCase()
+        return ("[" + getTrigramme() + "]")
+                + " " + nom
                 + " " + prenom
                 + " " + ("(" + societe + ")")
                 + " " + (

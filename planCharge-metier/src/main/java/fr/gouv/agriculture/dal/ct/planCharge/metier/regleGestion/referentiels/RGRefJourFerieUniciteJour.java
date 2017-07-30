@@ -13,8 +13,9 @@ public final class RGRefJourFerieUniciteJour extends RegleGestion<JourFerieDTO> 
     public static final RGRefJourFerieUniciteJour INSTANCE = new RGRefJourFerieUniciteJour();
 
     private RGRefJourFerieUniciteJour() {
-        super("RG_Ref_JourFerie_UniciteJour", "Unicité du jour",
-                jourFerie -> "Le jour férié " + jourFerie.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        super("RG_Ref_JourFerie_UniciteJour", "Jour en double",
+                jourFerie -> "Le jour férié "
+                        + (jourFerie.getDate() == null ? "" : jourFerie.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                         + (jourFerie.getDescription() == null ? "" : (" (" + jourFerie.getDescription() + ")"))
                         + " apparaît plus d'une fois."
         );
@@ -29,9 +30,12 @@ public final class RGRefJourFerieUniciteJour extends RegleGestion<JourFerieDTO> 
     public boolean estValide(@NotNull JourFerieDTO jf) {
         assert jf.getDate() != null;
         Collection<JourFerieDTO> joursFeries = getPlanChargeDTO().getReferentiels().getJoursFeries();
+        assert joursFeries != null; // TODO FDA 2017/07 Citer la RG qui n'est pas respectée.
         return joursFeries.parallelStream()
-                .filter(jourFerie -> jourFerie.getDate() != null)
-                .filter(jourFerie -> jourFerie.getDate().equals(jf.getDate()))
+                .filter(jourFerie -> {
+                    assert jourFerie.getDate() != null; // TODO FDA 2017/07 Citer la RG qui n'est pas respectée.
+                    return jourFerie.getDate().equals(jf.getDate());
+                })
                 .count() <= 1;
     }
 }

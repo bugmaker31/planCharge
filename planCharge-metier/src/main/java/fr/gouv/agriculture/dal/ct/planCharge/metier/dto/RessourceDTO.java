@@ -12,7 +12,7 @@ import javax.validation.constraints.Null;
 /**
  * Created by frederic.danna on 25/03/2017.
  */
-public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDTO<E, T>> extends AbstractDTO<E, String, T> implements Comparable<T> {
+public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDTO<E, T>> extends AbstractDTO<E, String, T> {
 
 
     @Null
@@ -23,7 +23,7 @@ public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDT
         super();
     }
 
-    public RessourceDTO(@NotNull String code) {
+    public RessourceDTO(@Null String code) {
         this();
         this.code = code;
     }

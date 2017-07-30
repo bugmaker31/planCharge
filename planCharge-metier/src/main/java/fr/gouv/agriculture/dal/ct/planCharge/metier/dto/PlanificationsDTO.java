@@ -1,9 +1,12 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -110,14 +113,36 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
 
     @NotNull
     @Override
-    public Planifications toEntity() {
-        return null;
+    public Planifications toEntity() throws DTOException {
+        Map<Tache, Map<LocalDate, Double>> planif = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
+        for (TacheDTO tacheDTO : plan.keySet()) {
+            Tache tache = tacheDTO.toEntity();
+            Map<LocalDate, Double> calendrierTache = plan.get(tacheDTO);
+            planif.put(tache, calendrierTache);
+        }
+        return new Planifications(planif);
     }
 
     @NotNull
     @Override
-    public PlanificationsDTO fromEntity(@NotNull Planifications entity) {
-        return null;
+    public PlanificationsDTO fromEntity(@NotNull Planifications planifications) throws DTOException {
+        Map<TacheDTO, Map<LocalDate, Double>> planifDTOsMap = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
+        for (Tache tache : planifications.taches()) {
+            TacheDTO tacheDTO = TacheDTO.from(tache);
+            try {
+                planifDTOsMap.put(tacheDTO, planifications.calendrier(tache));
+            } catch (TacheSansPlanificationException e) {
+                // Ne peut pas arriver, par construction.
+                throw new DTOException("Impossible de transformer les planification d'entité en DTO.", e);
+            }
+        }
+        PlanificationsDTO planificationsDTO = new PlanificationsDTO(planifDTOsMap);
+        return planificationsDTO;
+    }
+
+    @NotNull
+    public static PlanificationsDTO from(@NotNull Planifications planifications) throws DTOException {
+        return new PlanificationsDTO().fromEntity(planifications);
     }
 
 
@@ -179,6 +204,5 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     public void putAll(Map<? extends TacheDTO, ? extends Map<LocalDate, Double>> m) {
         plan.putAll(m);
     }
-
 
 }

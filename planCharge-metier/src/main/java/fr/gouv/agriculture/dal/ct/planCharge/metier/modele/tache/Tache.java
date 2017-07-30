@@ -21,7 +21,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Com
     private CategorieTache categorie;
     @Null
     private SousCategorieTache sousCategorie;
-    @Null
+    @NotNull
     private String noTicketIdal;
     @NotNull
     private String description;
@@ -59,7 +59,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Com
      * @throws ModeleException Si une donnée obligatoire manque (la {@link #categorie catégorie}, la {@link #description description}, etc.).
      */
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public Tache(int id, @Null CategorieTache categorie, @Null SousCategorieTache sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppli projetAppli, @Null Statut statut, @Null LocalDate debut, @Null LocalDate echeance, @Null Importance importance, double charge, @Null Ressource ressource, @Null Profil profil) /*throws ModeleException*/ {
+    public Tache(int id, @NotNull CategorieTache categorie, @Null SousCategorieTache sousCategorie, @NotNull String noTicketIdal, @NotNull String description, @NotNull ProjetAppli projetAppli, @NotNull Statut statut, @Null LocalDate debut, @NotNull LocalDate echeance, @NotNull Importance importance, double charge, @NotNull Ressource ressource, @NotNull Profil profil) /*throws ModeleException*/ {
         super();
 
         this.id = id;
@@ -102,11 +102,13 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Com
         this.profil = profil;
     }
 
+/*
     private void ctrlNonNull(int idTache, @Null Object propriete, @NotNull String nomPropriete) throws ModeleException {
         if (propriete == null) {
             throw new ModeleException("Tache n°" + idTache + " : " + nomPropriete + " de tâche non défini(e).");
         }
     }
+*/
 
 
     public int getId() {
@@ -123,7 +125,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Com
         return sousCategorie;
     }
 
-    @Null
+    @NotNull
     public String getNoTicketIdal() {
         return noTicketIdal;
     }
@@ -172,6 +174,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Com
         return profil;
     }
 
+
     @NotNull
     public String noTache() {
         return noTache(id);
@@ -181,6 +184,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Com
     public static String noTache(int id) {
         return String.format(FORMAT_NO_TACHE, id);
     }
+
 
     public boolean estProvision() {
         return statut.equals(Statut.PROVISION);

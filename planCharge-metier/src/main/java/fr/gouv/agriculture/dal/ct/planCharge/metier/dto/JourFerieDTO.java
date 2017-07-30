@@ -2,12 +2,16 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieDateObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieUniciteJour;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,7 +26,6 @@ public class JourFerieDTO extends AbstractDTO<JourFerie, LocalDate, JourFerieDTO
 
         @Override
         public int compare(@NotNull JourFerieDTO jf1, @NotNull JourFerieDTO jf2) {
-/*
             if ((jf1.getDate() == null) && (jf2.getDate() == null)) {
                 return 0;
             }
@@ -32,7 +35,6 @@ public class JourFerieDTO extends AbstractDTO<JourFerie, LocalDate, JourFerieDTO
             if ((jf1.getDate() != null) && (jf2.getDate() == null)) {
                 return -1;
             }
-*/
             return jf1.getDate().compareTo(jf2.getDate());
         }
 
@@ -55,7 +57,7 @@ public class JourFerieDTO extends AbstractDTO<JourFerie, LocalDate, JourFerieDTO
         super();
     }
 
-    public JourFerieDTO(@NotNull LocalDate date, @Null String description) {
+    public JourFerieDTO(@Null LocalDate date, @Null String description) {
         this();
         this.date = date;
         this.description = description;
@@ -80,17 +82,30 @@ public class JourFerieDTO extends AbstractDTO<JourFerie, LocalDate, JourFerieDTO
         return date;
     }
 
+    @NotNull
+    public static JourFerieDTO from(@NotNull JourFerie entity) {
+        return new JourFerieDTO().fromEntity(entity);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JourFerieDTO that = (JourFerieDTO) o;
+
+        return date != null ? date.equals(that.date) : that.date == null;
+    }
+
 
     @Override
     public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull JourFerieDTO other) {
         return COMPARATOR_DEFAUT.compare(this, other);
     }
 
-
-    @NotNull
     @Override
-    public JourFerie toEntity() {
-        return new JourFerie(date, description);
+    public int hashCode() {
+        return date != null ? date.hashCode() : 0;
     }
 
     @NotNull
@@ -100,23 +115,26 @@ public class JourFerieDTO extends AbstractDTO<JourFerie, LocalDate, JourFerieDTO
     }
 
     @NotNull
-    static public JourFerieDTO from(@NotNull JourFerie entity) {
-        return new JourFerieDTO().fromEntity(entity);
+    @Override
+    public JourFerie toEntity() {
+        assert date != null : RGRefJourFerieDateObligatoire.INSTANCE.getCode() + " non respectée";
+        return new JourFerie(date, description);
     }
-
 
     @NotNull
     @Override
     protected List<RegleGestion<JourFerieDTO>> getReglesGestion() {
-        return Collections.EMPTY_LIST; // TODO FDA 2017/07 Coder les règles de gestion.
+        return Arrays.asList(
+                RGRefJourFerieDateObligatoire.INSTANCE,
+                RGRefJourFerieUniciteJour.INSTANCE
+        );
     }
-
 
 
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        return (date == null ? "N/C" : date.format(DateTimeFormatter.ISO_DATE))
                 + (" " + (description == null ? "N/C" : ('"' + description + '"')));
     }
 }
