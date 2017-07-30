@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.ihm.model;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 
 public class BeanException extends IhmException {
 

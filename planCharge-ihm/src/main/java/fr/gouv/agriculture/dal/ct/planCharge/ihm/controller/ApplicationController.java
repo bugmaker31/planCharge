@@ -4,7 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportChargementAvecProgression;
@@ -17,7 +17,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
@@ -78,7 +77,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private NomModule nomModuleCourant = null;
+    private ApplicationController.NomModule nomModuleCourant = null;
 
     // Les menus :
 
@@ -197,7 +196,7 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
-    public NomModule getNomModuleCourant() {
+    public ApplicationController.NomModule getNomModuleCourant() {
         return nomModuleCourant;
     }
 
@@ -392,6 +391,7 @@ public class ApplicationController extends AbstractController {
                 planChargeBean.vientDEtreCharge();
                 getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
 
+/*
                 // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
                 rapport.setAvancement("Alimentation des référentiels...");
                 ihm.getTachesController().populerReferentiels();
@@ -401,6 +401,7 @@ public class ApplicationController extends AbstractController {
                 rapport.setAvancement("Alimentation des filtres...");
                 ihm.getTachesController().populerFiltres();
                 ihm.getChargesController().populerFiltres();
+*/
 
                 return rapport;
             }
@@ -580,6 +581,7 @@ public class ApplicationController extends AbstractController {
 
                 planChargeBean.fromDto(planCharge);
 
+/*
                 // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
                 rapport.setAvancement("Alimentation des référentiels...");
                 ihm.getTachesController().populerReferentiels();
@@ -589,6 +591,7 @@ public class ApplicationController extends AbstractController {
                 rapport.setAvancement("Alimentation des filtres...");
                 ihm.getTachesController().populerFiltres();
                 ihm.getChargesController().populerFiltres();
+*/
 
                 return rapport;
             }
@@ -699,6 +702,7 @@ public class ApplicationController extends AbstractController {
 
                 planChargeBean.fromDto(planCharge);
 
+/*
                 // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
                 rapport.setAvancement("Alimentation des référentiels...");
                 ihm.getTachesController().populerReferentiels();
@@ -708,6 +712,7 @@ public class ApplicationController extends AbstractController {
                 rapport.setAvancement("Alimentation des filtres...");
                 ihm.getTachesController().populerFiltres();
                 ihm.getChargesController().populerFiltres();
+*/
 
                 return rapport;
             }
@@ -916,7 +921,7 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleJoursFeries() throws IhmException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
 
-        if (nomModuleCourant == NomModule.JOURS_FERIES) {
+        if (nomModuleCourant == ApplicationController.NomModule.JOURS_FERIES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -926,9 +931,10 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
     }
 
-    public void activerModuleJoursFeries() {
+    public void activerModuleJoursFeries() throws IhmException {
         nomModuleCourant = NomModule.JOURS_FERIES;
         contentPane.getChildren().setAll(ihm.getJoursFeriesView());
+        ihm.getJoursFeriesController().fireActivation();
         majTitre();
     }
 
@@ -945,7 +951,7 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleRessourcesHumaines() throws IhmException {
         LOGGER.debug("> [...] > Module \"Ressources humaines\"");
 
-        if (nomModuleCourant == NomModule.RESSOURCES_HUMAINES) {
+        if (nomModuleCourant == ApplicationController.NomModule.RESSOURCES_HUMAINES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -955,9 +961,10 @@ public class ApplicationController extends AbstractController {
         getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
     }
 
-    public void activerModuleRessourcesHumaines() {
+    public void activerModuleRessourcesHumaines() throws IhmException {
         nomModuleCourant = NomModule.RESSOURCES_HUMAINES;
         contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
+        ihm.getRessourcesHumainesController().fireActivation();
         majTitre();
     }
 
@@ -975,19 +982,20 @@ public class ApplicationController extends AbstractController {
     void afficherModuleDisponibilites() throws IhmException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
-        if (nomModuleCourant == NomModule.DISPONIBILITES) {
+        if (nomModuleCourant == ApplicationController.NomModule.DISPONIBILITES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        final ApplicationController.NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleDisponibilites();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
     }
 
-    public void activerModuleDisponibilites() {
-        nomModuleCourant = NomModule.DISPONIBILITES;
+    public void activerModuleDisponibilites() throws IhmException {
+        nomModuleCourant = ApplicationController.NomModule.DISPONIBILITES;
         contentPane.getChildren().setAll(ihm.getDisponibilitesView());
+        ihm.getDisponibilitesController().fireActivation();
         majTitre();
     }
 
@@ -1004,20 +1012,21 @@ public class ApplicationController extends AbstractController {
     void afficherModuleTaches() throws IhmException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
-        if (nomModuleCourant == NomModule.TACHES) {
+        if (nomModuleCourant == ApplicationController.NomModule.TACHES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        final ApplicationController.NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleTaches();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
     }
 
-    public void activerModuleTaches() {
-        nomModuleCourant = NomModule.TACHES;
+    public void activerModuleTaches() throws IhmException {
+        nomModuleCourant = ApplicationController.NomModule.TACHES;
         ihm.getTachesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getTachesView());
+        ihm.getTachesController().fireActivation();
         majTitre();
     }
 
@@ -1034,20 +1043,21 @@ public class ApplicationController extends AbstractController {
     void afficherModuleCharges() throws IhmException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
-        if (nomModuleCourant == NomModule.CHARGES) {
+        if (nomModuleCourant == ApplicationController.NomModule.CHARGES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        final ApplicationController.NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleCharges();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
     }
 
-    public void activerModuleCharges() {
-        nomModuleCourant = NomModule.CHARGES;
+    public void activerModuleCharges() throws IhmException {
+        nomModuleCourant = ApplicationController.NomModule.CHARGES;
         ihm.getChargesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getChargesView());
+        ihm.getChargesController().fireActivation();
         majTitre();
     }
 

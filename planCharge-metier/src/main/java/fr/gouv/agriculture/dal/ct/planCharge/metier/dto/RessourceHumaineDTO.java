@@ -120,8 +120,8 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
                 + " " + prenom
                 + " " + ("(" + societe + ")")
                 + " " + (
-                (debutMission == null ? "N/C" : debutMission.format(DateTimeFormatter.BASIC_ISO_DATE))
-                        + ".." + (finMission == null ? "N/C" : finMission.format(DateTimeFormatter.BASIC_ISO_DATE))
+                (debutMission == null ? "N/C" : debutMission.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        + ".." + (finMission == null ? "N/C" : finMission.format(DateTimeFormatter.ISO_LOCAL_DATE))
         );
     }
 }

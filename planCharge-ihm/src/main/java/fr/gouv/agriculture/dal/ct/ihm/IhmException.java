@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm;
+package fr.gouv.agriculture.dal.ct.ihm;
 
 /**
  * Created by frederic.danna on 16/04/2017.

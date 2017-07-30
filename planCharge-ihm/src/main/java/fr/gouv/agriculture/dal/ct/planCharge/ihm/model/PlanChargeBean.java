@@ -2,9 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.DoubleProperty;
@@ -15,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,15 +33,15 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
 
-    private boolean estModifie;
-
-    public boolean estModifie() {
-        return estModifie;
-    }
-
-    private void setModifie(boolean estModifie) {
-        this.estModifie = estModifie;
-    }
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<ProfilBean> profilsBeans;
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<ProjetAppliBean> projetsApplisBeans;
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<StatutBean> statutsBeans;
 
 
     @Null
@@ -66,31 +64,32 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<ImportanceBean> importancesBeans;
-
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<String> profilsBeans;
+    private final ObservableList<RessourceBean> ressourcesBeans;
+    private boolean modifie;
 
-    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
-    @NotNull
-    private final ObservableList<String> projetsApplisBeans;
+    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+    private PlanChargeBean() {
+        super();
+        dateEtat = null;
+        joursFeriesBeans = FXCollections.observableArrayList();
+        importancesBeans = FXCollections.observableArrayList();
+        profilsBeans = FXCollections.observableArrayList();
+        projetsApplisBeans = FXCollections.observableArrayList();
+        statutsBeans = FXCollections.observableArrayList();
+        ressourcesBeans = FXCollections.observableArrayList();
+        planificationsBeans = FXCollections.observableArrayList();
+        modifie = false;
+    }
 
-    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
-    @NotNull
-    private final ObservableList<String> statutsBeans;
-
-    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
-    @NotNull
-    private final ObservableList<RessourceHumaineBean> ressourcesHumainesBeans;
+    public boolean estModifie() {
+        return modifie;
+    }
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<PlanificationBean> planificationsBeans;
-
-    @NotNull
-    public ObservableList<PlanificationBean> getPlanificationsBeans() {
-        return planificationsBeans;
-    }
 
     /*
     NB : Tout attribut ajouté à cette classe doit être répercuté dans la méthode {@link #copier(PlanChargeBean, PlanChargeBean)}.
@@ -102,40 +101,57 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
     @NotNull
-    public ObservableList<RessourceHumaineBean> getRessourcesHumainesBeans() {
-        return ressourcesHumainesBeans;
+    public ObservableList<ImportanceBean> getImportancesBeans() {
+        return importancesBeans;
     }
 
-
-    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
-    private PlanChargeBean() {
-        super();
-        dateEtat = null;
-        joursFeriesBeans = FXCollections.observableArrayList();
-        importancesBeans = FXCollections.observableArrayList();
-        profilsBeans = FXCollections.observableArrayList();
-        projetsApplisBeans = FXCollections.observableArrayList();
-        statutsBeans = FXCollections.observableArrayList();
-        ressourcesHumainesBeans = FXCollections.observableArrayList();
-        planificationsBeans = FXCollections.observableArrayList();
-        estModifie = false;
+    @NotNull
+    public ObservableList<ProfilBean> getProfilsBeans() {
+        return profilsBeans;
     }
 
+    @NotNull
+    public ObservableList<ProjetAppliBean> getProjetsApplisBeans() {
+        return projetsApplisBeans;
+    }
+
+    @NotNull
+    public ObservableList<StatutBean> getStatutsBeans() {
+        return statutsBeans;
+    }
+
+    @NotNull
+    public ObservableList<RessourceBean> getRessourcesBeans() {
+        return ressourcesBeans;
+    }
+
+    @NotNull
+    public ObservableList<PlanificationBean> getPlanificationsBeans() {
+        return planificationsBeans;
+    }
+
+    public boolean isModifie() {
+        return modifie;
+    }
+
+    private void setModifie(boolean estModifie) {
+        this.modifie = estModifie;
+    }
 
     public void vientDEtreCharge() {
-        this.estModifie = false;
+        this.modifie = false;
     }
 
     public void vientDEtreSauvegarde() {
-        this.estModifie = false;
+        this.modifie = false;
     }
 
     public void vientDEtreModifie() {
-        this.estModifie = true;
+        this.modifie = true;
     }
 
     public boolean aBesoinEtreSauvegarde() {
-        return estModifie;
+        return modifie;
     }
 
 
@@ -144,33 +160,39 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         setDateEtat(planCharge.getDateEtat());
         joursFeriesBeans.setAll(
                 planCharge.getReferentiels().getJoursFeries().stream()
-                        .map(jourFerieDTO -> new JourFerieBean().fromDto(jourFerieDTO))
+                        .map(JourFerieBean::from)
                         .collect(Collectors.toList())
         );
         importancesBeans.setAll(
                 planCharge.getReferentiels().getImportances().stream()
-                        .map(importanceDTO -> new ImportanceBean().fromDto(importanceDTO))
+                        .map(ImportanceBean::from)
                         .collect(Collectors.toList())
         );
         profilsBeans.setAll(
                 planCharge.getReferentiels().getProfils().stream()
-                        .map(ProfilDTO::getCode)
+                        .map(ProfilBean::from)
                         .collect(Collectors.toList())
         );
         projetsApplisBeans.setAll(
                 planCharge.getReferentiels().getProjetsApplis().stream()
-                        .map(ProjetAppliDTO::getCode)
+                        .map(ProjetAppliBean::from)
                         .collect(Collectors.toList())
         );
         statutsBeans.setAll(
                 planCharge.getReferentiels().getStatuts().stream()
-                        .map(StatutDTO::getCode)
+                        .map(StatutBean::from)
                         .collect(Collectors.toList())
         );
-        ressourcesHumainesBeans.clear();
-        planCharge.getReferentiels().getRessourcesHumaines().stream()
-                .filter(RessourceDTO::estHumain)
-                .forEach(ressource -> ressourcesHumainesBeans.add(new RessourceHumaineBean().fromDto(ressource)));
+        ressourcesBeans.setAll(
+                planCharge.getReferentiels().getRessourcesHumaines().stream()
+                        .map(RessourceHumaineBean::from)
+                        .collect(Collectors.toList())
+        );
+        ressourcesBeans.addAll(
+                Arrays.stream(RessourceGeneriqueDTO.values())
+                        .map(RessourceGeneriqueBean::from)
+                        .collect(Collectors.toList())
+        );
         planificationsBeans.setAll(
                 planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationBean(planif.getKey(), planif.getValue()))
@@ -182,12 +204,16 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     @Override
     public PlanChargeDTO toDto() throws BeanException {
-        List<JourFerieDTO> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::toDTO).collect(Collectors.toList());
-        List<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::toDTO).collect(Collectors.toList());
-        List<ProfilDTO> profils = profilsBeans.stream().map(ProfilDTO::new).collect(Collectors.toList());
-        List<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliDTO::new).collect(Collectors.toList());
-        List<StatutDTO> statuts = statutsBeans.stream().map(StatutDTO::new).collect(Collectors.toList());
-        List<RessourceHumaineDTO> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::toDTO).collect(Collectors.toList());
+        List<JourFerieDTO> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::to).collect(Collectors.toList());
+        List<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::to).collect(Collectors.toList());
+        List<ProfilDTO> profils = profilsBeans.stream().map(ProfilBean::to).collect(Collectors.toList());
+        List<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliBean::to).collect(Collectors.toList());
+        List<StatutDTO> statuts = statutsBeans.stream().map(StatutBean::to).collect(Collectors.toList());
+        List<RessourceHumaineDTO> ressourcesHumaines = ressourcesBeans.stream()
+                .filter(ressourceBean -> ressourceBean instanceof RessourceHumaineBean)
+                .map(ressourceBean -> (RessourceHumaineBean) ressourceBean)
+                .map(RessourceHumaineBean::to)
+                .collect(Collectors.toList());
         ReferentielsDTO referentiels = new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
 
         PlanificationsDTO planifications = toPlanificationDTOs();
@@ -239,6 +265,6 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         //noinspection StringConcatenationMissingWhitespace
         return "[" + (dateEtat == null ? "N/A" : dateEtat.format(DateTimeFormatter.ISO_DATE)) + "]"
                 + " " + getPlanificationsBeans().size() + " tâches"
-                + " (" + (estModifie ? "" : "non ") + "modifié)";
+                + " (" + (modifie ? "" : "non ") + "modifié)";
     }
 }

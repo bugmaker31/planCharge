@@ -55,13 +55,11 @@ public class CategorieTacheDTO extends AbstractDTO<CategorieTache, String, Categ
 
     @NotNull
     public static CategorieTacheDTO valeur(@NotNull String texte) throws DTOException {
-        Optional<CategorieTacheDTO> categ = Arrays.stream(values())
-                .filter(cat -> texte.equals(cat.getCode()))
-                .findAny();
-        if (!categ.isPresent()) {
+        CategorieTacheDTO valeur = valeurOuNull(texte);
+        if (valeur == null) {
             throw new DTOException("Catégorie inconnue : '" + texte + "'.");
         }
-        return categ.get();
+        return valeur;
     }
 
     @Null

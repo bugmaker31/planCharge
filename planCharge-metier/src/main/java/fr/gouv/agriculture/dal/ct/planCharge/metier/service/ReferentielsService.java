@@ -35,6 +35,10 @@ public class ReferentielsService {
         return InstanceHolder.INSTANCE;
     }
 
+    //    @Autowired
+    @NotNull
+    private JourFerieDao jourFerieDao = JourFerieDao.instance();
+    //    @Autowired
     @NotNull
     private ImportanceDao importanceDao = ImportanceDao.instance();
     //    @Autowired
@@ -61,6 +65,17 @@ public class ReferentielsService {
 
 
     @NotNull
+    public List<JourFerieDTO> joursFeries() throws ServiceException {
+        try {
+            List<JourFerie> joursFeries = jourFerieDao.list();
+            return joursFeries.stream().map(JourFerieDTO::from).collect(Collectors.toList());
+        } catch (DaoException e) {
+            throw new ServiceException("Impossible de retrouver les jours fériés.", e);
+        }
+    }
+
+
+    @NotNull
     public List<CategorieTacheDTO> categoriesTache() throws ServiceException {
         return CategorieTacheDTO.CATEGORIES;
     }
@@ -77,7 +92,7 @@ public class ReferentielsService {
             List<Importance> importances = importanceDao.list();
             return importances.stream().map(ImportanceDTO::from).collect(Collectors.toList());
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de lister les importances.", e);
+            throw new ServiceException("Impossible de retrouver les importances.", e);
         }
     }
 
@@ -99,7 +114,7 @@ public class ReferentielsService {
             return projetsApplis.stream().map(ProjetAppliDTO::from).collect(Collectors.toList());
         } catch (DaoException e) {
             //noinspection HardcodedFileSeparator
-            throw new ServiceException("Impossible de lister les projets/applis.", e);
+            throw new ServiceException("Impossible de retrouver les projets/applis.", e);
         }
     }
 
@@ -121,7 +136,7 @@ public class ReferentielsService {
             List<Statut> statuts = statutDao.list();
             return statuts.stream().map(StatutDTO::from).collect(Collectors.toList());
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de lister les statuts.", e);
+            throw new ServiceException("Impossible de retrouver les statuts.", e);
         }
     }
 
@@ -144,7 +159,7 @@ public class ReferentielsService {
             ressources.addAll(ressourceDao.listAll());
             return ressources.stream().map(RessourceDTO::from).collect(Collectors.toList());
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de lister les ressources.", e);
+            throw new ServiceException("Impossible de retrouver les ressources.", e);
         }
     }
 
@@ -164,7 +179,7 @@ public class ReferentielsService {
             List<RessourceHumaine> ressourcesHumaines = ressourceHumaineDao.list();
             return ressourcesHumaines.stream().map(RessourceHumaineDTO::from).collect(Collectors.toList());
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de lister les ressources.", e);
+            throw new ServiceException("Impossible de retrouver les ressources.", e);
         }
     }
 
@@ -175,7 +190,7 @@ public class ReferentielsService {
             List<Profil> profils = profilDao.list();
             return profils.stream().map(ProfilDTO::from).collect(Collectors.toList());
         } catch (DaoException e) {
-            throw new ServiceException("Impossible de lister les profils.", e);
+            throw new ServiceException("Impossible de retrouver les profils.", e);
         }
     }
 

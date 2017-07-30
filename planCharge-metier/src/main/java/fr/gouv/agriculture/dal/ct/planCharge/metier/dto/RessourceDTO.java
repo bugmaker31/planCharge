@@ -72,7 +72,7 @@ public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDT
 
 
     @Override
-    final public int compareTo(@NotNull T o) {
+    public final int compareTo(@NotNull T o) {
         return code.compareTo(o.getCode());
     }
 

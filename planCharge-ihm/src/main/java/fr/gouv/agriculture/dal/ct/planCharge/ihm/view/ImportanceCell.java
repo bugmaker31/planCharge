@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.ImportanceBean;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import org.slf4j.Logger;
@@ -13,16 +14,17 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
-public class ImportanceCell<S> extends ComboBoxTableCell<S, String> {
+public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
 
+    @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportanceCell.class);
 
-    public ImportanceCell(ObservableList<String> items) {
+    public ImportanceCell(@NotNull ObservableList<ImportanceBean> items) {
         super(items);
     }
 
     @Override
-    public void updateItem(String item, boolean empty) {
+    public void updateItem(@NotNull ImportanceBean item, boolean empty) {
         super.updateItem(item, empty);
 
         getStyleClass().clear();
@@ -41,7 +43,7 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, String> {
 
     @NotNull
     private String importanceStyleClass() throws IhmException {
-        String codeImportance = getItem();
+        String codeImportance = getItem().getCode();
         if (codeImportance == null) {
             return null;
         }

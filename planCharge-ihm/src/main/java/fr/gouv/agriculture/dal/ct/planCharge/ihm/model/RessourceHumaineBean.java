@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ImportanceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.beans.property.ObjectProperty;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class RessourceHumaineBean extends AbstractBean<RessourceHumaineDTO, RessourceHumaineBean> {
+public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, RessourceHumaineDTO> implements Comparable<RessourceHumaineBean> {
 
     @NotNull
     private StringProperty trigramme = new SimpleStringProperty();
@@ -35,12 +36,12 @@ public class RessourceHumaineBean extends AbstractBean<RessourceHumaineDTO, Ress
         super();
     }
 
-    public RessourceHumaineBean(@Null String trigramme) {
+    private RessourceHumaineBean(@Null String trigramme) {
         super();
         this.trigramme.set(trigramme);
     }
 
-    public RessourceHumaineBean(@Null String trigramme, @Null String nom, @Null String prenom, @Null String societe, @Null LocalDate debutMission, @Null LocalDate finMission) {
+    private RessourceHumaineBean(@Null String trigramme, @Null String nom, @Null String prenom, @Null String societe, @Null LocalDate debutMission, @Null LocalDate finMission) {
         this(trigramme);
         this.nom.set(nom);
         this.prenom.set(prenom);
@@ -155,8 +156,13 @@ public class RessourceHumaineBean extends AbstractBean<RessourceHumaineDTO, Ress
     }
 
     @NotNull
-    public static RessourceHumaineDTO toDTO(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+    public static RessourceHumaineDTO to(@NotNull RessourceHumaineBean ressourceHumaineBean) {
         return ressourceHumaineBean.toDto();
+    }
+
+    @NotNull
+    public static RessourceHumaineBean from(@NotNull RessourceHumaineDTO dto) {
+        return new RessourceHumaineBean().fromDto(dto);
     }
 
 
@@ -173,6 +179,12 @@ public class RessourceHumaineBean extends AbstractBean<RessourceHumaineDTO, Ress
     @Override
     public int hashCode() {
         return (getTrigramme() != null) ? getTrigramme().hashCode() : 0;
+    }
+
+
+    @Override
+    public int compareTo(@NotNull RessourceHumaineBean o) {
+        return getTrigramme().compareTo(o.getTrigramme());
     }
 
 

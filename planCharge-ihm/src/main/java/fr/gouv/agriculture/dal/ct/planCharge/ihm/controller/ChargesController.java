@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ModuleController;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
@@ -38,7 +39,7 @@ import java.util.TreeMap;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ChargesController extends AbstractTachesController<PlanificationBean> {
+public class ChargesController extends AbstractTachesController<PlanificationBean> implements ModuleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
 
@@ -380,6 +381,12 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
         semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 12));
 
         LOGGER.debug("Initialisé.");
+    }
+
+    @Override
+    public void fireActivation() throws IhmException {
+        // TODO FDA 2017/07 Coder.
+//        LOGGER.info("Données métier chargées.");
     }
 
     @Override

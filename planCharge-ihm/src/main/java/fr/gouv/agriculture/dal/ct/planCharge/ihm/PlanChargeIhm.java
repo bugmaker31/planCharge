@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
@@ -192,6 +193,34 @@ public class PlanChargeIhm extends Application {
 
     public ApplicationController getApplicationController() {
         return applicationController;
+    }
+
+    public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
+        cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
+//                    Platform.runLater(() -> {
+                                masquerErreurSaisie(cell);
+                                String error = validator.apply(newValue);
+                                if (error != null) {
+                                    afficherErreurSaisie(cell, title, error);
+                                }
+//                            }
+//                    );
+                }
+        );
+    }
+
+    public static void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
+        field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+//                    Platform.runLater(() -> {
+                                masquerErreurSaisie(field);
+                                String error = validator.apply(newValue);
+                                if (error != null) {
+                                    afficherErreurSaisie(field, title, error);
+                                }
+//                            }
+//                    );
+                }
+        );
     }
 
     public DisponibilitesController getDisponibilitesController() {
@@ -446,16 +475,18 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
-    public void symboliserFiltrable(@NotNull TableColumn... columns) {
-        Platform.runLater(() -> {
-            for (TableColumn column : columns) {
-                if (column.getGraphic() == null) {
-                    Label label = new Label();
-                    column.setGraphic(label);
-                }
-                symboliserFiltrable(column.getGraphic());
-            }
-        });
+    private static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
+        if (!popups.containsKey(idVBoxErreurSaisie(field))) {
+            LOGGER.debug("Pas d'erreur de saisie affichée actuellement pour le champ " + field.getId() + ", rien à masquer donc.");
+            return;
+        }
+        Decorator.removeAllDecorations(field);
+        try {
+            masquerPopupErreurSaisie(field);
+        } catch (IhmException e) {
+            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
+            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
+        }
     }
 
     public void symboliserFiltrable(@NotNull Node... nodes) {
@@ -484,30 +515,22 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
-        cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) ->
-                Platform.runLater(() -> {
-                            masquerErreurSaisie(cell);
-                            String error = validator.apply(newValue);
-                            if (error != null) {
-                                afficherErreurSaisie(cell, title, error);
-                            }
-                        }
-                )
-        );
+    private static void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
+        if (!popups.containsKey(idVBoxErreurSaisie(field))) {
+            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
+            throw new RuntimeException("Impossible de retrouver la popup associée au control " + field.getId() + " (pour afficher l'erreur de saisie).");
+        }
+        PopupWindow popup = popups.get(idVBoxErreurSaisie(field));
+        field.setOnMouseEntered(event -> {
+        });
+        field.setOnMouseExited(event -> {
+        });
+        popup.hide();
     }
 
-    public static void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
-        field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) ->
-                Platform.runLater(() -> {
-                            masquerErreurSaisie(field);
-                            String error = validator.apply(newValue);
-                            if (error != null) {
-                                afficherErreurSaisie(field, title, error);
-                            }
-                        }
-                )
-        );
+    @NotNull
+    public JoursFeriesController getJoursFeriesController() {
+        return joursFeriesController;
     }
 
     public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
@@ -521,14 +544,9 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    private static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
-        Decorator.removeAllDecorations(field);
-        try {
-            masquerPopupErreurSaisie(field);
-        } catch (IhmException e) {
-            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
-            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
-        }
+    @NotNull
+    public RessourcesHumainesController getRessourcesHumainesController() {
+        return ressourcesHumainesController;
     }
 
     private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
@@ -538,18 +556,16 @@ public class PlanChargeIhm extends Application {
         ((PopOver) popup).show(field);
     }
 
-    private static void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
-        if (!popups.containsKey(idVBoxErreurSaisie(field))) {
-            // TODO FDA 2017/07 Thrower une erreur, plutôt ?
-            LOGGER.error("Impossible de retrouver la popup associée au control " + field.getId() + " (pour afficher l'erreur de saisie).");
-            return;
-        }
-        PopupWindow popup = popups.get(idVBoxErreurSaisie(field));
-        field.setOnMouseEntered(event -> {
+    public void symboliserFiltrable(@NotNull TableColumn<?, ?>... columns) {
+        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
+            for (TableColumn<?, ?> column : columns) {
+                if (column.getGraphic() == null) {
+                    Label label = new Label();
+                    column.setGraphic(label);
+                }
+                symboliserFiltrable(column.getGraphic());
+            }
         });
-        field.setOnMouseExited(event -> {
-        });
-        popup.hide();
     }
 
     @NotNull
@@ -620,7 +636,7 @@ public class PlanChargeIhm extends Application {
 //            taskThread.join(); // Pas nécessaire.
         } catch (CancellationException | InterruptedException | ExecutionException e) {
             if (e.getCause() instanceof ViolationsReglesGestionException) {
-                throw (ViolationsReglesGestionException)e.getCause();
+                throw (ViolationsReglesGestionException) e.getCause();
             }
             throw new IhmException("Impossible d'exécuter le traitement.", e);
         }

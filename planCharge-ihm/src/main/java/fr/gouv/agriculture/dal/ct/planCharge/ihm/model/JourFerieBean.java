@@ -77,12 +77,12 @@ public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> imp
     }
 
     @NotNull
-    public static JourFerieBean fromDTO(@NotNull JourFerieDTO jourFerieDTO) {
+    public static JourFerieBean from(@NotNull JourFerieDTO jourFerieDTO) {
         return new JourFerieBean().fromDto(jourFerieDTO);
     }
 
     @NotNull
-    public static JourFerieDTO toDTO(@NotNull JourFerieBean jourFerieBean) {
+    public static JourFerieDTO to(@NotNull JourFerieBean jourFerieBean) {
         return jourFerieBean.toDto();
     }
 

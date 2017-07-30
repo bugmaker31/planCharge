@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ImportanceDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProjetAppliDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import javafx.beans.property.*;
@@ -62,11 +63,16 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
     }
 
     @NotNull
+    public static ImportanceBean from(@NotNull ImportanceDTO dto) {
+        return new ImportanceBean().fromDto(dto);
+    }
+
+    @NotNull
     public ImportanceDTO toDto() {
         return new ImportanceDTO(ordre.get(), code.get());
     }
 
-    public static ImportanceDTO toDTO(@NotNull ImportanceBean importanceBean) {
+    public static ImportanceDTO to(@NotNull ImportanceBean importanceBean) {
         return importanceBean.toDto();
     }
 

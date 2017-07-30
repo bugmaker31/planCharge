@@ -1,31 +1,37 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.ihm.controller.ModuleController;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
-import javafx.application.Platform;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.controlsfx.control.table.TableFilter;
+import org.controlsfx.control.table.TableFilter.Builder;
+import org.jfree.report.JFreeReportBoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  *
  * @author frederic.danna
  */
-public class JoursFeriesController extends AbstractController {
+public class JoursFeriesController extends AbstractController implements ModuleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JoursFeriesController.class);
 
@@ -38,12 +44,19 @@ public class JoursFeriesController extends AbstractController {
 
     // Couche "métier" :
 
+/*
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+*/
 
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private ObservableList<JourFerieBean> joursFeriesBeans = planChargeBean.getJoursFeriesBeans();
+    private final ObservableList<JourFerieBean> joursFeriesBeans = FXCollections.observableArrayList();
+
+    //    @Autowired
+    @NotNull
+    private final ReferentielsService referentielsService = ReferentielsService.instance();
 
 
     // Couche "vue" :
@@ -92,23 +105,15 @@ public class JoursFeriesController extends AbstractController {
 //        PlanChargeIhm.symboliserChampObligatoire(descriptionColumn);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-/*
-        // Association (binding) entre la liste et la table des jours fériés :
-        joursFeriesBeans.addListener((ListChangeListener<JourFerieBean>) changeListener -> {
-            // Wrap the FilteredList in a SortedList.
-            final SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
-            // Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
-            sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
-            // Add sorted data to the table.
-            joursFeriesTable.setItems(sortedBeans);
-        });
-*/
-        joursFeriesTable.setItems(joursFeriesBeans);
+        // Bind the SortedList comparator to the TableView comparator.
+        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+        SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
+        sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
+        joursFeriesTable.setItems(sortedBeans);
 
-        TableFilter.Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
+        Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
-        //noinspection unused
-        TableFilter<JourFerieBean> ressourcesHumainesTableFilter = filter.apply();
+        filter.apply();
         getIhm().symboliserFiltrable(dateColumn, descriptionColumn);
 
         definirMenuContextuel();
@@ -116,6 +121,20 @@ public class JoursFeriesController extends AbstractController {
         definirTouches();
 
         LOGGER.debug("Initialisé.");
+    }
+
+    @Override
+    public void fireActivation() throws IhmException {
+        try {
+            joursFeriesBeans.setAll(
+                    referentielsService.joursFeries().stream()
+                            .map(JourFerieBean::from)
+                            .collect(Collectors.toList())
+            );
+            LOGGER.info("Données métier chargées.");
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de récupérer les jours fériés.", e);
+        }
     }
 
     private void definirMenuContextuel() {

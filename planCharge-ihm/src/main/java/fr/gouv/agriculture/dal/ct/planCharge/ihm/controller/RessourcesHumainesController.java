@@ -1,15 +1,18 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.ihm.controller.ModuleController;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,13 +24,14 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 13/07/2017.
  *
  * @author frederic.danna
  */
-public class RessourcesHumainesController extends AbstractController {
+public class RessourcesHumainesController extends AbstractController implements ModuleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RessourcesHumainesController.class);
 
@@ -40,12 +44,19 @@ public class RessourcesHumainesController extends AbstractController {
 
     // Couche "métier" :
 
+/*
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+*/
 
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private ObservableList<RessourceHumaineBean> ressourceHumainesBeans = planChargeBean.getRessourcesHumainesBeans();
+    private final ObservableList<RessourceHumaineBean> ressourceHumainesBeans = FXCollections.observableArrayList();
+
+    //    @Autowired
+    @NotNull
+    private final ReferentielsService referentielsService = ReferentielsService.instance();
 
 
     // Couche "vue" :
@@ -96,6 +107,8 @@ public class RessourcesHumainesController extends AbstractController {
     protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 
+        ressourcesHumainesTable.setItems(ressourceHumainesBeans);
+
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());
         nomColumn.setCellValueFactory(cellData -> cellData.getValue().nomProperty());
@@ -141,13 +154,17 @@ public class RessourcesHumainesController extends AbstractController {
         debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
-        ressourcesHumainesTable.setItems(ressourceHumainesBeans);
+        // Bind the SortedList comparator to the TableView comparator.
+        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+        SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
+        sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
+        ressourcesHumainesTable.setItems(sortedBeans);
 
         TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
-        /*TableFilter<RessourceHumaineBean> ressourcesHumainesTableFilter =*/
         filterBuilder.apply();
         getIhm().symboliserFiltrable(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
+
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
 //            ressourcesHumainesTable.setPrefHeight(Region.USE_COMPUTED_SIZE);
@@ -161,6 +178,21 @@ public class RessourcesHumainesController extends AbstractController {
 
         LOGGER.debug("Initialisé.");
     }
+
+    @Override
+    public void fireActivation() throws IhmException {
+        try {
+            ressourceHumainesBeans.setAll(
+                    referentielsService.ressourcesHumaines().stream()
+                            .map(RessourceHumaineBean::from)
+                            .collect(Collectors.toList())
+            );
+            LOGGER.info("Données métier chargées.");
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de récupérer les ressources humaines.", e);
+        }
+    }
+
 
     private void definirMenuContextuel() {
         ContextMenu contextMenu = new ContextMenu();

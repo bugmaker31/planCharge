@@ -30,7 +30,7 @@ public class RessourceGeneriqueDTO extends RessourceDTO<RessourceGenerique, Ress
         super();
     }
 
-    private RessourceGeneriqueDTO(@NotNull String code) {
+    public RessourceGeneriqueDTO(@NotNull String code) {
         super(code);
     }
 

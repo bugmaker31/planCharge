@@ -17,15 +17,18 @@ public class Statut extends AbstractEntity<String, Statut> implements Comparable
     @NotNull
     private final String code;
 
+
     public Statut(@NotNull String code) {
         super();
         this.code = code;
     }
 
+
     @NotNull
     public String getCode() {
         return code;
     }
+
 
     @NotNull
     @Override

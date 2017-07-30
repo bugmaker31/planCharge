@@ -3,10 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
-import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
@@ -53,21 +51,21 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private StringProperty description = new SimpleStringProperty();
     @NotNull
-    private StringProperty codeProjetAppli = new SimpleStringProperty();
+    private ObjectProperty<ProjetAppliBean> projetAppli = new SimpleObjectProperty<>();
     @NotNull
-    private StringProperty codeStatut = new SimpleStringProperty();
+    private  ObjectProperty<StatutBean> statut = new SimpleObjectProperty<>();
     @NotNull
     private ObjectProperty<LocalDate> debut = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
     private ObjectProperty<LocalDate> echeance = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
-    private StringProperty codeImportance = new SimpleStringProperty();
+    private ObjectProperty<ImportanceBean> importance = new SimpleObjectProperty<>();
     @NotNull
-    private StringProperty codeRessource = new SimpleStringProperty();
+    private ObjectProperty<RessourceBean> ressource = new SimpleObjectProperty<>();
     @NotNull
     private DoubleProperty charge = new SimpleDoubleProperty();
     @NotNull
-    private StringProperty codeProfil = new SimpleStringProperty();
+    private ObjectProperty<ProfilBean> profil = new SimpleObjectProperty<>();
 
     //    @Autowired
     @NotNull
@@ -75,20 +73,20 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null String codeProjetAppli, @Null String codeStatut, @Null LocalDate debut, @Null LocalDate echeance, @Null String codeImportance, @Null Double charge, @Null String codeRessource, @Null String codeProfil) {
+    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliBean projetAppli, @Null StatutBean statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceBean importance, @Null Double charge, @Null RessourceBean ressource, @Null ProfilBean profil) {
         this.id.set(id);
         this.codeCategorie.set(codeCategorie);
         this.codeSousCategorie.set(codeSousCategorie);
         this.noTicketIdal.set(noTicketIdal);
         this.description.set(description);
-        this.codeProjetAppli.set(codeProjetAppli);
-        this.codeStatut.set(codeStatut);
+        this.projetAppli.set(projetAppli);
+        this.statut.set(statut);
         this.debut.set(debut);
         this.echeance.set(echeance);
-        this.codeImportance.set(codeImportance);
+        this.importance.set(importance);
         this.charge.set(charge);
-        this.codeRessource.set(codeRessource);
-        this.codeProfil.set(codeProfil);
+        this.ressource.set(ressource);
+        this.profil.set(profil);
     }
 
     TacheBean(@NotNull TacheBean tacheBean) {
@@ -98,14 +96,14 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 tacheBean.getCodeSousCategorie(),
                 tacheBean.getNoTicketIdal(),
                 tacheBean.getDescription(),
-                tacheBean.getCodeProjetAppli(),
-                tacheBean.getCodeStatut(),
+                tacheBean.getProjetAppli(),
+                tacheBean.getStatut(),
                 tacheBean.getDebut(),
                 tacheBean.getEcheance(),
-                tacheBean.getCodeImportance(),
+                tacheBean.getImportance(),
                 tacheBean.getCharge(),
-                tacheBean.getCodeRessource(),
-                tacheBean.getCodeProfil()
+                tacheBean.getRessource(),
+                tacheBean.getProfil()
         );
     }
 
@@ -117,14 +115,14 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         }
         this.noTicketIdal.set(tache.getNoTicketIdal());
         this.description.set(tache.getDescription());
-        this.codeProjetAppli.set(tache.getProjetAppli().getCode());
-        this.codeStatut.set(tache.getStatut().getCode());
+        this.projetAppli.set(ProjetAppliBean.from(tache.getProjetAppli()));
+        this.statut.set(StatutBean.from(tache.getStatut()));
         this.debut.set(tache.getDebut());
         this.echeance.set(tache.getEcheance());
-        this.codeImportance.set(tache.getImportance().getCode());
+        this.importance.set(ImportanceBean.from(tache.getImportance()));
         this.charge.set(tache.getCharge());
-        this.codeRessource.set(tache.getRessource().getCode());
-        this.codeProfil.set(tache.getProfil().getCode());
+        this.ressource.set(RessourceBean.from(tache.getRessource()));
+        this.profil.set(ProfilBean.from(tache.getProfil()));
     }
 
 /*
@@ -139,19 +137,19 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         this.noTicketIdal.set(noTicketIdal);
         this.description.set(description);
         if (projetAppli != null) {
-            this.codeProjetAppli.set(projetAppli.getCode());
+            this.projetAppli.set(projetAppli.getCode());
         }
         this.debut.set(debut);
         this.echeance.set(echeance);
         if (importance != null) {
-            this.codeImportance.set(importance.getCode());
+            this.importance.set(importance.getCode());
         }
         this.charge.set(charge);
         if (ressource != null) {
-            this.codeRessource.set(ressource.getCode());
+            this.ressource.set(ressource.getCode());
         }
         if (profil != null) {
-            this.codeProfil.set(profil.getCode());
+            this.profil.set(profil.getCode());
         }
     }
 */
@@ -207,23 +205,23 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
     @Null
-    public String getCodeProjetAppli() {
-        return codeProjetAppli.get();
+    public ProjetAppliBean getProjetAppli() {
+        return projetAppli.get();
     }
 
     @NotNull
-    public StringProperty codeProjetAppliProperty() {
-        return codeProjetAppli;
+    public ObjectProperty<ProjetAppliBean> projetAppliProperty() {
+        return projetAppli;
     }
 
     @Null
-    public String getCodeStatut() {
-        return codeStatut.get();
+    public StatutBean getStatut() {
+        return statut.get();
     }
 
     @NotNull
-    public StringProperty codeStatutProperty() {
-        return codeStatut;
+    public ObjectProperty<StatutBean> statutProperty() {
+        return statut;
     }
 
     @Null
@@ -236,10 +234,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return debut;
     }
 
-    public void setDebut(@NotNull LocalDate debut) {
-        this.debut.set(debut);
-    }
-
     @Null
     public LocalDate getEcheance() {
         return echeance.get();
@@ -250,18 +244,14 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return echeance;
     }
 
-    public void setEcheance(@NotNull LocalDate echeance) {
-        this.echeance.set(echeance);
-    }
-
     @Null
-    public String getCodeImportance() {
-        return codeImportance.get();
+    public ImportanceBean getImportance() {
+        return importance.get();
     }
 
     @NotNull
-    public StringProperty codeImportanceProperty() {
-        return codeImportance;
+    public ObjectProperty<ImportanceBean> importanceProperty() {
+        return importance;
     }
 
     @Null
@@ -275,23 +265,23 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
     @Null
-    public String getCodeRessource() {
-        return codeRessource.get();
+    public RessourceBean getRessource() {
+        return ressource.get();
     }
 
     @NotNull
-    public StringProperty codeRessourceProperty() {
-        return codeRessource;
+    public ObjectProperty<RessourceBean> ressourceProperty() {
+        return ressource;
     }
 
     @Null
-    public String getCodeProfil() {
-        return codeProfil.get();
+    public ProfilBean getProfil() {
+        return profil.get();
     }
 
     @NotNull
-    public StringProperty codeProfilProperty() {
-        return codeProfil;
+    public ObjectProperty<ProfilBean> profilProperty() {
+        return profil;
     }
 
 
@@ -316,16 +306,16 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                     SousCategorieTacheDTO.valeur(getCodeSousCategorie()),
                     getNoTicketIdal(),
                     getDescription(),
-                    new ProjetAppliDTO(getCodeProjetAppli()),
-                    new StatutDTO(getCodeStatut()),
+                    ProjetAppliBean.to(getProjetAppli()),
+                    StatutBean.to(getStatut()),
                     getDebut(),
                     getEcheance(),
-                    new ImportanceDTO(getCodeImportance()),
+                    ImportanceBean.to(getImportance()),
                     getCharge(),
-                    referentielsService.ressources().stream().filter(rsrc -> rsrc.getCode().equals(getCodeRessource())).findAny().get(),
-                    new ProfilDTO(getCodeProfil())
+                    RessourceBean.to(getRessource()),
+                    ProfilBean.to(getProfil())
             );
-        } catch (DTOException | ServiceException e) {
+        } catch (DTOException e) {
             throw new BeanException("Impossible de transformer la tâche de bean en DTO.", e);
         }
     }
@@ -337,7 +327,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
-    @NotNull
     public boolean matcheNoTache(@NotNull String otherValue) {
         if ((getId() + "").contains(otherValue)) {
             return true; // matches
@@ -348,7 +337,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheCategorie(@NotNull String otherValue) {
         if (getCodeCategorie() == null) {
             return false;
@@ -359,7 +347,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheSousCategorie(@NotNull String otherValue) {
         if (getCodeSousCategorie() == null) {
             return false;
@@ -370,7 +357,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheNoTicketIdal(@NotNull String otherValue) {
         if (getNoTicketIdal() == null) {
             return false;
@@ -381,7 +367,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheDescription(@NotNull String otherValue) throws IhmException {
         if (getDescription() == null) {
             return false;
@@ -400,40 +385,39 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheProjetAppli(@NotNull String otherValue) {
-        if (getCodeProjetAppli() == null) {
+        if (getProjetAppli() == null) {
             return false;
         }
-        if (getCodeProjetAppli().contains(otherValue)) {
+        if (getProjetAppli().getCode() == null) {
+            return false;
+        }
+        if (getProjetAppli().getCode().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheImportance(@NotNull Importance otherValue) {
-        if (getCodeImportance() == null) {
+        if (getImportance() == null) {
             return false;
         }
-        if (getCodeImportance().contains(otherValue.getCode())) {
+        if (getImportance().getCode().contains(otherValue.getCode())) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheImportance(@NotNull String otherValue) {
-        if (getCodeImportance() == null) {
+        if (getImportance() == null) {
             return false;
         }
-        if (getCodeImportance().contains(otherValue)) {
+        if (getImportance().getCode().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheDebut(@NotNull String otherValue) {
         if (getDebut() == null) {
             return false;
@@ -444,7 +428,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheEcheance(@NotNull String otherValue) {
         if (getEcheance() == null) {
             return false;
@@ -455,24 +438,24 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-
-    @NotNull
     public boolean matcheRessource(@NotNull String otherValue) {
-        if (getCodeRessource() == null) {
+        if (getRessource() == null) {
             return false;
         }
-        if (getCodeRessource().contains(otherValue)) {
+        if (getRessource().getCode().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
     }
 
-    @NotNull
     public boolean matcheProfil(@NotNull String otherValue) {
-        if (getCodeProfil() == null) {
+        if (getProfil() == null) {
             return false;
         }
-        if (getCodeProfil().contains(otherValue)) {
+        if (getProfil().getCode() == null) {
+            return false;
+        }
+        if (getProfil().getCode().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -487,16 +470,16 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                     (codeSousCategorie.isEmpty().get() ? null : SousCategorieTacheDTO.valeur(codeSousCategorie.get())),
                     noTicketIdal.get(),
                     description.get(),
-                    referentielsService.projetAppli(codeProjetAppli.get()),
-                    referentielsService.statut(codeStatut.get()),
+                    ProjetAppliBean.to(projetAppli.get()),
+                    StatutBean.to(statut.get()),
                     debut.get(),
                     echeance.get(),
-                    referentielsService.importance(codeImportance.get()),
+                    ImportanceBean.to(importance.get()),
                     charge.get(),
-                    referentielsService.ressource(codeRessource.get()),
-                    referentielsService.profil(codeProfil.get())
+                    RessourceBean.to(ressource.get()),
+                    ProfilBean.to(profil.get())
             );
-        } catch (DTOException | ServiceException e) {
+        } catch (DTOException e) {
             throw new BeanException("Impossible d'extraire la tâche depuis le bean.", e);
         }
         return tache;
@@ -530,12 +513,12 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         this.codeSousCategorieProperty().set(original.codeSousCategorieProperty().get());
         this.noTicketIdalProperty().set(original.noTicketIdalProperty().get());
         this.descriptionProperty().set(original.descriptionProperty().get());
-        this.codeProjetAppliProperty().set(original.codeProjetAppliProperty().get());
+        this.projetAppliProperty().set(original.projetAppliProperty().get());
         this.debutProperty().set(original.debutProperty().get());
         this.echeanceProperty().set(original.echeanceProperty().get());
         this.chargeProperty().set(original.chargeProperty().get());
-        this.codeRessourceProperty().set(original.codeRessourceProperty().get());
-        this.codeProfilProperty().set(original.codeProfilProperty().get());
+        this.ressourceProperty().set(original.ressourceProperty().get());
+        this.profilProperty().set(original.profilProperty().get());
     }
 
 
@@ -545,13 +528,13 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     public String toString() {
         return /*(codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
                 + " "
-                +*/ ("[" + (codeProjetAppli.isEmpty().get() ? "N/A" : codeProjetAppli.get()) + "]")
+                +*/ ("[" + (projetAppli.isNull().get() ? "N/A" : projetAppli.get()) + "]")
                 + " "
                 + noTache()
                 + " "
-                + ("(" + (noTicketIdal.isEmpty().get() ? "N/A" : noTicketIdal.get()) + ")")
+                + ("(" + (noTicketIdal.isNull().get() ? "N/A" : noTicketIdal.get()) + ")")
                 + " "
-                + ("<< " + (description.isEmpty().get() ? "N/A" : description.get()) + " >> ")
+                + ("<< " + (description.isNull().get() ? "N/A" : description.get()) + " >> ")
                 ;
     }
 }
