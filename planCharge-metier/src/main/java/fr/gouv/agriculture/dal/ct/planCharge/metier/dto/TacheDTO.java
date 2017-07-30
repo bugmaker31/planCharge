@@ -192,7 +192,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         return new TacheDTO(
                 entity.getId(),
                 CategorieTacheDTO.from(entity.getCategorie()),
-                SousCategorieTacheDTO.from(entity.getSousCategorie()),
+                (entity.getSousCategorie() == null) ? null : SousCategorieTacheDTO.from(entity.getSousCategorie()),
                 entity.getNoTicketIdal(),
                 entity.getDescription(),
                 ProjetAppliDTO.from(entity.getProjetAppli()),

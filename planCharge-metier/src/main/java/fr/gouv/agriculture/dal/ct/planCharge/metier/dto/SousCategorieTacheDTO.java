@@ -9,6 +9,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.SousCate
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -80,7 +81,7 @@ public class SousCategorieTacheDTO extends AbstractDTO<SousCategorieTache, Strin
     @NotNull
     @Override
     protected List<RegleGestion<SousCategorieTacheDTO>> getReglesGestion() {
-        return null;
+        return Collections.emptyList(); // TODO FDA 2017/07 Coder les RGs.
     }
 
 

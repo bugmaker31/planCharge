@@ -38,7 +38,7 @@ public class RessourceHumaine extends Ressource<RessourceHumaine> {
     @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
     public String getTrigramme() {
-        return nom;
+        return getCode();
     }
 
     @NotNull
