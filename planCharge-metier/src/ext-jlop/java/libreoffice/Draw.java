@@ -1194,7 +1194,7 @@ public class Draw
     Props.setProperty(shape, "CLSID", Lo.MATH_CLSID);  // a formula
                                      
     XModel model = Lo.qi(XModel.class, Props.getProperty(shape, "Model") );
-    // Info.showServices("OLE2Shape Model", model);
+    // Info.showServices("OLE2Shape Model", dto);
     Props.setProperty(model, "Formula", formula);   // from FormulaProperties
     return shape;
   }  // end of drawFormula()
@@ -1348,7 +1348,7 @@ public class Draw
       if (xButton == null)
         System.out.println("XButton is null");
 
-      Props.showProps("Control model props", props);
+      Props.showProps("Control dto props", props);
 
       return cShape;
     }

@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
+package fr.gouv.agriculture.dal.ct.metier.regleGestion;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

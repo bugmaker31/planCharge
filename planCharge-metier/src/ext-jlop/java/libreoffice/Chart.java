@@ -323,7 +323,7 @@ public class Chart
       // set the class id for charts
       // shapeProps.setPropertyValue("CLSID", Lo.CHART_CLSID);
 
-      // retrieve the chart document as model of the OLE shape
+      // retrieve the chart document as dto of the OLE shape
       chartDoc = Lo.qi(XChartDocument.class,
                                     shapeProps.getPropertyValue("Model"));
     }
@@ -376,7 +376,7 @@ public class Chart
       propsSet.setPropertyValue("VertOrientPosition", y*1000);
       propsSet.setPropertyValue("HoriOrientPosition", x*1000);
 
-      // retrieve the chart document as model of the OLE shape
+      // retrieve the chart document as dto of the OLE shape
       chartDoc = Lo.qi(XChartDocument.class,
                                               propsSet.getPropertyValue("Model"));
       if (chartDoc != null) // create a diagram

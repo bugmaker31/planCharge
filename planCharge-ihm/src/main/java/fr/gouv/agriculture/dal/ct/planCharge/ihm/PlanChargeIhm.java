@@ -5,10 +5,10 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
+import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationsReglesGestionException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -639,7 +639,7 @@ public class PlanChargeIhm extends Application {
             // TODO FDA 2017/07 Améliorer l'affichage.
             Notifications.create()
                     .title(titre)
-                    .text(violation.getRegle().getMessageErreur() + " : " + violation.getEntity().toString())
+                    .text((String) violation.getRegle().getFormateurMessage().apply(violation.getEntity()))
                     .hideAfter(Duration.INDEFINITE)
                     .showError();
         }

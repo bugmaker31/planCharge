@@ -1,25 +1,25 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
 
 import javax.validation.constraints.NotNull;
 
-public final class RGRefJourFerieDateObligatoire extends RegleGestion<JourFerie> {
+public final class RGRefJourFerieDateObligatoire extends RegleGestion<JourFerieDTO> {
 
     public static final RGRefJourFerieDateObligatoire INSTANCE = new RGRefJourFerieDateObligatoire();
 
     private RGRefJourFerieDateObligatoire() {
-        super("RG_REF_JF001_DateObligatoire", "Date obligatoire", "Le jour férié est requis.");
+        super("RG_REF_JF001_DateObligatoire", "Date obligatoire", jourFerie -> "La date du jour férié est requise.");
     }
 
     @Override
-    public boolean estApplicable(@NotNull JourFerie jf) {
+    public boolean estApplicable(@NotNull JourFerieDTO jf) {
         return true; // Toujours applicable.
     }
 
     @Override
-    public boolean estValide(@NotNull JourFerie jf) {
+    public boolean estValide(@NotNull JourFerieDTO jf) {
         return jf.getDate() != null;
     }
 }

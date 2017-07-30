@@ -177,7 +177,7 @@ public class Dialogs
                                     "com.sun.star.awt.UnoControlDialog");
       XControlModel xControlModel = Lo.createInstanceMCF(XControlModel.class, 
                                      "com.sun.star.awt.UnoControlDialogModel");
-      dialogCtrl.setModel(xControlModel);  // link view and model
+      dialogCtrl.setModel(xControlModel);  // link view and dto
       
       XPropertySet props = getControlProps(dialogCtrl.getModel());
           /* inherited from UnoControlDialogModel and its 
@@ -224,7 +224,7 @@ public class Dialogs
     XDialog dialog = getDialog(dialogCtrl);
     // dialogComponent.dispose();      // free window resources
         /* commented out or the Add-on dialog crashes when called a second time
-           because createPeer() cannot find a model */
+           because createPeer() cannot find a dto */
     return dialog;
   }  // end of createDialogPeer()
 
@@ -248,7 +248,7 @@ public class Dialogs
       XNameContainer nameCon = getDialogNmCon(dialogCtrl);
       String nm = createName(nameCon, "FixedText");
       
-      // Set properties in the model
+      // Set properties in the dto
       XPropertySet props = getControlProps(model);
       props.setPropertyValue("PositionX", x);
       props.setPropertyValue("PositionY", y + 2);
@@ -257,7 +257,7 @@ public class Dialogs
       props.setPropertyValue("Label", label);
       props.setPropertyValue("Name", nm);
       
-      // Add the model to the dialog
+      // Add the dto to the dialog
       nameCon.insertByName(nm, model);
       
       // reference the control by name
@@ -303,7 +303,7 @@ public class Dialogs
   public static XControl insertButton(XControl dialogCtrl,
                        int x, int y, int width, String label, int pushButtonType)
   { try {
-      // create a button model
+      // create a button dto
       XMultiServiceFactory msf = Lo.qi(XMultiServiceFactory.class, 
                                                        dialogCtrl.getModel());
       Object model = msf.createInstance("com.sun.star.awt.UnoControlButtonModel");
@@ -312,7 +312,7 @@ public class Dialogs
       XNameContainer nameCon = getDialogNmCon(dialogCtrl);
       String nm = createName(nameCon, "CommandButton");
       
-      // set properties in the model
+      // set properties in the dto
       XPropertySet props = getControlProps(model);
           // inherited from UnoControlDialogElement and UnoControlButtonModel
       props.setPropertyValue("PositionX", x);
@@ -323,13 +323,13 @@ public class Dialogs
       props.setPropertyValue("PushButtonType", new Short((short) pushButtonType));
       props.setPropertyValue("Name", nm);
       
-      // Add the model to the dialog
+      // Add the dto to the dialog
       nameCon.insertByName(nm, model);
       
       // get the dialog's container holding all the control views
       XControlContainer ctrlCon = Lo.qi(XControlContainer.class, dialogCtrl);
 
-      // use the model's name to get its view inside the dialog
+      // use the dto's name to get its view inside the dialog
       return ctrlCon.getControl(nm);
     }
     catch (Exception ex) {
@@ -357,12 +357,12 @@ public class Dialogs
       XMultiServiceFactory msf = Lo.qi(XMultiServiceFactory.class, 
                                                        dialogCtrl.getModel());
       Object model = msf.createInstance("com.sun.star.awt.UnoControlEditModel");
-      // System.out.println("text field model: " + model);
+      // System.out.println("text field dto: " + dto);
 
       XNameContainer nameCon = getDialogNmCon(dialogCtrl);
       String nm = createName(nameCon, "TextField");
       
-      // Set the properties in the model
+      // Set the properties in the dto
       XPropertySet props = getControlProps(model);
          // inherited from UnoControlDialogElement and UnoControlEditModel 
       props.setPropertyValue("PositionX", x);
@@ -375,7 +375,7 @@ public class Dialogs
       if (echoChar == '*')    // for password fields
         props.setPropertyValue("EchoChar",  new Short((short) echoChar));
       
-      // Add the model to the dialog
+      // Add the dto to the dialog
       nameCon.insertByName(nm, model);
       
       // reference the control by name
@@ -411,7 +411,7 @@ public class Dialogs
       props.setPropertyValue("MaxTextLen", new Short((short) 10));
       props.setPropertyValue("ReadOnly", false);
 
-      // add the model to the dialog
+      // add the dto to the dialog
       nameCon.insertByName(nm, model);
 
       // reference the control by name
@@ -447,7 +447,7 @@ public class Dialogs
       props.setPropertyValue("TriState", true);
       props.setPropertyValue("State", new Short((short) 1));
 
-      // add the model to the dialog
+      // add the dto to the dialog
       nameCon.insertByName(nm, model);
 
       // reference the control by name

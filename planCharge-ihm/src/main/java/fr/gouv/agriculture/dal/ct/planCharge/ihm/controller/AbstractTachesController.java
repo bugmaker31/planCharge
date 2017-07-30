@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
@@ -10,11 +11,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeCategorieTacheCompara
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.CodeImportanceComparator;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -643,20 +645,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     void populerReferentiels() throws IhmException {
         LOGGER.debug("populerReferentiels...");
         try {
-            List<CategorieTache> categories = referentielsService.categoriesTache();
+            List<CategorieTacheDTO> categories = referentielsService.categoriesTache();
             codesCategories.setAll(categories.parallelStream()
-                    .sorted(CategorieTache::compareTo)
-                    .map(CategorieTache::getCode)
+                    .sorted(CategorieTacheDTO::compareTo)
+                    .map(CategorieTacheDTO::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
             throw new IhmException("Impossible de populer la liste des catégories de tâche.", e);
         }
         try {
-            List<SousCategorieTache> sousCategories = referentielsService.sousCategoriesTache();
+            List<SousCategorieTacheDTO> sousCategories = referentielsService.sousCategoriesTache();
             codesSousCategories.setAll(sousCategories.parallelStream()
-                    .sorted(SousCategorieTache::compareTo)
-                    .map(SousCategorieTache::getCode)
+                    .sorted(SousCategorieTacheDTO::compareTo)
+                    .map(SousCategorieTacheDTO::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
@@ -664,20 +666,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         }
 
         try {
-            List<Importance> importances = referentielsService.importances();
+            List<ImportanceDTO> importances = referentielsService.importances();
             codesImportances.setAll(importances.parallelStream()
-                    .sorted(Importance::compareTo)
-                    .map(Importance::getCode)
+                    .sorted(ImportanceDTO::compareTo)
+                    .map(ImportanceDTO::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
             throw new IhmException("Impossible de populer la liste des importances.", e);
         }
         try {
-            List<ProjetAppli> projetApplis = referentielsService.projetsApplis();
+            List<ProjetAppliDTO> projetApplis = referentielsService.projetsApplis();
             codesProjetsApplis.setAll(projetApplis.parallelStream()
-                    .sorted(ProjetAppli::compareTo)
-                    .map(ProjetAppli::getCode)
+                    .sorted(ProjetAppliDTO::compareTo)
+                    .map(ProjetAppliDTO::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
@@ -685,30 +687,30 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             throw new IhmException("Impossible de populer la liste des projets/applis.", e);
         }
         try {
-            List<Statut> statuts = referentielsService.statuts();
+            List<StatutDTO> statuts = referentielsService.statuts();
             codesStatuts.setAll(statuts.parallelStream()
-                    .sorted(Statut::compareTo)
-                    .map(Statut::getCode)
+                    .sorted(StatutDTO::compareTo)
+                    .map(StatutDTO::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
             throw new IhmException("Impossible de populer la liste des ressources.", e);
         }
         try {
-            List<RessourceHumaine> ressources = referentielsService.ressources();
+            List<RessourceHumaineDTO> ressources = referentielsService.ressourcesHumaines();
             codesRessources.setAll(ressources.parallelStream()
-                    .sorted(Ressource::compareTo)
-                    .map(Ressource::getTrigramme)
+                    .sorted(RessourceHumaineDTO::compareTo)
+                    .map(RessourceHumaineDTO::getTrigramme)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {
             throw new IhmException("Impossible de populer la liste des ressources.", e);
         }
         try {
-            List<Profil> profils = referentielsService.profils();
+            List<ProfilDTO> profils = referentielsService.profils();
             codesProfils.setAll(profils.parallelStream()
-                    .sorted(Profil::compareTo)
-                    .map(Profil::getCode)
+                    .sorted(ProfilDTO::compareTo)
+                    .map(ProfilDTO::getCode)
                     .collect(Collectors.toList())
             );
         } catch (ServiceException e) {

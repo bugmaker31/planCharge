@@ -1,6 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao;
+package fr.gouv.agriculture.dal.ct.metier.dao;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 
 import java.io.Serializable;
 

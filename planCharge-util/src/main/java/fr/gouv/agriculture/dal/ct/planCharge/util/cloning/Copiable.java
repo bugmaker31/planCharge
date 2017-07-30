@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
  */
 public interface Copiable<T> {
 
+    @NotNull
     T copier() throws CopieException;
 
 }

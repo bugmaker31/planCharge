@@ -2,12 +2,11 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml;
 
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
@@ -18,7 +17,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * Created by frederic.danna on 22/04/2017.

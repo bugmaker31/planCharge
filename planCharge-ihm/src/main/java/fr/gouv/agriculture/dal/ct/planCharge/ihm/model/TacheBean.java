@@ -1,15 +1,16 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.SousCategorieTache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.binding.StringBinding;
@@ -31,7 +32,7 @@ import java.util.regex.PatternSyntaxException;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassWithTooManyMethods")
-public class TacheBean implements Copiable<TacheBean> {
+public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copiable<TacheBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
 
@@ -70,19 +71,7 @@ public class TacheBean implements Copiable<TacheBean> {
 
     //    @Autowired
     @NotNull
-    private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
-    //    @Autowired
-    @NotNull
-    private StatutDao statutDao = StatutDao.instance();
-    //    @Autowired
-    @NotNull
-    private RessourceDao ressourceDao = RessourceDao.instance();
-    //    @Autowired
-    @NotNull
-    private ImportanceDao importanceDao = ImportanceDao.instance();
-    //    @Autowired
-    @NotNull
-    private ProfilDao profilDao = ProfilDao.instance();
+    private ReferentielsService referentielsService = ReferentielsService.instance();
 
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
@@ -102,7 +91,7 @@ public class TacheBean implements Copiable<TacheBean> {
         this.codeProfil.set(codeProfil);
     }
 
-    public TacheBean(@NotNull TacheBean tacheBean) {
+    TacheBean(@NotNull TacheBean tacheBean) {
         this(
                 tacheBean.getId(),
                 tacheBean.getCodeCategorie(),
@@ -120,7 +109,7 @@ public class TacheBean implements Copiable<TacheBean> {
         );
     }
 
-    TacheBean(@NotNull Tache tache) {
+    TacheBean(@NotNull TacheDTO tache) {
         this.id.set(tache.getId());
         this.codeCategorie.set(tache.getCategorie().getCode());
         if (tache.getSousCategorie() != null) {
@@ -134,7 +123,7 @@ public class TacheBean implements Copiable<TacheBean> {
         this.echeance.set(tache.getEcheance());
         this.codeImportance.set(tache.getImportance().getCode());
         this.charge.set(tache.getCharge());
-        this.codeRessource.set(tache.getRessource().getTrigramme());
+        this.codeRessource.set(tache.getRessource().getCode());
         this.codeProfil.set(tache.getProfil().getCode());
     }
 
@@ -159,7 +148,7 @@ public class TacheBean implements Copiable<TacheBean> {
         }
         this.charge.set(charge);
         if (ressource != null) {
-            this.codeRessource.set(ressource.getTrigramme());
+            this.codeRessource.set(ressource.getCode());
         }
         if (profil != null) {
             this.codeProfil.set(profil.getCode());
@@ -316,6 +305,38 @@ public class TacheBean implements Copiable<TacheBean> {
         return Tache.noTache(id.get());
     }
 
+
+    @NotNull
+    @Override
+    public TacheDTO toDto() throws BeanException {
+        try {
+            return new TacheDTO(
+                    getId(),
+                    CategorieTacheDTO.valeur(getCodeCategorie()),
+                    SousCategorieTacheDTO.valeur(getCodeSousCategorie()),
+                    getNoTicketIdal(),
+                    getDescription(),
+                    new ProjetAppliDTO(getCodeProjetAppli()),
+                    new StatutDTO(getCodeStatut()),
+                    getDebut(),
+                    getEcheance(),
+                    new ImportanceDTO(getCodeImportance()),
+                    getCharge(),
+                    referentielsService.ressources().stream().filter(rsrc -> rsrc.getCode().equals(getCodeRessource())).findAny().get(),
+                    new ProfilDTO(getCodeProfil())
+            );
+        } catch (DTOException | ServiceException e) {
+            throw new BeanException("Impossible de transformer la tâche de bean en DTO.", e);
+        }
+    }
+
+    @NotNull
+    @Override
+    public TacheBean fromDto(@NotNull TacheDTO dto) throws BeanException {
+        return new TacheBean(dto);
+    }
+
+
     @NotNull
     public boolean matcheNoTache(@NotNull String otherValue) {
         if ((getId() + "").contains(otherValue)) {
@@ -457,26 +478,26 @@ public class TacheBean implements Copiable<TacheBean> {
         return false; // does not match.
     }
 
-    public Tache extract() throws IhmException {
-        Tache tache;
+    public TacheDTO extract() throws BeanException {
+        TacheDTO tache;
         try {
-            tache = new Tache(
+            tache = new TacheDTO(
                     id.get(),
-                    (codeCategorie.isEmpty().get() ? null : CategorieTache.valeur(codeCategorie.get())),
-                    (codeSousCategorie.isEmpty().get() ? null : SousCategorieTache.valeur(codeSousCategorie.get())),
+                    (codeCategorie.isEmpty().get() ? null : CategorieTacheDTO.valeur(codeCategorie.get())),
+                    (codeSousCategorie.isEmpty().get() ? null : SousCategorieTacheDTO.valeur(codeSousCategorie.get())),
                     noTicketIdal.get(),
                     description.get(),
-                    projetAppliDao.load(codeProjetAppli.get()),
-                    statutDao.load(codeStatut.get()),
+                    referentielsService.projetAppli(codeProjetAppli.get()),
+                    referentielsService.statut(codeStatut.get()),
                     debut.get(),
                     echeance.get(),
-                    importanceDao.loadByCode(codeImportance.get()),
+                    referentielsService.importance(codeImportance.get()),
                     charge.get(),
-                    ressourceDao.load(codeRessource.get()),
-                    profilDao.load(codeProfil.get())
+                    referentielsService.ressource(codeRessource.get()),
+                    referentielsService.profil(codeProfil.get())
             );
-        } catch (ModeleException | DaoException e) {
-            throw new IhmException("Impossible d'extraire la tâche depuis le bean.", e);
+        } catch (DTOException | ServiceException e) {
+            throw new BeanException("Impossible d'extraire la tâche depuis le bean.", e);
         }
         return tache;
     }

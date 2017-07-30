@@ -1,41 +1,37 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.TreeSet;
 
 /**
  * Created by frederic.danna on 01/07/2017.
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class Referentiels implements Controlable {
+public class Referentiels extends AbstractEntity {
 
     @NotNull
-    private Set<JourFerie> joursFeries;
+    private Collection<JourFerie> joursFeries;
     @NotNull
-    private Set<Importance> importances;
+    private Collection<Importance> importances;
     @NotNull
-    private Set<Profil> profils;
+    private Collection<Profil> profils;
     @NotNull
-    private Set<ProjetAppli> projetsApplis;
+    private Collection<ProjetAppli> projetsApplis;
     @NotNull
-    private Set<Statut> statuts;
+    private Collection<Statut> statuts;
     @NotNull
-    private Set<RessourceHumaine> ressourcesHumaines;
+    private Collection<RessourceHumaine> ressourcesHumaines;
 
 
-/*
     public Referentiels() {
         this(new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>(), new TreeSet<>()); // TreeSet (au lieu de HasHset) pour trier, juste pour faciliter le débogage.
     }
-*/
 
-    public Referentiels(@NotNull Set<JourFerie> joursFeries, @NotNull Set<Importance> importances, @NotNull Set<Profil> profils, @NotNull Set<ProjetAppli> projetsApplis, @NotNull Set<Statut> statuts, @NotNull Set<RessourceHumaine> ressourcesHumaines) {
+    public Referentiels(@NotNull Collection<JourFerie> joursFeries, @NotNull Collection<Importance> importances, @NotNull Collection<Profil> profils, @NotNull Collection<ProjetAppli> projetsApplis, @NotNull Collection<Statut> statuts, @NotNull Collection<RessourceHumaine> ressourcesHumaines) {
         this.joursFeries = joursFeries;
         this.importances = importances;
         this.profils = profils;
@@ -46,58 +42,45 @@ public class Referentiels implements Controlable {
 
 
     @NotNull
-    public Set<JourFerie> getJoursFeries() {
+    public Collection<JourFerie> getJoursFeries() {
         return joursFeries;
     }
 
     @NotNull
-    public Set<Importance> getImportances() {
+    public Collection<Importance> getImportances() {
         return importances;
     }
 
     @NotNull
-    public Set<Profil> getProfils() {
+    public Collection<Profil> getProfils() {
         return profils;
     }
 
     @NotNull
-    public Set<ProjetAppli> getProjetsApplis() {
+    public Collection<ProjetAppli> getProjetsApplis() {
         return projetsApplis;
     }
 
     @NotNull
-    public Set<Statut> getStatuts() {
+    public Collection<Statut> getStatuts() {
         return statuts;
     }
 
     @NotNull
-    public Set<RessourceHumaine> getRessourcesHumaines() {
+    public Collection<RessourceHumaine> getRessourcesHumaines() {
         return ressourcesHumaines;
     }
 
 
     @NotNull
     @Override
-    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
-        List<ViolationRegleGestion> violations = new ArrayList<>();
-        for (JourFerie jourFerie : joursFeries) {
-            violations.addAll(jourFerie.controlerReglesGestion());
-        }
-        for (Importance importance : importances) {
-            violations.addAll(importance.controlerReglesGestion());
-        }
-        for (Profil profil : profils) {
-            violations.addAll(profil.controlerReglesGestion());
-        }
-        for (ProjetAppli projetAppli : projetsApplis) {
-            violations.addAll(projetAppli.controlerReglesGestion());
-        }
-        for (Statut statut : statuts) {
-            violations.addAll(statut.controlerReglesGestion());
-        }
-        for (RessourceHumaine ressourceHumaine : ressourcesHumaines) {
-            violations.addAll(ressourceHumaine.controlerReglesGestion());
-        }
-        return violations;
+    public Serializable getIdentity() {
+        return null; // TODO FDA 2017/07 Trouver mieux comme code.
     }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0; // TODO FDA 2017/07 Trouver mieux comme code.
+    }
+
 }

@@ -1,17 +1,20 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ImportanceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import javafx.beans.property.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class ImportanceBean {
+public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
 
     @NotNull
     private IntegerProperty ordre = new SimpleIntegerProperty();
@@ -20,9 +23,14 @@ public class ImportanceBean {
     private StringProperty code = new SimpleStringProperty();
 
 
-    public ImportanceBean(@NotNull Importance importance) {
-        this.ordre.set(importance.getOrdre());
-        this.code.set(importance.getCode());
+    public ImportanceBean() {
+        super();
+    }
+
+    public ImportanceBean(@Null Integer ordre, @Null String code) {
+        this();
+        this.ordre.set(ordre);
+        this.code.set(code);
     }
 
 
@@ -48,8 +56,18 @@ public class ImportanceBean {
 
 
     @NotNull
-    public Importance extract() {
-        return new Importance(ordre.get(), code.get());
+    @Override
+    public ImportanceBean fromDto(@NotNull ImportanceDTO dto) {
+        return new ImportanceBean(dto.getOrdre(), dto.getCode());
+    }
+
+    @NotNull
+    public ImportanceDTO toDto() {
+        return new ImportanceDTO(ordre.get(), code.get());
+    }
+
+    public static ImportanceDTO toDTO(@NotNull ImportanceBean importanceBean) {
+        return importanceBean.toDto();
     }
 
 
@@ -75,4 +93,5 @@ public class ImportanceBean {
     public String toString() {
         return ordre.get() + "-" + code.get();
     }
+
 }

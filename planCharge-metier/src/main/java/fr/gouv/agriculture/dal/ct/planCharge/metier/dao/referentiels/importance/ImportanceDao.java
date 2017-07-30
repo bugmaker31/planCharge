@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

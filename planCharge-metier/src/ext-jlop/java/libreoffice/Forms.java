@@ -5,7 +5,7 @@ package libreoffice;
 /* Functions for:
      - accessing forms in document
      - get Form models
-     - get the control for a model
+     - get the control for a dto
      - creating controls
      - bind form to database
      - bind a macro to a form control
@@ -246,7 +246,7 @@ public class Forms
           XControlModel model = Lo.qi(XControlModel.class, servInfo);
           System.out.println(tabStr + "\"" + nms[i] + "\": " +
                                           Forms.getTypeStr(model));
-          // Props.showObjProps("Model", model);
+          // Props.showObjProps("Model", dto);
         }
         else
           System.out.println(tabStr + "unknown: " +  nms[i]);
@@ -319,7 +319,7 @@ public class Forms
       }
     }
     catch (Exception e) {
-      System.out.println("Could not collect control model: " + e);
+      System.out.println("Could not collect control dto: " + e);
     }
 
     int numModels = models.size();
@@ -511,7 +511,7 @@ public class Forms
 
 
 
-  // --------------------- get control for a model --------------------
+  // --------------------- get control for a dto --------------------
 
 
 
@@ -567,18 +567,18 @@ public class Forms
                   String name, String label, String compKind, int x, int y,
                   int width, int height, XNameContainer parentForm)
   /* 
-     add a control (view) and model (component) to the drawpage of the doc
+     add a control (view) and dto (component) to the drawpage of the doc
        - create and initialize a control shape for the control view
-       - create a control model
-       - link the model to the shape
+       - create a control dto
+       - link the dto to the shape
        - insert the shape into the shapes collection of the doc's draw page
 
-     compKind: the service name of the control model, e.g. "TextField".
+     compKind: the service name of the control dto, e.g. "TextField".
 
      parentForm: the form to use as the parent (container) for the control.
      If it's null, then the default form ("Form") will be used by default.
 
-     Returns the property set for the control's model
+     Returns the property set for the control's dto
   */
   {
     XPropertySet modelProps = null;
@@ -597,15 +597,15 @@ public class Forms
 
       shapeProps.setPropertyValue("AnchorType", eAnchorType);
 
-      // create the control's model
+      // create the control's dto
       XControlModel cModel = Lo.createInstanceMSF(XControlModel.class, 
                                           "com.sun.star.form.component." + compKind);
 
-      // insert the model into the form (or default to "Form")
+      // insert the dto into the form (or default to "Form")
       if (parentForm != null)
         parentForm.insertByName(name, cModel);
 
-      // link model to the shape
+      // link dto to the shape
       cShape.setControl(cModel);
 
       // add the shape to the shapes on the doc's draw page
@@ -613,7 +613,7 @@ public class Forms
       XShapes formShapes = Lo.qi(XShapes.class, drawPage);
       formShapes.add(cShape);
 
-      // set Name and Label properties for the model
+      // set Name and Label properties for the dto
       modelProps = Lo.qi(XPropertySet.class, cModel);
       modelProps.setPropertyValue("Name", name);
       if (label != null)

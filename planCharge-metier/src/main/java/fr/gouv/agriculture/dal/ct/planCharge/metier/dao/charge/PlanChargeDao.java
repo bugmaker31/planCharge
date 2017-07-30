@@ -10,13 +10,13 @@ import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.EntityNotFoundException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
+import fr.gouv.agriculture.dal.ct.metier.dao.EntityNotFoundException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
@@ -142,7 +142,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         return plan;
     }
 
-    public void sauver(PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
+    public void sauver(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
 
         LocalDate dateEtat = planCharge.getDateEtat();
 
@@ -710,7 +710,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             double charge = Calc.getDouble(feuilleCharges, 8 - 1, noLig - 1);
 
             String codeRessource = Calc.getString(feuilleCharges, 9 - 1, noLig - 1);
-            Ressource ressource = ressourceDao.load(codeRessource);
+            Ressource ressource = ressourceDao.loadAny(codeRessource);
 
             String codeProfil = Calc.getString(feuilleCharges, 10 - 1, noLig - 1);
             Profil profil = (
@@ -733,7 +733,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     profil
             );
 
-        } catch (ModeleException | DaoException | LibreOfficeException e) {
+        } catch (/*ModeleException |*/ DaoException | LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer la tâche.", e);
         }
         return tache;

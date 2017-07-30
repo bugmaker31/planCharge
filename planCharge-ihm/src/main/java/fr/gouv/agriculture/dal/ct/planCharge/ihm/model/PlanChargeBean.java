@@ -1,9 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * @author frederic.danna
  */
-public final class PlanChargeBean implements Copiable<PlanChargeBean> {
+public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanChargeBean> implements Copiable<PlanChargeBean> {
 
     private final static PlanChargeBean INSTANCE = new PlanChargeBean();
 
@@ -139,64 +138,68 @@ public final class PlanChargeBean implements Copiable<PlanChargeBean> {
     }
 
 
-    public void init(PlanCharge planCharge) {
+    @NotNull
+    public PlanChargeBean fromDto(@NotNull PlanChargeDTO planCharge) {
         setDateEtat(planCharge.getDateEtat());
         joursFeriesBeans.setAll(
                 planCharge.getReferentiels().getJoursFeries().stream()
-                        .map(JourFerieBean::new)
+                        .map(jourFerieDTO -> new JourFerieBean().fromDto(jourFerieDTO))
                         .collect(Collectors.toList())
         );
         importancesBeans.setAll(
                 planCharge.getReferentiels().getImportances().stream()
-                        .map(ImportanceBean::new)
+                        .map(importanceDTO -> new ImportanceBean().fromDto(importanceDTO))
                         .collect(Collectors.toList())
         );
         profilsBeans.setAll(
                 planCharge.getReferentiels().getProfils().stream()
-                        .map(Profil::getCode)
+                        .map(ProfilDTO::getCode)
                         .collect(Collectors.toList())
         );
         projetsApplisBeans.setAll(
                 planCharge.getReferentiels().getProjetsApplis().stream()
-                        .map(ProjetAppli::getCode)
+                        .map(ProjetAppliDTO::getCode)
                         .collect(Collectors.toList())
         );
         statutsBeans.setAll(
                 planCharge.getReferentiels().getStatuts().stream()
-                        .map(Statut::getCode)
+                        .map(StatutDTO::getCode)
                         .collect(Collectors.toList())
         );
         ressourcesHumainesBeans.clear();
         planCharge.getReferentiels().getRessourcesHumaines().stream()
-                .filter(Ressource::estHumain)
-                .forEach(ressource -> ressourcesHumainesBeans.add(new RessourceHumaineBean((RessourceHumaine) ressource)));
+                .filter(RessourceDTO::estHumain)
+                .forEach(ressource -> ressourcesHumainesBeans.add(new RessourceHumaineBean().fromDto(ressource)));
         planificationsBeans.setAll(
                 planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationBean(planif.getKey(), planif.getValue()))
                         .collect(Collectors.toList())
         );
-    }
-
-    public PlanCharge extract() throws IhmException {
-        Collection<JourFerie> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::extract).collect(Collectors.toSet());
-        Collection<Importance> importances = importancesBeans.stream().map(ImportanceBean::extract).collect(Collectors.toSet());
-        Collection<Profil> profils = profilsBeans.stream().map(Profil::new).collect(Collectors.toSet());
-        Collection<ProjetAppli> projetsApplis = projetsApplisBeans.stream().map(ProjetAppli::new).collect(Collectors.toSet());
-        Collection<Statut> statuts = statutsBeans.stream().map(Statut::new).collect(Collectors.toSet());
-        Collection<RessourceHumaine> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::extract).collect(Collectors.toSet());
-        Referentiels referentiels = new Referentiels(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
-
-        Planifications planifications = extractPlanifications();
-
-        assert dateEtat != null;
-        return new PlanCharge(dateEtat, referentiels, planifications);
+        return this;
     }
 
     @NotNull
-    public Planifications extractPlanifications() throws IhmException {
-        Planifications planifications = new Planifications();
+    @Override
+    public PlanChargeDTO toDto() throws BeanException {
+        Collection<JourFerieDTO> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::toDTO).collect(Collectors.toList());
+        Collection<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::toDTO).collect(Collectors.toList());
+        Collection<ProfilDTO> profils = profilsBeans.stream().map(ProfilDTO::new).collect(Collectors.toList());
+        Collection<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliDTO::new).collect(Collectors.toList());
+        Collection<StatutDTO> statuts = statutsBeans.stream().map(StatutDTO::new).collect(Collectors.toList());
+        Collection<RessourceHumaineDTO> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::toDTO).collect(Collectors.toList());
+        ReferentielsDTO referentiels = new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
+
+        PlanificationsDTO planifications = toPlanificationDTOs();
+
+        assert dateEtat != null;
+        return new PlanChargeDTO(dateEtat, referentiels, planifications);
+    }
+
+    @NotNull
+    public PlanificationsDTO toPlanificationDTOs() throws BeanException {
+        PlanificationsDTO planifications = new PlanificationsDTO();
         for (PlanificationBean planificationBean : this.planificationsBeans) {
-            Tache tache = planificationBean.getTacheBean().extract();
+            TacheDTO tache = planificationBean.getTacheBean().extract();
 
             Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
             Map<LocalDate, DoubleProperty> ligne = planificationBean.getCalendrier();

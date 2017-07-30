@@ -7,6 +7,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
@@ -19,7 +20,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import org.controlsfx.validation.ValidationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -473,8 +473,8 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
 
     private void afficherPlanification(@NotNull LocalDate dateEtat) throws IhmException {
         LOGGER.debug("Affichage de la planification : ");
-        Planifications planificationsInitiales = planChargeBean.extractPlanifications();
-        Planifications planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
+        PlanificationsDTO planificationsInitiales = planChargeBean.toPlanificationDTOs();
+        PlanificationsDTO planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
         planifications
                 .forEach((tache, planifTache) -> {
                     Optional<PlanificationBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()

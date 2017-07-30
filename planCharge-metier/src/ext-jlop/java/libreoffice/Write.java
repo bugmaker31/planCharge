@@ -7,7 +7,7 @@ package libreoffice;
    groups:
 
      * text doc methods
-     * model/view cursor methods
+     * dto/view cursor methods
      * text cursor property methods
      * text writing methods
      * extract text from document
@@ -182,12 +182,12 @@ public class Write
   }  // end of openFlatDocUsingTextTemplate()
 
 
-  // --------------------- model cursor methods -------------------------------
+  // --------------------- dto cursor methods -------------------------------
 
 
 
   public static XTextCursor getCursor(XTextDocument textDoc)
-  // get model cursor from a text document
+  // get dto cursor from a text document
   {
     XText xText = textDoc.getText();
     if (xText == null) {
@@ -723,7 +723,7 @@ public class Write
       append(cursor, embedContent);
       endLine(cursor);
 
-      // access object's model
+      // access object's dto
       XEmbeddedObjectSupplier2 embedObjSupplier = 
                 Lo.qi(XEmbeddedObjectSupplier2.class, embedContent);
       XComponent embedObjModel = embedObjSupplier.getEmbeddedObject();

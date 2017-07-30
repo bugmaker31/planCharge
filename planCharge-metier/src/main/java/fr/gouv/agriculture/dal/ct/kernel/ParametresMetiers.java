@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.kernel;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -40,12 +41,24 @@ public class ParametresMetiers {
         }
     }
 
-    public String getParametrage(String clef) throws KernelException {
+    @NotNull
+    public String getParametrage(@NotNull String clef) throws KernelException {
         if (!this.properties.containsKey(clef)) {
             throw new KernelException("No property '" + clef + "' in resource '" + PROPERTIES_FILE_RSRC_NAME + "'.");
         }
         if (this.properties.getProperty(clef) == null) {
             throw new KernelException("Property '" + clef + "' is null (in resource '" + PROPERTIES_FILE_RSRC_NAME + "').");
+        }
+        return this.properties.getProperty(clef);
+    }
+
+    @NotNull
+    public String getParametrage(@NotNull String clef, @NotNull String defaut) {
+        if (!this.properties.containsKey(clef)) {
+            return defaut;
+        }
+        if (this.properties.getProperty(clef) == null) {
+            return defaut;
         }
         return this.properties.getProperty(clef);
     }

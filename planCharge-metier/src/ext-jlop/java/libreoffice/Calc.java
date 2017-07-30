@@ -345,7 +345,7 @@ public class Calc {
 
     public static CellRangeAddress getSelectedAddr(XModel model) {
         if (model == null) {
-            System.out.println("No document model found");
+            System.out.println("No document dto found");
             return null;
         }
         XCellRangeAddressable ra = Lo.qi(

@@ -10,7 +10,7 @@
 
         <import resource="classpath:metier-conf-ioc.xml" />
 
-        <bean id="planCharge" class="fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean" scope="singleton"/>
+        <bean id="planCharge" class="PlanChargeBean" scope="singleton"/>
     -->
 
 </beans>

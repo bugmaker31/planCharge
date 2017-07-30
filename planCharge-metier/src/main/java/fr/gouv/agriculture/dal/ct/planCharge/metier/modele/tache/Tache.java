@@ -1,22 +1,17 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 11/03/2017.
  */
-public class Tache extends AbstractEntity<Integer, Tache> implements Comparable<Tache> {
+public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Comparable<Tache> {
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 
@@ -64,46 +59,46 @@ public class Tache extends AbstractEntity<Integer, Tache> implements Comparable<
      * @throws ModeleException Si une donnée obligatoire manque (la {@link #categorie catégorie}, la {@link #description description}, etc.).
      */
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public Tache(int id, @Null CategorieTache categorie, @Null SousCategorieTache sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppli projetAppli, @Null Statut statut, @Null LocalDate debut, @Null LocalDate echeance, @Null Importance importance, double charge, @Null Ressource ressource, @Null Profil profil) throws ModeleException {
+    public Tache(int id, @Null CategorieTache categorie, @Null SousCategorieTache sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppli projetAppli, @Null Statut statut, @Null LocalDate debut, @Null LocalDate echeance, @Null Importance importance, double charge, @Null Ressource ressource, @Null Profil profil) /*throws ModeleException*/ {
         super();
 
         this.id = id;
 
-        ctrlNonNull(id, categorie, "catégorie");
+//        ctrlNonNull(id, categorie, "catégorie");
         this.categorie = categorie;
 
 //        ctrlNonNull(id, sousCategorie, "sous-catégorie");
         this.sousCategorie = sousCategorie;
 
-        ctrlNonNull(id, noTicketIdal, "n° de ticket IDAL");
+//        ctrlNonNull(id, noTicketIdal, "n° de ticket IDAL");
         this.noTicketIdal = noTicketIdal;
 
-        ctrlNonNull(id, description, "description");
+//        ctrlNonNull(id, description, "description");
         this.description = description;
 
         //noinspection HardcodedFileSeparator
-        ctrlNonNull(id, projetAppli, "projet/appli");
+//        ctrlNonNull(id, projetAppli, "projet/appli");
         this.projetAppli = projetAppli;
 
-        ctrlNonNull(id, statut, "statut");
+//        ctrlNonNull(id, statut, "statut");
         this.statut = statut;
 
 //        ctrlNonNull(id, debut, "date de début");
         this.debut = debut;
 
-        ctrlNonNull(id, echeance, "date d'échéance");
+//        ctrlNonNull(id, echeance, "date d'échéance");
         this.echeance = echeance;
 
-        ctrlNonNull(id, importance, "importance");
+//        ctrlNonNull(id, importance, "importance");
         this.importance = importance;
 
 //        ctrlNonNull(id, charge, "charge");
         this.charge = charge;
 
-        ctrlNonNull(id, ressource, "ressource");
+//        ctrlNonNull(id, ressource, "ressource");
         this.ressource = ressource;
 
-        ctrlNonNull(id, profil, "profil");
+//        ctrlNonNull(id, profil, "profil");
         this.profil = profil;
     }
 
@@ -189,13 +184,6 @@ public class Tache extends AbstractEntity<Integer, Tache> implements Comparable<
 
     public boolean estProvision() {
         return statut.equals(Statut.PROVISION);
-    }
-
-
-    @NotNull
-    @Override
-    public List<RegleGestion<Tache>> getReglesGestion() {
-        return Collections.EMPTY_LIST; // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 

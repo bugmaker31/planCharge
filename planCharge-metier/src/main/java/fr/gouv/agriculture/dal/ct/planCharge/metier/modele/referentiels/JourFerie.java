@@ -1,9 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieDateObligatoire;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieUniciteJour;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -21,6 +18,7 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
 
         @Override
         public int compare(@NotNull JourFerie jf1, @NotNull JourFerie jf2) {
+/*
             if ((jf1.getDate() == null) && (jf2.getDate() == null)) {
                 return 0;
             }
@@ -30,6 +28,7 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
             if ((jf1.getDate() != null) && (jf2.getDate() == null)) {
                 return -1;
             }
+*/
             return jf1.getDate().compareTo(jf2.getDate());
         }
 
@@ -42,18 +41,18 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
     public static final Comparator<JourFerie> COMPARATOR_DEFAUT = COMPARATOR_DATE;
 
 
-    @Null
+    @NotNull
     private LocalDate date;
     @Null
     private String description;
 
-    public JourFerie(@Null LocalDate date, @Null String description) {
+    public JourFerie(@NotNull LocalDate date, @Null String description) {
         super();
         this.date = date;
         this.description = description;
     }
 
-    @Null
+    @NotNull
     public LocalDate getDate() {
         return date;
     }
@@ -65,20 +64,10 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
 
 
     @SuppressWarnings("SuspiciousGetterSetter")
-    @Null
+    @NotNull
     @Override
     public LocalDate getIdentity() {
         return date;
-    }
-
-
-    @NotNull
-    public List<RegleGestion<JourFerie>> getReglesGestion() {
-        return Arrays.asList(
-                RGRefJourFerieDateObligatoire.INSTANCE,
-                RGRefJourFerieUniciteJour.INSTANCE
-                // Ajouter ici les futures règles de gestion.
-        );
     }
 
 
@@ -91,7 +80,7 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return (date == null ? "N/C" : date.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                + " " + (description == null ? "N/C" : ('"' + description + '"'));
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                + (" " + (description == null ? "N/C" : ('"' + description + '"')));
     }
 }

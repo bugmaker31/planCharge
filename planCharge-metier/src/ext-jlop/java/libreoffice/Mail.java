@@ -368,7 +368,7 @@ public class Mail
       public void notifyMailMergeEvent(MailMergeEvent e)
       { count++;
         XModel model = e.Model;
-        // Props.showProps("Mail merge event", model.getArgs());
+        // Props.showProps("Mail merge event", dto.getArgs());
         long currTime = System.currentTimeMillis();
         System.out.println("  Letter " + count + ": " +
                    (currTime - start) + "ms");

@@ -1,12 +1,12 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
+package fr.gouv.agriculture.dal.ct.metier.regleGestion;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
 
 import javax.validation.constraints.NotNull;
 import java.util.function.Function;
 
-public abstract class RegleGestion<T extends AbstractEntity> {
+public abstract class RegleGestion<T extends AbstractDTO> {
 
     /**
      * Nom de l'attribut (statique) qui permet de récupérer dynamiquement l'instance (singleton) de chaque classe qui
@@ -20,16 +20,16 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     @NotNull
     private String libelle;
     @NotNull
-    private Function<T, String> messageErreur;
+    private Function<T, String> formateurMessage;
 
     @NotNull
-    private PlanCharge planCharge;
+    private PlanChargeDTO planChargeDTO;
 
 
-    public RegleGestion(@NotNull String code, @NotNull String libelle, @NotNull Function<T, String> messageErreur) {
+    public RegleGestion(@NotNull String code, @NotNull String libelle, @NotNull Function<T, String> formateurMessage) {
         this.code = code;
         this.libelle = libelle;
-        this.messageErreur = messageErreur;
+        this.formateurMessage = formateurMessage;
     }
 
 
@@ -44,18 +44,18 @@ public abstract class RegleGestion<T extends AbstractEntity> {
     }
 
     @NotNull
-    public Function<T, String> getMessageErreur() {
-        return messageErreur;
+    public Function<T, String> getFormateurMessage() {
+        return formateurMessage;
     }
 
 
     @NotNull
-    public PlanCharge getPlanCharge() {
-        return planCharge;
+    public PlanChargeDTO getPlanChargeDTO() {
+        return planChargeDTO;
     }
 
-    public void setPlanCharge(@NotNull PlanCharge planCharge) {
-        this.planCharge = planCharge;
+    public void setPlanCharge(@NotNull PlanChargeDTO planChargeDTO) {
+        this.planChargeDTO = planChargeDTO;
     }
 
 

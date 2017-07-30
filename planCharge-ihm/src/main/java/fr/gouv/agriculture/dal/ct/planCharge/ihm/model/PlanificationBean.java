@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.DoubleProperty;
@@ -57,7 +58,7 @@ public class PlanificationBean extends TacheBean {
     }
 */
 
-    public PlanificationBean(@NotNull Tache tache, @NotNull Map<LocalDate, Double> calendrier) {
+    public PlanificationBean(@NotNull TacheDTO tache, @NotNull Map<LocalDate, Double> calendrier) {
         super(tache);
 
         this.calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.

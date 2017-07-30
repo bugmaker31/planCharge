@@ -1,17 +1,23 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
+import fr.gouv.agriculture.dal.ct.metier.service.AbstractService;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ControleurRegles;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationsReglesGestionException;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ControleurRegles;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,10 +70,11 @@ public class PlanChargeService extends AbstractService {
     }
 
     @NotNull
-    public PlanCharge charger(@NotNull File ficPlanCharge, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
+    public PlanChargeDTO charger(@NotNull File ficPlanCharge, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.charger(ficPlanCharge, rapport);
-        } catch (DaoException e) {
+            PlanCharge planCharge = planChargeDao.charger(ficPlanCharge, rapport);
+            return PlanChargeDTO.from(planCharge);
+        } catch (DTOException | DaoException e) {
             throw new ServiceException(
                     "Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.",
                     e);
@@ -75,14 +82,16 @@ public class PlanChargeService extends AbstractService {
     }
 
 
-    public void sauver(@NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws ServiceException, ViolationsReglesGestionException {
-        LocalDate dateEtat = planCharge.getDateEtat();
+    public void sauver(@NotNull PlanChargeDTO planChargeDTO, @NotNull RapportSauvegarde rapport) throws ServiceException, ViolationsReglesGestionException {
+        LocalDate dateEtat = planChargeDTO.getDateEtat();
         try {
 
-            List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planCharge);
+            List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planChargeDTO);
             if (!violationsRegles.isEmpty()) {
                 throw new ViolationsReglesGestionException("Sauvegarde impossible", violationsRegles);
             }
+
+            PlanCharge planCharge = planChargeDTO.toEntity();
 
             planChargeDao.sauver(planCharge, rapport);
 
@@ -95,7 +104,7 @@ public class PlanChargeService extends AbstractService {
 
 
     @NotNull
-    public RapportImportTaches majTachesDepuisCalc(@NotNull PlanCharge planCharge, @NotNull File ficCalcTaches, @NotNull final RapportImportTaches rapport) throws ServiceException {
+    public RapportImportTaches majTachesDepuisCalc(@NotNull PlanChargeDTO planCharge, @NotNull File ficCalcTaches, @NotNull final RapportImportTaches rapport) throws ServiceException {
         try {
 
             Set<Tache> tachesImportees = tacheDao.importerDepuisCalc(ficCalcTaches, rapport);
@@ -107,27 +116,32 @@ public class PlanChargeService extends AbstractService {
             // - ajout des tâches qui ont été créées depuis
             // - mise à jour des tâches qui existaient déjà avant
             for (Tache tacheImportee : tachesImportees) {
+                TacheDTO tacheImporteeDTO =  TacheDTO.from(tacheImportee);
 
-                if (!planCharge.getPlanifications().taches().contains(tacheImportee)) {
+                assert planCharge.getPlanifications() != null;
+                if (!planCharge.getPlanifications().taches().contains(tacheImporteeDTO)) {
 
                     // Ajout des tâches qui ont été créées depuis :
-                    planCharge.getPlanifications().ajouter(tacheImportee, planCharge.getDateEtat());
+                    assert planCharge.getDateEtat() != null;
+                    planCharge.getPlanifications().ajouter(tacheImporteeDTO, planCharge.getDateEtat());
                     rapport.incrNbrTachesAjoutees();
                     LOGGER.debug("Tâche " + tacheImportee + " ajoutée.");
                 } else {
-                    assert planCharge.getPlanifications().taches().contains(tacheImportee);
+                    assert planCharge.getPlanifications().taches().contains(tacheImporteeDTO);
 
                     // Mise à jour des tâches qui existaient déjà avant, en gardant la planification actuelle :
-                    Tache tacheActuelle = planCharge.getPlanifications().tache(tacheImportee.getId());
-                    Map<LocalDate, Double> calendrierTache = planCharge.getPlanifications().calendrier(tacheActuelle);
-                    planCharge.getPlanifications().put(tacheImportee, calendrierTache);
+                    TacheDTO tacheActuelleDTO = planCharge.getPlanifications().tache(tacheImportee.getId());
+                    assert tacheActuelleDTO != null;
+                    Map<LocalDate, Double> calendrierTache = planCharge.getPlanifications().calendrier(tacheActuelleDTO);
+                    planCharge.getPlanifications().put(tacheImporteeDTO, calendrierTache);
                     rapport.incrNbrTachesMisesAJour();
-                    LOGGER.debug("Tâche " + tacheActuelle + " màj.");
+                    LOGGER.debug("Tâche " + tacheActuelleDTO + " màj.");
                 }
             }
             // Suppression des tâches qui n'existent plus (terminée/annulée/etc.) :
-            Set<Tache> tachesActuellesASupprimer = new HashSet<>();
-            for (Tache tacheActuelle : planCharge.getPlanifications().taches()) {
+            Set<TacheDTO> tachesActuellesASupprimer = new HashSet<>();
+            assert planCharge.getPlanifications() != null;
+            for (TacheDTO tacheActuelle : planCharge.getPlanifications().taches()) {
                 if (!tachesImportees.contains(tacheActuelle)) {
                     tachesActuellesASupprimer.add(tacheActuelle);
                 } else {
@@ -140,7 +154,7 @@ public class PlanChargeService extends AbstractService {
                 LOGGER.debug("Tâche " + tacheActuelle + " supprimée.");
             });
 
-        } catch (DaoException | TacheSansPlanificationException e) {
+        } catch (DTOException | DaoException | TacheSansPlanificationException e) {
             throw new ServiceException(
                     "Impossible de màj les tâches depuis le fichier Calc '" + ficCalcTaches.getAbsolutePath() + "'.",
                     e);
@@ -149,10 +163,11 @@ public class PlanChargeService extends AbstractService {
     }
 
     @NotNull
-    public PlanCharge importerDepuisCalc(@NotNull File ficCalc, @NotNull RapportImportPlanCharge rapport) throws ServiceException {
+    public PlanChargeDTO importerDepuisCalc(@NotNull File ficCalc, @NotNull RapportImportPlanCharge rapport) throws ServiceException {
         try {
-            return planChargeDao.importerDepuisCalc(ficCalc, rapport);
-        } catch (DaoException e) {
+            PlanCharge planCharge = planChargeDao.importerDepuisCalc(ficCalc, rapport);
+            return PlanChargeDTO.from(planCharge);
+        } catch (DTOException | DaoException e) {
             throw new ServiceException(
                     "Impossible d'importer le plan de charge depuis le fichier Calc '" + ficCalc.getAbsolutePath() + "'.",
                     e);
@@ -177,7 +192,7 @@ public class PlanChargeService extends AbstractService {
      * @return La (nouvelle) planification pour la (nouvelle) date d'état fournie.
      */
     @NotNull
-    public Planifications replanifier(@NotNull Planifications planifications, @NotNull LocalDate dateEtat) {
+    public PlanificationsDTO replanifier(@NotNull PlanificationsDTO planifications, @NotNull LocalDate dateEtat) {
 
         // Si la date d'état a changé, la planification change forcément aussi : il faut ajouter ou retirer des périodes de planification,
         // et initialiser les charges de chaque tâche en cas d'ajout :
@@ -216,7 +231,7 @@ public class PlanChargeService extends AbstractService {
     }
 
     @Null
-    private Double nouvelleCharge(@NotNull Tache tache, @NotNull LocalDate debutPeriode) {
+    private Double nouvelleCharge(@NotNull TacheDTO tache, @NotNull LocalDate debutPeriode) {
 
         if (!tache.estProvision()) {
             return null;

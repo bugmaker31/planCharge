@@ -1,12 +1,11 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.Controlable;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationRegleGestion;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.*;
@@ -16,12 +15,13 @@ import java.util.function.*;
  *
  * Created by frederic.danna on 20/03/2017.
  */
-public class Planifications implements Controlable {
+public class Planifications extends AbstractEntity<Serializable, Planifications> {
 
     public static final int NBR_SEMAINES_PLANIFIEES = 12;
 
     @NotNull
     private Map<Tache, Map<LocalDate, Double>> plan;
+
 
     public Planifications() {
         this.plan = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
@@ -30,6 +30,19 @@ public class Planifications implements Controlable {
     public Planifications(@NotNull Map<Tache, Map<LocalDate, Double>> plan) {
         this.plan = plan;
     }
+
+
+    @NotNull
+    @Override
+    public Serializable getIdentity() {
+        return null; // TODO FDA 2017/07 Trouver mieux comme code.
+    }
+
+    @Override
+    public int compareTo(Planifications o) {
+        return 0; // TODO FDA 2017/07 Trouver mieux comme code.
+    }
+
 
     @NotNull
     public Set<Tache> taches() {
@@ -139,12 +152,4 @@ public class Planifications implements Controlable {
         plan.putAll(m);
     }
 
-
-    @NotNull
-    @Override
-    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
-        List<ViolationRegleGestion> violations = new ArrayList<>();
-        // TODO FDA 2017/07 Coder les RG.
-        return violations;
-    }
 }

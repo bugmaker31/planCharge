@@ -1,8 +1,8 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
+package fr.gouv.agriculture.dal.ct.metier.regleGestion;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.reflect.InheritageFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +21,12 @@ public class ControleurRegles {
 
     private static boolean REGLES_INITIALISEES = false;
 
-    public static List<ViolationRegleGestion> violations(@NotNull PlanCharge planCharge) throws MetierException {
+    public static List<ViolationRegleGestion> violations(@NotNull PlanChargeDTO planChargeDTO) throws MetierException {
         List<ViolationRegleGestion> violationsRegles = new ArrayList<>();
 
         if (!REGLES_INITIALISEES) {
             // TODO FDA 2017/07 Gérer les accès concurrents (avec bloc 'synchronized')... si a un sens ? vu que l'appli est mono-utilisateur et mono-thread... à moins que JavaFX soit pmulti-thread ?
-            initReglesGestion(planCharge);
+            initReglesGestion(planChargeDTO);
             REGLES_INITIALISEES = true;
         }
 
@@ -36,12 +36,12 @@ public class ControleurRegles {
             violationsRegles.addAll(instanceControlable.controlerReglesGestion());
         }
 */
-        violationsRegles = planCharge.controlerReglesGestion();
+        violationsRegles = planChargeDTO.controlerReglesGestion();
 
         return violationsRegles;
     }
 
-    private static void initReglesGestion(@NotNull PlanCharge planCharge) throws ModeleException {
+    private static void initReglesGestion(@NotNull PlanChargeDTO planChargeDTO) throws ModeleException {
         LOGGER.debug("Chargement des règles de gestion :");
 //        List<RegleGestion> reglesGestion = new ArrayList<>();
         try {
@@ -63,7 +63,7 @@ public class ControleurRegles {
                 }
 
                 RegleGestion regleGestion = (RegleGestion) instanceField.get(null);
-                regleGestion.setPlanCharge(planCharge);
+                regleGestion.setPlanCharge(planChargeDTO);
 
 //                reglesGestion.add(regleGestion);
             }

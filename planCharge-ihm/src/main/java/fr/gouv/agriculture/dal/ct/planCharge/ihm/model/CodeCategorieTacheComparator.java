@@ -1,11 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Comparator;
 

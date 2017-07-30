@@ -6,14 +6,14 @@ import com.sun.star.table.XCell;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DataAcessObject;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHumaineDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
@@ -212,7 +212,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
                     profil
             );
 
-        } catch (ModeleException | DaoException | LibreOfficeException e) {
+        } catch (/*ModeleException | */DaoException | LibreOfficeException e) {
             throw new TacheDaoException("Impossible d'importer la tâche.", e);
         }
         return tache;

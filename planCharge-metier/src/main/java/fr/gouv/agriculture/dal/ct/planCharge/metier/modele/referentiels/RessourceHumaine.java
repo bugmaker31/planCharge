@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -35,6 +35,12 @@ public class RessourceHumaine extends Ressource<RessourceHumaine> {
     }
 
 
+    @SuppressWarnings("SuspiciousGetterSetter")
+    @NotNull
+    public String getTrigramme() {
+        return nom;
+    }
+
     @NotNull
     public String getNom() {
         return nom;
@@ -65,13 +71,6 @@ public class RessourceHumaine extends Ressource<RessourceHumaine> {
     @Override
     public String getIdentity() {
         return getTrigramme();
-    }
-
-
-    @NotNull
-    @Override
-    public List<RegleGestion<RessourceHumaine>> getReglesGestion() {
-        return Collections.EMPTY_LIST; // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 

@@ -254,7 +254,7 @@ public class GUI
     XComponent doc = Lo.qi(XComponent.class, odoc);
     XModel model = Lo.qi(XModel.class, doc); 
     if (model == null) {
-      System.out.println("Document has no data model");
+      System.out.println("Document has no data dto");
       return null;
     }
     return model.getCurrentController(); 

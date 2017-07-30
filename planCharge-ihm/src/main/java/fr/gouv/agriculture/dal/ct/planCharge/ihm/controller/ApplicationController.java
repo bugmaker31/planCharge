@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
@@ -15,8 +16,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.ViolationsReglesGestionException;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
@@ -383,9 +385,9 @@ public class ApplicationController extends AbstractController {
 
                 PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
 
-                PlanCharge planCharge = planChargeService.charger(ficPlanCharge, rapport);
+                PlanChargeDTO planCharge = planChargeService.charger(ficPlanCharge, rapport);
 
-                planChargeBean.init(planCharge);
+                planChargeBean.fromDto(planCharge);
 
                 planChargeBean.vientDEtreCharge();
                 getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
@@ -406,8 +408,9 @@ public class ApplicationController extends AbstractController {
 
         try {
 
-            RapportChargementAvecProgression rapportFinal = ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
-            assert rapportFinal != null;
+            /*RapportChargementAvecProgression rapportFinal = */
+            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
+//            assert rapportFinal != null;
 
             definirDateEtat(planChargeBean.getDateEtat());
 
@@ -464,7 +467,7 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
-                PlanCharge planCharge = planChargeBean.extract();
+                PlanChargeDTO planCharge = planChargeBean.toDto();
 
                 planChargeService.sauver(planCharge, rapport);
 
@@ -571,11 +574,11 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
-                PlanCharge planCharge = planChargeBean.extract();
+                PlanChargeDTO planCharge = planChargeBean.toDto();
 
                 planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapport);
 
-                planChargeBean.init(planCharge);
+                planChargeBean.fromDto(planCharge);
 
                 // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
                 rapport.setAvancement("Alimentation des référentiels...");
@@ -692,9 +695,9 @@ public class ApplicationController extends AbstractController {
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
                 rapport.setAvancement("Import depuis Calc...");
-                PlanCharge planCharge = planChargeService.importerDepuisCalc(ficCalc, rapport);
+                PlanChargeDTO planCharge = planChargeService.importerDepuisCalc(ficCalc, rapport);
 
-                planChargeBean.init(planCharge);
+                planChargeBean.fromDto(planCharge);
 
                 // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
                 rapport.setAvancement("Alimentation des référentiels...");

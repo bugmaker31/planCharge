@@ -1,9 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.dao;
+package fr.gouv.agriculture.dal.ct.metier.dao;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +20,11 @@ import static javax.swing.UIManager.get;
  */
 public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Serializable> implements DataAcessObject {
 
+    @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDao.class);
 
 
+    @NotNull
     protected abstract Map<EI, E> getCache();
 
     @Null

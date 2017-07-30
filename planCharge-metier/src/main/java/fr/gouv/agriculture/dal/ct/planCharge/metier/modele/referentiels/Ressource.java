@@ -1,11 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 25/03/2017.
@@ -13,24 +10,24 @@ import java.time.format.DateTimeFormatter;
 public abstract class Ressource<T extends Ressource<T>> extends AbstractEntity<String, T> implements Comparable<T> {
 
     @NotNull
-    private final String trigramme;
+    private final String code;
 
 
-    public Ressource(@NotNull String trigramme) {
-        this.trigramme = trigramme;
+    public Ressource(@NotNull String code) {
+        this.code = code;
     }
 
 
     @NotNull
-    public String getTrigramme() {
-        return trigramme;
+    public String getCode() {
+        return code;
     }
 
 
     @NotNull
     @Override
     public String getIdentity() {
-        return getTrigramme();
+        return getCode();
     }
 
 
@@ -47,25 +44,25 @@ public abstract class Ressource<T extends Ressource<T>> extends AbstractEntity<S
 
         Ressource ressource = (Ressource) o;
 
-        return trigramme.equals(ressource.trigramme);
+        return code.equals(ressource.code);
     }
 
     @Override
     public int hashCode() {
-        return trigramme.hashCode();
+        return code.hashCode();
     }
 
 
     @NotNull
     @Override
     public int compareTo(@NotNull Ressource o) {
-        return trigramme.compareTo(o.getTrigramme());
+        return code.compareTo(o.getCode());
     }
 
 
     // Juste pour faciliter le debogage.
     @Override
     public String toString() {
-        return ("[" + trigramme + "]");
+        return ("[" + code + "]");
     }
 }

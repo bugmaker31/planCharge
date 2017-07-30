@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.ihm.controller.rapportProgression;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportChargementPlanCharge;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportService;
+import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import javafx.beans.property.*;
 
 /**

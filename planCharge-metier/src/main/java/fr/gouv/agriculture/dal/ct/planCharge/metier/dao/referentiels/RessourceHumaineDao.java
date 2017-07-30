@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 
 import java.util.HashMap;
@@ -10,7 +9,7 @@ import java.util.Map;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class RessourceHumaineDao extends AbstractDao<RessourceHumaine, String> {
+public class RessourceHumaineDao extends /*RessourceDao*/ AbstractDao<RessourceHumaine, String> {
 
     private static final Map<String, RessourceHumaine> CACHE = new HashMap<>();
 
@@ -28,7 +27,7 @@ public class RessourceHumaineDao extends AbstractDao<RessourceHumaine, String> {
         super();
     }
 
-    @Override
+//    @Override
     protected Map<String, RessourceHumaine> getCache() {
         return CACHE;
     }

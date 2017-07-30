@@ -1,8 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
+import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,12 +10,11 @@ import javafx.beans.property.StringProperty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class RessourceHumaineBean {
+public class RessourceHumaineBean extends AbstractBean<RessourceHumaineDTO, RessourceHumaineBean> {
 
     @NotNull
     private StringProperty trigramme = new SimpleStringProperty();
@@ -36,18 +34,18 @@ public class RessourceHumaineBean {
         super();
     }
 
-    public RessourceHumaineBean(@NotNull String trigramme) {
+    public RessourceHumaineBean(@Null String trigramme) {
         super();
         this.trigramme.set(trigramme);
     }
 
-    public RessourceHumaineBean(@NotNull RessourceHumaine ressource) {
-        this.trigramme.set(ressource.getTrigramme());
-        this.nom.set(ressource.getNom());
-        this.prenom.set(ressource.getPrenom());
-        this.societe.set(ressource.getSociete());
-        this.debutMission.set(ressource.getDebutMission());
-        this.finMission.set(ressource.getFinMission());
+    public RessourceHumaineBean(@Null String trigramme, @Null String nom, @Null String prenom, @Null String societe, @Null LocalDate debutMission, @Null LocalDate finMission) {
+        this(trigramme);
+        this.nom.set(nom);
+        this.prenom.set(prenom);
+        this.societe.set(societe);
+        this.debutMission.set(debutMission);
+        this.finMission.set(finMission);
     }
 
 
@@ -138,8 +136,20 @@ public class RessourceHumaineBean {
 
 
     @NotNull
-    public RessourceHumaine extract() {
-        return new RessourceHumaine(trigramme.get(), nom.get(), prenom.get(), societe.get(), debutMission.get(), finMission.get());
+    @Override
+    public RessourceHumaineDTO toDto() {
+        return new RessourceHumaineDTO(trigramme.get(), nom.get(), prenom.get(), societe.get(), debutMission.get(), finMission.get());
+    }
+
+    @NotNull
+    @Override
+    public RessourceHumaineBean fromDto(@NotNull RessourceHumaineDTO dto) {
+        return new RessourceHumaineBean(dto.getCode(), dto.getNom(), dto.getPrenom(), dto.getSociete(), dto.getDebutMission(), dto.getFinMission());
+    }
+
+    @NotNull
+    public static RessourceHumaineDTO toDTO(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        return ressourceHumaineBean.toDto();
     }
 
 
@@ -164,4 +174,5 @@ public class RessourceHumaineBean {
     public String toString() {
         return trigramme.get() + " : " + nom.get() + " " + prenom.get();
     }
+
 }

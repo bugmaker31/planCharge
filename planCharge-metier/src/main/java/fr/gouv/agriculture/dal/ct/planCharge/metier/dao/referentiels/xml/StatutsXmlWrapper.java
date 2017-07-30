@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Statut;
 
@@ -48,6 +48,7 @@ public class StatutsXmlWrapper {
     public StatutsXmlWrapper init(List<StatutXmlWrapper> statuts) {
         this.statutsXmlWrapper.clear();
         this.statutsXmlWrapper.addAll(statuts);
+        //noinspection ReturnOfThis
         return this;
     }
 

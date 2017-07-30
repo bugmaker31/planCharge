@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.AbstractDao;
+import fr.gouv.agriculture.dal.ct.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Statut;
 
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
@@ -87,7 +87,7 @@ public class TacheXmlWrapper {
         echeance = Dates.asDate(tache.getEcheance());
         codeImportance = tache.getImportance().getCodeInterne();
         charge = tache.getCharge();
-        codeRessource = tache.getRessource().getTrigramme();
+        codeRessource = tache.getRessource().getCode();
         codeProfil = tache.getProfil().getCode();
         return this;
     }
@@ -234,7 +234,7 @@ public class TacheXmlWrapper {
                     Dates.asLocalDate(echeance),
                     importanceDao.load(codeImportance),
                     charge,
-                    ressourceDao.load(codeRessource),
+                    ressourceDao.loadAny(codeRessource),
                     profilDao.load(codeProfil)
             );
         } catch (Exception e) {

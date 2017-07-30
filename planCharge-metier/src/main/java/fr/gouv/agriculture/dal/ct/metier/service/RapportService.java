@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
+package fr.gouv.agriculture.dal.ct.metier.service;
 
 /**
  * Created by frederic.danna on 19/06/2017.

@@ -1,10 +1,10 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion;
+package fr.gouv.agriculture.dal.ct.metier.regleGestion;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 
 import javax.validation.constraints.NotNull;
 
-public class ViolationRegleGestion<T extends AbstractEntity> {
+public class ViolationRegleGestion<T extends AbstractDTO> {
 
     @NotNull
     private RegleGestion<T> regle;

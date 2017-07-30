@@ -1,8 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -97,13 +97,6 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
     public String getIdentity() {
 //        return getOrdre() + "";
         return codeInterne;
-    }
-
-
-    @NotNull
-    @Override
-    public List<RegleGestion<Importance>> getReglesGestion() {
-        return new ArrayList<>(); // TODO FDA 2017/07 Coder les règles de gestion.
     }
 
 

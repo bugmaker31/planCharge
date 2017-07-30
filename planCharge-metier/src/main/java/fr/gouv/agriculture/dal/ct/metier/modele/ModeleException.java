@@ -1,6 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.metier.modele;
+package fr.gouv.agriculture.dal.ct.metier.modele;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.MetierException;
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
 
 /**
  * Created by frederic.danna on 16/04/2017.

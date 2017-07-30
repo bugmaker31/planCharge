@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class JourFerieBean implements Comparable<JourFerieBean> {
+public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> implements Comparable<JourFerieBean> {
 
     @NotNull
     private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object;
@@ -27,7 +29,7 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
         super();
     }
 
-    public JourFerieBean(@NotNull JourFerie jourFerie) {
+    public JourFerieBean(@NotNull JourFerieDTO jourFerie) {
         this.date.set(jourFerie.getDate());
         this.description.set(jourFerie.getDescription());
     }
@@ -64,8 +66,24 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
 
 
     @NotNull
-    public JourFerie extract() {
-        return new JourFerie(date.get(), description.get());
+    @Override
+    public JourFerieBean fromDto(@NotNull JourFerieDTO dto) {
+        return new JourFerieBean(dto);
+    }
+
+    @NotNull
+    public JourFerieDTO toDto() {
+        return new JourFerieDTO(date.get(), description.get());
+    }
+
+    @NotNull
+    public static JourFerieBean fromDTO(@NotNull JourFerieDTO jourFerieDTO) {
+        return new JourFerieBean().fromDto(jourFerieDTO);
+    }
+
+    @NotNull
+    public static JourFerieDTO toDTO(@NotNull JourFerieBean jourFerieBean) {
+        return jourFerieBean.toDto();
     }
 
 
@@ -101,4 +119,5 @@ public class JourFerieBean implements Comparable<JourFerieBean> {
         return date.get().format(DateTimeFormatter.ISO_LOCAL_DATE)
                 + " " + description.get();
     }
+
 }

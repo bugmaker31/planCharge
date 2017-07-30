@@ -1,8 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
 
 import javax.validation.constraints.NotNull;
