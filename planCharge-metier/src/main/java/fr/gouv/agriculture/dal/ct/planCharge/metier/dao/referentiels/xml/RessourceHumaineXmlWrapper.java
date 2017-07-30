@@ -113,7 +113,7 @@ public class RessourceHumaineXmlWrapper {
     }
 
 
-    public RessourceHumaineXmlWrapper init(RessourceHumaine ressource) {
+    public RessourceHumaineXmlWrapper init(@NotNull RessourceHumaine ressource) {
         this.id = ressource.getIdentity();
         this.trigramme = ressource.getTrigramme();
         this.nom = ressource.getNom();
@@ -124,6 +124,7 @@ public class RessourceHumaineXmlWrapper {
         return this;
     }
 
+    @NotNull
     public RessourceHumaine extract() {
         return new RessourceHumaine(trigramme, nom, prenom, societe, Dates.asLocalDate(debutMission), Dates.asLocalDate(finMission));
     }

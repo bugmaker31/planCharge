@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -138,7 +139,13 @@ public class RessourceHumaineBean extends AbstractBean<RessourceHumaineDTO, Ress
     @NotNull
     @Override
     public RessourceHumaineDTO toDto() {
-        return new RessourceHumaineDTO(trigramme.get(), nom.get(), prenom.get(), societe.get(), debutMission.get(), finMission.get());
+        return new RessourceHumaineDTO(
+                Strings.epure(trigramme.get()),
+                Strings.epure(nom.get()),
+                Strings.epure(prenom.get()),
+                Strings.epure(societe.get()),
+                debutMission.get(), finMission.get()
+        );
     }
 
     @NotNull

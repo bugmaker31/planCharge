@@ -112,6 +112,7 @@ public class JoursFeriesController extends AbstractController {
         getIhm().symboliserFiltrable(dateColumn, descriptionColumn);
 
         definirMenuContextuel();
+
         definirTouches();
 
         LOGGER.debug("Initialisé.");

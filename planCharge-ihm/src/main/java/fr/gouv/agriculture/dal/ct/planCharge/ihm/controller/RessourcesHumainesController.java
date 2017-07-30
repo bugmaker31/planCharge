@@ -5,8 +5,10 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -128,20 +130,23 @@ public class RessourcesHumainesController extends AbstractController {
             PlanChargeIhm.controler(cell, "Société incorrecte", this::validerSociete);
             return cell;
         });
+/*
         PlanChargeIhm.symboliserChampObligatoire(debutMissionColumn);
         debutMissionColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, LocalDate> cell = DatePickerTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Date de début incorrecte", this::validerDebutMission);
             return cell;
         });
+*/
+        debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
         ressourcesHumainesTable.setItems(ressourceHumainesBeans);
 
-        TableFilter.Builder<RessourceHumaineBean> filter = TableFilter.forTableView(ressourcesHumainesTable);
+        TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
-        //noinspection unused
-        TableFilter<RessourceHumaineBean> ressourcesHumainesTableFilter = filter.apply();
+        /*TableFilter<RessourceHumaineBean> ressourcesHumainesTableFilter =*/
+        filterBuilder.apply();
         getIhm().symboliserFiltrable(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
@@ -150,7 +155,35 @@ public class RessourcesHumainesController extends AbstractController {
         });
 */
 
+        definirMenuContextuel();
+
+        definirTouches();
+
         LOGGER.debug("Initialisé.");
+    }
+
+    private void definirMenuContextuel() {
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem menuVoirTache = new MenuItem("Supprimer");
+        menuVoirTache.setOnAction(this::supprimerRessourceHumaine);
+
+        contextMenu.getItems().setAll(menuVoirTache);
+
+        ressourcesHumainesTable.setContextMenu(contextMenu);
+    }
+
+    private void definirTouches() {
+        // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
+        ressourcesHumainesTable.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case DELETE:
+                    supprimerRessourceHumaine(ressourcesHumainesTable.getSelectionModel().getSelectedItem());
+                    break;
+                default:
+                    LOGGER.debug("Touche ignorée : '" + event.getCode() + "'.");
+            }
+        });
     }
 
 
@@ -219,4 +252,23 @@ public class RessourcesHumainesController extends AbstractController {
         ressourcesHumainesTable.edit(idxLigNouvBean, trigrammeColumn);
 //        ressourcesHumainesTable.refresh();
     }
+
+
+    @FXML
+    private void supprimerRessourceHumaine(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        LOGGER.debug("supprimerJourFerie...");
+
+        RessourceHumaineBean focusedItem = ressourcesHumainesTable.getFocusModel().getFocusedItem();
+        if (focusedItem == null) {
+            LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");
+            return;
+        }
+        supprimerRessourceHumaine(focusedItem);
+    }
+
+    private void supprimerRessourceHumaine(@NotNull RessourceHumaineBean focusedItem) {
+        LOGGER.debug("supprimerRessourceHumaine...");
+        ressourceHumainesBeans.remove(focusedItem);
+    }
+
 }

@@ -3,6 +3,10 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumNomObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumPrenomObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumSocieteObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumTrigrammeObligatoire;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -46,7 +50,7 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
     @SuppressWarnings("SuspiciousGetterSetter")
     @Null
     public String getTrigramme() {
-        return nom;
+        return getCode();
     }
 
     @Null
@@ -75,12 +79,6 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
     }
 
 
-    @Null
-    @Override
-    public String getIdentity() {
-        return getCode();
-    }
-
     @NotNull
     public static RessourceHumaineDTO from(@NotNull RessourceHumaine entity) {
         return new RessourceHumaineDTO().fromEntity(entity);
@@ -106,7 +104,12 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
     @NotNull
     @Override
     public List<RegleGestion<RessourceHumaineDTO>> getReglesGestion() {
-        return Collections.emptyList(); // TODO FDA 2017/07 Coder les règles de gestion.
+        return Arrays.asList(
+                RGRefRessHumTrigrammeObligatoire.INSTANCE,
+                RGRefRessHumNomObligatoire.INSTANCE,
+                RGRefRessHumPrenomObligatoire.INSTANCE,
+                RGRefRessHumSocieteObligatoire.INSTANCE
+        );
     }
 
     // Juste pour faciliter le debogage.

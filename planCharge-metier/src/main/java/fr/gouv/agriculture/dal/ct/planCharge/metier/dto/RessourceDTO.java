@@ -37,7 +37,7 @@ public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDT
 
     @Null
     @Override
-    public String getIdentity() {
+    public final String getIdentity() {
         return getCode();
     }
 
