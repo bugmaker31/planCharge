@@ -60,7 +60,7 @@ import java.util.function.Supplier;
 
 public final class FilterPanel<T, R> extends VBox {
 
-    private static final String promptText = "Search...";
+    private static final String promptText = "Filtre";
     private static final Image filterIcon = new Image("/impl/org/controlsfx/table/filter.png");
     private static final Supplier<ImageView> filterImageView = () -> {
         ImageView imageView = new ImageView(filterIcon);
