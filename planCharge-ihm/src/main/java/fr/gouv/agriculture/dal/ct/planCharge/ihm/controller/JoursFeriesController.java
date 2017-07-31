@@ -1,14 +1,11 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.controller.ModuleController;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
-import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -17,21 +14,19 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableFilter.Builder;
-import org.jfree.report.JFreeReportBoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  *
  * @author frederic.danna
  */
-public class JoursFeriesController extends AbstractController implements ModuleController {
+public class JoursFeriesController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JoursFeriesController.class);
 
@@ -44,15 +39,13 @@ public class JoursFeriesController extends AbstractController implements ModuleC
 
     // Couche "métier" :
 
-/*
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
-*/
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<JourFerieBean> joursFeriesBeans = FXCollections.observableArrayList();
+    private final ObservableList<JourFerieBean> joursFeriesBeans = planChargeBean.getJoursFeriesBeans();
 
     //    @Autowired
     @NotNull
@@ -121,20 +114,6 @@ public class JoursFeriesController extends AbstractController implements ModuleC
         definirTouches();
 
         LOGGER.debug("Initialisé.");
-    }
-
-    @Override
-    public void fireActivation() throws IhmException {
-        try {
-            joursFeriesBeans.setAll(
-                    referentielsService.joursFeries().stream()
-                            .map(JourFerieBean::from)
-                            .collect(Collectors.toList())
-            );
-            LOGGER.info("Données métier chargées.");
-        } catch (ServiceException e) {
-            throw new IhmException("Impossible de récupérer les jours fériés.", e);
-        }
     }
 
     private void definirMenuContextuel() {

@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.controller.ModuleController;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import javafx.event.ActionEvent;
@@ -10,7 +9,7 @@ import javafx.fxml.FXML;
  * Created by frederic.danna on 26/03/2017.
  * @author frederic.danna
  */
-public class DisponibilitesController extends AbstractController implements ModuleController  {
+public class DisponibilitesController extends AbstractController  {
 
     private static DisponibilitesController instance;
 
@@ -38,13 +37,6 @@ public class DisponibilitesController extends AbstractController implements Modu
     protected void initialize() throws IhmException {
         // TODO FDA 2017/07 Coder.
     }
-
-    @Override
-    public void fireActivation() throws IhmException {
-        // TODO FDA 2017/07 Coder.
-//        LOGGER.info("Données métier chargées.");
-    }
-
 
     @FXML
     private void ajouterRessource(@SuppressWarnings("unused") ActionEvent actionEvent) {

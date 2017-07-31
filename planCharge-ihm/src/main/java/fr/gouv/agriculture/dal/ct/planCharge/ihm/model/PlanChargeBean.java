@@ -35,17 +35,17 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<ProfilBean> profilsBeans;
+    private final ObservableList<ProfilBean> profilsBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<ProjetAppliBean> projetsApplisBeans;
+    private final ObservableList<ProjetAppliBean> projetsApplisBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<StatutBean> statutsBeans;
+    private final ObservableList<StatutBean> statutsBeans = FXCollections.observableArrayList();
 
 
     @Null
-    private LocalDate dateEtat;
+    private LocalDate dateEtat = null;
 
     @Null
     public LocalDate getDateEtat() {
@@ -56,44 +56,37 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         this.dateEtat = dateEtat;
     }
 
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<JourFerieBean> joursFeriesBeans = FXCollections.observableArrayList();
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<JourFerieBean> joursFeriesBeans;
+    private final ObservableList<ImportanceBean> importancesBeans = FXCollections.observableArrayList();
+    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<RessourceBean> ressourcesBeans = FXCollections.observableArrayList();
+
+    private boolean modifie = false;
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<ImportanceBean> importancesBeans;
-    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
-    @NotNull
-    private final ObservableList<RessourceBean> ressourcesBeans;
-    private boolean modifie;
+    private final ObservableList<PlanificationBean> planificationsBeans = FXCollections.observableArrayList();
+
+    /*
+    NB : Tout attribut ajouté à cette classe doit être répercuté dans la méthode {@link #copier(PlanChargeBean, PlanChargeBean)}.
+    */
+
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeBean() {
         super();
-        dateEtat = null;
-        joursFeriesBeans = FXCollections.observableArrayList();
-        importancesBeans = FXCollections.observableArrayList();
-        profilsBeans = FXCollections.observableArrayList();
-        projetsApplisBeans = FXCollections.observableArrayList();
-        statutsBeans = FXCollections.observableArrayList();
-        ressourcesBeans = FXCollections.observableArrayList();
-        planificationsBeans = FXCollections.observableArrayList();
-        modifie = false;
     }
 
     public boolean estModifie() {
         return modifie;
     }
 
-    // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
-    @NotNull
-    private final ObservableList<PlanificationBean> planificationsBeans;
-
-    /*
-    NB : Tout attribut ajouté à cette classe doit être répercuté dans la méthode {@link #copier(PlanChargeBean, PlanChargeBean)}.
-    */
 
     @NotNull
     public ObservableList<JourFerieBean> getJoursFeriesBeans() {
@@ -267,4 +260,5 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 + " " + getPlanificationsBeans().size() + " tâches"
                 + " (" + (modifie ? "" : "non ") + "modifié)";
     }
+
 }

@@ -1,12 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportChargementAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportPlanChargeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
@@ -17,8 +18,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCharge;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -36,7 +39,8 @@ import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -934,7 +938,7 @@ public class ApplicationController extends AbstractController {
     public void activerModuleJoursFeries() throws IhmException {
         nomModuleCourant = NomModule.JOURS_FERIES;
         contentPane.getChildren().setAll(ihm.getJoursFeriesView());
-        ihm.getJoursFeriesController().fireActivation();
+//        ihm.getJoursFeriesController().fireActivation();
         majTitre();
     }
 
@@ -964,7 +968,7 @@ public class ApplicationController extends AbstractController {
     public void activerModuleRessourcesHumaines() throws IhmException {
         nomModuleCourant = NomModule.RESSOURCES_HUMAINES;
         contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
-        ihm.getRessourcesHumainesController().fireActivation();
+//        ihm.getRessourcesHumainesController().fireActivation();
         majTitre();
     }
 
@@ -995,7 +999,7 @@ public class ApplicationController extends AbstractController {
     public void activerModuleDisponibilites() throws IhmException {
         nomModuleCourant = ApplicationController.NomModule.DISPONIBILITES;
         contentPane.getChildren().setAll(ihm.getDisponibilitesView());
-        ihm.getDisponibilitesController().fireActivation();
+//        ihm.getDisponibilitesController().fireActivation();
         majTitre();
     }
 
@@ -1026,7 +1030,7 @@ public class ApplicationController extends AbstractController {
         nomModuleCourant = ApplicationController.NomModule.TACHES;
         ihm.getTachesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getTachesView());
-        ihm.getTachesController().fireActivation();
+//        ihm.getTachesController().fireActivation();
         majTitre();
     }
 
@@ -1057,7 +1061,7 @@ public class ApplicationController extends AbstractController {
         nomModuleCourant = ApplicationController.NomModule.CHARGES;
         ihm.getChargesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getChargesView());
-        ihm.getChargesController().fireActivation();
+//        ihm.getChargesController().fireActivation();
         majTitre();
     }
 

@@ -1,16 +1,15 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.controller.ModuleController;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
-import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  *
  * @author frederic.danna
  */
-public class RessourcesHumainesController extends AbstractController implements ModuleController {
+public class RessourcesHumainesController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RessourcesHumainesController.class);
 
@@ -44,19 +43,19 @@ public class RessourcesHumainesController extends AbstractController implements 
 
     // Couche "métier" :
 
-/*
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
-*/
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<RessourceHumaineBean> ressourceHumainesBeans = FXCollections.observableArrayList();
 
+/*
     //    @Autowired
     @NotNull
     private final ReferentielsService referentielsService = ReferentielsService.instance();
+*/
 
 
     // Couche "vue" :
@@ -106,6 +105,26 @@ public class RessourcesHumainesController extends AbstractController implements 
     @FXML
     protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
+
+        // Cf. https://stackoverflow.com/questions/24782280/bind-over-the-observablelist-in-javafx
+        ressourceHumainesBeans.setAll(
+                planChargeBean.getRessourcesBeans().stream()
+                .filter(ressourceBean -> ressourceBean instanceof RessourceHumaineBean)
+                .map(ressourceBean -> (RessourceHumaineBean)ressourceBean)
+                .collect(Collectors.toList())
+        );
+        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
+            while (change.next()) {
+                //If items are removed
+                for (RessourceBean remitem : change.getRemoved()) {
+                    unfixColumn(remitem);
+                }
+                //If items are added
+                for (RessourceBean additem : change.getAddedSubList()) {
+                    fixColumn(additem);
+                }
+            }
+        });
 
         ressourcesHumainesTable.setItems(ressourceHumainesBeans);
 
@@ -178,21 +197,6 @@ public class RessourcesHumainesController extends AbstractController implements 
 
         LOGGER.debug("Initialisé.");
     }
-
-    @Override
-    public void fireActivation() throws IhmException {
-        try {
-            ressourceHumainesBeans.setAll(
-                    referentielsService.ressourcesHumaines().stream()
-                            .map(RessourceHumaineBean::from)
-                            .collect(Collectors.toList())
-            );
-            LOGGER.info("Données métier chargées.");
-        } catch (ServiceException e) {
-            throw new IhmException("Impossible de récupérer les ressources humaines.", e);
-        }
-    }
-
 
     private void definirMenuContextuel() {
         ContextMenu contextMenu = new ContextMenu();
