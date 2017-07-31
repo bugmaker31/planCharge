@@ -546,7 +546,7 @@ public class PlanChargeIhm extends Application {
             Notifications.create()
                     .title(titre)
                     .text(
-                            "[" + violation.getRegle().getCode() + "]" + " " + violation.getRegle().getLibelle()
+                            violation.getRegle().getLibelle() + " (" + violation.getRegle().getCode() + ")"
                                     + "\n" + (String) violation.getRegle().getFormateurMessage().apply(violation.getEntity())
                     )
                     .hideAfter(Duration.INDEFINITE)

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * Created by frederic.danna on 14/05/2017.
@@ -24,7 +25,7 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
     }
 
     @Override
-    public void updateItem(@NotNull ImportanceBean item, boolean empty) {
+    public void updateItem(@Null ImportanceBean item, boolean empty) {
         super.updateItem(item, empty);
 
         getStyleClass().clear();
