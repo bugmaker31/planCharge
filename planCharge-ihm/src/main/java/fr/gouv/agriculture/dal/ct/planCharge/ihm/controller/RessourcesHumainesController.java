@@ -118,19 +118,37 @@ public class RessourcesHumainesController extends AbstractController {
                 //If items are removed
                 for (RessourceBean ressourceBean : change.getRemoved()) {
                     if (ressourceBean instanceof RessourceHumaineBean) {
-                        ressourceHumainesBeans.remove(ressourceBean);
+                        if (ressourceHumainesBeans.contains(ressourceBean)) {
+                            ressourceHumainesBeans.remove(ressourceBean);
+                        }
                     }
                 }
                 //If items are added
                 for (RessourceBean ressourceBean : change.getAddedSubList()) {
                     if (ressourceBean instanceof RessourceHumaineBean) {
-                        ressourceHumainesBeans.add((RessourceHumaineBean) ressourceBean);
+                        if (!ressourceHumainesBeans.contains(ressourceBean)) {
+                            ressourceHumainesBeans.add((RessourceHumaineBean) ressourceBean);
+                        }
                     }
                 }
             }
         });
-
-        ressourcesHumainesTable.setItems(ressourceHumainesBeans);
+        ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+            while (change.next()) {
+                //If items are removed
+                for (RessourceBean ressourceBean : change.getRemoved()) {
+                    if (planChargeBean.getRessourcesBeans().contains(ressourceBean)) {
+                        planChargeBean.getRessourcesBeans().remove(ressourceBean);
+                    }
+                }
+                //If items are added
+                for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                    if (!planChargeBean.getRessourcesBeans().contains(ressourceBean)) {
+                        planChargeBean.getRessourcesBeans().add((RessourceHumaineBean) ressourceBean);
+                    }
+                }
+            }
+        });
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());

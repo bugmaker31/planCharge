@@ -197,28 +197,38 @@ public class PlanChargeIhm extends Application {
 
     public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
         cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
-//                    Platform.runLater(() -> {
-                                masquerErreurSaisie(cell);
-                                String error = validator.apply(newValue);
-                                if (error != null) {
-                                    afficherErreurSaisie(cell, title, error);
+                    Platform.runLater(() -> { // Requis, sinon java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
+                                try {
+                                    masquerErreurSaisie(cell);
+                                    String error = validator.apply(newValue);
+                                    if (error != null) {
+                                        afficherErreurSaisie(cell, title, error);
+                                    }
+                                } catch (IhmException e) {
+                                    // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                                    throw new RuntimeException("Impossible de contrôler la saisie de la cellule '" + cell.getId() + "' de la table " + cell.getTableView().getId() + ".", e);
                                 }
-//                            }
-//                    );
+                            }
+                    );
                 }
         );
     }
 
     public static void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
         field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-//                    Platform.runLater(() -> {
-                                masquerErreurSaisie(field);
-                                String error = validator.apply(newValue);
-                                if (error != null) {
-                                    afficherErreurSaisie(field, title, error);
+                    Platform.runLater(() -> { // Requis, sinon java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
+                                try {
+                                    masquerErreurSaisie(field);
+                                    String error = validator.apply(newValue);
+                                    if (error != null) {
+                                        afficherErreurSaisie(field, title, error);
+                                    }
+                                } catch (IhmException e) {
+                                    // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                                    throw new RuntimeException("Impossible de contrôler la saisie du champ '" + field.getId() + "'.", e);
                                 }
-//                            }
-//                    );
+                            }
+                    );
                 }
         );
     }
@@ -475,30 +485,17 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
-    private static void masquerErreurSaisie(@NotNull Control field) /*throws IhmException*/ {
+    private static void masquerErreurSaisie(@NotNull Control field) throws IhmException {
         if (!popups.containsKey(idVBoxErreurSaisie(field))) {
             LOGGER.debug("Pas d'erreur de saisie affichée actuellement pour le champ " + field.getId() + ", rien à masquer donc.");
             return;
         }
         Decorator.removeAllDecorations(field);
-        try {
-            masquerPopupErreurSaisie(field);
-        } catch (IhmException e) {
-            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
-            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
-        }
-    }
-
-    public void symboliserFiltrable(@NotNull Node... nodes) {
-//        Platform.runLater(() -> {
-        for (Node node : nodes) {
-            Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
-        }
-//        });
+        masquerPopupErreurSaisie(field);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void symboliserChampObligatoire(@NotNull Control... fields) /*throws IhmException*/ {
+    public static void symboliserChampObligatoire(@NotNull Control... fields) throws IhmException {
         for (Control field : fields) {
             // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les TextFieldTableCell, la 2nde fait l'inverse).
             Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
@@ -506,7 +503,7 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    public static void symboliserChampObligatoire(@NotNull TableColumn... columns) /*throws IhmException*/ {
+    public static void symboliserChampObligatoire(@NotNull TableColumn... columns) throws IhmException {
         for (TableColumn column : columns) {
             // TODO FDA 2017/07 Confirmer qu'utiliser un Label vide est une bonne façon de faire.
             Label label = new Label();
@@ -517,15 +514,26 @@ public class PlanChargeIhm extends Application {
 
     private static void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
         if (!popups.containsKey(idVBoxErreurSaisie(field))) {
-            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
-            throw new RuntimeException("Impossible de retrouver la popup associée au control " + field.getId() + " (pour afficher l'erreur de saisie).");
+            throw new IhmException("Impossible de retrouver la popup associée au control " + field.getId() + " (pour afficher l'erreur de saisie).");
         }
         PopupWindow popup = popups.get(idVBoxErreurSaisie(field));
+/*
         field.setOnMouseEntered(event -> {
         });
         field.setOnMouseExited(event -> {
         });
+*/
         popup.hide();
+    }
+
+    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
+        Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
+        try {
+            afficherPopUpErreurSaisie(field, titre, message);
+        } catch (IhmException e) {
+            throw new IhmException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+        }
     }
 
     @NotNull
@@ -533,14 +541,16 @@ public class PlanChargeIhm extends Application {
         return joursFeriesController;
     }
 
-    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) /*throws IhmException*/ {
-        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
-        Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
-        try {
-            afficherPopUpErreurSaisie(field, titre, message);
-        } catch (IhmException e) {
-            // TODO FDA 2017/07 Trouver mieux que thrower un RuntimeException.
-            throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+    public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
+        for (ViolationRegleGestion violation : violations) {
+            Notifications.create()
+                    .title(titre)
+                    .text(
+                            "[" + violation.getRegle().getCode() + "]" + " " + violation.getRegle().getLibelle()
+                                    + "\n" + (String) violation.getRegle().getFormateurMessage().apply(violation.getEntity())
+                    )
+                    .hideAfter(Duration.INDEFINITE)
+                    .showError();
         }
     }
 
@@ -556,16 +566,12 @@ public class PlanChargeIhm extends Application {
         ((PopOver) popup).show(field);
     }
 
-    public void symboliserFiltrable(@NotNull TableColumn<?, ?>... columns) {
-        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
-            for (TableColumn<?, ?> column : columns) {
-                if (column.getGraphic() == null) {
-                    Label label = new Label();
-                    column.setGraphic(label);
-                }
-                symboliserFiltrable(column.getGraphic());
-            }
-        });
+    public void symboliserFiltrable(@NotNull Node... nodes) throws IhmException {
+//        Platform.runLater(() -> {
+        for (Node node : nodes) {
+            Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
+        }
+//        });
     }
 
     @NotNull
@@ -649,16 +655,21 @@ public class PlanChargeIhm extends Application {
         return resultat;
     }
 
-
-    public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
-        for (ViolationRegleGestion violation : violations) {
-            // TODO FDA 2017/07 Améliorer l'affichage.
-            Notifications.create()
-                    .title(titre)
-                    .text((String) violation.getRegle().getFormateurMessage().apply(violation.getEntity()))
-                    .hideAfter(Duration.INDEFINITE)
-                    .showError();
-        }
+    public void symboliserFiltrable(@NotNull TableColumn<?, ?>... columns) throws IhmException {
+        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
+            for (TableColumn<?, ?> column : columns) {
+                if (column.getGraphic() == null) {
+                    Label label = new Label();
+                    column.setGraphic(label);
+                }
+                try {
+                    symboliserFiltrable(column.getGraphic());
+                } catch (IhmException e) {
+                    // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                    throw new RuntimeException("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
+                }
+            }
+        });
     }
 
 
