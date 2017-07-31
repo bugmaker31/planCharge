@@ -109,19 +109,23 @@ public class RessourcesHumainesController extends AbstractController {
         // Cf. https://stackoverflow.com/questions/24782280/bind-over-the-observablelist-in-javafx
         ressourceHumainesBeans.setAll(
                 planChargeBean.getRessourcesBeans().stream()
-                .filter(ressourceBean -> ressourceBean instanceof RessourceHumaineBean)
-                .map(ressourceBean -> (RessourceHumaineBean)ressourceBean)
-                .collect(Collectors.toList())
+                        .filter(ressourceBean -> ressourceBean instanceof RessourceHumaineBean)
+                        .map(ressourceBean -> (RessourceHumaineBean) ressourceBean)
+                        .collect(Collectors.toList())
         );
         planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 //If items are removed
-                for (RessourceBean remitem : change.getRemoved()) {
-                    unfixColumn(remitem);
+                for (RessourceBean ressourceBean : change.getRemoved()) {
+                    if (ressourceBean instanceof RessourceHumaineBean) {
+                        ressourceHumainesBeans.remove(ressourceBean);
+                    }
                 }
                 //If items are added
-                for (RessourceBean additem : change.getAddedSubList()) {
-                    fixColumn(additem);
+                for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                    if (ressourceBean instanceof RessourceHumaineBean) {
+                        ressourceHumainesBeans.add((RessourceHumaineBean) ressourceBean);
+                    }
                 }
             }
         });
