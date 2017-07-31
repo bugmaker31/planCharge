@@ -10,7 +10,7 @@ public final class RGRefRessHumPrenomObligatoire extends RegleGestion<RessourceH
     public static final RGRefRessHumPrenomObligatoire INSTANCE = new RGRefRessHumPrenomObligatoire();
 
     private RGRefRessHumPrenomObligatoire() {
-        super("RG_Ref_RessHum_PrenomObligatoire", "Prénom non défini", ressHum -> "Le prénom est requis pour '" + ressHum.getTrigramme() + "'.");
+        super("RG_Ref_RessHum_PrenomObligatoire", "Prénom non défini", ressHum -> "Le prénom est requis pour " + ressHum.getTrigramme() + ".");
     }
 
     @Override

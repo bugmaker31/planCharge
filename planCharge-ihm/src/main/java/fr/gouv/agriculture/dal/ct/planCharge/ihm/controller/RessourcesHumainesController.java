@@ -159,33 +159,33 @@ public class RessourcesHumainesController extends AbstractController {
         finMissionColumn.setCellValueFactory(cellData -> cellData.getValue().finMissionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        PlanChargeIhm.symboliserChampObligatoire(trigrammeColumn);
+        PlanChargeIhm.symboliserColonnesObligatoires(trigrammeColumn);
         trigrammeColumn.setCellFactory(param -> {
             TextFieldTableCell<RessourceHumaineBean, String> trigrammeCell = new UpperCaseTextFieldTableCell<>();
-//            PlanChargeIhm.symboliserChampObligatoire(trigrammeCell);
+//            PlanChargeIhm.symboliserColonnesObligatoires(trigrammeCell);
             PlanChargeIhm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
             return trigrammeCell;
         });
-        PlanChargeIhm.symboliserChampObligatoire(nomColumn);
+        PlanChargeIhm.symboliserColonnesObligatoires(nomColumn);
         nomColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Nom incorrect", this::validerNom);
             return cell;
         });
-        PlanChargeIhm.symboliserChampObligatoire(prenomColumn);
+        PlanChargeIhm.symboliserColonnesObligatoires(prenomColumn);
         prenomColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Prénom incorrect", this::validerPrenom);
             return cell;
         });
-        PlanChargeIhm.symboliserChampObligatoire(societeColumn);
+        PlanChargeIhm.symboliserColonnesObligatoires(societeColumn);
         societeColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = TextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Société incorrecte", this::validerSociete);
             return cell;
         });
 /*
-        PlanChargeIhm.symboliserChampObligatoire(debutMissionColumn);
+        PlanChargeIhm.symboliserColonnesObligatoires(debutMissionColumn);
         debutMissionColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, LocalDate> cell = DatePickerTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Date de début incorrecte", this::validerDebutMission);
@@ -204,7 +204,7 @@ public class RessourcesHumainesController extends AbstractController {
         TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filterBuilder.apply();
-        getIhm().symboliserFiltrable(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
+        getIhm().symboliserColonnesFiltrables(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
 
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {

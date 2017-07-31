@@ -89,13 +89,13 @@ public class JoursFeriesController extends AbstractController {
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        PlanChargeIhm.symboliserChampObligatoire(dateColumn); // FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
+        PlanChargeIhm.symboliserColonnesObligatoires(dateColumn);
         dateColumn.setCellFactory(param -> {
             TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Date incorrecte", this::validerDateFeriee);
             return cell;
         });
-//        PlanChargeIhm.symboliserChampObligatoire(descriptionColumn);
+//        PlanChargeIhm.symboliserColonnesObligatoires(descriptionColumn);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Bind the SortedList comparator to the TableView comparator.
@@ -107,7 +107,7 @@ public class JoursFeriesController extends AbstractController {
         Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filter.apply();
-        getIhm().symboliserFiltrable(dateColumn, descriptionColumn);
+        getIhm().symboliserColonnesFiltrables(dateColumn, descriptionColumn);// FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
 
         definirMenuContextuel();
 

@@ -3,10 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumNomObligatoire;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumPrenomObligatoire;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumSocieteObligatoire;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefRessHumTrigrammeObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -108,8 +105,9 @@ public class RessourceHumaineDTO extends RessourceDTO<RessourceHumaine, Ressourc
                 RGRefRessHumTrigrammeObligatoire.INSTANCE,
                 RGRefRessHumNomObligatoire.INSTANCE,
                 RGRefRessHumPrenomObligatoire.INSTANCE,
-                RGRefRessHumSocieteObligatoire.INSTANCE
-        );
+                RGRefRessHumSocieteObligatoire.INSTANCE,
+                RGRefRessHumUniciteTrigramme.INSTANCE
+                );
     }
 
     // Juste pour faciliter le debogage.

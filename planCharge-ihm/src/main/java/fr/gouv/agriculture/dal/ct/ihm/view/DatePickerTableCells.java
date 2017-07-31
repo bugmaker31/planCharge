@@ -18,7 +18,7 @@ public class DatePickerTableCells {
     public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forRequiredTableColumn() {
         return (TableColumn<S, LocalDate> p) -> {
             TableCell<S, LocalDate> datePickerCell = DatePickerTableCells.<S>forTableColumn().call(p);
-//            PlanChargeIhm.symboliserChampObligatoire(datePickerCell);
+//            PlanChargeIhm.symboliserColonnesObligatoires(datePickerCell);
             return datePickerCell;
         };
     }

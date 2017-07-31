@@ -15,7 +15,7 @@ public class TextFieldTableCells {
         return (TableColumn<S, String> list) -> {
             //noinspection unchecked
             TableCell<S, String> textFieldCell = TextFieldTableCell.<S>forTableColumn().call(list);
-//            PlanChargeIhm.symboliserChampObligatoire(textFieldCell);
+//            PlanChargeIhm.symboliserColonnesObligatoires(textFieldCell);
             return textFieldCell;
         };
     }

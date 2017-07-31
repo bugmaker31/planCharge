@@ -187,7 +187,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         Builder<TB> filter = TableFilter.forTableView(getTachesTable());
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filter.apply();
-        getIhm().symboliserFiltrable(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
+        getIhm().symboliserColonnesFiltrables(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
 
         abstract class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
             @Override
