@@ -1,5 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import eu.hansolo.medusa.Gauge;
+import eu.hansolo.medusa.GaugeBuilder;
+import eu.hansolo.medusa.skins.SlimSkin;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
@@ -23,15 +26,21 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCha
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Box;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -147,6 +156,10 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private Label nbrTachesField;
+
+    @FXML
+    @NotNull
+    private Gauge memoryGauge;
 
 /*
     @FXML
@@ -285,6 +298,41 @@ public class ApplicationController extends AbstractController {
 //        planChargeBean.getPlanificationsBeans().addListener(
 //                (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
 //        );
+
+        memoryGauge.setMaxValue(Runtime.getRuntime().maxMemory()); // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+        // Cf. https://stackoverflow.com/questions/42811673/javafx-progressbar-showing-cpu-and-memory-usage
+        AnimationTimer memoryGaugeUpdater = new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+                double usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+                memoryGauge.setValue(usedMem);
+            }
+        };
+        memoryGauge.valueProperty().addListener((observable, oldValue, newValue) -> {
+            double maxMem = Runtime.getRuntime().maxMemory();
+            double totalMem = Runtime.getRuntime().totalMemory();
+            double freeMem = Runtime.getRuntime().freeMemory();
+            double usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+//            memoryGauge.getFormerValue();
+            if (((freeMem / maxMem) * 100) < 30) {
+                Platform.runLater(() -> {
+                    ihm.afficherPopUp(
+                            Alert.AlertType.WARNING,
+                            "A court de mémoire (RAM)",
+                            "On frôle le crash à cause d'un manque de mémoire. Pensez à sauvegarder dans un premier temps, puis à demander à augmenter la mémoire allouée à cette application.",
+                            400, 300
+                    );
+                });
+            }
+        });
+
+        memoryGauge.setOnMouseClicked(event -> {
+            //noinspection CallToSystemGC
+            Runtime.getRuntime().gc();
+        });
+        memoryGaugeUpdater.start();
+
     }
 
 

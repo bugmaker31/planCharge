@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <?import org.controlsfx.control.NotificationPane?>
+<?import eu.hansolo.medusa.Gauge?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
@@ -121,6 +122,14 @@
                 <HBox styleClass="itemBarreEtat">
                     <Label fx:id="nbrTachesField"/>
                     <Label text="tâches"/>
+                </HBox>
+                <Region prefWidth="200.0" HBox.hgrow="ALWAYS" /> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->
+                <HBox styleClass="itemBarreEtat" alignment="CENTER_RIGHT">
+                    <Gauge fx:id="memoryGauge" title="RAM" skinType="INDICATOR" prefHeight="12" prefWidth="12">
+                        <tooltip>
+                            <Tooltip text="Cliquer pour récupérer la mémoire disponible (garbage collect)."/>
+                        </tooltip>
+                    </Gauge>
                 </HBox>
             </HBox>
             <!--

@@ -3,12 +3,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.Notification;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,7 +30,6 @@ import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
@@ -413,64 +413,46 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message) {
-        return afficherPopUp(type,
-                titre, message,
-                Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
-                null
-        );
+    private static Set<Notification> notificationsViolationsReglesGestion = new HashSet<>();
+
+    @SuppressWarnings("WeakerAccess")
+    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+//        Platform.runLater(() -> {
+            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
+            Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
+            try {
+                afficherPopUpErreurSaisie(field, titre, message);
+            } catch (IhmException e) {
+                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+            }
+//        });
     }
 
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, ButtonType boutonParDefaut, ButtonType... bouttons) {
-        return afficherPopUp(type,
-                titre, message,
-                Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
-                boutonParDefaut, bouttons
-        );
+    public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
+//        Platform.runLater(() -> {
+
+        masquerNotificationsViolationsReglesGestion();
+
+        for (ViolationRegleGestion violation : violations) {
+            Notification notifErreur = new Notification()
+                    .title(titre)
+                    .text(
+                            violation.getRegle().getLibelle() + " (" + violation.getRegle().getCode() + ")"
+                                    + "\n" + violation.getRegle().getFormateurMessage().apply(violation.getEntity())
+                    )
+                    .hideAfter(Duration.INDEFINITE); // Voir #masquerNotificationsViolationsReglesGestion().
+            notifErreur.showError();
+            notificationsViolationsReglesGestion.add(notifErreur);
+        }
+//    });
     }
 
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
-        return afficherPopUp(type,
-                titre, message,
-                width, height,
-                null
-        );
-    }
-
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
-        Alert alert = new Alert(type);
-
-        alert.setTitle(APP_NAME + " - " + titre);
-        alert.setHeaderText(titre);
-        alert.setContentText(message);
-/*
-        // Cf. http://stackoverflow.com/questions/29738083/javafx-alert-dialog-html
-        WebView webView = new WebView();
-        webView.getEngine().loadContent("<html>" + message + "</html>");
-        webView.setPrefSize(width, height);
-        alert.getDialogPane().setContent(webView);
-*/
-
-        ScrollPane scroll = new ScrollPane(alert.getDialogPane().getContent());
-        alert.getDialogPane().getChildren().add(scroll);
-
-        alert.getButtonTypes().setAll(ButtonType.OK);
-        alert.getButtonTypes().addAll(buttons);
-        alert.getButtonTypes()
-                .forEach(buttonType -> {
-                    Button bouton = (Button) alert.getDialogPane().lookupButton(buttonType);
-                    bouton.setDefaultButton(Objects.equals(buttonType, boutonParDefaut));
-                });
-
-        alert.getDialogPane().setPrefWidth(width);
-        alert.getDialogPane().setPrefHeight(height);
-
-        alert.setResizable(true);
-
-        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertStage.getIcons().addAll(primaryStage.getIcons());
-
-        return alert.showAndWait();
+    @SuppressWarnings("StaticMethodNamingConvention")
+    public static void masquerNotificationsViolationsReglesGestion() {
+        for (Notification notification : notificationsViolationsReglesGestion) {
+            notification.hide();
+        }
     }
 
 
@@ -485,18 +467,12 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
-    @SuppressWarnings("WeakerAccess")
-    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
-        Platform.runLater(() -> {
-            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
-            Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
-            try {
-                afficherPopUpErreurSaisie(field, titre, message);
-            } catch (IhmException e) {
-                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
-            }
-        });
+    public static void afficherNotification(@NotNull String titre, @NotNull String message) {
+        new Notification()
+                .title(titre)
+                .text(message)
+                .hideAfter(new Duration(5000)) // TODO FDA 2017/08 Permettre à l'utilisateur de changer ce paramètre (à mémoriser dans ses préférences ?)
+                .showInformation();
     }
 
     private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
@@ -529,19 +505,35 @@ public class PlanChargeIhm extends Application {
         popup.hide();
     }
 
-    public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
-//        Platform.runLater(() -> {
-        for (ViolationRegleGestion violation : violations) {
-            Notifications.create()
-                    .title(titre)
-                    .text(
-                            violation.getRegle().getLibelle() + " (" + violation.getRegle().getCode() + ")"
-                                    + "\n" + violation.getRegle().getFormateurMessage().apply(violation.getEntity())
-                    )
-                    .hideAfter(Duration.INDEFINITE)
-                    .showError();
+    @NotNull
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message) {
+        if (primaryStage == null) {
+            LOGGER.warn("Impossbile d'afficher le message, application non entièrement initialisée (en cours de démarrage ?).");
+            return Optional.empty();
         }
-//    });
+        return afficherPopUp(type,
+                titre, message,
+                Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
+                null
+        );
+    }
+
+    @NotNull
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, ButtonType boutonParDefaut, ButtonType... bouttons) {
+        return afficherPopUp(type,
+                titre, message,
+                Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
+                boutonParDefaut, bouttons
+        );
+    }
+
+    @NotNull
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
+        return afficherPopUp(type,
+                titre, message,
+                width, height,
+                null
+        );
     }
 
 
@@ -669,12 +661,41 @@ public class PlanChargeIhm extends Application {
         });
     }
 
+    @NotNull
+    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
+        Alert alert = new Alert(type);
 
-    public static void afficherNotification(@NotNull String titre, @NotNull String message) {
-        Notifications.create()
-                .title(titre)
-                .text(message)
-                .showInformation();
+        alert.setTitle(APP_NAME + " - " + titre);
+        alert.setHeaderText(titre);
+        alert.setContentText(message);
+/*
+        // Cf. http://stackoverflow.com/questions/29738083/javafx-alert-dialog-html
+        WebView webView = new WebView();
+        webView.getEngine().loadContent("<html>" + message + "</html>");
+        webView.setPrefSize(width, height);
+        alert.getDialogPane().setContent(webView);
+*/
+
+        ScrollPane scroll = new ScrollPane(alert.getDialogPane().getContent());
+        alert.getDialogPane().getChildren().add(scroll);
+
+        alert.getButtonTypes().setAll(ButtonType.OK);
+        alert.getButtonTypes().addAll(buttons);
+        alert.getButtonTypes()
+                .forEach(buttonType -> {
+                    Button bouton = (Button) alert.getDialogPane().lookupButton(buttonType);
+                    bouton.setDefaultButton(Objects.equals(buttonType, boutonParDefaut));
+                });
+
+        alert.getDialogPane().setPrefWidth(width);
+        alert.getDialogPane().setPrefHeight(height);
+
+        alert.setResizable(true);
+
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().addAll(primaryStage.getIcons());
+
+        return alert.showAndWait();
     }
 
 
