@@ -26,6 +26,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCha
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -45,6 +46,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -58,7 +60,7 @@ import java.util.Optional;
  */
 public class ApplicationController extends AbstractController {
 
-    public static int SEUIL_ALERT_RAM_PC = 30; // TODO FDA 2017/08 Permettre à l'utilisateur de paramétrer ce seuil (dans ses préférences).
+    public static int SEUIL_ALERT_RAM_PC = 10; // TODO FDA 2017/08 Permettre à l'utilisateur de paramétrer ce seuil (dans ses préférences).
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
@@ -167,6 +169,8 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private Gauge memoryGauge;
+
+    private String memoryGaugeTooltipInitialText;
 
 /*
     @FXML
@@ -307,20 +311,30 @@ public class ApplicationController extends AbstractController {
 //        );
 
         memoryGauge.setMaxValue(Runtime.getRuntime().maxMemory()); // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+        DecimalFormat ramFormat = new DecimalFormat("0");
+        memoryGauge.getTooltip().setText(
+                memoryGauge.getTooltip().getText()
+                        .replaceAll("\\$maxMem", Strings.humanReadable(Runtime.getRuntime().maxMemory(), ramFormat))
+        );
+        memoryGaugeTooltipInitialText = memoryGauge.getTooltip().getText();
         // Cf. https://stackoverflow.com/questions/42811673/javafx-progressbar-showing-cpu-and-memory-usage
         AnimationTimer memoryGaugeUpdater = new AnimationTimer() {
 
             @Override
             public void handle(long now) {
-                double usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+                double usedMem = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
                 memoryGauge.setValue(usedMem);
             }
         };
-        memoryGauge.valueProperty().addListener((observable, oldValue, newValue) -> {
+        memoryGauge.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+
+            memoryGauge.getTooltip().setText(memoryGaugeTooltipInitialText
+                    .replaceAll("\\$usedMem", Strings.humanReadable(newValue.longValue(), ramFormat))
+            );
+
             double maxMem = Runtime.getRuntime().maxMemory();
-            double totalMem = Runtime.getRuntime().totalMemory();
             double freeMem = Runtime.getRuntime().freeMemory();
-            double usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+            double usedMem = maxMem - freeMem; // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
             int pcMemLibre = new Double((freeMem / maxMem) * 100).intValue();
             if ((pcMemLibre < SEUIL_ALERT_RAM_PC) && !alerteManqueMemoireAffichee && !manqueMemoireDejaDetecte) {
                 LOGGER.warn("Alerte manque de mémoire (RAM) : reste moins de {}% ({} oct. libres sur {} oct., soit {}%). Augmenter la mémoire allouée à l'appli ('java ... -Xmx...'.)", SEUIL_ALERT_RAM_PC, freeMem, maxMem, pcMemLibre);
@@ -330,15 +344,14 @@ public class ApplicationController extends AbstractController {
                     ihm.afficherPopUp(
                             Alert.AlertType.WARNING,
                             "Manque de mémoire",
-                            "On frôle le crash à cause d'un manque de mémoire (plus quee " + pcMemLibre + "% de RAM libre)."
+                            "On frôle le crash à cause d'un manque de mémoire (plus que " + pcMemLibre + "% de RAM libre)."
                                     + "\nPensez à sauvegarder dans un premier temps, puis à demander à augmenter la mémoire allouée à cette application (java ... -Xmx...).",
-                            300, 200
+                            500, 200
                     );
                     alerteManqueMemoireAffichee = false;
                 });
             }
         });
-
         memoryGauge.setOnMouseClicked(event -> {
             //noinspection CallToSystemGC
             Runtime.getRuntime().gc();

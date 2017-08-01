@@ -28,8 +28,9 @@ public final class RGRefRessHumUniciteTrigramme extends RegleGestion<RessourceHu
         Collection<RessourceHumaineDTO> ressourcesHumaines = getPlanChargeDTO().getReferentiels().getRessourcesHumaines();
         assert ressourcesHumaines != null; // TODO FDA 2017/07 Citer la RG qui n'est pas respectée.
         return ressourcesHumaines.parallelStream()
+                .filter(rh -> rh.getTrigramme() != null)
                 .filter(rh -> {
-                    assert rh.getTrigramme() != null; // TODO FDA 2017/07 Citer la RG qui n'est pas respectée.
+                    assert rh.getTrigramme() != null; // Par construction, vu le filtre précédent.
                     return rh.getTrigramme().equals(ressHum.getTrigramme());
                 })
                 .count() <= 1;
