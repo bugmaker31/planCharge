@@ -706,7 +706,7 @@ public class PlanChargeIhm extends Application {
     @Override
     public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
         try {
-            LOGGER.info("Application en cours de démarrage...");
+            LOGGER.debug("Application en cours de démarrage...");
 
             this.primaryStage = primaryStage;
 

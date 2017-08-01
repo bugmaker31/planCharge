@@ -61,6 +61,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
 
     public void createOrUpdate(@NotNull E entity) throws DaoException {
         getCache().put(entity.getIdentity(), entity);
-        LOGGER.info("Entité '{}' créée/màj : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
+        //noinspection HardcodedFileSeparator
+        LOGGER.debug("Entité '{}' créée/màj : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
     }
 }

@@ -1,8 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import eu.hansolo.medusa.Gauge;
-import eu.hansolo.medusa.GaugeBuilder;
-import eu.hansolo.medusa.skins.SlimSkin;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
@@ -35,14 +33,11 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -64,6 +59,7 @@ public class ApplicationController extends AbstractController {
     public static int SEUIL_ALERT_RAM_PC = 10; // TODO FDA 2017/08 Permettre à l'utilisateur de paramétrer ce seuil (dans ses préférences).
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
+    private static final Logger SYSTEM_LOGGER = LoggerFactory.getLogger("SYSTEM");
 
     private static ApplicationController instance = null;
 
@@ -342,7 +338,7 @@ public class ApplicationController extends AbstractController {
             }
             pcMemLibrePrecedent = pcMemLibre;
 
-            LOGGER.debug("Mémoire : free={} ({}%), used={}, total={}, max={}", Strings.humanReadable(freeMem, ramFormat), pcMemLibre, Strings.humanReadable(usedMem, ramFormat), Strings.humanReadable(totalMem, ramFormat), Strings.humanReadable(maxMem, ramFormat));
+            SYSTEM_LOGGER.info("Mémoire == free={} ({}%), used={}, total={}, max={}", Strings.humanReadable(freeMem, ramFormat), pcMemLibre, Strings.humanReadable(usedMem, ramFormat), Strings.humanReadable(totalMem, ramFormat), Strings.humanReadable(maxMem, ramFormat));
 
             memoryGauge.setBarColor(
                     (pcMemLibre <= 30) ? Color.RED :
@@ -351,12 +347,15 @@ public class ApplicationController extends AbstractController {
                                             Color.GREEN))
             );
 
-            memoryGauge.getTooltip().setText(memoryGaugeTooltipInitialText
-                    .replaceAll("\\$usedMem", Strings.humanReadable(newValue.longValue(), ramFormat))
+            memoryGauge.getTooltip().setText(
+                    memoryGaugeTooltipInitialText
+                            .replaceAll("\\$usedMem", Strings.humanReadable(newValue.longValue(), ramFormat))
+                            .replaceAll("\\$freeMemPc", String.valueOf(pcMemLibre))
             );
 
             if ((pcMemLibre < SEUIL_ALERT_RAM_PC) && !alerteManqueMemoireAffichee && !manqueMemoireDejaDetecte) {
                 LOGGER.warn("Alerte manque de mémoire (RAM) : reste moins de {}% ({} oct. libres sur {} oct., soit {}%). Augmenter la mémoire allouée à l'appli ('java ... -Xmx...'.)", SEUIL_ALERT_RAM_PC, freeMem, maxMem, pcMemLibre);
+                SYSTEM_LOGGER.warn("Alerte manque de mémoire (RAM) : reste moins de {}% ({} oct. libres sur {} oct., soit {}%). Augmenter la mémoire allouée à l'appli ('java ... -Xmx...'.)", SEUIL_ALERT_RAM_PC, freeMem, maxMem, pcMemLibre);
                 manqueMemoireDejaDetecte = true;
                 alerteManqueMemoireAffichee = true;
                 Platform.runLater(() -> {

@@ -379,7 +379,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
         semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 11));
         semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 12));
 
-        LOGGER.debug("Initialisé.");
+        LOGGER.info("Initialisé.");
     }
 
     @Override

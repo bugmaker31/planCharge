@@ -212,7 +212,7 @@ public class RessourcesHumainesController extends AbstractController {
 
         definirTouches();
 
-        LOGGER.debug("Initialisé.");
+        LOGGER.info("Initialisé.");
     }
 
     private void definirMenuContextuel() {

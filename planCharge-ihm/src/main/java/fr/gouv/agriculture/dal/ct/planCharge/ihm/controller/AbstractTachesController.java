@@ -300,7 +300,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         tachesTableContextMenu = new ContextMenu();
         getTachesTable().setContextMenu(tachesTableContextMenu);
 
-        LOGGER.debug("Initialisé.");
+        LOGGER.info("Initialisé.");
     }
 
     public abstract void definirMenuContextuel();

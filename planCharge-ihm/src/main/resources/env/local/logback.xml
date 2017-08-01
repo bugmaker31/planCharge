@@ -6,14 +6,14 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%date{HH:mm:ss.SSS} %-5level - %msg \(%file:%line\)%n%ex{full}</pattern>
+            <pattern>%date{HH:mm:ss} %-5level - %msg \(%file:%line\) &lt;%logger{20}&gt;%n%ex{full}</pattern>
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/${APP_NAME}.log</file>
         <append>false</append>
         <encoder>
-            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %-5level %logger{20}:%line - %msg%n%ex{full}</pattern>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss} %-5level &lt;%logger{20}&gt; \(%file:%line\) - %msg%n%ex{full}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
@@ -23,6 +23,9 @@
 
     <logger name="fr.gouv.agriculture.dal.ct.planCharge" level="DEBUG"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.dao" level="INFO"/>
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur" level="INFO"/>
+
+    <logger name="SYSTEM" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

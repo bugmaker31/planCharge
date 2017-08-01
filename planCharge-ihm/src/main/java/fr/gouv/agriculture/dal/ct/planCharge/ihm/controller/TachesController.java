@@ -94,7 +94,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
 
         // Rien de plus... pour l'instant.
 
-        LOGGER.debug("Initialisé.");
+        LOGGER.info("Initialisé.");
     }
 
     @Override
