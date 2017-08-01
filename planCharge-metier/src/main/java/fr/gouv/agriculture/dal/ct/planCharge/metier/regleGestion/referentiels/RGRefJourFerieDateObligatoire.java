@@ -5,12 +5,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
 
 import javax.validation.constraints.NotNull;
 
+// RG_Ref_JourFerie_DateObligatoire Date obligatoire https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-%3A-R%C3%A9f%C3%A9rentiels-%3A-Jours-f%C3%A9ri%C3%A9s#rg_ref_jourferie_dateobligatoire-date-obligatoire
 public final class RGRefJourFerieDateObligatoire extends RegleGestion<JourFerieDTO> {
 
     public static final RGRefJourFerieDateObligatoire INSTANCE = new RGRefJourFerieDateObligatoire();
 
     private RGRefJourFerieDateObligatoire() {
-        super("RG_Ref_JourFerie_DateObligatoire", "Date non définie", jourFerie -> "La date du jour férié est requise.");
+        super("RG_Ref_JourFerie_DateObligatoire", "Date obligatoire", jourFerie -> "La date du jour férié est requise.");
     }
 
     @Override

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
+// RG_Ref_JourFerie_UniciteJour Unicité du jour https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-:-R%C3%A9f%C3%A9rentiels-:-Jours-f%C3%A9ri%C3%A9s#rg_ref_jourferie_unicitejour-unicit%C3%A9-du-jour
 public final class RGRefJourFerieUniciteJour extends RegleGestion<JourFerieDTO> {
 
     public static final RGRefJourFerieUniciteJour INSTANCE = new RGRefJourFerieUniciteJour();
