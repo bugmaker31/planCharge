@@ -58,6 +58,8 @@ import java.util.Optional;
  */
 public class ApplicationController extends AbstractController {
 
+    public static int SEUIL_ALERT_RAM_PC = 30; // TODO FDA 2017/08 Permettre à l'utilisateur de paramétrer ce seuil (dans ses préférences).
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 
     private static ApplicationController instance = null;
@@ -68,7 +70,6 @@ public class ApplicationController extends AbstractController {
 
     private static ParametresIhm paramsIhm = ParametresIhm.instance();
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
-
 
     public enum NomModule {
         // Référentiels :
@@ -90,7 +91,13 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private ApplicationController.NomModule nomModuleCourant = null;
+    private NomModule nomModuleCourant = null;
+
+    @SuppressWarnings("BooleanVariableAlwaysNegated")
+    private boolean manqueMemoireDejaDetecte = false;
+    @SuppressWarnings("BooleanVariableAlwaysNegated")
+    private boolean alerteManqueMemoireAffichee = false;
+
 
     // Les menus :
 
@@ -314,15 +321,20 @@ public class ApplicationController extends AbstractController {
             double totalMem = Runtime.getRuntime().totalMemory();
             double freeMem = Runtime.getRuntime().freeMemory();
             double usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
-//            memoryGauge.getFormerValue();
-            if (((freeMem / maxMem) * 100) < 30) {
+            int pcMemLibre = new Double((freeMem / maxMem) * 100).intValue();
+            if ((pcMemLibre < 30) && !alerteManqueMemoireAffichee && !manqueMemoireDejaDetecte) {
+                LOGGER.warn("Alerte manque de mémoire (RAM) : reste moins de {}% ({} oct. libres sur {} oct., soit {}%). Augmenter la mémoire allouée à l'appli ('java ... -Xmx...'.)", SEUIL_ALERT_RAM_PC, freeMem, maxMem, pcMemLibre);
+                manqueMemoireDejaDetecte = true;
+                alerteManqueMemoireAffichee = true;
                 Platform.runLater(() -> {
                     ihm.afficherPopUp(
                             Alert.AlertType.WARNING,
-                            "A court de mémoire (RAM)",
-                            "On frôle le crash à cause d'un manque de mémoire. Pensez à sauvegarder dans un premier temps, puis à demander à augmenter la mémoire allouée à cette application.",
-                            400, 300
+                            "Manque de mémoire",
+                            "On frôle le crash à cause d'un manque de mémoire (plus quee " + pcMemLibre + "% de RAM libre)."
+                                    + "\nPensez à sauvegarder dans un premier temps, puis à demander à augmenter la mémoire allouée à cette application (java ... -Xmx...).",
+                            300, 200
                     );
+                    alerteManqueMemoireAffichee = false;
                 });
             }
         });
