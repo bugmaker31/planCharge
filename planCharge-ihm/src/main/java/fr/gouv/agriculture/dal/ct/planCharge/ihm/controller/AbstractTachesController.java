@@ -145,8 +145,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Rq : La colonne "N° de tâche" n'est pas éditable (car c'est la "primary key").
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn());
-        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn());
+        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getProjetsApplisBeans()));
+        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getStatutsBeans()));
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));

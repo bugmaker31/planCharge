@@ -197,9 +197,10 @@ public class RessourcesHumainesController extends AbstractController {
 
         // Bind the SortedList comparator to the TableView comparator.
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-        SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
-        sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
-        ressourcesHumainesTable.setItems(sortedBeans);
+//        SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
+//        sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
+//        ressourcesHumainesTable.setItems(sortedBeans);
+        ressourcesHumainesTable.setItems(ressourceHumainesBeans);
 
         TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).

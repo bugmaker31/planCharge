@@ -97,7 +97,7 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
 
     @Override
     public String toString() {
-        return ordre.get() + "-" + code.get();
+        return code.get();
     }
 
 }

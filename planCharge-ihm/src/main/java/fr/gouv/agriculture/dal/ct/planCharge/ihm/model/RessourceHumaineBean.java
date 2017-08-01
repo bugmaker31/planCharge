@@ -155,6 +155,7 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return new RessourceHumaineBean(dto.getCode(), dto.getNom(), dto.getPrenom(), dto.getSociete(), dto.getDebutMission(), dto.getFinMission());
     }
 
+    @SuppressWarnings("StaticMethodNamingConvention")
     @NotNull
     public static RessourceHumaineDTO to(@NotNull RessourceHumaineBean ressourceHumaineBean) {
         return ressourceHumaineBean.toDto();
@@ -191,7 +192,7 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return trigramme.get() + " : " + nom.get() + " " + prenom.get();
+        return trigramme.get();
     }
 
 }

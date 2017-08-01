@@ -22,23 +22,19 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
         super();
     }
 
-    public ProjetAppliBean(@NotNull ProjetAppliDTO projetAppliDTO) {
-        super();
+    private ProjetAppliBean(@NotNull ProjetAppliDTO projetAppliDTO) {
+        this();
         this.code.set(projetAppliDTO.getCode());
     }
 
-    public ProjetAppliBean(@Null String code) {
+    private ProjetAppliBean(@Null String code) {
+        this();
         this.code.set(code);
     }
 
     @NotNull
     public static ProjetAppliBean from(@NotNull ProjetAppliDTO projetAppliDTO) {
         return new ProjetAppliBean().fromDto(projetAppliDTO);
-    }
-
-    @NotNull
-    public static ProjetAppliDTO to(@NotNull ProjetAppliBean projetAppliBean) {
-        return projetAppliBean.toDto();
     }
 
     @Null
@@ -60,6 +56,12 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
     @NotNull
     public ProjetAppliDTO toDto() {
         return new ProjetAppliDTO(code.get());
+    }
+
+    @SuppressWarnings("StaticMethodNamingConvention")
+    @NotNull
+    public static ProjetAppliDTO to(@NotNull ProjetAppliBean projetAppliBean) {
+        return projetAppliBean.toDto();
     }
 
     @Override

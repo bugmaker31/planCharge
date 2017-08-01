@@ -25,7 +25,7 @@ public class ImportanceComparator implements Comparator<ImportanceBean> {
 
     @Override
     public int compare(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull ImportanceBean i1, @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull ImportanceBean i2) {
-        return i1.getCode().compareTo(i2.getCode());
+        return new Integer(i1.getOrdre()).compareTo(new Integer(i2.getOrdre()));
     }
 
 }

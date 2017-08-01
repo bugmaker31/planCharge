@@ -1086,7 +1086,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    void afficherModuleTaches() throws IhmException {
+    public void afficherModuleTaches() throws IhmException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
         if (nomModuleCourant == ApplicationController.NomModule.TACHES) {
