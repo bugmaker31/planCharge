@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
+// RG_Ref_RessHum_UniciteTrigramme Unicité du trigramme https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-:-R%C3%A9f%C3%A9rentiels-:-Ressources-humaines#rg_ref_resshum_unicitetrigramme-unicit%C3%A9-du-trigramme
 public final class RGRefRessHumUniciteTrigramme extends RegleGestion<RessourceHumaineDTO> {
 
     public static final RGRefRessHumUniciteTrigramme INSTANCE = new RGRefRessHumUniciteTrigramme();
