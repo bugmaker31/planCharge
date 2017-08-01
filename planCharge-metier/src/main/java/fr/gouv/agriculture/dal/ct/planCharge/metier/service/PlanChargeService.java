@@ -81,18 +81,24 @@ public class PlanChargeService extends AbstractService {
         }
     }
 
+    // RG_Gal_ControlerRegles Contrôler les règles https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-%3A-Globales#rg_gal_controlerregles-contr%C3%B4ler-les-r%C3%A8gles
+    public void controlerReglesGestion(@NotNull PlanChargeDTO planChargeDTO) throws MetierException, ViolationsReglesGestionException {
+        List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planChargeDTO);
+        if (!violationsRegles.isEmpty()) {
+            throw new ViolationsReglesGestionException("Règle(s) de gestion non respectée(s)", violationsRegles);
+        }
+    }
 
     public void sauver(@NotNull PlanChargeDTO planChargeDTO, @NotNull RapportSauvegarde rapport) throws ServiceException, ViolationsReglesGestionException {
         LocalDate dateEtat = planChargeDTO.getDateEtat();
         try {
 
-            List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planChargeDTO);
-            if (!violationsRegles.isEmpty()) {
-                throw new ViolationsReglesGestionException("Sauvegarde impossible", violationsRegles);
-            }
+            // RG_Gal_ControlerRegles Contrôler les règles https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-%3A-Globales#rg_gal_controlerregles-contr%C3%B4ler-les-r%C3%A8gles
+            rapport.setAvancement("Contrôle des règles de gestion...");
+            controlerReglesGestion(planChargeDTO);
 
+            rapport.setAvancement("Sauvegarde...");
             PlanCharge planCharge = planChargeDTO.toEntity();
-
             planChargeDao.sauver(planCharge, rapport);
 
         } catch (MetierException e) {
@@ -116,7 +122,7 @@ public class PlanChargeService extends AbstractService {
             // - ajout des tâches qui ont été créées depuis
             // - mise à jour des tâches qui existaient déjà avant
             for (Tache tacheImportee : tachesImportees) {
-                TacheDTO tacheImporteeDTO =  TacheDTO.from(tacheImportee);
+                TacheDTO tacheImporteeDTO = TacheDTO.from(tacheImportee);
 
                 assert planCharge.getPlanifications() != null;
                 if (!planCharge.getPlanifications().taches().contains(tacheImporteeDTO)) {
