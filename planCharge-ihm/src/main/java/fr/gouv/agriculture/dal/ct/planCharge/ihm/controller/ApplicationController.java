@@ -37,6 +37,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -171,6 +172,8 @@ public class ApplicationController extends AbstractController {
     private Gauge memoryGauge;
 
     private String memoryGaugeTooltipInitialText;
+
+    private int pcMemLibrePrecedent = -1;
 
 /*
     @FXML
@@ -328,14 +331,30 @@ public class ApplicationController extends AbstractController {
         };
         memoryGauge.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
 
+            long maxMem = Runtime.getRuntime().maxMemory();
+            long totalMem = Runtime.getRuntime().totalMemory();
+            long freeMem = Runtime.getRuntime().freeMemory() + (maxMem - totalMem);
+            long usedMem = maxMem - freeMem; // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+            int pcMemLibre = new Double(((freeMem * 100) / maxMem)).intValue();
+
+            if (pcMemLibrePrecedent == pcMemLibre) {
+                return;
+            }
+            pcMemLibrePrecedent = pcMemLibre;
+
+            LOGGER.debug("Mémoire : free={} ({}%), used={}, total={}, max={}", Strings.humanReadable(freeMem, ramFormat), pcMemLibre, Strings.humanReadable(usedMem, ramFormat), Strings.humanReadable(totalMem, ramFormat), Strings.humanReadable(maxMem, ramFormat));
+
+            memoryGauge.setBarColor(
+                    (pcMemLibre <= 30) ? Color.RED :
+                            ((pcMemLibre <= 40) ? Color.SALMON :
+                                    ((pcMemLibre <= 50) ? Color.ORANGE :
+                                            Color.GREEN))
+            );
+
             memoryGauge.getTooltip().setText(memoryGaugeTooltipInitialText
                     .replaceAll("\\$usedMem", Strings.humanReadable(newValue.longValue(), ramFormat))
             );
 
-            double maxMem = Runtime.getRuntime().maxMemory();
-            double freeMem = Runtime.getRuntime().freeMemory();
-            double usedMem = maxMem - freeMem; // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
-            int pcMemLibre = new Double((freeMem / maxMem) * 100).intValue();
             if ((pcMemLibre < SEUIL_ALERT_RAM_PC) && !alerteManqueMemoireAffichee && !manqueMemoireDejaDetecte) {
                 LOGGER.warn("Alerte manque de mémoire (RAM) : reste moins de {}% ({} oct. libres sur {} oct., soit {}%). Augmenter la mémoire allouée à l'appli ('java ... -Xmx...'.)", SEUIL_ALERT_RAM_PC, freeMem, maxMem, pcMemLibre);
                 manqueMemoireDejaDetecte = true;

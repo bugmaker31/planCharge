@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 
 /**
@@ -116,18 +118,20 @@ public class RessourcesHumainesController extends AbstractController {
         planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 //If items are removed
-                for (RessourceBean ressourceBean : change.getRemoved()) {
-                    if (ressourceBean instanceof RessourceHumaineBean) {
-                        if (ressourceHumainesBeans.contains(ressourceBean)) {
-                            ressourceHumainesBeans.remove(ressourceBean);
+                RessourceBean[] removedRessourceBeans = change.getRemoved().toArray(new RessourceBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
+                for (RessourceBean removedRessourceBean : removedRessourceBeans) {
+                    if (removedRessourceBean instanceof RessourceHumaineBean) {
+                        if (ressourceHumainesBeans.contains(removedRessourceBean)) {
+                            ressourceHumainesBeans.remove(removedRessourceBean);
                         }
                     }
                 }
                 //If items are added
-                for (RessourceBean ressourceBean : change.getAddedSubList()) {
-                    if (ressourceBean instanceof RessourceHumaineBean) {
-                        if (!ressourceHumainesBeans.contains(ressourceBean)) {
-                            ressourceHumainesBeans.add((RessourceHumaineBean) ressourceBean);
+                RessourceBean[] addedRessourceBeans = change.getAddedSubList().toArray(new RessourceBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
+                for (RessourceBean addedRessourceBean : addedRessourceBeans) {
+                    if (addedRessourceBean instanceof RessourceHumaineBean) {
+                        if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
+                            ressourceHumainesBeans.add((RessourceHumaineBean) addedRessourceBean);
                         }
                     }
                 }
@@ -135,18 +139,8 @@ public class RessourcesHumainesController extends AbstractController {
         });
         ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
-                //If items are removed
-                for (RessourceBean ressourceBean : change.getRemoved()) {
-                    if (planChargeBean.getRessourcesBeans().contains(ressourceBean)) {
-                        planChargeBean.getRessourcesBeans().remove(ressourceBean);
-                    }
-                }
-                //If items are added
-                for (RessourceBean ressourceBean : change.getAddedSubList()) {
-                    if (!planChargeBean.getRessourcesBeans().contains(ressourceBean)) {
-                        planChargeBean.getRessourcesBeans().add((RessourceHumaineBean) ressourceBean);
-                    }
-                }
+                planChargeBean.getRessourcesBeans().removeAll(change.getRemoved());
+                planChargeBean.getRessourcesBeans().addAll(change.getAddedSubList());
             }
         });
 

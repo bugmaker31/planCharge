@@ -693,7 +693,11 @@ public class PlanChargeIhm extends Application {
         alert.setResizable(true);
 
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertStage.getIcons().addAll(primaryStage.getIcons());
+        if (primaryStage == null) {
+            LOGGER.warn("Impossible de reprendre les icônes de l'application, application non entièrement initialisée (en cours de démarrage ?).");
+        } else {
+            alertStage.getIcons().addAll(primaryStage.getIcons());
+        }
 
         return alert.showAndWait();
     }
