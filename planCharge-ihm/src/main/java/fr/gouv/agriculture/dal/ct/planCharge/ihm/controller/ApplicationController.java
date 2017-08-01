@@ -322,7 +322,7 @@ public class ApplicationController extends AbstractController {
             double freeMem = Runtime.getRuntime().freeMemory();
             double usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
             int pcMemLibre = new Double((freeMem / maxMem) * 100).intValue();
-            if ((pcMemLibre < 30) && !alerteManqueMemoireAffichee && !manqueMemoireDejaDetecte) {
+            if ((pcMemLibre < SEUIL_ALERT_RAM_PC) && !alerteManqueMemoireAffichee && !manqueMemoireDejaDetecte) {
                 LOGGER.warn("Alerte manque de mémoire (RAM) : reste moins de {}% ({} oct. libres sur {} oct., soit {}%). Augmenter la mémoire allouée à l'appli ('java ... -Xmx...'.)", SEUIL_ALERT_RAM_PC, freeMem, maxMem, pcMemLibre);
                 manqueMemoireDejaDetecte = true;
                 alerteManqueMemoireAffichee = true;
