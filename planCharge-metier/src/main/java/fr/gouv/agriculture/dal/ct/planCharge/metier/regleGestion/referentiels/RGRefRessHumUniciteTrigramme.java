@@ -18,7 +18,7 @@ public final class RGRefRessHumUniciteTrigramme extends RegleGestion<RessourceHu
 
     @Override
     public boolean estApplicable(@NotNull RessourceHumaineDTO ressHum) {
-        return ressHum.getTrigramme() != null; // Applicable seulement si on connaît la date.
+        return ressHum.getTrigramme() != null; // Applicable seulement si on connaît le trigramme.
     }
 
     @Override
@@ -29,7 +29,7 @@ public final class RGRefRessHumUniciteTrigramme extends RegleGestion<RessourceHu
         return ressourcesHumaines.parallelStream()
                 .filter(rh -> {
                     assert rh.getTrigramme() != null; // TODO FDA 2017/07 Citer la RG qui n'est pas respectée.
-                    return rh.getTrigramme().equals(rh.getTrigramme());
+                    return rh.getTrigramme().equals(ressHum.getTrigramme());
                 })
                 .count() <= 1;
     }

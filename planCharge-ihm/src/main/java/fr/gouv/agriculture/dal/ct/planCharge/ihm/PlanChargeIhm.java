@@ -485,6 +485,20 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
+    @SuppressWarnings("WeakerAccess")
+    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        Platform.runLater(() -> {
+            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
+            Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
+            try {
+                afficherPopUpErreurSaisie(field, titre, message);
+            } catch (IhmException e) {
+                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+            }
+        });
+    }
+
     private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
         PopupWindow popup = createFieldPopup(field, titre, message);
         field.setOnMouseEntered(event -> ((PopOver) popup).show(field));
@@ -492,9 +506,10 @@ public class PlanChargeIhm extends Application {
         ((PopOver) popup).show(field);
     }
 
-    private static void masquerErreurSaisie(@NotNull Control field) throws IhmException {
+    @SuppressWarnings("WeakerAccess")
+    public static void masquerErreurSaisie(@NotNull Control field) throws IhmException {
         if (!popups.containsKey(idVBoxErreurSaisie(field))) {
-            LOGGER.debug("Pas d'erreur de saisie affichée actuellement pour le champ " + field.getId() + ", rien à masquer donc.");
+            LOGGER.debug("Pas d'erreur de saisie affichée actuellement pour le champ {}, rien à masquer donc.", field.getId());
             return;
         }
         Decorator.removeAllDecorations(field);
@@ -514,19 +529,6 @@ public class PlanChargeIhm extends Application {
         popup.hide();
     }
 
-    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
-        Platform.runLater(() -> {
-            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
-            Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
-            try {
-                afficherPopUpErreurSaisie(field, titre, message);
-            } catch (IhmException e) {
-                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
-            }
-        });
-    }
-
     public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
 //        Platform.runLater(() -> {
         for (ViolationRegleGestion violation : violations) {
@@ -534,7 +536,7 @@ public class PlanChargeIhm extends Application {
                     .title(titre)
                     .text(
                             violation.getRegle().getLibelle() + " (" + violation.getRegle().getCode() + ")"
-                                    + "\n" + (String) violation.getRegle().getFormateurMessage().apply(violation.getEntity())
+                                    + "\n" + violation.getRegle().getFormateurMessage().apply(violation.getEntity())
                     )
                     .hideAfter(Duration.INDEFINITE)
                     .showError();
@@ -589,7 +591,7 @@ public class PlanChargeIhm extends Application {
 
     @NotNull
     public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws IhmException, ViolationsReglesGestionException {
-        final ProgressDialog progressDialog = new ProgressDialog(task);
+        ProgressDialog progressDialog = new ProgressDialog(task);
         progressDialog.setTitle(titre);
         progressDialog.setHeaderText(titre);
 //        task.messageProperty().addListener((observable, oldValue, newValue) -> progressDialog.setContentText(newValue)); Redondant, car le ProgressDialog doit déjà le faire (ou un autre compsant JavaFX)
