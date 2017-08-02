@@ -5,7 +5,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ImportanceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProjetAppliDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableIntegerValue;
+import javafx.beans.value.WritableObjectValue;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -15,7 +18,8 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
+public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean> {
+
 
     @NotNull
     private IntegerProperty ordre = new SimpleIntegerProperty();
@@ -24,20 +28,19 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
     private StringProperty code = new SimpleStringProperty();
 
 
-    public ImportanceBean() {
+    private ImportanceBean() {
         super();
     }
 
-    public ImportanceBean(@Null Integer ordre, @Null String code) {
+    private ImportanceBean(@Null Integer ordre, @Null String code) {
         this();
         this.ordre.set(ordre);
         this.code.set(code);
     }
 
-
-    @NotNull
-    public int getOrdre() {
-        return ordre.get();
+    @SuppressWarnings("StaticMethodNamingConvention")
+    public static ImportanceDTO to(@NotNull ImportanceBean importanceBean) {
+        return importanceBean.toDto();
     }
 
     @NotNull
@@ -45,9 +48,9 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
         return ordre;
     }
 
-    @NotNull
-    public String getCode() {
-        return code.get();
+    @Null
+    public Integer getOrdre() {
+        return ordre.get();
     }
 
     @NotNull
@@ -72,15 +75,15 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
         return new ImportanceDTO(ordre.get(), code.get());
     }
 
-    public static ImportanceDTO to(@NotNull ImportanceBean importanceBean) {
-        return importanceBean.toDto();
+    @Null
+    public String getCode() {
+        return code.get();
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
 
         ImportanceBean that = (ImportanceBean) o;
 
@@ -91,13 +94,18 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean>{
     @Override
     public int hashCode() {
         int result = new Integer(getOrdre()).hashCode();
-        result = 31 * result + getCode().hashCode();
+        result = (31 * result) + getCode().hashCode();
         return result;
     }
 
+
+    // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return code.get();
+        //noinspection HardcodedFileSeparator
+        return Objects.value(ordre, IntegerProperty::get, "N/C")
+                + "-"
+                + Objects.value(code, StringProperty::get, "N/C");
     }
 
 }
