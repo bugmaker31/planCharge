@@ -13,7 +13,7 @@
             </TableColumn>
         </columns>
     </TableColumn>
-    <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0"
+    <TableColumn fx:id="noTacheColumn" editable="false" styleClass="nonModifiable" prefWidth="55.0"
                  text="N° tâche"/>
     <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
     <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description"/>

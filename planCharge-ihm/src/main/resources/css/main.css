@@ -4,7 +4,7 @@ Généralités :
 */
 
 /*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
-.non-modifiable {
+.nonModifiable {
     -fx-font-style: italic;
 }
 
@@ -85,6 +85,17 @@ Validation de la saisie depuis l'IHM :
 Tâches :
 */
 
+.description-column : {
+}
+.description-column .label : {
+    -fx-alignment: baseline-left;
+}
+.projetAppli-column : {
+}
+.projetAppli-column .label : {
+    -fx-alignment: baseline-center;
+}
+
 .importanceAvecEngagement {
     -fx-background-color: #bc5a45;
     -fx-text-fill: white;
@@ -134,10 +145,6 @@ Plan de charge :
 }
 
 
-.charge-cell : {
-    -fx-alignment: baseline-center;
-}
-
 .avantPeriodeDemandee {
     /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
     -fx-background-color: #DCDCDC;
@@ -165,8 +172,17 @@ Plan de charge :
     /*-fx-opacity: 50%;*/
 }
 
-.periodeChargee {
+.periodeChargee-column {
     -fx-font-size: 80%;
     -fx-alignment: baseline-center;
-    -fx-wrap-text: true; /*TODO FDA 2017/05 A revoir, sans effet.*/
+}
+.periodeChargee-column .label {
+    -fx-wrap-text: true;
+    -fx-alignment: baseline-center;
+}
+
+.chargePlanifiee-column {
+}
+.chargePlanifiee-column .label {
+    -fx-wrap-text: true;
 }

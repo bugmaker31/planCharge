@@ -21,6 +21,7 @@
                 <panes>
                     <TitledPane animated="false" text="Filtres">
                         <HBox>
+<!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
                             <HBox>
                                 <Label text="Filtre global : "/>
                                 <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
@@ -30,6 +31,7 @@
                                     </tooltip>
                                 </TextField>
                             </HBox>
+-->
                             <SegmentedButton>
                                 <buttons>
                                     <fx:define>
@@ -59,10 +61,7 @@
         </VBox>
     </top>
     <center>
-        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
-                   BorderPane.alignment="CENTER"
-                   styleClass="charge-cell"
-        >
+        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true">
             <!--contextMenu="tachesTableContextMenu">-->
             <columns>
                 <TableColumn text="Tâche">
@@ -80,10 +79,10 @@
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="55"
-                                     editable="false" styleClass="non-modifiable"/>
+                                     editable="false" styleClass="nonModifiable"/>
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                         <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionFieldPrefWidth"
-                                     text="Description"/>
+                                     text="Description" style="descriptionColumn"/>
                         <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"/>
                         <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                         <TableColumn text="Période souhaitée">
@@ -100,31 +99,22 @@
                 </TableColumn>
                 <TableColumn text="Planification">
                     <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11" styleClass="periodeChargee"/>
-                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12" styleClass="periodeChargee"/>
+                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12" styleClass="periodeChargee-column"/>
 
                         <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                         <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
-                                     editable="false" styleClass="non-modifiable" style="-fx-wrap-text: true"/>
-                        <!--
-                            Le libellé de l'entête de la colonne revient bien à la ligne, mais maintenant le libellé de la colonne n'apparâit plus dans le bouton "+"
-                            qui sert à l'utilisateur pour afficher/masquer des colonnes.
-                            <TableColumn fx:id="chargePlanifieeColumn" editable="false" prefWidth="50.0">
-                                <graphic>
-                                    <Label text="Charge planifiée" wrapText="true" />
-                                </graphic>
-                            </TableColumn>
-                        -->
+                                     editable="false" styleClass="non-modifiable chargePlanifiee-column"/>
                     </columns>
                 </TableColumn>
             </columns>
@@ -134,7 +124,7 @@
                 <fx:reference source="sousCategorieColumn"/>
                 <fx:reference source="projetAppliColumn"/>
                 <fx:reference source="echeanceColumn"/>
-                <fx:reference source="descriptionColumn"/>
+                <fx:reference source="noTicketIdalColumn"/>
             </sortOrder>
         </TableView>
     </center>

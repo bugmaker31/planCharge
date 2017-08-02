@@ -327,6 +327,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
     public boolean matcheNoTache(@NotNull String otherValue) {
         if ((getId() + "").contains(otherValue)) {
             return true; // matches
@@ -460,6 +461,8 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         }
         return false; // does not match.
     }
+*/
+
 
     public TacheDTO extract() throws BeanException {
         TacheDTO tache;

@@ -11,8 +11,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -98,9 +100,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     private TableColumn<TB, ProfilBean> profilColumn;
 
     // Les filtres :
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
     @FXML
     @NotNull
     protected TextField filtreGlobalField;
+*/
+
 
     @NotNull
     abstract ObservableList<TB> getTachesBeans();
@@ -158,22 +163,21 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
         importanceColumn.setComparator(ImportanceComparator.COMPARATEUR);
 
-/*
-        getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
-            LOGGER.debug("Changement pour la liste des tâches => màj des combobox des filtres...");
-            populerFiltres();
-        });
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //
+        SortedList<TB> sortedPlanifBeans = new SortedList<>(getTachesBeans());
+        sortedPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
+        getTachesTable().setItems(sortedPlanifBeans);
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
+        FilteredList<TB> filteredTachesBeans = enregistrerListenersSurFiltres(getTachesBeans());
 */
-
 /*
         getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
             LOGGER.debug("Changement pour la liste des tâches => filtrage des lignes de la table...");
 
             // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-            // 1. Wrap the ObservableList in a FilteredList
-            FilteredList<TB> filteredTaches = new FilteredList<>(getTachesBeans());
-            // 2. Set the filter Predicate whenever the filter changes.
-            enregistrerListenersSurFiltres(filteredTaches);
+            // 1. Wrap the ObservableList in a FilteredList, and 2. Set the filter Predicate whenever the filter changes.
+            FilteredList<TB> filteredTaches = enregistrerListenersSurFiltres(getTachesBeans());
             // 3. Wrap the FilteredList in a SortedList.
             SortedList<TB> sortedPlanifBeans = new SortedList<>(filteredTaches);
             // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
@@ -182,13 +186,16 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesTable().setItems(sortedPlanifBeans);
         });
 */
-        getTachesTable().setItems(getTachesBeans());
 
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        //
         Builder<TB> filter = TableFilter.forTableView(getTachesTable());
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filter.apply();
         getIhm().symboliserColonnesFiltrables(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
 
+        // Gestion des undo/redo :
+        //
         abstract class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
             @Override
             public void handle(TableColumn.CellEditEvent<TB, T> event) {
@@ -237,7 +244,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         });
         /*
-        TODO FDA 2017/07 Tester le undo/redo/repeat de la modif du n° de ticket IDAL, puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
+        TODO FDA 2017/07 D'abord bien tester le undo/redo/repeat de la modif du n° de ticket IDAL (ci-dessus), puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
         descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
@@ -296,6 +303,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         */
 
+        // Définition du menu contextuel :
+        //
         // Cf. http://o7planning.org/en/11115/javafx-contextmenu-tutorial
         tachesTableContextMenu = new ContextMenu();
         getTachesTable().setContextMenu(tachesTableContextMenu);
@@ -342,20 +351,26 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     void razFiltres() {
         LOGGER.debug("RAZ des filtres...");
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
         filtreGlobalField.clear();
+*/
     }
 
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
+    @NotNull
     @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
-    private void enregistrerListenersSurFiltres(FilteredList<TB> filteredTaches) {
+    private FilteredList<TB> enregistrerListenersSurFiltres(@NotNull ObservableList<TB> tachesBeans) {
         LOGGER.debug("enregistrerListenersSurFiltres...");
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
+        FilteredList<TB> filteredTachesBeans = new FilteredList<>(getTachesBeans());
+
         //noinspection OverlyLongLambda
         filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.debug("Changement pour le filtre 'filtreGlobal'...");
+            LOGGER.debug("Changement pour le filtre 'filtreGlobal' : {}...", newValue);
             //noinspection OverlyLongLambda
-            filteredTaches.setPredicate(tache -> {
+            filteredTachesBeans.setPredicate(tache -> {
                 // If filter text is empty, display all data.
                 if ((newValue == null) || newValue.isEmpty()) {
                     return true;
@@ -402,7 +417,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return false; // Does not match.
             });
         });
+        return filteredTachesBeans;
     }
+*/
 
     @Null
     TB tacheSelectionnee() {

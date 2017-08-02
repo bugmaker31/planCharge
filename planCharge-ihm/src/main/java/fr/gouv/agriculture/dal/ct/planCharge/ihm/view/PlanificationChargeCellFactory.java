@@ -17,6 +17,7 @@ import java.time.LocalDate;
  *
  * @author frederic.danna
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class PlanificationChargeCellFactory extends TextFieldTableCell<PlanificationBean, Double> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCellFactory.class);
@@ -26,7 +27,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
     private final int noPeriode;
 
 
-    public PlanificationChargeCellFactory(@NotNull PlanChargeBean planChargeBean, @NotNull int noPeriode) {
+    public PlanificationChargeCellFactory(@NotNull PlanChargeBean planChargeBean, int noPeriode) {
         super();
         this.planChargeBean = planChargeBean;
         this.noPeriode = noPeriode;

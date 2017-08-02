@@ -13,10 +13,12 @@
             <panes>
                 <TitledPane animated="false" text="Filtres">
                     <HBox>
+<!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
                         <HBox>
                             <Label text="Filtre global : "/>
                             <TextField fx:id="filtreGlobalField" prefWidth="200.0"/>
                         </HBox>
+-->
                         <SegmentedButton>
                             <buttons>
                                 <fx:define>
@@ -50,9 +52,7 @@
         </Accordion>
     </top>
     <center>
-        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER"
-                   styleClass="charge-cell"
-        >
+        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true">
             <!--contextMenu="tachesTableContextMenu"-->
             <columns>
 
@@ -66,13 +66,13 @@
                 </TableColumn>
                 <TableColumn text="identifiants">
                     <columns>
-                        <TableColumn fx:id="noTacheColumn" editable="false" styleClass="non-modifiable" prefWidth="55.0"
+                        <TableColumn fx:id="noTacheColumn" editable="false" styleClass="nonModifiable" prefWidth="55.0"
                                      text="N°"/>
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description"/>
-                <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"/>
+                <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description" styleClass="description-column"/>
+                <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli" styleClass="projetAppli-column"/>
                 <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                 <TableColumn text="Période souhaitée">
                     <columns>
@@ -82,7 +82,7 @@
                 </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
                 <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"/>
-                <TableColumn text="Ressource">
+                <TableColumn text="Ressource" >
                     <columns>
                         <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>
                         <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
@@ -95,7 +95,7 @@
                 <fx:reference source="sousCategorieColumn"/>
                 <fx:reference source="projetAppliColumn"/>
                 <fx:reference source="echeanceColumn"/>
-                <fx:reference source="descriptionColumn"/>
+                <fx:reference source="noTacheColumn"/>
             </sortOrder>
         </TableView>
     </center>

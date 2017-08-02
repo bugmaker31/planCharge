@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ImportanceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,8 +19,6 @@ import java.time.LocalDate;
  */
 public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, RessourceHumaineDTO> implements Comparable<RessourceHumaineBean> {
 
-    @NotNull
-    private StringProperty trigramme = new SimpleStringProperty();
     @NotNull
     private StringProperty nom = new SimpleStringProperty();
     @NotNull
@@ -37,8 +36,7 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     }
 
     private RessourceHumaineBean(@Null String trigramme) {
-        super();
-        this.trigramme.set(trigramme);
+        super(trigramme);
     }
 
     private RessourceHumaineBean(@Null String trigramme, @Null String nom, @Null String prenom, @Null String societe, @Null LocalDate debutMission, @Null LocalDate finMission) {
@@ -53,12 +51,11 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
 
     @Null
     public String getTrigramme() {
-        return trigramme.get();
+        return getCode();
     }
 
-    @NotNull
-    public StringProperty trigrammeProperty() {
-        return trigramme;
+    public void setTrigramme(@Null String trigramme) {
+        this.codeProperty().set(trigramme);
     }
 
     @Null
@@ -111,9 +108,9 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return finMission;
     }
 
-
-    public void setTrigramme(@Null String trigramme) {
-        this.trigramme.set(trigramme);
+    @NotNull
+    public StringProperty trigrammeProperty() {
+        return codeProperty();
     }
 
     public void setNom(@Null String nom) {
@@ -136,12 +133,11 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         this.finMission.set(finMission);
     }
 
-
     @NotNull
     @Override
     public RessourceHumaineDTO toDto() {
         return new RessourceHumaineDTO(
-                Strings.epure(trigramme.get()),
+                Strings.epure(codeProperty().get()),
                 Strings.epure(nom.get()),
                 Strings.epure(prenom.get()),
                 Strings.epure(societe.get()),
@@ -192,7 +188,9 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return trigramme.get();
+        return Objects.value(this,  RessourceHumaineBean::getTrigramme, "N/C")
+                + " " + Objects.value(this,  RessourceHumaineBean::getNom, "N/C")
+                + " " + Objects.value(this,  RessourceHumaineBean::getPrenom, "N/C");
     }
 
 }
