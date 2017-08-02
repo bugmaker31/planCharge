@@ -90,11 +90,17 @@ Tâches :
 .description-column .label : {
     -fx-alignment: baseline-left;
 }
+
 .projetAppli-column : {
 }
 .projetAppli-column .label : {
     -fx-alignment: baseline-center;
 }
+
+.charge-column {
+    -fx-alignment: baseline-right;
+}
+
 
 .importanceAvecEngagement {
     -fx-background-color: #bc5a45;
