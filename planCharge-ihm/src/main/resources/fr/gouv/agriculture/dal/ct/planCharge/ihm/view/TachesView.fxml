@@ -81,7 +81,7 @@
                     </columns>
                 </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
-                <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge"  styleClass="charge-column"/>
+                <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge" styleClass="charge-column"/>
                 <TableColumn text="Ressource" >
                     <columns>
                         <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>

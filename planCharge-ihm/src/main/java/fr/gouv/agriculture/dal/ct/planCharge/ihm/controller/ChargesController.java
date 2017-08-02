@@ -284,7 +284,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
                 super.updateItem(charge, empty);
 
                 setText("");
-                getStyleClass().clear();
+                getStyleClass().removeAll("chargeNonPlanifiee", "incoherence");
 
                 if ((charge == null) || empty) {
                     setStyle(null);
@@ -313,7 +313,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
                 super.updateItem(chargePlanifiee, empty);
 
                 setText("");
-                getStyleClass().clear();
+                getStyleClass().removeAll("incoherence");
 
                 if ((chargePlanifiee == null) || empty) {
                     setStyle(null);
