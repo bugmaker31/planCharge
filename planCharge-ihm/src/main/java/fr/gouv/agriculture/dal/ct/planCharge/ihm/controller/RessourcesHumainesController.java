@@ -8,9 +8,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.RessourceHumaineBean;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +27,8 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 /**
@@ -108,13 +112,10 @@ public class RessourcesHumainesController extends AbstractController {
     protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 
-        // Cf. https://stackoverflow.com/questions/24782280/bind-over-the-observablelist-in-javafx
-        ressourceHumainesBeans.setAll(
-                planChargeBean.getRessourcesBeans().stream()
-                        .filter(ressourceBean -> ressourceBean instanceof RessourceHumaineBean)
-                        .map(ressourceBean -> (RessourceHumaineBean) ressourceBean)
-                        .collect(Collectors.toList())
-        );
+/*
+        FilteredList<RessourceHumaineBean> rsrcHumainesBeans = (FilteredList<RessourceHumaineBean>) planChargeBean.getRessourcesBeans().filtered(rsrcBean -> rsrcBean instanceof RessourceHumaineBean);
+        Bindings.bindContentBidirectional(ressourceHumainesBeans, rsrcHumainesBeans);
+*/
         planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 //If items are removed
@@ -139,8 +140,20 @@ public class RessourcesHumainesController extends AbstractController {
         });
         ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
-                planChargeBean.getRessourcesBeans().removeAll(change.getRemoved());
-                planChargeBean.getRessourcesBeans().addAll(change.getAddedSubList());
+                //If items are removed
+                RessourceHumaineBean[] removedRessourceBeans = change.getRemoved().toArray(new RessourceHumaineBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
+                for (RessourceHumaineBean removedRessourceBean : removedRessourceBeans) {
+                    if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
+                        planChargeBean.getRessourcesBeans().remove(removedRessourceBean);
+                    }
+                }
+                //If items are added
+                RessourceHumaineBean[] addedRessourceBeans = change.getAddedSubList().toArray(new RessourceHumaineBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
+                for (RessourceHumaineBean addedRessourceBean : addedRessourceBeans) {
+                    if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
+                        planChargeBean.getRessourcesBeans().add(addedRessourceBean);
+                    }
+                }
             }
         });
 
