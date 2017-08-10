@@ -21,17 +21,70 @@
                 <panes>
                     <TitledPane animated="false" text="Filtres">
                         <HBox>
-<!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
-                            <HBox>
-                                <Label text="Filtre global : "/>
-                                <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
-                                    <tooltip>
-                                        <Tooltip
-                                                text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
-                                    </tooltip>
-                                </TextField>
-                            </HBox>
--->
+                            <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
+                                                        <HBox>
+                                                            <Label text="Filtre global : "/>
+                                                            <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
+                                                                <tooltip>
+                                                                    <Tooltip
+                                                                            text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+                                                                </tooltip>
+                                                            </TextField>
+                                                        </HBox>
+                            -->
+                            <SegmentedButton>
+                                <buttons>
+                                    <fx:define>
+                                        <ToggleGroup fx:id="filtreSelonCategorisationToggleGroup"/>
+                                    </fx:define>
+                                    <!--TODO FDA 2017/08 Coder l'action.-->
+                                    <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
+                                                  toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                    <!--TODO FDA 2017/08 Coder l'action.-->
+                                    <ToggleButton text="Tâches projet" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                    <!--TODO FDA 2017/08 Coder l'action.-->
+                                    <ToggleButton text="Tâches service" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                    <ToggleButton text="Tâches internes" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                </buttons>
+                            </SegmentedButton>
+                            <SegmentedButton>
+                                <buttons>
+                                    <fx:define>
+                                        <ToggleGroup fx:id="filtreSelonStatutDiffToggleGroup"/>
+                                    </fx:define>
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
+                                                  toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Nouvelles" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Fermées" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonStatutDiffToggleGroup"
+                                    />
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Priorisées" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonStatutDiffToggleGroup"
+                                    />
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
+                                    <ToggleButton text="Reportées" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonStatutDiffToggleGroup"
+                                    />
+                                </buttons>
+                            </SegmentedButton>
+                            <SegmentedButton>
+                                <buttons>
+                                    <fx:define>
+                                        <ToggleGroup fx:id="filtreSelonChargeToggleGroup"/>
+                                    </fx:define>
+                                    <!--TODO FDA 2017/08 Coder l'action.-->
+                                    <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
+                                                  toggleGroup="$filtreSelonChargeToggleGroup"/>
+                                </buttons>
+                            </SegmentedButton>
                             <SegmentedButton>
                                 <buttons>
                                     <fx:define>
@@ -40,6 +93,11 @@
                                     <!--TODO FDA 2017/07 Coder l'action.-->
                                     <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
                                                   toggleGroup="$filtreSelonPlanificationToggleGroup"/>
+                                    <!--TODO FDA 2017/08 Coder l'action.-->
+                                    <ToggleButton text="Pas planifiée entièrement" mnemonicParsing="false"
+                                                  toggleGroup="$filtreSelonChargeToggleGroup"
+                                    />
+                                    <!--TODO FDA 2017/07 Coder l'action.-->
                                     <ToggleButton text="Planifiées dans le mois" mnemonicParsing="false"
                                                   toggleGroup="$filtreSelonPlanificationToggleGroup"
                                                   onAction="#filtrerTachesNonPlanifieesDansLeMois"
@@ -83,7 +141,8 @@
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                         <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionFieldPrefWidth"
                                      text="Description" style="descriptionColumn" styleClass="description-column"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli" styleClass="projetAppli-column"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"
+                                     styleClass="projetAppli-column"/>
                         <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
@@ -99,18 +158,30 @@
                 </TableColumn>
                 <TableColumn text="Planification">
                     <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11" styleClass="periodeChargee-column"/>
-                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12" styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"
+                                     styleClass="periodeChargee-column"/>
+                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"
+                                     styleClass="periodeChargee-column"/>
 
                         <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                         <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"

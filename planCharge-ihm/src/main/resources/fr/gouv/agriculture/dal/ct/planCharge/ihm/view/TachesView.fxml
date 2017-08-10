@@ -22,10 +22,31 @@
                         <SegmentedButton>
                             <buttons>
                                 <fx:define>
+                                    <ToggleGroup fx:id="filtreSelonCategorisationToggleGroup"/>
+                                </fx:define>
+                                <!--TODO FDA 2017/08 Coder l'action.-->
+                                <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
+                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                <!--TODO FDA 2017/08 Coder l'action.-->
+                                <ToggleButton text="Tâches projet" mnemonicParsing="false"
+                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                <!--TODO FDA 2017/08 Coder l'action.-->
+                                <ToggleButton text="Tâches service" mnemonicParsing="false"
+                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                <ToggleButton text="Tâches internes" mnemonicParsing="false"
+                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                            </buttons>
+                        </SegmentedButton>
+                        <SegmentedButton>
+                            <buttons>
+                                <fx:define>
                                     <ToggleGroup fx:id="filtreSelonStatutDiffToggleGroup"/>
                                 </fx:define>
+                                <!--TODO FDA 2017/08 Coder l'action.-->
+                                <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
+                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
-                                <ToggleButton text="Nouvelles" mnemonicParsing="false" selected="true"
+                                <ToggleButton text="Nouvelles" mnemonicParsing="false"
                                               toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
                                 <ToggleButton text="Fermées" mnemonicParsing="false"
