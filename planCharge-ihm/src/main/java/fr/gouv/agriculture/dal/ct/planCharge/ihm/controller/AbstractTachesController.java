@@ -176,7 +176,23 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getRessourcesBeans()));
+        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+                new StringConverter<RessourceBean>() {
+                    @Null
+                    @Override
+                    public String toString(RessourceBean ressourceBean) {
+                        return ressourceBean.getCode();
+                    }
+
+                    @Override
+                    public RessourceBean fromString(String trigramme) {
+                        return planChargeBean.getRessourcesBeans().parallelStream()
+                                .filter(ressourceBean -> ressourceBean.getCode().equals(trigramme))
+                                .collect(Collectors.toList())
+                                .get(0);
+                    }
+                },
+                planChargeBean.getRessourcesBeans()));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getProfilsBeans()));
 
         // Paramétrage des ordres de tri :

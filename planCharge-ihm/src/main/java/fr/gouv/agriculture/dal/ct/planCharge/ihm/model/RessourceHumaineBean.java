@@ -1,7 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
-import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ImportanceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
@@ -188,6 +186,7 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
+        //noinspection HardcodedFileSeparator
         return Objects.value(this,  RessourceHumaineBean::getTrigramme, "N/C")
                 + " " + Objects.value(this,  RessourceHumaineBean::getNom, "N/C")
                 + " " + Objects.value(this,  RessourceHumaineBean::getPrenom, "N/C");
