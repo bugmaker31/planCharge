@@ -2,10 +2,12 @@ language: java
 jdk:
   - oraclejdk8
 
-sudo: required
+sudo: false
 
+addons:
+  apt:
+    packages:
+    - libreoffice
+    
 before_install:
-  - sudo add-apt-repository ppa:libreoffice/ppa -y
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libreoffice
   - chmod +x mvnw
