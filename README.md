@@ -7,3 +7,5 @@ Le projet est géré sous [GitHub](https://github.com/bugmaker31/planCharge) :
 - Documentation :
     - [wiki GitHub](https://github.com/bugmaker31/planCharge/wiki)
     - [fichier "INSTALL.md"](https://github.com/bugmaker31/planCharge/blob/master/INSTALL.md) : procédure d'installation (initiale + migration).
+
+Statut de l'intégration continue : [![Build Status](https://travis-ci.org/bugmaker31/planCharge.svg?branch=master)](https://travis-ci.org/bugmaker31/planCharge)
