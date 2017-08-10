@@ -1,1 +1,1 @@
-mvn -P env_dev.hors_maaf, env_exec.local, os_exec.unix $*
+mvn --errors -P env_dev.hors_maaf, env_exec.local, os_exec.unix $*
