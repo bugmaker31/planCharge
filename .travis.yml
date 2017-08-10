@@ -6,3 +6,8 @@ sudo: false
 
 before_install:
  - chmod +x mvnw
+
+addons:
+  apt:
+    packages:
+    - libreoffice
