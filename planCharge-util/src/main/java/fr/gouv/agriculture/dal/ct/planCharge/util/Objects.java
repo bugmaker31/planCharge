@@ -6,8 +6,13 @@ import java.util.function.Function;
 
 public class Objects {
 
-    @Null
-    public static <T, R> R value(@Null T object, @NotNull Function<T, R> fct, @Null R defaultValue) {
+    @NotNull
+    public static <T, R> R value(@Null R value, @NotNull R defaultValue) {
+        return ((value == null) ? defaultValue : value);
+    }
+
+    @NotNull
+    public static <T, R> R value(@Null T object, @NotNull Function<T, R> fct, @NotNull R defaultValue) {
         return ((object == null) ? defaultValue : fct.apply(object));
     }
 

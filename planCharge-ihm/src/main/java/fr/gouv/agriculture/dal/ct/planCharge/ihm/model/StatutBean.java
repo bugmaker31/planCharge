@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -90,7 +91,9 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return ((code.get() == null) ? "N/C" : code.get());
+        //noinspection HardcodedFileSeparator
+        return "Statut"
+                + " " + Objects.value(getCode(), "N/C");
     }
 
 }

@@ -103,9 +103,9 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean> 
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
-        return Objects.value(ordre, IntegerProperty::get, "N/C")
-                + "-"
-                + Objects.value(code, StringProperty::get, "N/C");
+        return "Importance"
+                + " " + Objects.value(ordre.get(), "N/C")
+                + "-" + Objects.value(code.get(), "N/C");
     }
 
 }

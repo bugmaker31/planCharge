@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProjetAppliDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -94,7 +95,8 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
-        return ((code.get() == null) ? "N/C" : code.get()); //NON-NLS
+        return "Projet/Appli"
+                + " " + Objects.value(code.get(), "N/C");
     }
 
 }

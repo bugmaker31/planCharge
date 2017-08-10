@@ -529,9 +529,11 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @Override
     @NotNull
     public String toString() {
-        return /*(codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
+        return "Tâche"
+                /*(codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
                 + " "
-                +*/ ("[" + (projetAppli.isNull().get() ? "N/A" : projetAppli.get()) + "]")
+                +*/
+                + " " + ("[" + (projetAppli.isNull().get() ? "N/A" : projetAppli.get()) + "]")
                 + " "
                 + noTache()
                 + " "

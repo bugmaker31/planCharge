@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -116,8 +117,9 @@ public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> imp
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return (date.get() == null ? "N/C" : date.get().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                + (" " + (description.get() == null ? "N/C" : description.get()));
+        return "Jour férié"
+                + " " + Objects.value(date, dateProperty -> dateProperty.get().format(DateTimeFormatter.ISO_LOCAL_DATE), "N/C")
+                + " " + Objects.value(description.get(), "N/C");
     }
 
 }

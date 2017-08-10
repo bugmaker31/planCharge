@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -94,7 +95,9 @@ public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements C
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return ((code.get() == null) ? "N/C" : code.get());
+        //noinspection HardcodedFileSeparator
+        return "Profil"
+                + " " + Objects.value(code.get(), "N/C");
     }
 
 }

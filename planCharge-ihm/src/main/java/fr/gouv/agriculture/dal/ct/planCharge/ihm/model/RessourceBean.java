@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceGeneriqueDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -74,7 +75,8 @@ public abstract class RessourceBean<B extends RessourceBean<B, D>, D extends Res
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
-        return code.get();
+        //noinspection HardcodedFileSeparator
+        return "Rsrc " + Objects.value(code.get(), "N/C");
     }
 
 }

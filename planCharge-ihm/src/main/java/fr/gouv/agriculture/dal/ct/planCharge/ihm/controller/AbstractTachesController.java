@@ -171,7 +171,24 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 },
                 planChargeBean.getProjetsApplisBeans())
         );
-        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getStatutsBeans()));
+        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+                new StringConverter<StatutBean>() {
+
+                    @Null
+                    @Override
+                    public String toString(StatutBean statutBean) {
+                        return statutBean.getCode();
+                    }
+
+                    @Override
+                    public StatutBean fromString(String codeStatut) {
+                        return planChargeBean.getStatutsBeans().parallelStream()
+                                .filter(statutBean -> statutBean.getCode().equals(codeStatut))
+                                .collect(Collectors.toList())
+                                .get(0);
+                    }
+                },
+                planChargeBean.getStatutsBeans()));
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
@@ -193,7 +210,24 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     }
                 },
                 planChargeBean.getRessourcesBeans()));
-        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getProfilsBeans()));
+        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+                new StringConverter<ProfilBean>() {
+
+                    @Null
+                    @Override
+                    public String toString(ProfilBean profilBean) {
+                        return profilBean.getCode();
+                    }
+
+                    @Override
+                    public ProfilBean fromString(String codeProfil) {
+                        return planChargeBean.getProfilsBeans().parallelStream()
+                                .filter(profilBean -> profilBean.getCode().equals(codeProfil))
+                                .collect(Collectors.toList())
+                                .get(0);
+                    }
+                },
+                planChargeBean.getProfilsBeans()));
 
         // Paramétrage des ordres de tri :
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
