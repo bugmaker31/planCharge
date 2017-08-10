@@ -235,6 +235,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //
+        // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
         SortedList<TB> sortedPlanifBeans = new SortedList<>(getTachesBeans());
         sortedPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
         getTachesTable().setItems(sortedPlanifBeans);

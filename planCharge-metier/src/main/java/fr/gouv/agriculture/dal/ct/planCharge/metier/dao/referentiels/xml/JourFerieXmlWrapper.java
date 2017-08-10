@@ -2,11 +2,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
+import fr.gouv.agriculture.dal.ct.planCharge.util.xml.LocalDateXmlAdapter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -16,7 +18,7 @@ import java.util.Date;
 public class JourFerieXmlWrapper {
 
     @NotNull
-    private Date date;
+    private LocalDate date;
     @Null
     private String description;
 
@@ -30,14 +32,14 @@ public class JourFerieXmlWrapper {
     }
 
     public JourFerieXmlWrapper init(JourFerie jourFerie) {
-        this.date = Dates.asDate(jourFerie.getDate());
+        this.date = jourFerie.getDate();
         this.description = jourFerie.getDescription();
         return this;
     }
 
     @XmlAttribute(name="date", required = true)
     @NotNull
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -47,7 +49,7 @@ public class JourFerieXmlWrapper {
         return description;
     }
 
-    public void setDate(@NotNull Date date) {
+    public void setDate(@NotNull LocalDate date) {
         this.date = date;
     }
 
@@ -57,6 +59,6 @@ public class JourFerieXmlWrapper {
 
 
     public JourFerie extract() {
-        return new JourFerie(Dates.asLocalDate(date), description);
+        return new JourFerie(date, description);
     }
 }

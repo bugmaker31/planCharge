@@ -12,6 +12,7 @@ import java.util.TreeMap;
 /**
  * Created by frederic.danna on 26/04/2017.
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class CalendrierXmlWrapper {
 
     private Map<Date, Double> semaines = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.

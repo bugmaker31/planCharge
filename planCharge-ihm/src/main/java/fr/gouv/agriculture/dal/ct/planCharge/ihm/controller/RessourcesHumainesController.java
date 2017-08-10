@@ -202,11 +202,6 @@ public class RessourcesHumainesController extends AbstractController {
         debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
-        // Bind the SortedList comparator to the TableView comparator.
-        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-//        SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
-//        sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
-//        ressourcesHumainesTable.setItems(sortedBeans);
         ressourcesHumainesTable.setItems(ressourceHumainesBeans);
 
         TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);

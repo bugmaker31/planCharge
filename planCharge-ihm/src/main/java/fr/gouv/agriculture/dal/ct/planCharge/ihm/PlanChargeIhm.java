@@ -718,8 +718,8 @@ public class PlanChargeIhm extends Application {
             //
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
             Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
-            final double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
-            final double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
+            double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
+            double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
             primaryStage.setWidth(screenWidth);
             primaryStage.setHeight(screenHeight);
             primaryStage.setResizable(true);

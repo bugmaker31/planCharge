@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -39,9 +40,9 @@ public class TacheXmlWrapper {
     @NotNull
     private String codeStatut;
     @Null
-    private Date debut;
+    private LocalDate debut;
     @NotNull
-    private Date echeance;
+    private LocalDate echeance;
     @NotNull
     private String codeImportance;
     @NotNull
@@ -83,8 +84,8 @@ public class TacheXmlWrapper {
         description = tache.getDescription();
         codeProjetAppli = tache.getProjetAppli().getCode();
         codeStatut = tache.getStatut().getCode();
-        debut = Dates.asDate(tache.getDebut());
-        echeance = Dates.asDate(tache.getEcheance());
+        debut = tache.getDebut();
+        echeance = tache.getEcheance();
         codeImportance = tache.getImportance().getCodeInterne();
         charge = tache.getCharge();
         codeRessource = tache.getRessource().getCode();
@@ -133,13 +134,12 @@ public class TacheXmlWrapper {
     }
 
     @XmlElement(name = "debut", required = false)
-    public Date getDebut() {
+    public LocalDate getDebut() {
         return debut;
     }
 
-    @XmlElement(name = "echeance", required = true)
-    public Date getEcheance() {
-        return echeance;
+    public void setDebut(LocalDate debut) {
+        this.debut = debut;
     }
 
     @XmlElement(name = "codeImportance", required = true)
@@ -194,11 +194,12 @@ public class TacheXmlWrapper {
         this.codeStatut = codeStatut;
     }
 
-    public void setDebut(Date debut) {
-        this.debut = debut;
+    @XmlElement(name = "echeance", required = true)
+    public LocalDate getEcheance() {
+        return echeance;
     }
 
-    public void setEcheance(Date echeance) {
+    public void setEcheance(LocalDate echeance) {
         this.echeance = echeance;
     }
 
@@ -230,8 +231,8 @@ public class TacheXmlWrapper {
                     description,
                     projetAppliDao.load(codeProjetAppli),
                     statutDao.load(codeStatut),
-                    Dates.asLocalDate(debut),
-                    Dates.asLocalDate(echeance),
+                    debut,
+                    echeance,
                     importanceDao.load(codeImportance),
                     charge,
                     ressourceDao.loadAny(codeRessource),

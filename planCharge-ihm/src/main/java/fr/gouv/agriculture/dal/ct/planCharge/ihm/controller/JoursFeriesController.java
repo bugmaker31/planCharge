@@ -98,11 +98,7 @@ public class JoursFeriesController extends AbstractController {
 //        PlanChargeIhm.symboliserColonnesObligatoires(descriptionColumn);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        // Bind the SortedList comparator to the TableView comparator.
-        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-        SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
-        sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
-        joursFeriesTable.setItems(sortedBeans);
+        joursFeriesTable.setItems(joursFeriesBeans);
 
         Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
