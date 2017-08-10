@@ -24,6 +24,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableFilter.Builder;
@@ -34,6 +35,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.OptionalInt;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 01/05/2017.
@@ -150,7 +153,24 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Rq : La colonne "N° de tâche" n'est pas éditable (car c'est la "primary key").
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getProjetsApplisBeans()));
+        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+                new StringConverter<ProjetAppliBean>() {
+                    @Null
+                    @Override
+                    public String toString(ProjetAppliBean projetAppliBean) {
+                        return projetAppliBean.getCode();
+                    }
+
+                    @Override
+                    public ProjetAppliBean fromString(String codeProjetAppli) {
+                        return planChargeBean.getProjetsApplisBeans().parallelStream()
+                                .filter(projetAppliBean -> projetAppliBean.getCode().equals(codeProjetAppli))
+                                .collect(Collectors.toList())
+                                .get(0);
+                    }
+                },
+                planChargeBean.getProjetsApplisBeans())
+        );
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(planChargeBean.getStatutsBeans()));
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());

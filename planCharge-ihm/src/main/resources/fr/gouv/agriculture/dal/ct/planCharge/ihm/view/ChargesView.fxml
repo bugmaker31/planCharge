@@ -82,8 +82,8 @@
                                      editable="false" styleClass="nonModifiable"/>
                         <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
                         <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionFieldPrefWidth"
-                                     text="Description" style="descriptionColumn"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"/>
+                                     text="Description" style="descriptionColumn" styleClass="description-column"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli" styleClass="projetAppli-column"/>
                         <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                         <TableColumn text="Période souhaitée">
                             <columns>

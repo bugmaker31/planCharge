@@ -86,16 +86,17 @@ Tâches :
 */
 
 .description-column : {
-}
-.description-column .label : {
     -fx-alignment: baseline-left;
 }
 
 .projetAppli-column : {
-}
-.projetAppli-column .label : {
     -fx-alignment: baseline-center;
 }
+/* Sans effet...
+.projetAppli-column .text : {
+    -fx-text-alignment: baseline-center;
+}
+*/
 
 .charge-column {
     -fx-alignment: baseline-right;
