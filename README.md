@@ -1,4 +1,4 @@
-### PlanCharge [![Build Status](https://travis-ci.org/bugmaker31/planCharge.svg?branch=master)](https://travis-ci.org/bugmaker31/planCharge)
+# PlanCharge [![Build Status](https://travis-ci.org/bugmaker31/planCharge.svg?branch=master)](https://travis-ci.org/bugmaker31/planCharge)
 
 Une appli avec IHM en JavaFX pour gérer le plan de charge d'une équipe d'un centre de service.
 
