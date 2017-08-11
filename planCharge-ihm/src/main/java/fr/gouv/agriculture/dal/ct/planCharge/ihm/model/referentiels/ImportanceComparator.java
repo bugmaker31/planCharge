@@ -1,8 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
-import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

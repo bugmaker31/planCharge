@@ -12,7 +12,7 @@
         <Accordion BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Filtres">
-                    <HBox>
+                    <HBox spacing="10">
 <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
                         <HBox>
                             <Label text="Filtre global : "/>

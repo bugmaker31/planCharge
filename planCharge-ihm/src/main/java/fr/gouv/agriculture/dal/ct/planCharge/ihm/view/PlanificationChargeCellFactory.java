@@ -1,8 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class PlanificationChargeCellFactory extends TextFieldTableCell<PlanificationBean, Double> {
+public class PlanificationChargeCellFactory extends TextFieldTableCell<PlanificationTacheBean, Double> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCellFactory.class);
 
@@ -54,8 +54,8 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
 
         // Récupération des infos sur la cellule :
         //noinspection unchecked
-        TableRow<PlanificationBean> tableRow = this.getTableRow();
-        PlanificationBean planifBean = tableRow.getItem();
+        TableRow<PlanificationTacheBean> tableRow = this.getTableRow();
+        PlanificationTacheBean planifBean = tableRow.getItem();
         if (planifBean == null) {
             return;
         }

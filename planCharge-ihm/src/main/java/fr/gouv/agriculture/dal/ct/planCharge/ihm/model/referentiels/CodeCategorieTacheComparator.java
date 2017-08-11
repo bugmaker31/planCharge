@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
@@ -14,9 +14,8 @@ import java.util.Comparator;
  */
 public class CodeCategorieTacheComparator implements Comparator<String> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CodeCategorieTacheComparator.class);
-
     public static final Comparator<String> COMPARATEUR = new CodeCategorieTacheComparator();
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeCategorieTacheComparator.class);
 
     @Override
     public int compare(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @Null String codeCategorie1, @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @Null String codeCategorie2) {

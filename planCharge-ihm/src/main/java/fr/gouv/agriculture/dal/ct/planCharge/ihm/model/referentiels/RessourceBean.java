@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceDTO;

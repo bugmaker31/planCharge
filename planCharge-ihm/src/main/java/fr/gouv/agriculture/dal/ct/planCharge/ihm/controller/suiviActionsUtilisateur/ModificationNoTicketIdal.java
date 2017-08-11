@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

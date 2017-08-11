@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
@@ -46,6 +46,16 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         this.finMission.set(finMission);
     }
 
+    @SuppressWarnings("StaticMethodNamingConvention")
+    @NotNull
+    public static RessourceHumaineDTO to(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        return ressourceHumaineBean.toDto();
+    }
+
+    @NotNull
+    public static RessourceHumaineBean from(@NotNull RessourceHumaineDTO dto) {
+        return new RessourceHumaineBean().fromDto(dto);
+    }
 
     @Null
     public String getTrigramme() {
@@ -61,6 +71,10 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return nom.get();
     }
 
+    public void setNom(@Null String nom) {
+        this.nom.set(nom);
+    }
+
     @NotNull
     public StringProperty nomProperty() {
         return nom;
@@ -69,6 +83,10 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     @Null
     public String getPrenom() {
         return prenom.get();
+    }
+
+    public void setPrenom(@Null String prenom) {
+        this.prenom.set(prenom);
     }
 
     @NotNull
@@ -81,6 +99,10 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return societe.get();
     }
 
+    public void setSociete(@Null String societe) {
+        this.societe.set(societe);
+    }
+
     @NotNull
     public StringProperty societeProperty() {
         return societe;
@@ -89,6 +111,10 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     @Null
     public LocalDate getDebutMission() {
         return debutMission.get();
+    }
+
+    public void setDebutMission(@Null LocalDate debutMission) {
+        this.debutMission.set(debutMission);
     }
 
     @NotNull
@@ -101,6 +127,10 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return finMission.get();
     }
 
+    public void setFinMission(@Null LocalDate finMission) {
+        this.finMission.set(finMission);
+    }
+
     @Null
     public ObjectProperty<LocalDate> finMissionProperty() {
         return finMission;
@@ -109,26 +139,6 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     @NotNull
     public StringProperty trigrammeProperty() {
         return codeProperty();
-    }
-
-    public void setNom(@Null String nom) {
-        this.nom.set(nom);
-    }
-
-    public void setPrenom(@Null String prenom) {
-        this.prenom.set(prenom);
-    }
-
-    public void setSociete(@Null String societe) {
-        this.societe.set(societe);
-    }
-
-    public void setDebutMission(@Null LocalDate debutMission) {
-        this.debutMission.set(debutMission);
-    }
-
-    public void setFinMission(@Null LocalDate finMission) {
-        this.finMission.set(finMission);
     }
 
     @NotNull
@@ -148,18 +158,6 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     public RessourceHumaineBean fromDto(@NotNull RessourceHumaineDTO dto) {
         return new RessourceHumaineBean(dto.getCode(), dto.getNom(), dto.getPrenom(), dto.getSociete(), dto.getDebutMission(), dto.getFinMission());
     }
-
-    @SuppressWarnings("StaticMethodNamingConvention")
-    @NotNull
-    public static RessourceHumaineDTO to(@NotNull RessourceHumaineBean ressourceHumaineBean) {
-        return ressourceHumaineBean.toDto();
-    }
-
-    @NotNull
-    public static RessourceHumaineBean from(@NotNull RessourceHumaineDTO dto) {
-        return new RessourceHumaineBean().fromDto(dto);
-    }
-
 
     @Override
     public boolean equals(Object o) {

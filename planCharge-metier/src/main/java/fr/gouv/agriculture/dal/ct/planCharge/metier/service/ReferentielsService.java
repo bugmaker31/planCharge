@@ -26,6 +26,7 @@ public class ReferentielsService {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferentielsService.class);
 
+
     private static class InstanceHolder {
         private static final ReferentielsService INSTANCE = new ReferentielsService();
     }
@@ -34,6 +35,7 @@ public class ReferentielsService {
     public static ReferentielsService instance() {
         return InstanceHolder.INSTANCE;
     }
+
 
     //    @Autowired
     @NotNull

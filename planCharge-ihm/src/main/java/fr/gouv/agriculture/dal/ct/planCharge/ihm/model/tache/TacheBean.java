@@ -1,12 +1,11 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
@@ -20,9 +19,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by frederic.danna on 11/03/2017.
@@ -32,13 +28,11 @@ import java.util.regex.PatternSyntaxException;
 @SuppressWarnings("ClassWithTooManyMethods")
 public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copiable<TacheBean> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
-
     @NotNull
     public static final String FORMAT_DATE = PlanChargeIhm.PATRON_FORMAT_DATE;
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
     @SuppressWarnings("InstanceVariableNamingConvention")
     @NotNull
     private IntegerProperty id = new SimpleIntegerProperty();
@@ -89,7 +83,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         this.profil.set(profil);
     }
 
-    TacheBean(@NotNull TacheBean tacheBean) {
+    public TacheBean(@NotNull TacheBean tacheBean) {
         this(
                 tacheBean.getId(),
                 tacheBean.getCodeCategorie(),
@@ -107,7 +101,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         );
     }
 
-    TacheBean(@NotNull TacheDTO tache) {
+    public TacheBean(@NotNull TacheDTO tache) {
         this.id.set(tache.getId());
         this.codeCategorie.set(tache.getCategorie().getCode());
         if (tache.getSousCategorie() != null) {

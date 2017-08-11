@@ -18,6 +18,18 @@ Généralités :
 }
 */
 
+/* Cf. http://fxexperience.com/2011/11/alternate-row-highlighting-in-empty-tableview-and-listview-rows */
+.table-row-cell:empty {
+    -fx-background-color: white;
+}
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+
+/* Cf. http://fxexperience.com/2011/11/alternate-row-highlighting-in-empty-tableview-and-listview-rows */
+.list-cell:empty {
+    -fx-background-color: white;
+}
 
 /*
 Barre d'état :
@@ -29,7 +41,7 @@ Barre d'état :
     /*-fx-border-insets: 1pt;*/
     /*-fx-border-width: 1pt;*/
     /*-fx-border-style: solid;*/
-    /*-fx-spacing: 1pt;*/
+    -fx-spacing: 1pt;
     -fx-border-insets: 2pt;
     -fx-alignment: baseline-center;
 }

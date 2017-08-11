@@ -3,9 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ import java.util.TreeMap;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ChargesController extends AbstractTachesController<PlanificationBean> {
+public class ChargesController extends AbstractTachesController<PlanificationTacheBean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
 
@@ -69,7 +70,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     @NotNull
-    private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+    private ObservableList<PlanificationTacheBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
     /*
      La couche "View" :
@@ -87,106 +88,106 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
     // La Table :
     @NotNull
     @FXML
-    private TableView<PlanificationBean> planificationsTable;
+    private TableView<PlanificationTacheBean> planificationsTable;
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine1Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine1Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine2Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine2Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine3Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine3Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine4Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine4Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine5Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine5Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine6Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine6Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine7Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine7Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine8Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine8Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine9Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine9Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine10Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine10Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine11Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine11Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> semaine12Column;
+    private TableColumn<PlanificationTacheBean, Double> semaine12Column;
     @FXML
     @NotNull
-    private TableColumn<PlanificationBean, Double> chargePlanifieeColumn;
+    private TableColumn<PlanificationTacheBean, Double> chargePlanifieeColumn;
 
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine1Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine1Column() {
         return semaine1Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine2Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine2Column() {
         return semaine2Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine3Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine3Column() {
         return semaine3Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine4Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine4Column() {
         return semaine4Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine5Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine5Column() {
         return semaine5Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine6Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine6Column() {
         return semaine6Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine7Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine7Column() {
         return semaine7Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine8Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine8Column() {
         return semaine8Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine9Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine9Column() {
         return semaine9Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine10Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine10Column() {
         return semaine10Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine11Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine11Column() {
         return semaine11Column;
     }
 
     @NotNull
-    public TableColumn<PlanificationBean, Double> getSemaine12Column() {
+    public TableColumn<PlanificationTacheBean, Double> getSemaine12Column() {
         return semaine12Column;
     }
 
@@ -207,14 +208,14 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
     @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
-    ObservableList<PlanificationBean> getTachesBeans() {
+    ObservableList<PlanificationTacheBean> getTachesBeans() {
         return planificationsBeans;
     }
 
     @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
-    TableView<PlanificationBean> getTachesTable() {
+    TableView<PlanificationTacheBean> getTachesTable() {
         return planificationsTable;
     }
 
@@ -235,7 +236,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //noinspection ClassHasNoToStringMethod
-        class ChargeSemaineCellCallback implements Callback<TableColumn.CellDataFeatures<PlanificationBean, Double>, ObservableValue<Double>> {
+        class ChargeSemaineCellCallback implements Callback<CellDataFeatures<PlanificationTacheBean, Double>, ObservableValue<Double>> {
             private final int noSemaine;
 
             public ChargeSemaineCellCallback(int noSemaine) {
@@ -244,9 +245,9 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
 
             @Null
             @Override
-            public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") TableColumn.CellDataFeatures<PlanificationBean, Double> cell) {
+            public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") CellDataFeatures<PlanificationTacheBean, Double> cell) {
                 try {
-                    PlanificationBean planifBean = cell.getValue();
+                    PlanificationTacheBean planifBean = cell.getValue();
                     LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
                     if (!planifBean.aChargePlanifiee(debutPeriode)) {
                         // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
@@ -278,7 +279,31 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         //noinspection OverlyComplexAnonymousInnerClass
-        getChargeColumn().setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
+        getChargeColumn().setCellFactory(column -> new
+        final class ChargeSemaineEditHandler implements EventHandler<TableColumn.CellEditEvent<PlanificationTacheBean, Double>> {
+
+            private final int noSemaine;
+
+            private ChargeSemaineEditHandler(int noSemaine) {
+                this.noSemaine = noSemaine;
+            }
+
+            @Override
+            public void handle(TableColumn.CellEditEvent<PlanificationTacheBean, Double> event) {
+
+                PlanificationTacheBean planifBean = event.getRowValue();
+                try {
+                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    planifBean.chargePlanifiee(dateDebutPeriode).setValue(event.getNewValue());
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
+                }
+
+                planifBean.majChargePlanifieeTotale();
+            }
+        });
+        //noinspection OverlyComplexAnonymousInnerClass
+        chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double charge, boolean empty) {
                 super.updateItem(charge, empty);
@@ -306,8 +331,8 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
                 }
             }
         });
-        //noinspection OverlyComplexAnonymousInnerClass
-        chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationBean, Double>() {
+        //noinspection ClassHasNoToStringMethod
+TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double chargePlanifiee, boolean empty) {
                 super.updateItem(chargePlanifiee, empty);
@@ -328,29 +353,6 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
                 if (chargePlanifiee > charge) {
                     getStyleClass().add("incoherence");
                 }
-            }
-        });
-        //noinspection ClassHasNoToStringMethod
-        final class ChargeSemaineEditHandler implements EventHandler<TableColumn.CellEditEvent<PlanificationBean, Double>> {
-
-            private final int noSemaine;
-
-            private ChargeSemaineEditHandler(int noSemaine) {
-                this.noSemaine = noSemaine;
-            }
-
-            @Override
-            public void handle(TableColumn.CellEditEvent<PlanificationBean, Double> event) {
-
-                PlanificationBean planifBean = event.getRowValue();
-                try {
-                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    planifBean.chargePlanifiee(dateDebutPeriode).setValue(event.getNewValue());
-                } catch (IhmException e) {
-                    LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
-                }
-
-                planifBean.majChargePlanifieeTotale();
             }
         }
         semaine1Column.setOnEditCommit(new ChargeSemaineEditHandler(1));
@@ -395,14 +397,14 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
 
     @FXML
     @NotNull
-    protected PlanificationBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+    protected PlanificationTacheBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
         try {
             if (planChargeBean.getDateEtat() == null) {
                 throw new IhmException("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
             }
 
-            PlanificationBean planifBean = super.ajouterTache();
+            PlanificationTacheBean planifBean = super.ajouterTache();
 
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new AjoutTache<>(planifBean, planChargeBean.getPlanificationsBeans()));
@@ -416,7 +418,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
     }
 
     @Override
-    PlanificationBean nouveauBean() throws IhmException {
+    PlanificationTacheBean nouveauBean() throws IhmException {
 
         TacheBean tacheBean = new TacheBean(
                 idTacheSuivant(),
@@ -443,8 +445,9 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
             debutPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/07 Ne fonctionne que pour des périodes hebdomadaire, pas trimestrielle.
         }
 
-        return new PlanificationBean(tacheBean, calendrier);
+        return new PlanificationTacheBean(tacheBean, calendrier);
     }
+
 
     public void afficherPlanification() {
 
@@ -477,11 +480,11 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
         PlanificationsDTO planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
         planifications
                 .forEach((tache, planifTache) -> {
-                    Optional<PlanificationBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
+                    Optional<PlanificationTacheBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
                             .filter(planificationBean -> planificationBean.getId() == tache.getId())
                             .findAny();
                     assert planifBeanOpt.isPresent();
-                    PlanificationBean planifBean = planifBeanOpt.get();
+                    PlanificationTacheBean planifBean = planifBeanOpt.get();
                     Map<LocalDate, DoubleProperty> calendrierTache = planifBean.getCalendrier();
                     calendrierTache.clear();
                     planifTache.forEach((debutPeriode, charge) -> calendrierTache.put(debutPeriode, new SimpleDoubleProperty(charge)));
@@ -489,6 +492,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
         planificationsTable.refresh();
         LOGGER.debug("Planification affichée.");
     }
+
 
     @FXML
     private void filtrerTachesNonPlanifieesDansLeMois(@SuppressWarnings("unused") ActionEvent actionEvent) {
@@ -502,7 +506,7 @@ public class ChargesController extends AbstractTachesController<PlanificationBea
     }
 
     private void afficherTache() {
-        PlanificationBean tacheBean = tacheSelectionnee();
+        PlanificationTacheBean tacheBean = tacheSelectionnee();
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(

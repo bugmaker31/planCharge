@@ -1,8 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProjetAppliDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -13,29 +12,32 @@ import javax.validation.constraints.Null;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBean> implements Comparable<ProjetAppliBean> {
+public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements Comparable<StatutBean> {
 
     @NotNull
     private StringProperty code = new SimpleStringProperty();
 
 
-    private ProjetAppliBean() {
+    public StatutBean() {
         super();
     }
 
-    private ProjetAppliBean(@NotNull ProjetAppliDTO projetAppliDTO) {
-        this();
-        this.code.set(projetAppliDTO.getCode());
+    public StatutBean(@NotNull StatutDTO statutDTO) {
+        this.code.set(statutDTO.getCode());
     }
 
-    private ProjetAppliBean(@Null String code) {
-        this();
+    public StatutBean(@Null String code) {
         this.code.set(code);
     }
 
     @NotNull
-    public static ProjetAppliBean from(@NotNull ProjetAppliDTO projetAppliDTO) {
-        return new ProjetAppliBean().fromDto(projetAppliDTO);
+    public static StatutBean from(@NotNull StatutDTO statutDTO) {
+        return new StatutBean().fromDto(statutDTO);
+    }
+
+    @NotNull
+    public static StatutDTO to(@NotNull StatutBean statutBean) {
+        return statutBean.toDto();
     }
 
     @Null
@@ -50,19 +52,13 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
 
     @NotNull
     @Override
-    public ProjetAppliBean fromDto(@NotNull ProjetAppliDTO dto) {
-        return new ProjetAppliBean(dto);
+    public StatutBean fromDto(@NotNull StatutDTO dto) {
+        return new StatutBean(dto);
     }
 
     @NotNull
-    public ProjetAppliDTO toDto() {
-        return new ProjetAppliDTO(code.get());
-    }
-
-    @SuppressWarnings("StaticMethodNamingConvention")
-    @NotNull
-    public static ProjetAppliDTO to(@NotNull ProjetAppliBean projetAppliBean) {
-        return projetAppliBean.toDto();
+    public StatutDTO toDto() {
+        return new StatutDTO(code.get());
     }
 
     @Override
@@ -70,7 +66,7 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
 
-        ProjetAppliBean that = (ProjetAppliBean) o;
+        StatutBean that = (StatutBean) o;
 
         return (getCode() != null) ? getCode().equals(that.getCode()) : (that.getCode() == null);
     }
@@ -82,7 +78,7 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
 
 
     @Override
-    public int compareTo(@NotNull ProjetAppliBean o) {
+    public int compareTo(@NotNull StatutBean o) {
         return (
                 (this.getCode() == null) && (o.getCode() == null)) ? 0
                 : (((this.getCode() == null) && (o.getCode() != null)) ? -1
@@ -95,8 +91,8 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
-        return "Projet/Appli"
-                + " " + Objects.value(code.get(), "N/C");
+        return "Statut"
+                + " " + Objects.value(getCode(), "N/C");
     }
 
 }

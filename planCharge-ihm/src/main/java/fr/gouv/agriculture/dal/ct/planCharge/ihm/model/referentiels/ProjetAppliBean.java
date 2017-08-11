@@ -1,48 +1,46 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProjetAppliDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements Comparable<ProfilBean> {
+public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBean> implements Comparable<ProjetAppliBean> {
 
     @NotNull
     private StringProperty code = new SimpleStringProperty();
 
 
-    public ProfilBean() {
+    private ProjetAppliBean() {
         super();
     }
 
-    public ProfilBean(@NotNull ProfilDTO profilDTO) {
-        this.code.set(profilDTO.getCode());
+    private ProjetAppliBean(@NotNull ProjetAppliDTO projetAppliDTO) {
+        this();
+        this.code.set(projetAppliDTO.getCode());
     }
 
-    public ProfilBean(@Null String code) {
+    private ProjetAppliBean(@Null String code) {
+        this();
         this.code.set(code);
     }
 
     @NotNull
-    public static ProfilBean from(@NotNull ProfilDTO profilDTO) {
-        return new ProfilBean().fromDto(profilDTO);
+    public static ProjetAppliBean from(@NotNull ProjetAppliDTO projetAppliDTO) {
+        return new ProjetAppliBean().fromDto(projetAppliDTO);
     }
 
+    @SuppressWarnings("StaticMethodNamingConvention")
     @NotNull
-    public static ProfilDTO to(@NotNull ProfilBean profilBean) {
-        return profilBean.toDto();
+    public static ProjetAppliDTO to(@NotNull ProjetAppliBean projetAppliBean) {
+        return projetAppliBean.toDto();
     }
 
     @Null
@@ -57,13 +55,13 @@ public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements C
 
     @NotNull
     @Override
-    public ProfilBean fromDto(@NotNull ProfilDTO dto) {
-        return new ProfilBean(dto);
+    public ProjetAppliBean fromDto(@NotNull ProjetAppliDTO dto) {
+        return new ProjetAppliBean(dto);
     }
 
     @NotNull
-    public ProfilDTO toDto() {
-        return new ProfilDTO(code.get());
+    public ProjetAppliDTO toDto() {
+        return new ProjetAppliDTO(code.get());
     }
 
     @Override
@@ -71,7 +69,7 @@ public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements C
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
 
-        ProfilBean that = (ProfilBean) o;
+        ProjetAppliBean that = (ProjetAppliBean) o;
 
         return (getCode() != null) ? getCode().equals(that.getCode()) : (that.getCode() == null);
     }
@@ -83,7 +81,7 @@ public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements C
 
 
     @Override
-    public int compareTo(@NotNull ProfilBean o) {
+    public int compareTo(@NotNull ProjetAppliBean o) {
         return (
                 (this.getCode() == null) && (o.getCode() == null)) ? 0
                 : (((this.getCode() == null) && (o.getCode() != null)) ? -1
@@ -96,7 +94,7 @@ public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements C
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
-        return "Profil"
+        return "Projet/Appli"
                 + " " + Objects.value(code.get(), "N/C");
     }
 

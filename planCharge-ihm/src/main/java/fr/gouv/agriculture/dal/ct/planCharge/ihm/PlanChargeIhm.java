@@ -10,7 +10,7 @@ import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -267,12 +267,12 @@ public class PlanChargeIhm extends Application {
         LOGGER.info("Application en cours d'initialisation...");
         instance = this;
 
+        // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
+        Thread.setDefaultUncaughtExceptionHandler(this::showError);
+
         super.init();
 
         chargerParametresApplicatifs();
-
-        // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
-        Thread.setDefaultUncaughtExceptionHandler(this::showError);
 
 //        injecter();
 

@@ -1,8 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -13,32 +12,32 @@ import javax.validation.constraints.Null;
 /**
  * Created by frederic.danna on 01/07/2017.
  */
-public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements Comparable<StatutBean> {
+public class ProfilBean extends AbstractBean<ProfilDTO, ProfilBean> implements Comparable<ProfilBean> {
 
     @NotNull
     private StringProperty code = new SimpleStringProperty();
 
 
-    public StatutBean() {
+    public ProfilBean() {
         super();
     }
 
-    public StatutBean(@NotNull StatutDTO statutDTO) {
-        this.code.set(statutDTO.getCode());
+    public ProfilBean(@NotNull ProfilDTO profilDTO) {
+        this.code.set(profilDTO.getCode());
     }
 
-    public StatutBean(@Null String code) {
+    public ProfilBean(@Null String code) {
         this.code.set(code);
     }
 
     @NotNull
-    public static StatutBean from(@NotNull StatutDTO statutDTO) {
-        return new StatutBean().fromDto(statutDTO);
+    public static ProfilBean from(@NotNull ProfilDTO profilDTO) {
+        return new ProfilBean().fromDto(profilDTO);
     }
 
     @NotNull
-    public static StatutDTO to(@NotNull StatutBean statutBean) {
-        return statutBean.toDto();
+    public static ProfilDTO to(@NotNull ProfilBean profilBean) {
+        return profilBean.toDto();
     }
 
     @Null
@@ -53,13 +52,13 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
 
     @NotNull
     @Override
-    public StatutBean fromDto(@NotNull StatutDTO dto) {
-        return new StatutBean(dto);
+    public ProfilBean fromDto(@NotNull ProfilDTO dto) {
+        return new ProfilBean(dto);
     }
 
     @NotNull
-    public StatutDTO toDto() {
-        return new StatutDTO(code.get());
+    public ProfilDTO toDto() {
+        return new ProfilDTO(code.get());
     }
 
     @Override
@@ -67,7 +66,7 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
 
-        StatutBean that = (StatutBean) o;
+        ProfilBean that = (ProfilBean) o;
 
         return (getCode() != null) ? getCode().equals(that.getCode()) : (that.getCode() == null);
     }
@@ -79,7 +78,7 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
 
 
     @Override
-    public int compareTo(@NotNull StatutBean o) {
+    public int compareTo(@NotNull ProfilBean o) {
         return (
                 (this.getCode() == null) && (o.getCode() == null)) ? 0
                 : (((this.getCode() == null) && (o.getCode() != null)) ? -1
@@ -92,8 +91,8 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
-        return "Statut"
-                + " " + Objects.value(getCode(), "N/C");
+        return "Profil"
+                + " " + Objects.value(code.get(), "N/C");
     }
 
 }

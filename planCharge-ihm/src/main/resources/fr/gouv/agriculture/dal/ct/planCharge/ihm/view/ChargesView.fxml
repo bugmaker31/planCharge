@@ -20,7 +20,7 @@
             <Accordion>
                 <panes>
                     <TitledPane animated="false" text="Filtres">
-                        <HBox>
+                        <HBox spacing="10">
                             <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
                                                         <HBox>
                                                             <Label text="Filtre global : "/>
@@ -78,16 +78,6 @@
                             <SegmentedButton>
                                 <buttons>
                                     <fx:define>
-                                        <ToggleGroup fx:id="filtreSelonChargeToggleGroup"/>
-                                    </fx:define>
-                                    <!--TODO FDA 2017/08 Coder l'action.-->
-                                    <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
-                                                  toggleGroup="$filtreSelonChargeToggleGroup"/>
-                                </buttons>
-                            </SegmentedButton>
-                            <SegmentedButton>
-                                <buttons>
-                                    <fx:define>
                                         <ToggleGroup fx:id="filtreSelonPlanificationToggleGroup"/>
                                     </fx:define>
                                     <!--TODO FDA 2017/07 Coder l'action.-->
@@ -95,7 +85,7 @@
                                                   toggleGroup="$filtreSelonPlanificationToggleGroup"/>
                                     <!--TODO FDA 2017/08 Coder l'action.-->
                                     <ToggleButton text="Pas planifiée entièrement" mnemonicParsing="false"
-                                                  toggleGroup="$filtreSelonChargeToggleGroup"
+                                                  toggleGroup="$filtreSelonPlanificationToggleGroup"
                                     />
                                     <!--TODO FDA 2017/07 Coder l'action.-->
                                     <ToggleButton text="Planifiées dans le mois" mnemonicParsing="false"
@@ -185,7 +175,8 @@
 
                         <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                         <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
-                                     editable="false" styleClass="non-modifiable chargePlanifiee-column"/>
+                                     editable="false" styleClass="nonModifiable chargePlanifiee-column"/>
+                        <!--FIXME FDA 2017/08 "styleClass="nonModifiable" sans effet (titre de la colonne pas en italique).-->
                     </columns>
                 </TableColumn>
             </columns>

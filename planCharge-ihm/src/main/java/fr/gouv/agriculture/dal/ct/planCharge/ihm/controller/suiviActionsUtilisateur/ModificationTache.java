@@ -2,7 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisa
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

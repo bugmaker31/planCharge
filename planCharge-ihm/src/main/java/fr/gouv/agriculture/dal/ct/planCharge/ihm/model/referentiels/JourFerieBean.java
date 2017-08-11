@@ -1,8 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.JourFerieDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -40,19 +39,28 @@ public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> imp
         this.description.set(description);
     }
 
+    @NotNull
+    public static JourFerieBean from(@NotNull JourFerieDTO jourFerieDTO) {
+        return new JourFerieBean().fromDto(jourFerieDTO);
+    }
+
+    @NotNull
+    public static JourFerieDTO to(@NotNull JourFerieBean jourFerieBean) {
+        return jourFerieBean.toDto();
+    }
 
     @Null
     public LocalDate getDate() {
         return date.get();
     }
 
+    public void setDate(@NotNull LocalDate date) {
+        this.date.set(date);
+    }
+
     @NotNull
     public ObjectProperty<LocalDate> dateProperty() {
         return date;
-    }
-
-    public void setDate(@NotNull LocalDate date) {
-        this.date.set(date);
     }
 
     @Null
@@ -65,7 +73,6 @@ public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> imp
         return description;
     }
 
-
     @NotNull
     @Override
     public JourFerieBean fromDto(@NotNull JourFerieDTO dto) {
@@ -76,17 +83,6 @@ public class JourFerieBean extends AbstractBean<JourFerieDTO, JourFerieBean> imp
     public JourFerieDTO toDto() {
         return new JourFerieDTO(date.get(), description.get());
     }
-
-    @NotNull
-    public static JourFerieBean from(@NotNull JourFerieDTO jourFerieDTO) {
-        return new JourFerieBean().fromDto(jourFerieDTO);
-    }
-
-    @NotNull
-    public static JourFerieDTO to(@NotNull JourFerieBean jourFerieBean) {
-        return jourFerieBean.toDto();
-    }
-
 
     @Override
     public boolean equals(Object o) {

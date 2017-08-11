@@ -14,9 +14,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.R
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportSauvegardeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.JourFerieBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.PlanificationBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
@@ -221,7 +221,7 @@ public class ApplicationController extends AbstractController {
     private ObservableList<JourFerieBean> joursFeriesBeans = planChargeBean.getJoursFeriesBeans();
 
     @NotNull
-    private ObservableList<PlanificationBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+    private ObservableList<PlanificationTacheBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
     public ApplicationController.NomModule getNomModuleCourant() {
         return nomModuleCourant;
@@ -306,7 +306,7 @@ public class ApplicationController extends AbstractController {
         );
 
 //        planChargeBean.getPlanificationsBeans().addListener(
-//                (ListChangeListener<? super PlanificationBean>) change -> nbrTachesField.setText(change.getList().size() + "")
+//                (ListChangeListener<? super PlanificationTacheBean>) change -> nbrTachesField.setText(change.getList().size() + "")
 //        );
 
         memoryGauge.setMaxValue(Runtime.getRuntime().maxMemory()); // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
@@ -1252,8 +1252,8 @@ public class ApplicationController extends AbstractController {
         ihm.getDisponibilitesController().getSemaine10Column().setText("S+10" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
-        ihm.getChargesController().getSemaine11Column().setText("S+11" + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine11Column().setText("S+11" + dateDebutPeriode.format(dateFormatter));
+        ihm.getChargesController().getSemaine11Column().setText("S+11" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine11Column().setText("S+11" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
         ihm.getChargesController().getSemaine12Column().setText("S+12" + " " + dateDebutPeriode.format(dateFormatter));
@@ -1262,7 +1262,7 @@ public class ApplicationController extends AbstractController {
 
     private void majPlanification() {
         ihm.getChargesController().afficherPlanification();
-        ihm.getDisponibilitesController().afficherPlanification();
+        ihm.getDisponibilitesController().afficherCalendrier();
     }
 
 

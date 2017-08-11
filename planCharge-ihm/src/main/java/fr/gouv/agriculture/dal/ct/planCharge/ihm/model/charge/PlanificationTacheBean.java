@@ -1,6 +1,7 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.DoubleProperty;
@@ -18,14 +19,14 @@ import java.util.TreeMap;
  *
  * @author frederic.danna
  */
-public class PlanificationBean extends TacheBean {
+public class PlanificationTacheBean extends TacheBean {
 
     @NotNull
     private Map<LocalDate, DoubleProperty> calendrier;
     @NotNull
     private DoubleProperty chargePlanifieeTotale = new SimpleDoubleProperty();
 
-    public PlanificationBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws IhmException {
+    public PlanificationTacheBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws IhmException {
         super(tacheBean);
         this.calendrier = calendrier;
 
@@ -33,7 +34,7 @@ public class PlanificationBean extends TacheBean {
     }
 
 /*
-    public PlanificationBean(
+    public PlanificationTacheBean(
             int id, String codeCategorie, String codeSousCategorie, String noTicketIdal, String description, String codeProjetAppli, LocalDate debut, LocalDate echeance, String codeImportance, double charge, String codeRessource, String codeProfil,
             @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier
     ) throws IhmException {
@@ -57,7 +58,7 @@ public class PlanificationBean extends TacheBean {
     }
 */
 
-    public PlanificationBean(@NotNull TacheDTO tache, @NotNull Map<LocalDate, Double> calendrier) {
+    public PlanificationTacheBean(@NotNull TacheDTO tache, @NotNull Map<LocalDate, Double> calendrier) {
         super(tache);
 
         this.calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
@@ -116,9 +117,9 @@ public class PlanificationBean extends TacheBean {
 
 
     @NotNull
-    public PlanificationBean copier(@NotNull PlanificationBean original) throws CopieException {
+    public PlanificationTacheBean copier(@NotNull PlanificationTacheBean original) throws CopieException {
         try {
-            return new PlanificationBean(
+            return new PlanificationTacheBean(
                     original.copier(),
                     getCalendrier() // FIXME FDA 2017/05 Copier les éléments de la liste aussi.
             );

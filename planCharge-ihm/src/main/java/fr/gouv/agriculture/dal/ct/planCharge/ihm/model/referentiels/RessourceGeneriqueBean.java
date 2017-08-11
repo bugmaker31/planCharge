@@ -1,16 +1,9 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceGeneriqueDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.time.LocalDate;
 
 /**
  * Created by frederic.danna on 01/07/2017.
