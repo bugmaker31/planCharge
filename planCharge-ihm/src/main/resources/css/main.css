@@ -82,6 +82,21 @@ Validation de la saisie depuis l'IHM :
 
 
 /*
+Dispo :
+*/
+
+
+.periodeDispo-column {
+    -fx-font-size: 80%;
+    -fx-alignment: baseline-center;
+    -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
+}
+.periodeDispo-column .label {
+    -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
+}
+
+
+/*
 Tâches :
 */
 
@@ -189,7 +204,8 @@ Plan de charge :
 }
 
 .chargePlanifiee-column {
+    -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
 .chargePlanifiee-column .label {
-    -fx-wrap-text: true;
+    -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }

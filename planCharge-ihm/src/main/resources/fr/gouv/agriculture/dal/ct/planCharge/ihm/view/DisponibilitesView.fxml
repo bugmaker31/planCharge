@@ -5,7 +5,8 @@
 <?import org.controlsfx.control.CheckComboBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
 >
     <top>
         <Accordion BorderPane.alignment="CENTER">
@@ -35,34 +36,59 @@
         </Accordion>
     </top>
     <center>
-        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true"
-                   BorderPane.alignment="CENTER">
-            <columns>
-                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
-                <TableColumn text="Planification">
+        <TabPane>
+            <Tab text="Ouvré" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+            <Tab text="Absence / rsrc (j)" closable="false">
+                <TableView fx:id="disponibilitesTable" editable="true" tableMenuButtonVisible="true"
+                           BorderPane.alignment="CENTER">
                     <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="35.0" text="S+1"/>
-                        <TableColumn fx:id="semaine2Column" prefWidth="35.0" text="S+2"/>
-                        <TableColumn fx:id="semaine3Column" prefWidth="35.0" text="S+3"/>
-                        <TableColumn fx:id="semaine4Column" prefWidth="35.0" text="S+4"/>
-                        <TableColumn fx:id="semaine5Column" prefWidth="35.0" text="S+5"/>
-                        <TableColumn fx:id="semaine6Column" prefWidth="35.0" text="S+6"/>
-                        <TableColumn fx:id="semaine7Column" prefWidth="35.0" text="S+7"/>
-                        <TableColumn fx:id="semaine8Column" prefWidth="35.0" text="S+8"/>
-                        <TableColumn fx:id="semaine9Column" prefWidth="35.0" text="S+9"/>
-                        <TableColumn fx:id="semaine10Column" prefWidth="35.0" text="S+10"/>
-                        <TableColumn fx:id="semaine11Column" prefWidth="35.0" text="S+11"/>
-                        <TableColumn fx:id="semaine12Column" prefWidth="35.0" text="S+12"/>
+                        <TableColumn prefWidth="40" text="Rsrc"/>
+                        <TableColumn text="Planification">
+                            <columns>
+                                <TableColumn fx:id="semaine1Column" prefWidth="35" text="S+1" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine2Column" prefWidth="35" text="S+2" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine3Column" prefWidth="35" text="S+3" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine4Column" prefWidth="35" text="S+4" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine5Column" prefWidth="35" text="S+5" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine6Column" prefWidth="35" text="S+6" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine7Column" prefWidth="35" text="S+7" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine8Column" prefWidth="35" text="S+8" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine9Column" prefWidth="35" text="S+9" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine10Column" prefWidth="35" text="S+10" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine11Column" prefWidth="35" text="S+11" styleClass="periodeDispo-column"/>
+                                <TableColumn fx:id="semaine12Column" prefWidth="35" text="S+12" styleClass="periodeDispo-column"/>
+                            </columns>
+                        </TableColumn>
                     </columns>
-                </TableColumn>
-            </columns>
-        </TableView>
+                </TableView>
+            </Tab>
+            <Tab text="Dispo MinAgri / rsrc (j)" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+            <Tab text="Dispo CT / rsrc (%)" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+            <Tab text="Dispo CT / rsrc (j)" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+            <Tab text="Dispo maxi / rsrc / profil (%)" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+            <Tab text="Dispo maxi / rsrc / profil (j)" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+            <Tab text="Dispo maxi / profil (j)" closable="false">
+                <Label text="TODO"/>
+            </Tab>
+        </TabPane>
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
             <ButtonBar>
                 <buttons>
-                    <Button text="Ajouter" onAction="#ajouterRessource"/>
+                    <!--<Button text="Ajouter" onAction="#ajouterRessource"/>-->
                 </buttons>
             </ButtonBar>
         </AnchorPane>
