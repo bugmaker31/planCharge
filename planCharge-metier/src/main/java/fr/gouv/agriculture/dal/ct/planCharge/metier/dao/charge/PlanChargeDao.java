@@ -24,6 +24,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportChargementPla
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -310,7 +311,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         PlanCharge planCharge;
 
         try {
-            XSpreadsheet feuilleParams = Calc.getSheet(calc, "param");
+            XSpreadsheet feuilleParams = Calc.getSheet(calc, "Param");
             XSpreadsheet feuilleCharges = Calc.getSheet(calc, "Charge");
             XSpreadsheet feuilleTaches = Calc.getSheet(calc, "Tâches");
             planCharge = importer(feuilleParams, feuilleCharges, feuilleTaches, rapport);
@@ -565,21 +566,23 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 if (Calc.isEmpty(trigrammeCell)) {
                     break;
                 }
-                String trigramme = Calc.getString(trigrammeCell);
-                String prenom = Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1);
-                String nom = Calc.getString(feuilleParams, (noColTitre + 2) - 1, noLig - 1);
-                String societe = Calc.getString(feuilleParams, (noColTitre + 3) - 1, noLig - 1);
+                String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                String prenom = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1));
+                String nom = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 2) - 1, noLig - 1));
+                String societe = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 3) - 1, noLig - 1));
+                String debutMissionStr = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 4) - 1, noLig - 1));
                 //noinspection HardcodedFileSeparator
                 Date debutMission = (
-                        Calc.getString(feuilleParams, (noColTitre + 4) - 1, noLig - 1).equals("N/A") ? null
+                        ((debutMissionStr == null) || debutMissionStr.equals("N/A")) ? null
                                 : Calc.getDate(feuilleParams, (noColTitre + 4) - 1, noLig - 1)
                 );
+                LocalDate debutMissionLocale = Dates.asLocalDate(debutMission);
+                String finMissionStr = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 5) - 1, noLig - 1));
                 //noinspection HardcodedFileSeparator
                 Date finMission = (
-                        Calc.getString(feuilleParams, (noColTitre + 5) - 1, noLig - 1).equals("N/A") ? null
+                        finMissionStr.equals("N/A") ? null
                                 : Calc.getDate(feuilleParams, (noColTitre + 5) - 1, noLig - 1)
                 );
-                LocalDate debutMissionLocale = Dates.asLocalDate(debutMission);
                 LocalDate finMissionLocale = Dates.asLocalDate(finMission);
                 RessourceHumaine ressource = new RessourceHumaine(trigramme, nom, prenom, societe, debutMissionLocale, finMissionLocale);
                 ressourcesHumaines.add(ressource);

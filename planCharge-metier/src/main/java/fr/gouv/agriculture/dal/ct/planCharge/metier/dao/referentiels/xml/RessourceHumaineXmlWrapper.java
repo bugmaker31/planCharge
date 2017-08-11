@@ -1,15 +1,12 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
-import fr.gouv.agriculture.dal.ct.planCharge.util.xml.LocalDateXmlAdapter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -29,9 +26,9 @@ public class RessourceHumaineXmlWrapper {
     @NotNull
     private String societe;
     @Null
-    private LocalDate debutMission;
+    private Date debutMission;
     @Null
-    private LocalDate finMission;
+    private Date finMission;
 
 
     /**
@@ -76,11 +73,11 @@ public class RessourceHumaineXmlWrapper {
 
     @XmlElement(name = "dateDebutMission", required = false)
     @Null
-    public LocalDate getDebutMission() {
+    public Date getDebutMission() {
         return debutMission;
     }
 
-    public void setDebutMission(LocalDate debutMission) {
+    public void setDebutMission(Date debutMission) {
         this.debutMission = debutMission;
     }
 
@@ -107,11 +104,11 @@ public class RessourceHumaineXmlWrapper {
 
     @XmlElement(name = "dateFinMission", required = false)
     @Null
-    public LocalDate getFinMission() {
+    public Date getFinMission() {
         return finMission;
     }
 
-    public void setFinMission(LocalDate finMission) {
+    public void setFinMission(Date finMission) {
         this.finMission = finMission;
     }
 
@@ -122,13 +119,13 @@ public class RessourceHumaineXmlWrapper {
         this.nom = ressource.getNom();
         this.prenom = ressource.getPrenom();
         this.societe = ressource.getSociete();
-        this.debutMission = ressource.getDebutMission();
-        this.finMission = ressource.getFinMission();
+        this.debutMission = Dates.asDate(ressource.getDebutMission());
+        this.finMission = Dates.asDate(ressource.getFinMission());
         return this;
     }
 
     @NotNull
     public RessourceHumaine extract() {
-        return new RessourceHumaine(trigramme, nom, prenom, societe, debutMission, finMission);
+        return new RessourceHumaine(trigramme, nom, prenom, societe, Dates.asLocalDate(debutMission), Dates.asLocalDate(finMission));
     }
 }

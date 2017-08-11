@@ -40,9 +40,9 @@ public class TacheXmlWrapper {
     @NotNull
     private String codeStatut;
     @Null
-    private LocalDate debut;
+    private Date debut;
     @NotNull
-    private LocalDate echeance;
+    private Date echeance;
     @NotNull
     private String codeImportance;
     @NotNull
@@ -84,8 +84,8 @@ public class TacheXmlWrapper {
         description = tache.getDescription();
         codeProjetAppli = tache.getProjetAppli().getCode();
         codeStatut = tache.getStatut().getCode();
-        debut = tache.getDebut();
-        echeance = tache.getEcheance();
+        debut = Dates.asDate(tache.getDebut());
+        echeance = Dates.asDate(tache.getEcheance());
         codeImportance = tache.getImportance().getCodeInterne();
         charge = tache.getCharge();
         codeRessource = tache.getRessource().getCode();
@@ -134,11 +134,11 @@ public class TacheXmlWrapper {
     }
 
     @XmlElement(name = "debut", required = false)
-    public LocalDate getDebut() {
+    public Date getDebut() {
         return debut;
     }
 
-    public void setDebut(LocalDate debut) {
+    public void setDebut(Date debut) {
         this.debut = debut;
     }
 
@@ -195,11 +195,11 @@ public class TacheXmlWrapper {
     }
 
     @XmlElement(name = "echeance", required = true)
-    public LocalDate getEcheance() {
+    public Date getEcheance() {
         return echeance;
     }
 
-    public void setEcheance(LocalDate echeance) {
+    public void setEcheance(Date echeance) {
         this.echeance = echeance;
     }
 
@@ -231,8 +231,8 @@ public class TacheXmlWrapper {
                     description,
                     projetAppliDao.load(codeProjetAppli),
                     statutDao.load(codeStatut),
-                    debut,
-                    echeance,
+                    Dates.asLocalDate(debut),
+                    Dates.asLocalDate(echeance),
                     importanceDao.load(codeImportance),
                     charge,
                     ressourceDao.loadAny(codeRessource),

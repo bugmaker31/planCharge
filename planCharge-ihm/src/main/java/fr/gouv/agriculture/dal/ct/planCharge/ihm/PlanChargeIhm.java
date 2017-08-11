@@ -418,14 +418,14 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("WeakerAccess")
     public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
 //        Platform.runLater(() -> {
-            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
-            Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
-            try {
-                afficherPopUpErreurSaisie(field, titre, message);
-            } catch (IhmException e) {
-                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
-            }
+        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
+        Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
+        try {
+            afficherPopUpErreurSaisie(field, titre, message);
+        } catch (IhmException e) {
+            // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+            throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
+        }
 //        });
     }
 
@@ -734,12 +734,14 @@ public class PlanChargeIhm extends Application {
                 applicationController.charger(dateEtatPrec);
             }
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
-//            applicationController.afficherModuleJoursFeries();
-//            applicationController.afficherModuleRessourcesHumaines();
-//            applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-//        applicationController.afficherModuleDisponibilites();
-        applicationController.afficherModuleTaches();
-//        applicationController.afficherModuleCharges();
+            if (estEnDeveloppement) {
+//                applicationController.afficherModuleJoursFeries();
+//                applicationController.afficherModuleRessourcesHumaines();
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//                applicationController.afficherModuleDisponibilites();
+                applicationController.afficherModuleTaches();
+//                applicationController.afficherModuleCharges();
+            }
 
             LOGGER.info("Application démarrée.");
         } catch (Throwable e) {

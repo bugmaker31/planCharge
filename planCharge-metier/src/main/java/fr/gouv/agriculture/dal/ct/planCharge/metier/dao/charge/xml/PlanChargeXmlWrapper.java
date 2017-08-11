@@ -43,7 +43,7 @@ public class PlanChargeXmlWrapper {
     private String versionApplication;
 
     @NotNull
-    private LocalDate dateEtat;
+    private Date dateEtat;
 
     //    @Autowired
     @NotNull
@@ -77,7 +77,7 @@ public class PlanChargeXmlWrapper {
 
     @XmlElement(name = "dateEtat", required = true)
     @NotNull
-    public LocalDate getDateEtat() {
+    public Date getDateEtat() {
         return dateEtat;
     }
 
@@ -102,7 +102,7 @@ public class PlanChargeXmlWrapper {
         this.versionApplication = versionApplication;
     }
 
-    public void setDateEtat(@NotNull LocalDate dateEtat) {
+    public void setDateEtat(@NotNull Date dateEtat) {
         this.dateEtat = dateEtat;
     }
 
@@ -122,7 +122,7 @@ public class PlanChargeXmlWrapper {
             throw new PlanChargeDaoException("Impossible de déterminer la version de l'application.", e);
         }
 
-        dateEtat = planCharge.getDateEtat();
+        dateEtat = Dates.asDate(planCharge.getDateEtat());
         referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getReferentiels(), rapport);
         planificationsXmlWrapper = planificationsXmlWrapper.init(planCharge.getPlanifications(), rapport);
 
@@ -131,8 +131,8 @@ public class PlanChargeXmlWrapper {
 
     public PlanCharge extract() throws DaoException {
 
-        LocalDate dateEtatLocale = dateEtat;
-        assert dateEtatLocale != null;
+        assert dateEtat != null;
+        LocalDate dateEtatLocale = Dates.asLocalDate(dateEtat);
 
         // Rq : Les méthodes "extract" alimentent les DAOs, donc il faut extraire les référentiels avant les données métier (qui utilisent les valeurs des référentiels).
 

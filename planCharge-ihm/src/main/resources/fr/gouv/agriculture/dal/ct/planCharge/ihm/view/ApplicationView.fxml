@@ -120,7 +120,7 @@
                     </Label>
                 </HBox>
                 <HBox styleClass="itemBarreEtat">
-                    <Label fx:id="nbrTachesField"/>
+                    <Label fx:id="nbrTachesField" minWidth="50"/>
                     <Label text="tâches"/>
                 </HBox>
                 <Region prefWidth="200.0" HBox.hgrow="ALWAYS" /> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->

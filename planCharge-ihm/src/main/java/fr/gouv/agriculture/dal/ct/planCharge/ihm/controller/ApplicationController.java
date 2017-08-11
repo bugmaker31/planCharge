@@ -459,7 +459,7 @@ public class ApplicationController extends AbstractController {
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
                     Exceptions.causes(e),
-                    400, 200
+                    800, 300
             );
         }
     }
@@ -1076,7 +1076,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    void afficherModuleDisponibilites() throws IhmException {
+    public void afficherModuleDisponibilites() throws IhmException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
         if (nomModuleCourant == ApplicationController.NomModule.DISPONIBILITES) {
@@ -1137,7 +1137,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    void afficherModuleCharges() throws IhmException {
+    public void afficherModuleCharges() throws IhmException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
         if (nomModuleCourant == ApplicationController.NomModule.CHARGES) {
