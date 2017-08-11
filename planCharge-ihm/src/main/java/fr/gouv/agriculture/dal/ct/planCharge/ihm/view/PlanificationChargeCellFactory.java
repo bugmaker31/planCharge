@@ -45,10 +45,12 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         getStyleClass().remove("pendantPeriodeDemandee");
         getStyleClass().remove("apresPeriodeDemandee");
 
+/* Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée, ne seront pas décorées.
         // Stop, si cellule vide :
         if (empty || (item == null)) {
-            return; // TODO FDA 2017/05 Confirmer.
+            return;
         }
+*/
 
         // Récupération des infos sur la cellule :
         //noinspection unchecked
@@ -63,7 +65,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         // Formatage du texte de la cellule :
         //noinspection UnnecessaryLocalVariable
         Double charge = item;
-        setText((charge == 0.0) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
+        setText(((charge == null) || (charge == 0.0)) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
 
         // Formatage du style (CSS) de la cellule :
         if (planifBean.getDebut() != null) {
