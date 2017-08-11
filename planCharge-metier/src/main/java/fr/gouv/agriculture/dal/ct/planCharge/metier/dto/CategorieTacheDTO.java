@@ -8,10 +8,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Categori
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +28,9 @@ public class CategorieTacheDTO extends AbstractDTO<CategorieTache, String, Categ
 
     @NotNull
     public static final List<CategorieTacheDTO> CATEGORIES = Arrays.asList(values());
+
+    @NotNull
+    public static final String[] CODES_CATEGORIES = Arrays.stream(values()).map(categorieTacheDTO -> categorieTacheDTO.getCode()).collect(Collectors.toList()).toArray(new String[0]);
 
 
     @NotNull

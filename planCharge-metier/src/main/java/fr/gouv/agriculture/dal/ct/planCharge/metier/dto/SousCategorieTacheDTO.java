@@ -27,6 +27,9 @@ public class SousCategorieTacheDTO extends AbstractDTO<SousCategorieTache, Strin
                 .toArray(new SousCategorieTacheDTO[0]);
     }
 
+    @NotNull
+    public static final String[] CODES_SOUS_CATEGORIES = Arrays.stream(values()).map(sousCategorieTacheDTO -> sousCategorieTacheDTO.getCode()).collect(Collectors.toList()).toArray(new String[0]);
+
 
     @NotNull
     private final String code;

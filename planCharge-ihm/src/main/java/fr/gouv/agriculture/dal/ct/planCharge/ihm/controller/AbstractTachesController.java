@@ -8,6 +8,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -34,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.OptionalInt;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -148,8 +152,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        categorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn());
-        sousCategorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn());
+        categorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(CategorieTacheDTO.CODES_CATEGORIES));
+        sousCategorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(SousCategorieTacheDTO.CODES_SOUS_CATEGORIES));
         // Rq : La colonne "N° de tâche" n'est pas éditable (car c'est la "primary key").
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
