@@ -309,9 +309,12 @@ public class ObservableStack<T> extends SimpleListProperty<T> {
         }
     }
 
-    /**
+/*
+    */
+/**
      * Testing
-     */
+     *//*
+
     public static void main(String[] args) {
         ObservableStack<Integer> obs = new ObservableStack<>();
         obs.addListener((ListChangeListener.Change<? extends Integer> c) -> {
@@ -335,4 +338,5 @@ public class ObservableStack<T> extends SimpleListProperty<T> {
         obs.addAll(Arrays.asList(2, 3, 4, 5, 6, 7, 1, 54, 23, 121));
         obs.removeAll();
     }
+*/
 }
