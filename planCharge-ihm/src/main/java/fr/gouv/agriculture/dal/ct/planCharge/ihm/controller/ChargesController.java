@@ -280,7 +280,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
-        //noinspection OverlyComplexAnonymousInnerClass
         getChargeColumn().setCellFactory(column -> new         final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
 
             private final int noSemaine;
@@ -304,7 +303,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 planifBean.majChargePlanifieeTotale();
             }
         });
-        //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double charge, boolean empty) {
@@ -333,7 +331,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
-        //noinspection ClassHasNoToStringMethod
 TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double chargePlanifiee, boolean empty) {
