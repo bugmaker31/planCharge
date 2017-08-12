@@ -304,6 +304,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 planifBean.majChargePlanifieeTotale();
             }
         });
+
         //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
