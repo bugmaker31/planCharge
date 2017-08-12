@@ -280,30 +280,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
-        getChargeColumn().setCellFactory(column -> new         final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
-
-            private final int noSemaine;
-
-            private ChargeSemaineEditHandler(int noSemaine) {
-                this.noSemaine = noSemaine;
-            }
-
-            @Override
-            public void handle(CellEditEvent<PlanificationTacheBean, Double> event) {
-
-                PlanificationTacheBean planifBean = event.getRowValue();
-                try {
-                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
-                } catch (IhmException e) {
-                    LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
-                }
-
-                planifBean.majChargePlanifieeTotale();
-            }
-        });
-        chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
+        getChargeColumn().setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double charge, boolean empty) {
                 super.updateItem(charge, empty);
@@ -331,7 +308,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
-TableCell<PlanificationTacheBean, Double>() {
+        chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double chargePlanifiee, boolean empty) {
                 super.updateItem(chargePlanifiee, empty);
@@ -352,6 +329,29 @@ TableCell<PlanificationTacheBean, Double>() {
                 if (chargePlanifiee > charge) {
                     getStyleClass().add("incoherence");
                 }
+            }
+        });
+        final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
+
+            private final int noSemaine;
+
+            private ChargeSemaineEditHandler(int noSemaine) {
+                this.noSemaine = noSemaine;
+            }
+
+            @Override
+            public void handle(CellEditEvent<PlanificationTacheBean, Double> event) {
+
+                PlanificationTacheBean planifBean = event.getRowValue();
+                try {
+                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
+                }
+
+                planifBean.majChargePlanifieeTotale();
             }
         }
         semaine1Column.setOnEditCommit(new ChargeSemaineEditHandler(1));
