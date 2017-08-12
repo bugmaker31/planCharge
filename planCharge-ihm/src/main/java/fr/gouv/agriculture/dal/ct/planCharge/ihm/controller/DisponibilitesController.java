@@ -95,10 +95,6 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursOuvresBean, String> premiereColonneAbsencesColumn;
-    @FXML
-    @SuppressWarnings("NullableProblems")
-    @NotNull
     private TableColumn<NbrsJoursOuvresBean, Integer> semaine1NbrsJoursOuvresColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -149,6 +145,10 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @NotNull
     private TableView<NbrsJoursDAbsenceBean> nbrsJoursDAbsenceTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, String> premiereColonneAbsencesColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -334,6 +334,9 @@ public class DisponibilitesController extends AbstractController {
         return semaine12NbrsJoursDAbsenceColumn;
     }
 
+
+    // Méthodes :
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -401,14 +404,44 @@ public class DisponibilitesController extends AbstractController {
 
     private void initTableAbsences() throws IhmException {
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        semaine1NbrsJoursDAbsenceColumn.setCellValueFactory(param -> {
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((1 - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-            return param.getValue().get(debutPeriode).asObject();
-        });
-        semaine2NbrsJoursDAbsenceColumn.setCellValueFactory(param -> {
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((2 - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-            return param.getValue().get(debutPeriode).asObject();
-        });
+        premiereColonneAbsencesColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+        final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursDAbsenceBean, Integer>, ObservableValue<Integer>> {
+            private final int noSemaine;
+
+            private NbrJoursDAbsenceCellCallback(int noSemaine) {
+                super();
+                this.noSemaine = noSemaine;
+            }
+
+            @Null
+            @Override
+            public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDAbsenceBean, Integer> cell) {
+                return new SimpleIntegerProperty(noSemaine).asObject();
+//                TODO FDA 2017/08 Coder.
+/*
+                if (cell == null) {
+                    return null;
+                }
+                NbrsJoursDAbsenceBean nbrsJoursDAbsenceBean = cell.getValue();
+                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                IntegerProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
+                return nbrJoursDAbsencePeriode.asObject();
+*/
+            }
+        }
+        semaine1NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(1));
+        semaine2NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(2));
+        semaine3NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(3));
+        semaine4NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(4));
+        semaine5NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(5));
+        semaine6NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(6));
+        semaine7NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(7));
+        semaine8NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(8));
+        semaine9NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(9));
+        semaine10NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(10));
+        semaine11NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(11));
+        semaine12NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(12));
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         // TODO FDA 2017/08 Coder.
@@ -438,17 +471,18 @@ public class DisponibilitesController extends AbstractController {
         }
 */
         planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
-            if (change.wasAdded()) {
-                for (RessourceBean ressourceBean : change.getAddedSubList()) {
-                    if (!(ressourceBean instanceof RessourceHumaineBean)) {
-                        continue;
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
+                        nbrsJoursAbsenceBeans.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
                     }
-                    RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                    Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
-                    nbrsJoursAbsenceBeans.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
                 }
             }
-            nbrsJoursAbsenceBeans.setAll();
         });
 
         nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);

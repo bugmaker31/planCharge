@@ -33,7 +33,7 @@ public class TableViews {
 
         focusOnTableRow(table, row);
 
-        // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
+        // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la (bonne) cellule.
         int idxLigNouvBean = table.getItems().indexOf(row);
         assert idxLigNouvBean != -1;
         table.edit(idxLigNouvBean, column);

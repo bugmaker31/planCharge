@@ -281,8 +281,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         //noinspection OverlyComplexAnonymousInnerClass
-        getChargeColumn().setCellFactory(column -> new
-        final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
+        getChargeColumn().setCellFactory(column -> new         final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
 
             private final int noSemaine;
 

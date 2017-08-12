@@ -62,6 +62,11 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return getCode();
     }
 
+    @NotNull
+    public StringProperty trigrammeProperty() {
+        return codeProperty();
+    }
+
     public void setTrigramme(@Null String trigramme) {
         this.codeProperty().set(trigramme);
     }
@@ -136,10 +141,6 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         return finMission;
     }
 
-    @NotNull
-    public StringProperty trigrammeProperty() {
-        return codeProperty();
-    }
 
     @NotNull
     @Override
