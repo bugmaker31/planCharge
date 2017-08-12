@@ -20,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,14 +250,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 try {
                     PlanificationTacheBean planifBean = cell.getValue();
                     LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    if (!planifBean.aChargePlanifiee(debutPeriode)) {
+                    LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    if (!planifBean.aChargePlanifiee(debutPeriode, finPeriode)) {
                         // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
                         return null;
                     }
-                    DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode);
+                    DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode, finPeriode);
                     return nouvelleCharge.getValue().equals(0.0) ? null : nouvelleCharge.asObject();
                 } catch (IhmException e) {
-                    LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°{} pour la tâche {}.", noSemaine, cell.getValue().noTache(), e);
+                    LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°" + noSemaine + " pour la tâche " + cell.getValue().noTache() + ".", e);
                     return null;
                 }
             }
@@ -280,7 +282,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         //noinspection OverlyComplexAnonymousInnerClass
         getChargeColumn().setCellFactory(column -> new
-        final class ChargeSemaineEditHandler implements EventHandler<TableColumn.CellEditEvent<PlanificationTacheBean, Double>> {
+        final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
 
             private final int noSemaine;
 
@@ -289,12 +291,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
 
             @Override
-            public void handle(TableColumn.CellEditEvent<PlanificationTacheBean, Double> event) {
+            public void handle(CellEditEvent<PlanificationTacheBean, Double> event) {
 
                 PlanificationTacheBean planifBean = event.getRowValue();
                 try {
                     LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    planifBean.chargePlanifiee(dateDebutPeriode).setValue(event.getNewValue());
+                    LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
                 } catch (IhmException e) {
                     LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
                 }
@@ -449,13 +452,13 @@ TableCell<PlanificationTacheBean, Double>() {
     }
 
 
-    public void afficherPlanification() {
+    public void definirValeursCalendrier() {
 
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if (dateEtat == null) {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible d'afficher la planification",
+                    "Impossible d'afficher la planification (valeurs du calendrier)",
                     "Date d'état non définie."
             );
             return;
@@ -463,19 +466,19 @@ TableCell<PlanificationTacheBean, Double>() {
         assert dateEtat != null;
 
         try {
-            afficherPlanification(dateEtat);
+            definirValeursCalendrier(dateEtat);
         } catch (IhmException e) {
-            LOGGER.error("Impossible d'afficher la planification.", e);
+            LOGGER.error("Impossible de màj la planification (valeurs du calendrier).", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible d'afficher la planification",
+                    "Impossible de mettre à jour la planification (valeurs du calendrier)",
                     Exceptions.causes(e)
             );
         }
     }
 
-    private void afficherPlanification(@NotNull LocalDate dateEtat) throws IhmException {
-        LOGGER.debug("Affichage de la planification : ");
+    private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
+        LOGGER.debug("Màj de la planification : ");
         PlanificationsDTO planificationsInitiales = planChargeBean.toPlanificationDTOs();
         PlanificationsDTO planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
         planifications
@@ -490,7 +493,7 @@ TableCell<PlanificationTacheBean, Double>() {
                     planifTache.forEach((debutPeriode, charge) -> calendrierTache.put(debutPeriode, new SimpleDoubleProperty(charge)));
                 });
         planificationsTable.refresh();
-        LOGGER.debug("Planification affichée.");
+        LOGGER.debug("Planification màj.");
     }
 
 
@@ -500,6 +503,7 @@ TableCell<PlanificationTacheBean, Double>() {
     }
 
 
+    @SuppressWarnings("unused")
     @FXML
     private void afficherTache(@SuppressWarnings("unused") ActionEvent actionEvent) {
         afficherTache();
@@ -521,7 +525,7 @@ TableCell<PlanificationTacheBean, Double>() {
 
         try {
             ihm.getApplicationController().afficherModuleTaches();
-            ihm.getTachesController().mettreFocusSurTache(tacheBean);
+            mettreFocusSurTache(tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(

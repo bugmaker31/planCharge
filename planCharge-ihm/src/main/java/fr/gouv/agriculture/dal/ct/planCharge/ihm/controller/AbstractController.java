@@ -24,7 +24,7 @@ public abstract class AbstractController implements Initializable {
 
     //    @Autowired
     @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
+    protected final PlanChargeIhm ihm = PlanChargeIhm.instance();
 
     //    @Autowired
     @NotNull
@@ -42,13 +42,11 @@ public abstract class AbstractController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the fxml file has been loaded.
+     */
     protected abstract void initialize() throws IhmException;
-
-
-    @NotNull
-    public PlanChargeIhm getIhm() {
-        return ihm;
-    }
 
 
     // Suivi des actions de l'utilisateur :

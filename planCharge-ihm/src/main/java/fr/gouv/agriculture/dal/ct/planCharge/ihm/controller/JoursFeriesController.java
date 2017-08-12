@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
@@ -102,7 +103,7 @@ public class JoursFeriesController extends AbstractController {
         Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filter.apply();
-        getIhm().symboliserColonnesFiltrables(dateColumn, descriptionColumn);// FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
+        ihm.symboliserColonnesFiltrables(dateColumn, descriptionColumn);// FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
 
         definirMenuContextuel();
 
@@ -152,16 +153,7 @@ public class JoursFeriesController extends AbstractController {
 //        joursFeriesTable.refresh();
 
         // Positionnement sur le jour férié qu'on vient d'ajouter :
-//        Platform.runLater(() -> {
-            int idxLigNouvBean = joursFeriesTable.getItems().indexOf(nouvJourFerieBean);
-            assert idxLigNouvBean != -1;
-            joursFeriesTable.scrollTo(idxLigNouvBean);
-            joursFeriesTable.getSelectionModel().clearAndSelect(idxLigNouvBean);
-//        joursFeriesTable.getSelectionModel().focus(idxLigNouvBean);
-            // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
-            joursFeriesTable.edit(idxLigNouvBean, dateColumn);
-//        joursFeriesTable.refresh();
-//        });
+        TableViews.editTableCell(joursFeriesTable, nouvJourFerieBean, dateColumn);
     }
 
     @FXML

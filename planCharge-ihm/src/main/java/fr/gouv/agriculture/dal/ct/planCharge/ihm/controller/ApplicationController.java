@@ -24,6 +24,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCha
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -48,6 +49,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -193,10 +195,6 @@ public class ApplicationController extends AbstractController {
         return dateEtatPicker;
     }
 
-
-    //    @Autowired
-    @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
 /*
     @Null
@@ -938,6 +936,7 @@ public class ApplicationController extends AbstractController {
 
     private void supprimer() throws IhmException {
         // TODO FDA 2017/04 Coder.
+        throw new NotImplementedException();
     }
 
 
@@ -1197,72 +1196,86 @@ public class ApplicationController extends AbstractController {
             dateEtatPicker.setValue(dateEtat);
         }
 
-        majPlanificationCharge();
+        majCalendriers();
         majTitre();
     }
 
 
-    private void majPlanificationCharge() {
+    private void majCalendriers() {
         definirNomsPeriodes();
-        majPlanification();
+        definirValeursCalendriers();
     }
 
     private void definirNomsPeriodes() {
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
+        // TODO FDA 2017/08 Réécrire avec une boucle (donc gérer une liste des colonnes).
+
         LocalDate dateDebutPeriode = planChargeBean.getDateEtat();
+        ihm.getDisponibilitesController().getSemaine1NbrsJoursOuvresColumn().setText("S+1" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine1NbrsJoursDAbsenceColumn().setText("S+1" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine1Column().setText("S+1" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine1Column().setText("S+1" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine2NbrsJoursOuvresColumn().setText("S+2" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine2NbrsJoursDAbsenceColumn().setText("S+2" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine2Column().setText("S+2" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine2Column().setText("S+2" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine3NbrsJoursOuvresColumn().setText("S+3" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine3NbrsJoursDAbsenceColumn().setText("S+3" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine3Column().setText("S+3" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine3Column().setText("S+3" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine4NbrsJoursOuvresColumn().setText("S+4" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine4NbrsJoursDAbsenceColumn().setText("S+4" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine4Column().setText("S+4" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine4Column().setText("S+4" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine5NbrsJoursOuvresColumn().setText("S+5" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine5NbrsJoursDAbsenceColumn().setText("S+5" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine5Column().setText("S+5" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine5Column().setText("S+5" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine6NbrsJoursOuvresColumn().setText("S+6" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine6NbrsJoursDAbsenceColumn().setText("S+6" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine6Column().setText("S+6" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine6Column().setText("S+6" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine7NbrsJoursOuvresColumn().setText("S+7" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine7NbrsJoursDAbsenceColumn().setText("S+7" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine7Column().setText("S+7" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine7Column().setText("S+7" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine8NbrsJoursOuvresColumn().setText("S+8" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine8NbrsJoursDAbsenceColumn().setText("S+8" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine8Column().setText("S+8" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine8Column().setText("S+8" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine9NbrsJoursOuvresColumn().setText("S+9" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine9NbrsJoursDAbsenceColumn().setText("S+9" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine9Column().setText("S+9" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine9Column().setText("S+9" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine10NbrsJoursOuvresColumn().setText("S+10" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine10NbrsJoursDAbsenceColumn().setText("S+10" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine10Column().setText("S+10" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine10Column().setText("S+10" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine11NbrsJoursOuvresColumn().setText("S+11" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine11NbrsJoursDAbsenceColumn().setText("S+11" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine11Column().setText("S+11" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine11Column().setText("S+11" + " " + dateDebutPeriode.format(dateFormatter));
 
         dateDebutPeriode = dateDebutPeriode.plusDays(7);
+        ihm.getDisponibilitesController().getSemaine12NbrsJoursOuvresColumn().setText("S+12" + " " + dateDebutPeriode.format(dateFormatter));
+        ihm.getDisponibilitesController().getSemaine12NbrsJoursDAbsenceColumn().setText("S+12" + " " + dateDebutPeriode.format(dateFormatter));
         ihm.getChargesController().getSemaine12Column().setText("S+12" + " " + dateDebutPeriode.format(dateFormatter));
-        ihm.getDisponibilitesController().getSemaine12Column().setText("S+12" + " " + dateDebutPeriode.format(dateFormatter));
     }
 
-    private void majPlanification() {
-        ihm.getChargesController().afficherPlanification();
-        ihm.getDisponibilitesController().afficherCalendrier();
+    private void definirValeursCalendriers() {
+        ihm.getDisponibilitesController().definirValeursCalendrier();
+        ihm.getChargesController().definirValeursCalendrier();
     }
 
 

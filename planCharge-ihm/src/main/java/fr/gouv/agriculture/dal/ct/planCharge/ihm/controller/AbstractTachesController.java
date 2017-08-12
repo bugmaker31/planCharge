@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
@@ -54,10 +55,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     //    @Autowired
     @NotNull
     private ReferentielsService referentielsService = ReferentielsService.instance();
-
-    //    @Autowired
-    @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
 
 
     // Les beans :
@@ -157,12 +154,19 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 new StringConverter<ProjetAppliBean>() {
                     @Null
                     @Override
-                    public String toString(ProjetAppliBean projetAppliBean) {
+                    public String toString(@Null ProjetAppliBean projetAppliBean) {
+                        if (projetAppliBean == null) {
+                            return null;
+                        }
                         return projetAppliBean.getCode();
                     }
 
+                    @Null
                     @Override
-                    public ProjetAppliBean fromString(String codeProjetAppli) {
+                    public ProjetAppliBean fromString(@Null String codeProjetAppli) {
+                        if (codeProjetAppli == null) {
+                            return null;
+                        }
                         return planChargeBean.getProjetsApplisBeans().parallelStream()
                                 .filter(projetAppliBean -> projetAppliBean.getCode().equals(codeProjetAppli))
                                 .collect(Collectors.toList())
@@ -176,12 +180,19 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
                     @Null
                     @Override
-                    public String toString(StatutBean statutBean) {
+                    public String toString(@Null StatutBean statutBean) {
+                        if (statutBean == null) {
+                            return null;
+                        }
                         return statutBean.getCode();
                     }
 
+                    @Null
                     @Override
-                    public StatutBean fromString(String codeStatut) {
+                    public StatutBean fromString(@Null String codeStatut) {
+                        if (codeStatut == null) {
+                            return null;
+                        }
                         return planChargeBean.getStatutsBeans().parallelStream()
                                 .filter(statutBean -> statutBean.getCode().equals(codeStatut))
                                 .collect(Collectors.toList())
@@ -197,12 +208,19 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 new StringConverter<RessourceBean>() {
                     @Null
                     @Override
-                    public String toString(RessourceBean ressourceBean) {
+                    public String toString(@Null RessourceBean ressourceBean) {
+                        if (ressourceBean == null) {
+                            return null;
+                        }
                         return ressourceBean.getCode();
                     }
 
                     @Override
-                    public RessourceBean fromString(String trigramme) {
+                    @Null
+                    public RessourceBean fromString(@Null String trigramme) {
+                        if (trigramme == null) {
+                            return null;
+                        }
                         return planChargeBean.getRessourcesBeans().parallelStream()
                                 .filter(ressourceBean -> ressourceBean.getCode().equals(trigramme))
                                 .collect(Collectors.toList())
@@ -215,12 +233,19 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
                     @Null
                     @Override
-                    public String toString(ProfilBean profilBean) {
+                    public String toString(@Null ProfilBean profilBean) {
+                        if (profilBean == null) {
+                            return null;
+                        }
                         return profilBean.getCode();
                     }
 
                     @Override
-                    public ProfilBean fromString(String codeProfil) {
+                    @Null
+                    public ProfilBean fromString(@Null String codeProfil) {
+                        if (codeProfil == null) {
+                            return null;
+                        }
                         return planChargeBean.getProfilsBeans().parallelStream()
                                 .filter(profilBean -> profilBean.getCode().equals(codeProfil))
                                 .collect(Collectors.toList())
@@ -263,7 +288,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         Builder<TB> filter = TableFilter.forTableView(getTachesTable());
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filter.apply();
-        getIhm().symboliserColonnesFiltrables(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
+        ihm.symboliserColonnesFiltrables(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
 
         // Gestion des undo/redo :
         //
@@ -393,14 +418,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesBeans().add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
-            int idxLigNouvTache = getTachesTable().getItems().indexOf(nouvTache);
-            getTachesTable().scrollTo(idxLigNouvTache);
-            getTachesTable().scrollToColumn(descriptionColumn);
-            getTachesTable().getSelectionModel().select(idxLigNouvTache);
-            // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
-//            getTachesTable().getSelectionModel().select(idxLigNouvTache, descriptionColumn);
-//            getTachesTable().edit(getTachesTable().getSelectionModel().getFocusedIndex(), descriptionColumn);
-            getTachesTable().edit(idxLigNouvTache, descriptionColumn);
+            TableViews.editTableCell(getTachesTable(), nouvTache, descriptionColumn);
 
             return nouvTache;
         } catch (IhmException e) {
@@ -494,15 +512,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @Null
     TB tacheSelectionnee() {
-        return getTachesTable().getSelectionModel().getSelectedItem();
+        return TableViews.selectedTableRow(getTachesTable());
     }
 
     void mettreFocusSurTache(@NotNull TB tacheBean) {
-        int idxTacheBean = getTachesTable().getItems().indexOf(tacheBean);
-        assert idxTacheBean != -1;
-        // FIXME FDA 2017/07 Ok qd on bascule du plan charge vers la liste des tâches, mais sans effet dans l'autre sens.
-        getTachesTable().getSelectionModel().clearAndSelect(idxTacheBean);
-//        getTachesTable().getSelectionModel().focus(idxTacheBean); Ne change rien.
+        TableViews.focusOnTableRow(getTachesTable(), tacheBean);
     }
 
 

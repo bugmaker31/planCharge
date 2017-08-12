@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
@@ -199,7 +200,7 @@ public class RessourcesHumainesController extends AbstractController {
         TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
         filterBuilder.apply();
-        getIhm().symboliserColonnesFiltrables(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
+        ihm.symboliserColonnesFiltrables(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
 
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
@@ -296,14 +297,7 @@ public class RessourcesHumainesController extends AbstractController {
         ressourceHumainesBeans.add(nouvRsrcHumaine);
 
         // Positionnement sur la ressource qu'on vient d'ajouter :
-        int idxLigNouvBean = ressourcesHumainesTable.getItems().indexOf(nouvRsrcHumaine);
-        assert idxLigNouvBean != -1;
-        ressourcesHumainesTable.scrollTo(idxLigNouvBean);
-        ressourcesHumainesTable.getSelectionModel().clearAndSelect(idxLigNouvBean);
-//        ressourcesHumainesTable.getSelectionModel().focus(idxLigNouvBean);
-        // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la cellule.
-        ressourcesHumainesTable.edit(idxLigNouvBean, trigrammeColumn);
-//        ressourcesHumainesTable.refresh();
+        TableViews.editTableCell(ressourcesHumainesTable, nouvRsrcHumaine, trigrammeColumn);
     }
 
 
@@ -311,7 +305,7 @@ public class RessourcesHumainesController extends AbstractController {
     private void supprimerRessourceHumaine(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimerJourFerie...");
 
-        RessourceHumaineBean focusedItem = ressourcesHumainesTable.getFocusModel().getFocusedItem();
+        RessourceHumaineBean focusedItem = TableViews.selectedTableRow(ressourcesHumainesTable);
         if (focusedItem == null) {
             LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");
             return;

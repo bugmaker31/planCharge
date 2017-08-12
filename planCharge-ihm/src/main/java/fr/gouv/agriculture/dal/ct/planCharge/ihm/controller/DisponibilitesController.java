@@ -1,19 +1,23 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrJourOuvreBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDAbsenceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOuvresBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -27,8 +31,10 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -56,71 +62,144 @@ public class DisponibilitesController extends AbstractController {
 
     //    @Autowired
     @NotNull
+    private final ReferentielsService referentielsService = ReferentielsService.instance();
+
+    //    @Autowired
+    @NotNull
     private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
+/*
     @NotNull
     private final ObservableList<PlanificationTacheBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+*/
 
     @NotNull
-    private final ObservableList<NbrJourOuvreBean> nbrsJoursOuvresBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursOuvresBean> nbrsJoursOuvresBeans = FXCollections.observableArrayList();
 
+    @NotNull
+    private final ObservableList<NbrsJoursDAbsenceBean> nbrsJoursAbsenceBeans = FXCollections.observableArrayList();
 
     /*
      La couche "View" :
       */
 
-    //    @Autowired
+    // Les tables/colonnes :
+    @SuppressWarnings("NullableProblems")
+    @FXML
     @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
+    private TableView<NbrsJoursOuvresBean> nbrsJoursOuvresTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, String> premiereColonneJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, String> premiereColonneAbsencesColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine1NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine2NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine3NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine4NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine5NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine6NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine7NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine8NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine9NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine10NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine11NbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, Integer> semaine12NbrsJoursOuvresColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableView<NbrJourOuvreBean> nbrsJoursOuvresTable;
-
+    private TableView<NbrsJoursDAbsenceBean> nbrsJoursDAbsenceTable;
+    @FXML
     @SuppressWarnings("NullableProblems")
-    @FXML
     @NotNull
-    private TableView<Integer> nbrsJoursAbsenceTable;
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine1NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine2NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine3NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine4NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine5NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine6NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine7NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine8NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine9NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine10NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine11NbrsJoursDAbsenceColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine12NbrsJoursDAbsenceColumn;
 
-    // Les colonnes spécifiques du calendrier des tâches :
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine1Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine2Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine3Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine4Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine5Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine6Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine7Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine8Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine9Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine10Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine11Column;
-    @FXML
-    @NotNull
-    private TableColumn<NbrJourOuvreBean, Integer> semaine12Column;
 
+    // Constructeurs :
 
     /**
      * The constructor.
@@ -136,65 +215,124 @@ public class DisponibilitesController extends AbstractController {
 
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine1Column() {
-        return semaine1Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine1NbrsJoursOuvresColumn() {
+        return semaine1NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine2Column() {
-        return semaine2Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine2NbrsJoursOuvresColumn() {
+        return semaine2NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine3Column() {
-        return semaine3Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine3NbrsJoursOuvresColumn() {
+        return semaine3NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine4Column() {
-        return semaine4Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine4NbrsJoursOuvresColumn() {
+        return semaine4NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine5Column() {
-        return semaine5Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine5NbrsJoursOuvresColumn() {
+        return semaine5NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine6Column() {
-        return semaine6Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine6NbrsJoursOuvresColumn() {
+        return semaine6NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine7Column() {
-        return semaine7Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine7NbrsJoursOuvresColumn() {
+        return semaine7NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine8Column() {
-        return semaine8Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine8NbrsJoursOuvresColumn() {
+        return semaine8NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine9Column() {
-        return semaine9Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine9NbrsJoursOuvresColumn() {
+        return semaine9NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine10Column() {
-        return semaine10Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine10NbrsJoursOuvresColumn() {
+        return semaine10NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine11Column() {
-        return semaine11Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine11NbrsJoursOuvresColumn() {
+        return semaine11NbrsJoursOuvresColumn;
     }
 
     @NotNull
-    public TableColumn<NbrJourOuvreBean, Integer> getSemaine12Column() {
-        return semaine12Column;
+    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine12NbrsJoursOuvresColumn() {
+        return semaine12NbrsJoursOuvresColumn;
     }
 
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine1NbrsJoursDAbsenceColumn() {
+        return semaine1NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine2NbrsJoursDAbsenceColumn() {
+        return semaine2NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine3NbrsJoursDAbsenceColumn() {
+        return semaine3NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine4NbrsJoursDAbsenceColumn() {
+        return semaine4NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine5NbrsJoursDAbsenceColumn() {
+        return semaine5NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine6NbrsJoursDAbsenceColumn() {
+        return semaine6NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine7NbrsJoursDAbsenceColumn() {
+        return semaine7NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine8NbrsJoursDAbsenceColumn() {
+        return semaine8NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine9NbrsJoursDAbsenceColumn() {
+        return semaine9NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine10NbrsJoursDAbsenceColumn() {
+        return semaine10NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine11NbrsJoursDAbsenceColumn() {
+        return semaine11NbrsJoursDAbsenceColumn;
+    }
+
+    @NotNull
+    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine12NbrsJoursDAbsenceColumn() {
+        return semaine12NbrsJoursDAbsenceColumn;
+    }
 
     /**
      * Initializes the controller class. This method is automatically called
@@ -202,41 +340,47 @@ public class DisponibilitesController extends AbstractController {
      */
     @FXML
     protected void initialize() throws IhmException {
+        initTableJoursOuvres();
+        initTableAbsences();
+        synchroniserLargeurPremieresColonnes();
+    }
+
+    private void initTableJoursOuvres() {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        class NbrJourOuvreCellCallback implements Callback<CellDataFeatures<NbrJourOuvreBean, Integer>, ObservableValue<Integer>> {
+        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+        final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
             private final int noSemaine;
 
-            public NbrJourOuvreCellCallback(int noSemaine) {
+            private NbrJoursOuvresCellCallback(int noSemaine) {
+                super();
                 this.noSemaine = noSemaine;
             }
 
             @Null
             @Override
-            public ObservableValue<Integer> call(@NotNull CellDataFeatures<NbrJourOuvreBean, Integer> cell) {
-                NbrJourOuvreBean planifBean = cell.getValue();
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                try {
-                    int nbrJoursOuvres = disponibilitesService.nbrJoursOuvres(debutPeriode);
-                    return new SimpleIntegerProperty(nbrJoursOuvres).asObject();
-                } catch (ServiceException e) {
-                    LOGGER.error("Impossible de gérer l'édition de la cellule conternant le nombre de jours ouvrés de la semaine n°" + noSemaine + ".", e);
+            public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursOuvresBean, Integer> cell) {
+                if (cell == null) {
                     return null;
                 }
+                NbrsJoursOuvresBean nbrsJoursOuvresBean = cell.getValue();
+                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                IntegerProperty nbrJoursOuvresPeriode = nbrsJoursOuvresBean.get(debutPeriode);
+                return nbrJoursOuvresPeriode.asObject();
             }
         }
-        semaine1Column.setCellValueFactory(new NbrJourOuvreCellCallback(1));
-        semaine2Column.setCellValueFactory(new NbrJourOuvreCellCallback(2));
-        semaine3Column.setCellValueFactory(new NbrJourOuvreCellCallback(3));
-        semaine4Column.setCellValueFactory(new NbrJourOuvreCellCallback(4));
-        semaine5Column.setCellValueFactory(new NbrJourOuvreCellCallback(5));
-        semaine6Column.setCellValueFactory(new NbrJourOuvreCellCallback(6));
-        semaine7Column.setCellValueFactory(new NbrJourOuvreCellCallback(7));
-        semaine8Column.setCellValueFactory(new NbrJourOuvreCellCallback(8));
-        semaine9Column.setCellValueFactory(new NbrJourOuvreCellCallback(9));
-        semaine10Column.setCellValueFactory(new NbrJourOuvreCellCallback(10));
-        semaine11Column.setCellValueFactory(new NbrJourOuvreCellCallback(11));
-        semaine12Column.setCellValueFactory(new NbrJourOuvreCellCallback(12));
+        semaine1NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(1));
+        semaine2NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(2));
+        semaine3NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(3));
+        semaine4NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(4));
+        semaine5NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(5));
+        semaine6NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(6));
+        semaine7NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(7));
+        semaine8NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(8));
+        semaine9NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(9));
+        semaine10NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(10));
+        semaine11NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(11));
+        semaine12NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(12));
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //Pas sur cet écran (non modifiable, calculé à partir du référentiel des jours fériés.).
@@ -250,42 +394,112 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (1 seule ligne).
 
-        nbrsJoursOuvresBeans.setAll(new NbrJourOuvreBean());
-
+        NbrsJoursOuvresBean nbrsJoursOuvresBean = new NbrsJoursOuvresBean();
+        nbrsJoursOuvresBeans.setAll(nbrsJoursOuvresBean);
         nbrsJoursOuvresTable.setItems(nbrsJoursOuvresBeans);
     }
 
+    private void initTableAbsences() throws IhmException {
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        semaine1NbrsJoursDAbsenceColumn.setCellValueFactory(param -> {
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((1 - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+            return param.getValue().get(debutPeriode).asObject();
+        });
+        semaine2NbrsJoursDAbsenceColumn.setCellValueFactory(param -> {
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((2 - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+            return param.getValue().get(debutPeriode).asObject();
+        });
 
-    public void afficherCalendrier() {
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        // TODO FDA 2017/08 Coder.
+
+        // Paramétrage des ordres de tri :
+        // TODO FDA 2017/08 Coder.
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+/*
+        try {
+            List<RessourceHumaineDTO> ressourceHumaineDTOS = referentielsService.ressourcesHumaines();
+            nbrsJoursAbsenceBeans.setAll(ressourceHumaineDTOS.stream()
+                    .map(ressourceHumaineDTO -> {
+                        RessourceHumaineBean ressourceHumaineBean = RessourceHumaineBean.from(ressourceHumaineDTO);
+                        NbrsJoursDAbsenceBean nbrsJoursAbsenceBean = new NbrsJoursDAbsenceBean(ressourceHumaineBean, null);
+                        return nbrsJoursAbsenceBean;
+                    })
+                    .collect(Collectors.toList())
+            );
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de déterminer la liste des ressources humaines.", e);
+        }
+*/
+        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
+            if (change.wasAdded()) {
+                for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                    if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                        continue;
+                    }
+                    RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                    Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
+                    nbrsJoursAbsenceBeans.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
+                }
+            }
+            nbrsJoursAbsenceBeans.setAll();
+        });
+
+        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+    }
+
+    private void synchroniserLargeurPremieresColonnes() {
+        TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, nbrsJoursDAbsenceTable);
+    }
+
+
+    public void definirValeursCalendrier() {
 
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if (dateEtat == null) {
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible d'afficher le calendrier",
+                    "Impossible de définir les valeurs du calendrier",
                     "Date d'état non définie."
             );
             return;
         }
-        assert dateEtat != null;
 
         try {
-            afficherCalendrier(dateEtat);
+            definirValeursCalendrier(dateEtat);
         } catch (IhmException e) {
-            LOGGER.error("Impossible d'afficher le calendrier.", e);
+            LOGGER.error("Impossible de définir les valeurs du calendrier.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible d'afficher le calendrier",
+                    "Impossible de définir les valeurs du calendrier",
                     Exceptions.causes(e)
             );
         }
     }
 
-    private void afficherCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
-        LOGGER.debug("Affichage du calendrier : ");
-        // TODO FDA 2017/08 Recalculer les nouveaux nombres.
-        nbrsJoursAbsenceTable.refresh();
-        nbrsJoursAbsenceTable.refresh();
-        LOGGER.debug("Calendrier affiché.");
+    private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
+        LOGGER.debug("Définition des valeurs du calendrier : ");
+        try {
+            NbrsJoursOuvresBean nbrsJoursOuvresBean = nbrsJoursOuvresBeans.get(0);
+            assert nbrsJoursOuvresBean != null;
+            nbrsJoursOuvresBean.clear();
+            for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+                LocalDate debutPeriode = dateEtat.plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                int nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
+                nbrsJoursOuvresBean.put(debutPeriode, new SimpleIntegerProperty(nbrJoursOuvresPeriode));
+            }
+            nbrsJoursOuvresTable.refresh();
+            nbrsJoursDAbsenceTable.refresh();
+            LOGGER.debug("Valeurs du calendrier définies.");
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de définir les valeurs du calendrier.", e);
+        }
     }
 }

@@ -177,15 +177,15 @@
             <artifactId>Medusa</artifactId>
             <version>7.9</version>
         </dependency>
-<!--
-        Non utilisé finalement, n'apporte pas gd-chose.
-        &lt;!&ndash;Pour gérer les undo/redo (annuler/rétablir) :&ndash;&gt;
-        <dependency>
-            <groupId>org.fxmisc.undo</groupId>
-            <artifactId>undofx</artifactId>
-            <version>1.1.1</version>
-        </dependency>
--->
+        <!--
+                Non utilisé finalement, n'apporte pas gd-chose.
+                &lt;!&ndash;Pour gérer les undo/redo (annuler/rétablir) :&ndash;&gt;
+                <dependency>
+                    <groupId>org.fxmisc.undo</groupId>
+                    <artifactId>undofx</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+        -->
 
     </dependencies>
 

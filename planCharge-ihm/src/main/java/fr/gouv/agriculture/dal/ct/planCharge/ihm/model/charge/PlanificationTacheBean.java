@@ -89,15 +89,15 @@ public class PlanificationTacheBean extends TacheBean {
         return chargePlanifieeTotale;
     }
 
-    @NotNull
-    public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode) {
+    // FIXME FDA 2017/06 Ne marche que quand la période est 1 semaine, pas pour 1 trimestre.
+    public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode, @SuppressWarnings("unused") @NotNull LocalDate datefinPeriode) {
         return calendrier.containsKey(dateDebutPeriode);
     }
 
     @NotNull
-    public DoubleProperty chargePlanifiee(@NotNull LocalDate dateDebutPeriode) throws IhmException {
-        if (!aChargePlanifiee(dateDebutPeriode)) {
-            throw new IhmException("Pas de calendrier pour la tâche " + noTache() + " sur la période qui commence le " + dateDebutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
+    public DoubleProperty chargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode) throws IhmException {
+        if (!aChargePlanifiee(dateDebutPeriode, datefinPeriode)) {
+            throw new IhmException("Pas de calendrier pour la tâche " + noTache() + " sur la période du " + dateDebutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + " au " + datefinPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
         }
         return calendrier.get(dateDebutPeriode);
     }

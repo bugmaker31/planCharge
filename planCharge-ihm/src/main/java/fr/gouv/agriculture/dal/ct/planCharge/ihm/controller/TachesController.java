@@ -37,10 +37,6 @@ public class TachesController extends AbstractTachesController<TacheBean> {
      La couche "View" :
       */
 
-    //    @Autowired
-    @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
-
     @NotNull
     @FXML
     private TableView<TacheBean> tachesTable;
@@ -151,7 +147,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         }
         try {
             ihm.getApplicationController().afficherModuleCharges();
-            ihm.getTachesController().mettreFocusSurTache(tacheBean);
+            mettreFocusSurTache(tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(

@@ -76,7 +76,7 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
     public void updateItem(@Null ImportanceBean item, boolean empty) {
         super.updateItem(item, empty);
 
-        getStyleClass().clear();
+        getStyleClass().removeAll("importanceAvecEngagement", "importanceMaximale", "importanceHaute", "importanceNormale", "importanceBasse");
 
         if (empty || (getItem() == null)) {
             return;

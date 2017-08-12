@@ -61,9 +61,11 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private ObjectProperty<ProfilBean> profil = new SimpleObjectProperty<>();
 
+/*
     //    @Autowired
     @NotNull
     private ReferentielsService referentielsService = ReferentielsService.instance();
+*/
 
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
@@ -498,6 +500,8 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return new Integer(getId()).hashCode();
     }
 
+
+    // Implémentation de Copiable :
 
     @Override
     public TacheBean copier() throws CopieException {

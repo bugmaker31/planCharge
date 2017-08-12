@@ -10,100 +10,84 @@
 >
     <center>
         <fx:define>
+            <Double fx:id="premiereColumnPrefWidth" fx:value="100"/>
             <Double fx:id="semaineColumnPrefWidth" fx:value="35"/>
-            <!--FIXME FDA 2017/08 "styleClass="nonModifiable" sans effet (titre de la colonne pas en italique).-->
-            <TableColumn fx:id="semaine1Column" text="S+1"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine2Column" text="S+2"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine3Column" text="S+3"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine4Column" text="S+4"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine5Column" text="S+5"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine6Column" text="S+6"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine7Column" text="S+7"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine8Column" text="S+8"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine9Column" text="S+9"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine10Column" text="S+10"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine11Column" text="S+11"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
-            <TableColumn fx:id="semaine12Column" text="S+12"
-                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
         </fx:define>
         <TabPane>
             <Tab text="Ouvré" closable="false">
-                <TableView fx:id="nbrsJoursOuvresTable" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
-                    <!--editable="false"-->
-                    <columns>
-                        <fx:reference source="semaine1Column"/>
-                        <fx:reference source="semaine2Column"/>
-                        <fx:reference source="semaine3Column"/>
-                        <fx:reference source="semaine4Column"/>
-                        <fx:reference source="semaine5Column"/>
-                        <fx:reference source="semaine6Column"/>
-                        <fx:reference source="semaine7Column"/>
-                        <fx:reference source="semaine8Column"/>
-                        <fx:reference source="semaine9Column"/>
-                        <fx:reference source="semaine10Column"/>
-                        <fx:reference source="semaine11Column"/>
-                        <fx:reference source="semaine12Column"/>
-                    </columns>
-                </TableView>
-            </Tab>
-            <Tab text="Absence / rsrc (j)" closable="false">
-                <TableView fx:id="nbrsJoursAbsenceTable" editable="true" tableMenuButtonVisible="true"
-                           BorderPane.alignment="CENTER">
-                    <columns>
-                        <TableColumn prefWidth="40" text="Rsrc"/>
-                        <TableColumn text="Calendrier">
-                            <columns>
-                                <fx:reference source="semaine1Column"/>
-                                <fx:reference source="semaine2Column"/>
-                                <fx:reference source="semaine3Column"/>
-                                <fx:reference source="semaine4Column"/>
-                                <fx:reference source="semaine5Column"/>
-                                <fx:reference source="semaine6Column"/>
-                                <fx:reference source="semaine7Column"/>
-                                <fx:reference source="semaine8Column"/>
-                                <fx:reference source="semaine9Column"/>
-                                <fx:reference source="semaine10Column"/>
-                                <fx:reference source="semaine11Column"/>
-                                <fx:reference source="semaine12Column"/>
-                            </columns>
-                        </TableColumn>
-                    </columns>
-                </TableView>
+                <VBox>
+                    <TableView fx:id="nbrsJoursOuvresTable" tableMenuButtonVisible="true"
+                               BorderPane.alignment="CENTER"> <!--editable="false"-->
+                        <columns>
+                            <TableColumn fx:id="premiereColonneJoursOuvresColumn" prefWidth="$premiereColumnPrefWidth"
+                                         styleClass="periodeDispo-column nonModifiable"/>
+                            <!--FIXME FDA 2017/08 "styleClass="nonModifiable" sans effet (titre de la colonne pas en italique).-->
+                            <TableColumn fx:id="semaine1NbrsJoursOuvresColumn" text="S+1"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine2NbrsJoursOuvresColumn" text="S+2"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine3NbrsJoursOuvresColumn" text="S+3"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine4NbrsJoursOuvresColumn" text="S+4"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine5NbrsJoursOuvresColumn" text="S+5"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine6NbrsJoursOuvresColumn" text="S+6"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine7NbrsJoursOuvresColumn" text="S+7"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine8NbrsJoursOuvresColumn" text="S+8"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine9NbrsJoursOuvresColumn" text="S+9"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine10NbrsJoursOuvresColumn" text="S+10"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine11NbrsJoursOuvresColumn" text="S+11"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine12NbrsJoursOuvresColumn" text="S+12"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                        </columns>
+                    </TableView>
+                    <!--
+                                </Tab>
+                                <Tab text="Absence / rsrc (j)" closable="false">
+                    -->
+                    <TableView fx:id="nbrsJoursDAbsenceTable" editable="true" tableMenuButtonVisible="true"
+                               BorderPane.alignment="CENTER">
+                        <columns>
+                            <TableColumn fx:id="premiereColonneAbsencesColumn" text="Ressource" prefWidth="$premiereColumnPrefWidth"
+                                         styleClass="periodeDispo-column nonModifiable"/>
+                            <!--FIXME FDA 2017/08 "styleClass="nonModifiable" sans effet (titre de la colonne pas en italique).-->
+                            <TableColumn fx:id="semaine1NbrsJoursDAbsenceColumn" text="S+1"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine2NbrsJoursDAbsenceColumn" text="S+2"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine3NbrsJoursDAbsenceColumn" text="S+3"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine4NbrsJoursDAbsenceColumn" text="S+4"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine5NbrsJoursDAbsenceColumn" text="S+5"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine6NbrsJoursDAbsenceColumn" text="S+6"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine7NbrsJoursDAbsenceColumn" text="S+7"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine8NbrsJoursDAbsenceColumn" text="S+8"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine9NbrsJoursDAbsenceColumn" text="S+9"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine10NbrsJoursDAbsenceColumn" text="S+10"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine11NbrsJoursDAbsenceColumn" text="S+11"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                            <TableColumn fx:id="semaine12NbrsJoursDAbsenceColumn" text="S+12"
+                                         prefWidth="$semaineColumnPrefWidth" styleClass="periodeDispo-column nonModifiable"/>
+                        </columns>
+                    </TableView>
+                </VBox>
             </Tab>
             <Tab text="Dispo MinAgri / rsrc (j)" closable="false">
-                <TableView fx:id="nbrsJoursDispoMinAgriTable" editable="true" tableMenuButtonVisible="true"
-                           BorderPane.alignment="CENTER">
-                    <columns>
-                        <TableColumn prefWidth="40" text="Rsrc"/>
-                        <TableColumn text="Calendrier">
-                            <columns>
-                                <fx:reference source="semaine1Column"/>
-                                <fx:reference source="semaine2Column"/>
-                                <fx:reference source="semaine3Column"/>
-                                <fx:reference source="semaine4Column"/>
-                                <fx:reference source="semaine5Column"/>
-                                <fx:reference source="semaine6Column"/>
-                                <fx:reference source="semaine7Column"/>
-                                <fx:reference source="semaine8Column"/>
-                                <fx:reference source="semaine9Column"/>
-                                <fx:reference source="semaine10Column"/>
-                                <fx:reference source="semaine11Column"/>
-                                <fx:reference source="semaine12Column"/>
-                            </columns>
-                        </TableColumn>
-                    </columns>
-                </TableView>
+                <Label text="TODO"/>
             </Tab>
             <Tab text="Dispo CT / rsrc (%)" closable="false">
                 <Label text="TODO"/>
@@ -122,13 +106,14 @@
             </Tab>
         </TabPane>
     </center>
-    <bottom>
-        <AnchorPane BorderPane.alignment="CENTER">
-            <ButtonBar>
-                <buttons>
-                    <!--<Button text="Ajouter" onAction="#ajouterRessource"/>-->
-                </buttons>
-            </ButtonBar>
-        </AnchorPane>
-    </bottom>
+    <!--
+        <bottom>
+            <AnchorPane BorderPane.alignment="CENTER">
+                <ButtonBar>
+                    <buttons>
+                    </buttons>
+                </ButtonBar>
+            </AnchorPane>
+        </bottom>
+    -->
 </BorderPane>
