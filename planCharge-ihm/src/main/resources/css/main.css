@@ -37,22 +37,29 @@ Barre d'état :
 
 /*Cf. http://www.java2s.com/Code/Java/JavaFX/UsingCSStostyletheborder.htm*/
 .barreEtat {
-    /*-fx-border-color: lightgray;*/
-    /*-fx-border-insets: 1pt;*/
-    /*-fx-border-width: 1pt;*/
-    /*-fx-border-style: solid;*/
-    -fx-spacing: 1pt;
-    -fx-border-insets: 2pt;
-    -fx-alignment: baseline-center;
+    -fx-border-color: darkgray;
+    -fx-border-width: 1pt;
+    -fx-border-style: solid;
+    -fx-border-insets: 0pt;
+
+    -fx-spacing: 0pt;
 }
 
 .itemBarreEtat {
     -fx-alignment: center;
+
     -fx-border-color: lightgray;
     -fx-border-width: 1;
     -fx-border-style: solid;
-    -fx-spacing: 2pt;
+    -fx-border-insets: 0pt;
+
+    -fx-spacing: 0pt;
 }
+
+
+/*
+Validation de la saisie depuis l'IHM :
+*/
 
 .incoherence {
     -fx-background-color: darkred;
@@ -62,11 +69,6 @@ Barre d'état :
     /*-fx-text-fill: white;*/
     /*-fx-opacity: 100%;*/
 }
-
-
-/*
-Validation de la saisie depuis l'IHM :
-*/
 
 .erreurSaisie {
 /*

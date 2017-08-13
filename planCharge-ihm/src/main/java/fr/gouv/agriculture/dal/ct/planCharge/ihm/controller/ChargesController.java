@@ -280,6 +280,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
+        //noinspection OverlyComplexAnonymousInnerClass
         getChargeColumn().setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double charge, boolean empty) {
@@ -308,6 +309,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
+        //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
             protected void updateItem(Double chargePlanifiee, boolean empty) {
@@ -331,11 +333,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
+        //noinspection LimitedScopeInnerClass
         final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
 
             private final int noSemaine;
 
             private ChargeSemaineEditHandler(int noSemaine) {
+                super();
                 this.noSemaine = noSemaine;
             }
 
@@ -459,7 +463,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             );
             return;
         }
-        assert dateEtat != null;
 
         try {
             definirValeursCalendrier(dateEtat);

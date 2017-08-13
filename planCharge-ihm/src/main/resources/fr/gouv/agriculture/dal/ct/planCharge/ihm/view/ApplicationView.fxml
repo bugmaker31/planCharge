@@ -38,13 +38,13 @@
                     <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
                     <SeparatorMenuItem/>
                     <SeparatorMenuItem/>
-<!--
-                    TODO FDA 2017/07 Coder.
-                    <MenuItem text="Couper" onAction="#couper" accelerator="Shortcut+X"/>
-                    <MenuItem text="Copier" onAction="#copier" accelerator="Shortcut+C"/>
-                    <MenuItem text="Coller" onAction="#coller" accelerator="Shortcut+V"/>
--->
-                    <MenuItem text="Supprimer" onAction="#supprimer" />
+                    <!--
+                                        TODO FDA 2017/07 Coder.
+                                        <MenuItem text="Couper" onAction="#couper" accelerator="Shortcut+X"/>
+                                        <MenuItem text="Copier" onAction="#copier" accelerator="Shortcut+C"/>
+                                        <MenuItem text="Coller" onAction="#coller" accelerator="Shortcut+V"/>
+                    -->
+                    <MenuItem text="Supprimer" onAction="#supprimer"/>
                 </Menu>
                 <Menu text="_Suivi" disable="true"/>
                 <Menu text="_Référentiels">
@@ -101,10 +101,10 @@
         <AnchorPane fx:id="contentPane"/>
     </center>
     <bottom>
-        <AnchorPane>
-            <HBox styleClass="barreEtat">
-                <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
-                <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
+        <HBox styleClass="barreEtat">
+            <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
+            <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
+            <HBox alignment="CENTER_LEFT"> <!--Box cadrée à gauche--> <!--FIXME FDA 2017/08 Sans effet.-->
                 <HBox styleClass="itemBarreEtat">
                     <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
                         <tooltip>
@@ -120,24 +120,28 @@
                     </Label>
                 </HBox>
                 <HBox styleClass="itemBarreEtat">
-                    <Label fx:id="nbrTachesField" minWidth="50"/>
-                    <Label text="tâches"/>
+                    <Label fx:id="nbrTachesField" minWidth="30" style="-fx-alignment: baseline-right;"/>
+                    <Label text=" tâches"/>
                 </HBox>
-                <Region prefWidth="200.0" HBox.hgrow="ALWAYS" /> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->
-                <HBox styleClass="itemBarreEtat" alignment="CENTER_RIGHT">
-                    <Gauge fx:id="memoryGauge" title="RAM" skinType="INDICATOR" prefHeight="25" minHeight="25" prefWidth="25" minWidth="25">
+            </HBox>
+            <!--<Region prefWidth="500" HBox.hgrow="ALWAYS"/>--> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->
+            <HBox alignment="CENTER_RIGHT"><!--Box cadrée à droite--> <!--FIXME FDA 2017/08 Sans effet.-->
+                <HBox styleClass="itemBarreEtat">
+                    <Gauge fx:id="memoryGauge" title="RAM" skinType="INDICATOR" prefHeight="25" minHeight="25"
+                           prefWidth="25" minWidth="25">
                         <tooltip>
-                            <Tooltip text="\$usedMem occupés sur $maxMem ($freeMemPc% libre) - Cliquer pour récupérer la mémoire qui serait disponible (garbage collect)."/>
+                            <Tooltip
+                                    text="\$usedMem occupés sur $maxMem ($freeMemPc% libre) - Cliquer pour récupérer la mémoire qui serait disponible (garbage collect)."/>
                         </tooltip>
                     </Gauge>
                 </HBox>
             </HBox>
-            <!--
-                        <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
-                            <Label fx:id="avancementLabel"/>
-                            <ProgressBar fx:id="progressionBar"/>
-                        </HBox>
-            -->
-        </AnchorPane>
+        </HBox>
+        <!--
+                    <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
+                        <Label fx:id="avancementLabel"/>
+                        <ProgressBar fx:id="progressionBar"/>
+                    </HBox>
+        -->
     </bottom>
 </BorderPane>
