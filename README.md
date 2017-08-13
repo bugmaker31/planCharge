@@ -8,5 +8,5 @@ Le projet est constitué de :
 - [ticketing ano/évo](https://github.com/bugmaker31/planCharge/issues) (issues sous GitHub)
 - [pilotage des dév](https://github.com/bugmaker31/planCharge/projects) (kanban sous GitHub)
 - documentation :
-    - [wiki](https://github.com/bugmaker31/planCharge/wiki) (wiki sous GitHub)
+    - [wiki](https://github.com/bugmaker31/planCharge/wiki) (wiki sous GitHub), notamment les [règles de gestion](https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion)
     - [fichier "INSTALL.md"](https://github.com/bugmaker31/planCharge/blob/master/INSTALL.md) : procédure d'installation (initiale + migration).
