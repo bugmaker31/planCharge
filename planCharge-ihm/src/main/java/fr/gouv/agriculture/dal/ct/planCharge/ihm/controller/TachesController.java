@@ -1,7 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
@@ -133,7 +133,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     }
 
     private void afficherPlanification() {
-        TacheBean tacheBean = tacheSelectionnee();
+        TacheBean tacheBean = TableViews.selectedItem(tachesTable);
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(
@@ -147,7 +147,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         }
         try {
             ihm.getApplicationController().afficherModuleCharges();
-            mettreFocusSurTache(tacheBean);
+            TableViews.focusOnItem(tachesTable, tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(

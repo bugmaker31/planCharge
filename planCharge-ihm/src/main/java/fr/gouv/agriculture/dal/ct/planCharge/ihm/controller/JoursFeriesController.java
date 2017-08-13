@@ -153,7 +153,7 @@ public class JoursFeriesController extends AbstractController {
 //        joursFeriesTable.refresh();
 
         // Positionnement sur le jour férié qu'on vient d'ajouter :
-        TableViews.editTableCell(joursFeriesTable, nouvJourFerieBean, dateColumn);
+        TableViews.editCell(joursFeriesTable, nouvJourFerieBean, dateColumn);
     }
 
     @FXML

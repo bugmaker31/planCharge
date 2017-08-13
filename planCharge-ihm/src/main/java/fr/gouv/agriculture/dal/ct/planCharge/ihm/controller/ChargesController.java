@@ -1,12 +1,14 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
@@ -89,7 +91,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // La Table :
     @NotNull
     @FXML
-    private TableView<PlanificationTacheBean> planificationsTable;
+    private TableViewAvecCalendrier<PlanificationTacheBean, Double> planificationsTable;
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
     @NotNull
@@ -216,7 +218,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
-    TableView<PlanificationTacheBean> getTachesTable() {
+    TableViewAvecCalendrier<PlanificationTacheBean, Double> getTachesTable() {
         return planificationsTable;
     }
 
@@ -384,6 +386,21 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 11));
         semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 12));
 
+        getTachesTable().setCalendrierColumns(
+                semaine1Column,
+                semaine2Column,
+                semaine3Column,
+                semaine4Column,
+                semaine5Column,
+                semaine6Column,
+                semaine7Column,
+                semaine8Column,
+                semaine9Column,
+                semaine10Column,
+                semaine11Column,
+                semaine12Column
+        );
+
         LOGGER.info("Initialisé.");
     }
 
@@ -509,7 +526,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void afficherTache() {
-        PlanificationTacheBean tacheBean = tacheSelectionnee();
+        PlanificationTacheBean tacheBean = TableViews.selectedItem(getTachesTable());
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(
@@ -524,7 +541,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         try {
             ihm.getApplicationController().afficherModuleTaches();
-            mettreFocusSurTache(tacheBean);
+            TableViews.focusOnItem(getTachesTable(), tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(

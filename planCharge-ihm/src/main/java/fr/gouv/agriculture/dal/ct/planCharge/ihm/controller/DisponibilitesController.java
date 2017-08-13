@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOu
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoMinAgriBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
@@ -99,7 +100,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableView<NbrsJoursOuvresBean> nbrsJoursOuvresTable;
+    private TableViewAvecCalendrier<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -156,7 +157,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableView<NbrsJoursDAbsenceBean> nbrsJoursDAbsenceTable;
+    private TableViewAvecCalendrier<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -213,7 +214,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableView<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriTable;
+    private TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -270,7 +271,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableView<PctagesDispoMinAgriBean> pctagesDispoMinAgriTable;
+    private TableViewAvecCalendrier<PctagesDispoMinAgriBean, Percentage> pctagesDispoMinAgriTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -343,243 +344,23 @@ public class DisponibilitesController extends AbstractController {
     // Getters/Setters:
 
     @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine1NbrsJoursOuvresColumn() {
-        return semaine1NbrsJoursOuvresColumn;
+    public TableViewAvecCalendrier<NbrsJoursOuvresBean, Integer> getNbrsJoursOuvresTable() {
+        return nbrsJoursOuvresTable;
     }
 
     @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine2NbrsJoursOuvresColumn() {
-        return semaine2NbrsJoursOuvresColumn;
+    public TableViewAvecCalendrier<NbrsJoursDAbsenceBean, Integer> getNbrsJoursDAbsenceTable() {
+        return nbrsJoursDAbsenceTable;
     }
 
     @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine3NbrsJoursOuvresColumn() {
-        return semaine3NbrsJoursOuvresColumn;
+    public TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Integer> getNbrsJoursDispoMinAgriTable() {
+        return nbrsJoursDispoMinAgriTable;
     }
 
     @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine4NbrsJoursOuvresColumn() {
-        return semaine4NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine5NbrsJoursOuvresColumn() {
-        return semaine5NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine6NbrsJoursOuvresColumn() {
-        return semaine6NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine7NbrsJoursOuvresColumn() {
-        return semaine7NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine8NbrsJoursOuvresColumn() {
-        return semaine8NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine9NbrsJoursOuvresColumn() {
-        return semaine9NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine10NbrsJoursOuvresColumn() {
-        return semaine10NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine11NbrsJoursOuvresColumn() {
-        return semaine11NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursOuvresBean, Integer> getSemaine12NbrsJoursOuvresColumn() {
-        return semaine12NbrsJoursOuvresColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine1NbrsJoursDAbsenceColumn() {
-        return semaine1NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine2NbrsJoursDAbsenceColumn() {
-        return semaine2NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine3NbrsJoursDAbsenceColumn() {
-        return semaine3NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine4NbrsJoursDAbsenceColumn() {
-        return semaine4NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine5NbrsJoursDAbsenceColumn() {
-        return semaine5NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine6NbrsJoursDAbsenceColumn() {
-        return semaine6NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine7NbrsJoursDAbsenceColumn() {
-        return semaine7NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine8NbrsJoursDAbsenceColumn() {
-        return semaine8NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine9NbrsJoursDAbsenceColumn() {
-        return semaine9NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine10NbrsJoursDAbsenceColumn() {
-        return semaine10NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine11NbrsJoursDAbsenceColumn() {
-        return semaine11NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDAbsenceBean, Integer> getSemaine12NbrsJoursDAbsenceColumn() {
-        return semaine12NbrsJoursDAbsenceColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine1NbrsJoursDispoMinAgriColumn() {
-        return semaine1NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine2NbrsJoursDispoMinAgriColumn() {
-        return semaine2NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine3NbrsJoursDispoMinAgriColumn() {
-        return semaine3NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine4NbrsJoursDispoMinAgriColumn() {
-        return semaine4NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine5NbrsJoursDispoMinAgriColumn() {
-        return semaine5NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine6NbrsJoursDispoMinAgriColumn() {
-        return semaine6NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine7NbrsJoursDispoMinAgriColumn() {
-        return semaine7NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine8NbrsJoursDispoMinAgriColumn() {
-        return semaine8NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine9NbrsJoursDispoMinAgriColumn() {
-        return semaine9NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine10NbrsJoursDispoMinAgriColumn() {
-        return semaine10NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine11NbrsJoursDispoMinAgriColumn() {
-        return semaine11NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<NbrsJoursDispoMinAgriBean, Integer> getSemaine12NbrsJoursDispoMinAgriColumn() {
-        return semaine12NbrsJoursDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine1PctagesDispoMinAgriColumn() {
-        return semaine1PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine2PctagesDispoMinAgriColumn() {
-        return semaine2PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine3PctagesDispoMinAgriColumn() {
-        return semaine3PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine4PctagesDispoMinAgriColumn() {
-        return semaine4PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine5PctagesDispoMinAgriColumn() {
-        return semaine5PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine6PctagesDispoMinAgriColumn() {
-        return semaine6PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine7PctagesDispoMinAgriColumn() {
-        return semaine7PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine8PctagesDispoMinAgriColumn() {
-        return semaine8PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine9PctagesDispoMinAgriColumn() {
-        return semaine9PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine10PctagesDispoMinAgriColumn() {
-        return semaine10PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine11PctagesDispoMinAgriColumn() {
-        return semaine11PctagesDispoMinAgriColumn;
-    }
-
-    @NotNull
-    public TableColumn<PctagesDispoMinAgriBean, Percentage> getSemaine12PctagesDispoMinAgriColumn() {
-        return semaine12PctagesDispoMinAgriColumn;
+    public TableViewAvecCalendrier<PctagesDispoMinAgriBean, Percentage> getPctagesDispoMinAgriTable() {
+        return pctagesDispoMinAgriTable;
     }
 
 
@@ -725,10 +506,25 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (1 seule ligne).
 
-        nbrsJoursOuvresTable.setItems(nbrsJoursOuvresBeans);
+        nbrsJoursOuvresTable.setCalendrierColumns(
+                semaine1NbrsJoursOuvresColumn,
+                semaine2NbrsJoursOuvresColumn,
+                semaine3NbrsJoursOuvresColumn,
+                semaine4NbrsJoursOuvresColumn,
+                semaine5NbrsJoursOuvresColumn,
+                semaine6NbrsJoursOuvresColumn,
+                semaine7NbrsJoursOuvresColumn,
+                semaine8NbrsJoursOuvresColumn,
+                semaine9NbrsJoursOuvresColumn,
+                semaine10NbrsJoursOuvresColumn,
+                semaine11NbrsJoursOuvresColumn,
+                semaine12NbrsJoursOuvresColumn
+        );
 
         TableViews.disableColumnReorderable(nbrsJoursOuvresTable);
         TableViews.adjustHeightToRowCount(nbrsJoursOuvresTable);
+
+        nbrsJoursOuvresTable.setItems(nbrsJoursOuvresBeans);
     }
 
     private void initTableAbsences() throws IhmException {
@@ -796,10 +592,25 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+        nbrsJoursDAbsenceTable.setCalendrierColumns(
+                semaine1NbrsJoursDAbsenceColumn,
+                semaine2NbrsJoursDAbsenceColumn,
+                semaine3NbrsJoursDAbsenceColumn,
+                semaine4NbrsJoursDAbsenceColumn,
+                semaine5NbrsJoursDAbsenceColumn,
+                semaine6NbrsJoursDAbsenceColumn,
+                semaine7NbrsJoursDAbsenceColumn,
+                semaine8NbrsJoursDAbsenceColumn,
+                semaine9NbrsJoursDAbsenceColumn,
+                semaine10NbrsJoursDAbsenceColumn,
+                semaine11NbrsJoursDAbsenceColumn,
+                semaine12NbrsJoursDAbsenceColumn
+        );
 
         TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
+
+        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
@@ -867,10 +678,25 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
+        nbrsJoursDispoMinAgriTable.setCalendrierColumns(
+                semaine1NbrsJoursDispoMinAgriColumn,
+                semaine2NbrsJoursDispoMinAgriColumn,
+                semaine3NbrsJoursDispoMinAgriColumn,
+                semaine4NbrsJoursDispoMinAgriColumn,
+                semaine5NbrsJoursDispoMinAgriColumn,
+                semaine6NbrsJoursDispoMinAgriColumn,
+                semaine7NbrsJoursDispoMinAgriColumn,
+                semaine8NbrsJoursDispoMinAgriColumn,
+                semaine9NbrsJoursDispoMinAgriColumn,
+                semaine10NbrsJoursDispoMinAgriColumn,
+                semaine11NbrsJoursDispoMinAgriColumn,
+                semaine12NbrsJoursDispoMinAgriColumn
+        );
 
         TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
+
+        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
     }
 
     private void initTablePctagesDispoMinAgri() {
@@ -938,10 +764,25 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        pctagesDispoMinAgriTable.setItems(pctagesDispoMinAgriBeans);
-
+        pctagesDispoMinAgriTable.setCalendrierColumns(
+                semaine1PctagesDispoMinAgriColumn,
+                semaine2PctagesDispoMinAgriColumn,
+                semaine3PctagesDispoMinAgriColumn,
+                semaine4PctagesDispoMinAgriColumn,
+                semaine5PctagesDispoMinAgriColumn,
+                semaine6PctagesDispoMinAgriColumn,
+                semaine7PctagesDispoMinAgriColumn,
+                semaine8PctagesDispoMinAgriColumn,
+                semaine9PctagesDispoMinAgriColumn,
+                semaine10PctagesDispoMinAgriColumn,
+                semaine11PctagesDispoMinAgriColumn,
+                semaine12PctagesDispoMinAgriColumn
+        );
+        
         TableViews.disableColumnReorderable(pctagesDispoMinAgriTable);
         TableViews.adjustHeightToRowCount(pctagesDispoMinAgriTable);
+
+        pctagesDispoMinAgriTable.setItems(pctagesDispoMinAgriBeans);
     }
 
     private void synchroniserLargeurPremieresColonnes() {

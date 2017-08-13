@@ -3,7 +3,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
@@ -14,8 +13,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,50 +62,64 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, String> categorieColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, String> sousCategorieColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, String> noTacheColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, String> noTicketIdalColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, String> descriptionColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, ProjetAppliBean> projetAppliColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, StatutBean> statutColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, LocalDate> debutColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, LocalDate> echeanceColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, ImportanceBean> importanceColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, Double> chargeColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, RessourceBean> ressourceColumn;
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     private TableColumn<TB, ProfilBean> profilColumn;
 
     // Les filtres :
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
+
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     protected TextField filtreGlobalField;
-*/
 
 
     @NotNull
@@ -120,6 +135,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @FXML
     @NotNull
+    @SuppressWarnings("NullableProblems")
     protected ContextMenu tachesTableContextMenu;
 
 
@@ -150,6 +166,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Rq : La colonne "N° de tâche" n'est pas éditable (car c'est la "primary key").
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        //noinspection OverlyComplexAnonymousInnerClass
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<ProjetAppliBean>() {
                     @Null
@@ -175,6 +192,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 },
                 planChargeBean.getProjetsApplisBeans())
         );
+        //noinspection OverlyComplexAnonymousInnerClass
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<StatutBean>() {
 
@@ -204,6 +222,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        //noinspection OverlyComplexAnonymousInnerClass
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<RessourceBean>() {
                     @Null
@@ -228,6 +247,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     }
                 },
                 planChargeBean.getRessourcesBeans()));
+        //noinspection OverlyComplexAnonymousInnerClass
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<ProfilBean>() {
 
@@ -261,12 +281,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //
         // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
-        SortedList<TB> sortedPlanifBeans = new SortedList<>(getTachesBeans());
-        sortedPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
-        getTachesTable().setItems(sortedPlanifBeans);
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
         FilteredList<TB> filteredTachesBeans = enregistrerListenersSurFiltres(getTachesBeans());
-*/
+        SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
+        sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
+        getTachesTable().setItems(sortedFilteredPlanifBeans);
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
 /*
         getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
             LOGGER.debug("Changement pour la liste des tâches => filtrage des lignes de la table...");
@@ -418,7 +437,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             getTachesBeans().add(nouvTache);
 
             // Positionnement sur la tâche qu'on vient d'ajouter :
-            TableViews.editTableCell(getTachesTable(), nouvTache, descriptionColumn);
+            TableViews.editCell(getTachesTable(), nouvTache, descriptionColumn);
 
             return nouvTache;
         } catch (IhmException e) {
@@ -445,7 +464,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 */
     }
 
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     @NotNull
     @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
     private FilteredList<TB> enregistrerListenersSurFiltres(@NotNull ObservableList<TB> tachesBeans) {
@@ -453,7 +472,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
-        FilteredList<TB> filteredTachesBeans = new FilteredList<>(getTachesBeans());
+        FilteredList<TB> filteredTachesBeans = new FilteredList<>(tachesBeans);
 
         //noinspection OverlyLongLambda
         filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -500,6 +519,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 if (!tache.ressourceProperty().isNull().get() && tache.matcheRessource(newValue)) {
                     return true; // Filter matches
                 }
+                //noinspection RedundantIfStatement
                 if (!tache.profilProperty().isNull().get() && tache.matcheProfil(newValue)) {
                     return true; // Filter matches
                 }
@@ -507,16 +527,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             });
         });
         return filteredTachesBeans;
-    }
-*/
-
-    @Null
-    TB tacheSelectionnee() {
-        return TableViews.selectedTableRow(getTachesTable());
-    }
-
-    void mettreFocusSurTache(@NotNull TB tacheBean) {
-        TableViews.focusOnTableRow(getTachesTable(), tacheBean);
     }
 
 
@@ -530,10 +540,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Cf. http://www.java2s.com/Tutorials/Java/JavaFX/1510__JavaFX_WebView.htm
         // Cf. https://docs.oracle.com/javase/8/javafx/embedded-browser-tutorial/overview.htm
-        final WebView browser = new WebView();
-        final WebEngine webEngine = browser.getEngine();
+        WebView browser = new WebView();
+        WebEngine webEngine = browser.getEngine();
 
-        final ScrollPane scrollPane = new ScrollPane();
+        ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(browser);
         webEngine.load("http://alim-prod-iws-1.zsg.agri/isilogwebsystem/homepage.aspx");
 

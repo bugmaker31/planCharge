@@ -297,7 +297,7 @@ public class RessourcesHumainesController extends AbstractController {
         ressourceHumainesBeans.add(nouvRsrcHumaine);
 
         // Positionnement sur la ressource qu'on vient d'ajouter :
-        TableViews.editTableCell(ressourcesHumainesTable, nouvRsrcHumaine, trigrammeColumn);
+        TableViews.editCell(ressourcesHumainesTable, nouvRsrcHumaine, trigrammeColumn);
     }
 
 
@@ -305,7 +305,7 @@ public class RessourcesHumainesController extends AbstractController {
     private void supprimerRessourceHumaine(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimerJourFerie...");
 
-        RessourceHumaineBean focusedItem = TableViews.selectedTableRow(ressourcesHumainesTable);
+        RessourceHumaineBean focusedItem = TableViews.selectedItem(ressourcesHumainesTable);
         if (focusedItem == null) {
             LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");
             return;

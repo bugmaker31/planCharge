@@ -1,11 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache;
 
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
@@ -19,6 +21,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by frederic.danna on 11/03/2017.
@@ -323,7 +328,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
+/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     public boolean matcheNoTache(@NotNull String otherValue) {
         if ((getId() + "").contains(otherValue)) {
             return true; // matches
@@ -457,7 +462,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         }
         return false; // does not match.
     }
-*/
 
 
     public TacheDTO extract() throws BeanException {

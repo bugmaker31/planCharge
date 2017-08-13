@@ -6,6 +6,7 @@
 
 
 <?import java.lang.Double?>
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -21,17 +22,16 @@
                 <panes>
                     <TitledPane animated="false" text="Filtres">
                         <HBox spacing="10">
-                            <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
-                                                        <HBox>
-                                                            <Label text="Filtre global : "/>
-                                                            <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
-                                                                <tooltip>
-                                                                    <Tooltip
-                                                                            text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
-                                                                </tooltip>
-                                                            </TextField>
-                                                        </HBox>
-                            -->
+                            <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).-->
+                            <HBox>
+                                <Label text="Filtre global : "/>
+                                <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
+                                    <tooltip>
+                                        <Tooltip
+                                                text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+                                    </tooltip>
+                                </TextField>
+                            </HBox>
                             <SegmentedButton>
                                 <buttons>
                                     <fx:define>
@@ -109,7 +109,7 @@
         </VBox>
     </top>
     <center>
-        <TableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true">
+        <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true">
             <!--contextMenu="tachesTableContextMenu">-->
             <columns>
                 <TableColumn text="Tâche">
@@ -175,8 +175,7 @@
 
                         <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                         <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="50.0"
-                                     editable="false" styleClass="nonModifiable chargePlanifiee-column"/>
-                        <!--FIXME FDA 2017/08 "styleClass="nonModifiable" sans effet (titre de la colonne pas en italique).-->
+                                     editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
                     </columns>
                 </TableColumn>
             </columns>
@@ -188,7 +187,7 @@
                 <fx:reference source="echeanceColumn"/>
                 <fx:reference source="noTicketIdalColumn"/>
             </sortOrder>
-        </TableView>
+        </TableViewAvecCalendrier>
     </center>
     <bottom>
         <AnchorPane>
