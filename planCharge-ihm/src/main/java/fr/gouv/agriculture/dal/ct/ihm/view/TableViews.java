@@ -1,7 +1,15 @@
 package fr.gouv.agriculture.dal.ct.ihm.view;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDAbsenceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOuvresBean;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -55,5 +63,79 @@ public class TableViews {
                 column.maxWidthProperty().bind(masterColumn.widthProperty());
             }
         }
+    }
+
+    public static <S> void disableColumnReorderable(@NotNull TableView<S> table) {
+/*
+        // table. https://stackoverflow.com/questions/10598639/how-to-disable-column-reordering-in-a-javafx2-tableview
+        table.getColumns().addListener(new ListChangeListener<TableColumn<S, ?>>() {
+
+            private boolean suspended = false;
+
+            @Override
+            public void onChanged(Change<? extends TableColumn<S, ?>> change) {
+                while (change.next()) {
+                    if (change.wasReplaced() && !suspended) {
+                        suspended = true;
+                        table.getColumns().setAll(columns);
+                        suspended = false;
+                    }
+                }
+            }
+        });
+*/
+        // Cf. https://stackoverflow.com/questions/22202782/how-to-prevent-tableview-from-doing-tablecolumn-re-order-in-javafx-8
+        TableHeaderRow header = headerRow(table);
+        // TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
+//        header.setReordering(false);
+    }
+
+    public static <S> TableHeaderRow headerRow(@NotNull TableView<S> table) {
+        // Cf. https://stackoverflow.com/questions/22202782/how-to-prevent-tableview-from-doing-tablecolumn-re-order-in-javafx-8
+        // FIXME FDA 2017/08 Retourne null.
+        return (TableHeaderRow) table.lookup("TableHeaderRow");
+    }
+
+    public static <S> void adjustHeightToRowCount(@NotNull TableView<S> table) {
+/*
+        table.itemsProperty().addListener(change -> {
+            int rowsCount = items.size();
+            double columnHeight = table.get;
+            double headerRowHeight = 100; // headerRow(table).getHeight(); // TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
+
+            double tableHeight = headerRowHeight + (columnHeight * rowsCount);
+
+            table.setMinHeight(tableHeight);
+            table.setPrefHeight(tableHeight);
+            table.setMaxHeight(tableHeight);
+        });
+*/
+        // Cf. https://stackoverflow.com/questions/27945817/javafx-adapt-tableview-height-to-number-of-rows
+/*
+        assert table.getFixedCellSize() > 0; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+        DoubleBinding height = new SimpleDoubleProperty(10.0); // headerRow(table).heightProperty(); // TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
+        DoubleBinding tableHeight = table.fixedCellSizeProperty().multiply(Bindings.size(table.getItems()).add(height));
+        table.minHeightProperty().bind(tableHeight);
+        table.prefHeightProperty().bind(tableHeight);
+        table.maxHeightProperty().bind(tableHeight);
+*/
+        assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+        adjustHeigth(table);
+        table.getItems().addListener((Change<? extends S> change) -> {
+            adjustHeigth(table);
+        });
+    }
+
+    private static <S> void adjustHeigth(@NotNull TableView<S> table) {
+        double headerRowHeight = table.getFixedCellSize(); // headerRow(table).getHeight(); // TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
+
+        double rowHeight = table.getFixedCellSize();
+        int rowsCount = table.getItems().size();
+
+        double tableHeight = headerRowHeight + (rowHeight * rowsCount);
+
+        table.setMinHeight(tableHeight);
+        table.setPrefHeight(tableHeight);
+        table.setMaxHeight(tableHeight);
     }
 }

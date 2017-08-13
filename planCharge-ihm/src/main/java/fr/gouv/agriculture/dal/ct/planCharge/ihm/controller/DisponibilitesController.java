@@ -19,6 +19,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -677,6 +678,7 @@ public class DisponibilitesController extends AbstractController {
     private void initTableJoursOuvres() {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        premiereColonneJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
         //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
         final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
             private final int noSemaine;
@@ -724,6 +726,9 @@ public class DisponibilitesController extends AbstractController {
         //Pas sur cet écran (1 seule ligne).
 
         nbrsJoursOuvresTable.setItems(nbrsJoursOuvresBeans);
+
+        TableViews.disableColumnReorderable(nbrsJoursOuvresTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursOuvresTable);
     }
 
     private void initTableAbsences() throws IhmException {
@@ -792,6 +797,9 @@ public class DisponibilitesController extends AbstractController {
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
         nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+
+        TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
@@ -860,6 +868,9 @@ public class DisponibilitesController extends AbstractController {
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
         nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
+
+        TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
     }
 
     private void initTablePctagesDispoMinAgri() {
@@ -928,6 +939,9 @@ public class DisponibilitesController extends AbstractController {
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
         pctagesDispoMinAgriTable.setItems(pctagesDispoMinAgriBeans);
+
+        TableViews.disableColumnReorderable(pctagesDispoMinAgriTable);
+        TableViews.adjustHeightToRowCount(pctagesDispoMinAgriTable);
     }
 
     private void synchroniserLargeurPremieresColonnes() {
