@@ -14,7 +14,7 @@
             <panes>
                 <TitledPane animated="false" text="Filtres">
                     <HBox spacing="10">
-<!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré). -->
+                        <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré). -->
                         <HBox>
                             <Label text="Filtre global : "/>
                             <TextField fx:id="filtreGlobalField" prefWidth="200.0"/>
@@ -87,23 +87,25 @@
                 </TableColumn>
                 <TableColumn text="identifiants">
                     <columns>
-                        <TableColumn fx:id="noTacheColumn" editable="false" styleClass="nonModifiable" prefWidth="55.0"
-                                     text="N°"/>
-                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"/>
+                        <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
+                                     prefWidth="55"/>
+                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL" prefWidth="80"/>
                     </columns>
                 </TableColumn>
-                <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description" styleClass="description-column"/>
-                <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli" styleClass="projetAppli-column"/>
+                <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description"
+                             styleClass="description-column"/>
+                <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"
+                             styleClass="projetAppli-column"/>
                 <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
                 <TableColumn text="Période souhaitée">
                     <columns>
-                        <TableColumn fx:id="debutColumn" prefWidth="100" text="Début"/>
-                        <TableColumn fx:id="echeanceColumn" prefWidth="100" text="Echéance"/>
+                        <TableColumn fx:id="debutColumn" prefWidth="80" text="Début"/>
+                        <TableColumn fx:id="echeanceColumn" prefWidth="80" text="Echéance"/>
                     </columns>
                 </TableColumn>
                 <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
                 <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge" styleClass="charge-column"/>
-                <TableColumn text="Ressource" >
+                <TableColumn text="Ressource">
                     <columns>
                         <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>
                         <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>

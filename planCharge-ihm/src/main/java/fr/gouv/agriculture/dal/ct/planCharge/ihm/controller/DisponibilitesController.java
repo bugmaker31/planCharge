@@ -9,6 +9,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDA
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoMinAgriBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOuvresBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoMinAgriBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
@@ -372,8 +373,10 @@ public class DisponibilitesController extends AbstractController {
 
     @FXML
     protected void initialize() throws IhmException {
+        LOGGER.debug("Initialisation...");
         initBeans();
         initTables();
+        LOGGER.info("Initialisé.");
     }
 
     private void initBeans() {
@@ -384,9 +387,13 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void initBeansJoursOuvres() {
+
         NbrsJoursOuvresBean nbrsJoursOuvresBean = new NbrsJoursOuvresBean();
         nbrsJoursOuvresBeans.setAll(nbrsJoursOuvresBean);
-        // TODO FDA 2017/08 Synchroniser avec le référentiel des jours fériés (planChargeBean.getJoursFeriesBeans())
+
+        planChargeBean.getJoursFeriesBeans().addListener((ListChangeListener<? super JourFerieBean>) change -> {
+            definirValeursCalendrier();
+        });
     }
 
     private void initBeansAbsences() {

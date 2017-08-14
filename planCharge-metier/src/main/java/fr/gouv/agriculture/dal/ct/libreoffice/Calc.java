@@ -29,7 +29,7 @@ import java.util.GregorianCalendar;
  *
  * @author frederic.danna
  */
-@SuppressWarnings({"ClassNamingConvention", "ClassWithTooManyMethods"})
+@SuppressWarnings({"ClassNamingConvention", "ClassWithTooManyMethods", "UseOfObsoleteDateTimeApi"})
 public class Calc {
 
     private static final int OFFICE_EPOCH_YEAR = 1900;
@@ -109,7 +109,7 @@ public class Calc {
     }
 
     public static boolean isEmpty(@NotNull XCell cell) throws LibreOfficeException {
-        Object cellVal = getVal(cell);
+        Object cellVal = libreoffice.Calc.getVal(cell);
         return (cellVal == null);
     }
 
@@ -173,15 +173,18 @@ public class Calc {
     }
 */
 
-    @Null
+    @NotNull
     public static Object getVal(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getVal(cell);
     }
 
-    @Null
-    public static Object getVal(@NotNull XCell cell) {
+    @NotNull
+    public static Object getVal(@NotNull XCell cell) throws LibreOfficeException {
         Object val = libreoffice.Calc.getVal(cell);
+        if (val == null) {
+            throw new LibreOfficeException("Cellule vide.");
+        }
         return val;
     }
 
@@ -191,6 +194,7 @@ public class Calc {
         return doubleToDate(cellValue);
     }
 
+    @NotNull
     public static Date getDate(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
         XCell cell = getCell(sheet, column, row);
         return getDate(cell);
@@ -240,9 +244,6 @@ public class Calc {
     @NotNull
     public static String getString(@NotNull XCell cell) throws LibreOfficeException {
         Object cellVal = getVal(cell);
-        if (cellVal == null) {
-            return "";
-        }
         if (cellVal instanceof Double) {
             Double val = (Double) cellVal;
             if (val == 0) {
@@ -256,16 +257,24 @@ public class Calc {
         throw new LibreOfficeException("Type de contenu non géré : " + cell.getType().getValue());
     }
 
+    @NotNull
     public static double getDouble(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
-        Double doubleVal = (Double) getVal(sheet, column, row);
-        if (doubleVal == null) {
-            throw new LibreOfficeException("La cellule (" + (row + 1) + ", " + (column + 1) + ") ne contient pas de nombre (vide).");
+        XCell cell = getCell(sheet, column, row);
+        return getDouble(cell);
+    }
+
+    @NotNull
+    public static double getDouble(@NotNull XCell cell) throws LibreOfficeException {
+        Object val = getVal(cell);
+        if (val instanceof Double) {
+            Double aDouble = (Double) val;
+            return aDouble;
         }
-        return doubleVal;
+        throw new LibreOfficeException("Cell does not contain a number (double).");
     }
 
     public static boolean isNumericValue(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
-        XCell cell = libreoffice.Calc.getCell(sheet, column, row);
+        XCell cell = getCell(sheet, column, row);
         return isNumericValue(cell);
     }
 
@@ -274,7 +283,7 @@ public class Calc {
     }
 
     public static void clearCell(@NotNull XSpreadsheet sheet, int column, int row) throws LibreOfficeException {
-        XCell cell = libreoffice.Calc.getCell(sheet, column, row);
+        XCell cell = getCell(sheet, column, row);
         clearCell(cell);
     }
 
@@ -283,6 +292,7 @@ public class Calc {
         setString(cell, "");
     }
 
+    @Null
     public static XCell findFirst(@NotNull String cellContents, @NotNull XCellRange searchRange) throws LibreOfficeException {
         // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/chaps/26.%20Search%20&%20Replace.pdf
 
@@ -311,6 +321,7 @@ public class Calc {
 
         XCellRange cellRange = cellRanges[0];
         XCell cell = libreoffice.Calc.getCell(cellRange, 0, 0);
+        assert cell != null;
         assert cell.getFormula().equals(cellContents);
 
         return cell;

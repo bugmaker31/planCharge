@@ -13,8 +13,8 @@
                 <TableColumn fx:id="nomColumn" text="Nom" prefWidth="150" />
                 <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="100" />
                 <TableColumn fx:id="societeColumn" text="Société" prefWidth="75" />
-                <TableColumn fx:id="debutMissionColumn" text="Début" prefWidth="120" />
-                <TableColumn fx:id="finMissionColumn" text="Fin" prefWidth="120" />
+                <TableColumn fx:id="debutMissionColumn" text="Début" prefWidth="90" />
+                <TableColumn fx:id="finMissionColumn" text="Fin" prefWidth="90" />
             </columns>
             <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
             <sortOrder>

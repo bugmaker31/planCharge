@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * Created by frederic.danna on 11/03/2017.
  */
-public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements ITache, Comparable<TacheDTO> {
+public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements ITache<TacheDTO> {
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 

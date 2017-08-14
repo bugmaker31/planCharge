@@ -2,11 +2,11 @@ package fr.gouv.agriculture.dal.ct.planCharge.util;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by frederic.danna on 28/04/2017.
@@ -47,4 +47,14 @@ public abstract class Dates {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
+    public static boolean isWeekEnd(@NotNull LocalDate jour) {
+        return (jour.getDayOfWeek() == DayOfWeek.SATURDAY) || (jour.getDayOfWeek() == DayOfWeek.SUNDAY);
+    }
+
+    public static int weekNumber(@NotNull LocalDate date) {
+        // Cf . https://stackoverflow.com/questions/26012434/get-week-number-of-localdate-java-8
+        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        int weekNumber = date.get(woy);
+        return weekNumber;
+    }
 }

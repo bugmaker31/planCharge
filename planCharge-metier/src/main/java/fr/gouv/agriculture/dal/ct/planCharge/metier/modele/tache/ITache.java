@@ -1,5 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache;
 
-public interface ITache {
+@SuppressWarnings("InterfaceNamingConvention")
+public interface ITache<T extends ITache<T>> extends Comparable<T> {
+
     String noTache();
+
 }

@@ -18,6 +18,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.disponibilite.Disponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportChargementPlanCharge;
@@ -46,6 +47,9 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     public static final String CLEF_PARAM_REP_PERSISTANCE = "persistance.repertoire";
     public static final String CLEF_PARAM_PATRON_FICHIER = "persistance.patronFichier";
+
+    public static final double NBR_HEURES_OUVREES_DS_UN_JOUR = 8.0;
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeDao.class);
 
@@ -285,9 +289,11 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             rapport.setAvancement("Ouverture du fichier Calc...");
             // Cf. http://fivedots.coe.psu.ac.th/~ad/jlop/jlop04/04.%20Spreadsheet%20Processing.pdf
             docCalc = Calc.openDoc(ficCalc.getAbsolutePath());
+/*
             if (docCalc == null) {
                 throw new PlanChargeDaoException("Document introuvable : '" + ficCalc.getAbsolutePath() + "'.");
             }
+*/
 
             rapport.setAvancement("Import des données...");
             planCharge = importer(docCalc, rapport);
@@ -299,6 +305,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 try {
                     Calc.closeDoc(docCalc);
                 } catch (LibreOfficeException e) {
+                    //noinspection ThrowFromFinallyBlock
                     throw new PlanChargeDaoException("Impossible de fermer (close) LibreOffice.", e);
                 }
             }
@@ -312,9 +319,10 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
         try {
             XSpreadsheet feuilleParams = Calc.getSheet(calc, "Param");
-            XSpreadsheet feuilleCharges = Calc.getSheet(calc, "Charge");
+            XSpreadsheet feuilleDisponibilites = Calc.getSheet(calc, "Dispo");
             XSpreadsheet feuilleTaches = Calc.getSheet(calc, "Tâches");
-            planCharge = importer(feuilleParams, feuilleCharges, feuilleTaches, rapport);
+            XSpreadsheet feuilleCharges = Calc.getSheet(calc, "Charge");
+            planCharge = importer(feuilleParams, feuilleDisponibilites, feuilleTaches, feuilleCharges, rapport);
         } catch (LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer le plan de charge depuis le doc OOCalc.", e);
         }
@@ -322,23 +330,27 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         return planCharge;
     }
 
-    private PlanCharge importer(@NotNull XSpreadsheet feuilleParams, @NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
+    private PlanCharge importer(@NotNull XSpreadsheet feuilleParams, @NotNull XSpreadsheet feuilleDisponibilites, @NotNull XSpreadsheet feuilleTaches, @NotNull XSpreadsheet feuilleCharges, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
         PlanCharge planDeCharge;
 
-        final int noLigDateEtat = 1;
-        final int noColDateEtat = 4;
+        int noLigDateEtat = 1;
+        int noColDateEtat = 4;
 
         Date dateEtat = Calc.getDate(feuilleCharges, noColDateEtat - 1, noLigDateEtat - 1);
+/*
         if (dateEtat == null) {
             throw new PlanChargeDaoException("Impossible de retrouver la date d'état.");
         }
+*/
 
         Referentiels referentiels = importerReferentiels(feuilleParams, rapport);
 
-        // TODO FDA 2017/07 Créer méthode "importerTaches", à appeler avant "importerPlanifications" (+ logique).
+        Disponibilites disponibilites = importerDisponibilites(feuilleDisponibilites, rapport);
 
+        // TODO FDA 2017/07 Créer méthode "importerTaches", à appeler avant "importerPlanifications" (+ logique).
         Planifications planifications = importerPlanifications(feuilleCharges, feuilleTaches, rapport);
 
+        //noinspection ConstantConditions
         planDeCharge = new PlanCharge(Dates.asLocalDate(dateEtat), referentiels, planifications);
 
         return planDeCharge;
@@ -371,6 +383,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     @NotNull
     private Set<JourFerie> importerJoursFeries(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
         Set<JourFerie> joursFeries = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
@@ -389,12 +402,10 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 if (Calc.isEmpty(dateCell)) {
                     break;
                 }
-                Date date = Calc.getDate(dateCell);
+                LocalDate date = Dates.asLocalDate(Calc.getDate(dateCell));
                 assert date != null;
-                LocalDate dateLocale = Dates.asLocalDate(date);
-                assert dateLocale != null;
                 String raison = Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1);
-                JourFerie jourFerie = new JourFerie(dateLocale, raison);
+                JourFerie jourFerie = new JourFerie(date, raison);
                 joursFeries.add(jourFerie);
 
                 noLig++;
@@ -405,9 +416,9 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         }
     }
 
-
     @NotNull
     private Set<Importance> importerImportances(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
         Set<Importance> importances = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
@@ -441,6 +452,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     @NotNull
     private Set<Profil> importerProfils(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
         Set<Profil> profils = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
@@ -475,6 +487,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     @NotNull
     private Set<ProjetAppli> importerProjetsApplis(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
         Set<ProjetAppli> projetsApplis = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
@@ -511,6 +524,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     @NotNull
     private Set<Statut> importerStatuts(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
         Set<Statut> statuts = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
@@ -542,8 +556,10 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         }
     }
 
+    @SuppressWarnings("OverlyComplexMethod")
     @NotNull
     private Set<RessourceHumaine> importerRessourcesHumaines(XSpreadsheet feuilleParams) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
         Set<RessourceHumaine> ressourcesHumaines = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
@@ -567,24 +583,34 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     break;
                 }
                 String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                if (trigramme == null) {
+                    throw new PlanChargeDaoException("Trigramme non défini.");
+                }
                 String prenom = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1));
+                if (prenom == null) {
+                    throw new PlanChargeDaoException("Trigramme non défini.");
+                }
                 String nom = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 2) - 1, noLig - 1));
+                if (nom == null) {
+                    throw new PlanChargeDaoException("Trigramme non défini.");
+                }
                 String societe = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 3) - 1, noLig - 1));
-                String debutMissionStr = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 4) - 1, noLig - 1));
-                //noinspection HardcodedFileSeparator
-                Date debutMission = (
-                        ((debutMissionStr == null) || debutMissionStr.equals("N/A")) ? null
-                                : Calc.getDate(feuilleParams, (noColTitre + 4) - 1, noLig - 1)
+                if (societe == null) {
+                    throw new PlanChargeDaoException("Trigramme non défini.");
+                }
+                XCell debutMissionCell = Calc.getCell(feuilleParams, (noColTitre + 4) - 1, noLig - 1);
+                //noinspection HardcodedFileSeparator,ConstantConditions
+                LocalDate debutMission = (
+                        (Calc.isEmpty(debutMissionCell) || Strings.epure(Calc.getString(debutMissionCell)).equals("N/A")) ? null
+                                : Dates.asLocalDate(Calc.getDate(debutMissionCell))
                 );
-                LocalDate debutMissionLocale = Dates.asLocalDate(debutMission);
-                String finMissionStr = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 5) - 1, noLig - 1));
-                //noinspection HardcodedFileSeparator
-                Date finMission = (
-                        finMissionStr.equals("N/A") ? null
-                                : Calc.getDate(feuilleParams, (noColTitre + 5) - 1, noLig - 1)
+                XCell finMissionCell = Calc.getCell(feuilleParams, (noColTitre + 5) - 1, noLig - 1);
+                //noinspection HardcodedFileSeparator,ConstantConditions
+                LocalDate finMission = (
+                        (Calc.isEmpty(finMissionCell) || Strings.epure(Calc.getString(finMissionCell)).equals("N/A")) ? null
+                                : Dates.asLocalDate(Calc.getDate(finMissionCell))
                 );
-                LocalDate finMissionLocale = Dates.asLocalDate(finMission);
-                RessourceHumaine ressource = new RessourceHumaine(trigramme, nom, prenom, societe, debutMissionLocale, finMissionLocale);
+                RessourceHumaine ressource = new RessourceHumaine(trigramme, nom, prenom, societe, debutMission, finMission);
                 ressourcesHumaines.add(ressource);
                 ressourceHumaineDao.createOrUpdate(ressource);
 
@@ -596,12 +622,90 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         }
     }
 
+    @NotNull
+    private Disponibilites importerDisponibilites(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
+        rapport.setAvancement("Import des absences...");
+        Map<RessourceHumaine, Map<LocalDate, Integer>> absences = importerAbsences(feuilleDisponibilites);
+        return new Disponibilites(
+                absences
+        );
+    }
+
+    @NotNull
+    private Map<RessourceHumaine, Map<LocalDate, Integer>> importerAbsences(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
+        Map<RessourceHumaine, Map<LocalDate, Integer>> absences = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+
+        int noLigDebutsPeriodes = 1; // Les débuts de période sont en ligne 1.
+
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A1:A20");
+            //noinspection HardcodedFileSeparator
+            XCell titrePlageCell = Calc.findFirst("Absence (CP, RTT, formation, maladie, …) / rsrc (j)", plageRecherche);
+            if (titrePlageCell == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver le titre de la plage des absences.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(titrePlageCell);
+            int noLigTitre = adrCell.Row + 1;
+            int noColTitre = adrCell.Column + 1;
+
+            int noLig = noLigTitre + 1;
+            while (true) {
+                XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTitre - 1, noLig - 1);
+                if (Calc.isEmpty(trigrammeCell)) {
+                    break;
+                }
+
+                String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                if (trigramme == null) {
+                    throw new PlanChargeDaoException("Trigramme non défini.");
+                }
+
+                Map<LocalDate, Integer> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                int noCol = noColTitre + 3; // Il y a 2 colonnes vides entre la colonne du titre/trigrammes et la 1ère colonne contenant les jours d'absence.
+                while (true) {
+
+                    XCell nbrTotalJoursAbsenceCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigTitre - 1);
+                    if (Calc.isEmpty(nbrTotalJoursAbsenceCell)) {
+                        break;
+                    }
+
+                    XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
+                    if (Calc.isEmpty(debutPeriodeCell)) {
+                        throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                    }
+                    LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
+
+                    XCell nbrJoursAbsenceCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
+                    Integer nbrJoursAbsence = (Calc.isEmpty(nbrJoursAbsenceCell) ? null : Calc.getInt(nbrJoursAbsenceCell));
+
+                    if (nbrJoursAbsence != null) {
+                        calendrier.put(debutPeriode, nbrJoursAbsence);
+                    }
+
+                    noCol++;
+                }
+
+                RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
+                absences.put(rsrcHum, calendrier);
+
+                noLig++;
+            }
+            return absences;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les absences.", e);
+        }
+    }
+
     private Planifications importerPlanifications(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
         Planifications planification;
 
-        final int noLigPeriodes = 1;
-        final int noLigDebut = 4;
-        final int noColDebut = 12;
+        //noinspection TooBroadScope
+        int noLigPeriodes = 1;
+        //noinspection TooBroadScope
+        int noLigDebut = 4;
+        //noinspection TooBroadScope
+        int noColDebut = 12;
 
         Map<Tache, Map<LocalDate, Double>> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
         {
@@ -610,13 +714,13 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             SousCategorieTache sousCategorieTache = null;
             LIG:
             while (true) {
-                LOGGER.debug("Ligne n°" + cptLig);
+                LOGGER.debug("Ligne n°{}", cptLig);
                 rapport.setAvancement("Import de la ligne " + cptLig + "...");
 
                 XCell cell = Calc.getCell(feuilleCharges, 0, cptLig - 1);
 
                 if (Calc.isEmpty(cell)) {
-                    LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
+                    LOGGER.debug("La ligne n°{} commence par une cellule vide, donc il n'y a plus de tâche à parser.", cptLig);
                     break LIG;
                 }
 
@@ -645,6 +749,9 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     cptLig++;
                     continue LIG;
                 }
+                if (categorieTache == null) {
+                    throw new PlanChargeDaoException("Impossible de retrouver la catégorie de la tâche de la ligne " + cptLig + ".");
+                }
 
                 Tache tache = importerTache(feuilleCharges, feuilleTaches, cptLig, categorieTache, sousCategorieTache);
 
@@ -661,12 +768,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
                         Date debutPeriode = Calc.getDate(feuilleCharges, cptCol - 1, noLigPeriodes - 1);
 
-                        Double chargePlanifiee = (Double) Calc.getVal(feuilleCharges, cptCol - 1, cptLig - 1);
-                        if (chargePlanifiee == null) {
-                            chargePlanifiee = 0.0;
-                        } else {
-                            chargePlanifiee = chargeArrondie(chargePlanifiee);
-                        }
+                        XCell chargeCell = Calc.getCell(feuilleCharges, cptCol - 1, cptLig - 1);
+                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : chargeArrondie((Double) Calc.getDouble(chargeCell)));
 
                         calendrier.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiee);
 
@@ -682,13 +785,14 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     }
 
     private Double chargeArrondie(@NotNull Double charge) {
-        return Math.round(charge * 8.0) / 8.0;
+        return Math.round(charge * NBR_HEURES_OUVREES_DS_UN_JOUR) / NBR_HEURES_OUVREES_DS_UN_JOUR;
     }
 
     private Tache importerTache(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, int noLig, @NotNull CategorieTache categorie, @Null SousCategorieTache sousCategorie) throws PlanChargeDaoException, LibreOfficeException {
         Tache tache;
         try {
 
+            //noinspection PointlessArithmeticExpression
             int id = Calc.getInt(feuilleCharges, 1 - 1, noLig - 1);
 
             String noTicketIdal = Calc.getString(feuilleCharges, 2 - 1, noLig - 1);
@@ -701,10 +805,12 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             String codeStatut = codeStatut(id, feuilleTaches);
             Statut statut = statutDao.load(codeStatut);
 
-            int noColDebut = 5;
-            Date debut = (Calc.isEmpty(feuilleCharges, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuilleCharges, noColDebut - 1, noLig - 1));
+            XCell debutCell = Calc.getCell(feuilleCharges, 5 - 1, noLig - 1);
+            LocalDate debut = (Calc.isEmpty(debutCell) ? null : Dates.asLocalDate(Calc.getDate(debutCell)));
 
-            Date echeance = Calc.getDate(feuilleCharges, 6 - 1, noLig - 1);
+            XCell echeanceCell = Calc.getCell(feuilleCharges, 6 - 1, noLig - 1);
+            LocalDate echeance = Dates.asLocalDate(Calc.getDate(echeanceCell));
+            assert echeance != null;
 
             String codeImportance = Calc.getString(feuilleCharges, 7 - 1, noLig - 1);
             Importance importance = importanceDao.load(codeImportance);
@@ -728,7 +834,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     description,
                     projetAppli,
                     statut,
-                    Dates.asLocalDate(debut), Dates.asLocalDate(echeance),
+                    debut, echeance,
                     importance,
                     charge,
                     ressource,

@@ -16,13 +16,16 @@ public abstract class AbstractEntity<I extends Serializable, T extends AbstractE
 
 
     @NotNull
-    abstract public I getIdentity();
+    public abstract I getIdentity();
 
 
     public boolean equals(@Null T obj) {
+        //noinspection SimplifiableIfStatement
         if (obj == null) return false;
         return getIdentity().equals(obj.getIdentity());
     }
+
+
 
 
     // Pour faciliter le débogage uniquement.

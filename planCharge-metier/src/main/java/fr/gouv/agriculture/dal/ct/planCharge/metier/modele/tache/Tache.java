@@ -11,7 +11,7 @@ import java.time.LocalDate;
 /**
  * Created by frederic.danna on 11/03/2017.
  */
-public class Tache extends AbstractEntity<Integer, Tache> implements ITache, Comparable<Tache> {
+public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tache> {
 
     public static final String FORMAT_NO_TACHE = "T%04d";
 

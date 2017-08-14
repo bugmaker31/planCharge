@@ -24,6 +24,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
@@ -1206,7 +1207,9 @@ public class ApplicationController extends AbstractController {
 
     private void definirNomsPeriodes() {
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
+        // Format = "S" + n° de semaine dans l'année + abréviation du nom du jour ("lun", "mar", etc.) + retour à la ligne + jour au format 'JJ/MM'.
+        //noinspection HardcodedLineSeparator
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("'S'w E\ndd/MM");
 
         // Rq : Plus nécessaire de redéfinir les colonnes pour les TableView de getDisponibilitesController() autres que "*NbrsJoursOuvresTable",
         //      maintenant qu'on n'affiche plus les TableHeaderRow de ces TableView.
@@ -1228,7 +1231,7 @@ public class ApplicationController extends AbstractController {
             int cptColonne = 0;
             for (TableColumn calendrierColumn : calendrierColumns) {
                 dateDebutPeriode = dateDebutPeriode.plusDays(7 * cptColonne); // FIXME FDA 2017/08 Ne fonctionne que pour les périodes hebdomadaires, pas trimestrielles.
-                calendrierColumn.setText(("S+"+(cptColonne+1)) + " " + dateDebutPeriode.format(dateFormatter));
+                calendrierColumn.setText(dateDebutPeriode.format(dateFormatter));
                 cptColonne++;
             }
         }
