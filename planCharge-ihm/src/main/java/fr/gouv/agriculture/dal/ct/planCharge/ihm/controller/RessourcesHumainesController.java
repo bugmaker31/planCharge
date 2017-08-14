@@ -7,11 +7,13 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDAbsenceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -195,7 +197,10 @@ public class RessourcesHumainesController extends AbstractController {
         debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
-        ressourcesHumainesTable.setItems(ressourceHumainesBeans);
+        SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
+        sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
+
+        ressourcesHumainesTable.setItems(sortedBeans);
 
         TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).

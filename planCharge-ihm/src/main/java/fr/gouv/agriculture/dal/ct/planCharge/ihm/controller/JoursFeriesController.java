@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBea
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -98,7 +99,10 @@ public class JoursFeriesController extends AbstractController {
 //        PlanChargeIhm.symboliserColonnesObligatoires(descriptionColumn);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        joursFeriesTable.setItems(joursFeriesBeans);
+        SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
+        sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
+
+        joursFeriesTable.setItems(sortedBeans);
 
         Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
 //        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).

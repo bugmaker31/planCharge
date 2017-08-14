@@ -25,6 +25,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
@@ -40,6 +41,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -48,6 +51,7 @@ import java.util.TreeMap;
  *
  * @author frederic.danna
  */
+@SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields"})
 public class DisponibilitesController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesController.class);
@@ -404,14 +408,16 @@ public class DisponibilitesController extends AbstractController {
         planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
+                    List<NbrsJoursDAbsenceBean> nbrsJoursAbsenceBeansAAjouter = new ArrayList<>();
                     for (RessourceBean ressourceBean : change.getAddedSubList()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
                         Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
-                        nbrsJoursAbsenceBeans.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
+                        nbrsJoursAbsenceBeansAAjouter.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
                     }
+                    nbrsJoursAbsenceBeans.addAll(nbrsJoursAbsenceBeansAAjouter);
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
@@ -422,11 +428,13 @@ public class DisponibilitesController extends AbstractController {
         nbrsJoursAbsenceBeans.addListener((ListChangeListener<? super NbrsJoursDAbsenceBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
+                    List<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeansAAjouter = new ArrayList<>();
                     for (NbrsJoursDAbsenceBean nbrsJoursDAbsenceBean : change.getAddedSubList()) {
                         RessourceHumaineBean ressourceHumaineBean = nbrsJoursDAbsenceBean.getRessourceHumaineBean();
                         Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
-                        nbrsJoursDispoMinAgriBeans.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
+                        nbrsJoursDispoMinAgriBeansAAjouter.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
                     }
+                    nbrsJoursDispoMinAgriBeans.addAll(nbrsJoursDispoMinAgriBeansAAjouter);
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
@@ -437,11 +445,13 @@ public class DisponibilitesController extends AbstractController {
         nbrsJoursDispoMinAgriBeans.addListener((ListChangeListener<? super NbrsJoursDispoMinAgriBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
+                    List<PctagesDispoMinAgriBean> pctagesDispoMinAgriBeansAAjouter = new ArrayList<>();
                     for (NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean : change.getAddedSubList()) {
                         RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMinAgriBean.getRessourceHumaineBean();
                         Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
-                        pctagesDispoMinAgriBeans.add(new PctagesDispoMinAgriBean(ressourceHumaineBean, calendrier));
+                        pctagesDispoMinAgriBeansAAjouter.add(new PctagesDispoMinAgriBean(ressourceHumaineBean, calendrier));
                     }
+                    pctagesDispoMinAgriBeans.addAll(pctagesDispoMinAgriBeansAAjouter);
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
@@ -457,6 +467,21 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void initTableJoursOuvres() {
+
+        nbrsJoursOuvresTable.setCalendrierColumns(
+                semaine1NbrsJoursOuvresColumn,
+                semaine2NbrsJoursOuvresColumn,
+                semaine3NbrsJoursOuvresColumn,
+                semaine4NbrsJoursOuvresColumn,
+                semaine5NbrsJoursOuvresColumn,
+                semaine6NbrsJoursOuvresColumn,
+                semaine7NbrsJoursOuvresColumn,
+                semaine8NbrsJoursOuvresColumn,
+                semaine9NbrsJoursOuvresColumn,
+                semaine10NbrsJoursOuvresColumn,
+                semaine11NbrsJoursOuvresColumn,
+                semaine12NbrsJoursOuvresColumn
+        );
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         premiereColonneJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
@@ -481,18 +506,11 @@ public class DisponibilitesController extends AbstractController {
                 return nbrJoursOuvresPeriode.asObject();
             }
         }
-        semaine1NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(1));
-        semaine2NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(2));
-        semaine3NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(3));
-        semaine4NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(4));
-        semaine5NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(5));
-        semaine6NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(6));
-        semaine7NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(7));
-        semaine8NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(8));
-        semaine9NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(9));
-        semaine10NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(10));
-        semaine11NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(11));
-        semaine12NbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(12));
+        int cptColonne = 0;
+        for (TableColumn<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
+            cptColonne++;
+            nbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(cptColonne));
+        }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //Pas sur cet écran (non modifiable, calculé à partir du référentiel des jours fériés.).
@@ -506,91 +524,16 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (1 seule ligne).
 
-        nbrsJoursOuvresTable.setCalendrierColumns(
-                semaine1NbrsJoursOuvresColumn,
-                semaine2NbrsJoursOuvresColumn,
-                semaine3NbrsJoursOuvresColumn,
-                semaine4NbrsJoursOuvresColumn,
-                semaine5NbrsJoursOuvresColumn,
-                semaine6NbrsJoursOuvresColumn,
-                semaine7NbrsJoursOuvresColumn,
-                semaine8NbrsJoursOuvresColumn,
-                semaine9NbrsJoursOuvresColumn,
-                semaine10NbrsJoursOuvresColumn,
-                semaine11NbrsJoursOuvresColumn,
-                semaine12NbrsJoursOuvresColumn
-        );
-
         TableViews.disableColumnReorderable(nbrsJoursOuvresTable);
         TableViews.adjustHeightToRowCount(nbrsJoursOuvresTable);
 
-        nbrsJoursOuvresTable.setItems(nbrsJoursOuvresBeans);
+        SortedList<NbrsJoursOuvresBean> sortedBeans = new SortedList<>(nbrsJoursOuvresBeans);
+        sortedBeans.comparatorProperty().bind(nbrsJoursOuvresTable.comparatorProperty());
+
+        nbrsJoursOuvresTable.setItems(sortedBeans);
     }
 
     private void initTableAbsences() throws IhmException {
-
-        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        premiereColonneAbsencesColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
-        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-        final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursDAbsenceBean, Integer>, ObservableValue<Integer>> {
-            private final int noSemaine;
-
-            private NbrJoursDAbsenceCellCallback(int noSemaine) {
-                super();
-                this.noSemaine = noSemaine;
-            }
-
-            @Null
-            @Override
-            public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDAbsenceBean, Integer> cell) {
-                return new SimpleIntegerProperty(noSemaine).asObject();
-//                TODO FDA 2017/08 Coder.
-/*
-                if (cell == null) {
-                    return null;
-                }
-                NbrsJoursDAbsenceBean nbrsJoursDAbsenceBean = cell.getValue();
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                IntegerProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
-                return nbrJoursDAbsencePeriode.asObject();
-*/
-            }
-        }
-        semaine1NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(1));
-        semaine2NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(2));
-        semaine3NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(3));
-        semaine4NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(4));
-        semaine5NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(5));
-        semaine6NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(6));
-        semaine7NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(7));
-        semaine8NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(8));
-        semaine9NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(9));
-        semaine10NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(10));
-        semaine11NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(11));
-        semaine12NbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(12));
-
-        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        semaine1NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine2NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine3NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine4NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine5NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine6NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine7NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine8NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine9NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine10NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine11NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine12NbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-
-        // Paramétrage des ordres de tri :
-        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-
-        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
-        //Pas sur cet écran (pas nécessaire, ni même utile).
-
-        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
-        //Pas sur cet écran (pas nécessaire, ni même utile).
 
         nbrsJoursDAbsenceTable.setCalendrierColumns(
                 semaine1NbrsJoursDAbsenceColumn,
@@ -607,29 +550,22 @@ public class DisponibilitesController extends AbstractController {
                 semaine12NbrsJoursDAbsenceColumn
         );
 
-        TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
-        TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
-
-        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
-    }
-
-    private void initTableNbrsJoursDispoMinAgri() {
-
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        premiereColonneNbrsJoursDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
-        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-        final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoMinAgriBean, Integer>, ObservableValue<Integer>> {
-            private final int noSemaine;
+        premiereColonneAbsencesColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursDAbsenceBean, Integer>, ObservableValue<Integer>> {
+                private final int noSemaine;
 
-            private NbrJoursDispoMinAgriCellCallback(int noSemaine) {
-                super();
-                this.noSemaine = noSemaine;
-            }
+                private NbrJoursDAbsenceCellCallback(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+                }
 
-            @Null
-            @Override
-            public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDispoMinAgriBean, Integer> cell) {
-                return new SimpleIntegerProperty(noSemaine).asObject();
+                @Null
+                @Override
+                public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDAbsenceBean, Integer> cell) {
+                    return new SimpleIntegerProperty(noSemaine).asObject();
 //                TODO FDA 2017/08 Coder.
 /*
                 if (cell == null) {
@@ -640,34 +576,19 @@ public class DisponibilitesController extends AbstractController {
                 IntegerProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
                 return nbrJoursDAbsencePeriode.asObject();
 */
+                }
+            }
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
+                cptColonne++;
+                nbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(cptColonne));
             }
         }
-        semaine1NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(1));
-        semaine2NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(2));
-        semaine3NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(3));
-        semaine4NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(4));
-        semaine5NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(5));
-        semaine6NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(6));
-        semaine7NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(7));
-        semaine8NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(8));
-        semaine9NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(9));
-        semaine10NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(10));
-        semaine11NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(11));
-        semaine12NbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(12));
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        semaine1NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine2NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine3NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine4NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine5NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine6NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine7NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine8NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine9NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine10NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine11NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        semaine12NbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        for (TableColumn<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
+            nbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        }
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
@@ -677,6 +598,20 @@ public class DisponibilitesController extends AbstractController {
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
+
+        SortedList<NbrsJoursDAbsenceBean> sortedBeans = new SortedList<>(nbrsJoursAbsenceBeans);
+        sortedBeans.comparatorProperty().bind(nbrsJoursDAbsenceTable.comparatorProperty());
+
+//        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+        nbrsJoursAbsenceBeans.addListener((ListChangeListener<? super NbrsJoursDAbsenceBean>) change -> {
+            nbrsJoursDAbsenceTable.setItems(sortedBeans);
+        });
+    }
+
+    private void initTableNbrsJoursDispoMinAgri() {
 
         nbrsJoursDispoMinAgriTable.setCalendrierColumns(
                 semaine1NbrsJoursDispoMinAgriColumn,
@@ -693,29 +628,22 @@ public class DisponibilitesController extends AbstractController {
                 semaine12NbrsJoursDispoMinAgriColumn
         );
 
-        TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
-        TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
-
-        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
-    }
-
-    private void initTablePctagesDispoMinAgri() {
-
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        premiereColonnePctagesDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
-        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-        final class PctagesDispoMinAgriCellCallback implements Callback<CellDataFeatures<PctagesDispoMinAgriBean, Percentage>, ObservableValue<Percentage>> {
-            private final int noSemaine;
+        premiereColonneNbrsJoursDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoMinAgriBean, Integer>, ObservableValue<Integer>> {
+                private final int noSemaine;
 
-            private PctagesDispoMinAgriCellCallback(int noSemaine) {
-                super();
-                this.noSemaine = noSemaine;
-            }
+                private NbrJoursDispoMinAgriCellCallback(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+                }
 
-            @Null
-            @Override
-            public ObservableValue<Percentage> call(CellDataFeatures<PctagesDispoMinAgriBean, Percentage> cell) {
-                return new PercentageProperty(new Double(noSemaine/12.0).floatValue());
+                @Null
+                @Override
+                public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDispoMinAgriBean, Integer> cell) {
+                    return new SimpleIntegerProperty(noSemaine).asObject();
 //                TODO FDA 2017/08 Coder.
 /*
                 if (cell == null) {
@@ -726,34 +654,19 @@ public class DisponibilitesController extends AbstractController {
                 IntegerProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
                 return nbrJoursDAbsencePeriode.asObject();
 */
+                }
+            }
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+                cptColonne++;
+                nbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(cptColonne));
             }
         }
-        semaine1PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(1));
-        semaine2PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(2));
-        semaine3PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(3));
-        semaine4PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(4));
-        semaine5PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(5));
-        semaine6PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(6));
-        semaine7PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(7));
-        semaine8PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(8));
-        semaine9PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(9));
-        semaine10PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(10));
-        semaine11PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(11));
-        semaine12PctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(12));
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        semaine1PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine2PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine3PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine4PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine5PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine6PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine7PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine8PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine9PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine10PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine11PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
-        semaine12PctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
+        for (TableColumn<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+            nbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        }
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
@@ -763,6 +676,17 @@ public class DisponibilitesController extends AbstractController {
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
+
+        SortedList<NbrsJoursDispoMinAgriBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
+        sortedBeans.comparatorProperty().bind(nbrsJoursDispoMinAgriTable.comparatorProperty());
+
+        nbrsJoursDispoMinAgriTable.setItems(sortedBeans);
+    }
+
+    private void initTablePctagesDispoMinAgri() {
 
         pctagesDispoMinAgriTable.setCalendrierColumns(
                 semaine1PctagesDispoMinAgriColumn,
@@ -778,11 +702,63 @@ public class DisponibilitesController extends AbstractController {
                 semaine11PctagesDispoMinAgriColumn,
                 semaine12PctagesDispoMinAgriColumn
         );
-        
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        premiereColonnePctagesDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class PctagesDispoMinAgriCellCallback implements Callback<CellDataFeatures<PctagesDispoMinAgriBean, Percentage>, ObservableValue<Percentage>> {
+                private final int noSemaine;
+
+                private PctagesDispoMinAgriCellCallback(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+                }
+
+                @Null
+                @Override
+                public ObservableValue<Percentage> call(CellDataFeatures<PctagesDispoMinAgriBean, Percentage> cell) {
+                    return new PercentageProperty(new Double(noSemaine / 12.0).floatValue());
+//                TODO FDA 2017/08 Coder.
+/*
+                if (cell == null) {
+                    return null;
+                }
+                NbrsJoursDAbsenceBean nbrsJoursDAbsenceBean = cell.getValue();
+                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                IntegerProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
+                return nbrJoursDAbsencePeriode.asObject();
+*/
+                }
+            }
+            int cptColonne = 0;
+            for (TableColumn<PctagesDispoMinAgriBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoMinAgriTable.getCalendrierColumns()) {
+                cptColonne++;
+                pctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(cptColonne));
+            }
+        }
+
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        for (TableColumn<PctagesDispoMinAgriBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoMinAgriTable.getCalendrierColumns()) {
+            pctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
+        }
+
+        // Paramétrage des ordres de tri :
+        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
         TableViews.disableColumnReorderable(pctagesDispoMinAgriTable);
         TableViews.adjustHeightToRowCount(pctagesDispoMinAgriTable);
 
-        pctagesDispoMinAgriTable.setItems(pctagesDispoMinAgriBeans);
+        SortedList<PctagesDispoMinAgriBean> sortedBeans = new SortedList<>(pctagesDispoMinAgriBeans);
+        sortedBeans.comparatorProperty().bind(pctagesDispoMinAgriTable.comparatorProperty());
+
+        pctagesDispoMinAgriTable.setItems(sortedBeans);
     }
 
     private void synchroniserLargeurPremieresColonnes() {

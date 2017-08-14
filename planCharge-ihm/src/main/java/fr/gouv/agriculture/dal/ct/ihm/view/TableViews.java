@@ -98,7 +98,7 @@ public class TableViews {
         return tableHeaderRow;
     }
 
-    public static void adjustHeightToRowCount(@NotNull TableView<?> table) {
+    public static <S> void adjustHeightToRowCount(@NotNull TableView<S> table) {
 /*
         table.itemsProperty().addListener(change -> {
             int rowsCount = items.size();
@@ -125,6 +125,12 @@ public class TableViews {
 
 //        adjustHeigth(table);
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
+            adjustHeigth(table);
+        });
+        table.itemsProperty().addListener((observable, oldValue, newValue) -> {
+            adjustHeigth(table);
+        });
+        table.getItems().addListener((ListChangeListener<? super S>) change -> {
             adjustHeigth(table);
         });
         table.getItems().addListener((InvalidationListener) observable -> {
