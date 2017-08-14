@@ -52,7 +52,7 @@
                     <MenuItem text="Jours _fériés" onAction="#afficherModuleJoursFeries"/>
                     <SeparatorMenuItem/>
                     <!--suppress JavaFxEventHandler -->
-                    <MenuItem text="_Ressources" onAction="#afficherModuleRessourcesHumaines"/>
+                    <MenuItem text="_Ressources humaines" onAction="#afficherModuleRessourcesHumaines"/>
                     <MenuItem disable="true" text="_Profils"/>
                     <SeparatorMenuItem/>
                     <MenuItem disable="true" text="Projets/_Applis"/>
