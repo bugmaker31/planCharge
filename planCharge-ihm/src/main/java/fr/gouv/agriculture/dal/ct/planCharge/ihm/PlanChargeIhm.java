@@ -64,8 +64,14 @@ public class PlanChargeIhm extends Application {
     @NotNull
     public static final String APP_NAME = "Plan de charge";
 
+    /**
+     * Format : <code>&lt;abr. du jour de la semaine ("lun.", "mar.", etc.)&gt; &lt;jour sur 2 chiffres&gt;/&lt;mois sur 2 chiffres&gt;/&lt;année sur 4 chiffres&gt;</code>.
+     * Exemple : "mar. 15/07/2018".
+     *
+     * @see DateTimeFormatter
+     */
     @NotNull
-    public static final String PATRON_FORMAT_DATE = "dd/MM/yy";
+    public static final String PATRON_FORMAT_DATE = "ccc d MMM yyyy";
 
     @NotNull
     public static final DateTimeFormatter FORMAT_DATE = DateTimeFormatter.ofPattern(PATRON_FORMAT_DATE);

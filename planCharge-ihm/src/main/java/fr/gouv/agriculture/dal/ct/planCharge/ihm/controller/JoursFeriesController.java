@@ -130,12 +130,13 @@ public class JoursFeriesController extends AbstractController {
     private void definirTouches() {
         // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
         joursFeriesTable.setOnKeyPressed(event -> {
+            //noinspection EnumSwitchStatementWhichMissesCases
             switch (event.getCode()) {
                 case DELETE:
                     supprimerJourFerie(joursFeriesTable.getSelectionModel().getSelectedItem());
                     break;
                 default:
-                    LOGGER.debug("Touche ignorée : '" + event.getCode() + "'.");
+                    LOGGER.debug("Touche ignorée : '{}'.", event.getCode());
             }
         });
     }
