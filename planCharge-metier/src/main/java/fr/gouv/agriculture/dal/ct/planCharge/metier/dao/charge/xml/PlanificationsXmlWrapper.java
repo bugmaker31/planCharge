@@ -51,7 +51,7 @@ public class PlanificationsXmlWrapper {
 
     public PlanificationsXmlWrapper init(@NotNull Planifications planifs, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         try {
-            this.planifications.clear();
+            planifications.clear();
             rapport.setProgressionMax(planifs.taches().size());
             int cptTache = 0;
             for (Tache tache : planifs.taches()) {
@@ -59,9 +59,9 @@ public class PlanificationsXmlWrapper {
                 //noinspection ValueOfIncrementOrDecrementUsed
                 rapport.setProgressionCourante(++cptTache);
                 PlanificationXmlWrapper planificationXmlWrapper = new PlanificationXmlWrapper().init(tache, planifs.calendrier(tache));
-                this.planifications.add(planificationXmlWrapper);
+                planifications.add(planificationXmlWrapper);
             }
-            this.planifications.sort(Comparator.comparing(p -> p.getTache().getIdTache()));
+            planifications.sort(Comparator.comparing(p -> p.getTache().getIdTache()));
         } catch (TacheSansPlanificationException e) {
             throw new PlanChargeDaoException("Impossible de wrapper les planifications.", e);
         }
@@ -70,7 +70,7 @@ public class PlanificationsXmlWrapper {
 
     public Planifications extract() throws DaoException {
         Planifications planifs = new Planifications();
-        for (PlanificationXmlWrapper pw : this.planifications) {
+        for (PlanificationXmlWrapper pw : planifications) {
             Tache tache = pw.getTache().extract();
             Map<LocalDate, Double> calendrier = pw.getCalendrier().extract();
             planifs.ajouter(tache, calendrier);

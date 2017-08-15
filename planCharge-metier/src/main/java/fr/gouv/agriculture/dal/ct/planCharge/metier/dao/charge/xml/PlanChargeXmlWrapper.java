@@ -4,9 +4,11 @@ import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.disponibilite.xml.DisponibilitesXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml.ReferentielsXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.disponibilite.Disponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
@@ -51,6 +53,10 @@ public class PlanChargeXmlWrapper {
 
     //    @Autowired
     @NotNull
+    private DisponibilitesXmlWrapper disponibilitesXmlWrapper = new DisponibilitesXmlWrapper();
+
+    //    @Autowired
+    @NotNull
     private PlanificationsXmlWrapper planificationsXmlWrapper = new PlanificationsXmlWrapper();
 
     /**
@@ -62,6 +68,7 @@ public class PlanChargeXmlWrapper {
         super();
     }
 
+    // Getters :
 
     @XmlAttribute(name = "versionFormat", required = true)
     @NotNull
@@ -87,12 +94,19 @@ public class PlanChargeXmlWrapper {
         return referentielsXmlWrapper;
     }
 
+    @XmlElement(name = "disponibilites", required = true)
+    @NotNull
+    public DisponibilitesXmlWrapper getDisponibilites() {
+        return disponibilitesXmlWrapper;
+    }
+
     @XmlElement(name = "planifications", required = true)
     @NotNull
     public PlanificationsXmlWrapper getPlanifications() {
         return planificationsXmlWrapper;
     }
 
+    // Setters :
 
     public void setVersionFormat(@NotNull String versionFormat) {
         this.versionFormat = versionFormat;
@@ -110,6 +124,10 @@ public class PlanChargeXmlWrapper {
         this.referentielsXmlWrapper = referentielsXmlWrapper;
     }
 
+    public void setDisponibilitesXmlWrapper(@NotNull DisponibilitesXmlWrapper disponibilitesXmlWrapper) {
+        this.disponibilitesXmlWrapper = disponibilitesXmlWrapper;
+    }
+
     public void setPlanifications(@NotNull PlanificationsXmlWrapper planifications) {
         this.planificationsXmlWrapper = planifications;
     }
@@ -124,6 +142,7 @@ public class PlanChargeXmlWrapper {
 
         dateEtat = Dates.asDate(planCharge.getDateEtat());
         referentielsXmlWrapper = referentielsXmlWrapper.init(planCharge.getReferentiels(), rapport);
+        disponibilitesXmlWrapper = disponibilitesXmlWrapper.init(planCharge.getDisponibilites(), rapport);
         planificationsXmlWrapper = planificationsXmlWrapper.init(planCharge.getPlanifications(), rapport);
 
         return this;
@@ -131,18 +150,21 @@ public class PlanChargeXmlWrapper {
 
     public PlanCharge extract() throws DaoException {
 
-        assert dateEtat != null;
         LocalDate dateEtatLocale = Dates.asLocalDate(dateEtat);
+        assert dateEtatLocale != null;
 
         // Rq : Les méthodes "extract" alimentent les DAOs, donc il faut extraire les référentiels avant les données métier (qui utilisent les valeurs des référentiels).
 
         Referentiels referentiels = referentielsXmlWrapper.extract();
+
+        Disponibilites disponibilites = disponibilitesXmlWrapper.extract();
 
         Planifications planifications = planificationsXmlWrapper.extract();
 
         return new PlanCharge(
                 dateEtatLocale,
                 referentiels,
+                disponibilites,
                 planifications
         );
     }

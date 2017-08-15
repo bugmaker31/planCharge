@@ -207,7 +207,9 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private PlanCharge plan(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge plan;
         try {
-            JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
+            JAXBContext context = JAXBContext.newInstance(
+                    PlanChargeXmlWrapper.class
+            );
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
@@ -351,7 +353,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         Planifications planifications = importerPlanifications(feuilleCharges, feuilleTaches, rapport);
 
         //noinspection ConstantConditions
-        planDeCharge = new PlanCharge(Dates.asLocalDate(dateEtat), referentiels, planifications);
+        planDeCharge = new PlanCharge(Dates.asLocalDate(dateEtat), referentiels, disponibilites, planifications);
 
         return planDeCharge;
     }

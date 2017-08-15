@@ -24,20 +24,25 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
 
     @Null
     private LocalDate dateEtat;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private ReferentielsDTO referentiels;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private DisponibilitesDTO disponibilites;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private PlanificationsDTO planifications;
-
 
     private PlanChargeDTO() {
         super();
     }
 
-    public PlanChargeDTO(@Null LocalDate dateEtat, @NotNull ReferentielsDTO referentiels, @NotNull PlanificationsDTO planifications) {
+    public PlanChargeDTO(@Null LocalDate dateEtat, @NotNull ReferentielsDTO referentiels, @NotNull DisponibilitesDTO disponibilites, @NotNull PlanificationsDTO planifications) {
         this();
         this.dateEtat = dateEtat;
         this.referentiels = referentiels;
+        this.disponibilites = disponibilites;
         this.planifications = planifications;
     }
 
@@ -60,6 +65,11 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
     }
 
     @NotNull
+    public DisponibilitesDTO getDisponibilites() {
+        return disponibilites;
+    }
+
+    @NotNull
     public PlanificationsDTO getPlanifications() {
         return planifications;
     }
@@ -69,7 +79,7 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
     @Override
     public PlanCharge toEntity() throws DTOException {
         assert getDateEtat() != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
-        return new PlanCharge(getDateEtat(), getReferentiels().toEntity(), getPlanifications().toEntity());
+        return new PlanCharge(getDateEtat(), getReferentiels().toEntity(), getDisponibilites().toEntity(), getPlanifications().toEntity());
     }
 
     @NotNull
@@ -78,6 +88,7 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
         return new PlanChargeDTO(
                 entity.getDateEtat(),
                 ReferentielsDTO.from(entity.getReferentiels()),
+                DisponibilitesDTO.from(entity.getDisponibilites()),
                 PlanificationsDTO.from(entity.getPlanifications())
         );
     }
@@ -100,6 +111,8 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
         List<ViolationRegleGestion> violations = super.controlerReglesGestion();
 //        assert referentiels != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         violations.addAll(referentiels.controlerReglesGestion());
+//        assert disponibilites != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        violations.addAll(disponibilites.controlerReglesGestion());
 //        assert planifications != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         violations.addAll(planifications.controlerReglesGestion());
         return violations;

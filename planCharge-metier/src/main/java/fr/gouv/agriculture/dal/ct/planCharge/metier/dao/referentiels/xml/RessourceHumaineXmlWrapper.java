@@ -13,6 +13,7 @@ import java.util.Date;
 /**
  * Created by frederic.danna on 30/04/2017.
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class RessourceHumaineXmlWrapper {
 
     @NotNull

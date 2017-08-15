@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge;
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.Difference;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.diff.StatutDifference;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.disponibilite.Disponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 
@@ -23,13 +24,16 @@ public class PlanCharge extends AbstractEntity<LocalDate, PlanCharge> {
     @NotNull
     private Referentiels referentiels;
     @NotNull
+    private final Disponibilites disponibilites;
+    @NotNull
     private Planifications planifications;
 
 
-    public PlanCharge(@NotNull LocalDate dateEtat, @NotNull Referentiels referentiels, @NotNull Planifications planifications) {
+    public PlanCharge(@NotNull LocalDate dateEtat, @NotNull Referentiels referentiels, Disponibilites disponibilites, @NotNull Planifications planifications) {
         super();
         this.dateEtat = dateEtat;
         this.referentiels = referentiels;
+        this.disponibilites = disponibilites;
         this.planifications = planifications;
     }
 
@@ -49,6 +53,11 @@ public class PlanCharge extends AbstractEntity<LocalDate, PlanCharge> {
     @NotNull
     public Referentiels getReferentiels() {
         return referentiels;
+    }
+
+    @NotNull
+    public Disponibilites getDisponibilites() {
+        return disponibilites;
     }
 
     @NotNull
