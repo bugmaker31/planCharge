@@ -37,13 +37,13 @@ public class CalendrierAbsencesXmlWrapper {
 
     // Getters/Setters :
 
-    @XmlElement(name = "absence", required = true)
+    @XmlElement(required = true)
     @NotNull
-    public Map<Date, Integer> getAbsences() {
+    public Map<Date, Integer> getSemaines() {
         return calendrierXmlWrapper;
     }
 
-    public void setAbsences(@NotNull Map<Date, Integer> absences) {
+    public void setSemaines(@NotNull Map<Date, Integer> absences) {
         this.calendrierXmlWrapper = absences;
     }
 

@@ -34,7 +34,7 @@ public class ProfilsXmlWrapper {
     }
 
 
-    @XmlElement(name = "profil", required = true)
+    @XmlElement(required = true)
     @NotNull
     public List<ProfilXmlWrapper> getProfils() {
         return profilsXmlWrapper;

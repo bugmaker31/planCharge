@@ -34,7 +34,7 @@ public class ImportancesXmlWrapper {
     }
 
 
-    @XmlElement(name = "importance", required = true)
+    @XmlElement(required = true)
     @NotNull
     public List<ImportanceXmlWrapper> getImportances() {
         return importancesXmlWrapper;

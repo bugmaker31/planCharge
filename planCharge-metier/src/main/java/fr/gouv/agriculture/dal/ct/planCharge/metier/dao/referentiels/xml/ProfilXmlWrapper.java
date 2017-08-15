@@ -24,13 +24,13 @@ public class ProfilXmlWrapper {
     }
 
 
-    @XmlAttribute(name = "id", required = true)
+    @XmlAttribute(required = true)
     @NotNull
     public String getId() {
         return id;
     }
 
-    @XmlElement(name = "code", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getCode() {
         return code;

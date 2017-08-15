@@ -33,7 +33,7 @@ public class ProjetsApplisXmlWrapper {
     }
 
 
-    @XmlElement(name = "projetAppli", required = true)
+    @XmlElement(required = true)
     @NotNull
     public List<ProjetAppliXmlWrapper> getProjetsApplis() {
         return projetsApplisXmlWrapper;

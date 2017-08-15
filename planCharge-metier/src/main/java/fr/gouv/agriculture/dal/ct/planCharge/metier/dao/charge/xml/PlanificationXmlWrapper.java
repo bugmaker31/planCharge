@@ -19,7 +19,7 @@ public class PlanificationXmlWrapper {
 
 //    @Autowired
     @NotNull
-    private CalendrierXmlWrapper calendrier = new CalendrierXmlWrapper();
+    private CalendrierChargesXmlWrapper calendrier = new CalendrierChargesXmlWrapper();
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
@@ -36,7 +36,7 @@ public class PlanificationXmlWrapper {
         return this;
     }
 
-    @XmlElement(name = "tache", required = true)
+    @XmlElement(required = true)
     public TacheXmlWrapper getTache() {
         return tache;
     }
@@ -45,12 +45,12 @@ public class PlanificationXmlWrapper {
         this.tache = tache;
     }
 
-    @XmlElement(name = "calendrier", required = true)
-    public CalendrierXmlWrapper getCalendrier() {
+    @XmlElement(required = true)
+    public CalendrierChargesXmlWrapper getCalendrier() {
         return calendrier;
     }
 
-    public void setCalendrier(CalendrierXmlWrapper calendrier) {
+    public void setCalendrier(CalendrierChargesXmlWrapper calendrier) {
         this.calendrier = calendrier;
     }
 

@@ -34,7 +34,7 @@ public class RessourcesHumainesXmlWrapper {
     }
 
 
-    @XmlElement(name = "ressource", required = true)
+    @XmlElement(required = true)
     @NotNull
     public List<RessourceHumaineXmlWrapper> getRessources() {
         return ressourcesHumainesXmlWrapper;

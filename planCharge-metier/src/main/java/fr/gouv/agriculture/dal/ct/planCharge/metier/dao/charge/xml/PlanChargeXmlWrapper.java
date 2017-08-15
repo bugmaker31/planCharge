@@ -70,37 +70,37 @@ public class PlanChargeXmlWrapper {
 
     // Getters :
 
-    @XmlAttribute(name = "versionFormat", required = true)
+    @XmlAttribute(required = true)
     @NotNull
     public String getVersionFormat() {
         return versionFormat;
     }
 
-    @XmlAttribute(name = "versionApplication", required = true)
+    @XmlAttribute(required = true)
     @NotNull
     public String getVersionApplication() {
         return versionApplication;
     }
 
-    @XmlElement(name = "dateEtat", required = true)
+    @XmlElement(required = true)
     @NotNull
     public Date getDateEtat() {
         return dateEtat;
     }
 
-    @XmlElement(name = "referentiels", required = true)
+    @XmlElement(required = true)
     @NotNull
     public ReferentielsXmlWrapper getReferentiels() {
         return referentielsXmlWrapper;
     }
 
-    @XmlElement(name = "disponibilites", required = true)
+    @XmlElement(required = true)
     @NotNull
     public DisponibilitesXmlWrapper getDisponibilites() {
         return disponibilitesXmlWrapper;
     }
 
-    @XmlElement(name = "planifications", required = true)
+    @XmlElement(required = true)
     @NotNull
     public PlanificationsXmlWrapper getPlanifications() {
         return planificationsXmlWrapper;

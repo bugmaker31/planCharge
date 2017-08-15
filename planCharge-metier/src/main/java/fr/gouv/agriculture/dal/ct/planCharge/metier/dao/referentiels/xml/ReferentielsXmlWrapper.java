@@ -32,37 +32,37 @@ public class ReferentielsXmlWrapper {
     }
 
 
-    @XmlElement(name = "joursFeries", required = true)
+    @XmlElement(required = true)
     @NotNull
     public JoursFeriesXmlWrapper getJoursFeries() {
         return joursFeriesXmlWrapper;
     }
 
-    @XmlElement(name = "importances", required = true)
+    @XmlElement(required = true)
     @NotNull
     public ImportancesXmlWrapper getImportances() {
         return importancesXmlWrapper;
     }
 
-    @XmlElement(name = "profils", required = true)
+    @XmlElement(required = true)
     @NotNull
     public ProfilsXmlWrapper getProfils() {
         return profilsXmlWrapper;
     }
 
-    @XmlElement(name = "projetsApplis", required = true)
+    @XmlElement(required = true)
     @NotNull
     public ProjetsApplisXmlWrapper getProjetsApplis() {
         return projetsApplisXmlWrapper;
     }
 
-    @XmlElement(name = "statuts", required = true)
+    @XmlElement(required = true)
     @NotNull
     public StatutsXmlWrapper getStatuts() {
         return statutsXmlWrapper;
     }
 
-    @XmlElement(name = "ressources", required = true)
+    @XmlElement(required = true)
     @NotNull
     public RessourcesHumainesXmlWrapper getRessources() {
         return ressourcesHumainesXmlWrapper;

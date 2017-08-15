@@ -39,7 +39,7 @@ public class PlanificationsXmlWrapper {
     }
 
 
-    @XmlElement(name = "planification", required = true)
+    @XmlElement(required = true)
     public List<PlanificationXmlWrapper> getPlanifications() {
         return planifications;
     }

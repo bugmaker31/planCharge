@@ -13,7 +13,7 @@ import java.util.TreeMap;
  * Created by frederic.danna on 26/04/2017.
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierXmlWrapper {
+public class CalendrierChargesXmlWrapper {
 
     private Map<Date, Double> semaines = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
 
@@ -22,11 +22,11 @@ public class CalendrierXmlWrapper {
      *
      * @return
      */
-    public CalendrierXmlWrapper() {
+    public CalendrierChargesXmlWrapper() {
         super();
     }
 
-    public CalendrierXmlWrapper init(Map<LocalDate, Double> semaines) {
+    public CalendrierChargesXmlWrapper init(Map<LocalDate, Double> semaines) {
         this.semaines.clear();
         semaines.keySet().stream().forEach(
                 date -> this.semaines.put(Dates.asDate(date), semaines.get(date))
@@ -34,12 +34,12 @@ public class CalendrierXmlWrapper {
         return this;
     }
 
-    @XmlElement(name = "semaines", required = true)
-    public Map<Date, Double> getSemaine() {
+    @XmlElement(required = true)
+    public Map<Date, Double> getSemaines() {
         return semaines;
     }
 
-    public void setSemaine(Map<Date, Double> tableau) {
+    public void setSemaines(Map<Date, Double> tableau) {
         this.semaines = tableau;
     }
 

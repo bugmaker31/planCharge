@@ -93,47 +93,47 @@ public class TacheXmlWrapper {
         return this;
     }
 
-    @XmlAttribute(name = "idTache", required = true)
+    @XmlAttribute(required = true)
     public Integer getIdTache() {
         return idTache;
     }
 
-    @XmlElement(name = "codeCategorie", required = true)
+    @XmlElement(required = true)
     public String getCodeCategorie() {
         return codeCategorie;
     }
 
-    @XmlElement(name = "codeSousCategorie", required = true)
+    @XmlElement(required = true)
     public String getCodeSousCategorie() {
         return codeSousCategorie;
     }
 
-    @XmlElement(name = "noTache", required = true)
+    @XmlElement(required = true)
     public String getNoTache() {
         return noTache;
     }
 
-    @XmlElement(name = "noTicketIdal", required = true)
+    @XmlElement(required = true)
     public String getNoTicketIdal() {
         return noTicketIdal;
     }
 
-    @XmlElement(name = "description", required = true)
+    @XmlElement(required = true)
     public String getDescription() {
         return description;
     }
 
-    @XmlElement(name = "codeProjetAppli", required = true)
+    @XmlElement(required = true)
     public String getCodeProjetAppli() {
         return codeProjetAppli;
     }
 
-    @XmlElement(name = "codeStatut", required = true)
+    @XmlElement(required = true)
     public String getCodeStatut() {
         return codeStatut;
     }
 
-    @XmlElement(name = "debut", required = false)
+    @XmlElement(required = false)
     public Date getDebut() {
         return debut;
     }
@@ -142,22 +142,22 @@ public class TacheXmlWrapper {
         this.debut = debut;
     }
 
-    @XmlElement(name = "codeImportance", required = true)
+    @XmlElement(required = true)
     public String getCodeImportance() {
         return codeImportance;
     }
 
-    @XmlElement(name = "charge", required = true)
+    @XmlElement(required = true)
     public double getCharge() {
         return charge;
     }
 
-    @XmlElement(name = "codeRessource", required = true)
+    @XmlElement(required = true)
     public String getCodeRessource() {
         return codeRessource;
     }
 
-    @XmlElement(name = "codeProfil", required = true)
+    @XmlElement(required = true)
     public String getCodeProfil() {
         return codeProfil;
     }
@@ -194,7 +194,7 @@ public class TacheXmlWrapper {
         this.codeStatut = codeStatut;
     }
 
-    @XmlElement(name = "echeance", required = true)
+    @XmlElement(required = true)
     public Date getEcheance() {
         return echeance;
     }

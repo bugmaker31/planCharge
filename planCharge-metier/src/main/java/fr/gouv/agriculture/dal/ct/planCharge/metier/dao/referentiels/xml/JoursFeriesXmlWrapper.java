@@ -34,7 +34,7 @@ public class JoursFeriesXmlWrapper {
     }
 
 
-    @XmlElement(name = "jourFerie", required = true)
+    @XmlElement(required = true)
     @NotNull
     public List<JourFerieXmlWrapper> getJoursFeries() {
         return joursFeriesWrappers;

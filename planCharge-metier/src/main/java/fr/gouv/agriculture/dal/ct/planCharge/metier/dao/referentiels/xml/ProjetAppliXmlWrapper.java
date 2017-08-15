@@ -26,12 +26,12 @@ public class ProjetAppliXmlWrapper {
     }
 
 
-    @XmlAttribute(name = "id", required = true)
+    @XmlAttribute(required = true)
     public String getId() {
         return id;
     }
 
-    @XmlElement(name = "code", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getCode() {
         return code;

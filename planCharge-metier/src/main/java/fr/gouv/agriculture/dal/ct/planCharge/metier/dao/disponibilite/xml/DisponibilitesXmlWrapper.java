@@ -46,7 +46,7 @@ public class DisponibilitesXmlWrapper {
 
     // Getters/Setters :
 
-    @XmlElement(name = "absences", required = true)
+    @XmlElement(required = true)
     @NotNull
     public Map<String, CalendrierAbsencesXmlWrapper> getAbsences() {
         return absencesXmlWrapper;

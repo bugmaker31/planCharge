@@ -26,25 +26,25 @@ public class ImportanceXmlWrapper {
     }
 
 
-    @XmlAttribute(name="id", required = true)
+    @XmlAttribute(required = true)
     @NotNull
     public String getId() {
         return id;
     }
 
-    @XmlElement(name="codeInterne", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getCodeInterne() {
         return codeInterne;
     }
 
-    @XmlElement(name="code", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getCode() {
         return code;
     }
 
-    @XmlElement(name="ordre", required = true)
+    @XmlElement(required = true)
     @NotNull
     public Integer getOrdre() {
         return ordre;

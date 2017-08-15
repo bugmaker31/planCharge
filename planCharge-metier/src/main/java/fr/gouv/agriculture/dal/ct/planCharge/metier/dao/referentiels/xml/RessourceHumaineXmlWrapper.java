@@ -42,37 +42,37 @@ public class RessourceHumaineXmlWrapper {
     }
 
 
-    @XmlAttribute(name = "id", required = true)
+    @XmlAttribute(required = true)
     @NotNull
     public String getId() {
         return id;
     }
 
-    @XmlElement(name = "trigramme", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getTrigramme() {
         return trigramme;
     }
 
-    @XmlElement(name = "nom", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getNom() {
         return nom;
     }
 
-    @XmlElement(name = "prenom", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getPrenom() {
         return prenom;
     }
 
-    @XmlElement(name = "societe", required = true)
+    @XmlElement(required = true)
     @NotNull
     public String getSociete() {
         return societe;
     }
 
-    @XmlElement(name = "dateDebutMission", required = false)
+    @XmlElement(required = false)
     @Null
     public Date getDebutMission() {
         return debutMission;
@@ -103,7 +103,7 @@ public class RessourceHumaineXmlWrapper {
         this.societe = societe;
     }
 
-    @XmlElement(name = "dateFinMission", required = false)
+    @XmlElement(required = false)
     @Null
     public Date getFinMission() {
         return finMission;

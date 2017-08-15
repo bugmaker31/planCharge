@@ -35,13 +35,13 @@ public class JourFerieXmlWrapper {
         return this;
     }
 
-    @XmlAttribute(name="date", required = true)
+    @XmlAttribute(required = true)
     @NotNull
     public Date getDate() {
         return date;
     }
 
-    @XmlElement(name="description", required = true)
+    @XmlElement(required = true)
     @Null
     public String getDescription() {
         return description;
