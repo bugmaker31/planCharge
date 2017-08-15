@@ -32,4 +32,16 @@ public class NbrsJoursDAbsenceBean extends AbstractDisponibilitesRessourceBean<A
 
     // Implementation of AbstractBean :
 
+
+    @NotNull
+    @Override
+    public AbstractDTO toDto() throws BeanException {
+        return super.toDto();
+    }
+
+    @NotNull
+    @Override
+    public NbrsJoursDAbsenceBean fromDto(@NotNull AbstractDTO dto) throws BeanException {
+        return super.fromDto(dto);
+    }
 }
