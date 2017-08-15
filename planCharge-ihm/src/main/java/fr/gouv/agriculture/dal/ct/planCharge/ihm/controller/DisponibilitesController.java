@@ -87,10 +87,10 @@ public class DisponibilitesController extends AbstractController {
     private final ObservableList<NbrsJoursOuvresBean> nbrsJoursOuvresBeans = FXCollections.observableArrayList();
 
     @NotNull
-    private final ObservableList<NbrsJoursDAbsenceBean> nbrsJoursAbsenceBeans = planChargeBean.getAbsencesBeans();
+    private final ObservableList<NbrsJoursDAbsenceBean> nbrsJoursDAbsenceBeans = planChargeBean.getAbsencesBeans();
 
     @NotNull
-    private final ObservableList<NbrsJoursDispoMinAgriBean> nbrsJoursDispoCTBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeans = FXCollections.observableArrayList();
 
     @NotNull
     private final ObservableList<PctagesDispoCTBean> pctagesDispoMinAgriBeans = FXCollections.observableArrayList();
@@ -404,13 +404,13 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (nbrsJoursAbsenceBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (nbrsJoursDAbsenceBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>();
                         nbrsJoursAbsenceBeansAAjouter.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
                     }
-                    nbrsJoursAbsenceBeans.addAll(nbrsJoursAbsenceBeansAAjouter);
+                    nbrsJoursDAbsenceBeans.addAll(nbrsJoursAbsenceBeansAAjouter);
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
@@ -418,16 +418,22 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void initBeansNbrsJoursDispoMinAgri() {
-        nbrsJoursAbsenceBeans.addListener((ListChangeListener<? super NbrsJoursDAbsenceBean>) change -> {
+        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
                     List<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeansAAjouter = new ArrayList<>();
-                    for (NbrsJoursDAbsenceBean nbrsJoursDAbsenceBean : change.getAddedSubList()) {
-                        RessourceHumaineBean ressourceHumaineBean = nbrsJoursDAbsenceBean.getRessourceHumaineBean();
-                        Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
+                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>();
                         nbrsJoursDispoMinAgriBeansAAjouter.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
                     }
-                    nbrsJoursDispoCTBeans.addAll(nbrsJoursDispoMinAgriBeansAAjouter);
+                    nbrsJoursDispoMinAgriBeans.addAll(nbrsJoursDispoMinAgriBeansAAjouter);
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
@@ -435,16 +441,22 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void initBeansPctagesDispoCT() {
-        nbrsJoursDispoCTBeans.addListener((ListChangeListener<? super NbrsJoursDispoMinAgriBean>) change -> {
+        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    List<PctagesDispoCTBean> pctagesDispoMinAgriBeansAAjouter = new ArrayList<>();
-                    for (NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean : change.getAddedSubList()) {
-                        RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMinAgriBean.getRessourceHumaineBean();
-                        Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>(); // TODO FDA 2017/08 Coder.
-                        pctagesDispoMinAgriBeansAAjouter.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
+                    List<PctagesDispoCTBean> pctagesDispoCTBeansAAjouter = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (pctagesDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
+                        pctagesDispoCTBeansAAjouter.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
                     }
-                    pctagesDispoMinAgriBeans.addAll(pctagesDispoMinAgriBeansAAjouter);
+                    pctagesDispoMinAgriBeans.addAll(pctagesDispoCTBeansAAjouter);
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
@@ -609,10 +621,10 @@ public class DisponibilitesController extends AbstractController {
         TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
 
-        SortedList<NbrsJoursDAbsenceBean> sortedBeans = new SortedList<>(nbrsJoursAbsenceBeans);
+        SortedList<NbrsJoursDAbsenceBean> sortedBeans = new SortedList<>(nbrsJoursDAbsenceBeans);
         sortedBeans.comparatorProperty().bind(nbrsJoursDAbsenceTable.comparatorProperty());
 
-        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+        nbrsJoursDAbsenceTable.setItems(nbrsJoursDAbsenceBeans);
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
@@ -685,7 +697,7 @@ public class DisponibilitesController extends AbstractController {
         TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
 
-        SortedList<NbrsJoursDispoMinAgriBean> sortedBeans = new SortedList<>(nbrsJoursDispoCTBeans);
+        SortedList<NbrsJoursDispoMinAgriBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
         sortedBeans.comparatorProperty().bind(nbrsJoursDispoMinAgriTable.comparatorProperty());
 
         nbrsJoursDispoMinAgriTable.setItems(sortedBeans);
