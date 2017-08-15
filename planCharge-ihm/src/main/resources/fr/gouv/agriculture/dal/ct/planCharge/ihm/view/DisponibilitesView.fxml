@@ -77,7 +77,7 @@
                                                  sortable="false"/>
                                 </columns>
                                 <tooltip>
-                                    <Tooltip text="Calculé à partir du référentiel des jours fériés."/>
+                                    <Tooltip text="Nombre de jours ouvrés. Calculé à partir du référentiel des jours fériés."/>
                                 </tooltip>
                             </TableViewAvecCalendrier>
                         </TitledPane>
@@ -148,6 +148,9 @@
                                 <sortOrder>
                                     <fx:reference source="premiereColonneAbsencesColumn"/>
                                 </sortOrder>
+                                <tooltip>
+                                    <Tooltip text="Entrez le nombre de jours d'absence de chaque ressource."/>
+                                </tooltip>
                             </TableViewAvecCalendrier>
                         </TitledPane>
                     </panes>
@@ -224,7 +227,7 @@
                                     <fx:reference source="premiereColonneNbrsJoursDispoMinAgriColumn"/>
                                 </sortOrder>
                                 <tooltip>
-                                    <Tooltip text="Calculé à partir des absences."/>
+                                    <Tooltip text="Nombre de jours de disponibilité dédiée au Ministère. Calculé à partir des absences."/>
                                 </tooltip>
                             </TableViewAvecCalendrier>
                         </TitledPane>
@@ -294,6 +297,9 @@
                                 <sortOrder>
                                     <fx:reference source="premiereColonnePctagesDispoMinAgriColumn"/>
                                 </sortOrder>
+                                <tooltip>
+                                    <Tooltip text="Entrez le % de disponibilité dédié à l'équipe (la CT du DAL)."/>
+                                </tooltip>
                             </TableViewAvecCalendrier>
                         </TitledPane>
                     </panes>

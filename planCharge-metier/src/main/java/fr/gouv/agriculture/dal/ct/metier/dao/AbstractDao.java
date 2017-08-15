@@ -32,7 +32,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
     public E get(@NotNull EI id) throws EntityNotFoundException {
 
         if (getCache().containsKey(id)) {
-            LOGGER.debug("Entité retrouvée dans le cache : '" + id + "'.");
+            LOGGER.debug("Entité retrouvée dans le cache : '{}'.", id);
             return getCache().get(id);
         }
         return null;

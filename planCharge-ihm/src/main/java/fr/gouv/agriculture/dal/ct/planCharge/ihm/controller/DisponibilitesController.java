@@ -505,6 +505,10 @@ public class DisponibilitesController extends AbstractController {
                 if (cell == null) {
                     return null;
                 }
+                if (planChargeBean.getDateEtat() == null) {
+                    LOGGER.warn("Date d'état non définie !?");
+                    return null;
+                }
                 NbrsJoursOuvresBean nbrsJoursOuvresBean = cell.getValue();
                 LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
                 IntegerProperty nbrJoursOuvresPeriode = nbrsJoursOuvresBean.get(debutPeriode);

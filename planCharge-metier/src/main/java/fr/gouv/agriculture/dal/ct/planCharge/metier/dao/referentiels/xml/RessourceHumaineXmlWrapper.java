@@ -78,8 +78,10 @@ public class RessourceHumaineXmlWrapper {
         return debutMission;
     }
 
-    public void setDebutMission(Date debutMission) {
-        this.debutMission = debutMission;
+    @XmlElement(required = false)
+    @Null
+    public Date getFinMission() {
+        return finMission;
     }
 
 
@@ -103,10 +105,8 @@ public class RessourceHumaineXmlWrapper {
         this.societe = societe;
     }
 
-    @XmlElement(required = false)
-    @Null
-    public Date getFinMission() {
-        return finMission;
+    public void setDebutMission(Date debutMission) {
+        this.debutMission = debutMission;
     }
 
     public void setFinMission(Date finMission) {

@@ -24,10 +24,6 @@ public class DisponibilitesXmlWrapper {
 
     //@Autowired
     @NotNull
-    private CalendrierAbsencesXmlWrapper calendrierWrapper = new CalendrierAbsencesXmlWrapper();
-
-    //@Autowired
-    @NotNull
     private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
 
 
@@ -66,9 +62,8 @@ public class DisponibilitesXmlWrapper {
         // Absences :
         rapport.setAvancement("Sauvegarde des absences...");
         absencesXmlWrapper.clear();
-        int cptRsrcHum = 0;
         for (RessourceHumaine rsrcHum : disponibilites.getAbsences().keySet()) {
-            rapport.setProgressionCourante(++cptRsrcHum);
+            CalendrierAbsencesXmlWrapper calendrierWrapper = new CalendrierAbsencesXmlWrapper();
             absencesXmlWrapper.put(rsrcHum.getTrigramme(), calendrierWrapper.init(disponibilites.getAbsences().get(rsrcHum), rapport));
         }
 
@@ -77,12 +72,15 @@ public class DisponibilitesXmlWrapper {
 
     @NotNull
     public Disponibilites extract() throws DaoException {
+
+        // Absences :
         Map<RessourceHumaine, Map<LocalDate, Integer>> absences = new TreeMap<>(); // TreeMap au lieu de HashMap juste pour trier afin de faciliter le débogage.
         for (String trigrammeRsrcHum : absencesXmlWrapper.keySet()) {
             RessourceHumaine ressourceHumaine = ressourceHumaineDao.load(trigrammeRsrcHum);
             Map<LocalDate, Integer> calendrier = absencesXmlWrapper.get(trigrammeRsrcHum).extract();
             absences.put(ressourceHumaine, calendrier);
         }
+
         return new Disponibilites(absences);
     }
 }
