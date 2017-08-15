@@ -28,10 +28,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.FloatStringConverter;
@@ -520,7 +518,11 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        //Pas sur cet écran (non modifiable, calculé à partir du référentiel des jours fériés.).
+        // Cette table n'est pas éditable (données calculées à partir des référentiels).
+        ihm.interdireEdition(premiereColonneJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
+        for (TableColumn<NbrsJoursOuvresBean, ?> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
+            ihm.interdireEdition(nbrsJoursOuvresColumn, "Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.");
+        }
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (1 seule ligne).
@@ -593,6 +595,8 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        // Rq : 1ère colonne (ressource) non éditable.
+        ihm.interdireEdition(premiereColonneAbsencesColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         for (TableColumn<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
             nbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         }
@@ -671,8 +675,9 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(premiereColonneNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         for (TableColumn<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
-            nbrsJoursDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+            ihm.interdireEdition(nbrsJoursDispoMinAgriColumn, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.");
         }
 
         // Paramétrage des ordres de tri :
@@ -746,6 +751,7 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(premiereColonnePctagesDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         for (TableColumn<PctagesDispoMinAgriBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoMinAgriTable.getCalendrierColumns()) {
             pctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
         }

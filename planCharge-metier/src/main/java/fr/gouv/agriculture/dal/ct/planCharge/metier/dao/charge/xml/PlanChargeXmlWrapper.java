@@ -124,7 +124,7 @@ public class PlanChargeXmlWrapper {
         this.referentielsXmlWrapper = referentielsXmlWrapper;
     }
 
-    public void setDisponibilitesXmlWrapper(@NotNull DisponibilitesXmlWrapper disponibilitesXmlWrapper) {
+    public void setDisponibilites(@NotNull DisponibilitesXmlWrapper disponibilitesXmlWrapper) {
         this.disponibilitesXmlWrapper = disponibilitesXmlWrapper;
     }
 

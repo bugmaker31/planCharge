@@ -21,7 +21,7 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="false">
-                            <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="25"> <!--editable="false"-->
+                            <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="25" editable="false">
                                 <columns>
                                     <TableColumn fx:id="premiereColonneJoursOuvresColumn" text="N/A"
                                                  prefWidth="$premiereColumnPrefWidth"
@@ -156,7 +156,7 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoMinAgriPane" text="Dispo MinAgri / rsrc (j)" animated="false">
-                            <TableViewAvecCalendrier fx:id="nbrsJoursDispoMinAgriTable" fixedCellSize="25">
+                            <TableViewAvecCalendrier fx:id="nbrsJoursDispoMinAgriTable" fixedCellSize="25" editable="false">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
                                     <TableColumn fx:id="premiereColonneNbrsJoursDispoMinAgriColumn" text="Ressource"

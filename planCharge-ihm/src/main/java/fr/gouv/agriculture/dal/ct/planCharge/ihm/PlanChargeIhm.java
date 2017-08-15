@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionExc
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOuvresBean;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -457,6 +459,24 @@ public class PlanChargeIhm extends Application {
     }
 
 
+    public void interdireEdition(@NotNull TableColumn<?, ?> column, @NotNull String message, @Null ButtonType... typesBouton) {
+        // Vu qu'on veut afficher un message lorsque l'utilisateur demande à édite une cellule de la colonne, il faut rendre la tébalme éditable.
+        if (!column.getTableView().isEditable()) {
+            // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la table éditable. Trouver mieux.
+            column.getTableView().setEditable(true);
+            LOGGER.info("La table '{}' est maintenant éditable.", column.getTableView().getId());
+        }
+        if (!column.isEditable()) {
+            // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la colonne éditable. Trouver mieux.
+            column.setEditable(true);
+            LOGGER.info("La colonne '{}' est maintenant éditable.", column.getId());
+        }
+        column.setOnEditStart(event -> {
+            afficherPopUp(AlertType.WARNING, "Données non modifiables", message, 400, 200, null, typesBouton);
+        });
+
+    }
+
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image REQUIRED_INDICATOR_IMAGE = new Image("/images/required-indicator.png");
     @SuppressWarnings("HardcodedFileSeparator")
@@ -508,6 +528,7 @@ public class PlanChargeIhm extends Application {
 
     @NotNull
     public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message) {
+        //noinspection ConstantConditions
         if (primaryStage == null) {
             LOGGER.warn("Impossbile d'afficher le message, application non entièrement initialisée (en cours de démarrage ?).");
             return Optional.empty();
@@ -663,7 +684,7 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height, ButtonType boutonParDefaut, ButtonType... buttons) {
+    public Optional<ButtonType> afficherPopUp(@NotNull AlertType type, @NotNull String titre, @NotNull String message, double width, double height, @Null ButtonType typeBoutonParDefaut, @Null ButtonType... typesBouton) {
         Alert alert = new Alert(type);
 
         alert.setTitle(APP_NAME + " - " + titre);
@@ -681,12 +702,16 @@ public class PlanChargeIhm extends Application {
         alert.getDialogPane().getChildren().add(scroll);
 
         alert.getButtonTypes().setAll(ButtonType.OK);
-        alert.getButtonTypes().addAll(buttons);
-        alert.getButtonTypes()
-                .forEach(buttonType -> {
-                    Button bouton = (Button) alert.getDialogPane().lookupButton(buttonType);
-                    bouton.setDefaultButton(Objects.equals(buttonType, boutonParDefaut));
-                });
+        if (typesBouton != null) {
+            alert.getButtonTypes().addAll(typesBouton);
+        }
+        if (typeBoutonParDefaut != null) {
+            alert.getButtonTypes()
+                    .forEach(buttonType -> {
+                        Button unBouton = (Button) alert.getDialogPane().lookupButton(buttonType);
+                        unBouton.setDefaultButton(Objects.equals(buttonType, typeBoutonParDefaut));
+                    });
+        }
 
         alert.getDialogPane().setPrefWidth(width);
         alert.getDialogPane().setPrefHeight(height);
@@ -753,6 +778,7 @@ public class PlanChargeIhm extends Application {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
@@ -770,6 +796,7 @@ public class PlanChargeIhm extends Application {
     public void definirTitre(String titre) {
         primaryStage.setTitle(titre);
     }
+
 
 
 /*
