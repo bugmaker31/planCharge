@@ -14,12 +14,12 @@ public class Disponibilites extends AbstractEntity {
     // Fields:
 
     @NotNull
-    private final Map<RessourceHumaine, Map<LocalDate, Integer>> absences;
+    private final Map<RessourceHumaine, Map<LocalDate, Double>> absences;
 
 
     // Constructors:
 
-    public Disponibilites(@NotNull Map<RessourceHumaine, Map<LocalDate, Integer>> absences) {
+    public Disponibilites(@NotNull Map<RessourceHumaine, Map<LocalDate, Double>> absences) {
         super();
         this.absences = absences;
     }
@@ -28,7 +28,7 @@ public class Disponibilites extends AbstractEntity {
     // Getters/Setters:
 
     @NotNull
-    public Map<RessourceHumaine, Map<LocalDate, Integer>> getAbsences() {
+    public Map<RessourceHumaine, Map<LocalDate, Double>> getAbsences() {
         return absences;
     }
 

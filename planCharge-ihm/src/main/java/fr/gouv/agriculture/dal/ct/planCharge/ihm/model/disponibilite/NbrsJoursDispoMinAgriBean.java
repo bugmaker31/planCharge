@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 
 import javax.validation.constraints.NotNull;
@@ -16,7 +17,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class NbrsJoursDispoMinAgriBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDispoMinAgriBean, IntegerProperty> {
+public class NbrsJoursDispoMinAgriBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDispoMinAgriBean, DoubleProperty> {
 
 
     // Fields :
@@ -24,7 +25,7 @@ public class NbrsJoursDispoMinAgriBean extends AbstractDisponibilitesRessourceBe
 
     // Constructors :
 
-    public NbrsJoursDispoMinAgriBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, IntegerProperty> calendrier) {
+    public NbrsJoursDispoMinAgriBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
     }
 

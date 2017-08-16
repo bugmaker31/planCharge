@@ -19,9 +19,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -33,6 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +159,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceTable;
+    private TableViewAvecCalendrier<NbrsJoursDAbsenceBean, Double> nbrsJoursDAbsenceTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -168,56 +167,56 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine1NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine1NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine2NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine2NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine3NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine3NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine4NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine4NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine5NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine5NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine6NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine6NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine7NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine7NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine8NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine8NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine9NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine9NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine10NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine10NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine11NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine11NbrsJoursDAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDAbsenceBean, Integer> semaine12NbrsJoursDAbsenceColumn;
+    private TableColumn<NbrsJoursDAbsenceBean, Double> semaine12NbrsJoursDAbsenceColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriTable;
+    private TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Double> nbrsJoursDispoMinAgriTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -225,51 +224,51 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine1NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine1NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine2NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine2NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine3NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine3NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine4NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine4NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine5NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine5NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine6NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine6NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine7NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine7NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine8NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine8NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine9NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine9NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine10NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine10NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine11NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine11NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Integer> semaine12NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoMinAgriBean, Double> semaine12NbrsJoursDispoMinAgriColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
@@ -352,12 +351,12 @@ public class DisponibilitesController extends AbstractController {
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDAbsenceBean, Integer> getNbrsJoursDAbsenceTable() {
+    public TableViewAvecCalendrier<NbrsJoursDAbsenceBean, Double> getNbrsJoursDAbsenceTable() {
         return nbrsJoursDAbsenceTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Integer> getNbrsJoursDispoMinAgriTable() {
+    public TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Double> getNbrsJoursDispoMinAgriTable() {
         return nbrsJoursDispoMinAgriTable;
     }
 
@@ -407,7 +406,7 @@ public class DisponibilitesController extends AbstractController {
                         if (nbrsJoursDAbsenceBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
-                        Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>();
+                        Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>();
                         nbrsJoursAbsenceBeansAAjouter.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
                     }
                     nbrsJoursDAbsenceBeans.addAll(nbrsJoursAbsenceBeansAAjouter);
@@ -430,7 +429,7 @@ public class DisponibilitesController extends AbstractController {
                         if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
-                        Map<LocalDate, IntegerProperty> calendrier = new TreeMap<>();
+                        Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>();
                         nbrsJoursDispoMinAgriBeansAAjouter.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
                     }
                     nbrsJoursDispoMinAgriBeans.addAll(nbrsJoursDispoMinAgriBeansAAjouter);
@@ -567,7 +566,7 @@ public class DisponibilitesController extends AbstractController {
         premiereColonneAbsencesColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursDAbsenceBean, Integer>, ObservableValue<Integer>> {
+            final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursDAbsenceBean, Double>, ObservableValue<Double>> {
                 private final int noSemaine;
 
                 private NbrJoursDAbsenceCellCallback(int noSemaine) {
@@ -577,7 +576,7 @@ public class DisponibilitesController extends AbstractController {
 
                 @Null
                 @Override
-                public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDAbsenceBean, Integer> cell) {
+                public ObservableValue<Double> call(CellDataFeatures<NbrsJoursDAbsenceBean, Double> cell) {
                     if (cell == null) {
                         return null;
                     }
@@ -588,7 +587,7 @@ public class DisponibilitesController extends AbstractController {
                         return null;
                     }
                     LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    IntegerProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
+                    DoubleProperty nbrJoursDAbsencePeriode = nbrsJoursDAbsenceBean.get(debutPeriode);
                     if (nbrJoursDAbsencePeriode == null) { // Pas d'absence prévue pour cette ressource humaine sur cette période.
                         return null;
                     }
@@ -596,7 +595,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursDAbsenceBean, Double> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
                 cptColonne++;
                 nbrsJoursDAbsenceColumn.setCellValueFactory(new NbrJoursDAbsenceCellCallback(cptColonne));
             }
@@ -605,8 +604,8 @@ public class DisponibilitesController extends AbstractController {
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         // Rq : 1ère colonne (ressource) non éditable.
         ihm.interdireEdition(premiereColonneAbsencesColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        for (TableColumn<NbrsJoursDAbsenceBean, Integer> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
-            nbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        for (TableColumn<NbrsJoursDAbsenceBean, Double> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
+            nbrsJoursDAbsenceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         }
 
         // Paramétrage des ordres de tri :
@@ -648,7 +647,7 @@ public class DisponibilitesController extends AbstractController {
         premiereColonneNbrsJoursDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoMinAgriBean, Integer>, ObservableValue<Integer>> {
+            final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoMinAgriBean, Double>, ObservableValue<Double>> {
                 private final int noSemaine;
 
                 private NbrJoursDispoMinAgriCellCallback(int noSemaine) {
@@ -658,8 +657,8 @@ public class DisponibilitesController extends AbstractController {
 
                 @Null
                 @Override
-                public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursDispoMinAgriBean, Integer> cell) {
-                    return new SimpleIntegerProperty(noSemaine).asObject();
+                public ObservableValue<Double> call(CellDataFeatures<NbrsJoursDispoMinAgriBean, Double> cell) {
+                    return new SimpleDoubleProperty(noSemaine).asObject();
 //                TODO FDA 2017/08 Coder.
 /*
                 if (cell == null) {
@@ -673,7 +672,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursDispoMinAgriBean, Double> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
                 cptColonne++;
                 nbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(cptColonne));
             }
@@ -681,7 +680,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(premiereColonneNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        for (TableColumn<NbrsJoursDispoMinAgriBean, Integer> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+        for (TableColumn<NbrsJoursDispoMinAgriBean, Double> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
             ihm.interdireEdition(nbrsJoursDispoMinAgriColumn, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.");
         }
 

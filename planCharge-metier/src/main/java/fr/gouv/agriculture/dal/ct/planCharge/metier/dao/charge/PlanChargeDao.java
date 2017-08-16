@@ -627,16 +627,16 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     @NotNull
     private Disponibilites importerDisponibilites(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         rapport.setAvancement("Import des absences...");
-        Map<RessourceHumaine, Map<LocalDate, Integer>> absences = importerAbsences(feuilleDisponibilites);
+        Map<RessourceHumaine, Map<LocalDate, Double>> absences = importerAbsences(feuilleDisponibilites);
         return new Disponibilites(
                 absences
         );
     }
 
     @NotNull
-    private Map<RessourceHumaine, Map<LocalDate, Integer>> importerAbsences(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
+    private Map<RessourceHumaine, Map<LocalDate, Double>> importerAbsences(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
         //noinspection TooBroadScope
-        Map<RessourceHumaine, Map<LocalDate, Integer>> absences = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+        Map<RessourceHumaine, Map<LocalDate, Double>> absences = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
 
         int noLigDebutsPeriodes = 1; // Les débuts de période sont en ligne 1.
 
@@ -663,7 +663,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     throw new PlanChargeDaoException("Trigramme non défini.");
                 }
 
-                Map<LocalDate, Integer> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                Map<LocalDate, Double> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
                 int noCol = noColTitre + 3; // Il y a 2 colonnes vides entre la colonne du titre/trigrammes et la 1ère colonne contenant les jours d'absence.
                 while (true) {
 
@@ -679,7 +679,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
 
                     XCell nbrJoursAbsenceCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
-                    Integer nbrJoursAbsence = (Calc.isEmpty(nbrJoursAbsenceCell) ? null : Calc.getInt(nbrJoursAbsenceCell));
+                    Double nbrJoursAbsence = (Calc.isEmpty(nbrJoursAbsenceCell) ? null : Calc.getDouble(nbrJoursAbsenceCell));
 
                     if (nbrJoursAbsence != null) {
                         calendrier.put(debutPeriode, nbrJoursAbsence);

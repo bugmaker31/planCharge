@@ -8,10 +8,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHu
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -208,10 +205,10 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         );
         // Disponibilités :
         absencesBeans.clear();
-        Map<RessourceHumaineDTO, Map<LocalDate, Integer>> absencesDTO = planCharge.getDisponibilites().getAbsences();
+        Map<RessourceHumaineDTO, Map<LocalDate, Double>> absencesDTO = planCharge.getDisponibilites().getAbsences();
         for (RessourceHumaineDTO ressourceHumaineDTO : absencesDTO.keySet()) {
-            Map<LocalDate, IntegerProperty> calendrierAbsences = absencesDTO.get(ressourceHumaineDTO).keySet().stream()
-                    .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleIntegerProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate))));
+            Map<LocalDate, DoubleProperty> calendrierAbsences = absencesDTO.get(ressourceHumaineDTO).keySet().stream()
+                    .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleDoubleProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate))));
             absencesBeans.add(new NbrsJoursDAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
         }
         // Tâches + Charge :
@@ -243,12 +240,12 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         // Disponibilités :
         //
         // Absences :
-        Map<RessourceHumaineDTO, Map<LocalDate, Integer>> absences = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+        Map<RessourceHumaineDTO, Map<LocalDate, Double>> absences = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (NbrsJoursDAbsenceBean absencesBean : absencesBeans) {
             RessourceHumaineDTO ressourceHumaine = absencesBean.getRessourceHumaineBean().toDto();
-            Map<LocalDate, Integer> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+            Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
             for (LocalDate debutPeriode : absencesBean.keySet()) {
-                IntegerProperty nbrJoursAbsenceProperty = absencesBean.get(debutPeriode);
+                DoubleProperty nbrJoursAbsenceProperty = absencesBean.get(debutPeriode);
                 calendrier.put(debutPeriode, nbrJoursAbsenceProperty.get());
             }
             absences.put(ressourceHumaine, calendrier);

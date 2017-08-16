@@ -19,7 +19,7 @@ public class CalendrierAbsencesXmlWrapper {
     // Fields:
 
     @NotNull
-    private Map<Date, Integer> calendrierXmlWrapper = new HashMap<>();
+    private Map<Date, Double> calendrierXmlWrapper = new HashMap<>();
 
 
     // Constructors:
@@ -39,11 +39,11 @@ public class CalendrierAbsencesXmlWrapper {
 
     @XmlElement(required = true)
     @NotNull
-    public Map<Date, Integer> getSemaines() {
+    public Map<Date, Double> getSemaines() {
         return calendrierXmlWrapper;
     }
 
-    public void setSemaines(@NotNull Map<Date, Integer> absences) {
+    public void setSemaines(@NotNull Map<Date, Double> absences) {
         this.calendrierXmlWrapper = absences;
     }
 
@@ -51,7 +51,7 @@ public class CalendrierAbsencesXmlWrapper {
     // Méthodes :
 
     @NotNull
-    public CalendrierAbsencesXmlWrapper init(@NotNull Map<LocalDate, Integer> calendrierAbsences, @NotNull RapportSauvegarde rapport) {
+    public CalendrierAbsencesXmlWrapper init(@NotNull Map<LocalDate, Double> calendrierAbsences, @NotNull RapportSauvegarde rapport) {
         calendrierXmlWrapper.clear();
         calendrierXmlWrapper.putAll(calendrierAbsences.keySet().stream()
                 .collect(Collectors.toMap(Dates::asDate, calendrierAbsences::get))
@@ -60,7 +60,7 @@ public class CalendrierAbsencesXmlWrapper {
     }
 
     @NotNull
-    public Map<LocalDate, Integer> extract() throws DaoException {
+    public Map<LocalDate, Double> extract() throws DaoException {
         return calendrierXmlWrapper.keySet().stream()
                 .collect(Collectors.toMap(Dates::asLocalDate, calendrierXmlWrapper::get));
     }

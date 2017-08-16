@@ -22,7 +22,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
 
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private Map<RessourceHumaineDTO, Map<LocalDate, Integer>> absences;
+    private Map<RessourceHumaineDTO, Map<LocalDate, Double>> absences;
 
 
     // Constructors:
@@ -31,7 +31,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
         super();
     }
 
-    public DisponibilitesDTO(@NotNull Map<RessourceHumaineDTO, Map<LocalDate, Integer>> absences) {
+    public DisponibilitesDTO(@NotNull Map<RessourceHumaineDTO, Map<LocalDate, Double>> absences) {
         this();
         this.absences = absences;
     }
@@ -40,7 +40,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
     // Getters/Setters:
 
     @NotNull
-    public Map<RessourceHumaineDTO, Map<LocalDate, Integer>> getAbsences() {
+    public Map<RessourceHumaineDTO, Map<LocalDate, Double>> getAbsences() {
         return absences;
     }
 
@@ -69,7 +69,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
                         ))
         );
 */
-        Map<RessourceHumaine, Map<LocalDate, Integer>> absencesEntities = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+        Map<RessourceHumaine, Map<LocalDate, Double>> absencesEntities = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
         //noinspection SimplifyStreamApiCallChains
         absences.keySet().stream()
                 .forEachOrdered(ressourceHumaineDTO -> absencesEntities.put(ressourceHumaineDTO.toEntity(), absences.get(ressourceHumaineDTO)));
@@ -88,7 +88,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
                         ))
         );
 */
-        Map<RessourceHumaineDTO, Map<LocalDate, Integer>> absencesDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+        Map<RessourceHumaineDTO, Map<LocalDate, Double>> absencesDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
         //noinspection SimplifyStreamApiCallChains
         entity.getAbsences().keySet().stream()
                 .forEachOrdered(ressourceHumaine -> absencesDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getAbsences().get(ressourceHumaine)));
