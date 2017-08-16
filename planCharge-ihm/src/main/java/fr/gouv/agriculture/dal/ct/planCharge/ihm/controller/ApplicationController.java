@@ -1180,7 +1180,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void definirDateEtat(@Null LocalDate dateEtat) {
+    public void definirDateEtat(@Null LocalDate dateEtat) throws IhmException {
         if (dateEtat != null) {
             if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
                 dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
@@ -1200,12 +1200,12 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    private void majCalendriers() {
+    private void majCalendriers() throws IhmException {
         definirNomsPeriodes();
         definirValeursCalendriers();
     }
 
-    private void definirNomsPeriodes() {
+    private void definirNomsPeriodes() throws IhmException {
 
         // Format = "S" + n° de semaine dans l'année + abréviation du nom du jour ("lun", "mar", etc.) + retour à la ligne + jour au format 'JJ/MM'.
         //noinspection HardcodedLineSeparator
@@ -1227,10 +1227,14 @@ public class ApplicationController extends AbstractController {
             //noinspection unchecked
             List<TableColumn> calendrierColumns = table.getCalendrierColumns();
 
-            LocalDate dateDebutPeriode = planChargeBean.getDateEtat();
+            LocalDate dateEtat = planChargeBean.getDateEtat();
+            if (dateEtat == null) {
+                throw new IhmException("Date d'état non encore définie.");
+            }
+            LocalDate dateDebutPeriode = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
             int cptColonne = 0;
             for (TableColumn calendrierColumn : calendrierColumns) {
-                dateDebutPeriode = dateDebutPeriode.plusDays(7 * cptColonne); // FIXME FDA 2017/08 Ne fonctionne que pour les périodes hebdomadaires, pas trimestrielles.
+                dateDebutPeriode = dateDebutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne fonctionne que pour les périodes hebdomadaires, pas trimestrielles.
                 calendrierColumn.setText(dateDebutPeriode.format(dateFormatter));
                 cptColonne++;
             }
