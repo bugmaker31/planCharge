@@ -4,8 +4,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 /**
@@ -15,8 +17,10 @@ import java.time.LocalDate;
  */
 public class ModificationDateEtat extends ModificationUnitairePlanCharge implements ActionAnnulable, ActionRetablissable {
 
+    @Null
     private LocalDate dateEtatPrecedente;
 
+    @Null
     private LocalDate dateEtatActuelle;
 
     //@Autowired
@@ -24,7 +28,7 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge impleme
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
 
-    public ModificationDateEtat(LocalDate dateEtatPrecedente) {
+    public ModificationDateEtat(@Null LocalDate dateEtatPrecedente) {
         super();
         this.dateEtatPrecedente = dateEtatPrecedente;
         this.dateEtatActuelle = planChargeBean.getDateEtat();
@@ -33,7 +37,7 @@ public class ModificationDateEtat extends ModificationUnitairePlanCharge impleme
 
     @Override
     public String getTexte() {
-        return "la modification de la date d'état (était " + dateEtatPrecedente + ")";
+        return "la modification de la date d'état (était " + Objects.value(dateEtatPrecedente, "N/C") + ")";
     }
 
 

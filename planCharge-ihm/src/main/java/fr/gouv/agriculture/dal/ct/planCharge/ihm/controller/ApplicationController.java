@@ -24,13 +24,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -303,9 +303,11 @@ public class ApplicationController extends AbstractController {
                 menuRepeter, sousMenuRepeter
         );
 
-//        planChargeBean.getPlanificationsBeans().addListener(
-//                (ListChangeListener<? super PlanificationTacheBean>) change -> nbrTachesField.setText(change.getList().size() + "")
-//        );
+/*
+        planChargeBean.getPlanificationsBeans().addListener((ListChangeListener<? super PlanificationTacheBean>) change ->
+                definirNbrTachesDansBarreEtat()
+        );
+*/
 
         memoryGauge.setMaxValue(Runtime.getRuntime().maxMemory()); // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
         DecimalFormat ramFormat = new DecimalFormat("0");
@@ -378,18 +380,21 @@ public class ApplicationController extends AbstractController {
 
     public void majTitre() {
         String titre = PlanChargeIhm.APP_NAME;
-        if (planChargeBean.getDateEtat() != null) {
-            titre += (" - " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-        }
-        if (nomModuleCourant != null) {
-            titre += (" - " + nomModuleCourant.getTexte());
-        }
+        //noinspection HardcodedFileSeparator
+        titre += " - " + fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(planChargeBean.getDateEtat(), localDate -> localDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), "N/C");
+        //noinspection HardcodedFileSeparator
+        titre += " - " + fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(nomModuleCourant, nomModule -> nomModuleCourant.getTexte(), "N/C");
         ihm.definirTitre(titre);
     }
 
     public void majBarreEtat() {
         LOGGER.debug("majBarreEtat...");
         sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
+        definirNbrTachesDansBarreEtat();
+    }
+
+
+    private void definirNbrTachesDansBarreEtat() {
         nbrTachesField.setText(String.valueOf(planChargeBean.getPlanificationsBeans().size()));
     }
 
@@ -399,25 +404,69 @@ public class ApplicationController extends AbstractController {
      */
 
     @FXML
-    private void charger(@SuppressWarnings("unused") ActionEvent event) {
-        LOGGER.debug("> Fichier > Charger");
+    private void nouveau(@SuppressWarnings("unused") ActionEvent event) {
+        LOGGER.debug("> Fichier > Nouveau");
 
         if (!perteDonneesAceeptee()) {
             return;
         }
 
         try {
-            charger();
+            reinitBeans();
         } catch (IhmException e) {
-            LOGGER.error("Impossible de charger le plan de charge.", e);
+            LOGGER.error("Impossible de ré-initialiser un nouveau plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible de charger le plan de charge",
-                    "Impossible de charger le plan de charge : \n" + Exceptions.causes(e),
+                    "Impossible de ré-initialiser un nouveau plan de charge",
+                    "Impossible de ré-initialiser un nouveau plan de charge : \n" + Exceptions.causes(e),
                     400, 200
             );
         }
     }
+
+    private void reinitBeans() throws IhmException {
+        definirDateEtat((LocalDate) null);
+        ObservableList[] listesBeans = {
+                // Référentiels :
+                planChargeBean.getJoursFeriesBeans(),
+                planChargeBean.getJoursFeriesBeans(),
+                planChargeBean.getImportancesBeans(),
+                planChargeBean.getProfilsBeans(),
+                planChargeBean.getStatutsBeans(),
+                planChargeBean.getRessourcesBeans(),
+                // Disponibilités :
+                planChargeBean.getAbsencesBeans(),
+                // Tâches + Charge
+                planChargeBean.getPlanificationsBeans()
+        };
+        for (ObservableList listeDonnees : listesBeans) {
+            listeDonnees.clear();
+        }
+
+        majTitre();
+        majBarreEtat();
+    }
+
+        @FXML
+        private void charger (@SuppressWarnings("unused") ActionEvent event){
+            LOGGER.debug("> Fichier > Charger");
+
+            if (!perteDonneesAceeptee()) {
+                return;
+            }
+
+            try {
+                charger();
+            } catch (IhmException e) {
+                LOGGER.error("Impossible de charger le plan de charge.", e);
+                ihm.afficherPopUp(
+                        Alert.AlertType.ERROR,
+                        "Impossible de charger le plan de charge",
+                        "Impossible de charger le plan de charge : \n" + Exceptions.causes(e),
+                        400, 200
+                );
+            }
+        }
 
     private void charger() throws IhmException {
 
@@ -1219,7 +1268,7 @@ public class ApplicationController extends AbstractController {
                 ihm.getDisponibilitesController().getNbrsJoursOuvresTable(),
                 ihm.getDisponibilitesController().getNbrsJoursDAbsenceTable(),
                 ihm.getDisponibilitesController().getNbrsJoursDispoMinAgriTable(),
-                ihm.getDisponibilitesController().getPctagesDispoMinAgriTable(),
+                ihm.getDisponibilitesController().getPctagesDispoCTTable(),
                 // ChargesController
                 ihm.getChargesController().getTachesTable()
         };
@@ -1227,15 +1276,23 @@ public class ApplicationController extends AbstractController {
             //noinspection unchecked
             List<TableColumn> calendrierColumns = table.getCalendrierColumns();
 
+            LocalDate dateDebutPeriode = null;
             LocalDate dateEtat = planChargeBean.getDateEtat();
-            if (dateEtat == null) {
-                throw new IhmException("Date d'état non encore définie.");
+            if (dateEtat != null) {
+                dateDebutPeriode = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
             }
-            LocalDate dateDebutPeriode = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
+
             int cptColonne = 0;
             for (TableColumn calendrierColumn : calendrierColumns) {
-                dateDebutPeriode = dateDebutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne fonctionne que pour les périodes hebdomadaires, pas trimestrielles.
-                calendrierColumn.setText(dateDebutPeriode.format(dateFormatter));
+                String titreColonne;
+                if (dateDebutPeriode == null) {
+                    //noinspection HardcodedFileSeparator
+                    titreColonne = "N/C";
+                } else {
+                    dateDebutPeriode = dateDebutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne fonctionne que pour les périodes hebdomadaires, pas trimestrielles.
+                    titreColonne = dateDebutPeriode.format(dateFormatter);
+                }
+                calendrierColumn.setText(titreColonne);
                 cptColonne++;
             }
         }
@@ -1264,6 +1321,7 @@ public class ApplicationController extends AbstractController {
                 assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
                 dateEtat = planChargeBean.getDateEtat().minusDays(7);
             }
+            assert dateEtat != null;
             assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
 
             definirDateEtat(dateEtat);
@@ -1326,6 +1384,7 @@ public class ApplicationController extends AbstractController {
             return;
         }
 */
+        //noinspection ConstantConditions
         if (result.get().equals(ButtonType.CANCEL)) {
             LOGGER.info("Action annulée par l'utilisateur, pour éviter de perdre des données.");
             return false;

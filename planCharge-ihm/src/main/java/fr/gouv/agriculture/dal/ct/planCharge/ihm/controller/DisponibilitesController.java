@@ -32,7 +32,6 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +39,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -273,7 +273,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriTable;
+    private TableViewAvecCalendrier<PctagesDispoCTBean, Percentage> pctagesDispoCTTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -361,8 +361,8 @@ public class DisponibilitesController extends AbstractController {
     }
 
     @NotNull
-    public TableViewAvecCalendrier<PctagesDispoCTBean, Percentage> getPctagesDispoMinAgriTable() {
-        return pctagesDispoMinAgriTable;
+    public TableViewAvecCalendrier<PctagesDispoCTBean, Percentage> getPctagesDispoCTTable() {
+        return pctagesDispoCTTable;
     }
 
 
@@ -411,7 +411,22 @@ public class DisponibilitesController extends AbstractController {
                     }
                     nbrsJoursDAbsenceBeans.addAll(nbrsJoursAbsenceBeansAAjouter);
                 }
-                // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
+                if (change.wasRemoved()) {
+                    List<NbrsJoursDAbsenceBean> nbrsJoursAbsenceBeansASupprimer = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (nbrsJoursDAbsenceBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, DoubleProperty> calendrier = new HashMap<>();
+                        nbrsJoursAbsenceBeansASupprimer.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
+                    }
+                    nbrsJoursDAbsenceBeans.removeAll(nbrsJoursAbsenceBeansASupprimer);
+                }
+                // TODO FDA 2017/08 Coder les autres modifs (permutations, etc.)... si besoin ?
             }
         });
     }
@@ -426,7 +441,7 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDispoMinAgriBean -> nbrsJoursDispoMinAgriBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>();
@@ -434,7 +449,22 @@ public class DisponibilitesController extends AbstractController {
                     }
                     nbrsJoursDispoMinAgriBeans.addAll(nbrsJoursDispoMinAgriBeansAAjouter);
                 }
-                // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
+                if (change.wasRemoved()) {
+                    List<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeansASupprimer = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDispoMinAgriBean -> nbrsJoursDispoMinAgriBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, DoubleProperty> calendrier = new HashMap<>();
+                        nbrsJoursDispoMinAgriBeansASupprimer.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
+                    }
+                    nbrsJoursDispoMinAgriBeans.removeAll(nbrsJoursDispoMinAgriBeansASupprimer);
+                }
+                // TODO FDA 2017/08 Coder les autres modifs (permutations, etc.)... si besoin ?
             }
         });
     }
@@ -449,7 +479,7 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (pctagesDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (pctagesDispoMinAgriBeans.parallelStream().anyMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
@@ -488,6 +518,7 @@ public class DisponibilitesController extends AbstractController {
         );
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        //noinspection HardcodedFileSeparator
         premiereColonneJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
         //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
         final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
@@ -704,7 +735,7 @@ public class DisponibilitesController extends AbstractController {
 
     private void initTablePctagesDispoMinAgri() {
 
-        pctagesDispoMinAgriTable.setCalendrierColumns(
+        pctagesDispoCTTable.setCalendrierColumns(
                 semaine1PctagesDispoMinAgriColumn,
                 semaine2PctagesDispoMinAgriColumn,
                 semaine3PctagesDispoMinAgriColumn,
@@ -748,7 +779,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoMinAgriTable.getCalendrierColumns()) {
+            for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoCTTable.getCalendrierColumns()) {
                 cptColonne++;
                 pctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(cptColonne));
             }
@@ -756,7 +787,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(premiereColonnePctagesDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoMinAgriTable.getCalendrierColumns()) {
+        for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoCTTable.getCalendrierColumns()) {
             pctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
         }
 
@@ -769,17 +800,17 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        TableViews.disableColumnReorderable(pctagesDispoMinAgriTable);
-        TableViews.adjustHeightToRowCount(pctagesDispoMinAgriTable);
+        TableViews.disableColumnReorderable(pctagesDispoCTTable);
+        TableViews.adjustHeightToRowCount(pctagesDispoCTTable);
 
         SortedList<PctagesDispoCTBean> sortedBeans = new SortedList<>(pctagesDispoMinAgriBeans);
-        sortedBeans.comparatorProperty().bind(pctagesDispoMinAgriTable.comparatorProperty());
+        sortedBeans.comparatorProperty().bind(pctagesDispoCTTable.comparatorProperty());
 
-        pctagesDispoMinAgriTable.setItems(sortedBeans);
+        pctagesDispoCTTable.setItems(sortedBeans);
     }
 
     private void synchroniserLargeurPremieresColonnes() {
-        TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, nbrsJoursDAbsenceTable, nbrsJoursDispoMinAgriTable, pctagesDispoMinAgriTable);
+        TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, nbrsJoursDAbsenceTable, nbrsJoursDispoMinAgriTable, pctagesDispoCTTable);
     }
 
 
@@ -787,11 +818,13 @@ public class DisponibilitesController extends AbstractController {
 
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if (dateEtat == null) {
+/*
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de définir les valeurs du calendrier",
                     "Date d'état non définie."
             );
+*/
             return;
         }
 
@@ -821,6 +854,8 @@ public class DisponibilitesController extends AbstractController {
             }
             nbrsJoursOuvresTable.refresh();
             nbrsJoursDAbsenceTable.refresh();
+            nbrsJoursDispoMinAgriTable.refresh();
+            pctagesDispoCTTable.refresh();
             LOGGER.debug("Valeurs du calendrier définies.");
         } catch (ServiceException e) {
             throw new IhmException("Impossible de définir les valeurs du calendrier.", e);

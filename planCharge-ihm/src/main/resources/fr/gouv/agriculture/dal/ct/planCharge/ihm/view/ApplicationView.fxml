@@ -9,12 +9,16 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
     <stylesheets>
+        <!--<URL value="@/css/moderna_dark.css"/>-->
+        <!--<URL value="@/css/dark.css"/>-->
+        <!--<URL value="@/css/dark_theme.css"/>-->
         <URL value="@/css/main.css"/>
     </stylesheets>
     <top>
         <VBox>
             <MenuBar BorderPane.alignment="CENTER">
                 <Menu text="_Fichier">
+                    <MenuItem onAction="#nouveau" text="_Nouveau"/>
                     <MenuItem onAction="#charger" text="_Charger..."/>
                     <Menu text="_Importer">
                         <MenuItem onAction="#importerTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>

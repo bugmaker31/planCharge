@@ -237,7 +237,7 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMinAgriPane" text="Dispo CT / rsrc (%)" animated="false">
-                            <TableViewAvecCalendrier fx:id="pctagesDispoMinAgriTable" fixedCellSize="25" editable="true">
+                            <TableViewAvecCalendrier fx:id="pctagesDispoCTTable" fixedCellSize="25" editable="true">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
                                     <TableColumn fx:id="premiereColonnePctagesDispoMinAgriColumn" text="Ressource"

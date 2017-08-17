@@ -249,6 +249,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             @Null
             @Override
             public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") CellDataFeatures<PlanificationTacheBean, Double> cell) {
+                if (planChargeBean.getDateEtat()==null){
+                    return null;
+                }
                 try {
                     PlanificationTacheBean planifBean = cell.getValue();
                     LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
@@ -473,11 +476,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if (dateEtat == null) {
+/*
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification (valeurs du calendrier)",
                     "Date d'état non définie."
             );
+*/
             return;
         }
 
