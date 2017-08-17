@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import eu.hansolo.medusa.Gauge?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<?import org.controlsfx.control.NotificationPane?>
-<?import eu.hansolo.medusa.Gauge?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
@@ -26,6 +25,7 @@
                                   text="Importer un plan de _charge depuis Calc..."/>
                     </Menu>
                     <MenuItem text="_Sauver" onAction="#sauver" accelerator="Shortcut+S"/>
+                    <MenuItem text="Sauver sous..." disable="true"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="_Préférences..." onAction="#afficherPreferences" disable="true"/>
                     <SeparatorMenuItem/>
