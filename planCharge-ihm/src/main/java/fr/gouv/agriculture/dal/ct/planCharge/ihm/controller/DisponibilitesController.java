@@ -38,11 +38,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -418,13 +414,13 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (nbrsJoursDAbsenceBeans.parallelStream().anyMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (nbrsJoursDAbsenceBeans.parallelStream().noneMatch(nbrsJoursDAbsenceBean -> nbrsJoursDAbsenceBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, DoubleProperty> calendrier = new HashMap<>();
                         nbrsJoursAbsenceBeansASupprimer.add(new NbrsJoursDAbsenceBean(ressourceHumaineBean, calendrier));
                     }
-                    nbrsJoursDAbsenceBeans.removeAll(nbrsJoursAbsenceBeansASupprimer);
+                    nbrsJoursDAbsenceBeans.removeAll(nbrsJoursAbsenceBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
                 }
                 // TODO FDA 2017/08 Coder les autres modifs (permutations, etc.)... si besoin ?
             }
@@ -456,13 +452,13 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDispoMinAgriBean -> nbrsJoursDispoMinAgriBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (nbrsJoursDispoMinAgriBeans.parallelStream().noneMatch(nbrsJoursDispoMinAgriBean -> nbrsJoursDispoMinAgriBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, DoubleProperty> calendrier = new HashMap<>();
                         nbrsJoursDispoMinAgriBeansASupprimer.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
                     }
-                    nbrsJoursDispoMinAgriBeans.removeAll(nbrsJoursDispoMinAgriBeansASupprimer);
+                    nbrsJoursDispoMinAgriBeans.removeAll(nbrsJoursDispoMinAgriBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
                 }
                 // TODO FDA 2017/08 Coder les autres modifs (permutations, etc.)... si besoin ?
             }
@@ -486,6 +482,21 @@ public class DisponibilitesController extends AbstractController {
                         pctagesDispoCTBeansAAjouter.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
                     }
                     pctagesDispoMinAgriBeans.addAll(pctagesDispoCTBeansAAjouter);
+                }
+                if (change.wasRemoved()) {
+                    List<PctagesDispoCTBean> pctagesDispoCTBeansASupprimer = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (pctagesDispoMinAgriBeans.parallelStream().noneMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
+                        pctagesDispoCTBeansASupprimer.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
+                    }
+                    pctagesDispoMinAgriBeans.removeAll(pctagesDispoCTBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }

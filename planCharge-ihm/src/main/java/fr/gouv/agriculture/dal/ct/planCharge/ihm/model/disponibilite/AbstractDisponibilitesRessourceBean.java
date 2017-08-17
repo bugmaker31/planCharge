@@ -1,18 +1,11 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 
-import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import javafx.beans.property.IntegerProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceBean<D, B, T>, T> extends AbstractDisponibilitesBean<D, B, T> {
 
@@ -28,6 +21,28 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, T> calendrier) {
         super(calendrier);
         this.ressourceHumaineBean = ressourceHumaineBean;
+    }
+
+
+    // Methods:
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if ((o == null) || (getClass() != o.getClass())) return false;
+        if (!super.equals(o)) return false;
+
+        //noinspection unchecked
+        AbstractDisponibilitesRessourceBean<D, B, T> that = (AbstractDisponibilitesRessourceBean<D, B, T>) o;
+
+        return ressourceHumaineBean.equals(that.ressourceHumaineBean);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = (31 * result) + ressourceHumaineBean.hashCode();
+        return result;
     }
 
 

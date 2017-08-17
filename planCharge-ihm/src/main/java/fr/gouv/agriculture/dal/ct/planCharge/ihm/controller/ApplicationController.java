@@ -14,9 +14,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.R
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportSauvegardeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
@@ -30,7 +30,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -49,7 +48,9 @@ import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -412,7 +413,7 @@ public class ApplicationController extends AbstractController {
         }
 
         try {
-            reinitBeans();
+            reinitPlanCharge();
         } catch (IhmException e) {
             LOGGER.error("Impossible de ré-initialiser un nouveau plan de charge.", e);
             ihm.afficherPopUp(
@@ -424,7 +425,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void reinitBeans() throws IhmException {
+    private void reinitPlanCharge() throws IhmException {
         definirDateEtat((LocalDate) null);
         ObservableList[] listesBeans = {
                 // Référentiels :
