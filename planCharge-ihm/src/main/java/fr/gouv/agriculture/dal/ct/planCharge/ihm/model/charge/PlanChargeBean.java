@@ -31,7 +31,16 @@ import java.util.stream.Collectors;
  */
 public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanChargeBean> implements Copiable<PlanChargeBean> {
 
-    private final static PlanChargeBean INSTANCE = new PlanChargeBean();
+    // Statics :
+
+    private static final PlanChargeBean INSTANCE = new PlanChargeBean();
+
+    public static PlanChargeBean instance() {
+        return INSTANCE;
+    }
+
+    // Fields :
+
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<ProfilBean> profilsBeans = FXCollections.observableArrayList();
@@ -91,12 +100,8 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         });
     }
 
-    public static PlanChargeBean instance() {
-        return INSTANCE;
-    }
-
     @NotNull
-    public static PlanChargeBean copier(PlanChargeBean original) throws CopieException {
+    public static PlanChargeBean copier(@NotNull PlanChargeBean original) throws CopieException {
         PlanChargeBean copie = new PlanChargeBean();
         copier(original, copie);
         return copie;

@@ -388,7 +388,7 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void initBeanNbrsJoursOuvres() {
-        // Rien... pour l'instant.
+        nbrsJoursOuvresBeans.setAll(nbrsJoursOuvresBean);
     }
 
     private void initBeanNbrsJoursAbsence() {
@@ -650,12 +650,23 @@ public class DisponibilitesController extends AbstractController {
                     super.commitEdit(newValue);
 
                     TableRow<NbrsJoursAbsenceBean> tableRow = getTableRow();
-                    NbrsJoursAbsenceBean nbrJoursAbsence = tableRow.getItem();
-                    if (nbrJoursAbsence == null) {
+                    NbrsJoursAbsenceBean nbrJoursAbsenceBean = tableRow.getItem();
+                    if (nbrJoursAbsenceBean == null) {
                         return;
                     }
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return;
+                    }
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
+                        nbrJoursAbsenceBean.put(debutPeriode, new SimpleDoubleProperty());
+                    }
+                    DoubleProperty nbrJoursDAbsencePeriode = nbrJoursAbsenceBean.get(debutPeriode);
+                    nbrJoursDAbsencePeriode.set(newValue);
+
                     try {
-                        majDisponibilites(nbrJoursAbsence.getRessourceHumaineBean(), noSemaine);
+                        majDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), noSemaine);
                     } catch (IhmException e) {
                         // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                         LOGGER.error("Impossible de màj les disponibilités.", e);
@@ -707,7 +718,11 @@ public class DisponibilitesController extends AbstractController {
         nbrJoursOuvresPeriodeProperty.set(nbrJoursOuvresPeriode);
 
         // Nbr de jours d'absence :
-        NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.fetchFirst(nbrsJoursAbsenceBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
+        NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.getFirst(nbrsJoursAbsenceBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
+        if (nbrsJoursAbsenceBean == null) {
+            nbrsJoursAbsenceBean = new NbrsJoursAbsenceBean(rsrcHumBean);
+            nbrsJoursAbsenceBeans.add(nbrsJoursAbsenceBean);
+        }
         DoubleProperty nbrsJoursAbsenceRsrcHumPeriodeProperty = nbrsJoursAbsenceBean.get(debutPeriode);
         double nbrsJoursAbsenceRsrcHumPeriode = ((nbrsJoursAbsenceRsrcHumPeriodeProperty == null) ? 0 : nbrsJoursAbsenceRsrcHumPeriodeProperty.get());
 
@@ -717,8 +732,7 @@ public class DisponibilitesController extends AbstractController {
             nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleDoubleProperty());
         }
         DoubleProperty nbrJoursDispoMinAgriRsrcHumPeriodeProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
-        double nbrJoursDispoMinAgriRsrcHumPeriode = nbrJoursDispoMinAgriRsrcHumPeriodeProperty.get();
-        nbrJoursDispoMinAgriRsrcHumPeriodeProperty.set(Math.min(nbrJoursDispoMinAgriRsrcHumPeriode - nbrsJoursAbsenceRsrcHumPeriode, 0));
+        nbrJoursDispoMinAgriRsrcHumPeriodeProperty.set(Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsenceRsrcHumPeriode, 0));
 
         // FIXME FDA 2017/08 Coder les autres tables (en cascade).
     }
@@ -755,17 +769,17 @@ public class DisponibilitesController extends AbstractController {
                 @Null
                 @Override
                 public ObservableValue<Double> call(CellDataFeatures<NbrsJoursDispoMinAgriBean, Double> cell) {
-                    return new SimpleDoubleProperty(noSemaine).asObject();
-//                TODO FDA 2017/08 Coder.
-/*
-                if (cell == null) {
-                    return null;
-                }
-                NbrsJoursAbsenceBean nbrsJoursAbsenceBean = cell.getValue();
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                IntegerProperty nbrJoursAbsenceBean = nbrsJoursAbsenceBean.get(debutPeriode);
-                return nbrJoursAbsenceBean.asObject();
-*/
+                    if (cell == null) {
+                        return null;
+                    }
+                    NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = cell.getValue();
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return null;
+                    }
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    DoubleProperty nbrsJoursDispoMinAgriProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
+                    return nbrsJoursDispoMinAgriProperty.asObject();
                 }
             }
             int cptColonne = 0;
