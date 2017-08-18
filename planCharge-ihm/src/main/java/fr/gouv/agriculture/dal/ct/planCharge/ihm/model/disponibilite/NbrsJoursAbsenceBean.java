@@ -9,14 +9,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class NbrsJoursDAbsenceBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDAbsenceBean, DoubleProperty> {
+public class NbrsJoursAbsenceBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursAbsenceBean, DoubleProperty> {
 
 
     // Fields:
 
     // Constructors:
 
-    public NbrsJoursDAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) {
+    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
     }
 
@@ -38,7 +38,7 @@ public class NbrsJoursDAbsenceBean extends AbstractDisponibilitesRessourceBean<A
 
     @NotNull
     @Override
-    public NbrsJoursDAbsenceBean fromDto(@NotNull AbstractDTO dto) throws BeanException {
+    public NbrsJoursAbsenceBean fromDto(@NotNull AbstractDTO dto) throws BeanException {
         return super.fromDto(dto);
     }
 }

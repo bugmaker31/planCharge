@@ -7,10 +7,8 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDAbsenceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,8 +24,6 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by frederic.danna on 13/07/2017.

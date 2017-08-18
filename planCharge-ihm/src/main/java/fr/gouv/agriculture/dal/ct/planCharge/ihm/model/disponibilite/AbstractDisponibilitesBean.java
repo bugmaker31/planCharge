@@ -20,17 +20,17 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
     // Fields :
 
     @NotNull
-    final Map<LocalDate, T> calendrier;
+    private final Map<LocalDate, T> calendrier;
 
 
     // Constructors:
 
-    public AbstractDisponibilitesBean() {
+    AbstractDisponibilitesBean() {
         super();
         calendrier = new TreeMap<>(); // TreeMap, au lieu de HashMap, juste pour faciliter le débogage en gardant le tri sur la Key (date).
     }
 
-    public AbstractDisponibilitesBean(@NotNull Map<LocalDate, T> calendrier) {
+    AbstractDisponibilitesBean(@NotNull Map<LocalDate, T> calendrier) {
         super();
         this.calendrier = calendrier;
     }

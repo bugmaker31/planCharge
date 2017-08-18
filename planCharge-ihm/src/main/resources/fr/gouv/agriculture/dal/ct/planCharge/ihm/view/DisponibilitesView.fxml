@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Double?>
-<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
-<?import com.sun.javafx.scene.control.skin.TableHeaderRow?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -95,51 +94,51 @@
                                                  prefWidth="$premiereColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine1NbrsJoursDAbsenceColumn" text="S+1"
+                                    <TableColumn fx:id="semaine1NbrsJoursAbsenceColumn" text="S+1"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine2NbrsJoursDAbsenceColumn" text="S+2"
+                                    <TableColumn fx:id="semaine2NbrsJoursAbsenceColumn" text="S+2"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine3NbrsJoursDAbsenceColumn" text="S+3"
+                                    <TableColumn fx:id="semaine3NbrsJoursAbsenceColumn" text="S+3"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine4NbrsJoursDAbsenceColumn" text="S+4"
+                                    <TableColumn fx:id="semaine4NbrsJoursAbsenceColumn" text="S+4"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine5NbrsJoursDAbsenceColumn" text="S+5"
+                                    <TableColumn fx:id="semaine5NbrsJoursAbsenceColumn" text="S+5"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine6NbrsJoursDAbsenceColumn" text="S+6"
+                                    <TableColumn fx:id="semaine6NbrsJoursAbsenceColumn" text="S+6"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine7NbrsJoursDAbsenceColumn" text="S+7"
+                                    <TableColumn fx:id="semaine7NbrsJoursAbsenceColumn" text="S+7"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine8NbrsJoursDAbsenceColumn" text="S+8"
+                                    <TableColumn fx:id="semaine8NbrsJoursAbsenceColumn" text="S+8"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine9NbrsJoursDAbsenceColumn" text="S+9"
+                                    <TableColumn fx:id="semaine9NbrsJoursAbsenceColumn" text="S+9"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine10NbrsJoursDAbsenceColumn" text="S+10"
+                                    <TableColumn fx:id="semaine10NbrsJoursAbsenceColumn" text="S+10"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine11NbrsJoursDAbsenceColumn" text="S+11"
+                                    <TableColumn fx:id="semaine11NbrsJoursAbsenceColumn" text="S+11"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine12NbrsJoursDAbsenceColumn" text="S+12"
+                                    <TableColumn fx:id="semaine12NbrsJoursAbsenceColumn" text="S+12"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
