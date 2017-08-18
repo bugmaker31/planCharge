@@ -807,10 +807,13 @@ public class DisponibilitesController extends AbstractController {
         TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
 
-        SortedList<NbrsJoursDispoMinAgriBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
-        sortedBeans.comparatorProperty().bind(nbrsJoursDispoMinAgriTable.comparatorProperty());
+        // Tri de la liste :
+        nbrsJoursDispoMinAgriTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoMinAgriBean>) change -> {
+            SortedList<NbrsJoursDispoMinAgriBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
+            sortedBeans.comparatorProperty().bind(nbrsJoursDispoMinAgriTable.comparatorProperty());
+        });
 
-        nbrsJoursDispoMinAgriTable.setItems(sortedBeans);
+        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
     }
 
     private void initTablePctagesDispoMinAgri() {
@@ -848,14 +851,14 @@ public class DisponibilitesController extends AbstractController {
                     if (cell == null) {
                         return null;
                     }
-//                TODO FDA 2017/08 Coder.
-                    return new PercentageProperty(new Double(noSemaine / 12.0).floatValue());
-/*
-                NbrsJoursAbsenceBean nbrsJoursAbsenceBean = cell.getValue();
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                IntegerProperty nbrJoursAbsencePeriode = nbrsJoursAbsenceBean.get(debutPeriode);
-                return nbrJoursAbsencePeriode.asObject();
-*/
+                    PctagesDispoCTBean pctagesDispoCTBean = cell.getValue();
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return null;
+                    }
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    PercentageProperty percentageProperty = pctagesDispoCTBean.get(debutPeriode);
+                    return percentageProperty;
                 }
             }
             int cptColonne = 0;
@@ -883,10 +886,13 @@ public class DisponibilitesController extends AbstractController {
         TableViews.disableColumnReorderable(pctagesDispoCTTable);
         TableViews.adjustHeightToRowCount(pctagesDispoCTTable);
 
-        SortedList<PctagesDispoCTBean> sortedBeans = new SortedList<>(pctagesDispoMinAgriBeans);
-        sortedBeans.comparatorProperty().bind(pctagesDispoCTTable.comparatorProperty());
+        // Tri de la liste :
+        pctagesDispoCTTable.getItems().addListener((ListChangeListener<? super PctagesDispoCTBean>) change -> {
+            SortedList<PctagesDispoCTBean> sortedBeans = new SortedList<>(pctagesDispoMinAgriBeans);
+            sortedBeans.comparatorProperty().bind(pctagesDispoCTTable.comparatorProperty());
+        });
 
-        pctagesDispoCTTable.setItems(sortedBeans);
+        pctagesDispoCTTable.setItems(pctagesDispoMinAgriBeans);
     }
 
     private void synchroniserLargeurPremieresColonnes() {
