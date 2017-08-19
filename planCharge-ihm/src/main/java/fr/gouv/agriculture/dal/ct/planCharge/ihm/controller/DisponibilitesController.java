@@ -1182,11 +1182,20 @@ public class DisponibilitesController extends AbstractController {
 
     private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
         LOGGER.debug("Définition des valeurs du calendrier : ");
+
         for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
                 majDisponibilites(ressourceHumaineBean, noSemaine);
             }
         }
+
+        // Les tables ont besoin d'être réactualisées dans certains cas, par exemple quand on change la date d'état.
+        nbrsJoursOuvresTable.refresh();
+        nbrsJoursDAbsenceTable.refresh();
+        nbrsJoursDispoMinAgriTable.refresh();
+        pctagesDispoCTTable.refresh();
+        nbrsJoursDispoCTTable.refresh();
+
         LOGGER.debug("Valeurs du calendrier définies.");
     }
 }
