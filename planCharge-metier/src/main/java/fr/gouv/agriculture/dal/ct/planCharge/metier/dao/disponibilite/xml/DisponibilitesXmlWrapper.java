@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHu
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.disponibilite.Disponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class DisponibilitesXmlWrapper {
@@ -20,7 +22,10 @@ public class DisponibilitesXmlWrapper {
     // Fields:
 
     @NotNull
-    private Map<String, CalendrierAbsencesXmlWrapper> absencesXmlWrapper = new HashMap<>();
+    private Map<String, CalendrierFloatXmlWrapper> nbrJoursAbsenceXmlWrapper = new HashMap<>();
+
+    @NotNull
+    private Map<String, CalendrierFloatXmlWrapper> pctagesDispoCTXmlWrapper = new HashMap<>();
 
     //@Autowired
     @NotNull
@@ -42,29 +47,58 @@ public class DisponibilitesXmlWrapper {
 
     // Getters/Setters :
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @XmlElement(required = true)
     @NotNull
-    public Map<String, CalendrierAbsencesXmlWrapper> getAbsences() {
-        return absencesXmlWrapper;
+    public Map<String, CalendrierFloatXmlWrapper> getNbrsJoursAbsence() {
+        return nbrJoursAbsenceXmlWrapper;
     }
 
-    public void setAbsences(@NotNull Map<String, CalendrierAbsencesXmlWrapper> absences) {
-        this.absencesXmlWrapper = absences;
+    @SuppressWarnings("SuspiciousGetterSetter")
+    @XmlElement(required = true)
+    @NotNull
+    public Map<String, CalendrierFloatXmlWrapper> getPctagesDispo() {
+        return pctagesDispoCTXmlWrapper;
     }
 
+    @SuppressWarnings("SuspiciousGetterSetter")
+    public void setNbrJoursAbsence(@NotNull Map<String, CalendrierFloatXmlWrapper> absences) {
+        this.nbrJoursAbsenceXmlWrapper = absences;
+    }
+
+    @SuppressWarnings("SuspiciousGetterSetter")
+    public void setPctagesDispoCT(@NotNull Map<String, CalendrierFloatXmlWrapper> pctagesDispoCTXmlWrapper) {
+        this.pctagesDispoCTXmlWrapper = pctagesDispoCTXmlWrapper;
+    }
 
     // Méthodes :
 
     @NotNull
     public DisponibilitesXmlWrapper init(@NotNull Disponibilites disponibilites, @NotNull RapportSauvegarde rapport) {
-        rapport.setProgressionMax(disponibilites.getAbsences().size());
+        rapport.setProgressionMax(disponibilites.getNbrsJoursAbsence().size());
 
-        // Absences :
+        // Nbrs de jours d'absence :
         rapport.setAvancement("Sauvegarde des absences...");
-        absencesXmlWrapper.clear();
-        for (RessourceHumaine rsrcHum : disponibilites.getAbsences().keySet()) {
-            CalendrierAbsencesXmlWrapper calendrierWrapper = new CalendrierAbsencesXmlWrapper();
-            absencesXmlWrapper.put(rsrcHum.getTrigramme(), calendrierWrapper.init(disponibilites.getAbsences().get(rsrcHum), rapport));
+        nbrJoursAbsenceXmlWrapper.clear();
+        for (RessourceHumaine rsrcHum : disponibilites.getNbrsJoursAbsence().keySet()) {
+            CalendrierFloatXmlWrapper calendrierWrapper = new CalendrierFloatXmlWrapper().init(
+                    disponibilites.getNbrsJoursAbsence().get(rsrcHum),
+                    rapport
+            );
+            nbrJoursAbsenceXmlWrapper.put(rsrcHum.getTrigramme(), calendrierWrapper);
+        }
+
+        // Pctages dispo CT :
+        rapport.setAvancement("Sauvegarde des pourcentages de dispo. pour l'équipe (la CT)...");
+        pctagesDispoCTXmlWrapper.clear();
+        for (RessourceHumaine rsrcHum : disponibilites.getPctagesDispoCT().keySet()) {
+            Map<LocalDate, Percentage> pctagesDispCTRessHum = disponibilites.getPctagesDispoCT().get(rsrcHum);
+            CalendrierFloatXmlWrapper calendrierWrapper = new CalendrierFloatXmlWrapper().init(
+                    pctagesDispCTRessHum.keySet().stream()
+                            .collect(Collectors.<LocalDate, LocalDate, Float>toMap(debutPeriode -> debutPeriode, debutPeriode -> pctagesDispCTRessHum.get(debutPeriode).floatValue())),
+                    rapport
+            );
+            pctagesDispoCTXmlWrapper.put(rsrcHum.getTrigramme(), calendrierWrapper);
         }
 
         return this;
@@ -73,14 +107,28 @@ public class DisponibilitesXmlWrapper {
     @NotNull
     public Disponibilites extract() throws DaoException {
 
-        // Absences :
-        Map<RessourceHumaine, Map<LocalDate, Double>> absences = new TreeMap<>(); // TreeMap au lieu de HashMap juste pour trier afin de faciliter le débogage.
-        for (String trigrammeRsrcHum : absencesXmlWrapper.keySet()) {
+        // Nbrs de jours d'absence :
+        Map<RessourceHumaine, Map<LocalDate, Float>> nbrJoursAbsence = new TreeMap<>(); // TreeMap au lieu de HashMap juste pour trier afin de faciliter le débogage.
+        for (String trigrammeRsrcHum : nbrJoursAbsenceXmlWrapper.keySet()) {
             RessourceHumaine ressourceHumaine = ressourceHumaineDao.load(trigrammeRsrcHum);
-            Map<LocalDate, Double> calendrier = absencesXmlWrapper.get(trigrammeRsrcHum).extract();
-            absences.put(ressourceHumaine, calendrier);
+            Map<LocalDate, Float> calendrier = nbrJoursAbsenceXmlWrapper.get(trigrammeRsrcHum).extract();
+            nbrJoursAbsence.put(
+                    ressourceHumaine,
+                    calendrier.keySet().stream().collect(Collectors.toMap(debutPeriode -> debutPeriode, calendrier::get))
+            );
         }
 
-        return new Disponibilites(absences);
+        // Pctages dispo CT :
+        Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap au lieu de HashMap juste pour trier afin de faciliter le débogage.
+        for (String trigrammeRsrcHum : pctagesDispoCTXmlWrapper.keySet()) {
+            RessourceHumaine ressourceHumaine = ressourceHumaineDao.load(trigrammeRsrcHum);
+            Map<LocalDate, Float> calendrier = pctagesDispoCTXmlWrapper.get(trigrammeRsrcHum).extract();
+            pctagesDispoCT.put(
+                    ressourceHumaine,
+                    calendrier.keySet().stream().collect(Collectors.toMap(debutPeriode -> debutPeriode, key -> new Percentage(calendrier.get(key))))
+            );
+        }
+
+        return new Disponibilites(nbrJoursAbsence, pctagesDispoCT);
     }
 }

@@ -436,7 +436,7 @@ public class ApplicationController extends AbstractController {
                 planChargeBean.getStatutsBeans(),
                 planChargeBean.getRessourcesBeans(),
                 // Disponibilités :
-                planChargeBean.getAbsencesBeans(),
+                planChargeBean.getNbrsJoursAbsenceBeans(),
                 // Tâches + Charge
                 planChargeBean.getPlanificationsBeans()
         };

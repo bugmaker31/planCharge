@@ -3,14 +3,14 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class NbrsJoursAbsenceBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursAbsenceBean, DoubleProperty> {
+public class NbrsJoursAbsenceBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursAbsenceBean, FloatProperty> {
 
 
     // Fields:
@@ -21,7 +21,7 @@ public class NbrsJoursAbsenceBean extends AbstractDisponibilitesRessourceBean<Ab
         super(ressourceHumaineBean, new TreeMap<>()); // TreeMap juste pour trier afin de faciliter le débogage.
     }
 
-    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) {
+    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
     }
 

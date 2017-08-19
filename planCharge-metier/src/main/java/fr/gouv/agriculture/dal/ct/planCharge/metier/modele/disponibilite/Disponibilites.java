@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.disponibilite;
 
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,24 +15,32 @@ public class Disponibilites extends AbstractEntity {
     // Fields:
 
     @NotNull
-    private final Map<RessourceHumaine, Map<LocalDate, Double>> absences;
+    private final Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence;
+    @NotNull
+    private final Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT;
 
 
     // Constructors:
 
-    public Disponibilites(@NotNull Map<RessourceHumaine, Map<LocalDate, Double>> absences) {
+    public Disponibilites(@NotNull Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence, @NotNull Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT) {
         super();
-        this.absences = absences;
+        this.nbrsJoursAbsence = nbrsJoursAbsence;
+        this.pctagesDispoCT = pctagesDispoCT;
     }
 
 
     // Getters/Setters:
 
     @NotNull
-    public Map<RessourceHumaine, Map<LocalDate, Double>> getAbsences() {
-        return absences;
+    public Map<RessourceHumaine, Map<LocalDate, Float>> getNbrsJoursAbsence() {
+        return nbrsJoursAbsence;
     }
 
+    @NotNull
+    public Map<RessourceHumaine, Map<LocalDate, Percentage>> getPctagesDispoCT() {
+        return pctagesDispoCT;
+    }
+    
 
     // Implémentation de AbstractEntity :
 

@@ -2,13 +2,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class NbrsJoursDispoCTBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDispoCTBean, DoubleProperty> {
+public class NbrsJoursDispoCTBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDispoCTBean, FloatProperty> {
 
 
     // Fields :
@@ -16,7 +16,7 @@ public class NbrsJoursDispoCTBean extends AbstractDisponibilitesRessourceBean<Ab
 
     // Constructors :
 
-    public NbrsJoursDispoCTBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) {
+    public NbrsJoursDispoCTBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
     }
 

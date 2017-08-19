@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by frederic.danna on 13/07/2017.
@@ -112,40 +114,56 @@ public class RessourcesHumainesController extends AbstractController {
 */
         planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
-                //If items are removed
-                RessourceBean[] removedRessourceBeans = change.getRemoved().toArray(new RessourceBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
-                for (RessourceBean removedRessourceBean : removedRessourceBeans) {
-                    if (removedRessourceBean instanceof RessourceHumaineBean) {
-                        if (ressourceHumainesBeans.contains(removedRessourceBean)) {
-                            ressourceHumainesBeans.remove(removedRessourceBean);
+                if (change.wasAdded()) {
+                    List<RessourceHumaineBean> ressourceHumaineBeansToAdd = new ArrayList<>();
+                    for (RessourceBean addedRessourceBean : change.getAddedSubList()) {
+                        if (addedRessourceBean instanceof RessourceHumaineBean) {
+                            if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
+                                ressourceHumaineBeansToAdd.add((RessourceHumaineBean) addedRessourceBean);
+                            }
                         }
                     }
+                    if (!ressourceHumaineBeansToAdd.isEmpty()) {
+                        ressourceHumainesBeans.addAll(ressourceHumaineBeansToAdd);
+                    }
                 }
-                //If items are added
-                RessourceBean[] addedRessourceBeans = change.getAddedSubList().toArray(new RessourceBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
-                for (RessourceBean addedRessourceBean : addedRessourceBeans) {
-                    if (addedRessourceBean instanceof RessourceHumaineBean) {
-                        if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
-                            ressourceHumainesBeans.add((RessourceHumaineBean) addedRessourceBean);
+                if (change.wasRemoved()) {
+                    List<RessourceHumaineBean> ressourceHumaineBeansToRemove = new ArrayList<>();
+                    for (RessourceBean removedRessourceBean : change.getRemoved()) {
+                        if (removedRessourceBean instanceof RessourceHumaineBean) {
+                            if (ressourceHumainesBeans.contains(removedRessourceBean)) {
+                                ressourceHumaineBeansToRemove.add((RessourceHumaineBean) removedRessourceBean);
+                            }
                         }
+                    }
+                    if (!ressourceHumaineBeansToRemove.isEmpty()) {
+                        ressourceHumainesBeans.removeAll(ressourceHumaineBeansToRemove);
                     }
                 }
             }
         });
         ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
-                //If items are removed
-                RessourceHumaineBean[] removedRessourceBeans = change.getRemoved().toArray(new RessourceHumaineBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
-                for (RessourceHumaineBean removedRessourceBean : removedRessourceBeans) {
-                    if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
-                        planChargeBean.getRessourcesBeans().remove(removedRessourceBean);
+                if (change.wasAdded()) {
+                    List<RessourceBean> ressourceBeansToAdd = new ArrayList<>();
+                    for (RessourceHumaineBean addedRessourceBean : change.getAddedSubList()) {
+                        if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
+                            ressourceBeansToAdd.add(addedRessourceBean);
+                        }
+                    }
+                    if (!ressourceBeansToAdd.isEmpty()) {
+                        planChargeBean.getRessourcesBeans().addAll(ressourceBeansToAdd);
                     }
                 }
-                //If items are added
-                RessourceHumaineBean[] addedRessourceBeans = change.getAddedSubList().toArray(new RessourceHumaineBean[0]); // On passe par un Array pour éviter le ConcurrentmodificationException.
-                for (RessourceHumaineBean addedRessourceBean : addedRessourceBeans) {
-                    if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
-                        planChargeBean.getRessourcesBeans().add(addedRessourceBean);
+                if (change.wasRemoved()) {
+                    List<RessourceBean> ressourceBeansToRemove = new ArrayList<>();
+                    for (RessourceHumaineBean removedRessourceBean : change.getRemoved()) {
+                        if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
+                            ressourceBeansToRemove.add(removedRessourceBean);
+                        }
+                    }
+                    if (!ressourceBeansToRemove.isEmpty()) {
+                        planChargeBean.getRessourcesBeans().removeAll(ressourceBeansToRemove);
                     }
                 }
             }

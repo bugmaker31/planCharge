@@ -11,7 +11,6 @@ import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionExc
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOuvresBean;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -762,16 +761,18 @@ public class PlanChargeIhm extends Application {
             primaryStage.show();
 
             // Chargement des données utilisées dernièrement (if any) :
+/*
             LocalDate dateEtatPrec = dateEtatPrecedente();
             if (dateEtatPrec != null) {
                 applicationController.charger(dateEtatPrec);
             }
+*/
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-                applicationController.afficherModuleDisponibilites();
+                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }

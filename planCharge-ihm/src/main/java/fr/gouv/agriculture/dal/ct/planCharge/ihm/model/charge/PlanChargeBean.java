@@ -4,12 +4,16 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAbsenceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoCTBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -64,13 +68,17 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     private final ObservableList<RessourceHumaineBean> ressourcesHumainesBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableMap, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<NbrsJoursAbsenceBean> absencesBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursAbsenceBean> nbrsJoursAbsenceBeans = FXCollections.observableArrayList();
+    // 'final' car personne ne doit (re)set'er cette ObservableMap, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<PctagesDispoCTBean> pctagesDispoCTBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<PlanificationTacheBean> planificationsBeans = FXCollections.observableArrayList();
     @Null
     private LocalDate dateEtat = null;
     private boolean modifie = false;
+
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeBean() {
@@ -176,8 +184,8 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
     @NotNull
-    public ObservableList<NbrsJoursAbsenceBean> getAbsencesBeans() {
-        return absencesBeans;
+    public ObservableList<NbrsJoursAbsenceBean> getNbrsJoursAbsenceBeans() {
+        return nbrsJoursAbsenceBeans;
     }
 
     @NotNull
@@ -249,12 +257,23 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .collect(Collectors.toList())
         );
         // Disponibilités :
-        absencesBeans.clear();
-        Map<RessourceHumaineDTO, Map<LocalDate, Double>> absencesDTO = planCharge.getDisponibilites().getAbsences();
-        for (RessourceHumaineDTO ressourceHumaineDTO : absencesDTO.keySet()) {
-            Map<LocalDate, DoubleProperty> calendrierAbsences = absencesDTO.get(ressourceHumaineDTO).keySet().stream()
-                    .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleDoubleProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate))));
-            absencesBeans.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
+        { // Nbrs de jours d'absence :
+            nbrsJoursAbsenceBeans.clear();
+            Map<RessourceHumaineDTO, Map<LocalDate, Float>> absencesDTO = planCharge.getDisponibilites().getNbrsJoursAbsence();
+            for (RessourceHumaineDTO ressourceHumaineDTO : absencesDTO.keySet()) {
+                Map<LocalDate, FloatProperty> calendrierAbsences = absencesDTO.get(ressourceHumaineDTO).keySet().stream()
+                        .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleFloatProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate))));
+                nbrsJoursAbsenceBeans.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
+            }
+        }
+        { // Pctages de dispo pour la CT :
+            pctagesDispoCTBeans.clear();
+            Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = planCharge.getDisponibilites().getPctagesDispoCT();
+            for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoCT.keySet()) {
+                Map<LocalDate, PercentageProperty> calendrierAbsences = pctagesDispoCT.get(ressourceHumaineDTO).keySet().stream()
+                        .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue())));
+                pctagesDispoCTBeans.add(new PctagesDispoCTBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
+            }
         }
         // Tâches + Charge :
         planificationsBeans.setAll(
@@ -284,19 +303,30 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
         // Disponibilités :
         //
-        // Absences :
-        Map<RessourceHumaineDTO, Map<LocalDate, Double>> absences = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
-        for (NbrsJoursAbsenceBean absencesBean : absencesBeans) {
-            RessourceHumaineDTO ressourceHumaine = absencesBean.getRessourceHumaineBean().toDto();
-            Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
-            for (LocalDate debutPeriode : absencesBean.keySet()) {
-                DoubleProperty nbrJoursAbsenceProperty = absencesBean.get(debutPeriode);
+        // Nbrs de jours d'absence :
+        Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+        for (NbrsJoursAbsenceBean nbrsJoursAbsenceBean : nbrsJoursAbsenceBeans) {
+            RessourceHumaineDTO ressourceHumaine = nbrsJoursAbsenceBean.getRessourceHumaineBean().toDto();
+            Map<LocalDate, Float> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+            for (LocalDate debutPeriode : nbrsJoursAbsenceBean.keySet()) {
+                FloatProperty nbrJoursAbsenceProperty = nbrsJoursAbsenceBean.get(debutPeriode);
                 calendrier.put(debutPeriode, nbrJoursAbsenceProperty.get());
             }
-            absences.put(ressourceHumaine, calendrier);
+            nbrsJoursAbsence.put(ressourceHumaine, calendrier);
+        }
+        // % de dispo pour la CT
+        Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+        for (PctagesDispoCTBean pctagesDispoCTBean : pctagesDispoCTBeans) {
+            RessourceHumaineDTO ressourceHumaine = pctagesDispoCTBean.getRessourceHumaineBean().toDto();
+            Map<LocalDate, Percentage> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+            for (LocalDate debutPeriode : pctagesDispoCTBean.keySet()) {
+                PercentageProperty pctageDispoCTProperty = pctagesDispoCTBean.get(debutPeriode);
+                calendrier.put(debutPeriode, pctageDispoCTProperty.getValue());
+            }
+            pctagesDispoCT.put(ressourceHumaine, calendrier);
         }
         //
-        DisponibilitesDTO disponibilites = new DisponibilitesDTO(absences);
+        DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsence, pctagesDispoCT);
 
         // Tâches + Charge :
         PlanificationsDTO planifications = toPlanificationDTOs();

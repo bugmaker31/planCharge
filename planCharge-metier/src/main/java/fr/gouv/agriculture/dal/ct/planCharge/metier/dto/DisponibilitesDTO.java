@@ -3,9 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.disponibilite.Disponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, DisponibilitesDTO> {
 
@@ -22,7 +21,11 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
 
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private Map<RessourceHumaineDTO, Map<LocalDate, Double>> absences;
+    private Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT;
 
 
     // Constructors:
@@ -31,19 +34,24 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
         super();
     }
 
-    public DisponibilitesDTO(@NotNull Map<RessourceHumaineDTO, Map<LocalDate, Double>> absences) {
+    public DisponibilitesDTO(@NotNull Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence, @NotNull Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT) {
         this();
-        this.absences = absences;
+        this.nbrsJoursAbsence = nbrsJoursAbsence;
+        this.pctagesDispoCT = pctagesDispoCT;
     }
 
 
     // Getters/Setters:
 
     @NotNull
-    public Map<RessourceHumaineDTO, Map<LocalDate, Double>> getAbsences() {
-        return absences;
+    public Map<RessourceHumaineDTO, Map<LocalDate, Float>> getNbrsJoursAbsence() {
+        return nbrsJoursAbsence;
     }
 
+    @NotNull
+    public Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> getPctagesDispoCT() {
+        return pctagesDispoCT;
+    }
 
     // Implementation de AbstractDTO :
 
@@ -63,17 +71,23 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
     public Disponibilites toEntity() throws DTOException {
 /*
         return new Disponibilites(
-                getAbsences().keySet().stream()
+                getNbrsJoursAbsence().keySet().stream()
                         .collect(Collectors.toMap(
-                                RessourceHumaineDTO::toEntity, ressourceHumaine -> getAbsences().get(ressourceHumaine)
+                                RessourceHumaineDTO::toEntity, ressourceHumaine -> getNbrsJoursAbsence().get(ressourceHumaine)
                         ))
         );
 */
-        Map<RessourceHumaine, Map<LocalDate, Double>> absencesEntities = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+
+        Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsenceEntities = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
         //noinspection SimplifyStreamApiCallChains
-        absences.keySet().stream()
-                .forEachOrdered(ressourceHumaineDTO -> absencesEntities.put(ressourceHumaineDTO.toEntity(), absences.get(ressourceHumaineDTO)));
-        Disponibilites disponibilites = new Disponibilites(absencesEntities);
+        nbrsJoursAbsence.keySet().stream()
+                .forEachOrdered(ressourceHumaineDTO -> nbrsJoursAbsenceEntities.put(ressourceHumaineDTO.toEntity(), nbrsJoursAbsence.get(ressourceHumaineDTO)));
+
+        Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCTEntities = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+        pctagesDispoCT.keySet().stream()
+                .forEachOrdered(ressourceHumaineDTO -> pctagesDispoCTEntities.put(ressourceHumaineDTO.toEntity(), pctagesDispoCT.get(ressourceHumaineDTO)));
+
+        Disponibilites disponibilites = new Disponibilites(nbrsJoursAbsenceEntities, pctagesDispoCTEntities);
         return disponibilites;
     }
 
@@ -82,17 +96,24 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
     public DisponibilitesDTO fromEntity(@NotNull Disponibilites entity) throws DTOException {
 /*
         return new DisponibilitesDTO(
-                entity.getAbsences().keySet().stream()
+                entity.getNbrsJoursAbsence().keySet().stream()
                         .collect(Collectors.toMap(
-                                RessourceHumaineDTO::from, ressourceHumaine -> entity.getAbsences().get(ressourceHumaine)
+                                RessourceHumaineDTO::from, ressourceHumaine -> entity.getNbrsJoursAbsence().get(ressourceHumaine)
                         ))
         );
 */
-        Map<RessourceHumaineDTO, Map<LocalDate, Double>> absencesDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+
+        Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsenceDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
         //noinspection SimplifyStreamApiCallChains
-        entity.getAbsences().keySet().stream()
-                .forEachOrdered(ressourceHumaine -> absencesDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getAbsences().get(ressourceHumaine)));
-        DisponibilitesDTO disponibilites = new DisponibilitesDTO(absencesDTO);
+        entity.getNbrsJoursAbsence().keySet().stream()
+                .forEachOrdered(ressourceHumaine -> nbrsJoursAbsenceDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getNbrsJoursAbsence().get(ressourceHumaine)));
+
+        Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCTDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+        //noinspection SimplifyStreamApiCallChains
+        entity.getPctagesDispoCT().keySet().stream()
+                .forEachOrdered(ressourceHumaine -> pctagesDispoCTDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getPctagesDispoCT().get(ressourceHumaine)));
+
+        DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsenceDTO, pctagesDispoCTDTO);
         return disponibilites;
     }
 

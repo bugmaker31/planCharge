@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierAbsencesXmlWrapper {
+@SuppressWarnings({"ClassHasNoToStringMethod", "UseOfObsoleteDateTimeApi"})
+public class CalendrierFloatXmlWrapper {
 
 
     // Fields:
 
     @NotNull
-    private Map<Date, Double> calendrierXmlWrapper = new HashMap<>();
+    private Map<Date, Float> calendrierXmlWrapper = new HashMap<>();
 
 
     // Constructors:
@@ -27,23 +27,23 @@ public class CalendrierAbsencesXmlWrapper {
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
-     *
-     * @return
      */
-    public CalendrierAbsencesXmlWrapper() {
+    CalendrierFloatXmlWrapper() {
         super();
     }
 
 
     // Getters/Setters :
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @XmlElement(required = true)
     @NotNull
-    public Map<Date, Double> getSemaines() {
+    public Map<Date, Float> getSemaines() {
         return calendrierXmlWrapper;
     }
 
-    public void setSemaines(@NotNull Map<Date, Double> absences) {
+    @SuppressWarnings("SuspiciousGetterSetter")
+    public void setSemaines(@NotNull Map<Date, Float> absences) {
         this.calendrierXmlWrapper = absences;
     }
 
@@ -51,18 +51,18 @@ public class CalendrierAbsencesXmlWrapper {
     // Méthodes :
 
     @NotNull
-    public CalendrierAbsencesXmlWrapper init(@NotNull Map<LocalDate, Double> calendrierAbsences, @NotNull RapportSauvegarde rapport) {
+    public CalendrierFloatXmlWrapper init(@NotNull Map<LocalDate, Float> calendrier, @NotNull RapportSauvegarde rapport) {
         calendrierXmlWrapper.clear();
-        calendrierXmlWrapper.putAll(calendrierAbsences.keySet().stream()
-                .collect(Collectors.toMap(Dates::asDate, calendrierAbsences::get))
+        calendrierXmlWrapper.putAll(calendrier.keySet().stream()
+                .collect(Collectors.toMap(Dates::asDate, debutPeriode -> calendrier.get(debutPeriode).floatValue()))
         );
         return this;
     }
 
     @NotNull
-    public Map<LocalDate, Double> extract() throws DaoException {
+    public Map<LocalDate, Float> extract() throws DaoException {
         return calendrierXmlWrapper.keySet().stream()
-                .collect(Collectors.toMap(Dates::asLocalDate, calendrierXmlWrapper::get));
+                .collect(Collectors.toMap(Dates::asLocalDate, debutPeriode -> calendrierXmlWrapper.get(debutPeriode)));
     }
 
     @Override

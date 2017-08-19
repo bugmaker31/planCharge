@@ -229,7 +229,7 @@
                                 </sortOrder>
                                 <tooltip>
                                     <Tooltip
-                                            text="Nombre de jours de disponibilité dédiée au Ministère. Calculé à partir des absences."/>
+                                            text="Nombre de jours de disponibilité dédiée au Ministère. Calculé à partir des nbrsJoursAbsence."/>
                                 </tooltip>
                             </TableViewAvecCalendrier>
                         </TitledPane>

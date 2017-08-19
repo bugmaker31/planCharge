@@ -82,4 +82,11 @@ public class PercentageProperty implements Property<Percentage> {
     public void setValue(Percentage value) {
         floatProperty.setValue(value);
     }
+
+
+    // Juste pour faciliter le débogage :
+    @Override
+    public String toString() {
+        return floatProperty.getValue() + "";
+    }
 }
