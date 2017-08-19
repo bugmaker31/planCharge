@@ -423,6 +423,11 @@ public class DisponibilitesController extends AbstractController {
         return pctagesDispoCTTable;
     }
 
+    @NotNull
+    public TableViewAvecCalendrier<NbrsJoursDispoCTBean, Double> getNbrsJoursDispoCTTable() {
+        return nbrsJoursDispoCTTable;
+    }
+
 
     // Méthodes :
 
