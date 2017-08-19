@@ -5,17 +5,20 @@ import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.JourFerieDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DisponibilitesService {
+
+    public static final Percentage PCTAGE_DISPO_CT_MIN = new Percentage(90);
+
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesService.class);

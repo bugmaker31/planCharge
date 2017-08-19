@@ -1,22 +1,13 @@
 package fr.gouv.agriculture.dal.ct.ihm.view;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import com.sun.javafx.scene.control.skin.TableViewSkinBase;
-import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.Arrays;
-import java.util.List;
 
 public class TableViews {
 
@@ -125,7 +116,6 @@ public class TableViews {
         table.prefHeightProperty().bind(tableHeight);
         table.maxHeightProperty().bind(tableHeight);
 */
-        assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
 
 //        adjustHeigth(table);
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
@@ -137,9 +127,6 @@ public class TableViews {
         table.getItems().addListener((ListChangeListener<? super S>) change -> {
             adjustHeigth(table);
         });
-        table.getItems().addListener((InvalidationListener) observable -> {
-            adjustHeigth(table);
-        });
     }
 
     private static void adjustHeigth(@NotNull TableView<?> table) {
@@ -149,7 +136,9 @@ public class TableViews {
         }
         double headerRowHeight = headerRow.getHeight();
 
+        assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
         double rowHeight = table.getFixedCellSize();
+
         int rowsCount = table.getItems().size();
 
         double tableHeight = headerRowHeight + (rowHeight * (rowsCount+1));

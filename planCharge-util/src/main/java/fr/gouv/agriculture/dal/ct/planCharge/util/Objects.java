@@ -17,7 +17,7 @@ public class Objects {
     }
 
     @Null
-    public static <T, R> R ifNotNull(@Null T object, @NotNull Function<T, R> function) {
-        return ((object == null) ? null : function.apply(object));
+    public static <T, R> R value(@Null T object, @NotNull Function<T, R> fct) {
+        return ((object == null) ? null : fct.apply(object));
     }
 }

@@ -30,7 +30,7 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     public boolean equals(Object o) {
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
-        if (!super.equals(o)) return false;
+//        if (!super.equals(o)) return false;
 
         //noinspection unchecked
         AbstractDisponibilitesRessourceBean<D, B, T> that = (AbstractDisponibilitesRessourceBean<D, B, T>) o;

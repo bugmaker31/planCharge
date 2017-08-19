@@ -5,10 +5,7 @@ import fr.gouv.agriculture.dal.ct.ihm.view.PercentageStringConverter;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAbsenceBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoMinAgriBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursOuvresBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoCTBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
@@ -18,6 +15,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesServic
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
 import javafx.beans.property.*;
@@ -93,7 +91,10 @@ public class DisponibilitesController extends AbstractController {
     private final ObservableList<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeans = FXCollections.observableArrayList();
 
     @NotNull
-    private final ObservableList<PctagesDispoCTBean> pctagesDispoMinAgriBeans = FXCollections.observableArrayList();
+    private final ObservableList<PctagesDispoCTBean> pctagesDispoCTBeans = FXCollections.observableArrayList();
+
+    @NotNull
+    private final ObservableList<NbrsJoursDispoCTBean> nbrsJoursDispoCTBeans = FXCollections.observableArrayList();
 
     /*
      La couche "View" :
@@ -278,56 +279,112 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, String> premiereColonnePctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, String> premiereColonnePctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine1PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine1PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine2PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine2PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine3PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine3PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine4PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine4PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine5PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine5PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine6PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine6PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine7PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine7PctagesDispoMinCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine8PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine8PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine9PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine9PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine10PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine10PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine11PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine11PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine12PctagesDispoMinAgriColumn;
+    private TableColumn<PctagesDispoCTBean, Percentage> semaine12PctagesDispoCTColumn;
 
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private TableViewAvecCalendrier<NbrsJoursDispoCTBean, Double> nbrsJoursDispoCTTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, String> premiereColonneNbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine1NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine2NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine3NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine4NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine5NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine6NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine7NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine8NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine9NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine10NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine11NbrsJoursDispoCTColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoCTBean, Double> semaine12NbrsJoursDispoCTColumn;
 
     // Constructeurs :
 
@@ -382,6 +439,7 @@ public class DisponibilitesController extends AbstractController {
         initBeanNbrsJoursAbsence();
         initBeanNbrsJoursDispoMinAgri();
         initBeanPctagesDispoCT();
+        initBeanNbrsJoursDispoCT();
         planChargeBean.getJoursFeriesBeans().addListener((ListChangeListener<? super JourFerieBean>) change -> {
             definirValeursCalendrier();
         });
@@ -461,13 +519,13 @@ public class DisponibilitesController extends AbstractController {
                 if (change.wasAdded()) {
                     List<PctagesDispoCTBean> pctagesDispoCTBeansAAjouter = new ArrayList<>();
                     for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
-                        if (pctagesDispoMinAgriBeans.parallelStream().anyMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (pctagesDispoCTBeans.parallelStream().anyMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
                         pctagesDispoCTBeansAAjouter.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
                     }
-                    pctagesDispoMinAgriBeans.addAll(pctagesDispoCTBeansAAjouter);
+                    pctagesDispoCTBeans.addAll(pctagesDispoCTBeansAAjouter);
                 }
                 if (change.wasRemoved()) {
                     List<PctagesDispoCTBean> pctagesDispoCTBeansASupprimer = new ArrayList<>();
@@ -476,24 +534,60 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (pctagesDispoMinAgriBeans.parallelStream().noneMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (pctagesDispoCTBeans.parallelStream().noneMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
                         pctagesDispoCTBeansASupprimer.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
                     }
-                    pctagesDispoMinAgriBeans.removeAll(pctagesDispoCTBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
+                    pctagesDispoCTBeans.removeAll(pctagesDispoCTBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
                 }
                 // TODO FDA 2017/08 Coder les suppressions (et permutations ?).
             }
         });
     }
 
+    private void initBeanNbrsJoursDispoCT() {
+        planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    List<NbrsJoursDispoCTBean> nbrsJoursDispoCTBeansAAjouter = new ArrayList<>();
+                    for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
+                        if (nbrsJoursDispoCTBeans.parallelStream().anyMatch(nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>();
+                        nbrsJoursDispoCTBeansAAjouter.add(new NbrsJoursDispoCTBean(ressourceHumaineBean, calendrier));
+                    }
+                    nbrsJoursDispoCTBeans.addAll(nbrsJoursDispoCTBeansAAjouter);
+                }
+                if (change.wasRemoved()) {
+                    List<NbrsJoursDispoCTBean> nbrsJoursDispoCTBeansASupprimer = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (nbrsJoursDispoCTBeans.parallelStream().noneMatch(nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, DoubleProperty> calendrier = new HashMap<>();
+                        nbrsJoursDispoCTBeansASupprimer.add(new NbrsJoursDispoCTBean(ressourceHumaineBean, calendrier));
+                    }
+                    nbrsJoursDispoCTBeans.removeAll(nbrsJoursDispoCTBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
+                }
+                // TODO FDA 2017/08 Coder les autres modifs (permutations, etc.)... si besoin ?
+            }
+        });
+    }
+
+    
     private void initTables() throws IhmException {
         initTableJoursOuvres();
         initTableNbrsJoursAbsence();
         initTableNbrsJoursDispoMinAgri();
         initTablePctagesDispoMinAgri();
+        initTableNbrsJoursDispoCT();
         synchroniserLargeurPremieresColonnes();
     }
 
@@ -638,7 +732,7 @@ public class DisponibilitesController extends AbstractController {
 
                 private final int noSemaine;
 
-                public NbrsJoursAbsenceCell(int noSemaine) {
+                private NbrsJoursAbsenceCell(int noSemaine) {
                     super();
                     this.noSemaine = noSemaine;
 
@@ -649,6 +743,7 @@ public class DisponibilitesController extends AbstractController {
                 public void commitEdit(Double newValue) {
                     super.commitEdit(newValue);
 
+                    //noinspection unchecked
                     TableRow<NbrsJoursAbsenceBean> tableRow = getTableRow();
                     NbrsJoursAbsenceBean nbrJoursAbsenceBean = tableRow.getItem();
                     if (nbrJoursAbsenceBean == null) {
@@ -697,44 +792,6 @@ public class DisponibilitesController extends AbstractController {
         sortedBeans.comparatorProperty().bind(nbrsJoursDAbsenceTable.comparatorProperty());
 
         nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
-    }
-
-    private void majDisponibilites(@NotNull RessourceHumaineBean rsrcHumBean, int noSemaine) throws IhmException {
-
-        LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-        LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-
-        // Nbr de jours ouvrés :
-        int nbrJoursOuvresPeriode;
-        try {
-            nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
-        } catch (ServiceException e) {
-            throw new IhmException("Impossible de calculer le nombre de jours ouvrés.", e);
-        }
-        if (!nbrsJoursOuvresBean.containsKey(debutPeriode)) {
-            nbrsJoursOuvresBean.put(debutPeriode, new SimpleIntegerProperty());
-        }
-        IntegerProperty nbrJoursOuvresPeriodeProperty = nbrsJoursOuvresBean.get(debutPeriode);
-        nbrJoursOuvresPeriodeProperty.set(nbrJoursOuvresPeriode);
-
-        // Nbr de jours d'absence :
-        NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.getFirst(nbrsJoursAbsenceBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
-        if (nbrsJoursAbsenceBean == null) {
-            nbrsJoursAbsenceBean = new NbrsJoursAbsenceBean(rsrcHumBean);
-            nbrsJoursAbsenceBeans.add(nbrsJoursAbsenceBean);
-        }
-        DoubleProperty nbrsJoursAbsenceRsrcHumPeriodeProperty = nbrsJoursAbsenceBean.get(debutPeriode);
-        double nbrsJoursAbsenceRsrcHumPeriode = ((nbrsJoursAbsenceRsrcHumPeriodeProperty == null) ? 0 : nbrsJoursAbsenceRsrcHumPeriodeProperty.get());
-
-        // Nbr de jours de dispo pour le Ministère :
-        NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = Collections.fetchFirst(nbrsJoursDispoMinAgriBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
-        if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
-            nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleDoubleProperty());
-        }
-        DoubleProperty nbrJoursDispoMinAgriRsrcHumPeriodeProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
-        nbrJoursDispoMinAgriRsrcHumPeriodeProperty.set(Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsenceRsrcHumPeriode, 0));
-
-        // FIXME FDA 2017/08 Coder les autres tables (en cascade).
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
@@ -819,22 +876,22 @@ public class DisponibilitesController extends AbstractController {
     private void initTablePctagesDispoMinAgri() {
 
         pctagesDispoCTTable.setCalendrierColumns(
-                semaine1PctagesDispoMinAgriColumn,
-                semaine2PctagesDispoMinAgriColumn,
-                semaine3PctagesDispoMinAgriColumn,
-                semaine4PctagesDispoMinAgriColumn,
-                semaine5PctagesDispoMinAgriColumn,
-                semaine6PctagesDispoMinAgriColumn,
-                semaine7PctagesDispoMinAgriColumn,
-                semaine8PctagesDispoMinAgriColumn,
-                semaine9PctagesDispoMinAgriColumn,
-                semaine10PctagesDispoMinAgriColumn,
-                semaine11PctagesDispoMinAgriColumn,
-                semaine12PctagesDispoMinAgriColumn
+                semaine1PctagesDispoCTColumn,
+                semaine2PctagesDispoCTColumn,
+                semaine3PctagesDispoCTColumn,
+                semaine4PctagesDispoCTColumn,
+                semaine5PctagesDispoCTColumn,
+                semaine6PctagesDispoCTColumn,
+                semaine7PctagesDispoMinCTColumn,
+                semaine8PctagesDispoCTColumn,
+                semaine9PctagesDispoCTColumn,
+                semaine10PctagesDispoCTColumn,
+                semaine11PctagesDispoCTColumn,
+                semaine12PctagesDispoCTColumn
         );
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        premiereColonnePctagesDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        premiereColonnePctagesDispoCTColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class PctagesDispoMinAgriCellCallback implements Callback<CellDataFeatures<PctagesDispoCTBean, Percentage>, ObservableValue<Percentage>> {
@@ -869,9 +926,56 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        ihm.interdireEdition(premiereColonnePctagesDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoCTTable.getCalendrierColumns()) {
-            pctagesDispoMinAgriColumn.setCellFactory(TextFieldTableCell.forTableColumn(new PercentageStringConverter()));
+        // Rq : 1ère colonne (ressource) non éditable.
+        ihm.interdireEdition(premiereColonnePctagesDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class PctagesDispoCTCell extends TextFieldTableCell<PctagesDispoCTBean, Percentage> {
+
+                private final int noSemaine;
+
+                private PctagesDispoCTCell(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+
+                    setConverter(new PercentageStringConverter());
+                }
+
+                @Override
+                public void commitEdit(Percentage newValue) {
+                    super.commitEdit(newValue);
+
+                    //noinspection unchecked
+                    TableRow<PctagesDispoCTBean> tableRow = getTableRow();
+                    PctagesDispoCTBean pctagesDispoCTBean = tableRow.getItem();
+                    if (pctagesDispoCTBean == null) {
+                        return;
+                    }
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return;
+                    }
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
+                        pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(disponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
+                    }
+                    PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
+                    pctageDispoCTPeriodeProperty.setValue(newValue);
+
+                    try {
+                        majDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), noSemaine);
+                    } catch (IhmException e) {
+                        // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                        LOGGER.error("Impossible de màj les disponibilités.", e);
+                    }
+                }
+            }
+            int cptColonne = 0;
+            for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoCTColumn : pctagesDispoCTTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                pctagesDispoCTColumn.setCellFactory(cell -> new PctagesDispoCTCell(finalCptColonne));
+            }
         }
 
         // Paramétrage des ordres de tri :
@@ -888,15 +992,148 @@ public class DisponibilitesController extends AbstractController {
 
         // Tri de la liste :
         pctagesDispoCTTable.getItems().addListener((ListChangeListener<? super PctagesDispoCTBean>) change -> {
-            SortedList<PctagesDispoCTBean> sortedBeans = new SortedList<>(pctagesDispoMinAgriBeans);
+            SortedList<PctagesDispoCTBean> sortedBeans = new SortedList<>(pctagesDispoCTBeans);
             sortedBeans.comparatorProperty().bind(pctagesDispoCTTable.comparatorProperty());
         });
 
-        pctagesDispoCTTable.setItems(pctagesDispoMinAgriBeans);
+        pctagesDispoCTTable.setItems(pctagesDispoCTBeans);
     }
 
+    private void initTableNbrsJoursDispoCT() {
+
+        nbrsJoursDispoCTTable.setCalendrierColumns(
+                semaine1NbrsJoursDispoCTColumn,
+                semaine2NbrsJoursDispoCTColumn,
+                semaine3NbrsJoursDispoCTColumn,
+                semaine4NbrsJoursDispoCTColumn,
+                semaine5NbrsJoursDispoCTColumn,
+                semaine6NbrsJoursDispoCTColumn,
+                semaine7NbrsJoursDispoCTColumn,
+                semaine8NbrsJoursDispoCTColumn,
+                semaine9NbrsJoursDispoCTColumn,
+                semaine10NbrsJoursDispoCTColumn,
+                semaine11NbrsJoursDispoCTColumn,
+                semaine12NbrsJoursDispoCTColumn
+        );
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        premiereColonneNbrsJoursDispoCTColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class NbrJoursDispoCTCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoCTBean, Double>, ObservableValue<Double>> {
+                private final int noSemaine;
+
+                private NbrJoursDispoCTCellCallback(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+                }
+
+                @Null
+                @Override
+                public ObservableValue<Double> call(CellDataFeatures<NbrsJoursDispoCTBean, Double> cell) {
+                    if (cell == null) {
+                        return null;
+                    }
+                    NbrsJoursDispoCTBean nbrsJoursDispoCTBean = cell.getValue();
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return null;
+                    }
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    DoubleProperty nbrsJoursDispoCTProperty = nbrsJoursDispoCTBean.get(debutPeriode);
+                    return nbrsJoursDispoCTProperty.asObject();
+                }
+            }
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoCTBean, Double> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
+                cptColonne++;
+                nbrsJoursDispoCTColumn.setCellValueFactory(new NbrJoursDispoCTCellCallback(cptColonne));
+            }
+        }
+
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(premiereColonneNbrsJoursDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        for (TableColumn<NbrsJoursDispoCTBean, Double> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
+            ihm.interdireEdition(nbrsJoursDispoCTColumn, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.");
+        }
+
+        // Paramétrage des ordres de tri :
+        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        TableViews.disableColumnReorderable(nbrsJoursDispoCTTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDispoCTTable);
+
+        // Tri de la liste :
+        nbrsJoursDispoCTTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoCTBean>) change -> {
+            SortedList<NbrsJoursDispoCTBean> sortedBeans = new SortedList<>(nbrsJoursDispoCTBeans);
+            sortedBeans.comparatorProperty().bind(nbrsJoursDispoCTTable.comparatorProperty());
+        });
+
+        nbrsJoursDispoCTTable.setItems(nbrsJoursDispoCTBeans);
+    }
+    
+    
     private void synchroniserLargeurPremieresColonnes() {
         TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, nbrsJoursDAbsenceTable, nbrsJoursDispoMinAgriTable, pctagesDispoCTTable);
+    }
+
+
+    private void majDisponibilites(@NotNull RessourceHumaineBean rsrcHumBean, int noSemaine) throws IhmException {
+
+        LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+        LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+
+        // Nbr de jours ouvrés :
+        int nbrJoursOuvresPeriode;
+        try {
+            nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de calculer le nombre de jours ouvrés.", e);
+        }
+        if (!nbrsJoursOuvresBean.containsKey(debutPeriode)) {
+            nbrsJoursOuvresBean.put(debutPeriode, new SimpleIntegerProperty());
+        }
+        IntegerProperty nbrJoursOuvresPeriodeProperty = nbrsJoursOuvresBean.get(debutPeriode);
+        nbrJoursOuvresPeriodeProperty.set(nbrJoursOuvresPeriode);
+
+        // Nbr de jours d'absence :
+        NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.getFirst(nbrsJoursAbsenceBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
+        if (nbrsJoursAbsenceBean == null) {
+            nbrsJoursAbsenceBean = new NbrsJoursAbsenceBean(rsrcHumBean);
+            nbrsJoursAbsenceBeans.add(nbrsJoursAbsenceBean);
+        }
+        DoubleProperty nbrsJoursAbsencePeriodeProperty = nbrsJoursAbsenceBean.get(debutPeriode);
+        double nbrsJoursAbsencePeriode = Objects.<DoubleProperty, Double>value(nbrsJoursAbsencePeriodeProperty, DoubleProperty::get, 0.0);
+
+        // Nbr de jours de dispo pour le Ministère :
+        NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = Collections.fetchFirst(nbrsJoursDispoMinAgriBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
+        if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
+            nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleDoubleProperty());
+        }
+        DoubleProperty nbrJoursDispoMinAgriPeriodeProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
+        double nbrJoursDispoMinAgriPeriode = Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0);
+        nbrJoursDispoMinAgriPeriodeProperty.set(nbrJoursDispoMinAgriPeriode);
+
+        // % dispo CT  :
+        PctagesDispoCTBean pctagesDispoCTBean = Collections.fetchFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
+        PercentageProperty percentageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
+        Percentage percentageDispoCTPeriode = Objects.value(percentageDispoCTPeriodeProperty, PercentageProperty::getValue, disponibilitesService.PCTAGE_DISPO_CT_MIN);
+
+        // Nbr de jours de dispo pour la CT :
+        NbrsJoursDispoCTBean nbrsJoursDispoCTBean = Collections.fetchFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
+        if (!nbrsJoursDispoCTBean.containsKey(debutPeriode)) {
+            nbrsJoursDispoCTBean.put(debutPeriode, new SimpleDoubleProperty());
+        }
+        DoubleProperty nbrJoursDispoCTPeriodeProperty = nbrsJoursDispoCTBean.get(debutPeriode);
+        nbrJoursDispoCTPeriodeProperty.set((nbrJoursDispoMinAgriPeriode * percentageDispoCTPeriode.floatValue()) / 100);
+
+        // FIXME FDA 2017/08 Coder les autres tables (en cascade).
     }
 
 
@@ -928,18 +1165,11 @@ public class DisponibilitesController extends AbstractController {
 
     private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
         LOGGER.debug("Définition des valeurs du calendrier : ");
-
         for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
                 majDisponibilites(ressourceHumaineBean, noSemaine);
             }
         }
-
-        nbrsJoursOuvresTable.refresh();
-        nbrsJoursDAbsenceTable.refresh();
-        nbrsJoursDispoMinAgriTable.refresh();
-        pctagesDispoCTTable.refresh();
-
         LOGGER.debug("Valeurs du calendrier définies.");
     }
 }
