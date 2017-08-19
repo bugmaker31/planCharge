@@ -925,6 +925,9 @@ public class DisponibilitesController extends AbstractController {
                         return null;
                     }
                     LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
+                        pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
+                    }
                     PercentageProperty percentageProperty = pctagesDispoCTBean.get(debutPeriode);
                     return percentageProperty;
                 }
@@ -1068,7 +1071,7 @@ public class DisponibilitesController extends AbstractController {
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(premiereColonneNbrsJoursDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
-            ihm.interdireEdition(nbrsJoursDispoCTColumn, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.");
+            ihm.interdireEdition(nbrsJoursDispoCTColumn, "Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.");
         }
 
         // Paramétrage des ordres de tri :

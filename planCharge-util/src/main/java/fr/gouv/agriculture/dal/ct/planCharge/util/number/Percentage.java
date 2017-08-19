@@ -26,6 +26,8 @@ public class Percentage extends Number {
 
     public Percentage(float value) {
         super();
+        assert value >= 0;
+        assert value <= 100;
         percentage = value;
     }
 

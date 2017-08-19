@@ -17,7 +17,7 @@ public class PercentageStringConverter extends StringConverter<Percentage> {
         if (pc == null) {
             return null;
         }
-        return PSC.toString(pc.floatValue() * 100);
+        return PSC.toString(pc.floatValue());
     }
 
     @Null

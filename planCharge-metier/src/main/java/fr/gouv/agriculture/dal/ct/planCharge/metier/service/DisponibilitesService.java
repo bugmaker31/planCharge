@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class DisponibilitesService {
 
-    public static final Percentage PCTAGE_DISPO_CT_MIN = new Percentage(90);
+    public static final Percentage PCTAGE_DISPO_CT_MIN = new Percentage(90f);
 
 
     @NotNull

@@ -238,7 +238,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private void ctrlVersionsFichierEntreXmlEtAppli(@NotNull String versionFormatRequis) throws PlanChargeDaoException {
         String versionFormat = PlanChargeXmlWrapper.VERSION_FORMAT;
         if (versionFormat.compareTo(versionFormatRequis) < 0) {
-            throw new PlanChargeDaoException("Le fichier XML a un format en version " + versionFormatRequis + ", or l'application gère la version de format " + versionFormat + ".");
+            throw new PlanChargeDaoException("Le fichier XML a un format en version " + versionFormatRequis + ", or l'application ne sait gérer qu'une version antérieure, la " + versionFormat + ".");
         }
 
     }
@@ -755,7 +755,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
                     Percentage pctageDispoCT = (
                             Calc.isEmpty(pctageDispoCTCell) ? DisponibilitesService.PCTAGE_DISPO_CT_MIN
-                                    : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell)).floatValue())
+                                    : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
                     );
 
                     calendrier.put(debutPeriode, pctageDispoCT);
