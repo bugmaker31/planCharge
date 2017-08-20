@@ -12,7 +12,7 @@
         <!--<withJansi>true</withJansi>-->
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%gray(%date{HH:mm:ss}) %highlight(%-5level) - %msg %cyan(%logger{20}) \(%file:%line\) %n %boldRed(%ex{full})</pattern>
+            <pattern>%date{HH:mm:ss} %highlight(%-5level) - %gray(%msg) at %cyan(%class{5}#%method) \(%file:%line\) %n%boldRed(%xException{0})</pattern>
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
@@ -35,6 +35,6 @@
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
+        <!--<appender-ref ref="FILE"/>-->
     </root>
 </configuration>
