@@ -4,16 +4,22 @@
     <property name="LOGS_DIR" value="./logs" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- On Windows machines setting withJansi to true enables ANSI
+                 color code interpretation by the Jansi library. This requires
+                 org.fusesource.jansi:jansi:1.8 on the class path.  Note that
+                 Unix-based operating systems such as Linux and Mac OS X
+                 support ANSI color codes by default. -->
+        <withJansi>true</withJansi>
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%date{HH:mm:ss} %-5level - %msg \(%file:%line\) &lt;%logger{20}&gt;%n%ex{full}</pattern>
+            <pattern>%gray(%date{HH:mm:ss}) %highlight(%-5level) - %msg %cyan(%logger{20}) \(%file:%line\) %n %boldRed(%ex{full})</pattern>
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/${APP_NAME}.log</file>
         <append>false</append>
         <encoder>
-            <pattern>%date{yyyy/MM/dd HH:mm:ss} %-5level &lt;%logger{20}&gt; \(%file:%line\) - %msg%n%ex{full}</pattern>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss} %-5level - %msg %logger{20} \(%file:%line\) %n%ex{full}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
