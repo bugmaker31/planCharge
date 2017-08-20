@@ -59,8 +59,8 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         if (planifBean == null) {
             return;
         }
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noPeriode - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-        LocalDate finPeriode = debutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noPeriode - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // Formatage du texte de la cellule :
         //noinspection UnnecessaryLocalVariable

@@ -89,7 +89,7 @@ public class PlanificationTacheBean extends TacheBean {
         return chargePlanifieeTotale;
     }
 
-    // FIXME FDA 2017/06 Ne marche que quand la période est 1 semaine, pas pour 1 trimestre.
+    // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
     public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode, @SuppressWarnings("unused") @NotNull LocalDate datefinPeriode) {
         return calendrier.containsKey(dateDebutPeriode);
     }

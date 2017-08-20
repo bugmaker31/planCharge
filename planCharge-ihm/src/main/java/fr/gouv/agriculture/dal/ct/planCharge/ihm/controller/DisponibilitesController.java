@@ -636,7 +636,7 @@ public class DisponibilitesController extends AbstractController {
                     return null;
                 }
                 NbrsJoursOuvresBean nbrsJoursOuvresRsrcHumPeriodeBean = cell.getValue();
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                 if (!nbrsJoursOuvresRsrcHumPeriodeBean.containsKey(debutPeriode)) {
                     nbrsJoursOuvresRsrcHumPeriodeBean.put(debutPeriode, new SimpleIntegerProperty());
                 }
@@ -761,7 +761,7 @@ public class DisponibilitesController extends AbstractController {
                         LOGGER.warn("Date d'état non définie !?");
                         return;
                     }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
                         nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
                     }
@@ -924,7 +924,7 @@ public class DisponibilitesController extends AbstractController {
                         LOGGER.warn("Date d'état non définie !?");
                         return null;
                     }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     PercentageProperty percentageProperty = pctagesDispoCTBean.get(debutPeriode);
                     return percentageProperty;
                 }
@@ -966,7 +966,7 @@ public class DisponibilitesController extends AbstractController {
                         LOGGER.warn("Date d'état non définie !?");
                         return;
                     }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
                         pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
                     }
@@ -1100,8 +1100,8 @@ public class DisponibilitesController extends AbstractController {
 
     private void calculerDisponibilites(@NotNull RessourceHumaineBean rsrcHumBean, int noSemaine) throws IhmException {
 
-        LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-        LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+        LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
+        LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
 
         LocalDate debutMission = Objects.value(rsrcHumBean.debutMissionProperty(), ObjectProperty::get);
         LocalDate finMission = Objects.value(rsrcHumBean.finMissionProperty(), ObjectProperty::get);

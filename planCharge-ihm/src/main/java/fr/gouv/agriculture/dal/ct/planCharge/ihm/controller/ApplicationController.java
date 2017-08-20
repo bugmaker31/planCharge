@@ -1291,7 +1291,7 @@ public class ApplicationController extends AbstractController {
                     //noinspection HardcodedFileSeparator
                     titreColonne = "N/C";
                 } else {
-                    dateDebutPeriode = dateDebutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne fonctionne que pour les périodes hebdomadaires, pas trimestrielles.
+                    dateDebutPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
                     titreColonne = dateDebutPeriode.format(dateFormatter);
                 }
                 calendrierColumn.setText(titreColonne);

@@ -128,7 +128,7 @@ Tâches :
 .projetAppli-column : {
     -fx-alignment: baseline-center;
 }
-/* https://github.com/bugmaker31/planCharge/issues/57 Cadrer des colonnes des tâches et du plan de charge
+/* [issue#57:Cadrer des colonnes des tâches et du plan de charge]
 .projetAppli-column .text : {
     -fx-text-alignment: baseline-center;  <-- Sans effet...
 }

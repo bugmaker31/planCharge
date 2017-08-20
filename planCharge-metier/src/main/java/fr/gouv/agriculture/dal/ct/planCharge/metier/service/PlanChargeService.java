@@ -1,10 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
-import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
-import fr.gouv.agriculture.dal.ct.metier.service.AbstractService;
-import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ControleurRegles;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
+import fr.gouv.agriculture.dal.ct.metier.service.AbstractService;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDao;
@@ -15,9 +18,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.ControleurRegles;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -203,7 +203,7 @@ public class PlanChargeService extends AbstractService {
         // Si la date d'état a changé, la planification change forcément aussi : il faut ajouter ou retirer des périodes de planification,
         // et initialiser les charges de chaque tâche en cas d'ajout :
         final LocalDate debutPlanif = dateEtat;
-        final LocalDate finPlanif = dateEtat.plusDays(Planifications.NBR_SEMAINES_PLANIFIEES * 7); // FIXME FDA 2017/07  Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+        final LocalDate finPlanif = dateEtat.plusDays(Planifications.NBR_SEMAINES_PLANIFIEES * 7); // TODO FDA 2017/07 [issue#26:PeriodeHebdo/Trim]
         planifications.keySet().parallelStream()
                 .forEach(tache -> {
                     Map<LocalDate, Double> planifTache = planifications.get(tache);
