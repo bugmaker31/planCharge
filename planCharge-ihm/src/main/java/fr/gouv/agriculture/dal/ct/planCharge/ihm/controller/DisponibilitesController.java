@@ -31,6 +31,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -448,6 +449,30 @@ public class DisponibilitesController extends AbstractController {
         initBeansNbrsJoursDispoMinAgri();
         initBeansPctagesDispoCT();
         initBeansNbrsJoursDispoCT();
+
+        planChargeBean.getRessourcesHumainesBeans().parallelStream()
+                .forEach(ressourceHumaineBean -> {
+                    ObjectProperty<LocalDate> debutMissionProperty = ressourceHumaineBean.debutMissionProperty();
+                    debutMissionProperty.addListener((observable, oldValue, newValue) -> {
+                        try {
+                            calculerDisponibilites();
+                        } catch (IhmException e) {
+                            LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                        }
+                    });
+
+                });
+        planChargeBean.getRessourcesHumainesBeans().parallelStream()
+                .forEach(ressourceHumaineBean -> {
+                    ObjectProperty<LocalDate> finMissionProperty = ressourceHumaineBean.finMissionProperty();
+                    finMissionProperty.addListener((observable, oldValue, newValue) -> {
+                        try {
+                            calculerDisponibilites();
+                        } catch (IhmException e) {
+                            LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                        }
+                    });
+                });
     }
 
     private void initBeansNbrsJoursOuvres() {
@@ -637,6 +662,66 @@ public class DisponibilitesController extends AbstractController {
         synchroniserLargeurPremieresColonnes();
     }
 
+    private static class DisponibilitesCellFactory<S extends AbstractDisponibilitesRessourceBean, T> extends TextFieldTableCell<S, T> {
+
+        private final PlanChargeBean planChargeBean;
+        final int noSemaine;
+
+        public DisponibilitesCellFactory(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
+            super();
+            this.planChargeBean = planChargeBean;
+            this.noSemaine = noSemaine;
+            setConverter(stringConverter);
+        }
+
+        @Override
+        public void updateItem(T item, boolean empty) {
+            super.updateItem(item, empty);
+            styler();
+        }
+
+        private void styler() {
+
+            // Réinit des style spécifiques :
+            getStyleClass().removeAll("avantMission", "pendantMission", "apresMission");
+
+            /* Non, surtout pas, sinon les cellules vides, ne seront pas stylées/décorées.
+            // Stop, si cellule vide :
+            if (empty || (item == null)) {
+                return;
+            }
+            */
+
+            // Récupération des infos sur la cellule :
+            //noinspection unchecked
+            TableRow<? extends S> tableRow = getTableRow();
+            S dispoBean = tableRow.getItem();
+            if (dispoBean == null) {
+                return;
+            }
+            LocalDate debutMission = dispoBean.getRessourceHumaineBean().getDebutMission();
+            LocalDate finMission = dispoBean.getRessourceHumaineBean().getFinMission();
+
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+
+            // Formatage du style (CSS) de la cellule :
+            if (debutMission != null) {
+                if (debutPeriode.isBefore(debutMission)) {
+                    getStyleClass().add("avantMission");
+                    return;
+                }
+            }
+            if (finMission != null) {
+                if (finPeriode.isAfter(finMission.plusDays(7))) {
+                    getStyleClass().add("apresMission");
+                    return;
+                }
+            }
+            getStyleClass().add("pendantMission");
+        }
+    }
+
     private void initTableJoursOuvres() {
 
         nbrsJoursOuvresTable.setCalendrierColumns(
@@ -777,15 +862,10 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(premiereColonneAbsencesColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrsJoursAbsenceCell extends TextFieldTableCell<NbrsJoursAbsenceBean, Float> {
-
-                private final int noSemaine;
+            final class NbrsJoursAbsenceCell extends DisponibilitesCellFactory<NbrsJoursAbsenceBean, Float> {
 
                 private NbrsJoursAbsenceCell(int noSemaine) {
-                    super();
-                    this.noSemaine = noSemaine;
-
-                    setConverter(new FloatStringConverter());
+                    super(planChargeBean, noSemaine, new FloatStringConverter()); // TODO FDA 2017/04 Mieux formater les charges ?);
                 }
 
                 @Override
@@ -900,8 +980,12 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(premiereColonneNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        int cptColonne = 0;
         for (TableColumn<NbrsJoursDispoMinAgriBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+            cptColonne++;
             ihm.interdireEdition(nbrsJoursDispoMinAgriColumn, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.");
+            int finalCptColonne = cptColonne;
+            nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesCellFactory<>(planChargeBean, finalCptColonne, new FloatStringConverter()));
         }
 
         // Paramétrage des ordres de tri :
@@ -982,15 +1066,10 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(premiereColonnePctagesDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoCTCell extends TextFieldTableCell<PctagesDispoCTBean, Percentage> {
-
-                private final int noSemaine;
+            final class PctagesDispoCTCell extends DisponibilitesCellFactory<PctagesDispoCTBean, Percentage> {
 
                 private PctagesDispoCTCell(int noSemaine) {
-                    super();
-                    this.noSemaine = noSemaine;
-
-                    setConverter(new PercentageStringConverter());
+                    super(planChargeBean, noSemaine, new PercentageStringConverter());
                 }
 
                 @Override
@@ -1108,8 +1187,12 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(premiereColonneNbrsJoursDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        int cptColonne = 0;
         for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
+            cptColonne++;
             ihm.interdireEdition(nbrsJoursDispoCTColumn, "Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.");
+            int finalCptColonne = cptColonne;
+            nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesCellFactory<NbrsJoursDispoCTBean, Float>(planChargeBean, finalCptColonne, new FloatStringConverter()));
         }
 
         // Paramétrage des ordres de tri :

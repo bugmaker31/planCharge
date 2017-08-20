@@ -117,6 +117,28 @@ Dispo :
 }
 
 
+.avantMission {
+    /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
+    -fx-background-color: #DCDCDC;
+    -fx-opacity: 50%;
+    -fx-background-image: url("/images/tropTot.gif");
+}
+
+.pendantMission {
+    /*-fx-background-color: #778899;*/
+    -fx-text-fill: white;
+}
+
+.apresMission {
+    /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
+    -fx-background-color: #696969;
+    -fx-text-fill: white;
+    -fx-opacity: 50%;
+    -fx-background-image: url("/images/tropTard.gif");
+}
+
+
+
 /*
 Tâches :
 */

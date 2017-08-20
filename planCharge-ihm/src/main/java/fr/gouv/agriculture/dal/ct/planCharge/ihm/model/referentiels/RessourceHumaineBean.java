@@ -136,7 +136,7 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
         this.finMission.set(finMission);
     }
 
-    @Null
+    @NotNull
     public ObjectProperty<LocalDate> finMissionProperty() {
         return finMission;
     }

@@ -24,13 +24,13 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
 
 
     private PlanChargeBean planChargeBean;
-    private final int noPeriode;
+    private final int noSemaine;
 
 
-    public PlanificationChargeCellFactory(@NotNull PlanChargeBean planChargeBean, int noPeriode) {
+    public PlanificationChargeCellFactory(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
         super();
         this.planChargeBean = planChargeBean;
-        this.noPeriode = noPeriode;
+        this.noSemaine = noSemaine;
         setConverter(new DoubleStringConverter()); // TODO FDA 2017/04 Mieux formater les charges ?
     }
 
@@ -45,7 +45,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         getStyleClass().remove("pendantPeriodeDemandee");
         getStyleClass().remove("apresPeriodeDemandee");
 
-/* Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée, ne seront pas décorées.
+/* Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée), ne seront pas décorées.
         // Stop, si cellule vide :
         if (empty || (item == null)) {
             return;
@@ -59,7 +59,7 @@ public class PlanificationChargeCellFactory extends TextFieldTableCell<Planifica
         if (planifBean == null) {
             return;
         }
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noPeriode - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // Formatage du texte de la cellule :
