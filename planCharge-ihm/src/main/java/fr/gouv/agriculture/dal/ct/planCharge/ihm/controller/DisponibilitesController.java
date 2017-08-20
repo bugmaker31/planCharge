@@ -586,7 +586,7 @@ public class DisponibilitesController extends AbstractController {
         });
     }
 
-    
+
     private void initTables() throws IhmException {
         initTableJoursOuvres();
         initTableNbrsJoursAbsence();
@@ -637,7 +637,7 @@ public class DisponibilitesController extends AbstractController {
                 }
                 NbrsJoursOuvresBean nbrsJoursOuvresRsrcHumPeriodeBean = cell.getValue();
                 LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                if (! nbrsJoursOuvresRsrcHumPeriodeBean.containsKey(debutPeriode)) {
+                if (!nbrsJoursOuvresRsrcHumPeriodeBean.containsKey(debutPeriode)) {
                     nbrsJoursOuvresRsrcHumPeriodeBean.put(debutPeriode, new SimpleIntegerProperty());
                 }
                 IntegerProperty nbrJoursOuvresPeriode = nbrsJoursOuvresRsrcHumPeriodeBean.get(debutPeriode);
@@ -769,7 +769,7 @@ public class DisponibilitesController extends AbstractController {
                     nbrJoursDAbsencePeriode.set(newValue);
 
                     try {
-                        majDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), noSemaine);
+                        calculerDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), noSemaine);
                     } catch (IhmException e) {
                         // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                         LOGGER.error("Impossible de màj les disponibilités.", e);
@@ -925,9 +925,6 @@ public class DisponibilitesController extends AbstractController {
                         return null;
                     }
                     LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
-                        pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
-                    }
                     PercentageProperty percentageProperty = pctagesDispoCTBean.get(debutPeriode);
                     return percentageProperty;
                 }
@@ -977,7 +974,7 @@ public class DisponibilitesController extends AbstractController {
                     pctageDispoCTPeriodeProperty.setValue(newValue);
 
                     try {
-                        majDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), noSemaine);
+                        calculerDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), noSemaine);
                     } catch (IhmException e) {
                         // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                         LOGGER.error("Impossible de màj les disponibilités.", e);
@@ -1094,17 +1091,20 @@ public class DisponibilitesController extends AbstractController {
 
         nbrsJoursDispoCTTable.setItems(nbrsJoursDispoCTBeans);
     }
-    
-    
+
+
     private void synchroniserLargeurPremieresColonnes() {
         TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, nbrsJoursDAbsenceTable, nbrsJoursDispoMinAgriTable, pctagesDispoCTTable);
     }
 
 
-    private void majDisponibilites(@NotNull RessourceHumaineBean rsrcHumBean, int noSemaine) throws IhmException {
+    private void calculerDisponibilites(@NotNull RessourceHumaineBean rsrcHumBean, int noSemaine) throws IhmException {
 
         LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
         LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/08 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+
+        LocalDate debutMission = Objects.value(rsrcHumBean.debutMissionProperty(), ObjectProperty::get);
+        LocalDate finMission = Objects.value(rsrcHumBean.finMissionProperty(), ObjectProperty::get);
 
         // Nbr de jours ouvrés :
         int nbrJoursOuvresPeriode;
@@ -1134,13 +1134,22 @@ public class DisponibilitesController extends AbstractController {
             nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleFloatProperty());
         }
         FloatProperty nbrJoursDispoMinAgriPeriodeProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
-        float nbrJoursDispoMinAgriPeriode = Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
+        // TODO FDA 2017/08 Gérer le cas où la mission commence/s'arrête en milieu de période (semaine).
+        float nbrJoursDispoMinAgriPeriode =
+                estHorsMission(debutPeriode, debutMission, finMission) ? 0 : Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
         nbrJoursDispoMinAgriPeriodeProperty.set(nbrJoursDispoMinAgriPeriode);
 
         // % dispo CT  :
         PctagesDispoCTBean pctagesDispoCTBean = Collections.fetchFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
         PercentageProperty percentageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
-        Percentage percentageDispoCTPeriode = Objects.value(percentageDispoCTPeriodeProperty, PercentageProperty::getValue, disponibilitesService.PCTAGE_DISPO_CT_MIN);
+        Percentage percentageDispoCTPeriode =
+                estHorsMission(debutPeriode, debutMission, finMission) ?
+                        new Percentage(0) :
+                        Objects.value(
+                                percentageDispoCTPeriodeProperty,
+                                PercentageProperty::getValue,
+                                DisponibilitesService.PCTAGE_DISPO_CT_MIN
+                        );
 
         // Nbr de jours de dispo pour la CT :
         NbrsJoursDispoCTBean nbrsJoursDispoCTBean = Collections.fetchFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(rsrcHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'."));
@@ -1151,6 +1160,18 @@ public class DisponibilitesController extends AbstractController {
         nbrJoursDispoCTPeriodeProperty.set((nbrJoursDispoMinAgriPeriode * percentageDispoCTPeriode.floatValue()) / 100);
 
         // FIXME FDA 2017/08 Coder les autres tables (en cascade).
+    }
+
+    private boolean estHorsMission(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) {
+        return estAvantLaMission(debutPeriode, debutMission) || estApresLaMission(debutPeriode, finMission);
+    }
+
+    private boolean estAvantLaMission(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission) {
+        return (debutMission != null) && debutMission.isAfter(debutPeriode);
+    }
+
+    private boolean estApresLaMission(@NotNull LocalDate debutPeriode, @Null LocalDate finMission) {
+        return ((finMission != null) && finMission.isBefore(debutPeriode));
     }
 
 
@@ -1185,7 +1206,7 @@ public class DisponibilitesController extends AbstractController {
 
         for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
-                majDisponibilites(ressourceHumaineBean, noSemaine);
+                calculerDisponibilites(ressourceHumaineBean, noSemaine);
             }
         }
 
