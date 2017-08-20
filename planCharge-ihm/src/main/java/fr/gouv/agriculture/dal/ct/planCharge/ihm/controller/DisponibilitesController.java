@@ -1249,15 +1249,15 @@ public class DisponibilitesController extends AbstractController {
 
         // % dispo CT  :
         PctagesDispoCTBean pctagesDispoCTBean = Collections.fetchFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
+        if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
+            PercentageProperty percentageDispoCTPeriodeProperty = new PercentageProperty(estHorsMission(debutPeriode, debutMission, finMission) ? 0 : DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue());
+            pctagesDispoCTBean.put(debutPeriode, percentageDispoCTPeriodeProperty);
+        }
         PercentageProperty percentageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
-        Percentage percentageDispoCTPeriode =
-                estHorsMission(debutPeriode, debutMission, finMission) ?
-                        new Percentage(0) :
-                        Objects.value(
-                                percentageDispoCTPeriodeProperty,
-                                PercentageProperty::getValue,
-                                DisponibilitesService.PCTAGE_DISPO_CT_MIN
-                        );
+        if (estHorsMission(debutPeriode, debutMission, finMission)) {
+            percentageDispoCTPeriodeProperty.setValue(new Percentage(0));
+        }
+        Percentage percentageDispoCTPeriode = percentageDispoCTPeriodeProperty.getValue();
 
         // Nbr de jours de dispo pour la CT :
         NbrsJoursDispoCTBean nbrsJoursDispoCTBean = Collections.fetchFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
