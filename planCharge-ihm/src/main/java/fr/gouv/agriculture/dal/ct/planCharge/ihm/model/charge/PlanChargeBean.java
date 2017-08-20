@@ -22,10 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -87,21 +84,29 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         ressourcesBeans.addListener((ListChangeListener<? super RessourceBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
+                    List<RessourceHumaineBean> ressourcesHumainesBeansToAdd = new ArrayList<>();
                     for (RessourceBean ressourceBean : change.getAddedSubList()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        ressourcesHumainesBeans.add(ressourceHumaineBean);
+                        ressourcesHumainesBeansToAdd.add(ressourceHumaineBean);
+                    }
+                    if (!ressourcesHumainesBeansToAdd.isEmpty()) {
+                        ressourcesHumainesBeans.addAll(ressourcesHumainesBeansToAdd);
                     }
                 }
                 if (change.wasRemoved()) {
+                    List<RessourceHumaineBean> ressourcesHumainesBeansToRemove = new ArrayList<>();
                     for (RessourceBean ressourceBean : change.getRemoved()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        ressourcesHumainesBeans.remove(ressourceHumaineBean);
+                        ressourcesHumainesBeansToRemove.add(ressourceHumaineBean);
+                    }
+                    if (!ressourcesHumainesBeansToRemove.isEmpty()) {
+                        ressourcesHumainesBeans.removeAll(ressourcesHumainesBeansToRemove);
                     }
                 }
             }
@@ -186,6 +191,11 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     public ObservableList<NbrsJoursAbsenceBean> getNbrsJoursAbsenceBeans() {
         return nbrsJoursAbsenceBeans;
+    }
+
+    @NotNull
+    public ObservableList<PctagesDispoCTBean> getPctagesDispoCTBeans() {
+        return pctagesDispoCTBeans;
     }
 
     @NotNull
