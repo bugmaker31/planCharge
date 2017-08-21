@@ -1,10 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
+import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,22 +18,19 @@ import java.time.LocalDate;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class PlanificationChargeCellFactory extends TextFieldTableCell<PlanificationTacheBean, Double> {
+public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<PlanificationTacheBean, Double> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCellFactory.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCell.class);
 
     private PlanChargeBean planChargeBean;
     private final int noSemaine;
 
 
-    public PlanificationChargeCellFactory(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
-        super();
+    public PlanificationChargeCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+        super(new DoubleStringConverter(), null); // TODO FDA 2017/04 Mieux formater les charges ?
         this.planChargeBean = planChargeBean;
         this.noSemaine = noSemaine;
-        setConverter(new DoubleStringConverter()); // TODO FDA 2017/04 Mieux formater les charges ?
     }
-
 
     @Override
     public void updateItem(Double item, boolean empty) {

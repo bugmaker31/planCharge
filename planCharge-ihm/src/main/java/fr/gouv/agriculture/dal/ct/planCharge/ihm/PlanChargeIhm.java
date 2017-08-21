@@ -464,21 +464,32 @@ public class PlanChargeIhm extends Application {
 
 
     public void interdireEdition(@NotNull TableColumn<?, ?> column, @NotNull String message, @Null ButtonType... typesBouton) {
-        // Vu qu'on veut afficher un message lorsque l'utilisateur demande à édite une cellule de la colonne, il faut rendre la tébalme éditable.
+        // Vu qu'on veut afficher un message lorsque l'utilisateur demande à édite une cellule de la colonne, il faut rendre la table éditable.
         if (!column.getTableView().isEditable()) {
             // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la table éditable. Trouver mieux.
             column.getTableView().setEditable(true);
-            LOGGER.info("La table '{}' est maintenant éditable.", column.getTableView().getId());
+            LOGGER.info("La table '{}' vient d'être rendue éditable.", column.getTableView().getId());
         }
         if (!column.isEditable()) {
             // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la colonne éditable. Trouver mieux.
             column.setEditable(true);
-            LOGGER.info("La colonne '{}' est maintenant éditable.", column.getId());
+            LOGGER.info("La colonne '{}' vient d'être rendue éditable.", column.getId());
         }
+/* N'empêche pas le passage en mode "édition" pour la cellule.
         column.setOnEditStart(event -> {
-            afficherPopUp(AlertType.WARNING, "Données non modifiables", message, 400, 200, null, typesBouton);
+            afficherInterdictionEditer(message, typesBouton);
+//            event.consume();
         });
+*/
+        // Cf. https://stackoverflow.com/questions/25910066/javafx-handling-events-on-tableview
+        column.addEventHandler(TableColumn.CellEditEvent.ANY, event -> {
+            afficherInterdictionEditer(message);
+            event.consume(); /// FIXME FDA 2017/08 Consuming an event does not prevent other EventHandlers on TableView from being invoked.
+        });
+    }
 
+    public void afficherInterdictionEditer(@NotNull String message) {
+        afficherPopUp(AlertType.WARNING, "Données non modifiables", message, 400, 200);
     }
 
     @SuppressWarnings("HardcodedFileSeparator")
@@ -647,7 +658,7 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("WeakerAccess")
     public static void symboliserChampsObligatoires(@NotNull Control... fields) throws IhmException {
         for (Control field : fields) {
-            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les TextFieldTableCell, la 2nde fait l'inverse).
+            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les EditableAwareTextFieldTableCell, la 2nde fait l'inverse).
             Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
             validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
         }

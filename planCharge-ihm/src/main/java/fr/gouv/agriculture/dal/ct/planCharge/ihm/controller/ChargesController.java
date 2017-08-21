@@ -7,7 +7,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCellFactory;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -20,7 +20,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.util.Callback;
@@ -376,18 +379,18 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         semaine11Column.setOnEditCommit(new ChargeSemaineEditHandler(11));
         semaine12Column.setOnEditCommit(new ChargeSemaineEditHandler(12));
         //
-        semaine1Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 1));
-        semaine2Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 2));
-        semaine3Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 3));
-        semaine4Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 4));
-        semaine5Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 5));
-        semaine6Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 6));
-        semaine7Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 7));
-        semaine8Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 8));
-        semaine9Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 9));
-        semaine10Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 10));
-        semaine11Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 11));
-        semaine12Column.setCellFactory(col -> new PlanificationChargeCellFactory(planChargeBean, 12));
+        semaine1Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 1));
+        semaine2Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 2));
+        semaine3Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 3));
+        semaine4Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 4));
+        semaine5Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 5));
+        semaine6Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 6));
+        semaine7Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 7));
+        semaine8Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 8));
+        semaine9Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 9));
+        semaine10Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 10));
+        semaine11Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 11));
+        semaine12Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 12));
 
         getTachesTable().setCalendrierColumns(
                 semaine1Column,

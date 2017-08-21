@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.PercentageStringConverter;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
@@ -29,15 +30,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import javafx.util.converter.FloatStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,75 @@ import java.util.TreeMap;
 public class DisponibilitesController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesController.class);
+
+    private static final StringConverter<Integer> NBRS_JOURS_STRING_CONVERTER = new StringConverter<Integer>() {
+
+        private final DecimalFormat FORMATEUR = new DecimalFormat("#");
+
+        @Null
+        @Override
+        public String toString(Integer f) {
+            if (f == null) {
+                return null;
+            }
+            if (f.equals(0)) {
+                return "-";
+            }
+            return FORMATEUR.format(f);
+        }
+
+        @Null
+        @Override
+        public Integer fromString(String s) {
+            if (s == null) {
+                return null;
+            }
+            if (s.equals("-")) {
+                return 0;
+            }
+            try {
+                return FORMATEUR.parse(s).intValue();
+            } catch (ParseException e) {
+                LOGGER.error("Impossible de décoder une valeur décimale dans la chaîne '" + s + "'.", e); // TODO FDA 2017/08 Trouver mieux que de loguer une erreur.
+                return null;
+            }
+        }
+    };
+
+    private static final StringConverter<Float> HUITIEMES_JOURS_STRING_CONVERTER = new StringConverter<Float>() {
+
+        private final DecimalFormat FORMATEUR = new DecimalFormat("#.###");
+
+        @Null
+        @Override
+        public String toString(Float f) {
+            if (f == null) {
+                return null;
+            }
+            if (f == 0) {
+                return "-";
+            }
+            return FORMATEUR.format(f);
+        }
+
+        @Null
+        @Override
+        public Float fromString(String s) {
+            if (s == null) {
+                return null;
+            }
+            if (s.equals("-")) {
+                return 0f;
+            }
+            try {
+                return FORMATEUR.parse(s).floatValue();
+            } catch (ParseException e) {
+                LOGGER.error("Impossible de décoder une valeur décimale dans la chaîne '" + s + "'.", e); // TODO FDA 2017/08 Trouver mieux que de loguer une erreur.
+                return null;
+            }
+        }
+    };
+
 
     private static DisponibilitesController instance;
 
@@ -450,29 +520,32 @@ public class DisponibilitesController extends AbstractController {
         initBeansPctagesDispoCT();
         initBeansNbrsJoursDispoCT();
 
-        planChargeBean.getRessourcesHumainesBeans().parallelStream()
-                .forEach(ressourceHumaineBean -> {
-                    ObjectProperty<LocalDate> debutMissionProperty = ressourceHumaineBean.debutMissionProperty();
-                    debutMissionProperty.addListener((observable, oldValue, newValue) -> {
-                        try {
-                            calculerDisponibilites();
-                        } catch (IhmException e) {
-                            LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
-                        }
-                    });
+        planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
 
-                });
-        planChargeBean.getRessourcesHumainesBeans().parallelStream()
-                .forEach(ressourceHumaineBean -> {
-                    ObjectProperty<LocalDate> finMissionProperty = ressourceHumaineBean.finMissionProperty();
-                    finMissionProperty.addListener((observable, oldValue, newValue) -> {
-                        try {
-                            calculerDisponibilites();
-                        } catch (IhmException e) {
-                            LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
-                        }
-                    });
-                });
+                        ObjectProperty<LocalDate> debutMissionProperty = ressourceHumaineBean.debutMissionProperty();
+                        debutMissionProperty.addListener((observable, oldValue, newValue) -> {
+                            try {
+                                calculerDisponibilites(ressourceHumaineBean);
+                            } catch (IhmException e) {
+                                LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                            }
+                        });
+
+                        ObjectProperty<LocalDate> finMissionProperty = ressourceHumaineBean.finMissionProperty();
+                        finMissionProperty.addListener((observable, oldValue, newValue) -> {
+                            try {
+                                calculerDisponibilites(ressourceHumaineBean);
+                            } catch (IhmException e) {
+                                LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     private void initBeansNbrsJoursOuvres() {
@@ -654,7 +727,7 @@ public class DisponibilitesController extends AbstractController {
 
 
     private void initTables() throws IhmException {
-        initTableJoursOuvres();
+        initTableNbrsJoursOuvres();
         initTableNbrsJoursAbsence();
         initTableNbrsJoursDispoMinAgri();
         initTablePctagesDispoMinAgri();
@@ -662,16 +735,23 @@ public class DisponibilitesController extends AbstractController {
         synchroniserLargeurPremieresColonnes();
     }
 
-    private static class DisponibilitesCellFactory<S extends AbstractDisponibilitesRessourceBean, T> extends TextFieldTableCell<S, T> {
+    private class DisponibilitesRessourceHumaineCell<S extends AbstractDisponibilitesRessourceBean, T> extends EditableAwareTextFieldTableCell<S, T> {
 
-        private final PlanChargeBean planChargeBean;
-        final int noSemaine;
+        private PlanChargeBean planChargeBean;
+        private int noSemaine;
 
-        public DisponibilitesCellFactory(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
-            super();
+        public DisponibilitesRessourceHumaineCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null String messageRefusEdition) {
+            super(stringConverter, (messageRefusEdition == null) ? null : () -> ihm.afficherInterdictionEditer(messageRefusEdition));
             this.planChargeBean = planChargeBean;
             this.noSemaine = noSemaine;
-            setConverter(stringConverter);
+        }
+
+        public DisponibilitesRessourceHumaineCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
+            this(planChargeBean, noSemaine, stringConverter, null);
+        }
+
+        public int getNoSemaine() {
+            return noSemaine;
         }
 
         @Override
@@ -702,7 +782,7 @@ public class DisponibilitesController extends AbstractController {
             LocalDate debutMission = dispoBean.getRessourceHumaineBean().getDebutMission();
             LocalDate finMission = dispoBean.getRessourceHumaineBean().getFinMission();
 
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
             LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
             // Formatage du style (CSS) de la cellule :
@@ -722,7 +802,7 @@ public class DisponibilitesController extends AbstractController {
         }
     }
 
-    private void initTableJoursOuvres() {
+    private void initTableNbrsJoursOuvres() {
 
         nbrsJoursOuvresTable.setCalendrierColumns(
                 semaine1NbrsJoursOuvresColumn,
@@ -742,45 +822,52 @@ public class DisponibilitesController extends AbstractController {
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //noinspection HardcodedFileSeparator
         premiereColonneJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
-        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-        final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
-            private final int noSemaine;
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
+                private final int noSemaine;
 
-            private NbrJoursOuvresCellCallback(int noSemaine) {
-                super();
-                this.noSemaine = noSemaine;
-            }
+                private NbrJoursOuvresCellCallback(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+                }
 
-            @Null
-            @Override
-            public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursOuvresBean, Integer> cell) {
-                if (cell == null) {
-                    return null;
+                @Null
+                @Override
+                public ObservableValue<Integer> call(CellDataFeatures<NbrsJoursOuvresBean, Integer> cell) {
+                    if (cell == null) {
+                        return null;
+                    }
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return null;
+                    }
+                    NbrsJoursOuvresBean nbrsJoursOuvresRsrcHumPeriodeBean = cell.getValue();
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    if (!nbrsJoursOuvresRsrcHumPeriodeBean.containsKey(debutPeriode)) {
+                        nbrsJoursOuvresRsrcHumPeriodeBean.put(debutPeriode, new SimpleIntegerProperty());
+                    }
+                    IntegerProperty nbrJoursOuvresPeriode = nbrsJoursOuvresRsrcHumPeriodeBean.get(debutPeriode);
+                    return nbrJoursOuvresPeriode.asObject();
                 }
-                if (planChargeBean.getDateEtat() == null) {
-                    LOGGER.warn("Date d'état non définie !?");
-                    return null;
-                }
-                NbrsJoursOuvresBean nbrsJoursOuvresRsrcHumPeriodeBean = cell.getValue();
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                if (!nbrsJoursOuvresRsrcHumPeriodeBean.containsKey(debutPeriode)) {
-                    nbrsJoursOuvresRsrcHumPeriodeBean.put(debutPeriode, new SimpleIntegerProperty());
-                }
-                IntegerProperty nbrJoursOuvresPeriode = nbrsJoursOuvresRsrcHumPeriodeBean.get(debutPeriode);
-                return nbrJoursOuvresPeriode.asObject();
             }
-        }
-        int cptColonne = 0;
-        for (TableColumn<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
-            cptColonne++;
-            nbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(cptColonne));
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
+                cptColonne++;
+                nbrsJoursOuvresColumn.setCellValueFactory(new NbrJoursOuvresCellCallback(cptColonne));
+            }
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         // Cette table n'est pas éditable (données calculées à partir des référentiels).
         ihm.interdireEdition(premiereColonneJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
-        for (TableColumn<NbrsJoursOuvresBean, ?> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
-            ihm.interdireEdition(nbrsJoursOuvresColumn, "Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.");
+        {
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                nbrsJoursOuvresColumn.setCellFactory(cell -> new EditableAwareTextFieldTableCell<NbrsJoursOuvresBean, Integer>(NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.")));
+            }
         }
 
         // Paramétrage des ordres de tri :
@@ -862,10 +949,10 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(premiereColonneAbsencesColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrsJoursAbsenceCell extends DisponibilitesCellFactory<NbrsJoursAbsenceBean, Float> {
+            final class NbrsJoursAbsenceCell extends DisponibilitesRessourceHumaineCell<NbrsJoursAbsenceBean, Float> {
 
                 private NbrsJoursAbsenceCell(int noSemaine) {
-                    super(planChargeBean, noSemaine, new FloatStringConverter()); // TODO FDA 2017/04 Mieux formater les charges ?);
+                    super(planChargeBean, noSemaine, HUITIEMES_JOURS_STRING_CONVERTER);
                 }
 
                 @Override
@@ -882,7 +969,7 @@ public class DisponibilitesController extends AbstractController {
                         LOGGER.warn("Date d'état non définie !?");
                         return;
                     }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
                         nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
                     }
@@ -890,7 +977,7 @@ public class DisponibilitesController extends AbstractController {
                     nbrJoursDAbsencePeriode.set(newValue);
 
                     try {
-                        calculerDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), noSemaine);
+                        calculerDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), getNoSemaine());
                     } catch (IhmException e) {
                         // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                         LOGGER.error("Impossible de màj les disponibilités.", e);
@@ -983,9 +1070,8 @@ public class DisponibilitesController extends AbstractController {
         int cptColonne = 0;
         for (TableColumn<NbrsJoursDispoMinAgriBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
             cptColonne++;
-            ihm.interdireEdition(nbrsJoursDispoMinAgriColumn, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.");
             int finalCptColonne = cptColonne;
-            nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesCellFactory<>(planChargeBean, finalCptColonne, new FloatStringConverter()));
+            nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence."));
         }
 
         // Paramétrage des ordres de tri :
@@ -1066,7 +1152,7 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(premiereColonnePctagesDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoCTCell extends DisponibilitesCellFactory<PctagesDispoCTBean, Percentage> {
+            final class PctagesDispoCTCell extends DisponibilitesRessourceHumaineCell<PctagesDispoCTBean, Percentage> {
 
                 private PctagesDispoCTCell(int noSemaine) {
                     super(planChargeBean, noSemaine, new PercentageStringConverter());
@@ -1086,7 +1172,7 @@ public class DisponibilitesController extends AbstractController {
                         LOGGER.warn("Date d'état non définie !?");
                         return;
                     }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
                         pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
                     }
@@ -1094,7 +1180,7 @@ public class DisponibilitesController extends AbstractController {
                     pctageDispoCTPeriodeProperty.setValue(newValue);
 
                     try {
-                        calculerDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), noSemaine);
+                        calculerDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), getNoSemaine());
                     } catch (IhmException e) {
                         // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                         LOGGER.error("Impossible de màj les disponibilités.", e);
@@ -1190,9 +1276,8 @@ public class DisponibilitesController extends AbstractController {
         int cptColonne = 0;
         for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
             cptColonne++;
-            ihm.interdireEdition(nbrsJoursDispoCTColumn, "Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.");
             int finalCptColonne = cptColonne;
-            nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesCellFactory<NbrsJoursDispoCTBean, Float>(planChargeBean, finalCptColonne, new FloatStringConverter()));
+            nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, "Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT."));
         }
 
         // Paramétrage des ordres de tri :
@@ -1258,22 +1343,22 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void calculerDisponibilites() throws IhmException {
-        LOGGER.debug("Définition des valeurs du calendrier : ");
+//        LOGGER.debug("Définition des valeurs du calendrier : ");
         LocalDate dateEtat = planChargeBean.dateEtat();
         calculerDisponibilites(dateEtat);
-        LOGGER.debug("Valeurs du calendrier définies.");
+//        LOGGER.debug("Valeurs du calendrier définies.");
     }
 
     private void calculerDisponibilites(@NotNull LocalDate dateEtat) throws IhmException {
-        LOGGER.debug("Définition des valeurs du calendrier : ");
+//        LOGGER.debug("Définition des valeurs du calendrier : ");
         for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculerDisponibilites(noSemaine);
         }
-        LOGGER.debug("Valeurs du calendrier définies.");
+//        LOGGER.debug("Valeurs du calendrier définies.");
     }
 
     private void calculerDisponibilites(int noSemaine) throws IhmException {
-        LOGGER.debug("Définition des valeurs du calendrier pour la semaine {} : ", noSemaine);
+//        LOGGER.debug("Définition des valeurs du calendrier pour la semaine {} : ", noSemaine);
         for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
             calculerDisponibilites(ressourceHumaineBean, noSemaine);
         }
@@ -1281,7 +1366,7 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void calculerDisponibilites(@NotNull RessourceHumaineBean ressHumBean) throws IhmException {
-        LOGGER.debug("Définition des valeurs du calendrier pour la ressource {} : ", ressHumBean);
+//        LOGGER.debug("Définition des valeurs du calendrier pour la ressource {} : ", ressHumBean);
         for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculerDisponibilites(ressHumBean, noSemaine);
         }
@@ -1289,7 +1374,7 @@ public class DisponibilitesController extends AbstractController {
     }
 
     private void calculerDisponibilites(@NotNull RessourceHumaineBean ressHumBean, int noSemaine) throws IhmException {
-        LOGGER.debug("Définition des valeurs du calendrier pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
+//        LOGGER.debug("Définition des valeurs du calendrier pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
 
         LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
@@ -1352,7 +1437,7 @@ public class DisponibilitesController extends AbstractController {
 
         // FIXME FDA 2017/08 Coder les autres tables (en cascade).
 
-        LOGGER.debug("Valeurs du calendrier définies  pour la ressource {} et la semaine n° {}.", ressHumBean, noSemaine);
+//        LOGGER.debug("Valeurs du calendrier définies pour la ressource {} et la semaine n° {}.", ressHumBean, noSemaine);
     }
 
     private boolean estHorsMission(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) {

@@ -2,22 +2,13 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.StringConverter;
 import javafx.util.converter.LocalDateStringConverter;
 
 import javax.validation.constraints.NotNull;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.function.BiConsumer;
 
 // Inspiré de http://physalix.com/javafx8-render-a-datepicker-cell-in-a-tableview/
 @SuppressWarnings("ClassHasNoToStringMethod")

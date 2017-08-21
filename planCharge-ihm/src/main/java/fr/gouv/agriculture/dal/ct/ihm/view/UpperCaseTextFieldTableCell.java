@@ -2,8 +2,6 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -25,7 +23,7 @@ public class UpperCaseTextFieldTableCell<S> extends TextFieldTableCell<S, String
     };
 
     public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
-        return TextFieldTableCell.forTableColumn(UPPERCASE_STRING_CONVERTER);
+        return EditableAwareTextFieldTableCell.forTableColumn(UPPERCASE_STRING_CONVERTER);
     }
 
     public UpperCaseTextFieldTableCell() {
