@@ -6,10 +6,11 @@ import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.binding.StringBinding;
@@ -156,7 +157,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 */
 
     public int getId() {
-        assert id != null;
         return id.get();
     }
 

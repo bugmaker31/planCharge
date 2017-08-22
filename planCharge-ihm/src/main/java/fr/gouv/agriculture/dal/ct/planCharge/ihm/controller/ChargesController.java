@@ -549,7 +549,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         try {
             ihm.getApplicationController().afficherModuleTaches();
-            TableViews.focusOnItem(getTachesTable(), tacheBean);
+            TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherPopUp(

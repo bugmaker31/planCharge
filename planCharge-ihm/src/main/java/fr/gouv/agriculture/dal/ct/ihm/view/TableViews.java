@@ -12,7 +12,7 @@ import javax.validation.constraints.Null;
 public class TableViews {
 
     @Null
-    public static <S> int itemIndex(@NotNull TableView<S> table, @NotNull S item) {
+    public static <S> int itemIndex(@NotNull TableView<? extends S> table, @NotNull S item) {
         return table.getItems().indexOf(item);
     }
 
@@ -21,13 +21,16 @@ public class TableViews {
         return table.getSelectionModel().getSelectedItem();
     }
 
-    public static <S> void focusOnItem(@NotNull TableView<S> table, @NotNull S item) {
+    public static <S> void focusOnItem(@NotNull TableView<? extends S> table, @NotNull S item) {
+
         int itemIdx = itemIndex(table, item);
         assert itemIdx != -1;
+
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
         table.requestFocus();
-        table.getSelectionModel().select(itemIdx);
+        table.getSelectionModel().clearAndSelect(itemIdx);
         table.getFocusModel().focus(itemIdx);
+
         // Il faut aussi scroller jusqu'à la ligne sélectionnée,
         // dans le cas où la table contient plus d'item qu'elle ne peut afficher de ligne
         // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
@@ -38,11 +41,9 @@ public class TableViews {
 
         focusOnItem(table, item);
 
-        // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la (bonne) cellule.
         int itemIdx = itemIndex(table, item);
         assert itemIdx != -1;
-        table.edit(itemIdx, column);
-//        ressourcesHumainesTable.refresh();
+        table.edit(itemIdx, column); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la (bonne) cellule.
     }
 
 
