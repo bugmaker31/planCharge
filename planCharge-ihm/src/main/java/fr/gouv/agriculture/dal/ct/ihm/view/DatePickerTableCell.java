@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.ihm.view;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -21,18 +20,10 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
 
 
     public DatePickerTableCell(@NotNull String format) {
-        super();
+        super(new LocalDateStringConverter(DateTimeFormatter.ofPattern(format), DateTimeFormatter.ofPattern(format)));
 
         this.format = format;
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        setConverter(new LocalDateStringConverter(formatter, formatter));
-
-        datePicker = createDatePicker();
-
-        Platform.runLater(() -> {
-
-        });
+        this.datePicker = createDatePicker();
     }
 
 

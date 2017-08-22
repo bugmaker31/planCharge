@@ -740,8 +740,8 @@ public class DisponibilitesController extends AbstractController {
         private PlanChargeBean planChargeBean;
         private int noSemaine;
 
-        public DisponibilitesRessourceHumaineCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null String messageRefusEdition) {
-            super(stringConverter, (messageRefusEdition == null) ? null : () -> ihm.afficherInterdictionEditer(messageRefusEdition));
+        public DisponibilitesRessourceHumaineCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
+            super(stringConverter, cantEditErrorDisplayer);
             this.planChargeBean = planChargeBean;
             this.noSemaine = noSemaine;
         }
@@ -827,7 +827,7 @@ public class DisponibilitesController extends AbstractController {
             final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
                 private final int noSemaine;
 
-                private NbrJoursOuvresCellCallback(int noSemaine) {
+                public NbrJoursOuvresCellCallback(int noSemaine) {
                     super();
                     this.noSemaine = noSemaine;
                 }
@@ -866,7 +866,7 @@ public class DisponibilitesController extends AbstractController {
             for (TableColumn<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
-                nbrsJoursOuvresColumn.setCellFactory(cell -> new EditableAwareTextFieldTableCell<NbrsJoursOuvresBean, Integer>(NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.")));
+                nbrsJoursOuvresColumn.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.")));
             }
         }
 
@@ -912,7 +912,7 @@ public class DisponibilitesController extends AbstractController {
             final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursAbsenceBean, Float>, ObservableValue<Float>> {
                 private final int noSemaine;
 
-                private NbrJoursDAbsenceCellCallback(int noSemaine) {
+                public NbrJoursDAbsenceCellCallback(int noSemaine) {
                     super();
                     this.noSemaine = noSemaine;
                 }
@@ -951,7 +951,7 @@ public class DisponibilitesController extends AbstractController {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrsJoursAbsenceCell extends DisponibilitesRessourceHumaineCell<NbrsJoursAbsenceBean, Float> {
 
-                private NbrsJoursAbsenceCell(int noSemaine) {
+                public NbrsJoursAbsenceCell(int noSemaine) {
                     super(planChargeBean, noSemaine, HUITIEMES_JOURS_STRING_CONVERTER);
                 }
 
@@ -988,7 +988,7 @@ public class DisponibilitesController extends AbstractController {
             for (TableColumn<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
-                nbrsJoursDAbsenceColumn.setCellFactory(cell -> new NbrsJoursAbsenceCell(finalCptColonne));
+                nbrsJoursDAbsenceColumn.setCellFactory(param -> new NbrsJoursAbsenceCell(finalCptColonne));
             }
         }
 
@@ -1071,7 +1071,7 @@ public class DisponibilitesController extends AbstractController {
         for (TableColumn<NbrsJoursDispoMinAgriBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
             cptColonne++;
             int finalCptColonne = cptColonne;
-            nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, "Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence."));
+            nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.")));
         }
 
         // Paramétrage des ordres de tri :
@@ -1277,7 +1277,7 @@ public class DisponibilitesController extends AbstractController {
         for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
             cptColonne++;
             int finalCptColonne = cptColonne;
-            nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, "Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT."));
+            nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.")));
         }
 
         // Paramétrage des ordres de tri :

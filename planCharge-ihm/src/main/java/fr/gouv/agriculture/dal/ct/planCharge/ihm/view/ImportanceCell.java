@@ -2,18 +2,15 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ImportanceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ImportanceBean;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.Optional;
 
 /**
  * Created by frederic.danna on 14/05/2017.
@@ -26,51 +23,16 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportanceCell.class);
 
+//    @Autowired
     @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
+    private final PlanChargeIhm ihm = PlanChargeIhm.instance();
 
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     public ImportanceCell(@NotNull ObservableList<ImportanceBean> items) {
-        super(items);
-        setConverter( new ImportanceBeanConverter());
+        super(new ImportanceBeanConverter(), items);
     }
-
-    @SuppressWarnings("NonStaticInnerClassInSecureContext")
-    private class ImportanceBeanConverter extends StringConverter<ImportanceBean> {
-
-        @Null
-        @Override
-        public String toString(@Null ImportanceBean importanceBean) {
-            //noinspection HardcodedFileSeparator
-            return Objects.value(importanceBean, ImportanceBean::getCode, "N/C");
-        }
-
-        @Null
-        @Override
-        public ImportanceBean fromString(@Null String codeImportance) {
-            return (codeImportance == null) ? null : importanceBeanFor(codeImportance);
-        }
-
-        @Null
-        private ImportanceBean importanceBeanFor(@NotNull String codeImportance) {
-            Optional<ImportanceBean> importanceBeanOpt = planChargeBean.getImportancesBeans().parallelStream()
-                    .filter(importanceBean -> importanceBean.getCode() == null)
-                    .filter(importanceBean -> {
-                        assert importanceBean.getCode() != null;
-                        return importanceBean.getCode().equals(codeImportance);
-                    })
-                    .findAny();
-            if (!importanceBeanOpt.isPresent()) {
-                // Ne devrait jamais passer ici, logiquement.
-                LOGGER.error("Impossible de retrouver l'importance ayant le code '" + codeImportance + "'.");
-                return null;
-            }
-            return importanceBeanOpt.get();
-        }
-    }
-
 
     @Override
     public void updateItem(@Null ImportanceBean item, boolean empty) {
@@ -90,7 +52,7 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
         }
     }
 
-    @NotNull
+    @Null
     private String importanceStyleClass() throws IhmException {
         String codeImportance = getItem().getCode();
         if (codeImportance == null) {

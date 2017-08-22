@@ -9,11 +9,11 @@ import javax.validation.constraints.Null;
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class EditableAwareTextFieldTableCell<S, T> extends TextFieldTableCell<S, T> {
 
+    @Null
     private final Runnable cantEditErrorDisplayer;
 
     public EditableAwareTextFieldTableCell(@NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
-        super();
-        setConverter(stringConverter);
+        super(stringConverter);
         this.cantEditErrorDisplayer = cantEditErrorDisplayer;
     }
 
