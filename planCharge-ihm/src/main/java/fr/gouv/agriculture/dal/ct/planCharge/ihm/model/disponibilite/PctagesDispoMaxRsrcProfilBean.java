@@ -20,6 +20,10 @@ public class PctagesDispoMaxRsrcProfilBean extends AbstractDisponibilitesRessour
         super(ressourceHumaineBean, calendrier);
     }
 
+    public PctagesDispoMaxRsrcProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        super(ressourceHumaineBean);
+    }
+
 
     // Getters/Setters :
 

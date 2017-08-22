@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHum
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceBean<D, B, T>, T> extends AbstractDisponibilitesBean<D, B, T> {
 
@@ -21,6 +22,10 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, T> calendrier) {
         super(calendrier);
         this.ressourceHumaineBean = ressourceHumaineBean;
+    }
+
+    public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        this(ressourceHumaineBean, new TreeMap<>()); // TreeMap juste pour trier afin de faciliter le débogage.
     }
 
 

@@ -185,7 +185,11 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursOuvresBean, String> ressourceJoursOuvresColumn;
+    private TableColumn<NbrsJoursOuvresBean, String> ressourceNbrsJoursOuvresColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursOuvresBean, String> profilNbrsJoursOuvresColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -588,7 +592,6 @@ public class DisponibilitesController extends AbstractController {
     }
 
 
-
     // Méthodes :
 
     @FXML
@@ -962,7 +965,8 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //noinspection HardcodedFileSeparator
-        ressourceJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
+        ressourceNbrsJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
+        profilNbrsJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrJoursOuvresCellCallback implements Callback<CellDataFeatures<NbrsJoursOuvresBean, Integer>, ObservableValue<Integer>> {
@@ -1001,7 +1005,8 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         // Cette table n'est pas éditable (données calculées à partir des référentiels).
-        ihm.interdireEdition(ressourceJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
+        ihm.interdireEdition(ressourceNbrsJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
+        ihm.interdireEdition(profilNbrsJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
         {
             int cptColonne = 0;
             for (TableColumn<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresColumn : nbrsJoursOuvresTable.getCalendrierColumns()) {
@@ -1640,7 +1645,7 @@ public class DisponibilitesController extends AbstractController {
         for (int noSemaine = 1; noSemaine <= PlanificationsDTO.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculerDisponibilites(ressHumBean, noSemaine);
         }
-        LOGGER.debug("Valeurs du calendrier définies  pour la ressource {}.", ressHumBean);
+        LOGGER.debug("Valeurs du calendrier définies pour la ressource {}.", ressHumBean);
     }
 
     private void calculerDisponibilites(@NotNull RessourceHumaineBean ressHumBean, int noSemaine) throws IhmException {
@@ -1654,56 +1659,93 @@ public class DisponibilitesController extends AbstractController {
 
         // Nbr de jours ouvrés :
         int nbrJoursOuvresPeriode;
-        try {
-            nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
-        } catch (ServiceException e) {
-            throw new IhmException("Impossible de calculer le nombre de jours ouvrés.", e);
+        {
+            try {
+                nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
+            } catch (ServiceException e) {
+                throw new IhmException("Impossible de calculer le nombre de jours ouvrés.", e);
+            }
+            if (!nbrsJoursOuvresBean.containsKey(debutPeriode)) {
+                nbrsJoursOuvresBean.put(debutPeriode, new SimpleIntegerProperty());
+            }
+            IntegerProperty nbrJoursOuvresPeriodeProperty = nbrsJoursOuvresBean.get(debutPeriode);
+            nbrJoursOuvresPeriodeProperty.set(nbrJoursOuvresPeriode);
         }
-        if (!nbrsJoursOuvresBean.containsKey(debutPeriode)) {
-            nbrsJoursOuvresBean.put(debutPeriode, new SimpleIntegerProperty());
-        }
-        IntegerProperty nbrJoursOuvresPeriodeProperty = nbrsJoursOuvresBean.get(debutPeriode);
-        nbrJoursOuvresPeriodeProperty.set(nbrJoursOuvresPeriode);
 
         // Nbr de jours d'absence :
-        NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.getFirst(nbrsJoursAbsenceBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
-        if (nbrsJoursAbsenceBean == null) {
-            nbrsJoursAbsenceBean = new NbrsJoursAbsenceBean(ressHumBean);
-            nbrsJoursAbsenceBeans.add(nbrsJoursAbsenceBean);
-        }
-        FloatProperty nbrsJoursAbsencePeriodeProperty = nbrsJoursAbsenceBean.get(debutPeriode);
-        float nbrsJoursAbsencePeriode = Objects.<FloatProperty, Float>value(nbrsJoursAbsencePeriodeProperty, FloatProperty::getValue, 0f);
+        float nbrJoursDispoMinAgriPeriode;
+        {
+            NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.getFirst(nbrsJoursAbsenceBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
+            if (nbrsJoursAbsenceBean == null) {
+                nbrsJoursAbsenceBean = new NbrsJoursAbsenceBean(ressHumBean);
+                nbrsJoursAbsenceBeans.add(nbrsJoursAbsenceBean);
+            }
+            FloatProperty nbrsJoursAbsencePeriodeProperty = nbrsJoursAbsenceBean.get(debutPeriode);
+            float nbrsJoursAbsencePeriode = Objects.<FloatProperty, Float>value(nbrsJoursAbsencePeriodeProperty, FloatProperty::getValue, 0f);
 
-        // Nbr de jours de dispo pour le Ministère :
-        NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = Collections.fetchFirst(nbrsJoursDispoMinAgriBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
-        if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
-            nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleFloatProperty());
+            // Nbr de jours de dispo pour le Ministère :
+            NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = Collections.fetchFirst(nbrsJoursDispoMinAgriBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
+            if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
+                nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleFloatProperty());
+            }
+            FloatProperty nbrJoursDispoMinAgriPeriodeProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
+            // TODO FDA 2017/08 Gérer le cas où la mission commence/s'arrête en milieu de période (semaine).
+            nbrJoursDispoMinAgriPeriode =
+                    estHorsMission(debutPeriode, debutMission, finMission) ? 0 : Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
+            nbrJoursDispoMinAgriPeriodeProperty.set(nbrJoursDispoMinAgriPeriode);
         }
-        FloatProperty nbrJoursDispoMinAgriPeriodeProperty = nbrsJoursDispoMinAgriBean.get(debutPeriode);
-        // TODO FDA 2017/08 Gérer le cas où la mission commence/s'arrête en milieu de période (semaine).
-        float nbrJoursDispoMinAgriPeriode =
-                estHorsMission(debutPeriode, debutMission, finMission) ? 0 : Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
-        nbrJoursDispoMinAgriPeriodeProperty.set(nbrJoursDispoMinAgriPeriode);
 
         // % dispo CT  :
-        PctagesDispoCTBean pctagesDispoCTBean = Collections.fetchFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
-        if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
-            PercentageProperty percentageDispoCTPeriodeProperty = new PercentageProperty(estHorsMission(debutPeriode, debutMission, finMission) ? 0 : DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue());
-            pctagesDispoCTBean.put(debutPeriode, percentageDispoCTPeriodeProperty);
+        Percentage percentageDispoCTPeriode;
+        {
+            PctagesDispoCTBean pctagesDispoCTBean = Collections.getFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+            if (pctagesDispoCTBean == null) {
+                pctagesDispoCTBean = new PctagesDispoCTBean(ressHumBean);
+                pctagesDispoCTBeans.add(pctagesDispoCTBean);
+            }
+            if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
+                PercentageProperty percentageDispoCTPeriodeProperty = new PercentageProperty(estHorsMission(debutPeriode, debutMission, finMission) ? 0 : DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue());
+                pctagesDispoCTBean.put(debutPeriode, percentageDispoCTPeriodeProperty);
+            }
+            PercentageProperty percentageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
+            percentageDispoCTPeriode = percentageDispoCTPeriodeProperty.getValue();
         }
-        PercentageProperty percentageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
-        if (estHorsMission(debutPeriode, debutMission, finMission)) {
-            percentageDispoCTPeriodeProperty.setValue(new Percentage(0));
-        }
-        Percentage percentageDispoCTPeriode = percentageDispoCTPeriodeProperty.getValue();
 
         // Nbr de jours de dispo pour la CT :
-        NbrsJoursDispoCTBean nbrsJoursDispoCTBean = Collections.fetchFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
-        if (!nbrsJoursDispoCTBean.containsKey(debutPeriode)) {
-            nbrsJoursDispoCTBean.put(debutPeriode, new SimpleFloatProperty());
+        float nbrJoursDispoCTPeriode;
+        {
+            NbrsJoursDispoCTBean nbrsJoursDispoCTBean = Collections.getFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+            if (nbrsJoursDispoCTBean == null) {
+                nbrsJoursDispoCTBean = new NbrsJoursDispoCTBean(ressHumBean);
+                nbrsJoursDispoCTBeans.add(nbrsJoursDispoCTBean);
+            }
+            if (!nbrsJoursDispoCTBean.containsKey(debutPeriode)) {
+                nbrsJoursDispoCTBean.put(debutPeriode, new SimpleFloatProperty());
+            }
+            nbrJoursDispoCTPeriode = (nbrJoursDispoMinAgriPeriode * percentageDispoCTPeriode.floatValue()) / 100;
+            FloatProperty nbrJoursDispoCTPeriodeProperty = nbrsJoursDispoCTBean.get(debutPeriode);
+            nbrJoursDispoCTPeriodeProperty.set(nbrJoursDispoCTPeriode);
         }
-        FloatProperty nbrJoursDispoCTPeriodeProperty = nbrsJoursDispoCTBean.get(debutPeriode);
-        nbrJoursDispoCTPeriodeProperty.set((nbrJoursDispoMinAgriPeriode * percentageDispoCTPeriode.floatValue()) / 100);
+
+        // Dispo. maxi. / rsrc / profil (%)
+        Percentage percentageDispoMaxRsrcProfilPeriode;
+        {
+            PctagesDispoMaxRsrcProfilBean pctagesDispoMaxRsrcProfilBean = Collections.getFirst(pctagesDispoMaxRsrcProfilBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+            if (pctagesDispoMaxRsrcProfilBean == null) {
+                pctagesDispoMaxRsrcProfilBean = new PctagesDispoMaxRsrcProfilBean(ressHumBean);
+                pctagesDispoMaxRsrcProfilBeans.add(pctagesDispoMaxRsrcProfilBean);
+            }
+            if (!pctagesDispoMaxRsrcProfilBean.containsKey(debutPeriode)) {
+                PercentageProperty percentageDispoMaxRsrcProfilPeriodeProperty = new PercentageProperty(0);
+                pctagesDispoMaxRsrcProfilBean.put(debutPeriode, percentageDispoMaxRsrcProfilPeriodeProperty);
+            }
+            PercentageProperty percentageDispoMaxRsrcProfilPeriodeProperty = pctagesDispoMaxRsrcProfilBean.get(debutPeriode);
+            if (estHorsMission(debutPeriode, debutMission, finMission)) {
+                percentageDispoMaxRsrcProfilPeriodeProperty.setValue(new Percentage(0));
+            }
+            percentageDispoMaxRsrcProfilPeriode = percentageDispoMaxRsrcProfilPeriodeProperty.getValue();
+        }
+
 
         // FIXME FDA 2017/08 Coder les autres tables (en cascade).
 

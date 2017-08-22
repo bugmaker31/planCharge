@@ -23,11 +23,11 @@
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="false">
                             <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="25" editable="false">
                                 <columns>
-                                    <TableColumn fx:id="ressourceJoursOuvresColumn" text="N/A"
+                                    <TableColumn fx:id="ressourceNbrsJoursOuvresColumn" text="N/A"
                                                  prefWidth="$ressourceColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="profilNbrsJoursOuvresColumn" text="Profil"
+                                    <TableColumn fx:id="profilNbrsJoursOuvresColumn" text="N/A"
                                                  prefWidth="$profilColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>

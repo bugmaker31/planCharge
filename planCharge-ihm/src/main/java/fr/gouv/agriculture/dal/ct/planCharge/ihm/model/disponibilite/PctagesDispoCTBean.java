@@ -20,6 +20,10 @@ public class PctagesDispoCTBean extends AbstractDisponibilitesRessourceBean<Abst
         super(ressourceHumaineBean, calendrier);
     }
 
+    public PctagesDispoCTBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        super(ressourceHumaineBean);
+    }
+
 
     // Getters/Setters :
 

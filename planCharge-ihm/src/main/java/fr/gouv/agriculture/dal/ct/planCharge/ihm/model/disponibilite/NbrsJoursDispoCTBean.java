@@ -20,6 +20,10 @@ public class NbrsJoursDispoCTBean extends AbstractDisponibilitesRessourceBean<Ab
         super(ressourceHumaineBean, calendrier);
     }
 
+    public NbrsJoursDispoCTBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        super(ressourceHumaineBean);
+    }
+
 
     // Getters/Setters :
 
