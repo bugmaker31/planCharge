@@ -11,7 +11,8 @@
 >
     <center>
         <fx:define>
-            <Double fx:id="premiereColumnPrefWidth" fx:value="100"/>
+            <Double fx:id="ressourceColumnPrefWidth" fx:value="100"/>
+            <Double fx:id="profilColumnPrefWidth" fx:value="80"/>
             <Double fx:id="semaineColumnPrefWidth" fx:value="50"/>
         </fx:define>
         <ScrollPane fitToWidth="true">
@@ -22,8 +23,12 @@
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="false">
                             <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="25" editable="false">
                                 <columns>
-                                    <TableColumn fx:id="premiereColonneJoursOuvresColumn" text="N/A"
-                                                 prefWidth="$premiereColumnPrefWidth"
+                                    <TableColumn fx:id="ressourceJoursOuvresColumn" text="N/A"
+                                                 prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="profilNbrsJoursOuvresColumn" text="Profil"
+                                                 prefWidth="$profilColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine1NbrsJoursOuvresColumn" text="S+1"
@@ -83,7 +88,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion expandedPane="$nbrsJoursAbsencePane">
+                <Accordion > <!--expandedPane="$nbrsJoursAbsencePane" TODO FDA 2017/08 Réactiver qd dév fini.-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursAbsencePane"
@@ -91,8 +96,12 @@
                             <TableViewAvecCalendrier fx:id="nbrsJoursDAbsenceTable" editable="true" fixedCellSize="25">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
-                                    <TableColumn fx:id="premiereColonneAbsencesColumn" text="Ressource"
-                                                 prefWidth="$premiereColumnPrefWidth"
+                                    <TableColumn fx:id="ressourceNbrsJoursAbsenceColumn" text="Ressource"
+                                                 prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="profilNbrsJoursAbsenceColumn" text="Profil"
+                                                 prefWidth="$profilColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine1NbrsJoursAbsenceColumn" text="S+1"
@@ -146,7 +155,7 @@
                                 </columns>
                                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                 <sortOrder>
-                                    <fx:reference source="premiereColonneAbsencesColumn"/>
+                                    <fx:reference source="ressourceNbrsJoursAbsenceColumn"/>
                                 </sortOrder>
                                 <tooltip>
                                     <Tooltip text="Entrez le nombre de jours d'absence de chaque ressource."/>
@@ -163,8 +172,12 @@
                                                      editable="false">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
-                                    <TableColumn fx:id="premiereColonneNbrsJoursDispoMinAgriColumn" text="Ressource"
-                                                 prefWidth="$premiereColumnPrefWidth"
+                                    <TableColumn fx:id="ressourceNbrsJoursDispoMinAgriColumn" text="Ressource"
+                                                 prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="profilNbrsJoursDispoMinAgriColumn" text="Profil"
+                                                 prefWidth="$profilColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine1NbrsJoursDispoMinAgriColumn" text="S+1"
@@ -225,7 +238,7 @@
                                 -->
                                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                 <sortOrder>
-                                    <fx:reference source="premiereColonneNbrsJoursDispoMinAgriColumn"/>
+                                    <fx:reference source="ressourceNbrsJoursDispoMinAgriColumn"/>
                                 </sortOrder>
                                 <tooltip>
                                     <Tooltip
@@ -235,15 +248,19 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion expandedPane="$pctagesDispoMinAgriPane">
+                <Accordion >
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMinAgriPane" text="Dispo CT / rsrc (%)" animated="false">
                             <TableViewAvecCalendrier fx:id="pctagesDispoCTTable" fixedCellSize="25" editable="true">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
-                                    <TableColumn fx:id="premiereColonnePctagesDispoCTColumn" text="Ressource"
-                                                 prefWidth="$premiereColumnPrefWidth"
+                                    <TableColumn fx:id="ressourcePctagesDispoCTColumn" text="Ressource"
+                                                 prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="profilPctagesDispoCTColumn" text="Profil"
+                                                 prefWidth="$profilColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine1PctagesDispoCTColumn" text="S+1"
@@ -270,7 +287,7 @@
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
-                                    <TableColumn fx:id="semaine7PctagesDispoMinCTColumn" text="S+7"
+                                    <TableColumn fx:id="semaine7PctagesDispoCTColumn" text="S+7"
                                                  prefWidth="$semaineColumnPrefWidth"
                                                  styleClass="periodeDispo-column"
                                                  sortable="false"/>
@@ -297,7 +314,7 @@
                                 </columns>
                                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                 <sortOrder>
-                                    <fx:reference source="premiereColonnePctagesDispoCTColumn"/>
+                                    <fx:reference source="ressourcePctagesDispoCTColumn"/>
                                 </sortOrder>
                                 <tooltip>
                                     <Tooltip text="Entrez le % de disponibilité dédié à l'équipe (la CT du DAL)."/>
@@ -305,8 +322,8 @@
                             </TableViewAvecCalendrier>
                         </TitledPane>
                     </panes>
-                </Accordion>
-                <Accordion expandedPane="$nbrsJoursDispoCTPane">
+                </Accordion> <!--expandedPane="$pctagesDispoMinAgriPane" TODO FDA 2017/08 Réactiver qd dév fini.-->
+                <Accordion > <!--expandedPane="$nbrsJoursDispoCTPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoCTPane" text="Dispo CT / rsrc (j)" animated="false">
@@ -314,8 +331,12 @@
                                                      editable="false">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
-                                    <TableColumn fx:id="premiereColonneNbrsJoursDispoCTColumn" text="Ressource"
-                                                 prefWidth="$premiereColumnPrefWidth"
+                                    <TableColumn fx:id="ressourceNbrsJoursDispoCTColumn" text="Ressource"
+                                                 prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="profilNbrsJoursDispoCTColumn" text="Profil"
+                                                 prefWidth="$profilColumnPrefWidth"
                                                  styleClass="nonModifiable"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine1NbrsJoursDispoCTColumn" text="S+1"
@@ -376,7 +397,7 @@
                                 -->
                                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                 <sortOrder>
-                                    <fx:reference source="premiereColonneNbrsJoursDispoCTColumn"/>
+                                    <fx:reference source="ressourceNbrsJoursDispoCTColumn"/>
                                 </sortOrder>
                                 <tooltip>
                                     <Tooltip
@@ -386,8 +407,92 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
+                <Accordion expandedPane="$pctagesDispoMaxRsrcProfil">
+                    <panes>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <TitledPane fx:id="pctagesDispoMaxRsrcProfil" text="Dispo maxi / rsrc / profil (%)" animated="false">
+                            <TableViewAvecCalendrier fx:id="pctagesDispoMaxRsrcProfilTable" fixedCellSize="25"
+                                                     editable="false">
+                                <!--styleClass="noHeader-table"-->
+                                <columns>
+                                    <TableColumn fx:id="ressourcePctagesDispoMaxRsrcProfilColumn" text="Ressource"
+                                                 prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="profilPctagesDispoMaxRsrcProfilColumn" text="Profil"
+                                                 prefWidth="$profilColumnPrefWidth"
+                                                 styleClass="nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine1PctagesDispoMaxRsrcProfilColumn" text="S+1"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine2PctagesDispoMaxRsrcProfilColumn" text="S+2"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine3PctagesDispoMaxRsrcProfilColumn" text="S+3"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine4PctagesDispoMaxRsrcProfilColumn" text="S+4"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine5PctagesDispoMaxRsrcProfilColumn" text="S+5"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine6PctagesDispoMaxRsrcProfilColumn" text="S+6"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine7PctagesDispoMaxRsrcProfilColumn" text="S+7"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine8PctagesDispoMaxRsrcProfilColumn" text="S+8"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine9PctagesDispoMaxRsrcProfilColumn" text="S+9"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine10PctagesDispoMaxRsrcProfilColumn" text="S+10"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine11PctagesDispoMaxRsrcProfilColumn" text="S+11"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                    <TableColumn fx:id="semaine12PctagesDispoMaxRsrcProfilColumn" text="S+12"
+                                                 prefWidth="$semaineColumnPrefWidth"
+                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 sortable="false"/>
+                                </columns>
+                                <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
+                                <!--
+                                                                <calendrierColumns>
+                                                                    Cf. https://community.oracle.com/thread/2307758
+                                                                    <fx:reference source="semaine1NbrsJoursDispoCTColumn"/>
+                                                                </calendrierColumns>
+                                -->
+                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                <sortOrder>
+                                    <fx:reference source="ressourceNbrsJoursDispoCTColumn"/>
+                                    <fx:reference source="profilPctagesDispoMaxRsrcProfilColumn"/>
+                                </sortOrder>
+                                <tooltip>
+                                    <Tooltip
+                                            text="Pourcentages de disponibilité max. de chaque ressource pour un profil donné. Saisis."/>
+                                </tooltip>
+                            </TableViewAvecCalendrier>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
                 <!--
-                <Tab text="Dispo maxi / rsrc / profil (%)" closable="false">
                 <Tab text="Dispo maxi / rsrc / profil (j)" closable="false">
                 <Tab text="Dispo maxi / profil (j)" closable="false">
                 -->

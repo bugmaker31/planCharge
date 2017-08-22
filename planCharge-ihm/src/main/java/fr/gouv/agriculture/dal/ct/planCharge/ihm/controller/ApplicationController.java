@@ -1271,6 +1271,7 @@ public class ApplicationController extends AbstractController {
                 ihm.getDisponibilitesController().getNbrsJoursDispoMinAgriTable(),
                 ihm.getDisponibilitesController().getPctagesDispoCTTable(),
                 ihm.getDisponibilitesController().getNbrsJoursDispoCTTable(),
+                ihm.getDisponibilitesController().getPctagesDispoMaxRsrcProfilTable(),
                 // ChargesController
                 ihm.getChargesController().getTachesTable()
         };
