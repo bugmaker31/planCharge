@@ -2,6 +2,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.util.number;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * A {@link Number number} whose value is between 0 and 100, included.
+ */
 public class Percentage extends Number {
 
 
@@ -13,6 +16,11 @@ public class Percentage extends Number {
 
     // Constructors:
 
+    /**
+     *
+     * @param max
+     * @param value Must be lower or equal to {@code max} ({@code assert}'ed).
+     */
     public Percentage(float max, float value) {
         super();
 
@@ -24,6 +32,10 @@ public class Percentage extends Number {
         percentage = (value * 100) / max;
     }
 
+    /**
+     *
+     * @param value Must be between 0 and 100, included ({@code assert}'ed).
+     */
     public Percentage(float value) {
         super();
         assert value >= 0;

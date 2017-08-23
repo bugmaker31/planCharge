@@ -448,26 +448,26 @@ public class ApplicationController extends AbstractController {
         majBarreEtat();
     }
 
-        @FXML
-        private void charger (@SuppressWarnings("unused") ActionEvent event){
-            LOGGER.debug("> Fichier > Charger");
+    @FXML
+    private void charger(@SuppressWarnings("unused") ActionEvent event) {
+        LOGGER.debug("> Fichier > Charger");
 
-            if (!perteDonneesAceeptee()) {
-                return;
-            }
-
-            try {
-                charger();
-            } catch (IhmException e) {
-                LOGGER.error("Impossible de charger le plan de charge.", e);
-                ihm.afficherPopUp(
-                        Alert.AlertType.ERROR,
-                        "Impossible de charger le plan de charge",
-                        "Impossible de charger le plan de charge : \n" + Exceptions.causes(e),
-                        400, 200
-                );
-            }
+        if (!perteDonneesAceeptee()) {
+            return;
         }
+
+        try {
+            charger();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible de charger le plan de charge.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible de charger le plan de charge",
+                    "Impossible de charger le plan de charge : \n" + Exceptions.causes(e),
+                    400, 200
+            );
+        }
+    }
 
     private void charger() throws IhmException {
 
@@ -1169,7 +1169,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleTaches() throws IhmException {
         nomModuleCourant = ApplicationController.NomModule.TACHES;
-        ihm.getTachesController().definirMenuContextuel();
+//        ihm.getTachesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getTachesView());
 //        ihm.getTachesController().fireActivation();
         majTitre();
@@ -1200,7 +1200,7 @@ public class ApplicationController extends AbstractController {
 
     public void activerModuleCharges() throws IhmException {
         nomModuleCourant = ApplicationController.NomModule.CHARGES;
-        ihm.getChargesController().definirMenuContextuel();
+//        ihm.getChargesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getChargesView());
 //        ihm.getChargesController().fireActivation();
         majTitre();
@@ -1257,9 +1257,15 @@ public class ApplicationController extends AbstractController {
 
     private void definirNomsPeriodes() throws IhmException {
 
-        // Format = "S" + n° de semaine dans l'année + abréviation du nom du jour ("lun", "mar", etc.) + retour à la ligne + jour au format 'JJ/MM'.
+/*
+        // Format = "S " + n° de semaine dans l'année + abréviation du nom du jour ("lun", "mar", etc.) + retour à la ligne + jour au format 'JJ/MM'.
         //noinspection HardcodedLineSeparator
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("'S'w E\ndd/MM");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("'S 'w E\ndd/MM");
+*/
+        // Format = "S " + n° de semaine dans l'année + retour à la ligne + jour au format 'JJ/MM'.
+        //noinspection HardcodedLineSeparator
+        DateTimeFormatter noSemaineFormatter = DateTimeFormatter.ofPattern("'S 'w");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
         // Rq : Plus nécessaire de redéfinir les colonnes pour les TableView de getDisponibilitesController() autres que "*NbrsJoursOuvresTable",
         //      maintenant qu'on n'affiche plus les TableHeaderRow de ces TableView.
@@ -1285,7 +1291,6 @@ public class ApplicationController extends AbstractController {
                 dateDebutPeriode = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
             }
 
-            int cptColonne = 0;
             for (TableColumn calendrierColumn : calendrierColumns) {
                 String titreColonne;
                 if (dateDebutPeriode == null) {
@@ -1293,10 +1298,17 @@ public class ApplicationController extends AbstractController {
                     titreColonne = "N/C";
                 } else {
                     dateDebutPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
-                    titreColonne = dateDebutPeriode.format(dateFormatter);
+                    titreColonne = noSemaineFormatter.format(dateDebutPeriode)
+                            + "\n" + ('[' + dateFormatter.format(dateDebutPeriode)
+/*
+                            + "\n.."
+                            + "\n" + dateFormatter.format(dateFinPeriode)
+*/
+                            + ".."
+                    )
+                    ;
                 }
                 calendrierColumn.setText(titreColonne);
-                cptColonne++;
             }
         }
     }

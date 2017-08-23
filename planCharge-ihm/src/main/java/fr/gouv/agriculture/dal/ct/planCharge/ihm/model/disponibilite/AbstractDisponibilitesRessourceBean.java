@@ -14,7 +14,7 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     // Fields :
 
     @NotNull
-    final RessourceHumaineBean ressourceHumaineBean;
+    private RessourceHumaineBean ressourceHumaineBean;
 
 
     // Constructors:
@@ -40,13 +40,13 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
         //noinspection unchecked
         AbstractDisponibilitesRessourceBean<D, B, T> that = (AbstractDisponibilitesRessourceBean<D, B, T>) o;
 
-        return ressourceHumaineBean.equals(that.ressourceHumaineBean);
+        return getRessourceHumaineBean().equals(that.getRessourceHumaineBean());
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = (31 * result) + ressourceHumaineBean.hashCode();
+        result = (31 * result) + getRessourceHumaineBean().hashCode();
         return result;
     }
 
@@ -63,6 +63,6 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
 
     @Override
     public final String toString() {
-        return ressourceHumaineBean + " : " + super.toString();
+        return getRessourceHumaineBean() + " : " + super.toString();
     }
 }

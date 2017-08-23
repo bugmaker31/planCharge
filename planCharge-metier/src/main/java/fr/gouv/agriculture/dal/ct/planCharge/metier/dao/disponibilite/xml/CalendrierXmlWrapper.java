@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"ClassHasNoToStringMethod", "UseOfObsoleteDateTimeApi"})
-public class CalendrierFloatXmlWrapper {
+public class CalendrierXmlWrapper {
 
 
     // Fields:
@@ -28,21 +28,21 @@ public class CalendrierFloatXmlWrapper {
     /**
      * Constructeur vide (appelé notamment par JAXB).
      */
-    CalendrierFloatXmlWrapper() {
+    CalendrierXmlWrapper() {
         super();
     }
 
 
     // Getters/Setters :
 
-    @SuppressWarnings("SuspiciousGetterSetter")
+    @SuppressWarnings({"SuspiciousGetterSetter", "unused"})
     @XmlElement(required = true)
     @NotNull
     public Map<Date, Float> getSemaines() {
         return calendrierXmlWrapper;
     }
 
-    @SuppressWarnings("SuspiciousGetterSetter")
+    @SuppressWarnings({"SuspiciousGetterSetter", "unused"})
     public void setSemaines(@NotNull Map<Date, Float> absences) {
         this.calendrierXmlWrapper = absences;
     }
@@ -51,10 +51,10 @@ public class CalendrierFloatXmlWrapper {
     // Méthodes :
 
     @NotNull
-    public CalendrierFloatXmlWrapper init(@NotNull Map<LocalDate, Float> calendrier, @NotNull RapportSauvegarde rapport) {
+    public CalendrierXmlWrapper init(@NotNull Map<LocalDate, Float> calendrier, @NotNull RapportSauvegarde rapport) {
         calendrierXmlWrapper.clear();
         calendrierXmlWrapper.putAll(calendrier.keySet().stream()
-                .collect(Collectors.toMap(Dates::asDate, debutPeriode -> calendrier.get(debutPeriode).floatValue()))
+                .collect(Collectors.toMap(Dates::asDate, calendrier::get))
         );
         return this;
     }

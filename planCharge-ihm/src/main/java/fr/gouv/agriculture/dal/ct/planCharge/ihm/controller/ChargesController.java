@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
@@ -82,9 +81,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
      La couche "View" :
       */
 
+/*
     //    @Autowired
     @NotNull
     private PlanChargeIhm ihm = PlanChargeIhm.instance();
+*/
 
     // Les paramètres (TabedPane "Paramètres") :
 
@@ -197,6 +198,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return semaine12Column;
     }
 
+    @Null
+    private MenuItem menuVoirTache;
+
+    @Null
+    private MenuItem menuVoirOutilTicketing;
+
 
     /**
      * The constructor.
@@ -252,7 +259,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             @Null
             @Override
             public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") CellDataFeatures<PlanificationTacheBean, Double> cell) {
-                if (planChargeBean.getDateEtat()==null){
+                if (planChargeBean.getDateEtat() == null) {
                     return null;
                 }
                 try {
@@ -410,16 +417,20 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         LOGGER.info("Initialisé.");
     }
 
-    @Override
-    public void definirMenuContextuel() {
-        MenuItem menuVoirTache = new MenuItem("Voir le détail de la tâche");
-        menuVoirTache.setOnAction(event -> afficherTache());
+/*
+    void definirMenuContextuel() {
+        super.definirMenuContextuel();
 
-        MenuItem menuVoirOutilTicketing = new MenuItem("Voir dans l'outil de ticketing");
-        menuVoirOutilTicketing.setOnAction(event -> afficherTacheDansOutilTicketing());
+        if (menuVoirTache == null) {
+            menuVoirTache = new MenuItem("Voir le détail de la tâche");
+            menuVoirTache.setOnAction(event -> afficherTache());
+        }
+        if (!tachesTableContextMenu.getItems().contains(menuVoirTache)) {
+            tachesTableContextMenu.getItems().add(menuVoirTache);
+        }
 
-        tachesTableContextMenu.getItems().setAll(menuVoirTache, menuVoirOutilTicketing);
     }
+*/
 
     @FXML
     @NotNull
@@ -465,10 +476,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         assert planChargeBean.getDateEtat() != null;
 
         Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-        LocalDate debutPeriode = planChargeBean.getDateEtat();
+        LocalDate debutSemaine = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calendrier.put(debutPeriode, new SimpleDoubleProperty(0.0));
-            debutPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/07 Ne fonctionne que pour des périodes hebdomadaire, pas trimestrielle.
+            calendrier.put(debutSemaine, new SimpleDoubleProperty(0.0));
+            debutSemaine = debutSemaine.plusDays(7); // FIXME FDA 2017/07 Ne fonctionne que pour des périodes hebdomadaire, pas trimestrielle.
         }
 
         return new PlanificationTacheBean(tacheBean, calendrier);

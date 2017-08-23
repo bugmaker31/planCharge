@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.control.*?>
-
-
+<?import org.controlsfx.control.SegmentedButton?>
 <?import java.lang.Double?>
-<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -113,7 +112,15 @@
             <Double fx:id="semaineColumnPrefWidth" fx:value="50"/>
         </fx:define>
         <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true">
-            <!--contextMenu="tachesTableContextMenu">-->
+            <contextMenu>
+                <ContextMenu fx:id="tachesTableContextMenu">
+                    <items>
+                        <MenuItem text="Voir la ressource humaine" onAction="#afficherRessourceHumaine"/>
+                        <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
+                        <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherTache"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
             <columns>
                 <TableColumn text="Tâche">
 

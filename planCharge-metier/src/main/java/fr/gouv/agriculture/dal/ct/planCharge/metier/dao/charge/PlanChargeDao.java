@@ -494,7 +494,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         //noinspection TooBroadScope
         Set<ProjetAppli> projetsApplis = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
-            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A:A");
             //noinspection HardcodedFileSeparator
             XCell cellule = Calc.findFirst("Projets / Applications", plageRecherche);
             if (cellule == null) {
@@ -531,7 +531,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         //noinspection TooBroadScope
         Set<Statut> statuts = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
-            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A:A");
             XCell cellule = Calc.findFirst("Statuts", plageRecherche);
             if (cellule == null) {
                 throw new PlanChargeDaoException("Impossible de retrouver les statuts.");
@@ -566,7 +566,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         //noinspection TooBroadScope
         Set<RessourceHumaine> ressourcesHumaines = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
         try {
-            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
+            XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A:A");
             XCell cellule = Calc.findFirst("Ressources", plageRecherche);
             if (cellule == null) {
                 throw new PlanChargeDaoException("Impossible de retrouver les ressources.");
@@ -628,10 +628,11 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     @NotNull
     private Disponibilites importerDisponibilites(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
-        rapport.setAvancement("Import des absences...");
+        rapport.setAvancement("Import des disponibilités...");
         Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence = importerNbrsJoursAbsence(feuilleDisponibilites);
         Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT = importerPctagesDispoCT(feuilleDisponibilites);
-        return new Disponibilites(nbrsJoursAbsence, pctagesDispoCT);
+        Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = importerPctagesDispoMaxProfil(feuilleDisponibilites);
+        return new Disponibilites(nbrsJoursAbsence, pctagesDispoCT, pctagesDispoMaxProfil);
     }
 
     @NotNull
@@ -647,7 +648,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         int noColTrigramme = 1; // Les trigrammes des ressources sont en colonne 1.
 
         try {
-            XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A1:B20"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
+            XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A:B"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
             //noinspection HardcodedFileSeparator
             XCell titrePlageCell = Calc.findFirst("Absence (CP, RTT, formation, maladie, …) / rsrc (j)", plageRecherche);
             if (titrePlageCell == null) {
@@ -716,7 +717,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         int noColTrigramme = 1; // Les trigrammes des ressources sont en colonne 1.
 
         try {
-            XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A1:B50"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
+            XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A:B"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
             //noinspection HardcodedFileSeparator
             XCell titrePlageCell = Calc.findFirst("Disponibilité CT / rsrc (%)", plageRecherche);
             if (titrePlageCell == null) {
@@ -771,6 +772,106 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
             return pctagesDispoCT;
         } catch (Exception e) {
             throw new PlanChargeDaoException("Impossible d'importer les pourcentages de disponibilité pour la CT.", e);
+        }
+    }
+
+    @NotNull
+    private Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> importerPctagesDispoMaxProfil(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
+        //noinspection TooBroadScope
+        Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+
+        //noinspection TooBroadScope
+        int noLigDebutsPeriodes = 1; // Les débuts de période sont en ligne 1.
+        //noinspection TooBroadScope
+        int noLigNumerosSemaine = 3; // La ligne des n° de semaine permet de détecter la fin des colonnes.
+        //noinspection TooBroadScope
+        int noColTrigramme = 1; // Les trigrammes des ressources sont en colonne 1.
+
+        try {
+            XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A:B"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
+            //noinspection HardcodedFileSeparator
+            XCell titrePlageCell = Calc.findFirst("Dispo. maxi. / rsrc / profil (%)", plageRecherche);
+            if (titrePlageCell == null) {
+                throw new PlanChargeDaoException("Impossible de retrouver le titre de la plage des disponibilités max. par ressource et profil.");
+            }
+            CellAddress adrCell = Calc.getCellAddress(titrePlageCell);
+            int noLigTitre = adrCell.Row + 1;
+
+            int noLig = noLigTitre + 1;
+            String trigrammePrecedent = null;
+            Map<Profil, Map<LocalDate, Percentage>> pctagesParProfils = null;
+            while (true) {
+                XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
+                if (Calc.isEmpty(trigrammeCell)) {
+                    break;
+                }
+
+                String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                if (trigramme == null) {
+                    throw new PlanChargeDaoException("Trigramme non défini.");
+                }
+                //noinspection HardcodedFileSeparator
+                if (trigramme.equals("Dispo. maxi. / rsrc /profil (j)")) {
+                    break;
+                }
+
+                RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
+
+                boolean nouvelleRessource =(trigrammePrecedent == null) || !trigramme.equals(trigrammePrecedent);
+                if (nouvelleRessource) {
+                    pctagesParProfils = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                }
+
+                PROFIL : {
+                    XCell codeProfilCell = Calc.getCell(feuilleDisponibilites, noColTrigramme + 1 - 1, noLig - 1);
+                    String codeProfil = Strings.epure(Calc.getString(codeProfilCell));
+                    if (codeProfil == null) {
+                        throw new PlanChargeDaoException("Profil non défini.");
+                    }
+                    if (codeProfil.equals("Total")) {
+                        break PROFIL;
+                    }
+                    Profil profil = profilDao.load(codeProfil);
+
+                    Map<LocalDate, Percentage> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                    int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
+                    while (true) {
+
+                        XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
+                        if (Calc.isEmpty(noSemaineCell)) {
+                            break;
+                        }
+
+                        XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
+                        if (Calc.isEmpty(debutPeriodeCell)) {
+                            throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                        }
+                        LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
+
+                        XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
+                        Percentage pctageDispoCT = (
+                                Calc.isEmpty(pctageDispoCTCell) ? new Percentage(0)
+                                        : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
+                        );
+
+                        calendrier.put(debutPeriode, pctageDispoCT);
+
+                        noCol++;
+                    }
+
+                    pctagesParProfils.put(profil, calendrier);
+                }
+
+                if (nouvelleRessource) {
+                    pctagesDispoMaxProfil.put(rsrcHum, pctagesParProfils);
+                }
+
+                trigrammePrecedent = trigramme;
+                noLig++;
+            }
+            return pctagesDispoMaxProfil;
+        } catch (Exception e) {
+            throw new PlanChargeDaoException("Impossible d'importer les pourcentages de disponibilité max. par ressource et profil.", e);
         }
     }
 

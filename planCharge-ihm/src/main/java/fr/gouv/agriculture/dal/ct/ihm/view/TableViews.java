@@ -1,17 +1,31 @@
 package fr.gouv.agriculture.dal.ct.ihm.view;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.controlsfx.control.table.TableFilter;
+import org.controlsfx.control.table.TableFilter.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-public class TableViews {
+public final class TableViews {
 
-    @Null
+    private static final Logger LOGGER = LoggerFactory.getLogger(TableViews.class);
+
+    private TableViews() {
+        super();
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static <S> int itemIndex(@NotNull TableView<? extends S> table, @NotNull S item) {
         return table.getItems().indexOf(item);
     }
@@ -37,15 +51,43 @@ public class TableViews {
         table.scrollTo(itemIdx);
     }
 
-    public static <S, T> void editCell(@NotNull TableView<S> table, @NotNull S item, @NotNull TableColumn<S, T> column) {
 
-        focusOnItem(table, item);
+    public static <S> void disableColumnReorderable(@NotNull TableView<S> table) {
+        // Cf. https://stackoverflow.com/questions/10598639/how-to-disable-column-reordering-in-a-javafx2-tableview
+        //noinspection OverlyComplexAnonymousInnerClass
+        table.getColumns().addListener(new ListChangeListener<TableColumn<S, ?>>() {
 
-        int itemIdx = itemIndex(table, item);
-        assert itemIdx != -1;
-        table.edit(itemIdx, column); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la (bonne) cellule.
+            @SuppressWarnings("BooleanVariableAlwaysNegated")
+            private boolean suspended = false;
+
+            @NotNull
+            private TableColumn[] orginalColumnsOrder = table.getColumns().toArray(new TableColumn[0]);
+
+            @Override
+            public void onChanged(Change<? extends TableColumn<S, ?>> change) {
+                while (change.next()) {
+                    if (change.wasReplaced() && !suspended) {
+                        suspended = true;
+                        //noinspection unchecked
+                        table.getColumns().setAll(orginalColumnsOrder);
+                        suspended = false;
+                    }
+                }
+            }
+        });
     }
 
+    @SuppressWarnings("WeakerAccess")
+    @Null
+    public static TableHeaderRow headerRow(@NotNull TableView<?> table) {
+        // Cf. https://stackoverflow.com/questions/22202782/how-to-prevent-tableview-from-doing-tablecolumn-re-order-in-javafx-8
+        TableHeaderRow tableHeaderRow = (TableHeaderRow) table.lookup("TableHeaderRow");
+//        assert tableHeaderRow != null : "Impossible de retrouver le 'selector' \"TableHeaderRow\". CSS pas encore appliquée ?";
+        return tableHeaderRow;
+    }
+
+
+    // Displaying :
 
     public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull TableView<?>... tables) {
         ObservableList<? extends TableColumn<?, ?>> masterColumns = masterTable.getColumns();
@@ -61,37 +103,6 @@ public class TableViews {
                 column.maxWidthProperty().bind(masterColumn.widthProperty());
             }
         }
-    }
-
-    public static <S> void disableColumnReorderable(@NotNull TableView<S> table) {
-        // Cf. https://stackoverflow.com/questions/10598639/how-to-disable-column-reordering-in-a-javafx2-tableview
-        //noinspection OverlyComplexAnonymousInnerClass
-        table.getColumns().addListener(new ListChangeListener<TableColumn<S, ?>>() {
-
-            private boolean suspended = false;
-
-            @NotNull
-            private TableColumn[] orginalColumnsOrder = table.getColumns().toArray(new TableColumn[0]);
-
-            @Override
-            public void onChanged(Change<? extends TableColumn<S, ?>> change) {
-                while (change.next()) {
-                    if (change.wasReplaced() && !suspended) {
-                        suspended = true;
-                        table.getColumns().setAll(orginalColumnsOrder);
-                        suspended = false;
-                    }
-                }
-            }
-        });
-    }
-
-    @Null
-    public static TableHeaderRow headerRow(@NotNull TableView<?> table) {
-        // Cf. https://stackoverflow.com/questions/22202782/how-to-prevent-tableview-from-doing-tablecolumn-re-order-in-javafx-8
-        TableHeaderRow tableHeaderRow = (TableHeaderRow) table.lookup("TableHeaderRow");
-//        assert tableHeaderRow != null : "Impossible de retrouver le 'selector' \"TableHeaderRow\". CSS pas encore appliquée ?";
-        return tableHeaderRow;
     }
 
     public static <S> void adjustHeightToRowCount(@NotNull TableView<S> table) {
@@ -142,10 +153,61 @@ public class TableViews {
 
         int rowsCount = table.getItems().size();
 
-        double tableHeight = headerRowHeight + (rowHeight * (rowsCount+1));
+        double tableHeight = headerRowHeight + (rowHeight * (rowsCount + 1));
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
         table.setMaxHeight(tableHeight);
     }
+
+    // Input :
+
+    public static void decorateMandatoryColumns(@NotNull TableColumn... columns) throws IhmException {
+        for (TableColumn column : columns) {
+            // TODO FDA 2017/07 Confirmer qu'utiliser un Label (vide) est une bonne façon de faire.
+            Label label = new Label();
+            PlanChargeIhm.symboliserChampsObligatoires(label);
+            column.setGraphic(label);
+        }
+    }
+
+    public static <S, T> void editCell(@NotNull TableView<S> table, @NotNull S item, @NotNull TableColumn<S, T> column) {
+
+        focusOnItem(table, item);
+
+        int itemIdx = itemIndex(table, item);
+        assert itemIdx != -1;
+        table.edit(itemIdx, column); // FIXME FDA 2017/05 Ne fonctionne pas, on ne passe pas automatiquement en mode édition de la (bonne) cellule.
+    }
+
+
+    // Filtering :
+
+    @SafeVarargs
+    public static <S> void enableFilteringOnColumns(@NotNull TableView<S> table, @NotNull TableColumn<S, ?>... columns) {
+        Builder<S> filterBuilder = TableFilter.forTableView(table);
+//        filter.lazy(true); // FDA 2017/07 Confirmer (ne semble rien changer).
+        filterBuilder.apply();
+        decorateFilterableColumns(columns);
+    }
+
+    public static void decorateFilterableColumns(@NotNull TableColumn<?, ?>... columns) {
+        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
+            for (TableColumn<?, ?> column : columns) {
+                if (column.getGraphic() == null) {
+                    Label label = new Label();
+                    column.setGraphic(label);
+                }
+                try {
+                    PlanChargeIhm.symboliserNoeudsFiltrables(column.getGraphic());
+                } catch (IhmException e) {
+                    // TODO FDA 2017/07 Trouver mieux que thrower une loguer et/ou une RuntimeException.
+                    LOGGER.error("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
+                    throw new RuntimeException("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
+                }
+            }
+        });
+    }
+
+
 }

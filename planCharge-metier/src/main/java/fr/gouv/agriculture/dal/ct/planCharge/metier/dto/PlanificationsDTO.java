@@ -5,7 +5,6 @@ import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 
 import javax.validation.constraints.NotNull;
@@ -21,8 +20,6 @@ import java.util.function.BiConsumer;
  * Created by frederic.danna on 20/03/2017.
  */
 public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable, PlanificationsDTO> {
-
-    public static final int NBR_SEMAINES_PLANIFIEES = 12;
 
     @NotNull
     private Map<TacheDTO, Map<LocalDate, Double>> plan;
@@ -97,10 +94,10 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     public void ajouter(@NotNull TacheDTO tache, @NotNull LocalDate dateEtat) {
 
         Map<LocalDate, Double> planification = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-        LocalDate dateSemaine = dateEtat;
-        for (int noSemaine = 1; noSemaine <= NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            planification.put(dateSemaine, 0.0);
-            dateSemaine = dateSemaine.plusDays(7);
+        LocalDate debutSemaine = dateEtat;
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            planification.put(debutSemaine, 0.0);
+            debutSemaine = debutSemaine.plusDays(7);
         }
 
         ajouter(tache, planification);

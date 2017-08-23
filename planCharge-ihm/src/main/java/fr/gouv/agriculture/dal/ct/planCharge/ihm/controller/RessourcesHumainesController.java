@@ -17,7 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +61,11 @@ public class RessourcesHumainesController extends AbstractController {
 
     // Couche "vue" :
 
+/*
     //    @Autowired
     @NotNull
     private PlanChargeIhm ihm = PlanChargeIhm.instance();
+*/
     @FXML
     @NotNull
     private TableView<RessourceHumaineBean> ressourcesHumainesTable;
@@ -98,6 +99,16 @@ public class RessourcesHumainesController extends AbstractController {
             throw new IhmException("Instanciation à plus d'1 exemplaire.");
         }
         instance = this;
+    }
+
+    @NotNull
+    public TableView<RessourceHumaineBean> getRessourcesHumainesTable() {
+        return ressourcesHumainesTable;
+    }
+
+    @NotNull
+    public ObservableList<RessourceHumaineBean> getRessourceHumainesBeans() {
+        return ressourceHumainesBeans;
     }
 
     /**
@@ -178,33 +189,33 @@ public class RessourcesHumainesController extends AbstractController {
         finMissionColumn.setCellValueFactory(cellData -> cellData.getValue().finMissionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        PlanChargeIhm.symboliserColonnesObligatoires(trigrammeColumn);
+        TableViews.decorateMandatoryColumns(trigrammeColumn);
         trigrammeColumn.setCellFactory(param -> {
             TextFieldTableCell<RessourceHumaineBean, String> trigrammeCell = new UpperCaseTextFieldTableCell<>();
-//            PlanChargeIhm.symboliserColonnesObligatoires(trigrammeCell);
+//            PlanChargeIhm.decorateMandatoryColumns(trigrammeCell);
             PlanChargeIhm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
             return trigrammeCell;
         });
-        PlanChargeIhm.symboliserColonnesObligatoires(nomColumn);
+        TableViews.decorateMandatoryColumns(nomColumn);
         nomColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Nom incorrect", this::validerNom);
             return cell;
         });
-        PlanChargeIhm.symboliserColonnesObligatoires(prenomColumn);
+        TableViews.decorateMandatoryColumns(prenomColumn);
         prenomColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Prénom incorrect", this::validerPrenom);
             return cell;
         });
-        PlanChargeIhm.symboliserColonnesObligatoires(societeColumn);
+        TableViews.decorateMandatoryColumns(societeColumn);
         societeColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Société incorrecte", this::validerSociete);
             return cell;
         });
 /*
-        PlanChargeIhm.symboliserColonnesObligatoires(debutMissionColumn);
+        PlanChargeIhm.decorateMandatoryColumns(debutMissionColumn);
         debutMissionColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, LocalDate> cell = DatePickerTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Date de début incorrecte", this::validerDebutMission);
@@ -219,10 +230,7 @@ public class RessourcesHumainesController extends AbstractController {
 
         ressourcesHumainesTable.setItems(sortedBeans);
 
-        TableFilter.Builder<RessourceHumaineBean> filterBuilder = TableFilter.forTableView(ressourcesHumainesTable);
-//        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
-        filterBuilder.apply();
-        ihm.symboliserColonnesFiltrables(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
+        TableViews.enableFilteringOnColumns(ressourcesHumainesTable, trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
 
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {

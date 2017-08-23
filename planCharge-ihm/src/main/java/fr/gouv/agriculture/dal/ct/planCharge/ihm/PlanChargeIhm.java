@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionExc
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -61,6 +63,8 @@ public class PlanChargeIhm extends Application {
 
     @NotNull
     public static final String APP_NAME = "Plan de charge";
+
+    public static final int NBR_SEMAINES_PLANIFIEES = Planifications.NBR_SEMAINES_PLANIFIEES;
 
     /**
      * Format : <code>&lt;abr. du jour de la semaine ("lun.", "mar.", etc.)&gt; &lt;jour sur 2 chiffres&gt;/&lt;mois sur 2 chiffres&gt;/&lt;année sur 4 chiffres&gt;</code>.
@@ -242,6 +246,16 @@ public class PlanChargeIhm extends Application {
 
     public DisponibilitesController getDisponibilitesController() {
         return disponibilitesController;
+    }
+
+    @NotNull
+    public JoursFeriesController getJoursFeriesController() {
+        return joursFeriesController;
+    }
+
+    @NotNull
+    public RessourcesHumainesController getRessourcesHumainesController() {
+        return ressourcesHumainesController;
     }
 
     public TachesController getTachesController() {
@@ -664,33 +678,7 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    public static void symboliserColonnesObligatoires(@NotNull TableColumn... columns) throws IhmException {
-        for (TableColumn column : columns) {
-            // TODO FDA 2017/07 Confirmer qu'utiliser un Label (vide) est une bonne façon de faire.
-            Label label = new Label();
-            symboliserChampsObligatoires(label);
-            column.setGraphic(label);
-        }
-    }
-
-    public void symboliserColonnesFiltrables(@NotNull TableColumn<?, ?>... columns) throws IhmException {
-        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
-            for (TableColumn<?, ?> column : columns) {
-                if (column.getGraphic() == null) {
-                    Label label = new Label();
-                    column.setGraphic(label);
-                }
-                try {
-                    symboliserNoeudsFiltrables(column.getGraphic());
-                } catch (IhmException e) {
-                    // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                    throw new RuntimeException("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
-                }
-            }
-        });
-    }
-
-    public void symboliserNoeudsFiltrables(@NotNull Node... nodes) throws IhmException {
+    public static void symboliserNoeudsFiltrables(@NotNull Node... nodes) throws IhmException {
         Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
             for (Node node : nodes) {
                 Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
@@ -770,17 +758,19 @@ public class PlanChargeIhm extends Application {
             //
             primaryStage.show();
 
+/*
             // Chargement des données utilisées dernièrement (if any) :
             LocalDate dateEtatPrec = dateEtatPrecedente();
             if (dateEtatPrec != null) {
                 applicationController.charger(dateEtatPrec);
             }
+*/
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-                applicationController.afficherModuleDisponibilites();
+                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }

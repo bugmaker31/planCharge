@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAbsenceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoCTBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoMaxProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
@@ -69,6 +70,9 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     // 'final' car personne ne doit (re)set'er cette ObservableMap, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<PctagesDispoCTBean> pctagesDispoCTBeans = FXCollections.observableArrayList();
+    // 'final' car personne ne doit (re)set'er cette ObservableMap, sinon on perdra les Listeners qu'on a enregistré dessus.
+    @NotNull
+    private final ObservableList<PctagesDispoMaxProfilBean> pctagesDispoMaxProfilBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<PlanificationTacheBean> planificationsBeans = FXCollections.observableArrayList();
@@ -199,6 +203,11 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
     @NotNull
+    public ObservableList<PctagesDispoMaxProfilBean> getPctagesDispoMaxProfilBeans() {
+        return pctagesDispoMaxProfilBeans;
+    }
+
+    @NotNull
     public ObservableList<PlanificationTacheBean> getPlanificationsBeans() {
         return planificationsBeans;
     }
@@ -267,7 +276,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .collect(Collectors.toList())
         );
         // Disponibilités :
-        { // Nbrs de jours d'absence :
+        { // Nbrs de jours d'absence / rsrc :
             nbrsJoursAbsenceBeans.clear();
             Map<RessourceHumaineDTO, Map<LocalDate, Float>> absencesDTO = planCharge.getDisponibilites().getNbrsJoursAbsence();
             for (RessourceHumaineDTO ressourceHumaineDTO : absencesDTO.keySet()) {
@@ -276,13 +285,24 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 nbrsJoursAbsenceBeans.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
         }
-        { // Pctages de dispo pour la CT :
+        { // Pctages de dispo pour la CT / rsrc :
             pctagesDispoCTBeans.clear();
             Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = planCharge.getDisponibilites().getPctagesDispoCT();
             for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoCT.keySet()) {
                 Map<LocalDate, PercentageProperty> calendrierAbsences = pctagesDispoCT.get(ressourceHumaineDTO).keySet().stream()
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue())));
                 pctagesDispoCTBeans.add(new PctagesDispoCTBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
+            }
+        }
+        { // Pctages de dispo max / rsrc / profil :
+            pctagesDispoMaxProfilBeans.clear();
+            Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = planCharge.getDisponibilites().getPctagesDispoMaxProfil();
+            for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoMaxProfil.keySet()) {
+                for (ProfilDTO profilDTO : pctagesDispoMaxProfil.get(ressourceHumaineDTO).keySet()) {
+                    Map<LocalDate, PercentageProperty> calendrierAbsences = pctagesDispoMaxProfil.get(ressourceHumaineDTO).get(profilDTO).keySet().stream()
+                            .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoMaxProfil.get(ressourceHumaineDTO).get(profilDTO).get(localDate).floatValue())));
+                    pctagesDispoMaxProfilBeans.add(new PctagesDispoMaxProfilBean(RessourceHumaineBean.from(ressourceHumaineDTO), ProfilBean.from(profilDTO), calendrierAbsences));
+                }
             }
         }
         // Tâches + Charge :
@@ -313,7 +333,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
         // Disponibilités :
         //
-        // Nbrs de jours d'absence :
+        // Nbrs de jours d'absence / rsrc :
         Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (NbrsJoursAbsenceBean nbrsJoursAbsenceBean : nbrsJoursAbsenceBeans) {
             RessourceHumaineDTO ressourceHumaine = nbrsJoursAbsenceBean.getRessourceHumaineBean().toDto();
@@ -324,7 +344,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             }
             nbrsJoursAbsence.put(ressourceHumaine, calendrier);
         }
-        // % de dispo pour la CT
+        // % de dispo pour la CT / rsrc
         Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (PctagesDispoCTBean pctagesDispoCTBean : pctagesDispoCTBeans) {
             RessourceHumaineDTO ressourceHumaine = pctagesDispoCTBean.getRessourceHumaineBean().toDto();
@@ -335,8 +355,28 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             }
             pctagesDispoCT.put(ressourceHumaine, calendrier);
         }
+        // % de dispo max / rsrc / profil
+        Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+        for (PctagesDispoMaxProfilBean pctagesDispoMaxProfilBean : pctagesDispoMaxProfilBeans) {
+
+            RessourceHumaineDTO ressourceHumaine = pctagesDispoMaxProfilBean.getRessourceHumaineBean().toDto();
+            if (!pctagesDispoMaxProfil.containsKey(ressourceHumaine)) {
+                pctagesDispoMaxProfil.put(ressourceHumaine, new TreeMap<>()); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+            }
+            Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxRessHum = pctagesDispoMaxProfil.get(ressourceHumaine);
+
+            ProfilDTO profil = pctagesDispoMaxProfilBean.getProfilBean().toDto();
+
+            Map<LocalDate, Percentage> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+            for (LocalDate debutPeriode : pctagesDispoMaxProfilBean.keySet()) {
+                PercentageProperty pctageDispoCTProperty = pctagesDispoMaxProfilBean.get(debutPeriode);
+                calendrier.put(debutPeriode, pctageDispoCTProperty.getValue());
+            }
+
+            pctagesDispoMaxRessHum.put(profil, calendrier);
+        }
         //
-        DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsence, pctagesDispoCT);
+        DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsence, pctagesDispoCT, pctagesDispoMaxProfil);
 
         // Tâches + Charge :
         PlanificationsDTO planifications = toPlanificationDTOs();
@@ -348,7 +388,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     public PlanificationsDTO toPlanificationDTOs() throws BeanException {
         PlanificationsDTO planifications = new PlanificationsDTO();
-        for (PlanificationTacheBean planificationBean : this.planificationsBeans) {
+        for (PlanificationTacheBean planificationBean : planificationsBeans) {
             TacheDTO tache = planificationBean.getTacheBean().extract();
 
             Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.

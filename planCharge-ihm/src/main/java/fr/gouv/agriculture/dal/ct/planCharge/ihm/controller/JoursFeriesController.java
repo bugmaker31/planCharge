@@ -4,8 +4,8 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -13,8 +13,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import org.controlsfx.control.table.TableFilter;
-import org.controlsfx.control.table.TableFilter.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,13 +88,13 @@ public class JoursFeriesController extends AbstractController {
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        PlanChargeIhm.symboliserColonnesObligatoires(dateColumn);
+        TableViews.decorateMandatoryColumns(dateColumn);
         dateColumn.setCellFactory(param -> {
             TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
             PlanChargeIhm.controler(cell, "Date incorrecte", this::validerDateFeriee);
             return cell;
         });
-//        PlanChargeIhm.symboliserColonnesObligatoires(descriptionColumn);
+//        PlanChargeIhm.decorateMandatoryColumns(descriptionColumn);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
@@ -104,10 +102,7 @@ public class JoursFeriesController extends AbstractController {
 
         joursFeriesTable.setItems(sortedBeans);
 
-        Builder<JourFerieBean> filter = TableFilter.forTableView(joursFeriesTable);
-//        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
-        filter.apply();
-        ihm.symboliserColonnesFiltrables(dateColumn, descriptionColumn);// FIXME FDA 2017/07 N'affiche pas le symbole "donnée requise".
+        TableViews.enableFilteringOnColumns(joursFeriesTable, dateColumn, descriptionColumn);
 
         definirMenuContextuel();
 

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -78,6 +79,10 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         return tachesTable;
     }
 
+    @Null
+    private MenuItem menuVoirTacheDansPlanCharge;
+
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -93,16 +98,20 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         LOGGER.info("Initialisé.");
     }
 
-    @Override
-    public void definirMenuContextuel() {
-        MenuItem menuVoirTacheDansPlanCharge = new MenuItem("Voir dans le plan de charge");
-        menuVoirTacheDansPlanCharge.setOnAction(event -> afficherPlanification());
+/*
+    void definirMenuContextuel() {
+        super.definirMenuContextuel();
 
-        MenuItem menuVoirOutilTicketing = new MenuItem("Voir dans l'outil de ticketing");
-        menuVoirOutilTicketing.setOnAction(event -> afficherTacheDansOutilTicketing());
+        if (menuVoirTacheDansPlanCharge == null) {
+            menuVoirTacheDansPlanCharge = new MenuItem("Voir la tâche dans le plan de charge");
+            menuVoirTacheDansPlanCharge.setOnAction(event -> afficherPlanification());
+        }
+        if (!tachesTableContextMenu.getItems().contains(menuVoirTacheDansPlanCharge)) {
+            tachesTableContextMenu.getItems().add(menuVoirTacheDansPlanCharge);
+        }
 
-        tachesTableContextMenu.getItems().setAll(menuVoirTacheDansPlanCharge, menuVoirOutilTicketing);
     }
+*/
 
     // Surchargée juste pour pouvoir ajouter le @FXML.
     @FXML

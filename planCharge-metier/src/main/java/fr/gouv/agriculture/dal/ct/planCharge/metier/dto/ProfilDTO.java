@@ -1,7 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 
 import javax.validation.constraints.NotNull;
@@ -12,7 +12,8 @@ import java.util.List;
 /**
  * Created by frederic.danna on 25/03/2017.
  */
-public class ProfilDTO extends AbstractDTO<Profil, String, ProfilDTO> implements Comparable<ProfilDTO> {
+@SuppressWarnings("ClassHasNoToStringMethod")
+public class ProfilDTO extends AbstractDTO<Profil, String, ProfilDTO> {
 
     public static final ProfilDTO TOUS = new ProfilDTO("*");
 
@@ -58,7 +59,7 @@ public class ProfilDTO extends AbstractDTO<Profil, String, ProfilDTO> implements
     }
 
     @NotNull
-    static public  ProfilDTO from(@NotNull Profil entity) {
+    public static ProfilDTO from(@NotNull Profil entity) {
         return new ProfilDTO().fromEntity(entity);
     }
 

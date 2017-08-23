@@ -13,7 +13,7 @@ public class EditableAwareTextFieldTableCells {
         return (TableColumn<S, String> list) -> {
             //noinspection unchecked
             TableCell<S, String> textFieldCell = EditableAwareTextFieldTableCell.<S>forTableColumn().call(list);
-//            PlanChargeIhm.symboliserColonnesObligatoires(textFieldCell);
+//            PlanChargeIhm.decorateMandatoryColumns(textFieldCell);
             return textFieldCell;
         };
     }

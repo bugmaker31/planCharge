@@ -1,7 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
@@ -13,6 +13,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ObservableList;
@@ -29,8 +30,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
-import org.controlsfx.control.table.TableFilter;
-import org.controlsfx.control.table.TableFilter.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,11 +114,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     // Les filtres :
 
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
+    /* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
     protected TextField filtreGlobalField;
+
+    @Null
+    private FilteredList<TB> filteredTachesBeans;
 
 
     @NotNull
@@ -280,7 +282,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //
-        FilteredList<TB> filteredTachesBeans = enregistrerListenersSurFiltres(getTachesBeans());
+        filteredTachesBeans = new FilteredList<>(getTachesBeans());
+        enregistrerListenersSurFiltres();
         // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
         SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
         sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
@@ -304,10 +307,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //
-        Builder<TB> filter = TableFilter.forTableView(getTachesTable());
-//        filter.lazy(true); // TODO FDA 2017/07 Confirmer (ne semble rien changer).
-        filter.apply();
-        ihm.symboliserColonnesFiltrables(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
+        TableViews.enableFilteringOnColumns(getTachesTable(), categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
 
         // Gestion des undo/redo :
         //
@@ -418,16 +418,34 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         */
 
+/*
         // Définition du menu contextuel :
         //
         // Cf. http://o7planning.org/en/11115/javafx-contextmenu-tutorial
-        tachesTableContextMenu = new ContextMenu();
-        getTachesTable().setContextMenu(tachesTableContextMenu);
+        definirMenuContextuel();
+*/
 
         LOGGER.info("Initialisé.");
     }
 
-    public abstract void definirMenuContextuel();
+/*
+    */
+/**
+     * Gagne à être surchargé, en veillant à appeler <code>super.definirMenuContextuel()</code>.
+     *//*
+
+    void definirMenuContextuel() {
+
+        MenuItem menuVoirRessourceHumaine = new MenuItem("Voir la ressource humaine");
+        menuVoirRessourceHumaine.setOnAction(event -> afficherRessourceHumaine());
+
+        MenuItem menuVoirOutilTicketing = new MenuItem("Voir la tâche dans l'outil de ticketing");
+        menuVoirOutilTicketing.setOnAction(event -> afficherTacheDansOutilTicketing());
+
+        tachesTableContextMenu.getItems().setAll(menuVoirRessourceHumaine, menuVoirOutilTicketing);
+    }
+*/
+
 
     @NotNull
     protected TB ajouterTache() throws Exception {
@@ -464,16 +482,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 */
     }
 
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
+    /* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     @NotNull
     @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
-    private FilteredList<TB> enregistrerListenersSurFiltres(@NotNull ObservableList<TB> tachesBeans) {
+    private void enregistrerListenersSurFiltres() {
         LOGGER.debug("enregistrerListenersSurFiltres...");
 
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-
-        FilteredList<TB> filteredTachesBeans = new FilteredList<>(tachesBeans);
-
+//        filteredTachesBeans = new FilteredList<>(tachesBeans);
         //noinspection OverlyLongLambda
         filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre 'filtreGlobal' : {}...", newValue);
@@ -526,7 +542,66 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return false; // Does not match.
             });
         });
-        return filteredTachesBeans;
+    }
+
+
+    @SuppressWarnings("unused")
+    @FXML
+    private void afficherRessourceHumaine(ActionEvent actionEvent) {
+        afficherRessourceHumaine();
+    }
+
+    private void afficherRessourceHumaine() {
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la tâche",
+                    "Aucune tâche n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        RessourceBean ressourceBean = tacheBean.getRessource();
+        if (ressourceBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la ressource",
+                    "Aucune ressource n'est (encore) affectée à la tâche sélectionnée (" + tacheBean.noTache() + ")."
+                            + "\nAffectez d'abord une ressource, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la ressource",
+                    "La ressource (" + ressourceBean.getCode() + ") affectée à la tâche sélectionnée (" + tacheBean.noTache() + ") n'est pas une ressource humaine.",
+                    400, 200
+            );
+            return;
+        }
+        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+
+        try {
+            ihm.getApplicationController().afficherModuleRessourcesHumaines();
+            TableViews.focusOnItem(ihm.getRessourcesHumainesController().getRessourcesHumainesTable(), ressourceHumaineBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher la ressource humaine " + ressourceHumaineBean.getTrigramme() + ".", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la ressource humaine '" + ressourceHumaineBean.getTrigramme() + "'",
+                    Exceptions.causes(e),
+                    400, 200
+            );
+        }
     }
 
 

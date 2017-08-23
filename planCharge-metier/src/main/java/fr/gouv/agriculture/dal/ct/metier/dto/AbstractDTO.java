@@ -1,11 +1,10 @@
 package fr.gouv.agriculture.dal.ct.metier.dto;
 
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.Controlable;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
-import fr.gouv.agriculture.dal.ct.metier.MetierException;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -54,4 +53,8 @@ public abstract class AbstractDTO<E extends AbstractEntity, I extends Serializab
     @NotNull
     protected abstract List<RegleGestion<T>> getReglesGestion();
 
+    @Override
+    public String toString() {
+        return String.valueOf(getIdentity());
+    }
 }

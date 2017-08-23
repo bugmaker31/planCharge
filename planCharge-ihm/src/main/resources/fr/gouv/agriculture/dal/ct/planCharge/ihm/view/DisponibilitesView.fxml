@@ -411,8 +411,7 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMaxRsrcProfil" text="Dispo maxi / rsrc / profil (%)" animated="false">
-                            <TableViewAvecCalendrier fx:id="pctagesDispoMaxRsrcProfilTable" fixedCellSize="25"
-                                                     editable="false">
+                            <TableViewAvecCalendrier fx:id="pctagesDispoMaxRsrcProfilTable" fixedCellSize="25">
                                 <!--styleClass="noHeader-table"-->
                                 <columns>
                                     <TableColumn fx:id="ressourcePctagesDispoMaxRsrcProfilColumn" text="Ressource"
@@ -425,51 +424,51 @@
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine1PctagesDispoMaxRsrcProfilColumn" text="S+1"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine2PctagesDispoMaxRsrcProfilColumn" text="S+2"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine3PctagesDispoMaxRsrcProfilColumn" text="S+3"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine4PctagesDispoMaxRsrcProfilColumn" text="S+4"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine5PctagesDispoMaxRsrcProfilColumn" text="S+5"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine6PctagesDispoMaxRsrcProfilColumn" text="S+6"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine7PctagesDispoMaxRsrcProfilColumn" text="S+7"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine8PctagesDispoMaxRsrcProfilColumn" text="S+8"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine9PctagesDispoMaxRsrcProfilColumn" text="S+9"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine10PctagesDispoMaxRsrcProfilColumn" text="S+10"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine11PctagesDispoMaxRsrcProfilColumn" text="S+11"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                     <TableColumn fx:id="semaine12PctagesDispoMaxRsrcProfilColumn" text="S+12"
                                                  prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
+                                                 styleClass="periodeDispo-column"
                                                  sortable="false"/>
                                 </columns>
                                 <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
