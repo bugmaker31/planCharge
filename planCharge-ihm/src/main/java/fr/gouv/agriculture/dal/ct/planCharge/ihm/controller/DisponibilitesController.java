@@ -1068,6 +1068,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursAbsenceColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        profilNbrsJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursAbsenceBean, Float>, ObservableValue<Float>> {
@@ -1400,6 +1401,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursDispoCTColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        profilNbrsJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrJoursDispoCTCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoCTBean, Float>, ObservableValue<Float>> {
@@ -1438,7 +1440,6 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(ressourceNbrsJoursDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        // Rq : 2nde colonne (profil) non éditable.
         ihm.interdireEdition(profilNbrsJoursDispoCTColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         int cptColonne = 0;
         for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
@@ -1521,9 +1522,7 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        // Rq : 1ère colonne (ressource) non éditable.
         ihm.interdireEdition(ressourcePctagesDispoMaxRsrcProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        // Rq : 2nde colonne (profil) non éditable.
         ihm.interdireEdition(profilPctagesDispoMaxRsrcProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
@@ -1576,6 +1575,8 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        pctagesDispoMaxRsrcProfilTable.setItems(pctagesDispoMaxProfilBeans);
+
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         TableViews.enableFilteringOnColumns(pctagesDispoMaxRsrcProfilTable, ressourcePctagesDispoMaxRsrcProfilColumn, profilPctagesDispoMaxRsrcProfilColumn);
 
@@ -1587,8 +1588,6 @@ public class DisponibilitesController extends AbstractController {
             SortedList<PctagesDispoMaxProfilBean> sortedBeans = new SortedList<>(pctagesDispoMaxProfilBeans);
             sortedBeans.comparatorProperty().bind(pctagesDispoMaxRsrcProfilTable.comparatorProperty());
         });
-
-        pctagesDispoMaxRsrcProfilTable.setItems(pctagesDispoMaxProfilBeans);
     }
 
 

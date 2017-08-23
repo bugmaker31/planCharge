@@ -3,6 +3,7 @@ Surchargé pour :
 - remplacer les textes des boutons qui sont en majuscule ("APPLY", etc.)
 - mieux agender ces boutons
 - ajouter un bouton pour inverser la sélection (merci Libreoffice)
+- unbinder la widthProperty de la colonne filtrée avant d'essayer de setter une nouvelle valeur
  */
 
 package impl.org.controlsfx.table; /**
@@ -43,13 +44,10 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -128,6 +126,7 @@ public final class FilterPanel<T, R> extends VBox {
                             } else {
                                 fp.columnFilter.getTableColumn().setGraphic(filterImageView.get());
                                 if (!bumpedWidth) {
+                                    fp.columnFilter.getTableColumn().prefWidthProperty().unbind(); // FDA 2017/08.
                                     fp.columnFilter.getTableColumn().setPrefWidth(columnFilter.getTableColumn().getWidth() + 20);
                                     bumpedWidth = true;
                                 }

@@ -12,7 +12,7 @@
     <center>
         <fx:define>
             <Double fx:id="ressourceColumnPrefWidth" fx:value="100"/>
-            <Double fx:id="profilColumnPrefWidth" fx:value="80"/>
+            <Double fx:id="profilColumnPrefWidth" fx:value="100"/>
             <Double fx:id="semaineColumnPrefWidth" fx:value="50"/>
         </fx:define>
         <ScrollPane fitToWidth="true">

@@ -106,19 +106,6 @@ public final class TableViews {
     }
 
     public static <S> void adjustHeightToRowCount(@NotNull TableView<S> table) {
-/*
-        table.itemsProperty().addListener(change -> {
-            int rowsCount = items.size();
-            double columnHeight = table.get;
-            double headerRowHeight = 100; // headerRow(table).getHeight(); // TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
-
-            double tableHeight = headerRowHeight + (columnHeight * rowsCount);
-
-            table.setMinHeight(tableHeight);
-            table.setPrefHeight(tableHeight);
-            table.setMaxHeight(tableHeight);
-        });
-*/
         // Cf. https://stackoverflow.com/questions/27945817/javafx-adapt-tableview-height-to-number-of-rows
 /*
         assert table.getFixedCellSize() > 0; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
@@ -128,7 +115,6 @@ public final class TableViews {
         table.prefHeightProperty().bind(tableHeight);
         table.maxHeightProperty().bind(tableHeight);
 */
-
 //        adjustHeigth(table);
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
             adjustHeigth(table);
@@ -153,7 +139,7 @@ public final class TableViews {
 
         int rowsCount = table.getItems().size();
 
-        double tableHeight = headerRowHeight + (rowHeight * (rowsCount + 1));
+        double tableHeight = headerRowHeight + (rowHeight * (rowsCount+1)) + 5; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
