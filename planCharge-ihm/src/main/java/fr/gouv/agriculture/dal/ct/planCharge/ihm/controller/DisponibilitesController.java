@@ -1068,7 +1068,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursAbsenceColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
-        profilNbrsJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
+        profilNbrsJoursAbsenceColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrJoursDAbsenceCellCallback implements Callback<CellDataFeatures<NbrsJoursAbsenceBean, Float>, ObservableValue<Float>> {
@@ -1164,13 +1164,13 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+
         TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
 
         SortedList<NbrsJoursAbsenceBean> sortedBeans = new SortedList<>(nbrsJoursAbsenceBeans);
         sortedBeans.comparatorProperty().bind(nbrsJoursDAbsenceTable.comparatorProperty());
-
-        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
@@ -1192,6 +1192,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursDispoMinAgriColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        profilNbrsJoursDispoMinAgriColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoMinAgriBean, Float>, ObservableValue<Float>> {
@@ -1278,6 +1279,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourcePctagesDispoCTColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        profilPctagesDispoCTColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class PctagesDispoMinAgriCellCallback implements Callback<CellDataFeatures<PctagesDispoCTBean, Percentage>, ObservableValue<Percentage>> {
@@ -1401,7 +1403,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursDispoCTColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
-        profilNbrsJoursOuvresColumn.setCellValueFactory((CellDataFeatures<NbrsJoursOuvresBean, String> cell) -> new SimpleStringProperty("N/A"));
+        profilNbrsJoursDispoCTColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
             final class NbrJoursDispoCTCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoCTBean, Float>, ObservableValue<Float>> {
