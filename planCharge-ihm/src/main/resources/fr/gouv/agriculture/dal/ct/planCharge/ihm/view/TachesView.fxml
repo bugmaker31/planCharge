@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.FiltreGlobalTachesComponent?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
@@ -13,6 +14,7 @@
             <panes>
                 <TitledPane animated="false" text="Filtres">
                     <HBox spacing="2" alignment="CENTER_LEFT">
+<!--
                         <HBox alignment="BASELINE_LEFT">
                             <Label text="Filtre global : "/>
                             <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
@@ -22,6 +24,8 @@
                                 </tooltip>
                             </TextField>
                         </HBox>
+-->
+                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent"/>
                         <SegmentedButton>
                             <buttons>
                                 <!--TODO FDA 2017/08 Coder l'action.-->
@@ -61,7 +65,11 @@
             <contextMenu>
                 <ContextMenu fx:id="tachesTableContextMenu">
                     <items>
-                        <MenuItem text="Voir la ressource humaine" onAction="#afficherRessourceHumaine"/>
+                        <MenuItem text="Voir la ressource humain de la tâchee" onAction="#afficherRessourceHumaine"/>
+                        <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                        <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                        <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                        <SeparatorMenuItem/>
                         <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
                                   onAction="#afficherTacheDansOutilTicketing"/>
                         <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherPlanification"/>

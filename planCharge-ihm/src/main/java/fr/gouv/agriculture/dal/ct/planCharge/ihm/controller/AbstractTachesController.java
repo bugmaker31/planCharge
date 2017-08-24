@@ -9,6 +9,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
@@ -129,12 +130,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     // Les filtres :
 
-    /* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    protected TextField filtreGlobalField;
-
+    private FiltreGlobalTachesComponent filtreGlobalComponent;
 
     @NotNull
     abstract TableView<TB> getTachesTable();
@@ -497,7 +496,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 //        filteredTachesBeans = new FilteredList<>(tachesBeans);
         //noinspection OverlyLongLambda
-        filtreGlobalField.textProperty().addListener((observable, oldValue, newValue) -> {
+        filtreGlobalComponent.getFiltreGlobalField().textProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Changement pour le filtre 'filtreGlobal' : {}...", newValue);
             //noinspection OverlyLongLambda
             filteredTachesBeans.setPredicate(tache -> {

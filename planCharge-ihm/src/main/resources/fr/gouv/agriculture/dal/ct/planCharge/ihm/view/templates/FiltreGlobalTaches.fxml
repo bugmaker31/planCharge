@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<fx:root xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.HBox"
+         fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController"
+>
+<!--
+    alignment="BASELINE_LEFT"
+-->
+
+    <!--<HBox alignment="BASELINE_LEFT">-->
+    <Label text="Filtre global : "/>
+    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
+        <tooltip>
+            <Tooltip text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+        </tooltip>
+    </TextField>
+    <!--</HBox>-->
+</fx:root>
