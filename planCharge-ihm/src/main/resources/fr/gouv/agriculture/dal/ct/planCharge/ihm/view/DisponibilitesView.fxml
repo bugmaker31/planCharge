@@ -18,7 +18,8 @@
         </fx:define>
         <ScrollPane fitToWidth="true">
             <VBox>
-                <Accordion VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" AnchorPane.rightAnchor="0.0"> <!--expandedPane="$nbrsJoursOuvresPane"-->
+                <Accordion VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS"
+                           AnchorPane.rightAnchor="0.0"> <!--expandedPane="$nbrsJoursOuvresPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="false">
@@ -428,17 +429,12 @@
                             <VBox>
                                 <SegmentedButton>
                                     <buttons>
-                                        <fx:define>
-                                            <ToggleGroup fx:id="toggleEntreVueGroupeeEtDetaillee"/>
-                                        </fx:define>
                                         <!--TODO FDA 2017/08 Coder l'action.-->
                                         <ToggleButton text="Totaux" mnemonicParsing="false" selected="false"
-                                                      toggleGroup="$toggleEntreVueGroupeeEtDetaillee"
                                                       disable="true"
                                         />
                                         <!--TODO FDA 2017/08 Coder l'action.-->
                                         <ToggleButton text="Détail" mnemonicParsing="true"
-                                                      toggleGroup="$toggleEntreVueGroupeeEtDetaillee"
                                                       disable="true"
                                         />
                                     </buttons>

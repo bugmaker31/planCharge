@@ -48,16 +48,29 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
 
-    //    @Autowired
-    @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     //    @Autowired
     @NotNull
+    final // 'final' pour empêcher de resetter cette variable.
     private ReferentielsService referentielsService = ReferentielsService.instance();
 
-
     // Les beans :
+
+    //    @Autowired
+    @NotNull
+    final // 'final' pour empêcher de resetter cette variable.
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+    @NotNull
+    abstract ObservableList<TB> getTachesBeans();
+
+    // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
+    @SuppressWarnings("unchecked")
+    @NotNull
+    final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
+    private FilteredList<TB> filteredTachesBeans = new FilteredList<TB>((ObservableList<TB>) planChargeBean.getPlanificationsBeans());
+
+    // Les tables :
 
     @FXML
     @NotNull
@@ -120,12 +133,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     protected TextField filtreGlobalField;
 
-    @Null
-    private FilteredList<TB> filteredTachesBeans;
-
-
-    @NotNull
-    abstract ObservableList<TB> getTachesBeans();
 
     @NotNull
     abstract TableView<TB> getTachesTable();
@@ -282,7 +289,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //
-        filteredTachesBeans = new FilteredList<>(getTachesBeans());
         enregistrerListenersSurFiltres();
         // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
         SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
@@ -430,7 +436,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
 /*
     */
-/**
+
+    /**
      * Gagne à être surchargé, en veillant à appeler <code>super.definirMenuContextuel()</code>.
      *//*
 
@@ -445,8 +452,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         tachesTableContextMenu.getItems().setAll(menuVoirRessourceHumaine, menuVoirOutilTicketing);
     }
 */
-
-
     @NotNull
     protected TB ajouterTache() throws Exception {
         LOGGER.debug("ajouterTache...");
@@ -513,12 +518,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
                     return true; // Filter matches
                 }
-                try {
-                    if (!tache.descriptionProperty().isEmpty().get() && Strings.estExpressionReguliere(newValue) && tache.matcheDescription(newValue)) {
-                        return true; // Filter matches
+                if (!tache.descriptionProperty().isEmpty().get()) {
+                    try {
+                        if (Strings.estExpressionReguliere(newValue) && tache.matcheDescription(newValue)) {
+                            return true; // Filter matches
+                        }
+                    } catch (IhmException e) {
+                        LOGGER.error("Impossible de filtrer sur la description '" + newValue + "' pour la tâche n° " + tache.getId() + ".", e);
                     }
-                } catch (IhmException e) {
-                    LOGGER.error("Impossible de filtrer sur la description '" + newValue + "' pour la tâche n° " + tache.getId() + ".", e);
                 }
                 if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue)) {
                     return true; // Filter matches

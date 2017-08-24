@@ -9,62 +9,47 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
-        <Accordion BorderPane.alignment="CENTER">
+        <Accordion>
             <panes>
                 <TitledPane animated="false" text="Filtres">
-                    <HBox spacing="10">
-                        <!-- planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré). -->
-                        <HBox>
+                    <HBox spacing="2" alignment="CENTER_LEFT">
+                        <HBox alignment="BASELINE_LEFT">
                             <Label text="Filtre global : "/>
-                            <TextField fx:id="filtreGlobalField" prefWidth="200.0"/>
+                            <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
+                                <tooltip>
+                                    <Tooltip
+                                            text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+                                </tooltip>
+                            </TextField>
                         </HBox>
                         <SegmentedButton>
                             <buttons>
-                                <fx:define>
-                                    <ToggleGroup fx:id="filtreSelonCategorisationToggleGroup"/>
-                                </fx:define>
                                 <!--TODO FDA 2017/08 Coder l'action.-->
-                                <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
-                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"/>
                                 <!--TODO FDA 2017/08 Coder l'action.-->
-                                <ToggleButton text="Tâches projet" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                <ToggleButton text="Tâches projet" mnemonicParsing="false"/>
                                 <!--TODO FDA 2017/08 Coder l'action.-->
-                                <ToggleButton text="Tâches service" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
-                                <ToggleButton text="Tâches internes" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonCategorisationToggleGroup"/>
+                                <ToggleButton text="Tâches service" mnemonicParsing="false"/>
+                                <ToggleButton text="Tâches internes" mnemonicParsing="false"/>
                             </buttons>
                         </SegmentedButton>
                         <SegmentedButton>
                             <buttons>
-                                <fx:define>
-                                    <ToggleGroup fx:id="filtreSelonStatutDiffToggleGroup"/>
-                                </fx:define>
                                 <!--TODO FDA 2017/08 Coder l'action.-->
-                                <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"
-                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
+                                <ToggleButton text="Toutes" mnemonicParsing="false" selected="true"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
-                                <ToggleButton text="Nouvelles" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"/>
+                                <ToggleButton text="Nouvelles" mnemonicParsing="false"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
-                                <ToggleButton text="Fermées" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"
-                                />
+                                <ToggleButton text="Fermées" mnemonicParsing="false"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
-                                <ToggleButton text="Priorisées" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"
-                                />
+                                <ToggleButton text="Priorisées" mnemonicParsing="false"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
-                                <ToggleButton text="Reportées" mnemonicParsing="false"
-                                              toggleGroup="$filtreSelonStatutDiffToggleGroup"
-                                />
+                                <ToggleButton text="Reportées" mnemonicParsing="false"/>
                             </buttons>
                         </SegmentedButton>
                         <Button text="RAZ"
                                 onAction="#razFiltres"
                                 styleClass="erase-button"
-                                alignment="CENTER_RIGHT"
                         />
                     </HBox>
                 </TitledPane>

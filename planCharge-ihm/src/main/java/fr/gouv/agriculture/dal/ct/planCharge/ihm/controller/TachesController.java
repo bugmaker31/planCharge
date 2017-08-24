@@ -46,11 +46,13 @@ public class TachesController extends AbstractTachesController<TacheBean> {
      La couche métier :
       */
     @NotNull
+    final // 'final' pour empêcher de resetter cette variable.
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
     @SuppressWarnings("unchecked")
     @NotNull
+    final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
     private ObservableList<TacheBean> planificationsBeans = (ObservableList) planChargeBean.getPlanificationsBeans();
 
 
