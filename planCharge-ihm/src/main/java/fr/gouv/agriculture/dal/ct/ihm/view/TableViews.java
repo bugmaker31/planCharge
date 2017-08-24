@@ -139,7 +139,7 @@ public final class TableViews {
 
         int rowsCount = table.getItems().size();
 
-        double tableHeight = headerRowHeight + (rowHeight * (rowsCount+1)) + 5; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
+        double tableHeight = headerRowHeight + (rowHeight * (rowsCount + 1)) + 7; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);

@@ -5,8 +5,8 @@
 <?import org.controlsfx.control.SegmentedButton?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TachesController"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
         <Accordion BorderPane.alignment="CENTER">
@@ -77,7 +77,8 @@
                 <ContextMenu fx:id="tachesTableContextMenu">
                     <items>
                         <MenuItem text="Voir la ressource humaine" onAction="#afficherRessourceHumaine"/>
-                        <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
+                        <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
+                                  onAction="#afficherTacheDansOutilTicketing"/>
                         <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherPlanification"/>
                     </items>
                 </ContextMenu>

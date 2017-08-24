@@ -3,11 +3,12 @@
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.SegmentedButton?>
 <?import java.lang.Double?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <center>
         <fx:define>
@@ -17,150 +18,156 @@
         </fx:define>
         <ScrollPane fitToWidth="true">
             <VBox>
-                <Accordion> <!--expandedPane="$nbrsJoursOuvresPane"-->
+                <Accordion VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" AnchorPane.rightAnchor="0.0"> <!--expandedPane="$nbrsJoursOuvresPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="false">
-                            <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="25" editable="false">
-                                <columns>
-                                    <TableColumn fx:id="ressourceNbrsJoursOuvresColumn" text="N/A"
-                                                 prefWidth="$ressourceColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="profilNbrsJoursOuvresColumn" text="N/A"
-                                                 prefWidth="$profilColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine1NbrsJoursOuvresColumn" text="S+1"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine2NbrsJoursOuvresColumn" text="S+2"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine3NbrsJoursOuvresColumn" text="S+3"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine4NbrsJoursOuvresColumn" text="S+4"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine5NbrsJoursOuvresColumn" text="S+5"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine6NbrsJoursOuvresColumn" text="S+6"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine7NbrsJoursOuvresColumn" text="S+7"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine8NbrsJoursOuvresColumn" text="S+8"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine9NbrsJoursOuvresColumn" text="S+9"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine10NbrsJoursOuvresColumn" text="S+10"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine11NbrsJoursOuvresColumn" text="S+11"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine12NbrsJoursOuvresColumn" text="S+12"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                </columns>
-                                <tooltip>
-                                    <Tooltip
-                                            text="Nombre de jours ouvrés. Calculé à partir du référentiel des jours fériés."/>
-                                </tooltip>
-                            </TableViewAvecCalendrier>
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="25"
+                                                         editable="false">
+                                    <columns>
+                                        <TableColumn fx:id="ressourceNbrsJoursOuvresColumn" text="N/A"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursOuvresColumn" text="N/A"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursOuvresColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursOuvresColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursOuvresColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursOuvresColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursOuvresColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursOuvresColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursOuvresColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursOuvresColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursOuvresColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursOuvresColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursOuvresColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursOuvresColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <tooltip>
+                                        <Tooltip
+                                                text="Nombre de jours ouvrés. Calculé à partir du référentiel des jours fériés."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion > <!--expandedPane="$nbrsJoursAbsencePane" TODO FDA 2017/08 Réactiver qd dév fini.-->
+                <Accordion> <!--expandedPane="$nbrsJoursAbsencePane" TODO FDA 2017/08 Réactiver qd dév fini.-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursAbsencePane"
                                     text="Absence (vacances, formation, etc.) / rsrc (j)" animated="false">
-                            <TableViewAvecCalendrier fx:id="nbrsJoursDAbsenceTable" editable="true" fixedCellSize="25">
-                                <!--styleClass="noHeader-table"-->
-                                <columns>
-                                    <TableColumn fx:id="ressourceNbrsJoursAbsenceColumn" text="Ressource"
-                                                 prefWidth="$ressourceColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="profilNbrsJoursAbsenceColumn" text="Profil"
-                                                 prefWidth="$profilColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine1NbrsJoursAbsenceColumn" text="S+1"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine2NbrsJoursAbsenceColumn" text="S+2"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine3NbrsJoursAbsenceColumn" text="S+3"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine4NbrsJoursAbsenceColumn" text="S+4"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine5NbrsJoursAbsenceColumn" text="S+5"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine6NbrsJoursAbsenceColumn" text="S+6"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine7NbrsJoursAbsenceColumn" text="S+7"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine8NbrsJoursAbsenceColumn" text="S+8"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine9NbrsJoursAbsenceColumn" text="S+9"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine10NbrsJoursAbsenceColumn" text="S+10"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine11NbrsJoursAbsenceColumn" text="S+11"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine12NbrsJoursAbsenceColumn" text="S+12"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                </columns>
-                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                                <sortOrder>
-                                    <fx:reference source="ressourceNbrsJoursAbsenceColumn"/>
-                                </sortOrder>
-                                <tooltip>
-                                    <Tooltip text="Entrez le nombre de jours d'absence de chaque ressource."/>
-                                </tooltip>
-                            </TableViewAvecCalendrier>
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursDAbsenceTable" editable="true"
+                                                         fixedCellSize="25">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="ressourceNbrsJoursAbsenceColumn" text="Ressource"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursAbsenceColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursAbsenceColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursAbsenceColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursAbsenceColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursAbsenceColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursAbsenceColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursAbsenceColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursAbsenceColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursAbsenceColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursAbsenceColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursAbsenceColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursAbsenceColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursAbsenceColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursAbsenceColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip text="Entrez le nombre de jours d'absence de chaque ressource."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
@@ -168,326 +175,352 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoMinAgriPane" text="Dispo MinAgri / rsrc (j)" animated="false">
-                            <TableViewAvecCalendrier fx:id="nbrsJoursDispoMinAgriTable" fixedCellSize="25"
-                                                     editable="false">
-                                <!--styleClass="noHeader-table"-->
-                                <columns>
-                                    <TableColumn fx:id="ressourceNbrsJoursDispoMinAgriColumn" text="Ressource"
-                                                 prefWidth="$ressourceColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="profilNbrsJoursDispoMinAgriColumn" text="Profil"
-                                                 prefWidth="$profilColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine1NbrsJoursDispoMinAgriColumn" text="S+1"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine2NbrsJoursDispoMinAgriColumn" text="S+2"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine3NbrsJoursDispoMinAgriColumn" text="S+3"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine4NbrsJoursDispoMinAgriColumn" text="S+4"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine5NbrsJoursDispoMinAgriColumn" text="S+5"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine6NbrsJoursDispoMinAgriColumn" text="S+6"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine7NbrsJoursDispoMinAgriColumn" text="S+7"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine8NbrsJoursDispoMinAgriColumn" text="S+8"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine9NbrsJoursDispoMinAgriColumn" text="S+9"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine10NbrsJoursDispoMinAgriColumn" text="S+10"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine11NbrsJoursDispoMinAgriColumn" text="S+11"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine12NbrsJoursDispoMinAgriColumn" text="S+12"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                </columns>
-                                <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
-                                <!--
-                                                                <calendrierColumns>
-                                                                    Cf. https://community.oracle.com/thread/2307758
-                                                                    <fx:reference source="semaine1NbrsJoursDispoMinAgriColumn"/>
-                                                                </calendrierColumns>
-                                -->
-                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                                <sortOrder>
-                                    <fx:reference source="ressourceNbrsJoursDispoMinAgriColumn"/>
-                                </sortOrder>
-                                <tooltip>
-                                    <Tooltip
-                                            text="Nombre de jours de disponibilité dédiée au Ministère. Calculé à partir des nbrsJoursAbsence."/>
-                                </tooltip>
-                            </TableViewAvecCalendrier>
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoMinAgriTable" fixedCellSize="25"
+                                                         editable="false">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="ressourceNbrsJoursDispoMinAgriColumn" text="Ressource"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursDispoMinAgriColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursDispoMinAgriColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursDispoMinAgriColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursDispoMinAgriColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursDispoMinAgriColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursDispoMinAgriColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursDispoMinAgriColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursDispoMinAgriColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursDispoMinAgriColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursDispoMinAgriColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursDispoMinAgriColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursDispoMinAgriColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursDispoMinAgriColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
+                                    <!--
+                                                                    <calendrierColumns>
+                                                                        Cf. https://community.oracle.com/thread/2307758
+                                                                        <fx:reference source="semaine1NbrsJoursDispoMinAgriColumn"/>
+                                                                    </calendrierColumns>
+                                    -->
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursDispoMinAgriColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip
+                                                text="Nombre de jours de disponibilité dédiée au Ministère. Calculé à partir des nbrsJoursAbsence."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion >
+                <Accordion>
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMinAgriPane" text="Dispo CT / rsrc (%)" animated="false">
-                            <TableViewAvecCalendrier fx:id="pctagesDispoCTTable" fixedCellSize="25" editable="true">
-                                <!--styleClass="noHeader-table"-->
-                                <columns>
-                                    <TableColumn fx:id="ressourcePctagesDispoCTColumn" text="Ressource"
-                                                 prefWidth="$ressourceColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="profilPctagesDispoCTColumn" text="Profil"
-                                                 prefWidth="$profilColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine1PctagesDispoCTColumn" text="S+1"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine2PctagesDispoCTColumn" text="S+2"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine3PctagesDispoCTColumn" text="S+3"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine4PctagesDispoCTColumn" text="S+4"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine5PctagesDispoCTColumn" text="S+5"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine6PctagesDispoCTColumn" text="S+6"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine7PctagesDispoCTColumn" text="S+7"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine8PctagesDispoCTColumn" text="S+8"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine9PctagesDispoCTColumn" text="S+9"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine10PctagesDispoCTColumn" text="S+10"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine11PctagesDispoCTColumn" text="S+11"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine12PctagesDispoCTColumn" text="S+12"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                </columns>
-                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                                <sortOrder>
-                                    <fx:reference source="ressourcePctagesDispoCTColumn"/>
-                                </sortOrder>
-                                <tooltip>
-                                    <Tooltip text="Entrez le % de disponibilité dédié à l'équipe (la CT du DAL)."/>
-                                </tooltip>
-                            </TableViewAvecCalendrier>
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="pctagesDispoCTTable" fixedCellSize="25" editable="true">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="ressourcePctagesDispoCTColumn" text="Ressource"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilPctagesDispoCTColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1PctagesDispoCTColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2PctagesDispoCTColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3PctagesDispoCTColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4PctagesDispoCTColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5PctagesDispoCTColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6PctagesDispoCTColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7PctagesDispoCTColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8PctagesDispoCTColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9PctagesDispoCTColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10PctagesDispoCTColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11PctagesDispoCTColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12PctagesDispoCTColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourcePctagesDispoCTColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip text="Entrez le % de disponibilité dédié à l'équipe (la CT du DAL)."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion> <!--expandedPane="$pctagesDispoMinAgriPane" TODO FDA 2017/08 Réactiver qd dév fini.-->
-                <Accordion > <!--expandedPane="$nbrsJoursDispoCTPane"-->
+                <Accordion> <!--expandedPane="$nbrsJoursDispoCTPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoCTPane" text="Dispo CT / rsrc (j)" animated="false">
-                            <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTTable" fixedCellSize="25"
-                                                     editable="false">
-                                <!--styleClass="noHeader-table"-->
-                                <columns>
-                                    <TableColumn fx:id="ressourceNbrsJoursDispoCTColumn" text="Ressource"
-                                                 prefWidth="$ressourceColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="profilNbrsJoursDispoCTColumn" text="Profil"
-                                                 prefWidth="$profilColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine1NbrsJoursDispoCTColumn" text="S+1"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine2NbrsJoursDispoCTColumn" text="S+2"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine3NbrsJoursDispoCTColumn" text="S+3"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine4NbrsJoursDispoCTColumn" text="S+4"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine5NbrsJoursDispoCTColumn" text="S+5"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine6NbrsJoursDispoCTColumn" text="S+6"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine7NbrsJoursDispoCTColumn" text="S+7"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine8NbrsJoursDispoCTColumn" text="S+8"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine9NbrsJoursDispoCTColumn" text="S+9"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine10NbrsJoursDispoCTColumn" text="S+10"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine11NbrsJoursDispoCTColumn" text="S+11"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine12NbrsJoursDispoCTColumn" text="S+12"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column, nonModifiable"
-                                                 sortable="false"/>
-                                </columns>
-                                <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
-                                <!--
-                                                                <calendrierColumns>
-                                                                    Cf. https://community.oracle.com/thread/2307758
-                                                                    <fx:reference source="semaine1NbrsJoursDispoCTColumn"/>
-                                                                </calendrierColumns>
-                                -->
-                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                                <sortOrder>
-                                    <fx:reference source="ressourceNbrsJoursDispoCTColumn"/>
-                                </sortOrder>
-                                <tooltip>
-                                    <Tooltip
-                                            text="Nombre de jours de disponibilité dédiée à l'équipe (la CT du DAL). Calculé à partir du % dispo équipe."/>
-                                </tooltip>
-                            </TableViewAvecCalendrier>
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTTable" fixedCellSize="25"
+                                                         editable="false">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="ressourceNbrsJoursDispoCTColumn" text="Ressource"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursDispoCTColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursDispoCTColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursDispoCTColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursDispoCTColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursDispoCTColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursDispoCTColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursDispoCTColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursDispoCTColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursDispoCTColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursDispoCTColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursDispoCTColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursDispoCTColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursDispoCTColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
+                                    <!--
+                                                                    <calendrierColumns>
+                                                                        Cf. https://community.oracle.com/thread/2307758
+                                                                        <fx:reference source="semaine1NbrsJoursDispoCTColumn"/>
+                                                                    </calendrierColumns>
+                                    -->
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursDispoCTColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip
+                                                text="Nombre de jours de disponibilité dédiée à l'équipe (la CT du DAL). Calculé à partir du % dispo équipe."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
                 <Accordion expandedPane="$pctagesDispoMaxRsrcProfil">
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
-                        <TitledPane fx:id="pctagesDispoMaxRsrcProfil" text="Dispo maxi / rsrc / profil (%)" animated="false">
-                            <TableViewAvecCalendrier fx:id="pctagesDispoMaxRsrcProfilTable" fixedCellSize="25">
-                                <!--styleClass="noHeader-table"-->
-                                <columns>
-                                    <TableColumn fx:id="ressourcePctagesDispoMaxRsrcProfilColumn" text="Ressource"
-                                                 prefWidth="$ressourceColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="profilPctagesDispoMaxRsrcProfilColumn" text="Profil"
-                                                 prefWidth="$profilColumnPrefWidth"
-                                                 styleClass="nonModifiable"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine1PctagesDispoMaxRsrcProfilColumn" text="S+1"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine2PctagesDispoMaxRsrcProfilColumn" text="S+2"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine3PctagesDispoMaxRsrcProfilColumn" text="S+3"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine4PctagesDispoMaxRsrcProfilColumn" text="S+4"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine5PctagesDispoMaxRsrcProfilColumn" text="S+5"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine6PctagesDispoMaxRsrcProfilColumn" text="S+6"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine7PctagesDispoMaxRsrcProfilColumn" text="S+7"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine8PctagesDispoMaxRsrcProfilColumn" text="S+8"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine9PctagesDispoMaxRsrcProfilColumn" text="S+9"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine10PctagesDispoMaxRsrcProfilColumn" text="S+10"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine11PctagesDispoMaxRsrcProfilColumn" text="S+11"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                    <TableColumn fx:id="semaine12PctagesDispoMaxRsrcProfilColumn" text="S+12"
-                                                 prefWidth="$semaineColumnPrefWidth"
-                                                 styleClass="periodeDispo-column"
-                                                 sortable="false"/>
-                                </columns>
-                                <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
-                                <!--
-                                                                <calendrierColumns>
-                                                                    Cf. https://community.oracle.com/thread/2307758
-                                                                    <fx:reference source="semaine1NbrsJoursDispoCTColumn"/>
-                                                                </calendrierColumns>
-                                -->
-                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                                <sortOrder>
-                                    <fx:reference source="ressourceNbrsJoursDispoCTColumn"/>
-                                    <fx:reference source="profilPctagesDispoMaxRsrcProfilColumn"/>
-                                </sortOrder>
-                                <tooltip>
-                                    <Tooltip
-                                            text="Pourcentages de disponibilité max. de chaque ressource pour un profil donné. Saisis."/>
-                                </tooltip>
-                            </TableViewAvecCalendrier>
+                        <TitledPane fx:id="pctagesDispoMaxRsrcProfil" text="Dispo maxi / rsrc / profil (%)"
+                                    animated="false">
+                            <VBox>
+                                <SegmentedButton>
+                                    <buttons>
+                                        <fx:define>
+                                            <ToggleGroup fx:id="toggleEntreVueGroupeeEtDetaillee"/>
+                                        </fx:define>
+                                        <!--TODO FDA 2017/08 Coder l'action.-->
+                                        <ToggleButton text="Totaux" mnemonicParsing="false" selected="false"
+                                                      toggleGroup="$toggleEntreVueGroupeeEtDetaillee"
+                                                      disable="true"
+                                        />
+                                        <!--TODO FDA 2017/08 Coder l'action.-->
+                                        <ToggleButton text="Détail" mnemonicParsing="true"
+                                                      toggleGroup="$toggleEntreVueGroupeeEtDetaillee"
+                                                      disable="true"
+                                        />
+                                    </buttons>
+                                </SegmentedButton>
+                                <TableViewAvecCalendrier fx:id="pctagesDispoMaxRsrcProfilTable" fixedCellSize="25">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="ressourcePctagesDispoMaxRsrcProfilColumn" text="Ressource"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilPctagesDispoMaxRsrcProfilColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1PctagesDispoMaxRsrcProfilColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2PctagesDispoMaxRsrcProfilColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3PctagesDispoMaxRsrcProfilColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4PctagesDispoMaxRsrcProfilColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5PctagesDispoMaxRsrcProfilColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6PctagesDispoMaxRsrcProfilColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7PctagesDispoMaxRsrcProfilColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8PctagesDispoMaxRsrcProfilColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9PctagesDispoMaxRsrcProfilColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10PctagesDispoMaxRsrcProfilColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11PctagesDispoMaxRsrcProfilColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12PctagesDispoMaxRsrcProfilColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeDispo-column"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Utile ? TODO FDA 2017/08 Supprimer si non utile.-->
+                                    <!--
+                                                                    <calendrierColumns>
+                                                                        Cf. https://community.oracle.com/thread/2307758
+                                                                        <fx:reference source="semaine1NbrsJoursDispoCTColumn"/>
+                                                                    </calendrierColumns>
+                                    -->
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursDispoCTColumn"/>
+                                        <fx:reference source="profilPctagesDispoMaxRsrcProfilColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip
+                                                text="Pourcentages de disponibilité max. de chaque ressource pour un profil donné. Saisis."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>

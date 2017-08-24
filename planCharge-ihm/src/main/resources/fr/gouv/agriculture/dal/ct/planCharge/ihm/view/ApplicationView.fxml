@@ -6,7 +6,10 @@
 <?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController">
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+>
     <stylesheets>
         <!--<URL value="@/css/moderna_dark.css"/>-->
         <!--<URL value="@/css/dark.css"/>-->
