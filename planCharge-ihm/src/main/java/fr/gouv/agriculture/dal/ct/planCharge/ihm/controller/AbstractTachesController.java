@@ -9,8 +9,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;

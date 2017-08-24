@@ -20,31 +20,38 @@ package libreoffice;
 */
 
 
-import java.util.*;
-import java.awt.image.*;
-
-
-import com.sun.star.beans.*;
-import com.sun.star.lang.*;
-
-import com.sun.star.awt.*;
-import com.sun.star.util.*;
-import com.sun.star.drawing.*;
-import com.sun.star.document.*;
-import com.sun.star.container.*;
-import com.sun.star.graphic.*;
-import com.sun.star.sheet.*;
-import com.sun.star.table.*;
-import com.sun.star.embed.*;
-import com.sun.star.view.*;
-
-import com.sun.star.chart2.*;     // using chart2 
-import com.sun.star.chart2.data.*;
-// import com.sun.star.chart.*;
-import com.sun.star.chart.ErrorBarStyle;
+import com.sun.star.awt.Rectangle;
+import com.sun.star.beans.PropertyValue;
+import com.sun.star.beans.XPropertySet;
 import com.sun.star.chart.ChartDataRowSource;
-
+import com.sun.star.chart.ErrorBarStyle;
+import com.sun.star.chart2.*;
+import com.sun.star.chart2.data.*;
+import com.sun.star.container.XNameAccess;
+import com.sun.star.document.XEmbeddedObjectSupplier;
+import com.sun.star.drawing.*;
+import com.sun.star.embed.XComponentSupplier;
+import com.sun.star.embed.XEmbeddedObject;
+import com.sun.star.graphic.XGraphic;
+import com.sun.star.lang.XComponent;
+import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.sheet.XSpreadsheet;
+import com.sun.star.sheet.XSpreadsheetDocument;
+import com.sun.star.table.CellRangeAddress;
+import com.sun.star.table.XTableChart;
+import com.sun.star.table.XTableCharts;
+import com.sun.star.table.XTableChartsSupplier;
 import com.sun.star.uno.Exception;
+import com.sun.star.util.XCloseable;
+import com.sun.star.util.XNumberFormats;
+import com.sun.star.util.XNumberFormatsSupplier;
+import com.sun.star.view.XSelectionSupplier;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+// import com.sun.star.chart.*;
 
 
 public class Chart2
