@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.FiltreGlobalTachesComponent?>
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
