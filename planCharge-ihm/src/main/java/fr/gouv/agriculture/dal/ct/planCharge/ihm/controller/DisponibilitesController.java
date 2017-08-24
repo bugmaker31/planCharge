@@ -547,6 +547,68 @@ public class DisponibilitesController extends AbstractController {
     @NotNull
     private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine12PctagesDispoMaxRsrcProfilColumn;
 
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private TableViewAvecCalendrier<NbrsJoursDispoMaxProfilBean, Percentage> nbrsJoursDispoMaxRsrcProfilTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, String> profilNbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, String> ressourceNbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine1NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine2NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine3NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine4NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine5NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine6NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine7NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine8NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine9NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine10NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine11NbrsJoursDispoMaxRsrcProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine12NbrsJoursDispoMaxRsrcProfilColumn;
+
+    
     // Constructeurs :
 
     /**
@@ -594,6 +656,11 @@ public class DisponibilitesController extends AbstractController {
         return pctagesDispoMaxRsrcProfilTable;
     }
 
+    @NotNull
+    public TableViewAvecCalendrier<NbrsJoursDispoMaxProfilBean, Percentage> getNbrsJoursDispoMaxRsrcProfilTable() {
+        return nbrsJoursDispoMaxRsrcProfilTable;
+    }
+
 
     // Méthodes :
 
@@ -613,6 +680,7 @@ public class DisponibilitesController extends AbstractController {
         initBeansNbrsJoursDispoCT();
         initBeansPctagesDispoCT();
         initBeansPctagesDispoMaxRsrcProfil();
+        initBeansNbrsJoursDispoMaxRsrcProfil();
 
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
@@ -882,6 +950,10 @@ public class DisponibilitesController extends AbstractController {
         });
     }
 
+    private void initBeansNbrsJoursDispoMaxRsrcProfil() {
+    }
+
+
     private void initTables() throws IhmException {
         initTableNbrsJoursOuvres();
         initTableNbrsJoursAbsence();
@@ -889,6 +961,7 @@ public class DisponibilitesController extends AbstractController {
         initTablePctagesDispoMinAgri();
         initTableNbrsJoursDispoCT();
         initTablePctagesDispoMaxRsrcProfil();
+        initTableNbrsJoursDispoMaxRsrcProfil();
 
         synchroniserLargeurPremieresColonnes();
     }
@@ -1590,6 +1663,9 @@ public class DisponibilitesController extends AbstractController {
             SortedList<PctagesDispoMaxProfilBean> sortedBeans = new SortedList<>(pctagesDispoMaxProfilBeans);
             sortedBeans.comparatorProperty().bind(pctagesDispoMaxRsrcProfilTable.comparatorProperty());
         });
+    }
+
+    private void initTableNbrsJoursDispoMaxRsrcProfil() {
     }
 
 

@@ -767,8 +767,8 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-//                applicationController.afficherModuleDisponibilites();
-                applicationController.afficherModuleTaches();
+                applicationController.afficherModuleDisponibilites();
+//                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }
 

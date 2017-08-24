@@ -62,7 +62,7 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     // Utilitie's methods:
 
     @Override
-    public final String toString() {
-        return getRessourceHumaineBean() + " : " + super.toString();
+    public String toString() {
+        return ressourceHumaineBean + " : " + super.toString();
     }
 }
