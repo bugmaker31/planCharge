@@ -78,7 +78,7 @@
             </contextMenu>
             <columns>
 
-                <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
+                <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
 
                 <TableColumn text="Catégories">
                     <columns>
