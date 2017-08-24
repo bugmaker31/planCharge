@@ -1250,9 +1250,16 @@ public class ApplicationController extends AbstractController {
     }
 
 
+    @Null
+    private LocalDate dateEtatPrecedentePourMajCalendriers = null;
+
     private void majCalendriers() throws IhmException {
-        definirNomsPeriodes();
-        definirValeursCalendriers();
+        LocalDate dateEtat = planChargeBean.dateEtat();
+        if ((dateEtatPrecedentePourMajCalendriers != null) && !dateEtatPrecedentePourMajCalendriers.equals(dateEtat)) {
+            definirNomsPeriodes();
+            definirValeursCalendriers();
+        }
+        dateEtatPrecedentePourMajCalendriers = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
     }
 
     private void definirNomsPeriodes() throws IhmException {

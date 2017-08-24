@@ -37,7 +37,8 @@ public abstract class ModificationTache<TB extends TacheBean> extends Modificati
     }
 
 
-    ModificationTache(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
+    ModificationTache(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) {
+        super();
         this.tacheBean = tacheBean;
         this.tacheBeanAvant = tacheBeanAvant;
         this.sauvegardeTacheBean = null;

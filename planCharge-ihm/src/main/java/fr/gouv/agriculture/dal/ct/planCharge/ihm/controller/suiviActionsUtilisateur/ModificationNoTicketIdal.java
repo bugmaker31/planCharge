@@ -16,7 +16,7 @@ public class ModificationNoTicketIdal<TB extends TacheBean> extends Modification
     private static final Logger LOGGER = LoggerFactory.getLogger(ModificationNoTicketIdal.class);
 
 
-    public ModificationNoTicketIdal(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
+    public ModificationNoTicketIdal(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) {
         super(tacheBeanAvant, tacheBean);
     }
 

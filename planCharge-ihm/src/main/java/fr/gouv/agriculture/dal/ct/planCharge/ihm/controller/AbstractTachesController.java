@@ -37,6 +37,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.OptionalInt;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -317,7 +319,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Gestion des undo/redo :
         //
-        abstract class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
+        //noinspection ClassHasNoToStringMethod
+        final class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
+
+            @NotNull
+            private BiConsumer<TB, T> modifieurValeur;
+            @NotNull
+            private BiFunction<TB, TB, ModificationTache> actionModificationFct;
+
+            private TacheTableCommitHandler(@NotNull BiConsumer<TB, T> modifieurValeur, @NotNull BiFunction<TB, TB, ModificationTache> actionModificationFct) {
+                super();
+                this.modifieurValeur = modifieurValeur;
+                this.actionModificationFct = actionModificationFct;
+            }
+
             @Override
             public void handle(TableColumn.CellEditEvent<TB, T> event) {
                 if ((event.getOldValue() != null) && event.getOldValue().equals(event.getNewValue())) {
@@ -333,37 +348,23 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
                 }
 
-                try {
-                    modifierValeur(tacheBean, event.getNewValue());
-                } catch (IhmException e) {
-                    LOGGER.error("Impossible de modifier la tâche.", e);
-                }
+                modifieurValeur.accept(tacheBean, event.getNewValue());
 
                 if (tacheBeanAvant != null) {
                     try {
-                        ModificationTache actionModif = actionModification(tacheBeanAvant, tacheBean);
+//                        ModificationTache actionModif = actionModification(tacheBeanAvant, tacheBean);
+                        ModificationTache actionModif = actionModificationFct.apply(tacheBeanAvant, tacheBean);
                         getSuiviActionsUtilisateur().historiser(actionModif);
                     } catch (SuiviActionsUtilisateurException e) {
                         LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
                     }
                 }
             }
-
-            abstract void modifierValeur(@NotNull TB tacheBean, @NotNull T nouvelleValeur) throws IhmException;
-
-            protected abstract ModificationTache actionModification(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException;
         }
-        noTicketIdalColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur) {
-                tacheBean.noTicketIdalProperty().set(nouvelleValeur);
-            }
-
-            @Override
-            protected ModificationTache actionModification(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) throws SuiviActionsUtilisateurException {
-                return new ModificationNoTicketIdal<>(tacheBeanAvant, tacheBean);
-            }
-        });
+        noTicketIdalColumn.setOnEditCommit(new TacheTableCommitHandler<>(
+                (tache, nouvelleValeur) -> tache.noTicketIdalProperty().set(nouvelleValeur),
+                ModificationNoTicketIdal::new
+        ));
         /*
         TODO FDA 2017/07 D'abord bien tester le undo/redo/repeat de la modif du n° de ticket IDAL (ci-dessus), puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
         descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
