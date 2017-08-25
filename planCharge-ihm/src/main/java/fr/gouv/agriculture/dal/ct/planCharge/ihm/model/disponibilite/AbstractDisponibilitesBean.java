@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
+import javafx.beans.property.Property;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,13 +15,13 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extends AbstractDisponibilitesBean<D, B, T>, T> extends AbstractBean<D, B> {
+public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extends AbstractDisponibilitesBean<D, B, P>, P extends Property> extends AbstractBean<D, B> {
 
 
     // Fields :
 
     @NotNull
-    private final Map<LocalDate, T> calendrier;
+    private final Map<LocalDate, P> calendrier;
 
 
     // Constructors:
@@ -30,7 +31,7 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
         calendrier = new TreeMap<>(); // TreeMap, au lieu de HashMap, juste pour faciliter le débogage en gardant le tri sur la Key (date).
     }
 
-    AbstractDisponibilitesBean(@NotNull Map<LocalDate, T> calendrier) {
+    AbstractDisponibilitesBean(@NotNull Map<LocalDate, P> calendrier) {
         super();
         this.calendrier = calendrier;
     }
@@ -53,19 +54,19 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
         return calendrier.containsKey(key);
     }
 
-    public T get(LocalDate key) {
+    public P get(LocalDate key) {
         return calendrier.get(key);
     }
 
-    public T put(LocalDate key, T value) {
+    public P put(LocalDate key, P value) {
         return calendrier.put(key, value);
     }
 
-    public T remove(LocalDate key) {
+    public P remove(LocalDate key) {
         return calendrier.remove(key);
     }
 
-    public void putAll(Map<? extends LocalDate, ? extends T> m) {
+    public void putAll(Map<? extends LocalDate, ? extends P> m) {
         calendrier.putAll(m);
     }
 
@@ -77,11 +78,11 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
         return calendrier.keySet();
     }
 
-    public Collection<T> values() {
+    public Collection<P> values() {
         return calendrier.values();
     }
 
-    public Set<Map.Entry<LocalDate, T>> entrySet() {
+    public Set<Map.Entry<LocalDate, P>> entrySet() {
         return calendrier.entrySet();
     }
 
@@ -95,47 +96,47 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
         return calendrier.hashCode();
     }
 
-    public T getOrDefault(LocalDate key, T defaultValue) {
+    public P getOrDefault(LocalDate key, P defaultValue) {
         return calendrier.getOrDefault(key, defaultValue);
     }
 
-    public void forEach(BiConsumer<? super LocalDate, ? super T> action) {
+    public void forEach(BiConsumer<? super LocalDate, ? super P> action) {
         calendrier.forEach(action);
     }
 
-    public void replaceAll(BiFunction<? super LocalDate, ? super T, ? extends T> function) {
+    public void replaceAll(BiFunction<? super LocalDate, ? super P, ? extends P> function) {
         calendrier.replaceAll(function);
     }
 
-    public T putIfAbsent(LocalDate key, T value) {
+    public P putIfAbsent(LocalDate key, P value) {
         return calendrier.putIfAbsent(key, value);
     }
 
-    public boolean remove(LocalDate key, T value) {
+    public boolean remove(LocalDate key, P value) {
         return calendrier.remove(key, value);
     }
 
-    public boolean replace(LocalDate key, T oldValue, T newValue) {
+    public boolean replace(LocalDate key, P oldValue, P newValue) {
         return calendrier.replace(key, oldValue, newValue);
     }
 
-    public T replace(LocalDate key, T value) {
+    public P replace(LocalDate key, P value) {
         return calendrier.replace(key, value);
     }
 
-    public T computeIfAbsent(LocalDate key, Function<? super LocalDate, ? extends T> mappingFunction) {
+    public P computeIfAbsent(LocalDate key, Function<? super LocalDate, ? extends P> mappingFunction) {
         return calendrier.computeIfAbsent(key, mappingFunction);
     }
 
-    public T computeIfPresent(LocalDate key, BiFunction<? super LocalDate, ? super T, ? extends T> remappingFunction) {
+    public P computeIfPresent(LocalDate key, BiFunction<? super LocalDate, ? super P, ? extends P> remappingFunction) {
         return calendrier.computeIfPresent(key, remappingFunction);
     }
 
-    public T compute(LocalDate key, BiFunction<? super LocalDate, ? super T, ? extends T> remappingFunction) {
+    public P compute(LocalDate key, BiFunction<? super LocalDate, ? super P, ? extends P> remappingFunction) {
         return calendrier.compute(key, remappingFunction);
     }
 
-    public T merge(LocalDate key, T value, BiFunction<? super T, ? super T, ? extends T> remappingFunction) {
+    public P merge(LocalDate key, P value, BiFunction<? super P, ? super P, ? extends P> remappingFunction) {
         return calendrier.merge(key, value, remappingFunction);
     }
 

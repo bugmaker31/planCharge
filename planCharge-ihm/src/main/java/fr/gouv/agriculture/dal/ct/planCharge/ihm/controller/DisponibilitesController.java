@@ -1111,28 +1111,34 @@ public class DisponibilitesController extends AbstractController {
         initTableNbrsJoursOuvres();
         initTableNbrsJoursAbsence();
         initTableNbrsJoursDispoMinAgri();
-        initTablePctagesDispoMinAgri();
+        initTablePctagesDispoCT();
         initTableNbrsJoursDispoCT();
         initTablePctagesDispoMaxRsrcProfil();
         initTableNbrsJoursDispoMaxRsrcProfil();
-//        initTableNbrsJoursDispoMaxProfil(); FIXME FDA 2017/08 Coder.
+        initTableNbrsJoursDispoMaxProfil();
 
         synchroniserLargeurColonnes();
     }
 
-    private static class DisponibilitesRessourceHumaineCell<S extends AbstractDisponibilitesRessourceBean, T> extends EditableAwareTextFieldTableCell<S, T> {
+    // Cells :
+
+    private static abstract class AbstractDispoRrsrcCell<S extends AbstractDisponibilitesRessourceBean, T> extends EditableAwareTextFieldTableCell<S, T> {
 
         private PlanChargeBean planChargeBean;
         private int noSemaine;
 
-        DisponibilitesRessourceHumaineCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
+        AbstractDispoRrsrcCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
             super(stringConverter, cantEditErrorDisplayer);
             this.planChargeBean = planChargeBean;
             this.noSemaine = noSemaine;
         }
 
-        DisponibilitesRessourceHumaineCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
+        AbstractDispoRrsrcCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
             this(planChargeBean, noSemaine, stringConverter, null);
+        }
+
+        PlanChargeBean getPlanChargeBean() {
+            return planChargeBean;
         }
 
         int getNoSemaine() {
@@ -1187,6 +1193,275 @@ public class DisponibilitesController extends AbstractController {
         }
 
     }
+
+    private static abstract class AbstractDispoProfilCell<S extends AbstractDisponibilitesProfilBean, T> extends EditableAwareTextFieldTableCell<S, T> {
+
+        private PlanChargeBean planChargeBean;
+        private int noSemaine;
+
+        AbstractDispoProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
+            super(stringConverter, cantEditErrorDisplayer);
+            this.planChargeBean = planChargeBean;
+            this.noSemaine = noSemaine;
+        }
+
+        AbstractDispoProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
+            this(planChargeBean, noSemaine, stringConverter, null);
+        }
+
+        PlanChargeBean getPlanChargeBean() {
+            return planChargeBean;
+        }
+
+        int getNoSemaine() {
+            return noSemaine;
+        }
+
+/* Rien de spécial... pour l'instant.
+        @Override
+        public void updateItem(T item, boolean empty) {
+            super.updateItem(item, empty);
+            styler();
+        }
+
+        private void styler() {
+
+            // Réinit des style spécifiques :
+            getStyleClass().removeAll("avantMission", "pendantMission", "apresMission");
+
+            // Récupération des infos sur la cellule :
+            //noinspection unchecked
+            TableRow<? extends S> tableRow = getTableRow();
+            S dispoBean = tableRow.getItem();
+            if (dispoBean == null) {
+                return;
+            }
+            LocalDate debutMission = dispoBean.getRessourceHumaineBean().getDebutMission();
+            LocalDate finMission = dispoBean.getRessourceHumaineBean().getFinMission();
+
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+
+            // Formatage du style (CSS) de la cellule :
+            if (debutMission != null) {
+                if (debutPeriode.isBefore(debutMission)) {
+                    getStyleClass().add("avantMission");
+                    return;
+                }
+            }
+            if (finMission != null) {
+                if (finPeriode.isAfter(finMission.plusDays(7))) {
+                    getStyleClass().add("apresMission");
+                    return;
+                }
+            }
+            getStyleClass().add("pendantMission");
+        }
+*/
+
+    }
+
+    private final class FractionsJoursDispoRsrcCell<T extends AbstractDisponibilitesRessourceBean<AbstractDTO, T, FloatProperty>> extends AbstractDispoRrsrcCell<T, Float> {
+
+        FractionsJoursDispoRsrcCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+            super(planChargeBean, noSemaine, HUITIEMES_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+        }
+
+        FractionsJoursDispoRsrcCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+            this(planChargeBean, noSemaine, null);
+        }
+
+        @Override
+        public void commitEdit(Float newValue) {
+            super.commitEdit(newValue);
+
+            //noinspection unchecked
+            TableRow<T> tableRow = getTableRow();
+            T nbrJoursAbsenceBean = tableRow.getItem();
+            if (nbrJoursAbsenceBean == null) {
+                return;
+            }
+            if (getPlanChargeBean().getDateEtat() == null) {
+                LOGGER.warn("Date d'état non définie !?");
+                return;
+            }
+            LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
+                nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
+            }
+            FloatProperty nbrJoursDAbsencePeriode = nbrJoursAbsenceBean.get(debutPeriode);
+            nbrJoursDAbsencePeriode.set(newValue);
+
+            try {
+                calculerDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), getNoSemaine());
+            } catch (IhmException e) {
+                // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                LOGGER.error("Impossible de màj les disponibilités.", e);
+            }
+        }
+    }
+
+    private final class PctagesDispoRsrcCell<T extends AbstractDisponibilitesRessourceBean<AbstractDTO, T, PercentageProperty>> extends AbstractDispoRrsrcCell<PctagesDispoRsrcBean, Percentage> {
+
+        PctagesDispoRsrcCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+            super(planChargeBean, noSemaine, new PercentageStringConverter(), cantEditErrorDisplayer);
+        }
+
+        PctagesDispoRsrcCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+            this(planChargeBean, noSemaine, null);
+        }
+
+        @Override
+        public void commitEdit(Percentage newValue) {
+            super.commitEdit(newValue);
+
+            //noinspection unchecked
+            TableRow<T> tableRow = getTableRow();
+            T pctagesDispoCTBean = tableRow.getItem();
+            if (pctagesDispoCTBean == null) {
+                return;
+            }
+            if (getPlanChargeBean().getDateEtat() == null) {
+                LOGGER.warn("Date d'état non définie !?");
+                return;
+            }
+            LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
+                pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
+            }
+            PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
+            pctageDispoCTPeriodeProperty.setValue(newValue);
+
+            try {
+                calculerDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), getNoSemaine());
+            } catch (IhmException e) {
+                // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                LOGGER.error("Impossible de màj les disponibilités.", e);
+            }
+        }
+    }
+
+    private final class PctagesDispoRsrcProfilCell<T extends AbstractDisponibilitesRessourceProfilBean<AbstractDTO, T, PercentageProperty>> extends AbstractDispoRrsrcCell<PctagesDispoRsrcProfilBean, Percentage> {
+
+        PctagesDispoRsrcProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+            super(planChargeBean, noSemaine,  new PercentageStringConverter(), cantEditErrorDisplayer);
+        }
+
+        PctagesDispoRsrcProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+            this(planChargeBean, noSemaine,  null);
+        }
+
+        @Override
+        public void commitEdit(Percentage newValue) {
+            super.commitEdit(newValue);
+
+            //noinspection unchecked
+            TableRow<T> tableRow = getTableRow();
+            T pctagesDispoRsrcProfilBean = tableRow.getItem();
+            if (pctagesDispoRsrcProfilBean == null) {
+                return;
+            }
+            if (getPlanChargeBean().getDateEtat() == null) {
+                LOGGER.warn("Date d'état non définie !?");
+                return;
+            }
+            LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            if (!pctagesDispoRsrcProfilBean.containsKey(debutPeriode)) {
+                pctagesDispoRsrcProfilBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
+            }
+            PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoRsrcProfilBean.get(debutPeriode);
+            pctageDispoCTPeriodeProperty.setValue(newValue);
+
+            try {
+                calculerDisponibilites(pctagesDispoRsrcProfilBean.getRessourceHumaineBean(), getNoSemaine());
+            } catch (IhmException e) {
+                // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                LOGGER.error("Impossible de màj les disponibilités.", e);
+            }
+        }
+    }
+
+    private final class FractionsJoursDispoRsrcProfilCell<T extends AbstractDisponibilitesRessourceProfilBean<AbstractDTO, T, FloatProperty>> extends AbstractDispoRrsrcCell<T, Float> {
+
+        FractionsJoursDispoRsrcProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+            super(planChargeBean, noSemaine, HUITIEMES_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+        }
+
+        FractionsJoursDispoRsrcProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+            this(planChargeBean, noSemaine, null);
+        }
+
+        @Override
+        public void commitEdit(Float newValue) {
+            super.commitEdit(newValue);
+
+            //noinspection unchecked
+            TableRow<T> tableRow = getTableRow();
+            T nbrJoursAbsenceBean = tableRow.getItem();
+            if (nbrJoursAbsenceBean == null) {
+                return;
+            }
+            if (getPlanChargeBean().getDateEtat() == null) {
+                LOGGER.warn("Date d'état non définie !?");
+                return;
+            }
+            LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
+                nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
+            }
+            FloatProperty nbrJoursDAbsencePeriode = nbrJoursAbsenceBean.get(debutPeriode);
+            nbrJoursDAbsencePeriode.set(newValue);
+
+            try {
+                calculerDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), getNoSemaine());
+            } catch (IhmException e) {
+                // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                LOGGER.error("Impossible de màj les disponibilités.", e);
+            }
+        }
+    }
+
+    private final class FractionsJoursDispoProfilCell<T extends AbstractDisponibilitesProfilBean<AbstractDTO, T, FloatProperty>> extends AbstractDispoProfilCell<NbrsJoursDispoProfilBean, Float> {
+
+        FractionsJoursDispoProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+            super(planChargeBean, noSemaine, HUITIEMES_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+        }
+
+        FractionsJoursDispoProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+            this(planChargeBean, noSemaine, null);
+        }
+
+        @Override
+        public void commitEdit(Float newValue) {
+            super.commitEdit(newValue);
+
+            //noinspection unchecked
+            TableRow<T> tableRow = getTableRow();
+            T pctagesDispoCTBean = tableRow.getItem();
+            if (pctagesDispoCTBean == null) {
+                return;
+            }
+            if (getPlanChargeBean().getDateEtat() == null) {
+                LOGGER.warn("Date d'état non définie !?");
+                return;
+            }
+            LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
+                pctagesDispoCTBean.put(debutPeriode, new SimpleFloatProperty(0));
+            }
+            FloatProperty pctageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
+            pctageDispoCTPeriodeProperty.setValue(newValue);
+
+            try {
+                calculerDisponibilites(pctagesDispoCTBean.getProfilBean(), getNoSemaine());
+            } catch (IhmException e) {
+                // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                LOGGER.error("Impossible de màj les disponibilités.", e);
+            }
+        }
+    }
+
+    // Callbacks :
 
     private static final class NbrJoursCellCallback<T extends AbstractDisponibilitesBean<AbstractDTO, T, IntegerProperty>> implements Callback<CellDataFeatures<T, Integer>, ObservableValue<Integer>> {
 
@@ -1250,12 +1525,12 @@ public class DisponibilitesController extends AbstractController {
         }
     }
 
-    private static final class PctagesDispoRsrcCallback<T extends AbstractDisponibilitesRessourceBean<AbstractDTO, T, PercentageProperty>> implements Callback<CellDataFeatures<T, Percentage>, ObservableValue<Percentage>> {
+    private static final class PctagesDispoCallback<T extends AbstractDisponibilitesBean<AbstractDTO, T, PercentageProperty>> implements Callback<CellDataFeatures<T, Percentage>, ObservableValue<Percentage>> {
 
         private PlanChargeBean planChargeBean;
         private final int noSemaine;
 
-        private PctagesDispoRsrcCallback(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+        private PctagesDispoCallback(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
             super();
             this.planChargeBean = planChargeBean;
             this.noSemaine = noSemaine;
@@ -1278,33 +1553,7 @@ public class DisponibilitesController extends AbstractController {
         }
     }
 
-    private static final class PctagesDispoRsrcProfilCallback<T extends AbstractDisponibilitesRessourceProfilBean<AbstractDTO, T, PercentageProperty>> implements Callback<CellDataFeatures<T, Percentage>, ObservableValue<Percentage>> {
-
-        private PlanChargeBean planChargeBean;
-        private final int noSemaine;
-
-        private PctagesDispoRsrcProfilCallback(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
-            super();
-            this.planChargeBean = planChargeBean;
-            this.noSemaine = noSemaine;
-        }
-
-        @Null
-        @Override
-        public ObservableValue<Percentage> call(CellDataFeatures<T, Percentage> cell) {
-            if (cell == null) {
-                return null;
-            }
-            T pctagesDispoRsrcProfilBean = cell.getValue();
-            if (planChargeBean.getDateEtat() == null) {
-                LOGGER.warn("Date d'état non définie !?");
-                return null;
-            }
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-            PercentageProperty pctageDispoRsrcProfilProperty = pctagesDispoRsrcProfilBean.get(debutPeriode);
-            return pctageDispoRsrcProfilProperty;
-        }
-    }
+    // Init des tables :
 
     private void initTableNbrsJoursOuvres() {
 
@@ -1366,7 +1615,7 @@ public class DisponibilitesController extends AbstractController {
         nbrsJoursOuvresTable.setItems(sortedBeans);
     }
 
-    private void initTableNbrsJoursAbsence() throws IhmException {
+    private void initTableNbrsJoursAbsence() {
 
         nbrsJoursDAbsenceTable.setCalendrierColumns(
                 semaine1NbrsJoursAbsenceColumn,
@@ -1395,51 +1644,14 @@ public class DisponibilitesController extends AbstractController {
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        // Rq : 1ère colonne (ressource) non éditable.
         ihm.interdireEdition(ressourceNbrsJoursAbsenceColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursAbsenceColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrsJoursAbsenceCell extends DisponibilitesRessourceHumaineCell<NbrsJoursAbsenceBean, Float> {
-
-                public NbrsJoursAbsenceCell(int noSemaine) {
-                    super(planChargeBean, noSemaine, HUITIEMES_JOURS_STRING_CONVERTER);
-                }
-
-                @Override
-                public void commitEdit(Float newValue) {
-                    super.commitEdit(newValue);
-
-                    //noinspection unchecked
-                    TableRow<NbrsJoursAbsenceBean> tableRow = getTableRow();
-                    NbrsJoursAbsenceBean nbrJoursAbsenceBean = tableRow.getItem();
-                    if (nbrJoursAbsenceBean == null) {
-                        return;
-                    }
-                    if (planChargeBean.getDateEtat() == null) {
-                        LOGGER.warn("Date d'état non définie !?");
-                        return;
-                    }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
-                        nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
-                    }
-                    FloatProperty nbrJoursDAbsencePeriode = nbrJoursAbsenceBean.get(debutPeriode);
-                    nbrJoursDAbsencePeriode.set(newValue);
-
-                    try {
-                        calculerDisponibilites(nbrJoursAbsenceBean.getRessourceHumaineBean(), getNoSemaine());
-                    } catch (IhmException e) {
-                        // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
-                        LOGGER.error("Impossible de màj les disponibilités.", e);
-                    }
-                }
-            }
             int cptColonne = 0;
             for (TableColumn<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
-                nbrsJoursDAbsenceColumn.setCellFactory(param -> new NbrsJoursAbsenceCell(finalCptColonne));
+                nbrsJoursDAbsenceColumn.setCellFactory(param -> new FractionsJoursDispoRsrcCell<>(planChargeBean, finalCptColonne));
             }
         }
 
@@ -1492,11 +1704,13 @@ public class DisponibilitesController extends AbstractController {
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(ressourceNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
-        int cptColonne = 0;
-        for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
-            cptColonne++;
-            int finalCptColonne = cptColonne;
-            nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.")));
+        {
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new FractionsJoursDispoRsrcCell<>(planChargeBean, finalCptColonne, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.")));
+            }
         }
 
         // Paramétrage des ordres de tri :
@@ -1520,7 +1734,7 @@ public class DisponibilitesController extends AbstractController {
         nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
     }
 
-    private void initTablePctagesDispoMinAgri() {
+    private void initTablePctagesDispoCT() {
 
         pctagesDispoCTTable.setCalendrierColumns(
                 semaine1PctagesDispoCTColumn,
@@ -1544,7 +1758,7 @@ public class DisponibilitesController extends AbstractController {
             int cptColonne = 0;
             for (TableColumn<PctagesDispoRsrcBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoCTTable.getCalendrierColumns()) {
                 cptColonne++;
-                pctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoRsrcCallback<>(planChargeBean, cptColonne));
+                pctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoCallback<>(planChargeBean, cptColonne));
             }
         }
 
@@ -1552,47 +1766,11 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(ressourcePctagesDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilPctagesDispoCTColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoCTCell extends DisponibilitesRessourceHumaineCell<PctagesDispoRsrcBean, Percentage> {
-
-                private PctagesDispoCTCell(int noSemaine) {
-                    super(planChargeBean, noSemaine, new PercentageStringConverter());
-                }
-
-                @Override
-                public void commitEdit(Percentage newValue) {
-                    super.commitEdit(newValue);
-
-                    //noinspection unchecked
-                    TableRow<PctagesDispoRsrcBean> tableRow = getTableRow();
-                    PctagesDispoRsrcBean pctagesDispoCTBean = tableRow.getItem();
-                    if (pctagesDispoCTBean == null) {
-                        return;
-                    }
-                    if (planChargeBean.getDateEtat() == null) {
-                        LOGGER.warn("Date d'état non définie !?");
-                        return;
-                    }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
-                        pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
-                    }
-                    PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
-                    pctageDispoCTPeriodeProperty.setValue(newValue);
-
-                    try {
-                        calculerDisponibilites(pctagesDispoCTBean.getRessourceHumaineBean(), getNoSemaine());
-                    } catch (IhmException e) {
-                        // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
-                        LOGGER.error("Impossible de màj les disponibilités.", e);
-                    }
-                }
-            }
             int cptColonne = 0;
             for (TableColumn<PctagesDispoRsrcBean, Percentage> pctagesDispoCTColumn : pctagesDispoCTTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
-                pctagesDispoCTColumn.setCellFactory(cell -> new PctagesDispoCTCell(finalCptColonne));
+                pctagesDispoCTColumn.setCellFactory(cell -> new PctagesDispoRsrcCell<>(planChargeBean, finalCptColonne));
             }
         }
 
@@ -1652,7 +1830,7 @@ public class DisponibilitesController extends AbstractController {
         for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
             cptColonne++;
             int finalCptColonne = cptColonne;
-            nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.")));
+            nbrsJoursDispoCTColumn.setCellFactory(cell -> new FractionsJoursDispoRsrcCell<>(planChargeBean, finalCptColonne, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.")));
         }
 
         // Paramétrage des ordres de tri :
@@ -1699,7 +1877,7 @@ public class DisponibilitesController extends AbstractController {
             int cptColonne = 0;
             for (TableColumn<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilColumn : pctagesDispoMaxRsrcProfilTable.getCalendrierColumns()) {
                 cptColonne++;
-                pctagesDispoMaxRsrcProfilColumn.setCellValueFactory(new PctagesDispoRsrcProfilCallback<>(planChargeBean, cptColonne));
+                pctagesDispoMaxRsrcProfilColumn.setCellValueFactory(new PctagesDispoCallback<>(planChargeBean, cptColonne));
             }
         }
 
@@ -1707,47 +1885,11 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(ressourcePctagesDispoMaxRsrcProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilPctagesDispoMaxRsrcProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoMaxRsrcProfilCell extends DisponibilitesRessourceHumaineCell<PctagesDispoRsrcProfilBean, Percentage> {
-
-                private PctagesDispoMaxRsrcProfilCell(int noSemaine) {
-                    super(planChargeBean, noSemaine, new PercentageStringConverter());
-                }
-
-                @Override
-                public void commitEdit(Percentage newValue) {
-                    super.commitEdit(newValue);
-
-                    //noinspection unchecked
-                    TableRow<PctagesDispoRsrcProfilBean> tableRow = getTableRow();
-                    PctagesDispoRsrcProfilBean pctagesDispoMaxRsrcProfilBean = tableRow.getItem();
-                    if (pctagesDispoMaxRsrcProfilBean == null) {
-                        return;
-                    }
-                    if (planChargeBean.getDateEtat() == null) {
-                        LOGGER.warn("Date d'état non définie !?");
-                        return;
-                    }
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    if (!pctagesDispoMaxRsrcProfilBean.containsKey(debutPeriode)) {
-                        pctagesDispoMaxRsrcProfilBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
-                    }
-                    PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoMaxRsrcProfilBean.get(debutPeriode);
-                    pctageDispoCTPeriodeProperty.setValue(newValue);
-
-                    try {
-                        calculerDisponibilites(pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean(), getNoSemaine());
-                    } catch (IhmException e) {
-                        // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
-                        LOGGER.error("Impossible de màj les disponibilités.", e);
-                    }
-                }
-            }
             int cptColonne = 0;
             for (TableColumn<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilColumn : pctagesDispoMaxRsrcProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
-                pctagesDispoMaxRsrcProfilColumn.setCellFactory(cell -> new PctagesDispoMaxRsrcProfilCell(finalCptColonne));
+                pctagesDispoMaxRsrcProfilColumn.setCellFactory(cell -> new PctagesDispoRsrcProfilCell<PctagesDispoRsrcProfilBean>(planChargeBean, finalCptColonne));
             }
         }
 
@@ -1807,7 +1949,7 @@ public class DisponibilitesController extends AbstractController {
             for (TableColumn<NbrsJoursDispoRsrcProfilBean, Float> nbrsJoursDispoMaxRsrcProfilColumn : nbrsJoursDispoMaxRsrcProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
-                nbrsJoursDispoMaxRsrcProfilColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité max. par ressrouce et par profil est calculé à partir des pourcentages.")));
+                nbrsJoursDispoMaxRsrcProfilColumn.setCellFactory(cell -> new FractionsJoursDispoRsrcCell<>(planChargeBean, finalCptColonne, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité max. par ressrouce et par profil est calculé à partir des pourcentages.")));
             }
         }
 
@@ -1829,6 +1971,68 @@ public class DisponibilitesController extends AbstractController {
         nbrsJoursDispoMaxRsrcProfilTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcProfilBean>) change -> {
             SortedList<NbrsJoursDispoRsrcProfilBean> sortedBeans = new SortedList<>(nbrsJoursDispoMaxRsrcProfilBeans);
             sortedBeans.comparatorProperty().bind(nbrsJoursDispoMaxRsrcProfilTable.comparatorProperty());
+        });
+    }
+
+    private void initTableNbrsJoursDispoMaxProfil() {
+        nbrsJoursDispoMaxProfilTable.setCalendrierColumns(
+                semaine1NbrsJoursDispoMaxProfilColumn,
+                semaine2NbrsJoursDispoMaxProfilColumn,
+                semaine3NbrsJoursDispoMaxProfilColumn,
+                semaine4NbrsJoursDispoMaxProfilColumn,
+                semaine5NbrsJoursDispoMaxProfilColumn,
+                semaine6NbrsJoursDispoMaxProfilColumn,
+                semaine7NbrsJoursDispoMaxProfilColumn,
+                semaine8NbrsJoursDispoMaxProfilColumn,
+                semaine9NbrsJoursDispoMaxProfilColumn,
+                semaine10NbrsJoursDispoMaxProfilColumn,
+                semaine11NbrsJoursDispoMaxProfilColumn,
+                semaine12NbrsJoursDispoMaxProfilColumn
+        );
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        //noinspection HardcodedFileSeparator
+        ressourceNbrsJoursDispoMaxProfilColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
+        profilNbrsJoursDispoMaxProfilColumn.setCellValueFactory(cell -> cell.getValue().getProfilBean().codeProperty());
+        {
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoProfilBean, Float> nbrsJoursDispoMaxProfilColumn : nbrsJoursDispoMaxProfilTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                nbrsJoursDispoMaxProfilColumn.setCellValueFactory(new FractionsJourCellCallback<>(planChargeBean, finalCptColonne));
+            }
+        }
+
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(ressourceNbrsJoursDispoMaxProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        ihm.interdireEdition(profilNbrsJoursDispoMaxProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
+        {
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoProfilBean, Float> nbrsJoursDispoMaxProfilColumn : nbrsJoursDispoMaxProfilTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                nbrsJoursDispoMaxProfilColumn.setCellFactory(cell -> new FractionsJoursDispoProfilCell<NbrsJoursDispoProfilBean>(planChargeBean, finalCptColonne, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité max. par ressrouce et par profil est calculé à partir des pourcentages.")));
+            }
+        }
+
+        // Paramétrage des ordres de tri :
+        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        nbrsJoursDispoMaxProfilTable.setItems(nbrsJoursDispoMaxProfilBeans);
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        TableViews.enableFilteringOnColumns(nbrsJoursDispoMaxProfilTable, ressourceNbrsJoursDispoMaxProfilColumn, profilNbrsJoursDispoMaxProfilColumn);
+
+        TableViews.disableReagencingColumns(nbrsJoursDispoMaxProfilTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDispoMaxProfilTable);
+
+        // Tri de la liste :
+        nbrsJoursDispoMaxProfilTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoProfilBean>) change -> {
+            SortedList<NbrsJoursDispoProfilBean> sortedBeans = new SortedList<>(nbrsJoursDispoMaxProfilBeans);
+            sortedBeans.comparatorProperty().bind(nbrsJoursDispoMaxProfilTable.comparatorProperty());
         });
     }
 
@@ -2010,6 +2214,10 @@ public class DisponibilitesController extends AbstractController {
         // FIXME FDA 2017/08 Coder les autres tables (en cascade).
 
 //        LOGGER.debug("Valeurs du calendrier définies pour la ressource {} et la semaine n° {}.", ressHumBean, noSemaine);
+    }
+
+    private void calculerDisponibilites(ProfilBean profilBean, int noSemaine) throws IhmException {
+        // TODO FDA 2017/08 Coder.
     }
 
     private boolean estHorsMission(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) {

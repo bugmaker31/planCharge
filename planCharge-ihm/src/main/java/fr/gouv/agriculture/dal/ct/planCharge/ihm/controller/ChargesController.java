@@ -25,7 +25,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -296,16 +298,23 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         //noinspection OverlyComplexAnonymousInnerClass
-        getChargeColumn().setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
+        getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>() {
+
             @Override
-            protected void updateItem(Double charge, boolean empty) {
+            public void updateItem(Double charge, boolean empty) {
+
+                if (getConverter() == null) {
+                    setConverter(new DoubleStringConverter()); // TODO FDA 2017/08 Mieux formater.
+                }
+
                 super.updateItem(charge, empty);
 
                 setText("");
                 getStyleClass().removeAll("chargeNonPlanifiee", "incoherence");
 
                 if ((charge == null) || empty) {
-                    setStyle(null);
+                    setText(null);
+                    setGraphic(null);
                     return;
                 }
 
@@ -334,7 +343,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 getStyleClass().removeAll("incoherence");
 
                 if ((chargePlanifiee == null) || empty) {
-                    setStyle(null);
+                    setText(null);
+                    setGraphic(null);
                     return;
                 }
 

@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceBean<D, B, T>, T> extends AbstractDisponibilitesBean<D, B, T> {
-
+public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceBean<D, B, P>, P extends Property>
+        extends AbstractDisponibilitesBean<D, B, P> {
 
     // Fields :
 
@@ -21,7 +21,7 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
 
     // Constructors:
 
-    public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, T> calendrier) {
+    public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, P> calendrier) {
         super(calendrier);
         this.ressourceHumaineBean.setValue(ressourceHumaineBean);
     }
@@ -40,7 +40,7 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
 //        if (!super.equals(o)) return false;
 
         //noinspection unchecked
-        AbstractDisponibilitesRessourceBean<D, B, T> that = (AbstractDisponibilitesRessourceBean<D, B, T>) o;
+        AbstractDisponibilitesRessourceBean<D, B, P> that = (AbstractDisponibilitesRessourceBean<D, B, P>) o;
 
         return getRessourceHumaineBean().equals(that.getRessourceHumaineBean());
     }
@@ -70,6 +70,6 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
 
     @Override
     public String toString() {
-        return ressourceHumaineBean + " : " + super.toString();
+        return ressourceHumaineBean.getValue() + " : " + super.toString();
     }
 }

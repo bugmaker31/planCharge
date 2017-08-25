@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public abstract class AbstractDisponibilitesRessourceProfilBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceProfilBean<D, B, T>, T> extends AbstractDisponibilitesRessourceBean<D, B, T> {
+public abstract class AbstractDisponibilitesRessourceProfilBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceProfilBean<D, B, T>, T extends Property> extends AbstractDisponibilitesRessourceBean<D, B, T> {
 
 
     // Fields :
