@@ -106,7 +106,7 @@ public final class TableViews {
         }
     }
 
-    public static <S> void adjustHeightToRowCount(@NotNull TableView<S> table) {
+    public static <S> void ensureDisplayingAllRows(@NotNull TableView<S> table) {
         // Cf. https://stackoverflow.com/questions/27945817/javafx-adapt-tableview-height-to-number-of-rows
 /*
         assert table.getFixedCellSize() > 0; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.

@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import javafx.beans.property.FloatProperty;
@@ -20,7 +19,7 @@ public class NbrsJoursDispoProfilBean extends AbstractDisponibilitesProfilBean<A
         super(profilBean);
     }
 
-    public NbrsJoursDispoProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws IhmException {
+    public NbrsJoursDispoProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(profilBean, calendrier);
     }
 

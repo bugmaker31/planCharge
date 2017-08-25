@@ -47,6 +47,7 @@ import org.controlsfx.control.table.TableFilter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public final class ColumnFilter<T,R> {
@@ -256,9 +257,13 @@ public final class ColumnFilter<T,R> {
         boolean removedLastDuplicate = filterValuesDupeCounter.remove(value) == 0;
         if (removedLastDuplicate) {
             // Remove the FilterValue associated with the value
-            FilterValue<T,R> existingFilterValue = getFilterValues().stream()
-                    .filter(fv -> Objects.equals(fv.getValue(), value)).findAny().get();
-            getFilterValues().remove(existingFilterValue);
+            // >>> FDA 2017/08
+            Optional<FilterValue<T, R>> existingFilterValueOpt = getFilterValues().stream()
+                    .filter(fv -> Objects.equals(fv.getValue(), value)).findAny();
+            if (existingFilterValueOpt.isPresent()) {
+                getFilterValues().remove(existingFilterValueOpt.get());
+            }
+            // <<< FDA 2017/08
         }
     }
     private void addVisibleItem(ObservableValue<R>  cellValue) {
