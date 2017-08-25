@@ -32,6 +32,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
@@ -42,10 +43,7 @@ import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -165,16 +163,23 @@ public class DisponibilitesController extends AbstractController {
     private final ObservableList<NbrsJoursAbsenceBean> nbrsJoursAbsenceBeans = planChargeBean.getNbrsJoursAbsenceBeans();
 
     @NotNull
-    private final ObservableList<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursDispoRsrcBean> nbrsJoursDispoMinAgriBeans = FXCollections.observableArrayList();
 
     @NotNull
-    private final ObservableList<PctagesDispoCTBean> pctagesDispoCTBeans = planChargeBean.getPctagesDispoCTBeans();
+    private final ObservableList<PctagesDispoRsrcBean> pctagesDispoCTBeans = planChargeBean.getPctagesDispoCTBeans();
 
     @NotNull
-    private final ObservableList<NbrsJoursDispoCTBean> nbrsJoursDispoCTBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursDispoRsrcBean> nbrsJoursDispoCTBeans = FXCollections.observableArrayList();
 
     @NotNull
-    private final ObservableList<PctagesDispoMaxProfilBean> pctagesDispoMaxProfilBeans = planChargeBean.getPctagesDispoMaxProfilBeans();
+    private final ObservableList<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeans = planChargeBean.getPctagesDispoMaxRsrcProfilBeans();
+
+    @NotNull
+    private final ObservableList<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeans = FXCollections.observableArrayList();
+
+    @NotNull
+    private final ObservableList<NbrsJoursDispoProfilBean> nbrsJoursDispoMaxProfilBeans = FXCollections.observableArrayList();
+
 
     /*
      La couche "View" :
@@ -249,7 +254,7 @@ public class DisponibilitesController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursAbsenceBean, String> ressourceNbrsJoursAbsenceColumn;
+    private TableColumn<NbrsJoursAbsenceBean, /*RessourceHumaineBean*/String> ressourceNbrsJoursAbsenceColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -306,309 +311,370 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Float> nbrsJoursDispoMinAgriTable;
+    private TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, String> ressourceNbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, /*RessourceHumaineBean*/String> ressourceNbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, String> profilNbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, String> profilNbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine1NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine1NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine2NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine2NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine3NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine3NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine4NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine4NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine5NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine5NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine6NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine6NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine7NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine7NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine8NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine8NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine9NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine9NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine10NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine10NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine11NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine11NbrsJoursDispoMinAgriColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMinAgriBean, Float> semaine12NbrsJoursDispoMinAgriColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine12NbrsJoursDispoMinAgriColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<PctagesDispoCTBean, Percentage> pctagesDispoCTTable;
+    private TableViewAvecCalendrier<PctagesDispoRsrcBean, Percentage> pctagesDispoCTTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, String> ressourcePctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, /*RessourceHumaineBean*/String> ressourcePctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, String> profilPctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, String> profilPctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine1PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine1PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine2PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine2PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine3PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine3PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine4PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine4PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine5PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine5PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine6PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine6PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine7PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine7PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine8PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine8PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine9PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine9PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine10PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine10PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine11PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine11PctagesDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoCTBean, Percentage> semaine12PctagesDispoCTColumn;
+    private TableColumn<PctagesDispoRsrcBean, Percentage> semaine12PctagesDispoCTColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTTable;
+    private TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoCTTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, String> ressourceNbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, /*RessourceHumaineBean*/String> ressourceNbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, String> profilNbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, String> profilNbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine1NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine1NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine2NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine2NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine3NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine3NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine4NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine4NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine5NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine5NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine6NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine6NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine7NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine7NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine8NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine8NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine9NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine9NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine10NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine10NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine11NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine11NbrsJoursDispoCTColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoCTBean, Float> semaine12NbrsJoursDispoCTColumn;
+    private TableColumn<NbrsJoursDispoRsrcBean, Float> semaine12NbrsJoursDispoCTColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<PctagesDispoMaxProfilBean, Percentage> pctagesDispoMaxRsrcProfilTable;
+    private TableViewAvecCalendrier<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, String> profilPctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, /*RessourceHumaineBean*/String> ressourcePctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, String> ressourcePctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, /*ProfilBean*/String> profilPctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine1PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine1PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine2PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine2PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine3PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine3PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine4PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine4PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine5PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine5PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine6PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine6PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine7PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine7PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine8PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine8PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine9PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine9PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine10PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine10PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine11PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine11PctagesDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PctagesDispoMaxProfilBean, Percentage> semaine12PctagesDispoMaxRsrcProfilColumn;
+    private TableColumn<PctagesDispoRsrcProfilBean, Percentage> semaine12PctagesDispoMaxRsrcProfilColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoMaxProfilBean, Percentage> nbrsJoursDispoMaxRsrcProfilTable;
+    private TableViewAvecCalendrier<NbrsJoursDispoRsrcProfilBean, Float> nbrsJoursDispoMaxRsrcProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, String> profilNbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, /*RessourceHumaineBean*/String> ressourceNbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, String> ressourceNbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, /*ProfilBean*/String> profilNbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine1NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine1NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine2NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine2NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine3NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine3NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine4NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine4NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine5NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine5NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine6NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine6NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine7NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine7NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine8NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine8NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine9NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine9NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine10NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine10NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine11NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine11NbrsJoursDispoMaxRsrcProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursDispoMaxProfilBean, Percentage> semaine12NbrsJoursDispoMaxRsrcProfilColumn;
+    private TableColumn<NbrsJoursDispoRsrcProfilBean, Float> semaine12NbrsJoursDispoMaxRsrcProfilColumn;
 
-    
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private TableViewAvecCalendrier<NbrsJoursDispoProfilBean, Float> nbrsJoursDispoMaxProfilTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, /*RessourceHumaineBean*/String> ressourceNbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, /*ProfilBean*/String> profilNbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine1NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine2NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine3NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine4NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine5NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine6NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine7NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine8NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine9NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine10NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine11NbrsJoursDispoMaxProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursDispoProfilBean, Float> semaine12NbrsJoursDispoMaxProfilColumn;
+
+
     // Constructeurs :
 
     /**
@@ -637,28 +703,33 @@ public class DisponibilitesController extends AbstractController {
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoMinAgriBean, Float> getNbrsJoursDispoMinAgriTable() {
+    public TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> getNbrsJoursDispoMinAgriTable() {
         return nbrsJoursDispoMinAgriTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<PctagesDispoCTBean, Percentage> getPctagesDispoCTTable() {
+    public TableViewAvecCalendrier<PctagesDispoRsrcBean, Percentage> getPctagesDispoCTTable() {
         return pctagesDispoCTTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoCTBean, Float> getNbrsJoursDispoCTTable() {
+    public TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> getNbrsJoursDispoCTTable() {
         return nbrsJoursDispoCTTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<PctagesDispoMaxProfilBean, Percentage> getPctagesDispoMaxRsrcProfilTable() {
+    public TableViewAvecCalendrier<PctagesDispoRsrcProfilBean, Percentage> getPctagesDispoMaxRsrcProfilTable() {
         return pctagesDispoMaxRsrcProfilTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoMaxProfilBean, Percentage> getNbrsJoursDispoMaxRsrcProfilTable() {
+    public TableViewAvecCalendrier<NbrsJoursDispoRsrcProfilBean, Float> getNbrsJoursDispoMaxRsrcProfilTable() {
         return nbrsJoursDispoMaxRsrcProfilTable;
+    }
+
+    @NotNull
+    public TableViewAvecCalendrier<NbrsJoursDispoProfilBean, Float> getNbrsJoursDispoMaxProfilTable() {
+        return nbrsJoursDispoMaxProfilTable;
     }
 
 
@@ -681,6 +752,7 @@ public class DisponibilitesController extends AbstractController {
         initBeansPctagesDispoCT();
         initBeansPctagesDispoMaxRsrcProfil();
         initBeansNbrsJoursDispoMaxRsrcProfil();
+//        initBeansNbrsJoursDispoMaxProfil(); FIXME FDA 2017/08 Coder.
 
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
@@ -766,20 +838,20 @@ public class DisponibilitesController extends AbstractController {
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    List<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeansAAjouter = new ArrayList<>();
+                    List<NbrsJoursDispoRsrcBean> nbrsJoursDispoMinAgriBeansAAjouter = new ArrayList<>();
                     for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
                         if (nbrsJoursDispoMinAgriBeans.parallelStream().anyMatch(nbrsJoursDispoMinAgriBean -> nbrsJoursDispoMinAgriBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursDispoMinAgriBeansAAjouter.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
+                        nbrsJoursDispoMinAgriBeansAAjouter.add(new NbrsJoursDispoRsrcBean(ressourceHumaineBean, calendrier));
                     }
                     if (!nbrsJoursDispoMinAgriBeansAAjouter.isEmpty()) {
                         nbrsJoursDispoMinAgriBeans.addAll(nbrsJoursDispoMinAgriBeansAAjouter);
                     }
                 }
                 if (change.wasRemoved()) {
-                    List<NbrsJoursDispoMinAgriBean> nbrsJoursDispoMinAgriBeansASupprimer = new ArrayList<>();
+                    List<NbrsJoursDispoRsrcBean> nbrsJoursDispoMinAgriBeansASupprimer = new ArrayList<>();
                     for (RessourceBean ressourceBean : change.getRemoved()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
@@ -789,7 +861,7 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursDispoMinAgriBeansASupprimer.add(new NbrsJoursDispoMinAgriBean(ressourceHumaineBean, calendrier));
+                        nbrsJoursDispoMinAgriBeansASupprimer.add(new NbrsJoursDispoRsrcBean(ressourceHumaineBean, calendrier));
                     }
                     if (!nbrsJoursDispoMinAgriBeansASupprimer.isEmpty()) {
                         nbrsJoursDispoMinAgriBeans.removeAll(nbrsJoursDispoMinAgriBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
@@ -804,20 +876,20 @@ public class DisponibilitesController extends AbstractController {
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    List<PctagesDispoCTBean> pctagesDispoCTBeansAAjouter = new ArrayList<>();
+                    List<PctagesDispoRsrcBean> pctagesDispoCTBeansAAjouter = new ArrayList<>();
                     for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
                         if (pctagesDispoCTBeans.parallelStream().anyMatch(pctagesDispoCTBean -> pctagesDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
-                        pctagesDispoCTBeansAAjouter.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
+                        pctagesDispoCTBeansAAjouter.add(new PctagesDispoRsrcBean(ressourceHumaineBean, calendrier));
                     }
                     if (!pctagesDispoCTBeansAAjouter.isEmpty()) {
                         pctagesDispoCTBeans.addAll(pctagesDispoCTBeansAAjouter);
                     }
                 }
                 if (change.wasRemoved()) {
-                    List<PctagesDispoCTBean> pctagesDispoCTBeansASupprimer = new ArrayList<>();
+                    List<PctagesDispoRsrcBean> pctagesDispoCTBeansASupprimer = new ArrayList<>();
                     for (RessourceBean ressourceBean : change.getRemoved()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
@@ -827,7 +899,7 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>();
-                        pctagesDispoCTBeansASupprimer.add(new PctagesDispoCTBean(ressourceHumaineBean, calendrier));
+                        pctagesDispoCTBeansASupprimer.add(new PctagesDispoRsrcBean(ressourceHumaineBean, calendrier));
                     }
                     if (!pctagesDispoCTBeansASupprimer.isEmpty()) {
                         pctagesDispoCTBeans.removeAll(pctagesDispoCTBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
@@ -837,10 +909,10 @@ public class DisponibilitesController extends AbstractController {
             }
         });
 
-        pctagesDispoCTBeans.addListener((ListChangeListener<? super PctagesDispoCTBean>) change -> {
+        pctagesDispoCTBeans.addListener((ListChangeListener<? super PctagesDispoRsrcBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    for (PctagesDispoCTBean pctagesDispoCTBean : change.getAddedSubList()) {
+                    for (PctagesDispoRsrcBean pctagesDispoCTBean : change.getAddedSubList()) {
                         RessourceHumaineBean ressourceHumaineBean = pctagesDispoCTBean.getRessourceHumaineBean();
                         try {
                             calculerDisponibilites(ressourceHumaineBean);
@@ -849,6 +921,7 @@ public class DisponibilitesController extends AbstractController {
                         }
                     }
                 }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
             }
         });
     }
@@ -857,18 +930,18 @@ public class DisponibilitesController extends AbstractController {
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    List<NbrsJoursDispoCTBean> nbrsJoursDispoCTBeansAAjouter = new ArrayList<>();
+                    List<NbrsJoursDispoRsrcBean> nbrsJoursDispoCTBeansAAjouter = new ArrayList<>();
                     for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
                         if (nbrsJoursDispoCTBeans.parallelStream().anyMatch(nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursDispoCTBeansAAjouter.add(new NbrsJoursDispoCTBean(ressourceHumaineBean, calendrier));
+                        nbrsJoursDispoCTBeansAAjouter.add(new NbrsJoursDispoRsrcBean(ressourceHumaineBean, calendrier));
                     }
                     nbrsJoursDispoCTBeans.addAll(nbrsJoursDispoCTBeansAAjouter);
                 }
                 if (change.wasRemoved()) {
-                    List<NbrsJoursDispoCTBean> nbrsJoursDispoCTBeansASupprimer = new ArrayList<>();
+                    List<NbrsJoursDispoRsrcBean> nbrsJoursDispoCTBeansASupprimer = new ArrayList<>();
                     for (RessourceBean ressourceBean : change.getRemoved()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
@@ -878,7 +951,7 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursDispoCTBeansASupprimer.add(new NbrsJoursDispoCTBean(ressourceHumaineBean, calendrier));
+                        nbrsJoursDispoCTBeansASupprimer.add(new NbrsJoursDispoRsrcBean(ressourceHumaineBean, calendrier));
                     }
                     nbrsJoursDispoCTBeans.removeAll(nbrsJoursDispoCTBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
                 }
@@ -891,15 +964,15 @@ public class DisponibilitesController extends AbstractController {
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    List<PctagesDispoMaxProfilBean> pctagesDispoMaxRsrcProfilBeansAAjouter = new ArrayList<>();
+                    List<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeansAAjouter = new ArrayList<>();
                     for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
-                        if (pctagesDispoMaxProfilBeans.parallelStream().anyMatch(pctagesDispoMaxRsrcProfilBean -> pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (pctagesDispoMaxRsrcProfilBeans.parallelStream().anyMatch(pctagesDispoMaxRsrcProfilBean -> pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         try {
                             for (ProfilDTO profilDTO : referentielsService.profils()) {
                                 Map<LocalDate, PercentageProperty> calendrier = new TreeMap<>(); // TreeMap afin de trier, juste pour faciliter le débogage.
-                                pctagesDispoMaxRsrcProfilBeansAAjouter.add(new PctagesDispoMaxProfilBean(ressourceHumaineBean, ProfilBean.from(profilDTO), calendrier));
+                                pctagesDispoMaxRsrcProfilBeansAAjouter.add(new PctagesDispoRsrcProfilBean(ressourceHumaineBean, ProfilBean.from(profilDTO), calendrier));
                             }
                         } catch (ServiceException e) {
                             // TODO FDA 2017/08 Trouver mieux que juste loguer l'erreur.
@@ -907,7 +980,7 @@ public class DisponibilitesController extends AbstractController {
                         }
                     }
                     if (!pctagesDispoMaxRsrcProfilBeansAAjouter.isEmpty()) {
-                        pctagesDispoMaxProfilBeans.addAll(pctagesDispoMaxRsrcProfilBeansAAjouter);
+                        pctagesDispoMaxRsrcProfilBeans.addAll(pctagesDispoMaxRsrcProfilBeansAAjouter);
                     }
                 }
                 if (change.wasRemoved()) {
@@ -917,14 +990,14 @@ public class DisponibilitesController extends AbstractController {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (pctagesDispoMaxProfilBeans.parallelStream().noneMatch(pctagesDispoMaxRsrcProfilBean -> pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                        if (pctagesDispoMaxRsrcProfilBeans.parallelStream().noneMatch(pctagesDispoMaxRsrcProfilBean -> pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
                         pctagesDispoMaxRsrcProfilBeansASupprimer.add(ressourceHumaineBean);
                     }
-                    pctagesDispoMaxProfilBeans.setAll(
-                            pctagesDispoMaxProfilBeans.stream()
-                                    .filter(pctagesDispoMaxProfilBean -> pctagesDispoMaxRsrcProfilBeansASupprimer.contains(pctagesDispoMaxProfilBean.getRessourceHumaineBean()))
+                    pctagesDispoMaxRsrcProfilBeans.setAll(
+                            pctagesDispoMaxRsrcProfilBeans.stream()
+                                    .filter(pctagesDispoMaxRsrcProfilBean -> pctagesDispoMaxRsrcProfilBeansASupprimer.contains(pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean()))
                                     .collect(Collectors.toList())
                     );
                 }
@@ -932,27 +1005,106 @@ public class DisponibilitesController extends AbstractController {
             }
         });
 
-        pctagesDispoMaxProfilBeans.addListener((ListChangeListener<? super PctagesDispoMaxProfilBean>) change ->
-
-        {
+        pctagesDispoMaxRsrcProfilBeans.addListener((ListChangeListener<? super PctagesDispoRsrcProfilBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    for (PctagesDispoMaxProfilBean pctagesDispoMaxRsrcProfilBean : change.getAddedSubList()) {
+                    Set<RessourceHumaineBean> ressourceHumaineBeansAvecDispoCalculees = new HashSet<>();
+                    for (PctagesDispoRsrcProfilBean pctagesDispoMaxRsrcProfilBean : change.getAddedSubList()) {
                         RessourceHumaineBean ressourceHumaineBean = pctagesDispoMaxRsrcProfilBean.getRessourceHumaineBean();
-                        try {
-                            calculerDisponibilites(ressourceHumaineBean);
-                        } catch (IhmException e) {
-                            LOGGER.error("Impossible de calculer les disponibilités max de la ressource " + ressourceHumaineBean.getTrigramme() + " par profil.", e); // TODO FDA 2017/08 Trouevr mieux que juste loguer une erreur.
+                        if (!ressourceHumaineBeansAvecDispoCalculees.contains(ressourceHumaineBean)) {
+                            try {
+                                calculerDisponibilites(ressourceHumaineBean);
+                            } catch (IhmException e) {
+                                LOGGER.error("Impossible de calculer les disponibilités max de la ressource " + ressourceHumaineBean.getTrigramme() + " par profil.", e); // TODO FDA 2017/08 Trouevr mieux que juste loguer une erreur.
+                            }
+                            ressourceHumaineBeansAvecDispoCalculees.add(ressourceHumaineBean);
                         }
                     }
                 }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
             }
         });
     }
 
     private void initBeansNbrsJoursDispoMaxRsrcProfil() {
+        planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    List<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeansAAjouter = new ArrayList<>();
+                    for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
+                        if (nbrsJoursDispoMaxRsrcProfilBeans.parallelStream().anyMatch(nbrsJoursDispoMaxRsrcProfilBean -> nbrsJoursDispoMaxRsrcProfilBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        try {
+                            for (ProfilDTO profilDTO : referentielsService.profils()) {
+                                Map<LocalDate, FloatProperty> calendrier = new TreeMap<>(); // TreeMap afin de trier, juste pour faciliter le débogage.
+                                nbrsJoursDispoMaxRsrcProfilBeansAAjouter.add(new NbrsJoursDispoRsrcProfilBean(ressourceHumaineBean, ProfilBean.from(profilDTO), calendrier));
+                            }
+                        } catch (ServiceException e) {
+                            // TODO FDA 2017/08 Trouver mieux que juste loguer l'erreur.
+                            LOGGER.error("Impossible d'initialiser les pourcentages de disponibilités max. par ressource et profil.", e);
+                        }
+                    }
+                    if (!nbrsJoursDispoMaxRsrcProfilBeansAAjouter.isEmpty()) {
+                        nbrsJoursDispoMaxRsrcProfilBeans.addAll(nbrsJoursDispoMaxRsrcProfilBeansAAjouter);
+                    }
+                }
+                if (change.wasRemoved()) {
+                    List<RessourceHumaineBean> nbrsJoursDispoMaxRsrcProfilBeansASupprimer = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (nbrsJoursDispoMaxRsrcProfilBeans.parallelStream().noneMatch(nbrsJoursDispoMaxRsrcProfilBean -> nbrsJoursDispoMaxRsrcProfilBean.getRessourceHumaineBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        nbrsJoursDispoMaxRsrcProfilBeansASupprimer.add(ressourceHumaineBean);
+                    }
+                    nbrsJoursDispoMaxRsrcProfilBeans.setAll(
+                            nbrsJoursDispoMaxRsrcProfilBeans.stream()
+                                    .filter(nbrsJoursDispoMaxRsrcProfilBean -> nbrsJoursDispoMaxRsrcProfilBeansASupprimer.contains(nbrsJoursDispoMaxRsrcProfilBean.getRessourceHumaineBean()))
+                                    .collect(Collectors.toList())
+                    );
+                }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
+            }
+        });
+
+        nbrsJoursDispoMaxRsrcProfilBeans.addListener((ListChangeListener<? super NbrsJoursDispoRsrcProfilBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    Set<RessourceHumaineBean> ressourceHumaineBeansAvecDispoCalculees = new HashSet<>();
+                    for (NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean : change.getAddedSubList()) {
+                        RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMaxRsrcProfilBean.getRessourceHumaineBean();
+                        if (!ressourceHumaineBeansAvecDispoCalculees.contains(ressourceHumaineBean)) {
+                            try {
+                                calculerDisponibilites(ressourceHumaineBean);
+                            } catch (IhmException e) {
+                                LOGGER.error("Impossible de calculer les disponibilités max de la ressource " + ressourceHumaineBean.getTrigramme() + " par profil.", e); // TODO FDA 2017/08 Trouevr mieux que juste loguer une erreur.
+                            }
+                            ressourceHumaineBeansAvecDispoCalculees.add(ressourceHumaineBean);
+                        }
+                    }
+                }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
+            }
+        });
     }
 
+
+    public List<TableViewAvecCalendrier<?, ?>> tables() {
+        return Arrays.asList(new TableViewAvecCalendrier<?, ?>[]{
+                nbrsJoursOuvresTable,
+                nbrsJoursDAbsenceTable,
+                nbrsJoursDispoMinAgriTable,
+                pctagesDispoCTTable,
+                nbrsJoursDispoCTTable,
+                pctagesDispoMaxRsrcProfilTable,
+                nbrsJoursDispoMaxRsrcProfilTable,
+                nbrsJoursDispoMaxProfilTable
+        });
+    }
 
     private void initTables() throws IhmException {
         initTableNbrsJoursOuvres();
@@ -962,11 +1114,12 @@ public class DisponibilitesController extends AbstractController {
         initTableNbrsJoursDispoCT();
         initTablePctagesDispoMaxRsrcProfil();
         initTableNbrsJoursDispoMaxRsrcProfil();
+//        initTableNbrsJoursDispoMaxProfil(); FIXME FDA 2017/08 Coder.
 
-        synchroniserLargeurPremieresColonnes();
+        synchroniserLargeurColonnes();
     }
 
-    private class DisponibilitesRessourceHumaineCell<S extends AbstractDisponibilitesRessourceBean, T> extends EditableAwareTextFieldTableCell<S, T> {
+    private static class DisponibilitesRessourceHumaineCell<S extends AbstractDisponibilitesRessourceBean, T> extends EditableAwareTextFieldTableCell<S, T> {
 
         private PlanChargeBean planChargeBean;
         private int noSemaine;
@@ -1113,7 +1266,7 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (1 seule ligne).
 
-        TableViews.disableColumnReorderable(nbrsJoursOuvresTable);
+        TableViews.disableReagencingColumns(nbrsJoursOuvresTable);
         TableViews.adjustHeightToRowCount(nbrsJoursOuvresTable);
 
         SortedList<NbrsJoursOuvresBean> sortedBeans = new SortedList<>(nbrsJoursOuvresBeans);
@@ -1239,7 +1392,7 @@ public class DisponibilitesController extends AbstractController {
 
         nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
 
-        TableViews.disableColumnReorderable(nbrsJoursDAbsenceTable);
+        TableViews.disableReagencingColumns(nbrsJoursDAbsenceTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDAbsenceTable);
 
         SortedList<NbrsJoursAbsenceBean> sortedBeans = new SortedList<>(nbrsJoursAbsenceBeans);
@@ -1268,7 +1421,7 @@ public class DisponibilitesController extends AbstractController {
         profilNbrsJoursDispoMinAgriColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoMinAgriBean, Float>, ObservableValue<Float>> {
+            final class NbrJoursDispoMinAgriCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoRsrcBean, Float>, ObservableValue<Float>> {
                 private final int noSemaine;
 
                 private NbrJoursDispoMinAgriCellCallback(int noSemaine) {
@@ -1278,11 +1431,11 @@ public class DisponibilitesController extends AbstractController {
 
                 @Null
                 @Override
-                public ObservableValue<Float> call(CellDataFeatures<NbrsJoursDispoMinAgriBean, Float> cell) {
+                public ObservableValue<Float> call(CellDataFeatures<NbrsJoursDispoRsrcBean, Float> cell) {
                     if (cell == null) {
                         return null;
                     }
-                    NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = cell.getValue();
+                    NbrsJoursDispoRsrcBean nbrsJoursDispoMinAgriBean = cell.getValue();
                     if (planChargeBean.getDateEtat() == null) {
                         LOGGER.warn("Date d'état non définie !?");
                         return null;
@@ -1296,7 +1449,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursDispoMinAgriBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
                 cptColonne++;
                 nbrsJoursDispoMinAgriColumn.setCellValueFactory(new NbrJoursDispoMinAgriCellCallback(cptColonne));
             }
@@ -1306,7 +1459,7 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(ressourceNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoMinAgriColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         int cptColonne = 0;
-        for (TableColumn<NbrsJoursDispoMinAgriBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
+        for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriColumn : nbrsJoursDispoMinAgriTable.getCalendrierColumns()) {
             cptColonne++;
             int finalCptColonne = cptColonne;
             nbrsJoursDispoMinAgriColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité au Ministère est calculé à partir des jours ouvrés et d'absence.")));
@@ -1321,12 +1474,12 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        TableViews.disableColumnReorderable(nbrsJoursDispoMinAgriTable);
+        TableViews.disableReagencingColumns(nbrsJoursDispoMinAgriTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDispoMinAgriTable);
 
         // Tri de la liste :
-        nbrsJoursDispoMinAgriTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoMinAgriBean>) change -> {
-            SortedList<NbrsJoursDispoMinAgriBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
+        nbrsJoursDispoMinAgriTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcBean>) change -> {
+            SortedList<NbrsJoursDispoRsrcBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
             sortedBeans.comparatorProperty().bind(nbrsJoursDispoMinAgriTable.comparatorProperty());
         });
 
@@ -1355,7 +1508,7 @@ public class DisponibilitesController extends AbstractController {
         profilPctagesDispoCTColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoMinAgriCellCallback implements Callback<CellDataFeatures<PctagesDispoCTBean, Percentage>, ObservableValue<Percentage>> {
+            final class PctagesDispoMinAgriCellCallback implements Callback<CellDataFeatures<PctagesDispoRsrcBean, Percentage>, ObservableValue<Percentage>> {
                 private final int noSemaine;
 
                 private PctagesDispoMinAgriCellCallback(int noSemaine) {
@@ -1365,11 +1518,11 @@ public class DisponibilitesController extends AbstractController {
 
                 @Null
                 @Override
-                public ObservableValue<Percentage> call(CellDataFeatures<PctagesDispoCTBean, Percentage> cell) {
+                public ObservableValue<Percentage> call(CellDataFeatures<PctagesDispoRsrcBean, Percentage> cell) {
                     if (cell == null) {
                         return null;
                     }
-                    PctagesDispoCTBean pctagesDispoCTBean = cell.getValue();
+                    PctagesDispoRsrcBean pctagesDispoCTBean = cell.getValue();
                     if (planChargeBean.getDateEtat() == null) {
                         LOGGER.warn("Date d'état non définie !?");
                         return null;
@@ -1380,20 +1533,18 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoCTTable.getCalendrierColumns()) {
+            for (TableColumn<PctagesDispoRsrcBean, Percentage> pctagesDispoMinAgriColumn : pctagesDispoCTTable.getCalendrierColumns()) {
                 cptColonne++;
                 pctagesDispoMinAgriColumn.setCellValueFactory(new PctagesDispoMinAgriCellCallback(cptColonne));
             }
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        // Rq : 1ère colonne (ressource) non éditable.
         ihm.interdireEdition(ressourcePctagesDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
-        // Rq : 2nde colonne (profil) non éditable.
         ihm.interdireEdition(profilPctagesDispoCTColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoCTCell extends DisponibilitesRessourceHumaineCell<PctagesDispoCTBean, Percentage> {
+            final class PctagesDispoCTCell extends DisponibilitesRessourceHumaineCell<PctagesDispoRsrcBean, Percentage> {
 
                 private PctagesDispoCTCell(int noSemaine) {
                     super(planChargeBean, noSemaine, new PercentageStringConverter());
@@ -1404,8 +1555,8 @@ public class DisponibilitesController extends AbstractController {
                     super.commitEdit(newValue);
 
                     //noinspection unchecked
-                    TableRow<PctagesDispoCTBean> tableRow = getTableRow();
-                    PctagesDispoCTBean pctagesDispoCTBean = tableRow.getItem();
+                    TableRow<PctagesDispoRsrcBean> tableRow = getTableRow();
+                    PctagesDispoRsrcBean pctagesDispoCTBean = tableRow.getItem();
                     if (pctagesDispoCTBean == null) {
                         return;
                     }
@@ -1429,7 +1580,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<PctagesDispoCTBean, Percentage> pctagesDispoCTColumn : pctagesDispoCTTable.getCalendrierColumns()) {
+            for (TableColumn<PctagesDispoRsrcBean, Percentage> pctagesDispoCTColumn : pctagesDispoCTTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
                 pctagesDispoCTColumn.setCellFactory(cell -> new PctagesDispoCTCell(finalCptColonne));
@@ -1445,12 +1596,12 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        TableViews.disableColumnReorderable(pctagesDispoCTTable);
+        TableViews.disableReagencingColumns(pctagesDispoCTTable);
         TableViews.adjustHeightToRowCount(pctagesDispoCTTable);
 
         // Tri de la liste :
-        pctagesDispoCTTable.getItems().addListener((ListChangeListener<? super PctagesDispoCTBean>) change -> {
-            SortedList<PctagesDispoCTBean> sortedBeans = new SortedList<>(pctagesDispoCTBeans);
+        pctagesDispoCTTable.getItems().addListener((ListChangeListener<? super PctagesDispoRsrcBean>) change -> {
+            SortedList<PctagesDispoRsrcBean> sortedBeans = new SortedList<>(pctagesDispoCTBeans);
             sortedBeans.comparatorProperty().bind(pctagesDispoCTTable.comparatorProperty());
         });
 
@@ -1479,7 +1630,7 @@ public class DisponibilitesController extends AbstractController {
         profilNbrsJoursDispoCTColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class NbrJoursDispoCTCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoCTBean, Float>, ObservableValue<Float>> {
+            final class NbrJoursDispoCTCellCallback implements Callback<CellDataFeatures<NbrsJoursDispoRsrcBean, Float>, ObservableValue<Float>> {
                 private final int noSemaine;
 
                 private NbrJoursDispoCTCellCallback(int noSemaine) {
@@ -1489,11 +1640,11 @@ public class DisponibilitesController extends AbstractController {
 
                 @Null
                 @Override
-                public ObservableValue<Float> call(CellDataFeatures<NbrsJoursDispoCTBean, Float> cell) {
+                public ObservableValue<Float> call(CellDataFeatures<NbrsJoursDispoRsrcBean, Float> cell) {
                     if (cell == null) {
                         return null;
                     }
-                    NbrsJoursDispoCTBean nbrsJoursDispoCTBean = cell.getValue();
+                    NbrsJoursDispoRsrcBean nbrsJoursDispoCTBean = cell.getValue();
                     if (planChargeBean.getDateEtat() == null) {
                         LOGGER.warn("Date d'état non définie !?");
                         return null;
@@ -1507,7 +1658,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
                 cptColonne++;
                 nbrsJoursDispoCTColumn.setCellValueFactory(new NbrJoursDispoCTCellCallback(cptColonne));
             }
@@ -1517,7 +1668,7 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(ressourceNbrsJoursDispoCTColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         int cptColonne = 0;
-        for (TableColumn<NbrsJoursDispoCTBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
+        for (TableColumn<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoCTColumn : nbrsJoursDispoCTTable.getCalendrierColumns()) {
             cptColonne++;
             int finalCptColonne = cptColonne;
             nbrsJoursDispoCTColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité à la CT est calculé à partir des pourcentages de dispo pour la CT.")));
@@ -1532,12 +1683,12 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        TableViews.disableColumnReorderable(nbrsJoursDispoCTTable);
+        TableViews.disableReagencingColumns(nbrsJoursDispoCTTable);
         TableViews.adjustHeightToRowCount(nbrsJoursDispoCTTable);
 
         // Tri de la liste :
-        nbrsJoursDispoCTTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoCTBean>) change -> {
-            SortedList<NbrsJoursDispoCTBean> sortedBeans = new SortedList<>(nbrsJoursDispoCTBeans);
+        nbrsJoursDispoCTTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcBean>) change -> {
+            SortedList<NbrsJoursDispoRsrcBean> sortedBeans = new SortedList<>(nbrsJoursDispoCTBeans);
             sortedBeans.comparatorProperty().bind(nbrsJoursDispoCTTable.comparatorProperty());
         });
 
@@ -1565,7 +1716,7 @@ public class DisponibilitesController extends AbstractController {
         profilPctagesDispoMaxRsrcProfilColumn.setCellValueFactory(cell -> cell.getValue().getProfilBean().codeProperty());
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoMaxRsrcProfilCallback implements Callback<CellDataFeatures<PctagesDispoMaxProfilBean, Percentage>, ObservableValue<Percentage>> {
+            final class PctagesDispoMaxRsrcProfilCallback implements Callback<CellDataFeatures<PctagesDispoRsrcProfilBean, Percentage>, ObservableValue<Percentage>> {
                 private final int noSemaine;
 
                 private PctagesDispoMaxRsrcProfilCallback(int noSemaine) {
@@ -1575,11 +1726,11 @@ public class DisponibilitesController extends AbstractController {
 
                 @Null
                 @Override
-                public ObservableValue<Percentage> call(CellDataFeatures<PctagesDispoMaxProfilBean, Percentage> cell) {
+                public ObservableValue<Percentage> call(CellDataFeatures<PctagesDispoRsrcProfilBean, Percentage> cell) {
                     if (cell == null) {
                         return null;
                     }
-                    PctagesDispoMaxProfilBean pctagesDispoMaxRsrcProfilBean = cell.getValue();
+                    PctagesDispoRsrcProfilBean pctagesDispoMaxRsrcProfilBean = cell.getValue();
                     if (planChargeBean.getDateEtat() == null) {
                         LOGGER.warn("Date d'état non définie !?");
                         return null;
@@ -1590,7 +1741,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<PctagesDispoMaxProfilBean, Percentage> pctagesDispoMaxRsrcProfilColumn : pctagesDispoMaxRsrcProfilTable.getCalendrierColumns()) {
+            for (TableColumn<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilColumn : pctagesDispoMaxRsrcProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 pctagesDispoMaxRsrcProfilColumn.setCellValueFactory(new PctagesDispoMaxRsrcProfilCallback(cptColonne));
             }
@@ -1601,7 +1752,7 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(profilPctagesDispoMaxRsrcProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
             //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-            final class PctagesDispoMaxRsrcProfilCell extends DisponibilitesRessourceHumaineCell<PctagesDispoMaxProfilBean, Percentage> {
+            final class PctagesDispoMaxRsrcProfilCell extends DisponibilitesRessourceHumaineCell<PctagesDispoRsrcProfilBean, Percentage> {
 
                 private PctagesDispoMaxRsrcProfilCell(int noSemaine) {
                     super(planChargeBean, noSemaine, new PercentageStringConverter());
@@ -1612,8 +1763,8 @@ public class DisponibilitesController extends AbstractController {
                     super.commitEdit(newValue);
 
                     //noinspection unchecked
-                    TableRow<PctagesDispoMaxProfilBean> tableRow = getTableRow();
-                    PctagesDispoMaxProfilBean pctagesDispoMaxRsrcProfilBean = tableRow.getItem();
+                    TableRow<PctagesDispoRsrcProfilBean> tableRow = getTableRow();
+                    PctagesDispoRsrcProfilBean pctagesDispoMaxRsrcProfilBean = tableRow.getItem();
                     if (pctagesDispoMaxRsrcProfilBean == null) {
                         return;
                     }
@@ -1637,7 +1788,7 @@ public class DisponibilitesController extends AbstractController {
                 }
             }
             int cptColonne = 0;
-            for (TableColumn<PctagesDispoMaxProfilBean, Percentage> pctagesDispoMaxRsrcProfilColumn : pctagesDispoMaxRsrcProfilTable.getCalendrierColumns()) {
+            for (TableColumn<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilColumn : pctagesDispoMaxRsrcProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
                 pctagesDispoMaxRsrcProfilColumn.setCellFactory(cell -> new PctagesDispoMaxRsrcProfilCell(finalCptColonne));
@@ -1650,27 +1801,116 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        pctagesDispoMaxRsrcProfilTable.setItems(pctagesDispoMaxProfilBeans);
+        pctagesDispoMaxRsrcProfilTable.setItems(pctagesDispoMaxRsrcProfilBeans);
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         TableViews.enableFilteringOnColumns(pctagesDispoMaxRsrcProfilTable, ressourcePctagesDispoMaxRsrcProfilColumn, profilPctagesDispoMaxRsrcProfilColumn);
 
-        TableViews.disableColumnReorderable(pctagesDispoMaxRsrcProfilTable);
+        TableViews.disableReagencingColumns(pctagesDispoMaxRsrcProfilTable);
         TableViews.adjustHeightToRowCount(pctagesDispoMaxRsrcProfilTable);
 
         // Tri de la liste :
-        pctagesDispoMaxRsrcProfilTable.getItems().addListener((ListChangeListener<? super PctagesDispoMaxProfilBean>) change -> {
-            SortedList<PctagesDispoMaxProfilBean> sortedBeans = new SortedList<>(pctagesDispoMaxProfilBeans);
+        pctagesDispoMaxRsrcProfilTable.getItems().addListener((ListChangeListener<? super PctagesDispoRsrcProfilBean>) change -> {
+            SortedList<PctagesDispoRsrcProfilBean> sortedBeans = new SortedList<>(pctagesDispoMaxRsrcProfilBeans);
             sortedBeans.comparatorProperty().bind(pctagesDispoMaxRsrcProfilTable.comparatorProperty());
         });
     }
 
     private void initTableNbrsJoursDispoMaxRsrcProfil() {
+        nbrsJoursDispoMaxRsrcProfilTable.setCalendrierColumns(
+                semaine1NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine2NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine3NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine4NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine5NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine6NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine7NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine8NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine9NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine10NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine11NbrsJoursDispoMaxRsrcProfilColumn,
+                semaine12NbrsJoursDispoMaxRsrcProfilColumn
+        );
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        ressourceNbrsJoursDispoMaxRsrcProfilColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        profilNbrsJoursDispoMaxRsrcProfilColumn.setCellValueFactory(cell -> cell.getValue().getProfilBean().codeProperty());
+        {
+            //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
+            final class NbrsJoursDispoMaxRsrcProfilCallback implements Callback<CellDataFeatures<NbrsJoursDispoRsrcProfilBean, Float>, ObservableValue<Float>> {
+                private final int noSemaine;
+
+                private NbrsJoursDispoMaxRsrcProfilCallback(int noSemaine) {
+                    super();
+                    this.noSemaine = noSemaine;
+                }
+
+                @Null
+                @Override
+                public ObservableValue<Float> call(CellDataFeatures<NbrsJoursDispoRsrcProfilBean, Float> cell) {
+                    if (cell == null) {
+                        return null;
+                    }
+                    NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean = cell.getValue();
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return null;
+                    }
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    FloatProperty nbrJoursProperty = nbrsJoursDispoMaxRsrcProfilBean.get(debutPeriode);
+                    if (nbrJoursProperty == null) {
+                        nbrJoursProperty = new SimpleFloatProperty();
+                        nbrsJoursDispoMaxRsrcProfilBean.put(debutPeriode, nbrJoursProperty);
+                    }
+                    return nbrJoursProperty.asObject();
+                }
+            }
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoRsrcProfilBean, Float> nbrsJoursDispoMaxRsrcProfilColumn : nbrsJoursDispoMaxRsrcProfilTable.getCalendrierColumns()) {
+                cptColonne++;
+                nbrsJoursDispoMaxRsrcProfilColumn.setCellValueFactory(new NbrsJoursDispoMaxRsrcProfilCallback(cptColonne));
+            }
+        }
+
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(ressourceNbrsJoursDispoMaxRsrcProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        ihm.interdireEdition(profilNbrsJoursDispoMaxRsrcProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
+        {
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursDispoRsrcProfilBean, Float> nbrsJoursDispoMaxRsrcProfilColumn : nbrsJoursDispoMaxRsrcProfilTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                nbrsJoursDispoMaxRsrcProfilColumn.setCellFactory(cell -> new DisponibilitesRessourceHumaineCell<>(planChargeBean, finalCptColonne, HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité max. par ressrouce et par profil est calculé à partir des pourcentages.")));
+            }
+        }
+
+        // Paramétrage des ordres de tri :
+        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        nbrsJoursDispoMaxRsrcProfilTable.setItems(nbrsJoursDispoMaxRsrcProfilBeans);
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        TableViews.enableFilteringOnColumns(nbrsJoursDispoMaxRsrcProfilTable, ressourceNbrsJoursDispoMaxRsrcProfilColumn, profilNbrsJoursDispoMaxRsrcProfilColumn);
+
+        TableViews.disableReagencingColumns(nbrsJoursDispoMaxRsrcProfilTable);
+        TableViews.adjustHeightToRowCount(nbrsJoursDispoMaxRsrcProfilTable);
+
+        // Tri de la liste :
+        nbrsJoursDispoMaxRsrcProfilTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcProfilBean>) change -> {
+            SortedList<NbrsJoursDispoRsrcProfilBean> sortedBeans = new SortedList<>(nbrsJoursDispoMaxRsrcProfilBeans);
+            sortedBeans.comparatorProperty().bind(nbrsJoursDispoMaxRsrcProfilTable.comparatorProperty());
+        });
     }
 
 
-    private void synchroniserLargeurPremieresColonnes() {
-        TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, nbrsJoursDAbsenceTable, nbrsJoursDispoMinAgriTable, pctagesDispoCTTable, nbrsJoursDispoCTTable, pctagesDispoMaxRsrcProfilTable);
+    private void synchroniserLargeurColonnes() {
+        List<TableView<?>> tablesSuivantes = new ArrayList<>(tables());
+        tablesSuivantes.remove(nbrsJoursOuvresTable);
+
+        TableViews.synchronizeColumnsWidth(nbrsJoursOuvresTable, tablesSuivantes);
     }
 
 
@@ -1777,7 +2017,7 @@ public class DisponibilitesController extends AbstractController {
             float nbrsJoursAbsencePeriode = Objects.<FloatProperty, Float>value(nbrsJoursAbsencePeriodeProperty, FloatProperty::getValue, 0f);
 
             // Nbr de jours de dispo pour le Ministère :
-            NbrsJoursDispoMinAgriBean nbrsJoursDispoMinAgriBean = Collections.fetchFirst(nbrsJoursDispoMinAgriBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
+            NbrsJoursDispoRsrcBean nbrsJoursDispoMinAgriBean = Collections.fetchFirst(nbrsJoursDispoMinAgriBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
             if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
                 nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleFloatProperty());
             }
@@ -1791,9 +2031,9 @@ public class DisponibilitesController extends AbstractController {
         // % dispo CT  :
         Percentage percentageDispoCTPeriode;
         {
-            PctagesDispoCTBean pctagesDispoCTBean = Collections.getFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+            PctagesDispoRsrcBean pctagesDispoCTBean = Collections.getFirst(pctagesDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
             if (pctagesDispoCTBean == null) {
-                pctagesDispoCTBean = new PctagesDispoCTBean(ressHumBean);
+                pctagesDispoCTBean = new PctagesDispoRsrcBean(ressHumBean);
                 pctagesDispoCTBeans.add(pctagesDispoCTBean);
             }
             if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
@@ -1807,9 +2047,9 @@ public class DisponibilitesController extends AbstractController {
         // Nbr de jours de dispo pour la CT :
         float nbrJoursDispoCTPeriode;
         {
-            NbrsJoursDispoCTBean nbrsJoursDispoCTBean = Collections.getFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+            NbrsJoursDispoRsrcBean nbrsJoursDispoCTBean = Collections.getFirst(nbrsJoursDispoCTBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
             if (nbrsJoursDispoCTBean == null) {
-                nbrsJoursDispoCTBean = new NbrsJoursDispoCTBean(ressHumBean);
+                nbrsJoursDispoCTBean = new NbrsJoursDispoRsrcBean(ressHumBean);
                 nbrsJoursDispoCTBeans.add(nbrsJoursDispoCTBean);
             }
             if (!nbrsJoursDispoCTBean.containsKey(debutPeriode)) {
@@ -1820,16 +2060,13 @@ public class DisponibilitesController extends AbstractController {
             nbrJoursDispoCTPeriodeProperty.set(nbrJoursDispoCTPeriode);
         }
 
-/*
+/* TODO FDA 2017/08 Coder.
         // Dispo. maxi. / rsrc / profil (%)
-        Percentage percentageDispoMaxRsrcProfilPeriode;
         {
-            PctagesDispoMaxProfilBean pctagesDispoMaxRsrcProfilBean = Collections.getFirst(pctagesDispoMaxProfilBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean)*/
-/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*//*
-);
+            PctagesDispoRsrcProfilBean pctagesDispoMaxRsrcProfilBean = Collections.getFirst(pctagesDispoMaxRsrcProfilBeans, bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
             if (pctagesDispoMaxRsrcProfilBean == null) {
-                pctagesDispoMaxRsrcProfilBean = new PctagesDispoMaxProfilBean(ressHumBean);
-                pctagesDispoMaxProfilBeans.add(pctagesDispoMaxRsrcProfilBean);
+                pctagesDispoMaxRsrcProfilBean = new PctagesDispoRsrcProfilBean(ressHumBean);
+                pctagesDispoMaxRsrcProfilBeans.add(pctagesDispoMaxRsrcProfilBean);
             }
             if (!pctagesDispoMaxRsrcProfilBean.containsKey(debutPeriode)) {
                 PercentageProperty percentageDispoMaxRsrcProfilPeriodeProperty = new PercentageProperty(0);
@@ -1839,7 +2076,7 @@ public class DisponibilitesController extends AbstractController {
             if (estHorsMission(debutPeriode, debutMission, finMission)) {
                 percentageDispoMaxRsrcProfilPeriodeProperty.setValue(new Percentage(0));
             }
-            percentageDispoMaxRsrcProfilPeriode = percentageDispoMaxRsrcProfilPeriodeProperty.getValue();
+            Percentage percentageDispoMaxRsrcProfilPeriode = percentageDispoMaxRsrcProfilPeriodeProperty.getValue();
         }
 */
 

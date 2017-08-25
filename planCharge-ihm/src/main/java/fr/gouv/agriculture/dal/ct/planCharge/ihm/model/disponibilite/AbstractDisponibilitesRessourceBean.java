@@ -2,6 +2,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,14 +16,14 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     // Fields :
 
     @NotNull
-    private RessourceHumaineBean ressourceHumaineBean;
+    private Property<RessourceHumaineBean> ressourceHumaineBean = new SimpleObjectProperty<>();
 
 
     // Constructors:
 
     public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, T> calendrier) {
         super(calendrier);
-        this.ressourceHumaineBean = ressourceHumaineBean;
+        this.ressourceHumaineBean.setValue(ressourceHumaineBean);
     }
 
     public AbstractDisponibilitesRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
@@ -54,7 +56,12 @@ public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO,
     // Getters/Setters:
 
     @NotNull
-    public final RessourceHumaineBean getRessourceHumaineBean() {
+    public RessourceHumaineBean getRessourceHumaineBean() {
+        return ressourceHumaineBean.getValue();
+    }
+
+    @NotNull
+    public Property<RessourceHumaineBean> ressourceHumaineBeanProperty() {
         return ressourceHumaineBean;
     }
 

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.List;
 
 public final class TableViews {
 
@@ -52,7 +53,7 @@ public final class TableViews {
     }
 
 
-    public static <S> void disableColumnReorderable(@NotNull TableView<S> table) {
+    public static <S> void disableReagencingColumns(@NotNull TableView<S> table) {
         // Cf. https://stackoverflow.com/questions/10598639/how-to-disable-column-reordering-in-a-javafx2-tableview
         //noinspection OverlyComplexAnonymousInnerClass
         table.getColumns().addListener(new ListChangeListener<TableColumn<S, ?>>() {
@@ -89,7 +90,7 @@ public final class TableViews {
 
     // Displaying :
 
-    public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull TableView<?>... tables) {
+    public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull List<TableView<?>> tables) {
         ObservableList<? extends TableColumn<?, ?>> masterColumns = masterTable.getColumns();
         for (TableView<?> table : tables) {
             ObservableList<? extends TableColumn<?, ?>> columns = table.getColumns();

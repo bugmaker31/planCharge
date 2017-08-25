@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class NbrsJoursDispoMinAgriBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDispoMinAgriBean, FloatProperty> {
+public class NbrsJoursDispoRsrcBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, NbrsJoursDispoRsrcBean, FloatProperty> {
 
 
     // Fields :
@@ -16,8 +16,12 @@ public class NbrsJoursDispoMinAgriBean extends AbstractDisponibilitesRessourceBe
 
     // Constructors :
 
-    public NbrsJoursDispoMinAgriBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
+    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
+    }
+
+    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+        super(ressourceHumaineBean);
     }
 
 

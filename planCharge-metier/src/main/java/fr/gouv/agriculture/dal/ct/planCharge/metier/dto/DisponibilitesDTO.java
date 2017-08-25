@@ -30,7 +30,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
 
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil;
+    private Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil;
 
     // Constructors:
 
@@ -38,11 +38,11 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
         super();
     }
 
-    public DisponibilitesDTO(@NotNull Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence, @NotNull Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT, @NotNull Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil) {
+    public DisponibilitesDTO(@NotNull Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence, @NotNull Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT, @NotNull Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil) {
         this();
         this.nbrsJoursAbsence = nbrsJoursAbsence;
         this.pctagesDispoCT = pctagesDispoCT;
-        this.pctagesDispoMaxProfil = pctagesDispoMaxProfil;
+        this.pctagesDispoMaxRsrcProfil = pctagesDispoMaxRsrcProfil;
     }
 
 
@@ -59,8 +59,8 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
     }
 
     @NotNull
-    public Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> getPctagesDispoMaxProfil() {
-        return pctagesDispoMaxProfil;
+    public Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> getPctagesDispoMaxRsrcProfil() {
+        return pctagesDispoMaxRsrcProfil;
     }
 
     // Implementation de AbstractDTO :
@@ -101,11 +101,11 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
 
         // Pctages de dispo max / rsrc / profil :
         Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfilEntities = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
-        for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoMaxProfil.keySet()) {
+        for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoMaxRsrcProfil.keySet()) {
             RessourceHumaine ressourceHumaine = ressourceHumaineDTO.toEntity();
             pctagesDispoMaxProfilEntities.put(ressourceHumaine, new TreeMap<>()); // TreeMap pour trier, juste pour faciliter le débogage.
 
-            Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrcDTO = pctagesDispoMaxProfil.get(ressourceHumaineDTO);
+            Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrcDTO = pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO);
             Map<Profil, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrc = pctagesDispoMaxProfilEntities.get(ressourceHumaine);
             for (ProfilDTO profilDTO : pctagesDispoMaxProfilRsrcDTO.keySet()) {
                 Profil profil = profilDTO.toEntity();
@@ -142,13 +142,13 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
                 .forEachOrdered(ressourceHumaine -> pctagesDispoCTDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getPctagesDispoCT().get(ressourceHumaine)));
 
         // Pctages de dispo max / rsrc / profil :
-        Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfilDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
-        for (RessourceHumaine ressourceHumaine : entity.getPctagesDispoMaxProfil().keySet()) {
+        Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfilDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
+        for (RessourceHumaine ressourceHumaine : entity.getPctagesDispoMaxRsrcProfil().keySet()) {
             RessourceHumaineDTO ressourceHumaineDTO = RessourceHumaineDTO.from(ressourceHumaine);
-            pctagesDispoMaxProfilDTO.put(ressourceHumaineDTO, new TreeMap<>()); // TreeMap pour trier, juste pour faciliter le débogage.
+            pctagesDispoMaxRsrcProfilDTO.put(ressourceHumaineDTO, new TreeMap<>()); // TreeMap pour trier, juste pour faciliter le débogage.
 
-            Map<Profil, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrc = entity.getPctagesDispoMaxProfil().get(ressourceHumaine);
-            Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrcDTO = pctagesDispoMaxProfilDTO.get(ressourceHumaineDTO);
+            Map<Profil, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrc = entity.getPctagesDispoMaxRsrcProfil().get(ressourceHumaine);
+            Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxProfilRsrcDTO = pctagesDispoMaxRsrcProfilDTO.get(ressourceHumaineDTO);
             for (Profil profil : pctagesDispoMaxProfilRsrc.keySet()) {
                 ProfilDTO profilDTO = ProfilDTO.from(profil);
                 Map<LocalDate, Percentage> calendrier = pctagesDispoMaxProfilRsrc.get(profil);
@@ -156,7 +156,7 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
             }
         }
 
-        DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsenceDTO, pctagesDispoCTDTO, pctagesDispoMaxProfilDTO);
+        DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsenceDTO, pctagesDispoCTDTO, pctagesDispoMaxRsrcProfilDTO);
         return disponibilites;
     }
 

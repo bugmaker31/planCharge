@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class PctagesDispoCTBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, PctagesDispoCTBean, PercentageProperty> {
+public class PctagesDispoRsrcBean extends AbstractDisponibilitesRessourceBean<AbstractDTO, PctagesDispoRsrcBean, PercentageProperty> {
 
 
     // Fields :
@@ -16,11 +16,11 @@ public class PctagesDispoCTBean extends AbstractDisponibilitesRessourceBean<Abst
 
     // Constructors :
 
-    public PctagesDispoCTBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, PercentageProperty> calendrier) {
+    public PctagesDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, PercentageProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
     }
 
-    public PctagesDispoCTBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+    public PctagesDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
         super(ressourceHumaineBean);
     }
 

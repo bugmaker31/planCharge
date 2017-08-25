@@ -9,18 +9,18 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class NbrsJoursDispoMaxProfilBean extends AbstractDisponibilitesRessourceProfilBean<AbstractDTO, NbrsJoursDispoMaxProfilBean, FloatProperty> {
+public class NbrsJoursDispoRsrcProfilBean extends AbstractDisponibilitesRessourceProfilBean<AbstractDTO, NbrsJoursDispoRsrcProfilBean, FloatProperty> {
 
     // Fields :
 
 
     // Constructors :
 
-    public NbrsJoursDispoMaxProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
+    public NbrsJoursDispoRsrcProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(ressourceHumaineBean, profilBean, calendrier);
     }
 
-    public NbrsJoursDispoMaxProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean) {
+    public NbrsJoursDispoRsrcProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean) {
         super(ressourceHumaineBean, profilBean);
     }
 

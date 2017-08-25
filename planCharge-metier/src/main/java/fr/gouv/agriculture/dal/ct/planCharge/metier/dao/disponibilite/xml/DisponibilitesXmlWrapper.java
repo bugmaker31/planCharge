@@ -121,8 +121,8 @@ public class DisponibilitesXmlWrapper {
         // Pctages dispo max / rsrc / profil :
         rapport.setAvancement("Sauvegarde des pourcentages de dispo. max par ressource et profil...");
         pctagesDispoMaxProfilXmlWrapper.clear();
-        for (RessourceHumaine rsrcHum : disponibilites.getPctagesDispoMaxProfil().keySet()) {
-            Map<Profil, Map<LocalDate, Percentage>> pctagesDispoMaxRessHum = disponibilites.getPctagesDispoMaxProfil().get(rsrcHum);
+        for (RessourceHumaine rsrcHum : disponibilites.getPctagesDispoMaxRsrcProfil().keySet()) {
+            Map<Profil, Map<LocalDate, Percentage>> pctagesDispoMaxRessHum = disponibilites.getPctagesDispoMaxRsrcProfil().get(rsrcHum);
             pctagesDispoMaxProfilXmlWrapper.put(rsrcHum.getTrigramme(), new PctagesDispoProfilsXmlWrapper().init(pctagesDispoMaxRessHum, rapport));
         }
 

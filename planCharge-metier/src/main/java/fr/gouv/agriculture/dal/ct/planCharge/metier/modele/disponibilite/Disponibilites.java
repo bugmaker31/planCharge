@@ -20,16 +20,16 @@ public class Disponibilites extends AbstractEntity {
     @NotNull
     private final Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT;
     @NotNull
-    private final Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil;
+    private final Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil;
 
 
     // Constructors:
 
-    public Disponibilites(@NotNull Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence, @NotNull Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT, @NotNull Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil) {
+    public Disponibilites(@NotNull Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence, @NotNull Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT, @NotNull Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil) {
         super();
         this.nbrsJoursAbsence = nbrsJoursAbsence;
         this.pctagesDispoCT = pctagesDispoCT;
-        this.pctagesDispoMaxProfil = pctagesDispoMaxProfil;
+        this.pctagesDispoMaxRsrcProfil = pctagesDispoMaxRsrcProfil;
     }
 
 
@@ -46,8 +46,8 @@ public class Disponibilites extends AbstractEntity {
     }
 
     @NotNull
-    public Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> getPctagesDispoMaxProfil() {
-        return pctagesDispoMaxProfil;
+    public Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> getPctagesDispoMaxRsrcProfil() {
+        return pctagesDispoMaxRsrcProfil;
     }
 
     // Implémentation de AbstractEntity :
@@ -69,6 +69,6 @@ public class Disponibilites extends AbstractEntity {
     public String toString() {
         return nbrsJoursAbsence
                 + " " + pctagesDispoCT
-                + " " + pctagesDispoMaxProfil;
+                + " " + pctagesDispoMaxRsrcProfil;
     }
 }

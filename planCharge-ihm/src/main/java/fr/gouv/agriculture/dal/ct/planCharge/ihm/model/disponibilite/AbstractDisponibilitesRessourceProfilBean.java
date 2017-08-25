@@ -3,6 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,19 +16,19 @@ public abstract class AbstractDisponibilitesRessourceProfilBean<D extends Abstra
     // Fields :
 
     @NotNull
-    private ProfilBean profilBean;
+    private Property<ProfilBean> profilBean = new SimpleObjectProperty<>();
 
 
     // Constructors:
 
     public AbstractDisponibilitesRessourceProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean,@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
         super(ressourceHumaineBean, calendrier);
-        this.profilBean = profilBean;
+        this.profilBean.setValue(profilBean);
     }
 
     public AbstractDisponibilitesRessourceProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean) {
         super(ressourceHumaineBean);
-        this.profilBean = profilBean;
+        this.profilBean.setValue(profilBean);
     }
 
 
@@ -34,9 +36,13 @@ public abstract class AbstractDisponibilitesRessourceProfilBean<D extends Abstra
 
     @NotNull
     public final ProfilBean getProfilBean() {
-        return profilBean;
+        return profilBean.getValue();
     }
 
+    @NotNull
+    public Property<ProfilBean> profilBeanProperty() {
+        return profilBean;
+    }
 
     // Methods:
 
@@ -46,7 +52,7 @@ public abstract class AbstractDisponibilitesRessourceProfilBean<D extends Abstra
         if ((o == null) || (getClass() != o.getClass())) return false;
         if (!super.equals(o)) return false;
 
-        NbrsJoursDispoMaxProfilBean that = (NbrsJoursDispoMaxProfilBean) o;
+        NbrsJoursDispoRsrcProfilBean that = (NbrsJoursDispoRsrcProfilBean) o;
 
         return super.equals(that) && getProfilBean().equals(that.getProfilBean());
     }

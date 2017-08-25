@@ -48,6 +48,7 @@ import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -557,10 +558,8 @@ public class ApplicationController extends AbstractController {
 
             definirDateEtat(planChargeBean.getDateEtat());
 
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
             ihm.getTachesController().razFiltres();
             ihm.getChargesController().razFiltres();
-*/
 
             ihm.afficherNotification(
                     "Chargement terminé",
@@ -1277,18 +1276,12 @@ public class ApplicationController extends AbstractController {
         // Rq : Plus nécessaire de redéfinir les colonnes pour les TableView de getDisponibilitesController() autres que "*NbrsJoursOuvresTable",
         //      maintenant qu'on n'affiche plus les TableHeaderRow de ces TableView.
 
-        TableViewAvecCalendrier[] tables = {
-                // DisponibilitesController
-                ihm.getDisponibilitesController().getNbrsJoursOuvresTable(),
-                ihm.getDisponibilitesController().getNbrsJoursDAbsenceTable(),
-                ihm.getDisponibilitesController().getNbrsJoursDispoMinAgriTable(),
-                ihm.getDisponibilitesController().getPctagesDispoCTTable(),
-                ihm.getDisponibilitesController().getNbrsJoursDispoCTTable(),
-                ihm.getDisponibilitesController().getPctagesDispoMaxRsrcProfilTable(),
-                ihm.getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilTable(),
-                // ChargesController
-                ihm.getChargesController().getTachesTable()
-        };
+        List<TableViewAvecCalendrier> tables = new ArrayList<>();
+        // Disponibilites :
+        tables.addAll(ihm.getDisponibilitesController().tables());
+        // Charges :
+        tables.add(ihm.getChargesController().getTachesTable());
+        //
         for (TableViewAvecCalendrier table : tables) {
             //noinspection unchecked
             List<TableColumn> calendrierColumns = table.getCalendrierColumns();
