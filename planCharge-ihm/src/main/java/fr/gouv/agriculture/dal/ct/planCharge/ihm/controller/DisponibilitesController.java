@@ -1992,7 +1992,7 @@ public class DisponibilitesController extends AbstractController {
         nbrsJoursDispoMaxRsrcProfilTable.setItems(nbrsJoursDispoMaxRsrcProfilBeans);
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
-        TableViews.enableFilteringOnColumns(nbrsJoursDispoMaxRsrcProfilTable, ressourceNbrsJoursDispoMaxRsrcProfilColumn, profilNbrsJoursDispoMaxRsrcProfilColumn);
+//        TableViews.enableFilteringOnColumns(nbrsJoursDispoMaxRsrcProfilTable, ressourceNbrsJoursDispoMaxRsrcProfilColumn, profilNbrsJoursDispoMaxRsrcProfilColumn);
 
         TableViews.disableReagencingColumns(nbrsJoursDispoMaxRsrcProfilTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoMaxRsrcProfilTable);

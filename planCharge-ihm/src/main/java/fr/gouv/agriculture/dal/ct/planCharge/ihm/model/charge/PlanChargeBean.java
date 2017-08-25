@@ -295,7 +295,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             }
         }
         { // Pctages de dispo max / rsrc / profil :
-            pctagesDispoMaxRsrcProfilBeans.clear();
+            pctagesDispoMaxRsrcProfilBeans.clear(); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
             Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil = planCharge.getDisponibilites().getPctagesDispoMaxRsrcProfil();
             for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoMaxRsrcProfil.keySet()) {
                 for (ProfilDTO profilDTO : pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO).keySet()) {

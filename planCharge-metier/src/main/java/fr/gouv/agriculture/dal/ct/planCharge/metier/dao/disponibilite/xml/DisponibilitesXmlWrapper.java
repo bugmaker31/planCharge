@@ -29,7 +29,7 @@ public class DisponibilitesXmlWrapper {
     private Map<String, CalendrierXmlWrapper> pctagesDispoCTXmlWrapper = new HashMap<>();
 
     @NotNull
-    private Map<String, PctagesDispoProfilsXmlWrapper> pctagesDispoMaxProfilXmlWrapper = new HashMap<>();
+    private Map<String, PctagesDispoProfilsXmlWrapper> pctagesDispoMaxRsrcProfilXmlWrapper = new HashMap<>();
 
     //@Autowired
     @NotNull
@@ -68,8 +68,8 @@ public class DisponibilitesXmlWrapper {
     @SuppressWarnings({"SuspiciousGetterSetter", "unused"})
     @XmlElement(required = true)
     @NotNull
-    public Map<String, PctagesDispoProfilsXmlWrapper> getPctagesDispoMaxProfil() {
-        return pctagesDispoMaxProfilXmlWrapper;
+    public Map<String, PctagesDispoProfilsXmlWrapper> getPctagesDispoMaxRsrcProfil() {
+        return pctagesDispoMaxRsrcProfilXmlWrapper;
     }
 
 
@@ -84,8 +84,8 @@ public class DisponibilitesXmlWrapper {
     }
 
     @SuppressWarnings({"SuspiciousGetterSetter", "unused"})
-    public void setPctagesDispoMaxProfil(@NotNull Map<String, PctagesDispoProfilsXmlWrapper> pctagesDispoMaxProfilXmlWrapper) {
-        this.pctagesDispoMaxProfilXmlWrapper = pctagesDispoMaxProfilXmlWrapper;
+    public void setPctagesDispoMaxRsrcProfil(@NotNull Map<String, PctagesDispoProfilsXmlWrapper> pctagesDispoMaxProfilXmlWrapper) {
+        this.pctagesDispoMaxRsrcProfilXmlWrapper = pctagesDispoMaxProfilXmlWrapper;
     }
 
     // Méthodes :
@@ -120,10 +120,10 @@ public class DisponibilitesXmlWrapper {
 
         // Pctages dispo max / rsrc / profil :
         rapport.setAvancement("Sauvegarde des pourcentages de dispo. max par ressource et profil...");
-        pctagesDispoMaxProfilXmlWrapper.clear();
+        pctagesDispoMaxRsrcProfilXmlWrapper.clear();
         for (RessourceHumaine rsrcHum : disponibilites.getPctagesDispoMaxRsrcProfil().keySet()) {
             Map<Profil, Map<LocalDate, Percentage>> pctagesDispoMaxRessHum = disponibilites.getPctagesDispoMaxRsrcProfil().get(rsrcHum);
-            pctagesDispoMaxProfilXmlWrapper.put(rsrcHum.getTrigramme(), new PctagesDispoProfilsXmlWrapper().init(pctagesDispoMaxRessHum, rapport));
+            pctagesDispoMaxRsrcProfilXmlWrapper.put(rsrcHum.getTrigramme(), new PctagesDispoProfilsXmlWrapper().init(pctagesDispoMaxRessHum, rapport));
         }
 
         return this;
@@ -156,9 +156,9 @@ public class DisponibilitesXmlWrapper {
 
         // Pctages dispo max. / rsrc / profil :
         Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap au lieu de HashMap juste pour trier afin de faciliter le débogage.
-        for (String trigrammeRsrcHum : pctagesDispoMaxProfilXmlWrapper.keySet()) {
+        for (String trigrammeRsrcHum : pctagesDispoMaxRsrcProfilXmlWrapper.keySet()) {
             RessourceHumaine ressourceHumaine = ressourceHumaineDao.load(trigrammeRsrcHum);
-            Map<Profil, Map<LocalDate, Percentage>> pctagesDispoProfils = pctagesDispoMaxProfilXmlWrapper.get(trigrammeRsrcHum).extract();
+            Map<Profil, Map<LocalDate, Percentage>> pctagesDispoProfils = pctagesDispoMaxRsrcProfilXmlWrapper.get(trigrammeRsrcHum).extract();
             pctagesDispoMaxProfil.put(ressourceHumaine, pctagesDispoProfils);
         }
 
