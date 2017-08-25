@@ -52,7 +52,7 @@ public abstract class AbstractDisponibilitesRessourceProfilBean<D extends Abstra
         if ((o == null) || (getClass() != o.getClass())) return false;
         if (!super.equals(o)) return false;
 
-        NbrsJoursDispoRsrcProfilBean that = (NbrsJoursDispoRsrcProfilBean) o;
+        AbstractDisponibilitesRessourceProfilBean that = (AbstractDisponibilitesRessourceProfilBean) o;
 
         return super.equals(that) && getProfilBean().equals(that.getProfilBean());
     }

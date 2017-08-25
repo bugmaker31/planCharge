@@ -17,6 +17,9 @@ public class PercentageStringConverter extends StringConverter<Percentage> {
         if (pc == null) {
             return null;
         }
+        if (pc.floatValue() == 0) {
+            return "-";
+        }
         return PSC.toString(pc.floatValue());
     }
 
@@ -25,6 +28,9 @@ public class PercentageStringConverter extends StringConverter<Percentage> {
     public Percentage fromString(@Null String string) {
         if (string == null) {
             return null;
+        }
+        if (string.equals("-")) {
+            return new Percentage(0);
         }
         return Percentage.parse(string);
     }

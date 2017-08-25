@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -23,7 +24,10 @@ public class DisponibilitesService {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesService.class);
 
+    private static class InstanceHolder {
 
+        private static final DisponibilitesService INSTANCE = new DisponibilitesService();
+    }
     @NotNull
     public static DisponibilitesService instance() {
         return InstanceHolder.INSTANCE;
@@ -31,8 +35,8 @@ public class DisponibilitesService {
 
 
     // Fields :
-
     //    @Autowired
+
     @NotNull
     private JourFerieDao jourFerieDao = JourFerieDao.instance();
 
@@ -40,6 +44,7 @@ public class DisponibilitesService {
     // Constructeurs :
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
+
     private DisponibilitesService() {
         super();
     }
@@ -84,9 +89,43 @@ public class DisponibilitesService {
         return nbrJoursOuvresDsPeriode;
     }
 
+    // TODO FDA 2017/08 Gérer le cas où la mission commence/s'arrête en milieu de période (semaine).
+    public float nbrJoursDispoMinAgri(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, int nbrJoursOuvresPeriode, float nbrsJoursAbsencePeriode) {
+        if (estHorsMission(debutPeriode, debutMission, finMission)) {
+            return 0f;
+        }
+        return Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
+    }
 
-    private static class InstanceHolder {
-        private static final DisponibilitesService INSTANCE = new DisponibilitesService();
+    public Percentage pctageDispoCT(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) {
+        if (estHorsMission(debutPeriode, debutMission, finMission)) {
+            return new Percentage(0f);
+        }
+        return PCTAGE_DISPO_CT_MIN;
+    }
+
+    public float nbrJoursDispoCT(float nbrJoursDispoMinAgriPeriode, @NotNull Percentage pctageDispoCTPeriode) {
+        return (nbrJoursDispoMinAgriPeriode * pctageDispoCTPeriode.floatValue()) / 100;
+    }
+
+    public float nbrJoursDispoMaxRsrcProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, float nbrJoursDispoCTPeriode, @NotNull Percentage pctageDispoRsrcProfil) {
+        if (estHorsMission(debutPeriode, debutMission, finMission)) {
+            return 0f;
+        }
+        return nbrJoursDispoCTPeriode * pctageDispoRsrcProfil.floatValue();
+    }
+
+
+    private boolean estHorsMission(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) {
+        return estAvantLaMission(debutPeriode, debutMission) || estApresLaMission(debutPeriode, finMission);
+    }
+
+    private boolean estAvantLaMission(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission) {
+        return (debutMission != null) && debutMission.isAfter(debutPeriode);
+    }
+
+    private boolean estApresLaMission(@NotNull LocalDate debutPeriode, @Null LocalDate finMission) {
+        return ((finMission != null) && finMission.isBefore(debutPeriode));
     }
 
 }
