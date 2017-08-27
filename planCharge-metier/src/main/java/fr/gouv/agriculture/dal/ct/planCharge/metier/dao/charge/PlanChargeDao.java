@@ -755,7 +755,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
                     XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
                     Percentage pctageDispoCT = (
-                            Calc.isEmpty(pctageDispoCTCell) ? DisponibilitesService.PCTAGE_DISPO_CT_MIN
+                            Calc.isEmpty(pctageDispoCTCell) ? DisponibilitesService.PCTAGE_DISPO_CT_MIN // TOD FDA 2017/08 Confirmer la valeur par défaut.
                                     : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
                     );
 

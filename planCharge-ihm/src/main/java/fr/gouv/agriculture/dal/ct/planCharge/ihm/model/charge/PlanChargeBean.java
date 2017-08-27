@@ -317,8 +317,15 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     @Override
     public PlanChargeDTO toDto() throws BeanException {
+        assert dateEtat != null;
+        ReferentielsDTO referentiels = toReferentielsDTO();
+        DisponibilitesDTO disponibilites = toDisponibilitesDTO();
+        PlanificationsDTO planifications = toPlanificationDTOs();
+        return new PlanChargeDTO(dateEtat, referentiels, disponibilites, planifications);
+    }
 
-        // Référentiels :
+    @SuppressWarnings("WeakerAccess")
+    public ReferentielsDTO toReferentielsDTO() {
         List<JourFerieDTO> joursFeries = joursFeriesBeans.stream().map(JourFerieBean::to).collect(Collectors.toList());
         List<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::to).collect(Collectors.toList());
         List<ProfilDTO> profils = profilsBeans.stream().map(ProfilBean::to).collect(Collectors.toList());
@@ -329,10 +336,12 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 .map(ressourceBean -> (RessourceHumaineBean) ressourceBean)
                 .map(RessourceHumaineBean::to)
                 .collect(Collectors.toList());
-        ReferentielsDTO referentiels = new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
+        return new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
+    }
 
-        // Disponibilités :
-        //
+    @NotNull
+    public DisponibilitesDTO toDisponibilitesDTO() {
+
         // Nbrs de jours d'absence / rsrc :
         Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (NbrsJoursAbsenceBean nbrsJoursAbsenceBean : nbrsJoursAbsenceBeans) {
@@ -344,6 +353,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             }
             nbrsJoursAbsence.put(ressourceHumaine, calendrier);
         }
+
         // % de dispo pour la CT / rsrc
         Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (PctagesDispoRsrcBean pctagesDispoCTBean : pctagesDispoCTBeans) {
@@ -355,6 +365,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             }
             pctagesDispoCT.put(ressourceHumaine, calendrier);
         }
+
         // % de dispo max / rsrc / profil
         Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (PctagesDispoRsrcProfilBean pctagesDispoMaxProfilBean : pctagesDispoMaxRsrcProfilBeans) {
@@ -375,14 +386,9 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
             pctagesDispoMaxRessHum.put(profil, calendrier);
         }
-        //
+
         DisponibilitesDTO disponibilites = new DisponibilitesDTO(nbrsJoursAbsence, pctagesDispoCT, pctagesDispoMaxProfil);
-
-        // Tâches + Charge :
-        PlanificationsDTO planifications = toPlanificationDTOs();
-
-        assert dateEtat != null;
-        return new PlanChargeDTO(dateEtat, referentiels, disponibilites, planifications);
+        return disponibilites;
     }
 
     @NotNull

@@ -3,6 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.JourFerieDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
@@ -14,20 +16,28 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DisponibilitesService {
+@SuppressWarnings("ClassHasNoToStringMethod")
+public final class DisponibilitesService {
 
     public static final Percentage PCTAGE_DISPO_CT_MIN = new Percentage(90f);
+
+    public static final Percentage PCTAGE_DISPO_RSRC_DEFAUT = new Percentage(0f);
+
+    public static final Float NBR_JOURS_ABSENCE_RSRC_DEFAUT = 0f;
 
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesService.class);
 
-    private static class InstanceHolder {
+    @SuppressWarnings("UtilityClass")
+    private static final class InstanceHolder {
 
         private static final DisponibilitesService INSTANCE = new DisponibilitesService();
     }
+
     @NotNull
     public static DisponibilitesService instance() {
         return InstanceHolder.INSTANCE;
@@ -44,7 +54,6 @@ public class DisponibilitesService {
     // Constructeurs :
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
-
     private DisponibilitesService() {
         super();
     }
@@ -72,7 +81,7 @@ public class DisponibilitesService {
             throw new ServiceException("Impossible de récupérer la liste des jours fériés.", e);
         }
         List<LocalDate> datesJoursFeries = joursFeries.stream()
-                .map(jourFerie -> jourFerie.getDate())
+                .map(JourFerie::getDate)
                 .collect(Collectors.toList());
 
         for (int cptJour = 0; cptJour < nbrJoursDsPeriode; cptJour++) {
@@ -90,29 +99,45 @@ public class DisponibilitesService {
     }
 
     // TODO FDA 2017/08 Gérer le cas où la mission commence/s'arrête en milieu de période (semaine).
-    public float nbrJoursDispoMinAgri(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, int nbrJoursOuvresPeriode, float nbrsJoursAbsencePeriode) {
+    public float nbrJoursDispoMinAgri(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, int nbrJoursOuvresPeriode, float nbrsJoursAbsencePeriode) throws ServiceException {
         if (estHorsMission(debutPeriode, debutMission, finMission)) {
             return 0f;
         }
         return Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
     }
 
-    public Percentage pctageDispoCT(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) {
+    public Percentage pctageDispoCT(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) throws ServiceException {
         if (estHorsMission(debutPeriode, debutMission, finMission)) {
             return new Percentage(0f);
         }
         return PCTAGE_DISPO_CT_MIN;
     }
 
-    public float nbrJoursDispoCT(float nbrJoursDispoMinAgriPeriode, @NotNull Percentage pctageDispoCTPeriode) {
-        return (nbrJoursDispoMinAgriPeriode * pctageDispoCTPeriode.floatValue()) / 100;
+    public float nbrJoursDispoCT(float nbrJoursDispoMinAgriPeriode, @NotNull Percentage pctageDispoCTPeriode) throws ServiceException {
+        //noinspection MagicNumber
+        return (nbrJoursDispoMinAgriPeriode * pctageDispoCTPeriode.floatValue()) / 100f;
     }
 
-    public float nbrJoursDispoMaxRsrcProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, float nbrJoursDispoCTPeriode, @NotNull Percentage pctageDispoRsrcProfil) {
+    public float nbrJoursDispoMaxRsrcProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, float nbrJoursDispoCTPeriode, @NotNull Percentage pctageDispoRsrcProfil) throws ServiceException {
         if (estHorsMission(debutPeriode, debutMission, finMission)) {
             return 0f;
         }
         return nbrJoursDispoCTPeriode * pctageDispoRsrcProfil.floatValue();
+    }
+
+    public float nbrsJoursDispoMaxProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, @NotNull Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil, @NotNull ProfilDTO profilDTO) throws ServiceException {
+        if (estHorsMission(debutPeriode, debutMission, finMission)) {
+            return 0f;
+        }
+
+        final float[] nbrsJoursDispoMaxProfil = {0f};
+        pctagesDispoMaxRsrcProfil.values().parallelStream()
+                .forEach((Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxProfils) -> {
+                    pctagesDispoMaxProfils.keySet().parallelStream()
+                            .filter((ProfilDTO p) -> p.equals(profilDTO))
+                            .forEach(p -> nbrsJoursDispoMaxProfil[0] += pctagesDispoMaxProfils.get(p).get(debutPeriode).floatValue());
+                });
+        return nbrsJoursDispoMaxProfil[0];
     }
 
 

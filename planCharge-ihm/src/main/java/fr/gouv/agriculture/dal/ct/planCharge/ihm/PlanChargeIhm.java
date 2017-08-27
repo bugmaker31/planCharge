@@ -95,14 +95,14 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
 
+    public static PlanChargeIhm instance() {
+        return instance;
+    }
+
     private static PlanChargeIhm instance;
 
     @NotNull
     private static Map<String, PopupWindow> popups = new HashMap<>();
-
-    public static PlanChargeIhm instance() {
-        return instance;
-    }
 
     //    private static Contexte contexte = Contexte.instance();
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
@@ -112,6 +112,10 @@ public class PlanChargeIhm extends Application {
 
     @NotNull
     private Stage primaryStage;
+
+
+    @NotNull
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
 
     @NotNull
@@ -135,27 +139,6 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private Region chargesView;
 
-
-    @NotNull
-    private ApplicationController applicationController;
-    /*
-    @NotNull
-    private ErrorController errorController;
-    */
-/*
-    @NotNull
-    private WorkProgressController workProgressController;
-*/
-    @NotNull
-    private JoursFeriesController joursFeriesController;
-    @NotNull
-    private RessourcesHumainesController ressourcesHumainesController;
-    @NotNull
-    private DisponibilitesController disponibilitesController;
-    @NotNull
-    private TachesController tachesController;
-    @NotNull
-    private ChargesController chargesController;
 
     @NotNull
     private Pane contentPane;
@@ -201,9 +184,35 @@ public class PlanChargeIhm extends Application {
         return chargesView;
     }
 
+    /*
+    La couche "Controller" :
+     */
+
+    @NotNull
+    private ApplicationController applicationController;
+    /*
+    @NotNull
+    private ErrorController errorController;
+    */
+/*
+    @NotNull
+    private WorkProgressController workProgressController;
+*/
+    @NotNull
+    private JoursFeriesController joursFeriesController;
+    @NotNull
+    private RessourcesHumainesController ressourcesHumainesController;
+    @NotNull
+    private DisponibilitesController disponibilitesController;
+    @NotNull
+    private TachesController tachesController;
+    @NotNull
+    private ChargesController chargesController;
+
     public ApplicationController getApplicationController() {
         return applicationController;
     }
+
 
     public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
         cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
@@ -264,9 +273,6 @@ public class PlanChargeIhm extends Application {
     public ChargesController getChargesController() {
         return chargesController;
     }
-
-    @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
 
     public static void main(String[] args) {
@@ -391,7 +397,7 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    public void showError(@NotNull Thread thread, @NotNull Throwable throwable) {
+    private void showError(@NotNull Thread thread, @NotNull Throwable throwable) {
         LOGGER.error("An (uncaught) error occurred (in thread " + thread.getName() + ").", throwable);
         if (Platform.isFxApplicationThread()) {
 
@@ -403,10 +409,10 @@ public class PlanChargeIhm extends Application {
             // TODO FDA 2017/07 Tester (à n'afficher que pour le développement, pas pour la production car peut contenuir des informations sensibles comme les mots de passe, etc.).
             if (estEnDeveloppement) {
                 alert.setContentText(throwable.getLocalizedMessage());
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                throwable.printStackTrace(pw);
-                String exceptionText = sw.toString();
+                StringWriter stringWriter = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(stringWriter);
+                throwable.printStackTrace(printWriter);
+                String exceptionText = stringWriter.toString();
 
                 Label label = new Label("Exception Java : ");
 

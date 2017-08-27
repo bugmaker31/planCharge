@@ -9,6 +9,7 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurDisponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportChargementAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportPlanChargeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
@@ -203,6 +204,9 @@ public class ApplicationController extends AbstractController {
     private String moduleCourant;
 */
 
+    //    @Autowired
+    @NotNull
+    private final CalculateurDisponibilites calculateurDisponibilites = CalculateurDisponibilites.instance();
 
     // Les services métier :
 
@@ -551,31 +555,38 @@ public class ApplicationController extends AbstractController {
         };
 
         try {
+            calculateurDisponibilites.execPuisCalculer(
+                    () -> {
+                        try {
 
-            /*RapportChargementAvecProgression rapportFinal = */
-            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
-//            assert rapportFinal != null;
+                    /*RapportChargementAvecProgression rapportFinal = */
+                            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
+//                  assert rapportFinal != null;
 
-            definirDateEtat(planChargeBean.getDateEtat());
+                            definirDateEtat(planChargeBean.getDateEtat());
 
-            ihm.getTachesController().razFiltres();
-            ihm.getChargesController().razFiltres();
+                            ihm.getTachesController().razFiltres();
+                            ihm.getChargesController().razFiltres();
 
-            ihm.afficherNotification(
-                    "Chargement terminé",
-                    "Le chargement est terminé :"
-                            + "\n- date d'état : " + planChargeBean.getDateEtat()
-                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches"
-            );
+                            ihm.afficherNotification(
+                                    "Chargement terminé",
+                                    "Le chargement est terminé :"
+                                            + "\n- date d'état : " + planChargeBean.getDateEtat()
+                                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches"
+                            );
 
-            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
+                            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
 
-            majBarreEtat();
+                            majBarreEtat();
 
-        } catch (ViolationsReglesGestionException e) {
-            ihm.afficherViolationsReglesGestion(
-                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
-                    e.getViolations()
+                        } catch (ViolationsReglesGestionException e) {
+                            ihm.afficherViolationsReglesGestion(
+                                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                                    e.getViolations()
+                            );
+                        }
+                    },
+                    () -> calculateurDisponibilites.calculer(planChargeBean.dateEtat())
             );
         } catch (IhmException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);

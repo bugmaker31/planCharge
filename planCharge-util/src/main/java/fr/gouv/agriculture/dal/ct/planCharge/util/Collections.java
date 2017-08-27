@@ -9,8 +9,10 @@ import java.util.function.Predicate;
 public class Collections {
 
     @NotNull
-    public static final <T, E extends Exception> T fetchFirst(@NotNull Collection<T> collection, @NotNull Predicate<T> pred, @NotNull E exception) throws E {
-        T elt = getFirst(collection, pred);
+    public static final <T, E extends Exception> T any(@NotNull Collection<T> collection, @NotNull Predicate<T> pred, @NotNull E exception) throws E {
+
+        T elt = any(collection, pred);
+
         if (elt == null) {
             throw exception;
         } else {
@@ -19,8 +21,8 @@ public class Collections {
     }
 
     @Null
-    public static final <T> T getFirst(@NotNull Collection<T> collection, @NotNull Predicate<T> pred) {
-        Optional<T> eltOpt = collection.parallelStream().filter(pred).findFirst();
+    public static final <T> T any(@NotNull Collection<T> collection, @NotNull Predicate<T> pred) {
+        Optional<T> eltOpt = collection.parallelStream().filter(pred).findAny();
         if (eltOpt.isPresent()) {
             T elt = eltOpt.get();
             return elt;
