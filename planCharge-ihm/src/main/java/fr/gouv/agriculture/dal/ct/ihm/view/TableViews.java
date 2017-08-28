@@ -197,12 +197,12 @@ public final class TableViews {
         });
     }
 
+    // FIXME FDA 2017/08 Ne fonctionne pas à 100% : quelques lignes ne sont parfois pas dans l'ordre défini par le sortOrder du FXML.
     public static <S> void ensureSorting(@NotNull TableView<S> table) {
-        table.getItems().addListener((ListChangeListener<? super S>) change ->
-            Platform.runLater(() -> {
-                SortedList<S> sortedBeans = new SortedList<>(table.getItems());
-                sortedBeans.comparatorProperty().bind(table.comparatorProperty());
-            })
-        );
+        table.getItems().addListener((ListChangeListener<? super S>) change -> {
+            SortedList<S> sortedBeans = new SortedList<>(table.getItems());
+            sortedBeans.comparatorProperty().bind(table.comparatorProperty());
+            table.setItems(sortedBeans);
+        });
     }
 }

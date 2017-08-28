@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +125,7 @@ public class CalculateurDisponibilites extends AbstractCalculateur {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
-        LOGGER.debug("Calcul des disponibilités pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
+//        LOGGER.debug("Calcul des disponibilités pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
 
         LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
@@ -349,7 +348,7 @@ public class CalculateurDisponibilites extends AbstractCalculateur {
             return;
         }
 
-        LOGGER.debug("Calcul des disponibilités pour les profils et la période commençant le n° {} : ", debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
+//        LOGGER.debug("Calcul des disponibilités pour les profils et la période commençant le n° {} : ", debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         // Ajout des beans pour tous les profils manquants,
         // en 1 seule fois (1 'addAll' au lieu de N 'add') pour éviter les recalculs en chaîne, qui sont déclenchés à chaque modif :
@@ -396,7 +395,7 @@ public class CalculateurDisponibilites extends AbstractCalculateur {
             FloatProperty nbrJoursDispoMaxProfilPeriodeProperty = nbrsJoursDispoMaxProfilBean.get(debutPeriode);
             nbrJoursDispoMaxProfilPeriodeProperty.setValue(nbrsJoursDispoMaxProfil);
         }
-        LOGGER.debug("Disponibilités calculées pour les profils et la période commençant le n° {} : ", debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
+//        LOGGER.debug("Disponibilités calculées pour les profils et la période commençant le n° {} : ", debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
     }
 
 }
