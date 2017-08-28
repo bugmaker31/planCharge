@@ -17,6 +17,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
@@ -26,12 +27,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
@@ -183,6 +182,26 @@ public class DisponibilitesController extends AbstractController {
      La couche "View" :
       */
 
+    // Les accordéons :
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private Accordion nbrsJoursAbsenceAccordion;
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private Accordion pctagesDispoCTAccordion;
+
+    // Les TabbedPane :
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private TitledPane nbrsJoursAbsencePane;
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private TitledPane pctagesDispoCTPane;
+
     // Les tables/colonnes :
     @SuppressWarnings("NullableProblems")
     @FXML
@@ -248,7 +267,7 @@ public class DisponibilitesController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceTable;
+    private TableViewAvecCalendrier<NbrsJoursAbsenceBean, Float> nbrsJoursAbsenceTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -706,7 +725,7 @@ public class DisponibilitesController extends AbstractController {
 
     @NotNull
     public TableViewAvecCalendrier<NbrsJoursAbsenceBean, Float> getNbrsJoursDAbsenceTable() {
-        return nbrsJoursDAbsenceTable;
+        return nbrsJoursAbsenceTable;
     }
 
     @NotNull
@@ -1179,7 +1198,7 @@ public class DisponibilitesController extends AbstractController {
     public List<TableViewAvecCalendrier<?, ?>> tables() {
         return Arrays.asList(new TableViewAvecCalendrier<?, ?>[]{
                 nbrsJoursOuvresTable,
-                nbrsJoursDAbsenceTable,
+                nbrsJoursAbsenceTable,
                 nbrsJoursDispoMinAgriTable,
                 pctagesDispoCTTable,
                 nbrsJoursDispoCTTable,
@@ -1628,6 +1647,11 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (1 seule ligne).
+        nbrsJoursOuvresTable.getItems().addListener((ListChangeListener<? super NbrsJoursOuvresBean>) change -> {
+            SortedList<NbrsJoursOuvresBean> sortedBeans = new SortedList<>(nbrsJoursOuvresBeans);
+            sortedBeans.comparatorProperty().bind(nbrsJoursOuvresTable.comparatorProperty());
+            nbrsJoursOuvresTable.setItems(sortedBeans);
+        });
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (1 seule ligne).
@@ -1635,18 +1659,16 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (1 seule ligne).
 
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursOuvresTable.setItems(nbrsJoursOuvresBeans);
+
         TableViews.disableReagencingColumns(nbrsJoursOuvresTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursOuvresTable);
-
-        SortedList<NbrsJoursOuvresBean> sortedBeans = new SortedList<>(nbrsJoursOuvresBeans);
-        sortedBeans.comparatorProperty().bind(nbrsJoursOuvresTable.comparatorProperty());
-
-        nbrsJoursOuvresTable.setItems(sortedBeans);
     }
 
     private void initTableNbrsJoursAbsence() {
 
-        nbrsJoursDAbsenceTable.setCalendrierColumns(
+        nbrsJoursAbsenceTable.setCalendrierColumns(
                 semaine1NbrsJoursAbsenceColumn,
                 semaine2NbrsJoursAbsenceColumn,
                 semaine3NbrsJoursAbsenceColumn,
@@ -1663,10 +1685,11 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursAbsenceColumn.setCellValueFactory(cell -> cell.getValue().getRessourceHumaineBean().trigrammeProperty());
+        //noinspection HardcodedFileSeparator
         profilNbrsJoursAbsenceColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursAbsenceTable.getCalendrierColumns()) {
                 cptColonne++;
                 nbrsJoursDAbsenceColumn.setCellValueFactory(new FractionsJoursCellCallback<>(planChargeBean, cptColonne));
             }
@@ -1677,7 +1700,7 @@ public class DisponibilitesController extends AbstractController {
         ihm.interdireEdition(profilNbrsJoursAbsenceColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursDAbsenceTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursAbsenceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursAbsenceTable.getCalendrierColumns()) {
                 cptColonne++;
                 int finalCptColonne = cptColonne;
                 nbrsJoursDAbsenceColumn.setCellFactory(param -> new FractionsJoursDispoRsrcCell<>(planChargeBean, finalCptColonne));
@@ -1686,6 +1709,8 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursAbsenceTable);
+
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1693,13 +1718,14 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        nbrsJoursDAbsenceTable.setItems(nbrsJoursAbsenceBeans);
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursAbsenceTable.setItems(nbrsJoursAbsenceBeans);
 
-        TableViews.disableReagencingColumns(nbrsJoursDAbsenceTable);
-        TableViews.ensureDisplayingAllRows(nbrsJoursDAbsenceTable);
+        TableViews.disableReagencingColumns(nbrsJoursAbsenceTable);
+        TableViews.ensureDisplayingAllRows(nbrsJoursAbsenceTable);
 
-        SortedList<NbrsJoursAbsenceBean> sortedBeans = new SortedList<>(nbrsJoursAbsenceBeans);
-        sortedBeans.comparatorProperty().bind(nbrsJoursDAbsenceTable.comparatorProperty());
+        // Définition du menu contextuel :
+        ContextMenu menuCtxt = new ContextMenu();
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
@@ -1744,6 +1770,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursDispoMinAgriTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1751,16 +1778,11 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
+
         TableViews.disableReagencingColumns(nbrsJoursDispoMinAgriTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoMinAgriTable);
-
-        // Tri de la liste :
-        nbrsJoursDispoMinAgriTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcBean>) change -> {
-            SortedList<NbrsJoursDispoRsrcBean> sortedBeans = new SortedList<>(nbrsJoursDispoMinAgriBeans);
-            sortedBeans.comparatorProperty().bind(nbrsJoursDispoMinAgriTable.comparatorProperty());
-        });
-
-        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
     }
 
     private void initTablePctagesDispoCT() {
@@ -1805,6 +1827,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(pctagesDispoCTTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1812,16 +1835,11 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        // Définition du contenu de la table (ses lignes) :
+        pctagesDispoCTTable.setItems(pctagesDispoCTBeans);
+
         TableViews.disableReagencingColumns(pctagesDispoCTTable);
         TableViews.ensureDisplayingAllRows(pctagesDispoCTTable);
-
-        // Tri de la liste :
-        pctagesDispoCTTable.getItems().addListener((ListChangeListener<? super PctagesDispoRsrcBean>) change -> {
-            SortedList<PctagesDispoRsrcBean> sortedBeans = new SortedList<>(pctagesDispoCTBeans);
-            sortedBeans.comparatorProperty().bind(pctagesDispoCTTable.comparatorProperty());
-        });
-
-        pctagesDispoCTTable.setItems(pctagesDispoCTBeans);
     }
 
     private void initTableNbrsJoursDispoCT() {
@@ -1864,6 +1882,7 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursDispoCTTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1871,16 +1890,11 @@ public class DisponibilitesController extends AbstractController {
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursDispoCTTable.setItems(nbrsJoursDispoCTBeans);
+
         TableViews.disableReagencingColumns(nbrsJoursDispoCTTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTTable);
-
-        // Tri de la liste :
-        nbrsJoursDispoCTTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcBean>) change -> {
-            SortedList<NbrsJoursDispoRsrcBean> sortedBeans = new SortedList<>(nbrsJoursDispoCTBeans);
-            sortedBeans.comparatorProperty().bind(nbrsJoursDispoCTTable.comparatorProperty());
-        });
-
-        nbrsJoursDispoCTTable.setItems(nbrsJoursDispoCTBeans);
     }
 
     private void initTablePctagesDispoMaxRsrcProfil() {
@@ -1924,10 +1938,12 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(pctagesDispoMaxRsrcProfilTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        // Définition du contenu de la table (ses lignes) :
         pctagesDispoMaxRsrcProfilTable.setItems(pctagesDispoMaxRsrcProfilBeans);
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
@@ -1935,12 +1951,6 @@ public class DisponibilitesController extends AbstractController {
 
         TableViews.disableReagencingColumns(pctagesDispoMaxRsrcProfilTable);
         TableViews.ensureDisplayingAllRows(pctagesDispoMaxRsrcProfilTable);
-
-        // Tri de la liste :
-        pctagesDispoMaxRsrcProfilTable.getItems().addListener((ListChangeListener<? super PctagesDispoRsrcProfilBean>) change -> {
-            SortedList<PctagesDispoRsrcProfilBean> sortedBeans = new SortedList<>(pctagesDispoMaxRsrcProfilBeans);
-            sortedBeans.comparatorProperty().bind(pctagesDispoMaxRsrcProfilTable.comparatorProperty());
-        });
     }
 
     private void initTableNbrsJoursDispoMaxRsrcProfil() {
@@ -1984,10 +1994,12 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursDispoMaxRsrcProfilTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        // Définition du contenu de la table (ses lignes) :
         nbrsJoursDispoMaxRsrcProfilTable.setItems(nbrsJoursDispoMaxRsrcProfilBeans);
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
@@ -1996,11 +2008,6 @@ public class DisponibilitesController extends AbstractController {
         TableViews.disableReagencingColumns(nbrsJoursDispoMaxRsrcProfilTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoMaxRsrcProfilTable);
 
-        // Tri de la liste :
-        nbrsJoursDispoMaxRsrcProfilTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoRsrcProfilBean>) change -> {
-            SortedList<NbrsJoursDispoRsrcProfilBean> sortedBeans = new SortedList<>(nbrsJoursDispoMaxRsrcProfilBeans);
-            sortedBeans.comparatorProperty().bind(nbrsJoursDispoMaxRsrcProfilTable.comparatorProperty());
-        });
     }
 
     private void initTableNbrsJoursDispoMaxProfil() {
@@ -2047,10 +2054,12 @@ public class DisponibilitesController extends AbstractController {
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursDispoMaxProfilTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
+        // Définition du contenu de la table (ses lignes) :
         nbrsJoursDispoMaxProfilTable.setItems(nbrsJoursDispoMaxProfilBeans);
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
@@ -2058,12 +2067,6 @@ public class DisponibilitesController extends AbstractController {
 
         TableViews.disableReagencingColumns(nbrsJoursDispoMaxProfilTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoMaxProfilTable);
-
-        // Tri de la liste :
-        nbrsJoursDispoMaxProfilTable.getItems().addListener((ListChangeListener<? super NbrsJoursDispoProfilBean>) change -> {
-            SortedList<NbrsJoursDispoProfilBean> sortedBeans = new SortedList<>(nbrsJoursDispoMaxProfilBeans);
-            sortedBeans.comparatorProperty().bind(nbrsJoursDispoMaxProfilTable.comparatorProperty());
-        });
     }
 
 
@@ -2095,7 +2098,7 @@ public class DisponibilitesController extends AbstractController {
 
             // Les tables ont besoin d'être réactualisées dans certains cas, par exemple quand on change la date d'état.
             nbrsJoursOuvresTable.refresh();
-            nbrsJoursDAbsenceTable.refresh();
+            nbrsJoursAbsenceTable.refresh();
             nbrsJoursDispoMinAgriTable.refresh();
             pctagesDispoCTTable.refresh();
             nbrsJoursDispoCTTable.refresh();
@@ -2117,5 +2120,74 @@ public class DisponibilitesController extends AbstractController {
         calculateurDisponibilites.calculer();
 //        LOGGER.debug("Valeurs du calendrier définies.");
     }
+
+
+    @FXML
+    private <B extends AbstractDisponibilitesRessourceBean> void voirNbrJoursAbsence(@NotNull ActionEvent actionEvent) {
+        TableView<B> table = tableDuMenuContextuel(actionEvent);
+        B nbrsJoursDispoMinAgriSelectedBean = TableViews.<B>selectedItem(table);
+        if (nbrsJoursDispoMinAgriSelectedBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher les nombres de jours d'absence pour la ressource",
+                    "Aucune ligne n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+        try {
+            RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMinAgriSelectedBean.getRessourceHumaineBean();
+            NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.any(nbrsJoursAbsenceBeans, (NbrsJoursAbsenceBean bean) -> bean.getRessourceHumaineBean().equals(ressourceHumaineBean), new IhmException("Impossible de retrouver la ressource '" + ressourceHumaineBean.getTrigramme() + "' dans la table des nombres de jours d'absence."));
+            nbrsJoursAbsenceAccordion.setExpandedPane(nbrsJoursAbsencePane);
+            TableViews.focusOnItem(nbrsJoursAbsenceTable, nbrsJoursAbsenceBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher les nombres de jours d'absence pour la ressource.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher les nombres de jours d'absence pour la ressource",
+                    Exceptions.causes(e)
+            );
+        }
+    }
+
+    @FXML
+    private <B extends AbstractDisponibilitesRessourceBean> void voirPctagesDispoCT(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        TableView<B> table = (TableView<B>) nbrsJoursDispoCTTable;
+        B nbrsJoursDispoCTBean = TableViews.selectedItem(table);
+        if (nbrsJoursDispoCTBean == null) {
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher les pourcentages de disponiblité pour l'équipe (la CT) de la ressource",
+                    "Aucune ligne n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+        try {
+            RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoCTBean.getRessourceHumaineBean();
+            PctagesDispoRsrcBean pctagesDispoCTBean = Collections.any(pctagesDispoCTBeans, (PctagesDispoRsrcBean bean) -> bean.getRessourceHumaineBean().equals(ressourceHumaineBean), new IhmException("Impossible de retrouver la ressource '" + ressourceHumaineBean.getTrigramme() + "' dans la table des pourcentages de disponibilité pour l'équipe (la CT)."));
+            nbrsJoursAbsenceAccordion.setExpandedPane(pctagesDispoCTPane);
+            TableViews.focusOnItem(pctagesDispoCTTable, pctagesDispoCTBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher les pourcentages de disponiblité pour l'équipe (la CT) de la ressource.", e);
+            ihm.afficherPopUp(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher les pourcentages de disponiblité pour l'équipe (la CT) de la ressource",
+                    Exceptions.causes(e)
+            );
+        }
+    }
+
+    @NotNull
+    private <B extends AbstractDisponibilitesRessourceBean> TableView<B> tableDuMenuContextuel(ActionEvent actionEvent) {
+        MenuItem menuItem = (MenuItem) actionEvent.getSource();
+        //noinspection unchecked
+        TableView<B> table = (TableView<B>) menuItem.getUserData();
+        return table;
+    }
+
 
 }

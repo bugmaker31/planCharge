@@ -35,42 +35,42 @@
                                                      prefWidth="$profilColumnPrefWidth"
                                                      styleClass="nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine1NbrsJoursOuvresColumn" text="S+1"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine2NbrsJoursOuvresColumn" text="S+2"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine3NbrsJoursOuvresColumn" text="S+3"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine4NbrsJoursOuvresColumn" text="S+4"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine5NbrsJoursOuvresColumn" text="S+5"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine6NbrsJoursOuvresColumn" text="S+6"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine7NbrsJoursOuvresColumn" text="S+7"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
                                                      sortable="false"
-                                                     />
+                                        />
                                         <TableColumn fx:id="semaine8NbrsJoursOuvresColumn" text="S+8"
                                                      prefWidth="$semaineColumnPrefWidth"
                                                      styleClass="periodeDispo-column, nonModifiable"
@@ -101,13 +101,13 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion> <!--expandedPane="$nbrsJoursAbsencePane" TODO FDA 2017/08 Réactiver qd dév fini.-->
+                <Accordion
+                        fx:id="nbrsJoursAbsenceAccordion"> <!--expandedPane="$nbrsJoursAbsencePane" TODO FDA 2017/08 Réactiver qd dév fini.-->
                     <panes>
-                        <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursAbsencePane"
                                     text="Absence (vacances, formation, etc.) / rsrc (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDAbsenceTable" editable="true"
+                                <TableViewAvecCalendrier fx:id="nbrsJoursAbsenceTable" editable="true"
                                                          fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
@@ -263,15 +263,26 @@
                                         <Tooltip
                                                 text="Nombre de jours de disponibilité dédiée au Ministère. Calculé à partir des nbrsJoursAbsence."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Voir le nombre de jours d'absence"
+                                                          onAction="#voirNbrJoursAbsence">
+                                                    <userData>
+                                                        <fx:reference source="nbrsJoursDispoMinAgriTable"/>
+                                                    </userData>
+                                                </MenuItem>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion>
+                <Accordion fx:id="pctagesDispoCTAccordion">
                     <panes>
-                        <!--suppress JavaFxUnresolvedFxIdReference -->
-                        <TitledPane fx:id="pctagesDispoMinAgriPane" text="Dispo CT / rsrc (%)"
+                        <TitledPane fx:id="pctagesDispoCTPane" text="Dispo CT / rsrc (%)"
                                     animated="$arePanesAnimated">
                             <VBox>
                                 <TableViewAvecCalendrier fx:id="pctagesDispoCTTable" fixedCellSize="$fixedCellSize"
@@ -342,6 +353,18 @@
                                     <tooltip>
                                         <Tooltip text="Entrez le % de disponibilité dédié à l'équipe (la CT du DAL)."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Voir le nombre de jours d'absence"
+                                                          onAction="#voirNbrJoursAbsence">
+                                                    <userData>
+                                                        <fx:reference source="pctagesDispoCTTable"/>
+                                                    </userData>
+                                                </MenuItem>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
@@ -429,12 +452,27 @@
                                         <Tooltip
                                                 text="Nombre de jours de disponibilité dédiée à l'équipe (la CT du DAL). Calculé à partir du % dispo équipe."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Voir le nombre de jours d'absence"
+                                                          onAction="#voirNbrJoursAbsence">
+                                                    <userData>
+                                                        <fx:reference source="pctagesDispoCTTable"/>
+                                                    </userData>
+                                                </MenuItem>
+                                                <MenuItem
+                                                        text="Voir le pourcentage de disponibilité pour l'équipe (la CT)"
+                                                        onAction="#voirPctagesDispoCT"/>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion > <!--expandedPane="$pctagesDispoMaxRsrcProfilPane"-->
+                <Accordion> <!--expandedPane="$pctagesDispoMaxRsrcProfilPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (%)"
@@ -517,12 +555,24 @@
                                         <Tooltip
                                                 text="Pourcentages de disponibilité max. de chaque ressource pour un profil donné. Saisis."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Voir le nombre de jours d'absence"
+                                                          onAction="#voirNbrJoursAbsence">
+                                                    <userData>
+                                                        <fx:reference source="pctagesDispoMaxRsrcProfilTable"/>
+                                                    </userData>
+                                                </MenuItem>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion > <!--expandedPane="$nbrsJoursDispoMaxRsrcProfilPane"-->
+                <Accordion> <!--expandedPane="$nbrsJoursDispoMaxRsrcProfilPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (j)"
@@ -618,6 +668,18 @@
                                         <Tooltip
                                                 text="Nombres de jours de disponibilité max. de chaque ressource pour un profil donné. Calculés."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Voir le nombre de jours d'absence"
+                                                          onAction="#voirNbrJoursAbsence">
+                                                    <userData>
+                                                        <fx:reference source="nbrsJoursDispoMaxRsrcProfilTable"/>
+                                                    </userData>
+                                                </MenuItem>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>

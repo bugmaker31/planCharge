@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -196,5 +197,12 @@ public final class TableViews {
         });
     }
 
-
+    public static <S> void ensureSorting(@NotNull TableView<S> table) {
+        table.getItems().addListener((ListChangeListener<? super S>) change ->
+            Platform.runLater(() -> {
+                SortedList<S> sortedBeans = new SortedList<>(table.getItems());
+                sortedBeans.comparatorProperty().bind(table.comparatorProperty());
+            })
+        );
+    }
 }
