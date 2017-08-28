@@ -63,6 +63,11 @@ public class JoursFeriesController extends AbstractController {
     private TableColumn<JourFerieBean, String> descriptionColumn;
 
 
+    //    @Autowired
+    @NotNull
+    PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -91,7 +96,7 @@ public class JoursFeriesController extends AbstractController {
         TableViews.decorateMandatoryColumns(dateColumn);
         dateColumn.setCellFactory(param -> {
             TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
-            PlanChargeIhm.controler(cell, "Date incorrecte", this::validerDateFeriee);
+            ihm.controler(cell, "Date incorrecte", this::validerDateFeriee);
             return cell;
         });
 //        PlanChargeIhm.decorateMandatoryColumns(descriptionColumn);

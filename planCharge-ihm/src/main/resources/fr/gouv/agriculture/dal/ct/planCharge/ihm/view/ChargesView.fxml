@@ -102,6 +102,7 @@
                         <SeparatorMenuItem/>
                         <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache" />
                         <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
+                        <SeparatorMenuItem/>
                         <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
                                   onAction="#afficherTacheDansOutilTicketing"/>
                     </items>

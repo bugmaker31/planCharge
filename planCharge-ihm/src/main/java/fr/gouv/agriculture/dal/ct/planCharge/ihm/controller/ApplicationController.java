@@ -544,18 +544,6 @@ public class ApplicationController extends AbstractController {
                 planChargeBean.vientDEtreCharge();
                 getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
 
-/*
-                // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-                rapport.setAvancement("Alimentation des référentiels...");
-                ihm.getTachesController().populerReferentiels();
-                ihm.getChargesController().populerReferentiels();
-
-                // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-                rapport.setAvancement("Alimentation des filtres...");
-                ihm.getTachesController().populerFiltres();
-                ihm.getChargesController().populerFiltres();
-*/
-
                 return rapport;
             }
         };
@@ -592,7 +580,10 @@ public class ApplicationController extends AbstractController {
                             );
                         }
                     },
-                    () -> calculateurDisponibilites.calculer()
+                    () -> {
+//                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "chargerPlanCharge".
+                        calculer();
+                    }
             );
         } catch (IhmException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
@@ -1427,23 +1418,27 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    public void calculer(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+    @FXML
+    private void calculer(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         try {
-
-            ihm.getDisponibilitesController().calculerDisponibilites();
-            // Ajouter ici les autres calculs (surcharges, etc.)
-
-            planChargeBean.vientDEtreCalcule();
-            majBarreEtat();
-
-            ihm.afficherNotification(
-                    "Calcul terminé",
-                    "Les données (disponibilités, surcharges, etc.) ont été calculées."
-            );
+            calculer();
         } catch (IhmException e) {
             LOGGER.error("Impossible de calculer.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible de calculer.", Exceptions.causes(e));
         }
+    }
+
+    public void calculer() throws IhmException {
+        ihm.getDisponibilitesController().calculerDisponibilites();
+        // Ajouter ici les autres calculs (surcharges, etc.)
+
+        planChargeBean.vientDEtreCalcule();
+        majBarreEtat();
+
+        ihm.afficherNotification(
+                "Calcul terminé",
+                "Les données (disponibilités, surcharges, etc.) ont été calculées."
+        );
     }
 
 }

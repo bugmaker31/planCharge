@@ -5,7 +5,6 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
@@ -193,25 +192,25 @@ public class RessourcesHumainesController extends AbstractController {
         trigrammeColumn.setCellFactory(param -> {
             TextFieldTableCell<RessourceHumaineBean, String> trigrammeCell = new UpperCaseTextFieldTableCell<>();
 //            PlanChargeIhm.decorateMandatoryColumns(trigrammeCell);
-            PlanChargeIhm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
+            ihm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
             return trigrammeCell;
         });
         TableViews.decorateMandatoryColumns(nomColumn);
         nomColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            PlanChargeIhm.controler(cell, "Nom incorrect", this::validerNom);
+            ihm.controler(cell, "Nom incorrect", this::validerNom);
             return cell;
         });
         TableViews.decorateMandatoryColumns(prenomColumn);
         prenomColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            PlanChargeIhm.controler(cell, "Prénom incorrect", this::validerPrenom);
+            ihm.controler(cell, "Prénom incorrect", this::validerPrenom);
             return cell;
         });
         TableViews.decorateMandatoryColumns(societeColumn);
         societeColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            PlanChargeIhm.controler(cell, "Société incorrecte", this::validerSociete);
+            ihm.controler(cell, "Société incorrecte", this::validerSociete);
             return cell;
         });
 /*

@@ -39,6 +39,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
+
     @SuppressWarnings("InstanceVariableNamingConvention")
     @NotNull
     private IntegerProperty id = new SimpleIntegerProperty();

@@ -214,7 +214,7 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    public static <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
+    public <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
         cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
                     Platform.runLater(() -> { // Requis, sinon java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
                                 try {
@@ -233,7 +233,7 @@ public class PlanChargeIhm extends Application {
         );
     }
 
-    public static void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
+    public void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
         field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
                     Platform.runLater(() -> { // Requis, sinon java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
                                 try {
@@ -439,10 +439,10 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    private static Set<Notification> notificationsViolationsReglesGestion = new HashSet<>();
+    private Set<Notification> notificationsViolationsReglesGestion = new HashSet<>();
 
     @SuppressWarnings("WeakerAccess")
-    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+    public void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
 //        Platform.runLater(() -> {
         Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
         Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
@@ -455,12 +455,13 @@ public class PlanChargeIhm extends Application {
 //        });
     }
 
-    public static void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
+    public void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
 //        Platform.runLater(() -> {
 
         masquerNotificationsViolationsReglesGestion();
 
         for (ViolationRegleGestion violation : violations) {
+            //noinspection HardcodedLineSeparator
             Notification notifErreur = new Notification()
                     .title(titre)
                     .text(
@@ -475,7 +476,7 @@ public class PlanChargeIhm extends Application {
     }
 
     @SuppressWarnings("StaticMethodNamingConvention")
-    public static void masquerNotificationsViolationsReglesGestion() {
+    public void masquerNotificationsViolationsReglesGestion() {
         for (Notification notification : notificationsViolationsReglesGestion) {
             notification.hide();
         }
@@ -775,7 +776,7 @@ public class PlanChargeIhm extends Application {
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 //                applicationController.afficherModuleDisponibilites();
-//                applicationController.afficherModuleTaches();
+                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }
 

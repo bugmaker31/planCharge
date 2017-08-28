@@ -5,11 +5,14 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TotalTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +43,16 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     @NotNull
     @FXML
     private TableView<TacheBean> tachesTable;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TableView<TotalTacheBean> totauxTachesTable;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TableColumn<TotalTacheBean, Integer> nbrTachesATraiterColumn;
 
     /*
      La couche métier :
@@ -93,7 +106,15 @@ public class TachesController extends AbstractTachesController<TacheBean> {
 
         super.initialize();
 
-        // Rien de plus... pour l'instant.
+        totauxTachesTable.getItems().setAll(new TotalTacheBean());
+
+        tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
+            assert totauxTachesTable.getItems().size() == 1;
+            TotalTacheBean totalTacheBean = totauxTachesTable.getItems().get(0);
+            totalTacheBean.setNbrTachesATraiter(-1); // // TODO FDA 2017/08 Coder.
+        });
+
+        nbrTachesATraiterColumn.setCellValueFactory((TableColumn.CellDataFeatures<TotalTacheBean, Integer> cellData) -> cellData.getValue().nbrTachesATraiterProperty().asObject());
 
         LOGGER.info("Initialisé.");
     }

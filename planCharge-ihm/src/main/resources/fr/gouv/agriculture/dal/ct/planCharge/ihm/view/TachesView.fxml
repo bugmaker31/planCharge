@@ -14,17 +14,17 @@
             <panes>
                 <TitledPane animated="false" text="Filtres">
                     <HBox spacing="2" alignment="CENTER_LEFT">
-<!--
-                        <HBox alignment="BASELINE_LEFT">
-                            <Label text="Filtre global : "/>
-                            <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
-                                <tooltip>
-                                    <Tooltip
-                                            text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
-                                </tooltip>
-                            </TextField>
-                        </HBox>
--->
+                        <!--
+                                                <HBox alignment="BASELINE_LEFT">
+                                                    <Label text="Filtre global : "/>
+                                                    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
+                                                        <tooltip>
+                                                            <Tooltip
+                                                                    text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+                                                        </tooltip>
+                                                    </TextField>
+                                                </HBox>
+                        -->
                         <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent"/>
                         <SegmentedButton>
                             <buttons>
@@ -61,69 +61,88 @@
         </Accordion>
     </top>
     <center>
-        <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true">
-            <contextMenu>
-                <ContextMenu fx:id="tachesTableContextMenu">
-                    <items>
-                        <MenuItem text="Voir la ressource humain de la tâche" onAction="#afficherRessourceHumaine"/>
-                        <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <SeparatorMenuItem/>
-                        <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherPlanification"/>
-                        <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
-                        <SeparatorMenuItem/>
-                        <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
-                                  onAction="#afficherTacheDansOutilTicketing"/>
-                    </items>
-                </ContextMenu>
-            </contextMenu>
-            <columns>
+        <!--<VBox VBox.vgrow="ALWAYS">-->
+        <BorderPane>
+            <center>
+                <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true">
+                    <contextMenu>
+                        <ContextMenu fx:id="tachesTableContextMenu">
+                            <items>
+                                <MenuItem text="Voir la ressource humain de la tâche"
+                                          onAction="#afficherRessourceHumaine"/>
+                                <MenuItem text="Voir le profil de la tâche"
+                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                <MenuItem text="Voir le projet/appli de la tâche"
+                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                <MenuItem text="Voir l'importance de la tâche"
+                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                <SeparatorMenuItem/>
+                                <MenuItem text="Voir la tâche dans le plan de charge"
+                                          onAction="#afficherPlanification"/>
+                                <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
+                                <SeparatorMenuItem/>
+                                <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
+                                          onAction="#afficherTacheDansOutilTicketing"/>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                    <columns>
 
-                <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
+                        <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
 
-                <TableColumn text="Catégories">
-                    <columns>
-                        <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60"/>
-                        <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"/>
+                        <TableColumn text="Catégories">
+                            <columns>
+                                <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60"/>
+                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn text="identifiants">
+                            <columns>
+                                <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
+                                             prefWidth="55"/>
+                                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL" prefWidth="80"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description"
+                                     styleClass="description-column"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"
+                                     styleClass="projetAppli-column"/>
+                        <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
+                        <TableColumn text="Période souhaitée">
+                            <columns>
+                                <TableColumn fx:id="debutColumn" prefWidth="80" text="Début"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="80" text="Echéance"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge" styleClass="charge-column"/>
+                        <TableColumn text="Ressource">
+                            <columns>
+                                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>
+                                <TableColumn fx:id="profilColumn" prefWidth="60" text="Profil"/>
+                            </columns>
+                        </TableColumn>
                     </columns>
-                </TableColumn>
-                <TableColumn text="identifiants">
+                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                    <sortOrder>
+                        <fx:reference source="categorieColumn"/>
+                        <fx:reference source="sousCategorieColumn"/>
+                        <fx:reference source="projetAppliColumn"/>
+                        <fx:reference source="echeanceColumn"/>
+                        <fx:reference source="noTacheColumn"/>
+                    </sortOrder>
+                </TableView>
+            </center>
+            <bottom>
+                <TableView fx:id="totauxTachesTable" editable="false" styleClass="noHeader-table" fixedCellSize="25" prefHeight="27">
                     <columns>
-                        <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
-                                     prefWidth="55"/>
-                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL" prefWidth="80"/>
+                        <TableColumn fx:id="nbrTachesATraiterColumn" text="Nombre de tâches à traiter" prefWidth="60"/>
+                        <TableColumn text="Total du RAF" prefWidth="100"/>
                     </columns>
-                </TableColumn>
-                <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description"
-                             styleClass="description-column"/>
-                <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"
-                             styleClass="projetAppli-column"/>
-                <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
-                <TableColumn text="Période souhaitée">
-                    <columns>
-                        <TableColumn fx:id="debutColumn" prefWidth="80" text="Début"/>
-                        <TableColumn fx:id="echeanceColumn" prefWidth="80" text="Echéance"/>
-                    </columns>
-                </TableColumn>
-                <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
-                <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge" styleClass="charge-column"/>
-                <TableColumn text="Ressource">
-                    <columns>
-                        <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>
-                        <TableColumn fx:id="profilColumn" prefWidth="60" text="Profil"/>
-                    </columns>
-                </TableColumn>
-            </columns>
-            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-            <sortOrder>
-                <fx:reference source="categorieColumn"/>
-                <fx:reference source="sousCategorieColumn"/>
-                <fx:reference source="projetAppliColumn"/>
-                <fx:reference source="echeanceColumn"/>
-                <fx:reference source="noTacheColumn"/>
-            </sortOrder>
-        </TableView>
+                </TableView>
+            </bottom>
+        </BorderPane>
+        <!--</VBox>-->
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">
