@@ -197,7 +197,7 @@ public final class TableViews {
         });
     }
 
-    // FIXME FDA 2017/08 Ne fonctionne pas à 100% : quelques lignes ne sont parfois pas dans l'ordre défini par le sortOrder du FXML.
+    // FIXME FDA 2017/08 Ne fonctionne pas à 100% : quelques lignes ne sont parfois pas dans l'ordre défini par le sortOrder du FXML (ressource humaine). Et quand il y a un 2nd critère de tri (le profil), la 2nde colonne n'est vraiment pazs triée.
     public static <S> void ensureSorting(@NotNull TableView<S> table) {
         table.getItems().addListener((ListChangeListener<? super S>) change -> {
             SortedList<S> sortedBeans = new SortedList<>(table.getItems());
