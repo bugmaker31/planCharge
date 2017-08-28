@@ -107,11 +107,11 @@ public final class DisponibilitesService {
         return Math.max(nbrJoursOuvresPeriode - nbrsJoursAbsencePeriode, 0f);
     }
 
-    public Percentage pctageDispoCT(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) throws ServiceException {
+    public Percentage pctageDispoCTParDefaut(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission) throws ServiceException {
         if (estHorsMission(debutPeriode, debutMission, finMission)) {
             return new Percentage(0f);
         }
-        return PCTAGE_DISPO_CT_MIN;
+        return PCTAGE_DISPO_RSRC_DEFAUT;
     }
 
     public float nbrJoursDispoCT(float nbrJoursDispoMinAgriPeriode, @NotNull Percentage pctageDispoCTPeriode) throws ServiceException {

@@ -113,11 +113,11 @@ public class CalculateurDisponibilites extends AbstractCalculateur {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
-        LOGGER.debug("Calcul des disponibilités pour la ressource {} : ", ressHumBean);
+//        LOGGER.debug("Calcul des disponibilités pour la ressource {} : ", ressHumBean);
         for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculer(ressHumBean, noSemaine);
         }
-        LOGGER.debug("Disponibilités calculées pour la ressource {}.", ressHumBean);
+//        LOGGER.debug("Disponibilités calculées pour la ressource {}.", ressHumBean);
     }
 
     public void calculer(@NotNull RessourceHumaineBean ressHumBean, int noSemaine) throws IhmException {
@@ -187,8 +187,9 @@ public class CalculateurDisponibilites extends AbstractCalculateur {
         // % disponibilité CT / rsrc (saisi) :
         Percentage percentageDispoCTPeriode;
         {
+            Percentage percentageDispoCTPeriodeParDefaut;
             try {
-                percentageDispoCTPeriode = disponibilitesService.pctageDispoCT(debutPeriode, debutMission, finMission);
+                percentageDispoCTPeriodeParDefaut = disponibilitesService.pctageDispoCTParDefaut(debutPeriode, debutMission, finMission);
             } catch (ServiceException e) {
                 throw new IhmException("Impossible de calculer le pourcentage de disponibilité pour l'équipe (CT du DAL).", e);
             }
@@ -199,10 +200,12 @@ public class CalculateurDisponibilites extends AbstractCalculateur {
                 getDisponibilitesController().getPctagesDispoCTBeans().add(pctagesDispoCTBean);
             }
             if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
-                PercentageProperty percentageDispoCTPeriodeProperty = new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT.floatValue());
+                percentageDispoCTPeriode = percentageDispoCTPeriodeParDefaut;
+
+                PercentageProperty percentageDispoCTPeriodeProperty = new PercentageProperty(percentageDispoCTPeriodeParDefaut.floatValue());
                 pctagesDispoCTBean.put(debutPeriode, percentageDispoCTPeriodeProperty);
             } else {
-                pctagesDispoCTBean.get(debutPeriode).setValue(percentageDispoCTPeriode);
+                percentageDispoCTPeriode = pctagesDispoCTBean.get(debutPeriode).getValue();
             }
         }
 

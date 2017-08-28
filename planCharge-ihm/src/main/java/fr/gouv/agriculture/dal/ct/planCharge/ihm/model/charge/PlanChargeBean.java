@@ -265,45 +265,53 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .map(StatutBean::from)
                         .collect(Collectors.toList())
         );
-        ressourcesBeans.setAll(
-                planCharge.getReferentiels().getRessourcesHumaines().stream()
-                        .map(RessourceHumaineBean::from)
-                        .collect(Collectors.toList())
-        );
-        ressourcesBeans.addAll(
-                Arrays.stream(RessourceGeneriqueDTO.values())
-                        .map(RessourceGeneriqueBean::from)
-                        .collect(Collectors.toList())
-        );
+        // Ressources :
+        {
+            List<RessourceBean> ressourceBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            ressourceBeanList.addAll(
+                    planCharge.getReferentiels().getRessourcesHumaines().stream()
+                            .map(RessourceHumaineBean::from)
+                            .collect(Collectors.toList())
+            );
+            ressourceBeanList.addAll(
+                    Arrays.stream(RessourceGeneriqueDTO.values())
+                            .map(RessourceGeneriqueBean::from)
+                            .collect(Collectors.toList())
+            );
+            ressourcesBeans.setAll(ressourceBeanList);
+        }
         // Disponibilités :
         { // Nbrs de jours d'absence / rsrc :
-            nbrsJoursAbsenceBeans.clear();
+            List<NbrsJoursAbsenceBean> nbrsJoursAbsenceBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             Map<RessourceHumaineDTO, Map<LocalDate, Float>> absencesDTO = planCharge.getDisponibilites().getNbrsJoursAbsence();
             for (RessourceHumaineDTO ressourceHumaineDTO : absencesDTO.keySet()) {
                 Map<LocalDate, FloatProperty> calendrierAbsences = absencesDTO.get(ressourceHumaineDTO).keySet().stream()
-                        .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleFloatProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate))));
-                nbrsJoursAbsenceBeans.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
+                        .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleFloatProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate)))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
+                nbrsJoursAbsenceBeanList.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
+            nbrsJoursAbsenceBeans.setAll(nbrsJoursAbsenceBeanList);
         }
         { // Pctages de dispo pour la CT / rsrc :
-            pctagesDispoCTBeans.clear();
+            List<PctagesDispoRsrcBean> pctagesDispoCTBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = planCharge.getDisponibilites().getPctagesDispoCT();
             for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoCT.keySet()) {
                 Map<LocalDate, PercentageProperty> calendrierAbsences = pctagesDispoCT.get(ressourceHumaineDTO).keySet().stream()
-                        .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue())));
-                pctagesDispoCTBeans.add(new PctagesDispoRsrcBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
+                        .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue()))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
+                pctagesDispoCTBeanList.add(new PctagesDispoRsrcBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
+            pctagesDispoCTBeans.setAll(pctagesDispoCTBeanList);
         }
         { // Pctages de dispo max / rsrc / profil :
-            pctagesDispoMaxRsrcProfilBeans.clear(); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
+            List<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil = planCharge.getDisponibilites().getPctagesDispoMaxRsrcProfil();
             for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoMaxRsrcProfil.keySet()) {
                 for (ProfilDTO profilDTO : pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO).keySet()) {
                     Map<LocalDate, PercentageProperty> calendrierAbsences = pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO).get(profilDTO).keySet().stream()
-                            .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO).get(profilDTO).get(localDate).floatValue())));
-                    pctagesDispoMaxRsrcProfilBeans.add(new PctagesDispoRsrcProfilBean(RessourceHumaineBean.from(ressourceHumaineDTO), ProfilBean.from(profilDTO), calendrierAbsences));
+                            .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO).get(profilDTO).get(localDate).floatValue()))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
+                    pctagesDispoMaxRsrcProfilBeanList.add(new PctagesDispoRsrcProfilBean(RessourceHumaineBean.from(ressourceHumaineDTO), ProfilBean.from(profilDTO), calendrierAbsences));
                 }
             }
+            pctagesDispoMaxRsrcProfilBeans.setAll(pctagesDispoMaxRsrcProfilBeanList); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
         }
         // Tâches + Charge :
         planificationsBeans.setAll(

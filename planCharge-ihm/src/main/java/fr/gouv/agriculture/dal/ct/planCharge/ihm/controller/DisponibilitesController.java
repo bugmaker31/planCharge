@@ -1428,7 +1428,7 @@ public class DisponibilitesController extends AbstractController {
             }
             LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
             if (!pctagesDispoCTBean.containsKey(debutPeriode)) {
-                pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
+                pctagesDispoCTBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT.floatValue()));
             }
             PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoCTBean.get(debutPeriode);
             pctageDispoCTPeriodeProperty.setValue(newValue);
@@ -1468,7 +1468,7 @@ public class DisponibilitesController extends AbstractController {
             }
             LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
             if (!pctagesDispoRsrcProfilBean.containsKey(debutPeriode)) {
-                pctagesDispoRsrcProfilBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_CT_MIN.floatValue()));
+                pctagesDispoRsrcProfilBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT.floatValue()));
             }
             PercentageProperty pctageDispoCTPeriodeProperty = pctagesDispoRsrcProfilBean.get(debutPeriode);
             pctageDispoCTPeriodeProperty.setValue(newValue);

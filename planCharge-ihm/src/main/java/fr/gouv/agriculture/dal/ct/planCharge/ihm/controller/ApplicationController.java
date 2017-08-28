@@ -1425,6 +1425,10 @@ public class ApplicationController extends AbstractController {
     public void calculer(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         try {
             ihm.getDisponibilitesController().calculerDisponibilites();
+            ihm.afficherNotification(
+                    "Disponiblités calculées",
+                    "Les disponibilités ont été calculées."
+            );
         } catch (IhmException e) {
             LOGGER.error("Impossible de calculer.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible de calculer.", Exceptions.causes(e));

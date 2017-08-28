@@ -19,7 +19,7 @@
         </fx:define>
         <ScrollPane fitToWidth="true">
             <VBox>
-                <Accordion> <!--expandedPane="$nbrsJoursOuvresPane"-->
+                <Accordion expandedPane="$nbrsJoursOuvresPane">
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="$arePanesAnimated">
@@ -102,7 +102,7 @@
                     </panes>
                 </Accordion>
                 <Accordion
-                        fx:id="nbrsJoursAbsenceAccordion"> <!--expandedPane="$nbrsJoursAbsencePane" TODO FDA 2017/08 Réactiver qd dév fini.-->
+                        fx:id="nbrsJoursAbsenceAccordion" expandedPane="$nbrsJoursAbsencePane">
                     <panes>
                         <TitledPane fx:id="nbrsJoursAbsencePane"
                                     text="Absence (vacances, formation, etc.) / rsrc (j)" animated="$arePanesAnimated">
@@ -369,8 +369,8 @@
                             </VBox>
                         </TitledPane>
                     </panes>
-                </Accordion> <!--expandedPane="$pctagesDispoMinAgriPane" TODO FDA 2017/08 Réactiver qd dév fini.-->
-                <Accordion> <!--expandedPane="$nbrsJoursDispoCTPane"-->
+                </Accordion>
+                <Accordion expandedPane="$nbrsJoursDispoCTPane">
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoCTPane" text="Dispo CT / rsrc (j)"
@@ -472,7 +472,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion> <!--expandedPane="$pctagesDispoMaxRsrcProfilPane"-->
+                <Accordion expandedPane="$pctagesDispoMaxRsrcProfilPane">
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (%)"

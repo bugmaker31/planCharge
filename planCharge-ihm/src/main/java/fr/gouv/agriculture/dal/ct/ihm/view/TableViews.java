@@ -141,7 +141,7 @@ public final class TableViews {
 
         int rowsCount = table.getItems().size();
 
-        double tableHeight = headerRowHeight + (rowHeight * (rowsCount + 1)) + 7; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
+        double tableHeight = headerRowHeight + (rowHeight * (rowsCount + 1)) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
@@ -199,10 +199,10 @@ public final class TableViews {
 
     // FIXME FDA 2017/08 Ne fonctionne pas à 100% : quelques lignes ne sont parfois pas dans l'ordre défini par le sortOrder du FXML (ressource humaine). Et quand il y a un 2nd critère de tri (le profil), la 2nde colonne n'est vraiment pazs triée.
     public static <S> void ensureSorting(@NotNull TableView<S> table) {
-        table.getItems().addListener((ListChangeListener<? super S>) change -> {
+//        table.getItems().addListener((ListChangeListener<? super S>) change -> {
             SortedList<S> sortedBeans = new SortedList<>(table.getItems());
             sortedBeans.comparatorProperty().bind(table.comparatorProperty());
             table.setItems(sortedBeans);
-        });
+//        });
     }
 }
