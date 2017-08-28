@@ -10,8 +10,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceBean<D, B, P>, P extends Property>
-        extends AbstractDisponibilitesBean<D, B, P> {
+public abstract class AbstractDisponibilitesRessourceBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceBean<D, B, P>, P extends Property> extends AbstractDisponibilitesBean<D, B, P> {
 
     // Fields :
 

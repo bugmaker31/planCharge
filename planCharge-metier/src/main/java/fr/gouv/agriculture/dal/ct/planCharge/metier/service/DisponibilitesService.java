@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
@@ -118,26 +119,31 @@ public final class DisponibilitesService {
         return (nbrJoursDispoMinAgriPeriode * pctageDispoCTPeriode.floatValue()) / 100f;
     }
 
-    public float nbrJoursDispoMaxRsrcProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, float nbrJoursDispoCTPeriode, @NotNull Percentage pctageDispoRsrcProfil) throws ServiceException {
+    public float nbrJoursDispoMaxRsrcProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, float nbrJoursDispo, @NotNull Percentage pctageDispo) throws ServiceException {
         if (estHorsMission(debutPeriode, debutMission, finMission)) {
             return 0f;
         }
-        return nbrJoursDispoCTPeriode * pctageDispoRsrcProfil.floatValue();
+        //noinspection MagicNumber
+        return (nbrJoursDispo * pctageDispo.floatValue()) / 100f;
     }
 
-    public float nbrsJoursDispoMaxProfil(@NotNull LocalDate debutPeriode, @Null LocalDate debutMission, @Null LocalDate finMission, @NotNull Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil, @NotNull ProfilDTO profilDTO) throws ServiceException {
-        if (estHorsMission(debutPeriode, debutMission, finMission)) {
-            return 0f;
-        }
+    public Map<ProfilDTO, Float> nbrsJoursDispoMaxProfil(@NotNull LocalDate debutPeriode, @NotNull Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> nbrsJoursDispoMaxRsrcProfil) throws ServiceException {
+        Map<ProfilDTO, Float> nbrsJoursDispoMaxProfil = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+        for (Map<ProfilDTO, Map<LocalDate, Float>> nbrsJoursDispoMaxProfils : nbrsJoursDispoMaxRsrcProfil.values()) {
+            for (ProfilDTO profilDTO : nbrsJoursDispoMaxProfils.keySet()) {
+                if (!nbrsJoursDispoMaxProfil.containsKey(profilDTO)) {
+                    nbrsJoursDispoMaxProfil.put(profilDTO, 0f);
+                }
+                for (LocalDate periode : nbrsJoursDispoMaxProfils.get(profilDTO).keySet().stream().filter(localDate -> localDate.equals(debutPeriode)).collect(Collectors.toList())) {
+                    Float nbrJoursDispoRsrcProfil = nbrsJoursDispoMaxProfils.get(profilDTO).get(periode);
 
-        final float[] nbrsJoursDispoMaxProfil = {0f};
-        pctagesDispoMaxRsrcProfil.values().parallelStream()
-                .forEach((Map<ProfilDTO, Map<LocalDate, Percentage>> pctagesDispoMaxProfils) -> {
-                    pctagesDispoMaxProfils.keySet().parallelStream()
-                            .filter((ProfilDTO p) -> p.equals(profilDTO))
-                            .forEach(p -> nbrsJoursDispoMaxProfil[0] += pctagesDispoMaxProfils.get(p).get(debutPeriode).floatValue());
-                });
-        return nbrsJoursDispoMaxProfil[0];
+                    Float nbrJoursDispoMaxProfils = nbrsJoursDispoMaxProfil.get(profilDTO);
+                    nbrJoursDispoMaxProfils += nbrJoursDispoRsrcProfil;
+                    nbrsJoursDispoMaxProfil.put(profilDTO, nbrJoursDispoMaxProfils);
+                }
+            }
+        }
+        return nbrsJoursDispoMaxProfil;
     }
 
 

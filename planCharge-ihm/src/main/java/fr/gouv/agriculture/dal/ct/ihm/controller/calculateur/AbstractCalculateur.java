@@ -5,43 +5,59 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class AbstractCalculateur {
+public abstract class AbstractCalculateur {
 
-    private boolean estActif = false;
 
-    public boolean estActif() {
-        return estActif;
+    private static boolean estActif = true;
+
+    private boolean estEnCoursDeCalcul = false;
+
+
+    protected AbstractCalculateur() {
+        super();
     }
 
+
+    public boolean estActif() {
+        return estEnCoursDeCalcul || estActif;
+    }
+
+
     private void desactiver() {
-        this.estActif = false;
+        estActif = false;
     }
 
     private void activer() {
-        this.estActif = true;
+        estActif = true;
     }
 
-    public void execSansCalculer(@NotNull ExecuteurCalculateur aExecuter) throws IhmException {
+
+/*
+    public abstract void calculer() throws IhmException;
+*/
+
+    public void executerSansCalculer(@NotNull Executeur aExecuter) throws IhmException {
         boolean etaitActive = estActif();
         desactiver();
-        {
-            aExecuter.executer();
-        }
+
+        aExecuter.executer();
+
         if (etaitActive) {
             activer();
         }
     }
 
-    public void execPuisCalculer(@NotNull ExecuteurCalculateur aExecuter, @NotNull ExecuteurCalculateur calculer) throws IhmException {
-        boolean etaitActive = estActif();
-        activer();
-        {
-            execSansCalculer(aExecuter);
+    public void executerPuisCalculer(@NotNull Executeur aExecuter, @NotNull Executeur aCalculer) throws IhmException {
 
-            calculer.executer();
-        }
-        if (!etaitActive) {
-            desactiver();
+        executerSansCalculer(aExecuter);
+
+        boolean etaitActive = estActif();
+        desactiver();
+        estEnCoursDeCalcul = true;
+        aCalculer.executer();
+        estEnCoursDeCalcul = false;
+        if (etaitActive) {
+            activer();
         }
     }
 

@@ -9,11 +9,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.DisponibilitesDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesService;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
@@ -22,6 +20,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,22 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public final class CalculateurDisponibilites extends AbstractCalculateur {
+public class CalculateurDisponibilites extends AbstractCalculateur {
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(CalculateurDisponibilites.class);
-
-    @SuppressWarnings("UtilityClass")
-    private static final class InstanceHolder {
-        private static final CalculateurDisponibilites INSTANCE = new CalculateurDisponibilites();
-    }
-
-    @NotNull
-    public static CalculateurDisponibilites instance() {
-        return CalculateurDisponibilites.InstanceHolder.INSTANCE;
-    }
 
 
     /*
@@ -59,21 +49,17 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
 
     //    @Autowired
     @NotNull
-    private final ReferentielsService referentielsService = ReferentielsService.instance();
-
-    //    @Autowired
-    @NotNull
     private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     /*
      La couche controller :
     */
 
-/*
-    //    @Autowired
-    @NotNull
-    private final DisponibilitesController disponibilitesController = DisponibilitesController.instance();
-*/
+    /*
+        //    @Autowired
+        @NotNull
+        private final DisponibilitesController disponibilitesController = DisponibilitesController.instance();
+    */
     //    @Autowired
     @NotNull
     private final DisponibilitesController getDisponibilitesController() {
@@ -83,8 +69,7 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
 
     // Constructeurs :
 
-    // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
-    private CalculateurDisponibilites() {
+    public CalculateurDisponibilites() {
         super();
         // Rien... pour l'instant.
     }
@@ -92,17 +77,18 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
 
     // Méthodes :
 
-    public void calculer(@NotNull LocalDate dateEtat) throws IhmException {
+    //    @Override
+    public void calculer() throws IhmException {
         if (!estActif()) {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
 
-        LOGGER.debug("Définition des valeurs du calendrier : ");
+        LOGGER.debug("Calcul des disponibilités : ");
         for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculer(noSemaine);
         }
-        LOGGER.debug("Valeurs du calendrier définies.");
+        LOGGER.debug("Disponibilités calculées.");
     }
 
     private void calculer(int noSemaine) throws IhmException {
@@ -110,7 +96,7 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
-//        LOGGER.debug("Définition des valeurs du calendrier pour la semaine {} : ", noSemaine);
+//        LOGGER.debug("Calcul des disponibilités pour la semaine {} : ", noSemaine);
         for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
             calculer(ressourceHumaineBean, noSemaine);
         }
@@ -119,7 +105,7 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
             calculer(profilBean, noSemaine);
         }
 */
-        LOGGER.debug("Valeurs du calendrier définies  pour la semaine {}.", noSemaine);
+        LOGGER.debug("Disponibilités calculées pour la semaine {}.", noSemaine);
     }
 
     public void calculer(@NotNull RessourceHumaineBean ressHumBean) throws IhmException {
@@ -127,11 +113,11 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
-//        LOGGER.debug("Définition des valeurs du calendrier pour la ressource {} : ", ressHumBean);
+//        LOGGER.debug("Calcul des disponibilités pour la ressource {} : ", ressHumBean);
         for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculer(ressHumBean, noSemaine);
         }
-        LOGGER.debug("Valeurs du calendrier définies pour la ressource {}.", ressHumBean);
+        LOGGER.debug("Disponibilités calculées pour la ressource {}.", ressHumBean);
     }
 
     public void calculer(@NotNull RessourceHumaineBean ressHumBean, int noSemaine) throws IhmException {
@@ -139,7 +125,7 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
-//        LOGGER.debug("Définition des valeurs du calendrier pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
+//        LOGGER.debug("Calcul des disponibilités pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
 
         LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
@@ -186,7 +172,11 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
                 throw new IhmException("Impossible de calculer le nombre de jours de disponibilité pour l'entreprise (MinAgri).", e);
             }
 
-            NbrsJoursDispoRsrcBean nbrsJoursDispoMinAgriBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMinAgriBeans(), bean -> bean.getRessourceHumaineBean().equals(ressHumBean), new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'."));
+            NbrsJoursDispoRsrcBean nbrsJoursDispoMinAgriBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMinAgriBeans(), bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+            if (nbrsJoursDispoMinAgriBean == null) {
+                nbrsJoursDispoMinAgriBean = new NbrsJoursDispoRsrcBean(ressHumBean);
+                getDisponibilitesController().getNbrsJoursDispoMinAgriBeans().add(nbrsJoursDispoMinAgriBean);
+            }
             if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
                 nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleFloatProperty(nbrJoursDispoMinAgriPeriode));
             } else {
@@ -307,7 +297,14 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
                 }
             }
 
-            for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
+            List<ProfilBean> profilsConcernes = getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilBeans().stream()
+                    .filter(
+                            nbrsJoursDispoRsrcProfilBean ->
+                                    nbrsJoursDispoRsrcProfilBean.getRessourceHumaineBean().equals(ressHumBean)
+                    )
+                    .map(nbrsJoursDispoRsrcProfilBean -> nbrsJoursDispoRsrcProfilBean.getProfilBean())
+                    .collect(Collectors.toList());
+            for (ProfilBean profilBean : profilsConcernes) {
 
                 Percentage pctageDispoRsrcProfil = pctagesDispoRsrc.get(profilBean);
 
@@ -339,71 +336,64 @@ public final class CalculateurDisponibilites extends AbstractCalculateur {
         }
 
         // Nbrs de jours de dispo. maxi. / profil (calculé) :
-        CALCUL_NBRS_JOURS_DISPO_MAX_PROFIL:
-        {
-            // Ajout des beans pour tous les profils manquants,
-            // en 1 seule fois (1 'addAll' au lieu de N 'add') pour éviter les recalculs en chaîne, qui sont déclenchés à chaque modif :
-            {
-                List<NbrsJoursDispoProfilBean> nbrsJoursDispoMaxProfilBeansAAjouter = new ArrayList<>();
-                for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
-                    NbrsJoursDispoProfilBean nbrsJoursDispoMaxRsrcProfilBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans(),
-                            nbrsJoursDispoProfilBean -> nbrsJoursDispoProfilBean.getProfilBean().equals(profilBean)
-                    );
-                    if (nbrsJoursDispoMaxRsrcProfilBean == null) {
-                        NbrsJoursDispoProfilBean nbrsJoursDispoProfilBeanAAjouter = new NbrsJoursDispoProfilBean(profilBean);
-                        nbrsJoursDispoMaxProfilBeansAAjouter.add(nbrsJoursDispoProfilBeanAAjouter);
-                    }
-                }
-                if (!nbrsJoursDispoMaxProfilBeansAAjouter.isEmpty()) {
-                    getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans().addAll(nbrsJoursDispoMaxProfilBeansAAjouter);
-                }
-            }
+        calculerDispoProfils(debutPeriode, finPeriode);
 
-            for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
-
-                Float nbrsJoursDispoMaxProfil;
-                try {
-
-                    DisponibilitesDTO disponibilitesDTO = planChargeBean.toDisponibilitesDTO();
-                    Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil = disponibilitesDTO.getPctagesDispoMaxRsrcProfil();
-
-                    ProfilDTO profilDTO = profilBean.toDto();
-
-                    nbrsJoursDispoMaxProfil = disponibilitesService.nbrsJoursDispoMaxProfil(debutPeriode, debutMission, finMission, pctagesDispoMaxRsrcProfil, profilDTO);
-                } catch (ServiceException e) {
-                    throw new IhmException("Impossible de calculer le nombre de jours de disponibilité max. par profil.", e);
-                }
-
-                NbrsJoursDispoProfilBean nbrsJoursDispoMaxProfilBean = Collections.any(
-                        getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans(),
-                        nbrsJoursDispoProfilBean ->
-                                nbrsJoursDispoProfilBean.getProfilBean().equals(profilBean),
-                        new IhmException("Impossible de retrouver les nombres de jours de dispo. max. pour le profil '" + profilBean.getCode() + "'.")
-                );
-
-                if (!nbrsJoursDispoMaxProfilBean.containsKey(debutPeriode)) {
-                    FloatProperty nbrJoursDispoMaxProfilPeriodeProperty = new SimpleFloatProperty(DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT.floatValue());
-                    nbrsJoursDispoMaxProfilBean.put(debutPeriode, nbrJoursDispoMaxProfilPeriodeProperty);
-                }
-                FloatProperty nbrJoursDispoMaxProfilPeriodeProperty = nbrsJoursDispoMaxProfilBean.get(debutPeriode);
-                nbrJoursDispoMaxProfilPeriodeProperty.setValue(nbrsJoursDispoMaxProfil);
-            }
-        }
-
-        for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
-            calculer(profilBean, noSemaine);
-        }
-
-//        LOGGER.debug("Valeurs du calendrier définies pour la ressource {} et la semaine n° {}.", ressHumBean, noSemaine);
+//        LOGGER.debug("Disponibilités calculées pour la ressource {} et la semaine n° {}.", ressHumBean, noSemaine);
     }
 
 
-    public void calculer(ProfilBean profilBean, int noSemaine) throws IhmException {
+    public void calculerDispoProfils(@NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode) throws IhmException {
         if (!estActif()) {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
-        // TODO FDA 2017/08 Coder.
+
+        // Ajout des beans pour tous les profils manquants,
+        // en 1 seule fois (1 'addAll' au lieu de N 'add') pour éviter les recalculs en chaîne, qui sont déclenchés à chaque modif :
+        {
+            List<NbrsJoursDispoProfilBean> nbrsJoursDispoMaxProfilBeansAAjouter = new ArrayList<>();
+            for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
+                NbrsJoursDispoProfilBean nbrsJoursDispoMaxRsrcProfilBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans(),
+                        nbrsJoursDispoProfilBean -> nbrsJoursDispoProfilBean.getProfilBean().equals(profilBean)
+                );
+                if (nbrsJoursDispoMaxRsrcProfilBean == null) {
+                    NbrsJoursDispoProfilBean nbrsJoursDispoProfilBeanAAjouter = new NbrsJoursDispoProfilBean(profilBean);
+                    nbrsJoursDispoMaxProfilBeansAAjouter.add(nbrsJoursDispoProfilBeanAAjouter);
+                }
+            }
+            if (!nbrsJoursDispoMaxProfilBeansAAjouter.isEmpty()) {
+                getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans().addAll(nbrsJoursDispoMaxProfilBeansAAjouter);
+            }
+        }
+
+        Map<ProfilDTO, Float> nbsrJoursDispoMaxProfil;
+        try {
+            ObservableList<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeans = getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilBeans();
+            Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> nbrsJoursDispoMaxRsrcProfil = NbrsJoursDispoRsrcProfilBeans.toDTO(nbrsJoursDispoMaxRsrcProfilBeans);
+            nbsrJoursDispoMaxProfil = disponibilitesService.nbrsJoursDispoMaxProfil(debutPeriode, nbrsJoursDispoMaxRsrcProfil);
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de calculer le nombre de jours de disponibilité max. par profil.", e);
+        }
+        for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
+
+            ProfilDTO profilDTO = profilBean.toDto();
+            Float nbrsJoursDispoMaxProfil = nbsrJoursDispoMaxProfil.get(profilDTO);
+
+            NbrsJoursDispoProfilBean nbrsJoursDispoMaxProfilBean = Collections.any(
+                    getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans(),
+                    nbrsJoursDispoProfilBean ->
+                            nbrsJoursDispoProfilBean.getProfilBean().equals(profilBean),
+                    new IhmException("Impossible de retrouver les nombres de jours de dispo. max. pour le profil '" + profilBean.getCode() + "'.")
+            );
+
+            if (!nbrsJoursDispoMaxProfilBean.containsKey(debutPeriode)) {
+                FloatProperty nbrJoursDispoMaxProfilPeriodeProperty = new SimpleFloatProperty(DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT.floatValue());
+                nbrsJoursDispoMaxProfilBean.put(debutPeriode, nbrJoursDispoMaxProfilPeriodeProperty);
+            }
+            FloatProperty nbrJoursDispoMaxProfilPeriodeProperty = nbrsJoursDispoMaxProfilBean.get(debutPeriode);
+            nbrJoursDispoMaxProfilPeriodeProperty.setValue(nbrsJoursDispoMaxProfil);
+        }
+        //        LOGGER.debug("Disponibilités calculées pour le profil {} et la semaine n° {}.", debutPeriode, noSemaine);
     }
 
 }

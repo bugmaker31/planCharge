@@ -58,6 +58,8 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
         return calendrier.get(key);
     }
 
+
+
     public P put(LocalDate key, P value) {
         return calendrier.put(key, value);
     }

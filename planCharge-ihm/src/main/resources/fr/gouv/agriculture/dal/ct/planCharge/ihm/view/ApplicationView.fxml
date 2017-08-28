@@ -2,6 +2,7 @@
 
 <?import eu.hansolo.medusa.Gauge?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111"
@@ -44,7 +45,6 @@
                     <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
                     <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
                     <SeparatorMenuItem/>
-                    <SeparatorMenuItem/>
                     <!--
                                         TODO FDA 2017/07 Coder.
                                         <MenuItem text="Couper" onAction="#couper" accelerator="Shortcut+X"/>
@@ -52,6 +52,17 @@
                                         <MenuItem text="Coller" onAction="#coller" accelerator="Shortcut+V"/>
                     -->
                     <MenuItem text="Supprimer" onAction="#supprimer"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Calculer" onAction="#calculer">
+                        <accelerator>
+                            <KeyCodeCombination code="F5" alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+                        </accelerator>
+                    </MenuItem>
+                    <MenuItem text="Valider" disable="true"> <!--TODO FDA 2017/08 Coder... ou associer à "Calculer" ?-->
+                        <accelerator>
+                            <KeyCodeCombination code="F10" alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+                        </accelerator>
+                    </MenuItem>
                 </Menu>
                 <Menu text="_Suivi" disable="true"/>
                 <Menu text="_Référentiels">

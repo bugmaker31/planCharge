@@ -434,7 +434,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion expandedPane="$pctagesDispoMaxRsrcProfilPane">
+                <Accordion > <!--expandedPane="$pctagesDispoMaxRsrcProfilPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="pctagesDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (%)"
@@ -522,7 +522,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion expandedPane="$nbrsJoursDispoMaxRsrcProfilPane">
+                <Accordion > <!--expandedPane="$nbrsJoursDispoMaxRsrcProfilPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (j)"

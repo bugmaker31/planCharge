@@ -75,6 +75,7 @@ public class ApplicationController extends AbstractController {
     private static ParametresIhm paramsIhm = ParametresIhm.instance();
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
+
     public enum NomModule {
         // Référentiels :
         JOURS_FERIES("Jours fériés"),
@@ -206,7 +207,7 @@ public class ApplicationController extends AbstractController {
 
     //    @Autowired
     @NotNull
-    private final CalculateurDisponibilites calculateurDisponibilites = CalculateurDisponibilites.instance();
+    private final CalculateurDisponibilites calculateurDisponibilites = new CalculateurDisponibilites();
 
     // Les services métier :
 
@@ -555,7 +556,7 @@ public class ApplicationController extends AbstractController {
         };
 
         try {
-            calculateurDisponibilites.execPuisCalculer(
+            calculateurDisponibilites.executerPuisCalculer(
                     () -> {
                         try {
 
@@ -586,7 +587,7 @@ public class ApplicationController extends AbstractController {
                             );
                         }
                     },
-                    () -> calculateurDisponibilites.calculer(planChargeBean.dateEtat())
+                    () -> calculateurDisponibilites.calculer()
             );
         } catch (IhmException e) {
             throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
@@ -1106,7 +1107,7 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleRessourcesHumaines() throws IhmException {
         LOGGER.debug("> [...] > Module \"Ressources humaines\"");
 
-        if (nomModuleCourant == ApplicationController.NomModule.RESSOURCES_HUMAINES) {
+        if (nomModuleCourant == NomModule.RESSOURCES_HUMAINES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
@@ -1137,12 +1138,12 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleDisponibilites() throws IhmException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
-        if (nomModuleCourant == ApplicationController.NomModule.DISPONIBILITES) {
+        if (nomModuleCourant == NomModule.DISPONIBILITES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final ApplicationController.NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleDisponibilites();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
     }
@@ -1172,13 +1173,13 @@ public class ApplicationController extends AbstractController {
             return;
         }
 
-        final ApplicationController.NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleTaches();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
     }
 
     public void activerModuleTaches() throws IhmException {
-        nomModuleCourant = ApplicationController.NomModule.TACHES;
+        nomModuleCourant = NomModule.TACHES;
 //        ihm.getTachesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getTachesView());
 //        ihm.getTachesController().fireActivation();
@@ -1198,12 +1199,12 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleCharges() throws IhmException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
-        if (nomModuleCourant == ApplicationController.NomModule.CHARGES) {
+        if (nomModuleCourant == NomModule.CHARGES) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final ApplicationController.NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleCharges();
         getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
     }
@@ -1264,12 +1265,14 @@ public class ApplicationController extends AbstractController {
     private LocalDate dateEtatPrecedentePourMajCalendriers = null;
 
     private void majCalendriers() throws IhmException {
-        LocalDate dateEtat = planChargeBean.dateEtat();
-        if ((dateEtatPrecedentePourMajCalendriers == null) || !dateEtat.equals(dateEtatPrecedentePourMajCalendriers)) {
+        LocalDate dateEtat = planChargeBean.getDateEtat();
+        if ((dateEtatPrecedentePourMajCalendriers == null) || (dateEtat == null) || !dateEtat.equals(dateEtatPrecedentePourMajCalendriers)) {
             definirNomsPeriodes();
             definirValeursCalendriers();
         }
-        dateEtatPrecedentePourMajCalendriers = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
+        if (dateEtat != null) {
+            dateEtatPrecedentePourMajCalendriers = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
+        }
     }
 
     private void definirNomsPeriodes() throws IhmException {
@@ -1309,7 +1312,6 @@ public class ApplicationController extends AbstractController {
                     //noinspection HardcodedFileSeparator
                     titreColonne = "N/C";
                 } else {
-                    dateDebutPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
                     titreColonne = noSemaineFormatter.format(dateDebutPeriode)
                             + "\n" + ('[' + dateFormatter.format(dateDebutPeriode)
 /*
@@ -1317,8 +1319,8 @@ public class ApplicationController extends AbstractController {
                             + "\n" + dateFormatter.format(dateFinPeriode)
 */
                             + ".."
-                    )
-                    ;
+                    );
+                    dateDebutPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
                 }
                 calendrierColumn.setText(titreColonne);
             }
@@ -1418,4 +1420,15 @@ public class ApplicationController extends AbstractController {
         }
         return true;
     }
+
+
+    public void calculer(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        try {
+            ihm.getDisponibilitesController().calculerDisponibilites();
+        } catch (IhmException e) {
+            LOGGER.error("Impossible de calculer.", e);
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible de calculer.", Exceptions.causes(e));
+        }
+    }
+
 }
