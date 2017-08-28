@@ -503,7 +503,7 @@ public class PlanChargeIhm extends Application {
         // Cf. https://stackoverflow.com/questions/25910066/javafx-handling-events-on-tableview
         column.addEventHandler(TableColumn.CellEditEvent.ANY, event -> {
             afficherInterdictionEditer(message);
-            event.consume(); /// FIXME FDA 2017/08 Consuming an event does not prevent other EventHandlers on TableView from being invoked.
+            event.consume(); /// FIXME FDA 2017/08 Ne sufit pas : Consuming an event does not prevent other EventHandlers on TableView from being invoked.
         });
     }
 

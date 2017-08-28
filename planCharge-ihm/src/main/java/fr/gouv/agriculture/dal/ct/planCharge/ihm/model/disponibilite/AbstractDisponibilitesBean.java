@@ -148,13 +148,13 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
     @NotNull
     @Override
     public D toDto() throws BeanException {
-        return null; // FIXME FDA 2017/08
+        return null; // TODO FDA 2017/08 Trouver mieux comme code.
     }
 
     @NotNull
     @Override
     public B fromDto(@NotNull D dto) throws BeanException {
-        return null; // FIXME FDA 2017/08
+        return null; // TODO FDA 2017/08 Trouver mieux comme code.
     }
 
 

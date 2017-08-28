@@ -95,47 +95,61 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
     // La Table :
+    @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
     private TableViewAvecCalendrier<PlanificationTacheBean, Double> planificationsTable;
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine1Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine2Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine3Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine4Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine5Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine6Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine7Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine8Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine9Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine10Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine11Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> semaine12Column;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> chargePlanifieeColumn;
 
@@ -266,8 +280,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
                 try {
                     PlanificationTacheBean planifBean = cell.getValue();
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    LocalDate finPeriode = debutPeriode.plusDays(7); // FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     if (!planifBean.aChargePlanifiee(debutPeriode, finPeriode)) {
                         // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
                         return null;
@@ -373,8 +387,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
                 PlanificationTacheBean planifBean = event.getRowValue();
                 try {
-                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
-                    LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7);// FIXME FDA 2017/06 Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
                 } catch (IhmException e) {
                     LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
@@ -427,7 +441,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         LOGGER.info("Initialisé.");
     }
 
-/*
+/* Le menu contextuel est défini dans le fichier FXML.
     void definirMenuContextuel() {
         super.definirMenuContextuel();
 
@@ -489,7 +503,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         LocalDate debutSemaine = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calendrier.put(debutSemaine, new SimpleDoubleProperty(0.0));
-            debutSemaine = debutSemaine.plusDays(7); // FIXME FDA 2017/07 Ne fonctionne que pour des périodes hebdomadaire, pas trimestrielle.
+            debutSemaine = debutSemaine.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         }
 
         return new PlanificationTacheBean(tacheBean, calendrier);

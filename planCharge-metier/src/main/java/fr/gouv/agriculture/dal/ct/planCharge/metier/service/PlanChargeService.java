@@ -222,7 +222,7 @@ public class PlanChargeService extends AbstractService {
 
                     // On ajoute les planifications qui manquent au calendrier :
                     for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-                        LocalDate debutPeriodeTache = dateEtat.plusDays((noSemaine - 1) * 7);// FIXME FDA 2017/07  Ne marche que quand les périodes sont des semaines, pas pour les trimestres.
+                        LocalDate debutPeriodeTache = dateEtat.plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                         if (!planifTache.containsKey(debutPeriodeTache)) {
                             Double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache);
                             if (chargeTachePeriode != null) {

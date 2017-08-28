@@ -10,13 +10,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -38,6 +36,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
      La couche "View" :
       */
 
+    @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
     private TableView<TacheBean> tachesTable;
@@ -45,12 +44,13 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     /*
      La couche métier :
       */
+    @SuppressWarnings("NullableProblems")
     @NotNull
     final // 'final' pour empêcher de resetter cette variable.
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @NotNull
     final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
     private ObservableList<TacheBean> planificationsBeans = (ObservableList) planChargeBean.getPlanificationsBeans();
@@ -69,6 +69,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     }
 
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
     @Override
     ObservableList<TacheBean> getTachesBeans() {
@@ -80,9 +81,6 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     TableView<TacheBean> getTachesTable() {
         return tachesTable;
     }
-
-    @Null
-    private MenuItem menuVoirTacheDansPlanCharge;
 
 
     /**
@@ -100,7 +98,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         LOGGER.info("Initialisé.");
     }
 
-/*
+/* Le menu contextuel est défini dans le fichier FXML.
     void definirMenuContextuel() {
         super.definirMenuContextuel();
 
@@ -120,7 +118,9 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     @NotNull
     protected TacheBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
         LOGGER.debug("ajouterTache...");
+        //noinspection OverlyBroadCatchBlock
         try {
+            //noinspection UnnecessarySuperQualifier
             TacheBean tacheBean = super.ajouterTache();
 
             planChargeBean.vientDEtreModifie();
@@ -146,7 +146,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     private void afficherPlanification() {
         TacheBean tacheBean = TableViews.selectedItem(tachesTable);
         if (tacheBean == null) {
-            //noinspection HardcodedLineSeparator
+            //noinspection HardcodedLineSeparator,MagicNumber
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification pour la tâche",

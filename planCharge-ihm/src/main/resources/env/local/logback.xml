@@ -1,7 +1,7 @@
 <configuration scan="false">
 
-    <property name="APP_NAME" value="planCharge" />
     <property name="LOGS_DIR" value="./logs" />
+    <property name="APP_NAME" value="planCharge" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- On Windows machines setting withJansi to true enables ANSI

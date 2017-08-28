@@ -100,7 +100,8 @@
                         <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                         <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                         <SeparatorMenuItem/>
-                        <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherTache"/>
+                        <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache" />
+                        <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
                         <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
                                   onAction="#afficherTacheDansOutilTicketing"/>
                     </items>
@@ -138,7 +139,7 @@
                         <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
                         <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge" styleClass="charge-column"/>
                         <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Rsrc"/>
-                        <TableColumn fx:id="profilColumn" prefWidth="50.0" text="Profil"/>
+                        <TableColumn fx:id="profilColumn" prefWidth="60" text="Profil"/>
                     </columns>
                 </TableColumn>
                 <TableColumn text="Planification">

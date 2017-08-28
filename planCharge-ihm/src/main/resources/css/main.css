@@ -213,24 +213,26 @@ Plan de charge :
 
 
 .avantPeriodeDemandee {
-    /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
-    -fx-background-color: #DCDCDC;
-    -fx-opacity: 50%; /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
-    -fx-background-image: url("/images/tropTot.gif");
+    -fx-background-color: rgba(221, 221, 221, 0.3); /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/
+    /*-fx-background-color: #DCDCDC;*/
+    /*-fx-text-fill: white;*/
+
+    /*-fx-background-image: url("/images/tropTot.gif");*/
+    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
 
 .pendantPeriodeDemandee {
-    -fx-background-color: #778899;
-    -fx-opacity: 50%; /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
-    -fx-text-fill: white;
+    /*-fx-background-color: #778899;*/
+    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
+    /*-fx-text-fill: white;*/
 }
 
 .apresPeriodeDemandee {
-    /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
-    -fx-background-color: #696969;
-    -fx-text-fill: white;
-    -fx-opacity: 50%; /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
-    -fx-background-image: url("/images/tropTard.gif");
+    -fx-background-color: rgba(192, 192, 192, 0.3); /*rgba(173, 216, 230, 0.25) lightblue #add8e6*/
+    /*-fx-background-color: #696969;*/
+    /*-fx-text-fill: white;*/
+    /*-fx-background-image: url("/images/tropTard.png");*/
+    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires, et continuer à lire les nombres. */
 }
 
 

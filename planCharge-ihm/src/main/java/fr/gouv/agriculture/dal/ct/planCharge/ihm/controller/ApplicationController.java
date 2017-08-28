@@ -1431,13 +1431,14 @@ public class ApplicationController extends AbstractController {
         try {
 
             ihm.getDisponibilitesController().calculerDisponibilites();
+            // Ajouter ici les autres calculs (surcharges, etc.)
 
             planChargeBean.vientDEtreCalcule();
             majBarreEtat();
 
             ihm.afficherNotification(
-                    "Disponiblités calculées",
-                    "Les disponibilités ont été calculées."
+                    "Calcul terminé",
+                    "Les données (disponibilités, surcharges, etc.) ont été calculées."
             );
         } catch (IhmException e) {
             LOGGER.error("Impossible de calculer.", e);

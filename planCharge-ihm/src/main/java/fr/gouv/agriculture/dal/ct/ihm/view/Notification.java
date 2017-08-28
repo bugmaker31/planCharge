@@ -83,6 +83,6 @@ public class Notification /*extends Notifications*/ {
     }
 
     public void hide() {
-        notifImpl.hideAfter(Duration.millis(2)); // FIXME FDA 2017/08 Ne fonctionne pas, sans doute parce que la nouvelle Duration est ignorée.
+        notifImpl.hideAfter(Duration.millis(2)); // FIXME FDA 2017/08 Ne fonctionne pas, sans doute parce que la nouvelle Duration est ignorée, vu le code.
     }
 }

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
+<?import java.lang.Double?>
 <?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.111"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -90,12 +91,15 @@
                 <panes>
                     <TitledPane animated="false" text="Paramètres">
                         <HBox spacing="2" alignment="BASELINE_LEFT">
+                            <fx:define>
+                                <Double fx:id="lundisButtonsPrefWidth" fx:value="150"/>
+                            </fx:define>
                             <Label text="Date d'état : "/>
-                            <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Lundi précédent"/>
+                            <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Lundi précédent &lt;&lt;&lt;" prefWidth="$lundisButtonsPrefWidth"/>
                             <Label text="Lundi"/>
-                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat"
+                            <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat" prefWidth="100"
                                         showWeekNumbers="true"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
-                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="Lundi suivant"/>
+                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="&gt;&gt;&gt; Lundi suivant"  prefWidth="$lundisButtonsPrefWidth"/>
                         </HBox>
                     </TitledPane>
                 </panes>
