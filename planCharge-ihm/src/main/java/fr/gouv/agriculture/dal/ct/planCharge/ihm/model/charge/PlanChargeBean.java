@@ -78,8 +78,10 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     private final ObservableList<PlanificationTacheBean> planificationsBeans = FXCollections.observableArrayList();
     @Null
     private LocalDate dateEtat = null;
-    private boolean modifie = false;
 
+    private boolean estModifie = false;
+
+    private boolean aBesoinEtreCalcule = false;
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeBean() {
@@ -153,9 +155,6 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         this.dateEtat = dateEtat;
     }
 
-    public boolean estModifie() {
-        return modifie;
-    }
 
     @NotNull
     public ObservableList<JourFerieBean> getJoursFeriesBeans() {
@@ -212,29 +211,40 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         return planificationsBeans;
     }
 
-    public boolean isModifie() {
-        return modifie;
-    }
 
+    public boolean estModifie() {
+        return estModifie;
+    }
     private void setModifie(boolean estModifie) {
-        this.modifie = estModifie;
+        this.estModifie = estModifie;
     }
 
     public void vientDEtreCharge() {
-        this.modifie = false;
+        this.estModifie = false;
+        this.aBesoinEtreCalcule = true;
     }
 
     public void vientDEtreSauvegarde() {
-        this.modifie = false;
+        this.estModifie = false;
     }
 
     public void vientDEtreModifie() {
-        this.modifie = true;
+        this.estModifie = true;
+        this.aBesoinEtreCalcule = true;
+    }
+
+    public void vientDEtreCalcule() {
+        this.aBesoinEtreCalcule = false;
     }
 
     public boolean aBesoinEtreSauvegarde() {
-        return modifie;
+        return estModifie;
     }
+
+    public boolean aBesoinEtreCalcule() {
+        return aBesoinEtreCalcule;
+    }
+
 
     @NotNull
     public PlanChargeBean fromDto(@NotNull PlanChargeDTO planCharge) {
@@ -425,7 +435,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         //noinspection StringConcatenationMissingWhitespace
         return "[" + (dateEtat == null ? "N/A" : dateEtat.format(DateTimeFormatter.ISO_DATE)) + "]"
                 + " " + getPlanificationsBeans().size() + " tâches"
-                + " (" + (modifie ? "" : "non ") + "modifié)";
+                + " (" + (estModifie ? "" : "non ") + "modifié)";
     }
 
 }

@@ -138,6 +138,20 @@
                     </Label>
                 </HBox>
                 <HBox styleClass="itemBarreEtat">
+                    <CheckBox fx:id="calculRequisCheckbox" disable="true">
+                        <tooltip>
+                            <!--suppress JavaFxUnresolvedFxIdReference -->
+                            <Tooltip fx:id="calculRequisCheckboxTooltip"
+                                    text="Si coché, il faudra re-calculer (menu 'Edition' > 'Calculer', ou 'F5'). Sinon, les calculs sont à jour, pas besoin de re-calculer"/>
+                        </tooltip>
+                    </CheckBox>
+                    <Label text="Calculs requis ?">
+                        <tooltip>
+                            <fx:reference source="calculRequisCheckboxTooltip"/>
+                        </tooltip>
+                    </Label>
+                </HBox>
+                <HBox styleClass="itemBarreEtat">
                     <Label fx:id="nbrTachesField" minWidth="30" style="-fx-alignment: baseline-right;"/>
                     <Label text=" tâches"/>
                 </HBox>

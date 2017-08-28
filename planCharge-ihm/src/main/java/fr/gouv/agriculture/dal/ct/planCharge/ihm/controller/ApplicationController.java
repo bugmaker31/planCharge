@@ -167,6 +167,10 @@ public class ApplicationController extends AbstractController {
 
     @FXML
     @NotNull
+    private CheckBox calculRequisCheckbox;
+
+    @FXML
+    @NotNull
     private Label nbrTachesField;
 
     @FXML
@@ -397,6 +401,7 @@ public class ApplicationController extends AbstractController {
     public void majBarreEtat() {
         LOGGER.debug("majBarreEtat...");
         sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
+        calculRequisCheckbox.setSelected(planChargeBean.aBesoinEtreCalcule());
         definirNbrTachesDansBarreEtat();
     }
 
@@ -1424,7 +1429,12 @@ public class ApplicationController extends AbstractController {
 
     public void calculer(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         try {
+
             ihm.getDisponibilitesController().calculerDisponibilites();
+
+            planChargeBean.vientDEtreCalcule();
+            majBarreEtat();
+
             ihm.afficherNotification(
                     "Disponiblités calculées",
                     "Les disponibilités ont été calculées."
