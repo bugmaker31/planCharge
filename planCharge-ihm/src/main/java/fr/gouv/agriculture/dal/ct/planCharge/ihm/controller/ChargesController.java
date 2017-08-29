@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
@@ -20,7 +21,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -214,11 +214,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return semaine12Column;
     }
 
-    @Null
-    private MenuItem menuVoirTache;
+    /*
+    La couche "Controller" :
+     */
 
-    @Null
-    private MenuItem menuVoirOutilTicketing;
+    //    @Autowired
+    @NotNull
+    private final CalculateurCharges calculateurCharges = new CalculateurCharges();
 
 
     /**
@@ -596,4 +598,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
     }
 
+
+    public void calculerCharges() throws IhmException {
+        calculateurCharges.calculer();
+    }
 }

@@ -1424,6 +1424,7 @@ public class ApplicationController extends AbstractController {
 
         // TODO FDA 2017/08 Afficher une barre de progression.
         ihm.getDisponibilitesController().calculerDisponibilites();
+        ihm.getChargesController().calculerCharges();
         // Ajouter ici les autres calculs (surcharges, etc.)
 
         planChargeBean.vientDEtreCalcule();

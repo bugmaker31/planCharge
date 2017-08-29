@@ -2116,9 +2116,9 @@ public class DisponibilitesController extends AbstractController {
 
 
     public void calculerDisponibilites() throws IhmException {
-//        LOGGER.debug("Définition des valeurs du calendrier : ");
+//        LOGGER.debug("Calcul des disponibilités  : ");
         calculateurDisponibilites.calculer();
-//        LOGGER.debug("Valeurs du calendrier définies.");
+//        LOGGER.debug("Disponibilités calculées.");
     }
 
 
