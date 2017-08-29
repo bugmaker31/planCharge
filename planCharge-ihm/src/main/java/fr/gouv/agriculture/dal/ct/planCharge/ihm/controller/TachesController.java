@@ -5,7 +5,9 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TotalTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBeans;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.collections.ListChangeListener;
@@ -13,12 +15,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.List;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -36,6 +41,12 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         return instance;
     }
 
+
+    //    @Autowired
+    @NotNull
+    private TacheService tacheService = TacheService.instance();
+
+
     /*
      La couche "View" :
       */
@@ -45,20 +56,16 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     @FXML
     private TableView<TacheBean> tachesTable;
 
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    @FXML
-    private TableView<TotalTacheBean> totauxTachesTable;
 
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private TableColumn<TotalTacheBean, Long> nbrTachesATraiterColumn;
+    private Label nbrTachesATraiterLabel;
 
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private TableColumn<TotalTacheBean, Double> totalResteAFaireColumn;
+    private Label totalResteAFaireLabel;
 
     /*
      La couche métier :
@@ -112,22 +119,22 @@ public class TachesController extends AbstractTachesController<TacheBean> {
 
         super.initialize();
 
-        totauxTachesTable.getItems().setAll(new TotalTacheBean());
-
+        NumberFormat formatNbrTaches = new DecimalFormat("#,##0");
+        NumberFormat formatCharge = new DecimalFormat("#,##0.###");
         tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
-            assert totauxTachesTable.getItems().size() == 1;
-            TotalTacheBean totalTacheBean = totauxTachesTable.getItems().get(0);
 
-            long nbrTachesATraiter = tachesTable.getItems().parallelStream().filter(TacheBean::estATraiter).count();
-            totalTacheBean.setNbrTachesATraiter(nbrTachesATraiter);
+            List<TacheDTO> tacheDTOs = TacheBeans.toDTO(tachesTable.getItems());
+            List<TacheDTO> tacheATraiterDTOs = tacheService.aTraiter(tacheDTOs);
 
-            Double totalRAF = tachesTable.getItems().parallelStream().mapToDouble(tacheBean -> Objects.value(tacheBean.getCharge(), 0.0)).sum();
-            totalTacheBean.setTotalResteAFaire(totalRAF);
+            long nbrTachesATraiter = tacheATraiterDTOs.size();
+            nbrTachesATraiterLabel.setText(formatNbrTaches.format(nbrTachesATraiter));
+
+            Double totalRAF = tacheATraiterDTOs.parallelStream()
+                    .mapToDouble(tacheBean -> Objects.value(tacheBean.getCharge(), 0.0))
+                    .sum();
+            totalResteAFaireLabel.setText(formatCharge.format(totalRAF));
 
         });
-
-        nbrTachesATraiterColumn.setCellValueFactory((TableColumn.CellDataFeatures<TotalTacheBean, Long> cellData) -> cellData.getValue().nbrTachesATraiterProperty().asObject());
-        totalResteAFaireColumn.setCellValueFactory((TableColumn.CellDataFeatures<TotalTacheBean, Double> cellData) -> cellData.getValue().totalResteAFaireProperty().asObject());
 
         LOGGER.info("Initialisé.");
     }

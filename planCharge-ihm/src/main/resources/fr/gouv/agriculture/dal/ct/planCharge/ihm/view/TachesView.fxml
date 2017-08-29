@@ -45,6 +45,8 @@
                                 <!--TODO FDA 2017/07 Coder l'action.-->
                                 <ToggleButton text="Nouvelles" mnemonicParsing="false"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
+                                <ToggleButton text="Echues" mnemonicParsing="false"/>
+                                <!--TODO FDA 2017/07 Coder l'action.-->
                                 <ToggleButton text="Fermées" mnemonicParsing="false"/>
                                 <!--TODO FDA 2017/07 Coder l'action.-->
                                 <ToggleButton text="Priorisées" mnemonicParsing="false"/>
@@ -79,27 +81,6 @@
         </fx:define>
         <VBox VBox.vgrow="ALWAYS">
             <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
-                <contextMenu>
-                    <ContextMenu fx:id="tachesTableContextMenu">
-                        <items>
-                            <MenuItem text="Voir la ressource humain de la tâche"
-                                      onAction="#afficherRessourceHumaine"/>
-                            <MenuItem text="Voir le profil de la tâche"
-                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir le projet/appli de la tâche"
-                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir l'importance de la tâche"
-                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Voir la tâche dans le plan de charge"
-                                      onAction="#afficherPlanification"/>
-                            <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
-                                      onAction="#afficherTacheDansOutilTicketing"/>
-                        </items>
-                    </ContextMenu>
-                </contextMenu>
                 <columns>
 
                     <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
@@ -153,36 +134,67 @@
                     <fx:reference source="echeanceColumn"/>
                     <fx:reference source="noTacheColumn"/>
                 </sortOrder>
-            </TableView>
-            <TableView fx:id="totauxTachesTable" editable="false" styleClass="noHeader-table" fixedCellSize="25"
-                       prefHeight="27">
-                <columns>
-                    <TableColumn prefWidth="${categorieColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${sousCategorieColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${noTacheColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${noTicketIdalColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${descriptionColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${projetAppliColumnPrefWidth}"/>
-                    <TableColumn fx:id="nbrTachesATraiterColumn" text="Nombre de tâches à traiter"
-                                 prefWidth="$statutColumnPrefWidth"/>
-                    <TableColumn prefWidth="${debutColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${echeanceColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${importanceColumnPrefWidth}"/>
-                    <TableColumn fx:id="totalResteAFaireColumn" text="Total du RAF"
-                                 prefWidth="$chargeColumnPrefWidth"/>
-                    <TableColumn prefWidth="${ressourceColumnPrefWidth}"/>
-                    <TableColumn prefWidth="${profilColumnPrefWidth}"/>
-                </columns>
+                <contextMenu>
+                    <ContextMenu fx:id="tachesTableContextMenu">
+                        <items>
+                            <MenuItem text="Voir la ressource humain de la tâche"
+                                      onAction="#afficherRessourceHumaine"/>
+                            <MenuItem text="Voir le profil de la tâche"
+                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <MenuItem text="Voir le projet/appli de la tâche"
+                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <MenuItem text="Voir l'importance de la tâche"
+                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Voir la tâche dans le plan de charge"
+                                      onAction="#afficherPlanification"/>
+                            <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
+                                      onAction="#afficherTacheDansOutilTicketing"/>
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
             </TableView>
         </VBox>
     </center>
     <bottom>
-        <AnchorPane BorderPane.alignment="CENTER">
+        <HBox>
             <ButtonBar>
                 <buttons>
                     <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
                 </buttons>
             </ButtonBar>
-        </AnchorPane>
+            <HBox styleClass="barreEtat">
+                <HBox styleClass="itemBarreEtat">
+                    <Label text="Nombre de tâches à traiter : ">
+                        <tooltip>
+                            <!--suppress JavaFxUnresolvedFxIdReference -->
+                            <Tooltip fx:id="nbrTachesATraiterTooltip"
+                                     text="Nombre de tâches dont le statut est inférieur à '85-Reportée'."/>
+                        </tooltip>
+                    </Label>
+                    <Label fx:id="nbrTachesATraiterLabel" prefWidth="50" >
+                        <tooltip>
+                            <fx:reference source="nbrTachesATraiterTooltip"/>
+                        </tooltip>
+                    </Label>
+                </HBox>
+                <HBox styleClass="itemBarreEtat">
+                    <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
+                        <tooltip>
+                            <!--suppress JavaFxUnresolvedFxIdReference -->
+                            <Tooltip fx:id="totalResteAFaireTooltip"
+                                     text="Total des charges pour les tâches restant à traiter."/>
+                        </tooltip>
+                    </Label>
+                    <Label fx:id="totalResteAFaireLabel" prefWidth="80" tooltip="$totalResteAFaireTooltip">
+                        <tooltip>
+                            <fx:reference source="totalResteAFaireTooltip"/>
+                        </tooltip>
+                    </Label>
+                </HBox>
+            </HBox>
+        </HBox>
     </bottom>
 </BorderPane>

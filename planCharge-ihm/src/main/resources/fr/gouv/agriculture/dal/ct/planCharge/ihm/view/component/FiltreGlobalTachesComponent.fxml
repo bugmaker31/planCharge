@@ -13,11 +13,17 @@
 -->
 
     <!--<HBox alignment="BASELINE_LEFT">-->
-    <Label text="Filtre global : "/>
+    <Label text="Filtre global : ">
+        <tooltip>
+            <!--suppress JavaFxUnresolvedFxIdReference -->
+            <Tooltip fx:id="filtreGlobalTootip" text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+        </tooltip>
+    </Label>
     <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
         <tooltip>
-            <Tooltip text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+            <fx:reference source="filtreGlobalTootip"/>
         </tooltip>
     </TextField>
+
     <!--</HBox>-->
 </fx:root>

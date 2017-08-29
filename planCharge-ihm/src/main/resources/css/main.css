@@ -50,17 +50,19 @@ Barre d'état :
     -fx-border-insets: 0pt;
 
     -fx-spacing: 0pt;
+
+    -fx-alignment: CENTER_LEFT;
 }
 
 .itemBarreEtat {
-    -fx-alignment: center;
-
     -fx-border-color: lightgray;
     -fx-border-width: 1;
     -fx-border-style: solid;
     -fx-border-insets: 0pt;
 
     -fx-spacing: 0pt;
+
+    -fx-alignment: CENTER;
 }
 
 

@@ -95,11 +95,13 @@
                                 <Double fx:id="lundisButtonsPrefWidth" fx:value="150"/>
                             </fx:define>
                             <Label text="Date d'état : "/>
-                            <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Lundi précédent &lt;&lt;&lt;" prefWidth="$lundisButtonsPrefWidth"/>
+                            <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Lundi précédent &lt;&lt;&lt;"
+                                    prefWidth="$lundisButtonsPrefWidth"/>
                             <Label text="Lundi"/>
                             <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat" prefWidth="100"
                                         showWeekNumbers="true"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
-                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="&gt;&gt;&gt; Lundi suivant"  prefWidth="$lundisButtonsPrefWidth"/>
+                            <Button onAction="#positionnerDateEtatAuLundiSuivant" text="&gt;&gt;&gt; Lundi suivant"
+                                    prefWidth="$lundisButtonsPrefWidth"/>
                         </HBox>
                     </TitledPane>
                 </panes>
@@ -126,52 +128,52 @@
         <HBox styleClass="barreEtat">
             <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
             <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
-            <HBox alignment="CENTER_LEFT"> <!--Box cadrée à gauche--> <!--FIXME FDA 2017/08 Sans effet.-->
-                <HBox styleClass="itemBarreEtat">
-                    <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
-                        <tooltip>
-                            <!--suppress JavaFxUnresolvedFxIdReference -->
-                            <Tooltip fx:id="sauvegardeRequiseCheckboxTooltip"
-                                     text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
-                        </tooltip>
-                    </CheckBox>
-                    <Label text="Modifié ?">
-                        <tooltip>
-                            <fx:reference source="sauvegardeRequiseCheckboxTooltip"/>
-                        </tooltip>
-                    </Label>
-                </HBox>
-                <HBox styleClass="itemBarreEtat">
-                    <CheckBox fx:id="calculRequisCheckbox" disable="true">
-                        <tooltip>
-                            <!--suppress JavaFxUnresolvedFxIdReference -->
-                            <Tooltip fx:id="calculRequisCheckboxTooltip"
-                                    text="Si coché, il faudra re-calculer (menu 'Edition' > 'Calculer', ou 'F5'). Sinon, les calculs sont à jour, pas besoin de re-calculer"/>
-                        </tooltip>
-                    </CheckBox>
-                    <Label text="Calculs requis ?">
-                        <tooltip>
-                            <fx:reference source="calculRequisCheckboxTooltip"/>
-                        </tooltip>
-                    </Label>
-                </HBox>
-                <HBox styleClass="itemBarreEtat">
-                    <Label fx:id="nbrTachesField" minWidth="30" style="-fx-alignment: baseline-right;"/>
-                    <Label text=" tâches"/>
-                </HBox>
+            <!--<HBox alignment="CENTER_LEFT"> &lt;!&ndash;Box cadrée à gauche&ndash;&gt; &lt;!&ndash;FIXME FDA 2017/08 Sans effet.&ndash;&gt;-->
+            <HBox styleClass="itemBarreEtat">
+                <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
+                    <tooltip>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <Tooltip fx:id="sauvegardeRequiseCheckboxTooltip"
+                                 text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
+                    </tooltip>
+                </CheckBox>
+                <Label text="Modifié ?">
+                    <tooltip>
+                        <fx:reference source="sauvegardeRequiseCheckboxTooltip"/>
+                    </tooltip>
+                </Label>
             </HBox>
+            <HBox styleClass="itemBarreEtat">
+                <CheckBox fx:id="calculRequisCheckbox" disable="true">
+                    <tooltip>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <Tooltip fx:id="calculRequisCheckboxTooltip"
+                                 text="Si coché, il faudra re-calculer (menu 'Edition' > 'Calculer', ou 'F5'). Sinon, les calculs sont à jour, pas besoin de re-calculer"/>
+                    </tooltip>
+                </CheckBox>
+                <Label text="Calculs requis ?">
+                    <tooltip>
+                        <fx:reference source="calculRequisCheckboxTooltip"/>
+                    </tooltip>
+                </Label>
+            </HBox>
+            <HBox styleClass="itemBarreEtat">
+                <Label fx:id="nbrTachesField" minWidth="30" style="-fx-alignment: baseline-right;"/>
+                <Label text=" tâches"/>
+            </HBox>
+            <!--</HBox>-->
             <!--<Region prefWidth="500" HBox.hgrow="ALWAYS"/>--> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->
-            <HBox alignment="CENTER_RIGHT"><!--Box cadrée à droite--> <!--FIXME FDA 2017/08 Sans effet.-->
-                <HBox styleClass="itemBarreEtat">
-                    <Gauge fx:id="memoryGauge" title="RAM" skinType="INDICATOR" prefHeight="25" minHeight="25"
-                           prefWidth="25" minWidth="25">
-                        <tooltip>
-                            <Tooltip
-                                    text="\$usedMem occupés sur $maxMem ($freeMemPc% libre) - Cliquer pour récupérer la mémoire qui serait disponible (garbage collect)."/>
-                        </tooltip>
-                    </Gauge>
-                </HBox>
+            <!--<HBox alignment="CENTER_RIGHT">&lt;!&ndash;Box cadrée à droite&ndash;&gt; &lt;!&ndash;FIXME FDA 2017/08 Sans effet.&ndash;&gt;-->
+            <HBox styleClass="itemBarreEtat">
+                <Gauge fx:id="memoryGauge" title="RAM" skinType="INDICATOR" prefHeight="25" minHeight="25"
+                       prefWidth="25" minWidth="25">
+                    <tooltip>
+                        <Tooltip
+                                text="\$usedMem occupés sur $maxMem ($freeMemPc% libre) - Cliquer pour récupérer la mémoire qui serait disponible (garbage collect)."/>
+                    </tooltip>
+                </Gauge>
             </HBox>
+            <!--</HBox>-->
         </HBox>
         <!--
                     <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">

@@ -298,8 +298,9 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
-    public boolean estATraiter() {
-        return false;
+    public boolean estATraiter() throws BeanException {
+        TacheDTO tacheDTO = toDto();
+        return tacheService.estATraiter(tacheDTO);
     }
 
 
@@ -309,18 +310,18 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         try {
             return new TacheDTO(
                     getId(),
-                    CategorieTacheDTO.valeur(getCodeCategorie()),
-                    SousCategorieTacheDTO.valeur(getCodeSousCategorie()),
+                    (getCodeCategorie() == null) ? null : CategorieTacheDTO.valeur(getCodeCategorie()),
+                    (getCodeSousCategorie() == null) ? null : SousCategorieTacheDTO.valeur(getCodeSousCategorie()),
                     getNoTicketIdal(),
                     getDescription(),
-                    ProjetAppliBean.to(getProjetAppli()),
-                    StatutBean.to(getStatut()),
+                    (getProjetAppli() == null) ? null : ProjetAppliBean.to(getProjetAppli()),
+                    (getStatut() == null) ? null : StatutBean.to(getStatut()),
                     getDebut(),
                     getEcheance(),
-                    ImportanceBean.to(getImportance()),
+                    (getImportance() == null) ? null : ImportanceBean.to(getImportance()),
                     getCharge(),
-                    RessourceBean.to(getRessource()),
-                    ProfilBean.to(getProfil())
+                    (getRessource() == null) ? null : RessourceBean.to(getRessource()),
+                    (getProfil() == null) ? null : ProfilBean.to(getProfil())
             );
         } catch (DTOException e) {
             throw new BeanException("Impossible de transformer la tâche de bean en DTO.", e);

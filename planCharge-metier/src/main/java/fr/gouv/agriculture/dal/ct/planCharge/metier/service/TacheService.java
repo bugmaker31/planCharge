@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TacheService extends AbstractService {
 
@@ -30,4 +32,10 @@ public class TacheService extends AbstractService {
                 || (tache.getStatut().compareTo(StatutDTO.REPORTEE) < 0);
     }
 
+    @NotNull
+    public List<TacheDTO> aTraiter(@NotNull List<TacheDTO> tacheDTOs) {
+        return tacheDTOs.parallelStream()
+                .filter(this::estATraiter)
+                .collect(Collectors.toList());
+    }
 }
