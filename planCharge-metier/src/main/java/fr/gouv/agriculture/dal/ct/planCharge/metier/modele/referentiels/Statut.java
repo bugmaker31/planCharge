@@ -1,18 +1,16 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 24/06/2017.
  */
-public class Statut extends AbstractEntity<String, Statut> implements Comparable<Statut> {
+public class Statut extends AbstractEntity<String, Statut> {
 
     public static final Statut PROVISION = new Statut("80-Récurrente");
+    public static final Statut REPORTEE = new Statut("85-Reportée");
 
     @NotNull
     private final String code;
@@ -30,6 +28,7 @@ public class Statut extends AbstractEntity<String, Statut> implements Comparable
     }
 
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
     @Override
     public String getIdentity() {
@@ -37,9 +36,29 @@ public class Statut extends AbstractEntity<String, Statut> implements Comparable
     }
 
 
-    @NotNull
     @Override
     public int compareTo(@NotNull Statut o) {
         return code.compareTo(o.getCode());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Statut statut = (Statut) o;
+
+        return code.equals(statut.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return code.hashCode();
+    }
+
+    // Juste pour faciliter le débogage.
+    @Override
+    public String toString() {
+        return code;
     }
 }

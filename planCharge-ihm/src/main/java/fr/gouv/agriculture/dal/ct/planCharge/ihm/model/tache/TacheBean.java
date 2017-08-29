@@ -11,6 +11,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.binding.StringBinding;
@@ -54,7 +56,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private ObjectProperty<ProjetAppliBean> projetAppli = new SimpleObjectProperty<>();
     @NotNull
-    private  ObjectProperty<StatutBean> statut = new SimpleObjectProperty<>();
+    private ObjectProperty<StatutBean> statut = new SimpleObjectProperty<>();
     @NotNull
     private ObjectProperty<LocalDate> debut = new SimpleObjectProperty<>(); // Cf. http://stackoverflow.com/questions/29174497/how-to-bind-unbind-a-date-type-attribute-to-a-datepicker-object
     @NotNull
@@ -68,28 +70,26 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private ObjectProperty<ProfilBean> profil = new SimpleObjectProperty<>();
 
-/*
     //    @Autowired
     @NotNull
-    private ReferentielsService referentielsService = ReferentielsService.instance();
-*/
+    private TacheService tacheService = TacheService.instance();
 
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliBean projetAppli, @Null StatutBean statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceBean importance, @Null Double charge, @Null RessourceBean ressource, @Null ProfilBean profil) {
         this.id.set(id);
-        this.codeCategorie.set(codeCategorie);
-        this.codeSousCategorie.set(codeSousCategorie);
-        this.noTicketIdal.set(noTicketIdal);
-        this.description.set(description);
-        this.projetAppli.set(projetAppli);
-        this.statut.set(statut);
-        this.debut.set(debut);
-        this.echeance.set(echeance);
-        this.importance.set(importance);
-        this.charge.set(charge);
-        this.ressource.set(ressource);
-        this.profil.set(profil);
+        this.codeCategorie.setValue(codeCategorie);
+        this.codeSousCategorie.setValue(codeSousCategorie);
+        this.noTicketIdal.setValue(noTicketIdal);
+        this.description.setValue(description);
+        this.projetAppli.setValue(projetAppli);
+        this.statut.setValue(statut);
+        this.debut.setValue(debut);
+        this.echeance.setValue(echeance);
+        this.importance.setValue(importance);
+        this.charge.setValue(charge);
+        this.ressource.setValue(ressource);
+        this.profil.setValue(profil);
     }
 
     public TacheBean(@NotNull TacheBean tacheBean) {
@@ -111,21 +111,21 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
     public TacheBean(@NotNull TacheDTO tache) {
-        this.id.set(tache.getId());
-        this.codeCategorie.set(tache.getCategorie().getCode());
-        if (tache.getSousCategorie() != null) {
-            this.codeSousCategorie.set(tache.getSousCategorie().getCode());
-        }
-        this.noTicketIdal.set(tache.getNoTicketIdal());
-        this.description.set(tache.getDescription());
-        this.projetAppli.set(ProjetAppliBean.from(tache.getProjetAppli()));
-        this.statut.set(StatutBean.from(tache.getStatut()));
-        this.debut.set(tache.getDebut());
-        this.echeance.set(tache.getEcheance());
-        this.importance.set(ImportanceBean.from(tache.getImportance()));
-        this.charge.set(tache.getCharge());
-        this.ressource.set(RessourceBean.from(tache.getRessource()));
-        this.profil.set(ProfilBean.from(tache.getProfil()));
+        this(
+                tache.getId(),
+                Objects.value(tache.getCategorie(), CategorieTacheDTO::getCode),
+                Objects.value(tache.getSousCategorie(), SousCategorieTacheDTO::getCode),
+                tache.getNoTicketIdal(),
+                tache.getDescription(),
+                Objects.value(tache.getProjetAppli(), ProjetAppliBean::from),
+                Objects.value(tache.getStatut(), StatutBean::from),
+                tache.getDebut(),
+                tache.getEcheance(),
+                Objects.value(tache.getImportance(), ImportanceBean::from),
+                tache.getCharge(),
+                Objects.value(tache.getRessource(), RessourceBean::from),
+                Objects.value(tache.getProfil(), ProfilBean::from)
+        );
     }
 
 /*
@@ -298,6 +298,11 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
+    public boolean estATraiter() {
+        return false;
+    }
+
+
     @NotNull
     @Override
     public TacheDTO toDto() throws BeanException {
@@ -329,7 +334,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
+    /* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
     public boolean matcheNoTache(@NotNull String otherValue) {
         if ((getId() + "").contains(otherValue)) {
             return true; // matches
@@ -545,4 +550,5 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 + ("<< " + (description.isNull().get() ? "N/A" : description.get()) + " >> ")
                 ;
     }
+
 }

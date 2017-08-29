@@ -7,6 +7,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TotalTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -52,7 +53,12 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private TableColumn<TotalTacheBean, Integer> nbrTachesATraiterColumn;
+    private TableColumn<TotalTacheBean, Long> nbrTachesATraiterColumn;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TableColumn<TotalTacheBean, Double> totalResteAFaireColumn;
 
     /*
      La couche métier :
@@ -111,10 +117,17 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
             assert totauxTachesTable.getItems().size() == 1;
             TotalTacheBean totalTacheBean = totauxTachesTable.getItems().get(0);
-            totalTacheBean.setNbrTachesATraiter(-1); // // TODO FDA 2017/08 Coder.
+
+            long nbrTachesATraiter = tachesTable.getItems().parallelStream().filter(TacheBean::estATraiter).count();
+            totalTacheBean.setNbrTachesATraiter(nbrTachesATraiter);
+
+            Double totalRAF = tachesTable.getItems().parallelStream().mapToDouble(tacheBean -> Objects.value(tacheBean.getCharge(), 0.0)).sum();
+            totalTacheBean.setTotalResteAFaire(totalRAF);
+
         });
 
-        nbrTachesATraiterColumn.setCellValueFactory((TableColumn.CellDataFeatures<TotalTacheBean, Integer> cellData) -> cellData.getValue().nbrTachesATraiterProperty().asObject());
+        nbrTachesATraiterColumn.setCellValueFactory((TableColumn.CellDataFeatures<TotalTacheBean, Long> cellData) -> cellData.getValue().nbrTachesATraiterProperty().asObject());
+        totalResteAFaireColumn.setCellValueFactory((TableColumn.CellDataFeatures<TotalTacheBean, Double> cellData) -> cellData.getValue().totalResteAFaireProperty().asObject());
 
         LOGGER.info("Initialisé.");
     }

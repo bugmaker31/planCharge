@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
+<?import java.lang.*?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TachesController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
@@ -61,88 +62,119 @@
         </Accordion>
     </top>
     <center>
-        <!--<VBox VBox.vgrow="ALWAYS">-->
-        <BorderPane>
-            <center>
-                <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true">
-                    <contextMenu>
-                        <ContextMenu fx:id="tachesTableContextMenu">
-                            <items>
-                                <MenuItem text="Voir la ressource humain de la tâche"
-                                          onAction="#afficherRessourceHumaine"/>
-                                <MenuItem text="Voir le profil de la tâche"
-                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                <MenuItem text="Voir le projet/appli de la tâche"
-                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                <MenuItem text="Voir l'importance de la tâche"
-                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                <SeparatorMenuItem/>
-                                <MenuItem text="Voir la tâche dans le plan de charge"
-                                          onAction="#afficherPlanification"/>
-                                <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
-                                <SeparatorMenuItem/>
-                                <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
-                                          onAction="#afficherTacheDansOutilTicketing"/>
-                            </items>
-                        </ContextMenu>
-                    </contextMenu>
-                    <columns>
+        <fx:define>
+            <Double fx:id="categorieColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
+            <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
+            <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
+            <Double fx:id="descriptionColumnPrefWidth" fx:value="700"/>
+            <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
+            <Double fx:id="statutColumnPrefWidth" fx:value="75"/>
+            <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
+            <Double fx:id="echeanceColumnPrefWidth" fx:value="80"/>
+            <Double fx:id="importanceColumnPrefWidth" fx:value="75"/>
+            <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
+            <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
+            <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+        </fx:define>
+        <VBox VBox.vgrow="ALWAYS">
+            <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+                <contextMenu>
+                    <ContextMenu fx:id="tachesTableContextMenu">
+                        <items>
+                            <MenuItem text="Voir la ressource humain de la tâche"
+                                      onAction="#afficherRessourceHumaine"/>
+                            <MenuItem text="Voir le profil de la tâche"
+                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <MenuItem text="Voir le projet/appli de la tâche"
+                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <MenuItem text="Voir l'importance de la tâche"
+                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Voir la tâche dans le plan de charge"
+                                      onAction="#afficherPlanification"/>
+                            <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
+                                      onAction="#afficherTacheDansOutilTicketing"/>
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
+                <columns>
 
-                        <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
+                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
 
-                        <TableColumn text="Catégories">
-                            <columns>
-                                <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="60"/>
-                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="100"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn text="identifiants">
-                            <columns>
-                                <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
-                                             prefWidth="55"/>
-                                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL" prefWidth="80"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="700" text="Description"
-                                     styleClass="description-column"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="100" text="Projet/Appli"
-                                     styleClass="projetAppli-column"/>
-                        <TableColumn fx:id="statutColumn" prefWidth="75" text="Statut"/>
-                        <TableColumn text="Période souhaitée">
-                            <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="80" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="80" text="Echéance"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="importanceColumn" prefWidth="75.0" text="Importance"/>
-                        <TableColumn fx:id="chargeColumn" prefWidth="50.0" text="Charge" styleClass="charge-column"/>
-                        <TableColumn text="Ressource">
-                            <columns>
-                                <TableColumn fx:id="ressourceColumn" prefWidth="40.0" text="Trigramme"/>
-                                <TableColumn fx:id="profilColumn" prefWidth="60" text="Profil"/>
-                            </columns>
-                        </TableColumn>
-                    </columns>
-                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                    <sortOrder>
-                        <fx:reference source="categorieColumn"/>
-                        <fx:reference source="sousCategorieColumn"/>
-                        <fx:reference source="projetAppliColumn"/>
-                        <fx:reference source="echeanceColumn"/>
-                        <fx:reference source="noTacheColumn"/>
-                    </sortOrder>
-                </TableView>
-            </center>
-            <bottom>
-                <TableView fx:id="totauxTachesTable" editable="false" styleClass="noHeader-table" fixedCellSize="25" prefHeight="27">
-                    <columns>
-                        <TableColumn fx:id="nbrTachesATraiterColumn" text="Nombre de tâches à traiter" prefWidth="60"/>
-                        <TableColumn text="Total du RAF" prefWidth="100"/>
-                    </columns>
-                </TableView>
-            </bottom>
-        </BorderPane>
-        <!--</VBox>-->
+                    <TableColumn text="Catégories">
+                        <columns>
+                            <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                         prefWidth="$categorieColumnPrefWidth"/>
+                            <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                         prefWidth="$sousCategorieColumnPrefWidth"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn text="identifiants">
+                        <columns>
+                            <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
+                                         prefWidth="$noTacheColumnPrefWidth"/>
+                            <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                         prefWidth="$noTicketIdalColumnPrefWidth"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
+                                 text="Description"
+                                 styleClass="description-column"/>
+                    <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                 text="Projet/Appli"
+                                 styleClass="projetAppli-column"/>
+                    <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"/>
+                    <TableColumn text="Période souhaitée">
+                        <columns>
+                            <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
+                            <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                         text="Echéance"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"/>
+                    <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                 styleClass="charge-column"/>
+                    <TableColumn text="Ressource">
+                        <columns>
+                            <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth"
+                                         text="Trigramme"/>
+                            <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"/>
+                        </columns>
+                    </TableColumn>
+                </columns>
+                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                <sortOrder>
+                    <fx:reference source="categorieColumn"/>
+                    <fx:reference source="sousCategorieColumn"/>
+                    <fx:reference source="projetAppliColumn"/>
+                    <fx:reference source="echeanceColumn"/>
+                    <fx:reference source="noTacheColumn"/>
+                </sortOrder>
+            </TableView>
+            <TableView fx:id="totauxTachesTable" editable="false" styleClass="noHeader-table" fixedCellSize="25"
+                       prefHeight="27">
+                <columns>
+                    <TableColumn prefWidth="${categorieColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${sousCategorieColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${noTacheColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${noTicketIdalColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${descriptionColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${projetAppliColumnPrefWidth}"/>
+                    <TableColumn fx:id="nbrTachesATraiterColumn" text="Nombre de tâches à traiter"
+                                 prefWidth="$statutColumnPrefWidth"/>
+                    <TableColumn prefWidth="${debutColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${echeanceColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${importanceColumnPrefWidth}"/>
+                    <TableColumn fx:id="totalResteAFaireColumn" text="Total du RAF"
+                                 prefWidth="$chargeColumnPrefWidth"/>
+                    <TableColumn prefWidth="${ressourceColumnPrefWidth}"/>
+                    <TableColumn prefWidth="${profilColumnPrefWidth}"/>
+                </columns>
+            </TableView>
+        </VBox>
     </center>
     <bottom>
         <AnchorPane BorderPane.alignment="CENTER">

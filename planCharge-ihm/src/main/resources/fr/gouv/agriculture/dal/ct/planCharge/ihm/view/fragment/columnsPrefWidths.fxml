@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<fx:define xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+    <Double fx:id="categorieColumnPrefWidth" fx:value="60"/>
+    <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
+    <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
+    <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
+    <Double fx:id="descriptionColumnPrefWidth" fx:value="700"/>
+    <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
+    <Double fx:id="statutColumnPrefWidth" fx:value="75"/>
+    <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
+    <Double fx:id="echeanceColumnPrefWidth" fx:value="80"/>
+    <Double fx:id="importanceColumnPrefWidth" fx:value="75"/>
+    <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
+    <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
+    <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+</fx:define>

@@ -14,9 +14,13 @@ import javax.validation.constraints.Null;
  */
 public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements Comparable<StatutBean> {
 
+    // Fields :
+
     @NotNull
     private StringProperty code = new SimpleStringProperty();
 
+
+    // Constructeurs :
 
     public StatutBean() {
         super();
@@ -30,15 +34,8 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
         this.code.set(code);
     }
 
-    @NotNull
-    public static StatutBean from(@NotNull StatutDTO statutDTO) {
-        return new StatutBean().fromDto(statutDTO);
-    }
 
-    @NotNull
-    public static StatutDTO to(@NotNull StatutBean statutBean) {
-        return statutBean.toDto();
-    }
+    // Getters/Setters :
 
     @Null
     public String getCode() {
@@ -50,6 +47,23 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
         return code;
     }
 
+
+    // Méthodes :
+
+
+    // AbstractBean
+
+    @NotNull
+    public static StatutBean from(@NotNull StatutDTO statutDTO) {
+        return new StatutBean().fromDto(statutDTO);
+    }
+
+    @NotNull
+    public static StatutDTO to(@NotNull StatutBean statutBean) {
+        return statutBean.toDto();
+    }
+
+
     @NotNull
     @Override
     public StatutBean fromDto(@NotNull StatutDTO dto) {
@@ -60,6 +74,8 @@ public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements C
     public StatutDTO toDto() {
         return new StatutDTO(code.get());
     }
+
+    // General
 
     @Override
     public boolean equals(Object o) {

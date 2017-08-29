@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
-import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Statut;
 
@@ -15,7 +14,9 @@ import java.util.List;
  */
 public class StatutDTO extends AbstractDTO<Statut, String, StatutDTO> implements Comparable<StatutDTO> {
 
-    public static final StatutDTO PROVISION = new StatutDTO("80-Récurrente");
+    public static final StatutDTO PROVISION = StatutDTO.from(Statut.PROVISION);
+    public static final StatutDTO REPORTEE = StatutDTO.from(Statut.REPORTEE);
+
 
     @Null
     private String code;
@@ -25,7 +26,7 @@ public class StatutDTO extends AbstractDTO<Statut, String, StatutDTO> implements
         super();
     }
 
-    public StatutDTO(@NotNull String code) {
+    public StatutDTO(@Null String code) {
         this();
         this.code = code;
     }
@@ -71,6 +72,7 @@ public class StatutDTO extends AbstractDTO<Statut, String, StatutDTO> implements
 
     @Override
     public int compareTo(@NotNull StatutDTO o) {
-        return code.compareTo(o.getCode());
+        return (code == null) ? -1 : ((o.getCode() == null) ? 1 : code.compareTo(o.getCode()));
     }
+
 }
