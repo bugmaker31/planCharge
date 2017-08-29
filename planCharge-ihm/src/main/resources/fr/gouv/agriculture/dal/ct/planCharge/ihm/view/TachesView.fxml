@@ -174,11 +174,7 @@
                                      text="Nombre de tâches dont le statut est inférieur à '85-Reportée'."/>
                         </tooltip>
                     </Label>
-                    <Label fx:id="nbrTachesATraiterLabel" prefWidth="50" >
-                        <tooltip>
-                            <fx:reference source="nbrTachesATraiterTooltip"/>
-                        </tooltip>
-                    </Label>
+                    <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
                 </HBox>
                 <HBox styleClass="itemBarreEtat">
                     <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
@@ -188,11 +184,8 @@
                                      text="Total des charges pour les tâches restant à traiter."/>
                         </tooltip>
                     </Label>
-                    <Label fx:id="totalResteAFaireLabel" prefWidth="80" tooltip="$totalResteAFaireTooltip">
-                        <tooltip>
-                            <fx:reference source="totalResteAFaireTooltip"/>
-                        </tooltip>
-                    </Label>
+                    <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
+                    <Label text=" jours"/>
                 </HBox>
             </HBox>
         </HBox>

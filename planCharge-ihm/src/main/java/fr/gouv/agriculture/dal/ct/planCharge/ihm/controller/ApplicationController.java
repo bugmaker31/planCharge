@@ -34,6 +34,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
@@ -168,10 +169,6 @@ public class ApplicationController extends AbstractController {
     @FXML
     @NotNull
     private CheckBox calculRequisCheckbox;
-
-    @FXML
-    @NotNull
-    private Label nbrTachesField;
 
     @FXML
     @NotNull
@@ -402,12 +399,6 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("majBarreEtat...");
         sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
         calculRequisCheckbox.setSelected(planChargeBean.aBesoinEtreCalcule());
-        definirNbrTachesDansBarreEtat();
-    }
-
-
-    private void definirNbrTachesDansBarreEtat() {
-        nbrTachesField.setText(String.valueOf(planChargeBean.getPlanificationsBeans().size()));
     }
 
 
@@ -1395,6 +1386,7 @@ public class ApplicationController extends AbstractController {
         if (!planChargeBean.aBesoinEtreSauvegarde()) {
             return true;
         }
+        //noinspection HardcodedLineSeparator
         Optional<ButtonType> result = ihm.afficherPopUp(
                 Alert.AlertType.CONFIRMATION,
                 "Perdre les modifications ?",
@@ -1419,7 +1411,7 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void calculer(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+    private void calculer(@SuppressWarnings("unused") @NotNull Event event) {
         try {
             calculer();
         } catch (IhmException e) {
@@ -1429,6 +1421,8 @@ public class ApplicationController extends AbstractController {
     }
 
     public void calculer() throws IhmException {
+
+        // TODO FDA 2017/08 Afficher une barre de progression.
         ihm.getDisponibilitesController().calculerDisponibilites();
         // Ajouter ici les autres calculs (surcharges, etc.)
 

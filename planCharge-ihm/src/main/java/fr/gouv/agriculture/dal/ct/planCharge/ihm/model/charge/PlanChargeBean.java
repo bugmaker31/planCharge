@@ -12,12 +12,11 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -79,9 +78,9 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @Null
     private LocalDate dateEtat = null;
 
-    private boolean estModifie = false;
+    private BooleanProperty estModifie = new SimpleBooleanProperty(false);
 
-    private boolean aBesoinEtreCalcule = false;
+    private BooleanProperty aBesoinEtreCalcule = new SimpleBooleanProperty(false);
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeBean() {
@@ -213,35 +212,60 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
 
     public boolean estModifie() {
+        return estModifie.getValue();
+    }
+
+    public BooleanProperty estModifieProperty() {
         return estModifie;
     }
+
     private void setModifie(boolean estModifie) {
-        this.estModifie = estModifie;
+        this.estModifie.set(estModifie);
     }
 
     public void vientDEtreCharge() {
-        this.estModifie = false;
-        this.aBesoinEtreCalcule = true;
+        this.estModifie.setValue(false);
+        this.aBesoinEtreCalcule.setValue(true);
     }
 
     public void vientDEtreSauvegarde() {
-        this.estModifie = false;
+        this.estModifie.setValue(false);
     }
 
     public void vientDEtreModifie() {
-        this.estModifie = true;
-        this.aBesoinEtreCalcule = true;
+        this.estModifie.setValue(true);
+        this.aBesoinEtreCalcule.setValue(true);
     }
 
     public void vientDEtreCalcule() {
-        this.aBesoinEtreCalcule = false;
+        this.aBesoinEtreCalcule.setValue(false);
     }
 
     public boolean aBesoinEtreSauvegarde() {
+        return estModifie.getValue();
+    }
+
+    @FXML
+    public BooleanProperty aBesoinEtreSauvegardeProperty() {
+        return estModifie;
+    }
+
+    @FXML
+    public BooleanProperty getABesoinEtreSauvegardeProperty() {
         return estModifie;
     }
 
     public boolean aBesoinEtreCalcule() {
+        return aBesoinEtreCalcule.getValue();
+    }
+
+    @FXML
+    public BooleanProperty aBesoinEtreCalculeProperty() {
+        return aBesoinEtreCalcule;
+    }
+
+    @FXML
+    public BooleanProperty getABesoinEtreCalculeProperty() {
         return aBesoinEtreCalcule;
     }
 
@@ -432,10 +456,10 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     // Pour déboguer, uniquement.
     @Override
     public String toString() {
-        //noinspection StringConcatenationMissingWhitespace
+        //noinspection StringConcatenationMissingWhitespace,HardcodedFileSeparator
         return "[" + (dateEtat == null ? "N/A" : dateEtat.format(DateTimeFormatter.ISO_DATE)) + "]"
-                + " " + getPlanificationsBeans().size() + " tâches"
-                + " (" + (estModifie ? "" : "non ") + "modifié)";
+                + " " + planificationsBeans.size() + " tâches"
+                + " (" + (estModifie() ? "" : "non ") + "modifié)";
     }
 
 }
