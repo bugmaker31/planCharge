@@ -462,6 +462,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             // Positionnement sur la tâche qu'on vient d'ajouter :
             TableViews.editCell(getTachesTable(), nouvTache, descriptionColumn);
 
+            getTachesTable().refresh(); // Notamment pour recalculer les styles CSS.
+
             return nouvTache;
         } catch (IhmException e) {
             throw new Exception("Impossible d'ajouter une tâche.", e);
