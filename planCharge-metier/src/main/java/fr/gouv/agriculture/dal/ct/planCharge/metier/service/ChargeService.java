@@ -18,6 +18,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,20 +27,21 @@ import javax.validation.constraints.Null;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class PlanChargeService extends AbstractService {
+public class ChargeService extends AbstractService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChargeService.class);
 
-    private static PlanChargeService instance;
+    private static ChargeService instance;
 
-    public static PlanChargeService instance() {
+    public static ChargeService instance() {
         if (instance == null) {
-            instance = new PlanChargeService();
+            instance = new ChargeService();
         }
         return instance;
     }
@@ -54,7 +56,7 @@ public class PlanChargeService extends AbstractService {
 
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
-    private PlanChargeService() {
+    private ChargeService() {
         super();
     }
 
@@ -198,58 +200,92 @@ public class PlanChargeService extends AbstractService {
      * @return La (nouvelle) planification pour la (nouvelle) date d'état fournie.
      */
     @NotNull
-    public PlanificationsDTO replanifier(@NotNull PlanificationsDTO planifications, @NotNull LocalDate dateEtat) {
+    public PlanificationsDTO replanifier(@NotNull PlanificationsDTO planifications, @NotNull LocalDate dateEtat) throws ServiceException {
 
         // Si la date d'état a changé, la planification change forcément aussi : il faut ajouter ou retirer des périodes de planification,
         // et initialiser les charges de chaque tâche en cas d'ajout :
-        final LocalDate debutPlanif = dateEtat;
-        final LocalDate finPlanif = dateEtat.plusDays(Planifications.NBR_SEMAINES_PLANIFIEES * 7); // TODO FDA 2017/07 [issue#26:PeriodeHebdo/Trim]
-        planifications.keySet().parallelStream()
-                .forEach(tache -> {
-                    Map<LocalDate, Double> planifTache = planifications.get(tache);
+        //noinspection UnnecessaryLocalVariable
+        LocalDate debutPlanif = dateEtat;
+        LocalDate finPlanif = dateEtat.plusDays(Planifications.NBR_SEMAINES_PLANIFIEES * 7); // TODO FDA 2017/07 [issue#26:PeriodeHebdo/Trim]
+        for (TacheDTO tache : planifications.keySet()) {
+            Map<LocalDate, Double> planifTache = planifications.get(tache);
 
-                    // On supprime les périodes qui sont en dehors du calendrier de planification :
-                    Set<LocalDate> periodesASupprimer = new TreeSet<>(); // Un TreeSet pour garder le tri (par date), juste pour faciliter le débogage.
-                    for (LocalDate debutPeriodeTache : planifTache.keySet()) {
-                        if (debutPeriodeTache.isBefore(debutPlanif) || debutPeriodeTache.isAfter(finPlanif)) {
-                            periodesASupprimer.add(debutPeriodeTache);
-                        }
+            // On supprime les périodes qui sont en dehors de la période de planification ([date d'état.. date d'état + Planifications.NBR_SEMAINES_PLANIFIEES semaines]) :
+            Set<LocalDate> periodesASupprimer = new TreeSet<>(); // Un TreeSet pour garder le tri (par date), juste pour faciliter le débogage.
+            for (LocalDate debutPeriodeTache : planifTache.keySet()) {
+                if (debutPeriodeTache.isBefore(debutPlanif) || debutPeriodeTache.isAfter(finPlanif)) {
+                    periodesASupprimer.add(debutPeriodeTache);
+                }
+            }
+            periodesASupprimer.forEach(debutPeriodeTache -> {
+                //noinspection Convert2MethodRef
+                planifTache.remove(debutPeriodeTache);
+                LOGGER.debug("Période commençant le {} supprimée pour la tâche {}.", debutPeriodeTache, tache.noTache());
+            });
+
+            // On ajoute les planifications qui manquent au calendrier :
+            for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+                LocalDate debutPeriodeTache = dateEtat.plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                if (!planifTache.containsKey(debutPeriodeTache)) {
+                    LocalDate finPeriodeTache = debutPeriodeTache.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    Double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache, finPeriodeTache, dateEtat);
+                    if (chargeTachePeriode != null) {
+                        planifTache.put(debutPeriodeTache, chargeTachePeriode);
+                        LOGGER.debug("Période commençant le {} ajoutée pour la tâche {} avec une charge de {}.", debutPeriodeTache.format(DateTimeFormatter.ISO_LOCAL_DATE), tache.noTache(), chargeTachePeriode);
                     }
-                    periodesASupprimer.forEach(debutPeriodeTache -> {
-                        planifTache.remove(debutPeriodeTache);
-//                        LOGGER.debug("Période commençant le {} supprimée pour la tâche {}.", debutPeriodeTache, tache.noTache());
-                    });
-
-                    // On ajoute les planifications qui manquent au calendrier :
-                    for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-                        LocalDate debutPeriodeTache = dateEtat.plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                        if (!planifTache.containsKey(debutPeriodeTache)) {
-                            Double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache);
-                            if (chargeTachePeriode != null) {
-                                planifTache.put(debutPeriodeTache, chargeTachePeriode);
-//                            LOGGER.debug("Période commençant le {} ajoutée pour la tâche {}, chargée à {}.", debutPeriodeTache, tache.noTache(), chargeTachePeriode);
-                            }
-                        }
-                    }
-                });
-
+                }
+            }
+        }
         return planifications;
     }
 
     @Null
-    private Double nouvelleCharge(@NotNull TacheDTO tache, @NotNull LocalDate debutPeriode) {
+    private Double nouvelleCharge(@NotNull TacheDTO tacheDTO, @NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode, @NotNull LocalDate dateEtat) throws ServiceException {
+        try {
+            Tache tache = tacheDTO.toEntity();
 
-        if (!tache.estProvision()) {
-            return null;
+            if (!tache.estProvision()) {
+                return null;
+            }
+            assert tache.estProvision();
+
+            if ((tache.getDebut() != null) && tache.getDebut().isAfter(debutPeriode)) {
+                return null;
+            }
+            if (tache.getEcheance().isBefore(debutPeriode)) {
+                return null;
+            }
+
+            return provision(tache, debutPeriode, finPeriode, dateEtat);
+
+        } catch (DTOException e) {
+            throw new ServiceException("Impossible de calculer la nouvelle charge de la tâche '" + tacheDTO.noTache() + "'.", e);
+        }
+    }
+
+    public double provision(@NotNull Tache tache, @NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode, @NotNull LocalDate dateEtat) throws ServiceException {
+
+        double chargeTache = tache.getCharge();
+        if (chargeTache == 0) {
+            return 0;
         }
 
-        assert tache.estProvision();
-        if ((tache.getDebut() != null) && tache.getDebut().isAfter(debutPeriode)) {
-            return null;
+        LocalDate debutTache = tache.getDebut();
+        if (debutTache == null) {
+//            throw new ServiceException("Impossible de caluler la provision de la tâche " + tache.noTache() + ", car elle n'a pas de date de début.");
+            debutTache = dateEtat; // TODO FDA 2017/08 Confirmer.
         }
-        if (tache.getEcheance().isBefore(debutPeriode)) {
-            return null;
-        }
-        return 77.75; // FIXME FDA 2017/07 Retourner la charge pour la période.
+
+        LocalDate echeanceTache = tache.getEcheance();
+
+        LocalDate debutProvision = Dates.max(debutTache, dateEtat);
+
+//        Cf. http://docs.oracle.com/javase/tutorial/datetime/iso/period.html
+        long dureeRestanteTacheEnJours = ChronoUnit.DAYS.between(debutProvision, echeanceTache) + 1; // "+1" car le jour d'échéance est inclus.
+        double provisionParJour = chargeTache / dureeRestanteTacheEnJours;
+
+        long dureePeriodeEnJours = ChronoUnit.DAYS.between(debutPeriode, finPeriode); // Pas "+1" car le jour d'échéance est exclus.
+
+        return provisionParJour * dureePeriodeEnJours;
     }
 }

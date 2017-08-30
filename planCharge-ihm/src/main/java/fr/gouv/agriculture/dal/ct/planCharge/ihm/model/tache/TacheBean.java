@@ -10,6 +10,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
@@ -34,13 +35,16 @@ import java.util.regex.PatternSyntaxException;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassWithTooManyMethods")
-public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copiable<TacheBean> {
+public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copiable<TacheBean>, ITache<TacheBean> {
 
     @NotNull
     public static final String FORMAT_DATE = PlanChargeIhm.PATRON_FORMAT_DATE;
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
+
+    @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
+
 
     @SuppressWarnings("InstanceVariableNamingConvention")
     @NotNull
@@ -294,24 +298,40 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @NotNull
     public String noTache() {
-        return Tache.noTache(id.get());
+        return Tache.noTache(getId());
     }
 
 
-    public boolean estATraiter() throws BeanException {
+    public boolean estATraiter() throws IhmException {
         TacheDTO tacheDTO = toDto();
         return tacheService.estATraiter(tacheDTO);
+    }
+
+    // ITache
+
+    public boolean estProvision() {
+        TacheDTO tacheDTO = toDto();
+        return tacheDTO.estProvision();
+    }
+
+    @Override
+    public int compareTo(@Null TacheBean o) {
+        TacheDTO tacheDTO = toDto();
+        TacheDTO autreTacheDTO = (o == null) ? null : o.toDto();
+        return tacheDTO.compareTo(autreTacheDTO);
     }
 
 
     @NotNull
     @Override
-    public TacheDTO toDto() throws BeanException {
+    public TacheDTO toDto() {
+/*
         try {
+*/
             return new TacheDTO(
                     getId(),
-                    (getCodeCategorie() == null) ? null : CategorieTacheDTO.valeur(getCodeCategorie()),
-                    (getCodeSousCategorie() == null) ? null : SousCategorieTacheDTO.valeur(getCodeSousCategorie()),
+                    (getCodeCategorie() == null) ? null : CategorieTacheDTO.valeurOuNull(getCodeCategorie()),
+                    (getCodeSousCategorie() == null) ? null : SousCategorieTacheDTO.valeurOuNull(getCodeSousCategorie()),
                     getNoTicketIdal(),
                     getDescription(),
                     (getProjetAppli() == null) ? null : ProjetAppliBean.to(getProjetAppli()),
@@ -323,14 +343,16 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                     (getRessource() == null) ? null : RessourceBean.to(getRessource()),
                     (getProfil() == null) ? null : ProfilBean.to(getProfil())
             );
+/*
         } catch (DTOException e) {
-            throw new BeanException("Impossible de transformer la tâche de bean en DTO.", e);
+            throw new BeanException("Impossible de transformer la tâche de Bean en DTO.", e);
         }
+*/
     }
 
     @NotNull
     @Override
-    public TacheBean fromDto(@NotNull TacheDTO dto) throws BeanException {
+    public TacheBean fromDto(@NotNull TacheDTO dto) {
         return new TacheBean(dto);
     }
 
@@ -551,5 +573,4 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 + ("<< " + (description.isNull().get() ? "N/A" : description.get()) + " >> ")
                 ;
     }
-
 }

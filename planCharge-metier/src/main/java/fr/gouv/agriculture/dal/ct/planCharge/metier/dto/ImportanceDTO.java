@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
-import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 
@@ -22,13 +21,15 @@ public class ImportanceDTO extends AbstractDTO<Importance, String, ImportanceDTO
 
         @Override
         public int compare(ImportanceDTO i1, ImportanceDTO i2) {
-            if (i1 == null && i2 == null) {
+            if ((i1 == null) && (i2 == null)) {
                 return 0;
             }
-            if (i1 == null && i2 != null) {
+            //noinspection ConstantConditions
+            if ((i1 == null) && (i2 != null)) {
                 return -1;
             }
-            if (i1 != null && i2 == null) {
+            //noinspection ConstantConditions
+            if ((i1 != null) && (i2 == null)) {
                 return 1;
             }
             return i2.getOrdre().compareTo(i1.getOrdre());

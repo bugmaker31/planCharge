@@ -331,7 +331,7 @@ public class PlanChargeIhm extends Application {
         // Les beans Spring (métier) utilisés dans les classes JavaFX (IHM) ne peuvent être injectés par Spring,
         // car les classes JavaFX ne sont pas instanciées par Spring.
         // Il faut donc les injecter soi-même :
-        planChargeService = contexte.getBean(PlanChargeService.class);
+        planChargeService = contexte.getBean(ChargeService.class);
         planChargeBean = contexte.getBean(PlanChargeBean.class);
 
         // Certaines classes ne peuvent être injectées par Spring car ne sont pas instanciables par Spring (elles sont instanciées
@@ -776,7 +776,7 @@ public class PlanChargeIhm extends Application {
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 //                applicationController.afficherModuleDisponibilites();
-                applicationController.afficherModuleTaches();
+//                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }
 

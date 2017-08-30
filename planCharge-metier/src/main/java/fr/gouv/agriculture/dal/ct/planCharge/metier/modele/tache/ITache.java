@@ -5,4 +5,6 @@ public interface ITache<T extends ITache<T>> extends Comparable<T> {
 
     String noTache();
 
+    boolean estProvision();
+
 }

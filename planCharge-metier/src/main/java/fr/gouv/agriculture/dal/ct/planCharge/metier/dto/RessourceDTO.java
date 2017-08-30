@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
-import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceGenerique;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
@@ -12,7 +11,7 @@ import javax.validation.constraints.Null;
 /**
  * Created by frederic.danna on 25/03/2017.
  */
-public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDTO<E, T>> extends AbstractDTO<E, String, T> {
+public abstract class RessourceDTO<E extends Ressource<E>, D extends RessourceDTO<E, D>> extends AbstractDTO<E, String, D> {
 
 
     @Null
@@ -72,7 +71,7 @@ public abstract class RessourceDTO<E extends Ressource<E>, T extends RessourceDT
 
 
     @Override
-    public final int compareTo(@NotNull T o) {
+    public final int compareTo(@NotNull D o) {
         return code.compareTo(o.getCode());
     }
 

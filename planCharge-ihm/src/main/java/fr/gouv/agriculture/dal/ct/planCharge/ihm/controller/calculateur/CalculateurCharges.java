@@ -1,21 +1,19 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.AbstractCalculateur;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.beans.property.ObjectProperty;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalculateurCharges extends AbstractCalculateur {
+public class CalculateurCharges extends Calculateur {
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(CalculateurCharges.class);
@@ -25,11 +23,14 @@ public class CalculateurCharges extends AbstractCalculateur {
      La couche métier :
     */
 
-/*
-    //    @Autowired
+    /*
+        //    @Autowired
+        @NotNull
+        private final DisponibilitesService disponibilitesService = DisponibilitesService.instance();
+    */
+//    @Autowired
     @NotNull
-    private final DisponibilitesService disponibilitesService = DisponibilitesService.instance();
-*/
+    private final ChargeService chargeService = ChargeService.instance();
 
     //    @Autowired
     @NotNull
@@ -62,74 +63,50 @@ public class CalculateurCharges extends AbstractCalculateur {
     // Méthodes :
 
     //    @Override
-    public void calculer() throws IhmException {
-        if (!estActif()) {
+    public void calculer() throws ControllerException {
+        if (!estActive()) {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
             return;
         }
 
         LOGGER.debug("Calcul des charges : ");
-        for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calculer(noSemaine);
-        }
+
+        calculerProvisions();
+        calculerSurcharges();
+
         LOGGER.debug("Charges calculées.");
     }
 
-    private void calculer(int noSemaine) throws IhmException {
-        if (!estActif()) {
-            LOGGER.debug("Calculateur désactivé, donc sans effet.");
-            return;
+    private void calculerProvisions() throws ControllerException {
+        LOGGER.debug("Calcul des charges à provisionner : ");
+        for (PlanificationTacheBean planificationTacheBean : planChargeBean.getPlanificationsBeans()) {
+            calculerProvision(planificationTacheBean);
         }
-//        LOGGER.debug("Calcul des charges pour la semaine {} : ", noSemaine);
-        for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
-            calculer(ressourceHumaineBean, noSemaine);
-        }
-
-        LOGGER.debug("Charges calculées pour la semaine {}.", noSemaine);
+        LOGGER.debug("Charges à provisionner calculées.");
     }
 
-    public void calculer(@NotNull RessourceHumaineBean ressHumBean) throws IhmException {
-        if (!estActif()) {
-            LOGGER.debug("Calculateur désactivé, donc sans effet.");
+    private void calculerProvision(@NotNull PlanificationTacheBean planificationTacheBean) {
+        if (!planificationTacheBean.getTacheBean().estProvision()) {
+            LOGGER.debug("La tâche {} n'est pas une provision, donc rien à calculer.", planificationTacheBean.noTache());
             return;
         }
-//        LOGGER.debug("Calcul des charges pour la ressource {} : ", ressHumBean);
-        for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calculer(ressHumBean, noSemaine);
-        }
-//        LOGGER.debug("Charges calculées pour la ressource {}.", ressHumBean);
+        LOGGER.debug("Calcul des charges à provisionner pour la tâche {} : ", planificationTacheBean.noTache());
+
+        TacheBean tacheBean = planificationTacheBean.getTacheBean();
+/* TODO FDA 2017/08 Coder.
+        LocalDate debutPeriode;
+        LocalDate finPeriode;
+        LocalDate dateEtat;
+        chargeService.provision(tacheBean, debutPeriode, finPeriode, dateEtat);
+*/
+        LOGGER.debug("Charges à provisionner calculées pour la tâche {} : ", planificationTacheBean.noTache());
     }
 
-    public void calculer(@NotNull RessourceHumaineBean ressHumBean, int noSemaine) throws IhmException {
-        if (!estActif()) {
-            LOGGER.debug("Calculateur désactivé, donc sans effet.");
-            return;
-        }
-//        LOGGER.debug("Calcul des charges pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
-
-        LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
-        LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
-
-        LocalDate debutMission = Objects.value(ressHumBean.debutMissionProperty(), ObjectProperty::get);
-        LocalDate finMission = Objects.value(ressHumBean.finMissionProperty(), ObjectProperty::get);
-
+    private void calculerSurcharges() {
         // TODO FDA 2017/08 Coder.
-
-//        LOGGER.debug("Charges calculées pour la ressource {} et la semaine n° {}.", ressHumBean, noSemaine);
+/*
+        calculerSurchargesRessources();
+        calculerSurchargesProfils();
+*/
     }
-
-
-    public void calculerDispoProfils(@NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode) throws IhmException {
-        if (!estActif()) {
-            LOGGER.debug("Calculateur désactivé, donc sans effet.");
-            return;
-        }
-
-//        LOGGER.debug("Calcul des charges pour les profils et la période commençant le n° {} : ", debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
-
-        // TODO FDA 2017/08 Coder.
-
-//        LOGGER.debug("Charges calculées pour les profils et la période commençant le n° {} : ", debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
-    }
-
 }

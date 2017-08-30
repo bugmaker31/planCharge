@@ -19,7 +19,8 @@ import java.util.TreeMap;
  *
  * @author frederic.danna
  */
-public class PlanificationTacheBean extends TacheBean {
+public class
+PlanificationTacheBean extends TacheBean {
 
     @NotNull
     private Map<LocalDate, DoubleProperty> calendrier;

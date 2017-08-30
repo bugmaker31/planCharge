@@ -2,27 +2,28 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
-import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by frederic.danna on 11/03/2017.
  */
 public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements ITache<TacheDTO> {
 
-    public static final String FORMAT_NO_TACHE = "T%04d";
+    @NotNull
+    private static final Logger LOGGER = LoggerFactory.getLogger(TacheDTO.class);
+
 
     @SuppressWarnings("InstanceVariableNamingConvention")
     private int id;
@@ -75,7 +76,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
      * @throws ModeleException Si une donnée obligatoire manque (la {@link #categorie catégorie}, la {@link #description description}, etc.).
      */
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public TacheDTO(int id, @Null CategorieTacheDTO categorie, @Null SousCategorieTacheDTO sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliDTO projetAppli, @Null StatutDTO statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceDTO importance, @Null Double charge, @Null RessourceDTO ressource, @Null ProfilDTO profil) {
+    public TacheDTO(int id, @Null CategorieTacheDTO categorie, @Null SousCategorieTacheDTO sousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliDTO projetAppli, @Null StatutDTO statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceDTO importance, @Null Double charge, @Null RessourceDTO<? extends Ressource, ? extends RessourceDTO> ressource, @Null ProfilDTO profil) {
         this();
         this.id = id;
         this.categorie = categorie;
@@ -142,7 +143,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         return importance;
     }
 
-    public double getCharge() {
+    public Double getCharge() {
         return charge;
     }
 
@@ -166,24 +167,27 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
 
     @NotNull
     public String noTache() {
-        return noTache(id);
-    }
-
-    @NotNull
-    public static String noTache(int id) {
-        return String.format(FORMAT_NO_TACHE, id);
-    }
-
-
-    public boolean estProvision() {
-        return statut.equals(Statut.PROVISION);
+        return Tache.noTache(id);
     }
 
 
     @NotNull
     @Override
     public Tache toEntity() throws DTOException {
-        return new Tache(id, categorie.toEntity(), (sousCategorie == null ? null : sousCategorie.toEntity()), noTicketIdal, description, projetAppli.toEntity(), statut.toEntity(), debut, echeance, importance.toEntity(), charge, ressource.toEntity(), profil.toEntity());
+        return new Tache(id,
+                categorie.toEntity(),
+                ((sousCategorie == null) ? null : sousCategorie.toEntity()),
+                noTicketIdal,
+                description,
+                projetAppli.toEntity(),
+                statut.toEntity(),
+                debut,
+                echeance,
+                importance.toEntity(),
+                charge,
+                ressource.toEntity(),
+                profil.toEntity()
+        );
     }
 
     @NotNull
@@ -223,7 +227,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
         TacheDTO tache = (TacheDTO) o;
-        return id == tache.id;
+        return id == tache.getId();
     }
 
     @Override
@@ -232,9 +236,22 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     }
 
 
+    // ITache
+
+    public boolean estProvision() {
+        return (statut != null) && statut.equals(StatutDTO.PROVISION);
+    }
+
     @Override
-    public int compareTo(TacheDTO o) {
-        return new Integer(getId()).compareTo(o.getId());
+    public int compareTo(@Null TacheDTO o) {
+        try {
+            Tache tache = toEntity();
+            Tache autreTache = ((o == null) ? null : o.toEntity());
+            return tache.compareTo(autreTache);
+        } catch (DTOException e) {
+            LOGGER.error("Impossible de comparer les 2 taches (DTO)s.", e);
+            return 0;
+        }
     }
 
 

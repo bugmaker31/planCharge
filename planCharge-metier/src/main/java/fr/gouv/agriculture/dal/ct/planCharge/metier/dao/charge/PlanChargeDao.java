@@ -629,14 +629,14 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     @NotNull
     private Disponibilites importerDisponibilites(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         rapport.setAvancement("Import des disponibilités...");
-        Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence = importerNbrsJoursAbsence(feuilleDisponibilites);
-        Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT = importerPctagesDispoCT(feuilleDisponibilites);
-        Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = importerPctagesDispoMaxProfil(feuilleDisponibilites);
+        Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence = importerNbrsJoursAbsence(feuilleDisponibilites, rapport);
+        Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT = importerPctagesDispoCT(feuilleDisponibilites, rapport);
+        Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = importerPctagesDispoMaxProfil(feuilleDisponibilites, rapport);
         return new Disponibilites(nbrsJoursAbsence, pctagesDispoCT, pctagesDispoMaxProfil);
     }
 
     @NotNull
-    private Map<RessourceHumaine, Map<LocalDate, Float>> importerNbrsJoursAbsence(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
+    private Map<RessourceHumaine, Map<LocalDate, Float>> importerNbrsJoursAbsence(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Map<RessourceHumaine, Map<LocalDate, Float>> nbrsJoursAbsence = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
 
@@ -663,6 +663,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 if (Calc.isEmpty(trigrammeCell)) {
                     break;
                 }
+
+                rapport.setAvancement("Import des disponibilités - nombres de jours d'absence : ligne n°" + noLig + "...");
 
                 String trigramme = Strings.epure(Calc.getString(trigrammeCell));
                 if (trigramme == null) {
@@ -705,7 +707,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         }
     }
 
-    private Map<RessourceHumaine, Map<LocalDate, Percentage>> importerPctagesDispoCT(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
+    private Map<RessourceHumaine, Map<LocalDate, Percentage>> importerPctagesDispoCT(@NotNull XSpreadsheet feuilleDisponibilites,  @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
 
@@ -732,6 +734,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 if (Calc.isEmpty(trigrammeCell)) {
                     break;
                 }
+
+                rapport.setAvancement("Import des disponibilités - % de dispo. pour l'équipe (la CT) : ligne n°" + noLig + "...");
 
                 String trigramme = Strings.epure(Calc.getString(trigrammeCell));
                 if (trigramme == null) {
@@ -776,7 +780,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     }
 
     @NotNull
-    private Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> importerPctagesDispoMaxProfil(@NotNull XSpreadsheet feuilleDisponibilites) throws PlanChargeDaoException {
+    private Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> importerPctagesDispoMaxProfil(@NotNull XSpreadsheet feuilleDisponibilites,  @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
 
@@ -805,6 +809,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 if (Calc.isEmpty(trigrammeCell)) {
                     break;
                 }
+
+                rapport.setAvancement("Import des disponibilités - % de dispo. max. par ressource et profil : ligne n°" + noLig + "...");
 
                 String trigramme = Strings.epure(Calc.getString(trigrammeCell));
                 if (trigramme == null) {
@@ -948,7 +954,8 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                         Date debutPeriode = Calc.getDate(feuilleCharges, cptCol - 1, noLigPeriodes - 1);
 
                         XCell chargeCell = Calc.getCell(feuilleCharges, cptCol - 1, cptLig - 1);
-                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : chargeArrondie((Double) Calc.getDouble(chargeCell)));
+//                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : chargeArrondie((Double) Calc.getDouble(chargeCell)));
+                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : Calc.getDouble(chargeCell));
 
                         calendrier.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiee);
 

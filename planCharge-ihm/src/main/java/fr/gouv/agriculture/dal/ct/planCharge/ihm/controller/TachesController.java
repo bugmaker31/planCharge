@@ -124,7 +124,7 @@ public class TachesController extends AbstractTachesController<TacheBean> {
         tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
 
             List<TacheDTO> tacheDTOs = TacheBeans.toDTO(tachesTable.getItems());
-            List<TacheDTO> tacheATraiterDTOs = tacheService.aTraiter(tacheDTOs);
+            List<TacheDTO> tacheATraiterDTOs = tacheService.tachesATraiter(tacheDTOs);
 
             long nbrTachesATraiter = tacheATraiterDTOs.size();
             nbrTachesATraiterLabel.setText(formatNbrTaches.format(nbrTachesATraiter));

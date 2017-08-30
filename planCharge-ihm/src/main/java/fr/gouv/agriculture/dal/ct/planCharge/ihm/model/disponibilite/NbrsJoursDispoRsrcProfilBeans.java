@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
@@ -29,7 +29,7 @@ public final class NbrsJoursDispoRsrcProfilBeans {
     // Implementation of AbstractBean :
 
     @NotNull
-    public static Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> toDTO(@NotNull ObservableList<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeans) throws IhmException {
+    public static Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> toDTO(@NotNull ObservableList<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeans) throws BeanException {
         Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> nbrsJoursDispoMaxRsrcProfilDTOs = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
         for (NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean : nbrsJoursDispoMaxRsrcProfilBeans) {
 

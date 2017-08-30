@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import eu.hansolo.medusa.Gauge;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
@@ -21,7 +22,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBea
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportPlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
@@ -214,7 +215,7 @@ public class ApplicationController extends AbstractController {
 
     //    @Autowired
     @NotNull
-    private PlanChargeService planChargeService = PlanChargeService.instance();
+    private ChargeService planChargeService = ChargeService.instance();
 
 
     // Les données métier :
@@ -234,16 +235,16 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    public ApplicationController() throws IhmException {
+    public ApplicationController() throws ControllerException {
         super();
         if (instance != null) {
-            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+            throw new ControllerException("Instanciation à plus d'1 exemplaire.");
         }
         instance = this;
     }
 
 
-    public void initialize() throws IhmException {
+    public void initialize() throws ControllerException {
 //        super.initialize();
 
 /*
@@ -427,7 +428,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void reinitPlanCharge() throws IhmException {
+    private void reinitPlanCharge() throws ControllerException {
         definirDateEtat((LocalDate) null);
         ObservableList[] listesBeans = {
                 // Référentiels :
@@ -471,7 +472,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void charger() throws IhmException {
+    private void charger() throws ControllerException {
 
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
@@ -482,7 +483,7 @@ public class ApplicationController extends AbstractController {
         try {
             fileChooser.setInitialDirectory(new File(paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
         } catch (KernelException e) {
-            throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
+            throw new ControllerException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
         }
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
@@ -513,7 +514,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void charger(@NotNull File ficPlanCharge) throws IhmException {
+    private void charger(@NotNull File ficPlanCharge) throws ControllerException {
 
         RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
 
@@ -540,19 +541,20 @@ public class ApplicationController extends AbstractController {
         };
 
         try {
-            calculateurDisponibilites.executerPuisCalculer(
+            Calculateur.executerPuisCalculer(
                     () -> {
                         try {
 
-                    /*RapportChargementAvecProgression rapportFinal = */
-                            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
-//                  assert rapportFinal != null;
+                            RapportChargementAvecProgression rapportFinal =
+                                    ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
+                            assert rapportFinal != null;
 
                             definirDateEtat(planChargeBean.getDateEtat());
 
                             ihm.getTachesController().razFiltres();
                             ihm.getChargesController().razFiltres();
 
+                            //noinspection HardcodedLineSeparator
                             ihm.afficherNotification(
                                     "Chargement terminé",
                                     "Le chargement est terminé :"
@@ -566,7 +568,7 @@ public class ApplicationController extends AbstractController {
 
                         } catch (ViolationsReglesGestionException e) {
                             ihm.afficherViolationsReglesGestion(
-                                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                                    "Impossible de charger le plan de charge.", e.getLocalizedMessage(),
                                     e.getViolations()
                             );
                         }
@@ -577,7 +579,7 @@ public class ApplicationController extends AbstractController {
                     }
             );
         } catch (IhmException e) {
-            throw new IhmException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
+            throw new ControllerException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
     }
 
@@ -674,7 +676,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void importerTachesDepuisCalc() throws IhmException {
+    private void importerTachesDepuisCalc() throws ControllerException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LibreOffice) qui contient les tâches ('suivi des demandes'') : ");
@@ -686,7 +688,7 @@ public class ApplicationController extends AbstractController {
             // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
             nomRepFicCalc = paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
-            throw new IhmException("Impossible de déterminer le répertoire de persistance.", e);
+            throw new ControllerException("Impossible de déterminer le répertoire de persistance.", e);
         }
         fileChooser.setInitialDirectory(new File(nomRepFicCalc));
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
@@ -794,7 +796,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void importerPlanChargeDepuisCalc() throws IhmException {
+    private void importerPlanChargeDepuisCalc() throws ControllerException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
@@ -806,7 +808,7 @@ public class ApplicationController extends AbstractController {
             // TODO FDA 2017/05 C'est le répertoire des XML, pas forcément des ODS. Plutôt regarder dans les préférences de l'utilisateur ?
             nomRepFicCalc = paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
-            throw new IhmException("Impossible de déterminer le répertoire de persistance du plan de charge.", e);
+            throw new ControllerException("Impossible de déterminer le répertoire de persistance du plan de charge.", e);
         }
         // TODO FDA 2017/05 Vérifier que le répertoire existe. Si non, le créer ?
         fileChooser.setInitialDirectory(new File(nomRepFicCalc));
@@ -824,9 +826,9 @@ public class ApplicationController extends AbstractController {
         importerPlanChargeDepuisCalc(ficCalc);
     }
 
-    public void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-        final RapportImportPlanChargeAvecProgression rapport = new RapportImportPlanChargeAvecProgression();
+        RapportImportPlanChargeAvecProgression rapport = new RapportImportPlanChargeAvecProgression();
 
         Task<RapportImportPlanChargeAvecProgression> importerPlanChargeDepuisCalc = new Task<RapportImportPlanChargeAvecProgression>() {
 
@@ -844,46 +846,50 @@ public class ApplicationController extends AbstractController {
 
                 planChargeBean.fromDto(planCharge);
 
-/*
-                // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-                rapport.setAvancement("Alimentation des référentiels...");
-                ihm.getTachesController().populerReferentiels();
-                ihm.getChargesController().populerReferentiels();
-
-                // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-                rapport.setAvancement("Alimentation des filtres...");
-                ihm.getTachesController().populerFiltres();
-                ihm.getChargesController().populerFiltres();
-*/
+                planChargeBean.vientDEtreModifie();
+                getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
 
                 return rapport;
             }
         };
 
         try {
+            Calculateur.executerPuisCalculer(
+                    () -> {
+                        try {
 
-            RapportImportPlanCharge rapportFinal = ihm.afficherProgression("Import du plan de charge", importerPlanChargeDepuisCalc);
-            assert rapportFinal != null;
+                            RapportImportPlanCharge rapportFinal =
+                                    ihm.afficherProgression("Import du plan de charge", importerPlanChargeDepuisCalc);
+                            assert rapportFinal != null;
 
-            definirDateEtat(planChargeBean.getDateEtat());
+                            definirDateEtat(planChargeBean.getDateEtat());
 
-            planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
+                            ihm.getTachesController().razFiltres();
+                            ihm.getChargesController().razFiltres();
 
-            ihm.afficherNotification("Données importées",
-                    "Le plan de charge a été importé : "
-                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                            + "\n- date d'état : " + planChargeBean.getDateEtat()
-                            + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size()
-            );
+                            //noinspection HardcodedLineSeparator,HardcodedFileSeparator
+                            ihm.afficherNotification("Données importées",
+                                    "Le plan de charge a été importé : "
+                                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                                            + "\n- date d'état : " + planChargeBean.getDateEtat()
+                                            + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size()
+                            );
 
-            afficherModuleCharges();
+                            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
 
-            majBarreEtat();
-        } catch (ViolationsReglesGestionException e) {
-            ihm.afficherViolationsReglesGestion(
-                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
-                    e.getViolations()
+                            majBarreEtat();
+
+                        } catch (ViolationsReglesGestionException e) {
+                            ihm.afficherViolationsReglesGestion(
+                                    "Impossible d'importer le plan de charge.", e.getLocalizedMessage(),
+                                    e.getViolations()
+                            );
+                        }
+                    },
+                    () -> {
+//                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
+                        calculer();
+                    }
             );
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
@@ -981,7 +987,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void supprimer() throws IhmException {
+    private void supprimer() throws ControllerException {
         // TODO FDA 2017/04 Coder.
         throw new NotImplementedException();
     }
@@ -1061,7 +1067,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleJoursFeries() throws IhmException {
+    public void afficherModuleJoursFeries() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
 
         if (nomModuleCourant == ApplicationController.NomModule.JOURS_FERIES) {
@@ -1071,10 +1077,14 @@ public class ApplicationController extends AbstractController {
 
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleJoursFeries();
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
     }
 
-    public void activerModuleJoursFeries() throws IhmException {
+    public void activerModuleJoursFeries() throws ControllerException {
         nomModuleCourant = NomModule.JOURS_FERIES;
         contentPane.getChildren().setAll(ihm.getJoursFeriesView());
 //        ihm.getJoursFeriesController().fireActivation();
@@ -1091,7 +1101,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleRessourcesHumaines() throws IhmException {
+    public void afficherModuleRessourcesHumaines() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Ressources humaines\"");
 
         if (nomModuleCourant == NomModule.RESSOURCES_HUMAINES) {
@@ -1101,10 +1111,14 @@ public class ApplicationController extends AbstractController {
 
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleRessourcesHumaines();
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
     }
 
-    public void activerModuleRessourcesHumaines() throws IhmException {
+    public void activerModuleRessourcesHumaines() throws ControllerException {
         nomModuleCourant = NomModule.RESSOURCES_HUMAINES;
         contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
 //        ihm.getRessourcesHumainesController().fireActivation();
@@ -1122,7 +1136,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleDisponibilites() throws IhmException {
+    public void afficherModuleDisponibilites() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
         if (nomModuleCourant == NomModule.DISPONIBILITES) {
@@ -1132,10 +1146,14 @@ public class ApplicationController extends AbstractController {
 
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleDisponibilites();
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
     }
 
-    public void activerModuleDisponibilites() throws IhmException {
+    public void activerModuleDisponibilites() throws ControllerException {
         nomModuleCourant = ApplicationController.NomModule.DISPONIBILITES;
         contentPane.getChildren().setAll(ihm.getDisponibilitesView());
 //        ihm.getDisponibilitesController().fireActivation();
@@ -1152,7 +1170,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleTaches() throws IhmException {
+    public void afficherModuleTaches() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
         if (nomModuleCourant == ApplicationController.NomModule.TACHES) {
@@ -1162,10 +1180,14 @@ public class ApplicationController extends AbstractController {
 
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleTaches();
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
     }
 
-    public void activerModuleTaches() throws IhmException {
+    public void activerModuleTaches() throws ControllerException {
         nomModuleCourant = NomModule.TACHES;
 //        ihm.getTachesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getTachesView());
@@ -1183,7 +1205,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void afficherModuleCharges() throws IhmException {
+    public void afficherModuleCharges() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
         if (nomModuleCourant == NomModule.CHARGES) {
@@ -1193,10 +1215,14 @@ public class ApplicationController extends AbstractController {
 
         final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
         activerModuleCharges();
-        getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
     }
 
-    public void activerModuleCharges() throws IhmException {
+    public void activerModuleCharges() throws ControllerException {
         nomModuleCourant = ApplicationController.NomModule.CHARGES;
 //        ihm.getChargesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getChargesView());
@@ -1228,7 +1254,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void definirDateEtat(@Null LocalDate dateEtat) throws IhmException {
+    public void definirDateEtat(@Null LocalDate dateEtat) throws ControllerException {
         if (dateEtat != null) {
             if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
                 dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
@@ -1251,7 +1277,7 @@ public class ApplicationController extends AbstractController {
     @Null
     private LocalDate dateEtatPrecedentePourMajCalendriers = null;
 
-    private void majCalendriers() throws IhmException {
+    private void majCalendriers() throws ControllerException {
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if ((dateEtatPrecedentePourMajCalendriers == null) || (dateEtat == null) || !dateEtat.equals(dateEtatPrecedentePourMajCalendriers)) {
             definirNomsPeriodes();
@@ -1262,7 +1288,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void definirNomsPeriodes() throws IhmException {
+    private void definirNomsPeriodes() throws ControllerException {
 
 /*
         // Format = "S " + n° de semaine dans l'année + abréviation du nom du jour ("lun", "mar", etc.) + retour à la ligne + jour au format 'JJ/MM'.
@@ -1420,8 +1446,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    public void calculer() throws IhmException {
-
+    public void calculer() throws ControllerException {
         // TODO FDA 2017/08 Afficher une barre de progression.
         ihm.getDisponibilitesController().calculerDisponibilites();
         ihm.getChargesController().calculerCharges();
@@ -1432,8 +1457,7 @@ public class ApplicationController extends AbstractController {
 
         ihm.afficherNotification(
                 "Calcul terminé",
-                "Les données (disponibilités, surcharges, etc.) ont été calculées."
+                "Les données (disponibilités, provisions, surcharges, etc.) ont été calculées."
         );
     }
-
 }

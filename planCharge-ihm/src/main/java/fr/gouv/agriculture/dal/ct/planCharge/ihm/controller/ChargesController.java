@@ -1,7 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
@@ -11,7 +13,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.PlanChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -70,7 +72,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     //    @Autowired
     @NotNull
-    private PlanChargeService planChargeService = PlanChargeService.instance();
+    private ChargeService planChargeService = ChargeService.instance();
 
     //    @Autowired
     @NotNull
@@ -425,7 +427,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         semaine11Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 11));
         semaine12Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 12));
 
-        getTachesTable().setCalendrierColumns(
+        planificationsTable.setCalendrierColumns(
                 semaine1Column,
                 semaine2Column,
                 semaine3Column,
@@ -439,6 +441,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine11Column,
                 semaine12Column
         );
+
+        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
         LOGGER.info("Initialisé.");
     }
@@ -539,22 +543,26 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
-        LOGGER.debug("Màj de la planification : ");
-        PlanificationsDTO planificationsInitiales = planChargeBean.toPlanificationDTOs();
-        PlanificationsDTO planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
-        planifications
-                .forEach((tache, planifTache) -> {
-                    Optional<PlanificationTacheBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
-                            .filter(planificationBean -> planificationBean.getId() == tache.getId())
-                            .findAny();
-                    assert planifBeanOpt.isPresent();
-                    PlanificationTacheBean planifBean = planifBeanOpt.get();
-                    Map<LocalDate, DoubleProperty> calendrierTache = planifBean.getCalendrier();
-                    calendrierTache.clear();
-                    planifTache.forEach((debutPeriode, charge) -> calendrierTache.put(debutPeriode, new SimpleDoubleProperty(charge)));
-                });
-        planificationsTable.refresh();
-        LOGGER.debug("Planification màj.");
+        try {
+            LOGGER.debug("Màj de la planification : ");
+            PlanificationsDTO planificationsInitiales = planChargeBean.toPlanificationDTOs();
+            PlanificationsDTO planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
+            planifications
+                    .forEach((tache, planifTache) -> {
+                        Optional<PlanificationTacheBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
+                                .filter(planificationBean -> planificationBean.getId() == tache.getId())
+                                .findAny();
+                        assert planifBeanOpt.isPresent();
+                        PlanificationTacheBean planifBean = planifBeanOpt.get();
+                        Map<LocalDate, DoubleProperty> calendrierTache = planifBean.getCalendrier();
+                        calendrierTache.clear();
+                        planifTache.forEach((debutPeriode, charge) -> calendrierTache.put(debutPeriode, new SimpleDoubleProperty(charge)));
+                    });
+            planificationsTable.refresh();
+            LOGGER.debug("Planification màj.");
+        } catch (ServiceException e) {
+            throw new IhmException("Impossible de màj la planification.", e);
+        }
     }
 
 
@@ -599,7 +607,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
 
-    public void calculerCharges() throws IhmException {
+    public void calculerCharges() throws ControllerException {
         calculateurCharges.calculer();
     }
 }

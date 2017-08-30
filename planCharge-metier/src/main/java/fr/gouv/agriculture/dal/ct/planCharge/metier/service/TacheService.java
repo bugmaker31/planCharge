@@ -33,7 +33,7 @@ public class TacheService extends AbstractService {
     }
 
     @NotNull
-    public List<TacheDTO> aTraiter(@NotNull List<TacheDTO> tacheDTOs) {
+    public List<TacheDTO> tachesATraiter(@NotNull List<TacheDTO> tacheDTOs) {
         return tacheDTOs.parallelStream()
                 .filter(this::estATraiter)
                 .collect(Collectors.toList());

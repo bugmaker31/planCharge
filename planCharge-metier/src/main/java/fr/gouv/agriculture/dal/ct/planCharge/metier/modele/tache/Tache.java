@@ -16,7 +16,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
     public static final String FORMAT_NO_TACHE = "T%04d";
 
     @SuppressWarnings("InstanceVariableNamingConvention")
-    private int id;
+    private final int id;
     @NotNull
     private CategorieTache categorie;
     @Null
@@ -196,7 +196,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
         Tache tache = (Tache) o;
-        return id == tache.id;
+        return id == tache.getId();
     }
 
     @Override
@@ -205,14 +205,17 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
     }
 
     @Override
-    public int compareTo(Tache o) {
-        return new Integer(getId()).compareTo(o.getId());
+    public int compareTo(@Null Tache o) {
+        if (o == null) {
+            return 1; // Les atstuts indéfinis sont triés en tête de liste.
+        }
+        return Integer.compare(id, o.getId());
     }
 
     @NotNull
     @Override
     public Integer getIdentity() {
-        return getId();
+        return id;
     }
 
     // Pour les débug, uniquement.

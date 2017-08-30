@@ -15,4 +15,9 @@ Ce fichier liste les modif à faire sur les données, pour les rendre compatible
 1) Màj la liste des projets : ajouter `SOCTEC_V2`, `EQUAR`, `BDNI-Mig`, `SIPV`, etc. (copier/coller depuis "Suivi des demandes").
 1) Ajouter le profil "Encadrant".
 1) Affecter le profil "Encadrant" aux 2 tâches ayant le profil "*".
+1) Ajouter le profil "Encadrant" à l'onglet "Charge", en copiant/collant les formules des colonnes hebdo/trimestrielles (`L` à `AC`) :
+    1) dans la section "Charge / profil (j)" (ligne 208)
+    1) dans la section "Dispo. maxi. / profil (j)" (ligne 239)
+    1) dans la section "Dispo. maxi. restante CT / profil (j)" (ligne 271)
+    
 

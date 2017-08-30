@@ -57,4 +57,9 @@ public abstract class Dates {
         int weekNumber = date.get(woy);
         return weekNumber;
     }
+
+    @NotNull
+    public static LocalDate max(@NotNull LocalDate date1, @NotNull LocalDate date2) {
+        return (date1.compareTo(date2) < 0) ? date1 : date2;
+    }
 }

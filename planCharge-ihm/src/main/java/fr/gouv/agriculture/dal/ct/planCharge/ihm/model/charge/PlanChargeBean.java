@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAbsenceBean;
@@ -143,9 +142,9 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
     @NotNull
-    public LocalDate dateEtat() throws IhmException {
+    public LocalDate dateEtat() throws BeanException {
         if (dateEtat == null) {
-            throw new IhmException("Date d'état non définie.");
+            throw new BeanException("Date d'état non définie.");
         }
         return dateEtat;
     }

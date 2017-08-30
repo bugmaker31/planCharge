@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.PercentageStringConverter;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -2115,7 +2116,7 @@ public class DisponibilitesController extends AbstractController {
     }
 
 
-    public void calculerDisponibilites() throws IhmException {
+    public void calculerDisponibilites() throws ControllerException {
 //        LOGGER.debug("Calcul des disponibilités  : ");
         calculateurDisponibilites.calculer();
 //        LOGGER.debug("Disponibilités calculées.");
