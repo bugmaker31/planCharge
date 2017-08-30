@@ -304,22 +304,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
         sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
         getTachesTable().setItems(sortedFilteredPlanifBeans);
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
-/*
-        getTachesBeans().addListener((ListChangeListener<TB>) changeListener -> {
-            LOGGER.debug("Changement pour la liste des tâches => filtrage des lignes de la table...");
-
-            // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-            // 1. Wrap the ObservableList in a FilteredList, and 2. Set the filter Predicate whenever the filter changes.
-            FilteredList<TB> filteredTaches = enregistrerListenersSurFiltres(getTachesBeans());
-            // 3. Wrap the FilteredList in a SortedList.
-            SortedList<TB> sortedPlanifBeans = new SortedList<>(filteredTaches);
-            // 4. Bind the SortedList COMPARATOR_DEFAUT to the TableView COMPARATOR_DEFAUT.
-            sortedPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
-            // 5. Add sorted (and filtered) data to the table.
-            getTachesTable().setItems(sortedPlanifBeans);
-        });
-*/
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //

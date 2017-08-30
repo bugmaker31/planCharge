@@ -256,7 +256,7 @@ Plan de charge :
     -fx-font-size: 80%;
     -fx-alignment: baseline-center;
 }
-.periodeChargee-column .label {
+.periodeChargee-column .label .text {
     -fx-wrap-text: true;
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
 }

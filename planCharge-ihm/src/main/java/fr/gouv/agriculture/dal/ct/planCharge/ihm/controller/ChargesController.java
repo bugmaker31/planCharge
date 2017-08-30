@@ -442,7 +442,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine12Column
         );
 
-        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
+//        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
         LOGGER.info("Initialisé.");
     }
