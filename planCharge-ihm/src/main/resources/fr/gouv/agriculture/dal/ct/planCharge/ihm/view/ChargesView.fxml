@@ -12,10 +12,6 @@
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
-    <fx:define>
-        <Double fx:id="descriptionFieldPrefWidth" fx:value="400"/>
-        <!--TODO FDA 2017/07 Continuer à paramétrer les prefWidth.-->
-    </fx:define>
     <top>
         <VBox>
             <!--suppress JavaFxUnresolvedFxIdReference -->
@@ -24,7 +20,8 @@
                     <!--suppress JavaFxUnresolvedFxIdReference -->
                     <TitledPane fx:id="filtresPane" animated="false" text="Filtres">
                         <HBox spacing="2" alignment="CENTER_LEFT">
-                            <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion" titledPane="$filtresPane"/>
+                            <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion"
+                                                         titledPane="$filtresPane"/>
                             <VBox alignment="CENTER_LEFT">
                                 <SegmentedButton>
                                     <buttons>
@@ -96,7 +93,6 @@
             <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
             <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
             <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
-            <Double fx:id="descriptionColumnPrefWidth" fx:value="700"/>
             <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
             <Double fx:id="statutColumnPrefWidth" fx:value="75"/>
             <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
@@ -119,28 +115,35 @@
                         <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
                         <TableColumn text="Catégories">
                             <columns>
-                                <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="$categorieColumnPrefWidth" visible="false"/>
+                                <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                             prefWidth="$categorieColumnPrefWidth" visible="false"/>
                                 <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
-                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie" prefWidth="$sousCategorieColumnPrefWidth"
+                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                             prefWidth="$sousCategorieColumnPrefWidth"
                                              visible="false" style="-fx-wrap-text: true"/>
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
                                      editable="false" styleClass="nonModifiable"/>
-                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL" prefWidth="$noTicketIdalColumnPrefWidth"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
+                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                     prefWidth="$noTicketIdalColumnPrefWidth"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="400"
                                      text="Description" styleClass="description-column"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth" text="Projet/Appli"
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                     text="Projet/Appli"
                                      styleClass="projetAppli-column"/>
-                        <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut" visible="false"/>
+                        <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"
+                                     visible="false"/>
                         <TableColumn text="Période souhaitée">
                             <columns>
                                 <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth" text="Echéance"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                             text="Echéance"/>
                             </columns>
                         </TableColumn>
                         <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"/>
-                        <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge" styleClass="charge-column"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                     styleClass="charge-column"/>
                         <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"/>
                         <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"/>
                     </columns>
@@ -190,14 +193,15 @@
                     <items>
                         <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
                         <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                        <MenuItem text="Voir le projet/appli de la tâche"
+                                  disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                         <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <SeparatorMenuItem/>
-                        <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache" />
+                        <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache"/>
                         <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
-                        <SeparatorMenuItem/>
                         <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
                                   onAction="#afficherTacheDansOutilTicketing"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
                     </items>
                 </ContextMenu>
             </contextMenu>

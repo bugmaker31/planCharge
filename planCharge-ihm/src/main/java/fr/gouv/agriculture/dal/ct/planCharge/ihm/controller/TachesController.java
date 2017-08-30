@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
@@ -31,7 +32,7 @@ import java.util.List;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class TachesController extends AbstractTachesController<TacheBean> {
+public class TachesController extends AbstractTachesController<TacheBean> implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TachesController.class);
 
@@ -82,6 +83,8 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     private ObservableList<TacheBean> planificationsBeans = (ObservableList) planChargeBean.getPlanificationsBeans();
 
 
+    // Constructeurs :
+
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -95,6 +98,8 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     }
 
 
+    // Getters/Setters :
+
     @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
     @Override
@@ -106,6 +111,17 @@ public class TachesController extends AbstractTachesController<TacheBean> {
     @Override
     TableView<TacheBean> getTachesTable() {
         return tachesTable;
+    }
+
+
+    // Méthodes :
+
+
+    // Module
+
+    @Override
+    public String getTitre() {
+        return "Tâches";
     }
 
 

@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
@@ -23,82 +25,82 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
 
     //    @Autowired
     @NotNull
+    private final PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+    //    @Autowired
+    @NotNull
     private final ApplicationController applicationController = ApplicationController.instance();
 
 
     @Null
-    private final ApplicationController.NomModule nomModulePrecedent;
+    private final Module modulePrecedent;
 
 
-    public AffichageModule(@Null ApplicationController.NomModule nomModulePrecedent) {
-        this.nomModulePrecedent = nomModulePrecedent;
+    public AffichageModule(@Null Module modulePrecedent) {
+        this.modulePrecedent = modulePrecedent;
     }
 
 
     @Override
     public String getTexte() {
-        return "affichage du module \"" + getNomModule().getTexte() + "\"";
+        return "affichage du module \"" + getModule().getTitre() + "\"";
     }
 
 
     @NotNull
-    abstract ApplicationController.NomModule getNomModule();
+    abstract Module getModule();
 
 
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
     public void annuler() throws AnnulationActionException {
         try {
-            if (nomModulePrecedent == null) {
+            if (modulePrecedent == null) {
                 // TODO FDA 2017/05 Quel module afficher, lorsqu'on annule l'affichage du tout 1er module affiché ? La page d'accueil ?
                 LOGGER.warn("Impossible d'annuler l'affichage du tout premier module (quel autre module afficher ?).");
                 return;
             }
-            if (nomModulePrecedent == ApplicationController.NomModule.JOURS_FERIES) {
-                applicationController.activerModuleJoursFeries();
-                return;
-            }
-            if (nomModulePrecedent == ApplicationController.NomModule.DISPONIBILITES) {
-                applicationController.activerModuleDisponibilites();
-                return;
-            }
-            if (nomModulePrecedent == ApplicationController.NomModule.TACHES) {
-                applicationController.activerModuleTaches();
-                return;
-            }
-            if (nomModulePrecedent == ApplicationController.NomModule.CHARGES) {
-                applicationController.activerModuleCharges();
-                return;
-            }
-            throw new AnnulationActionException("Module non géré : '" + nomModulePrecedent.getTexte() + "'.");
-        } catch (IhmException e) {
+            activerModule(modulePrecedent);
+        } catch (ControllerException e) {
             throw new AnnulationActionException("Impossible d'annuler l'action '" + getTexte() + "'.", e);
         }
     }
 
     @Override
     public void retablir() throws RetablissementActionException {
-        ApplicationController appCtrl = ApplicationController.instance();
         try {
-            if (getNomModule() == ApplicationController.NomModule.JOURS_FERIES) {
-                appCtrl.activerModuleJoursFeries();
-                return;
-            }
-            if (getNomModule() == ApplicationController.NomModule.DISPONIBILITES) {
-                appCtrl.activerModuleDisponibilites();
-                return;
-            }
-            if (getNomModule() == ApplicationController.NomModule.TACHES) {
-                appCtrl.activerModuleTaches();
-                return;
-            }
-            if (getNomModule() == ApplicationController.NomModule.CHARGES) {
-                appCtrl.activerModuleCharges();
-                return;
-            }
-            throw new RetablissementActionException("Module non géré : '" + getNomModule().getTexte() + "'.");
-        } catch (IhmException e) {
-            throw new RetablissementActionException("Impossible d'annuler l'action '" + getTexte() + "'.", e);
+            activerModule(getModule());
+        } catch (ControllerException e) {
+            throw new RetablissementActionException("Impossible de rétablir l'action '" + getTexte() + "'.", e);
         }
+    }
+
+    private void activerModule(@NotNull Module module) throws ControllerException {
+        //noinspection ObjectEquality
+        if (module == ihm.getJoursFeriesController()) {
+            applicationController.activerModuleJoursFeries();
+            return;
+        }
+        //noinspection ObjectEquality
+        if (module == ihm.getRessourcesHumainesController()) {
+            applicationController.activerModuleRessourcesHumaines();
+            return;
+        }
+        //noinspection ObjectEquality
+        if (module == ihm.getDisponibilitesController()) {
+            applicationController.activerModuleDisponibilites();
+            return;
+        }
+        //noinspection ObjectEquality
+        if (module == ihm.getTachesController()) {
+            applicationController.activerModuleTaches();
+            return;
+        }
+        //noinspection ObjectEquality
+        if (module == ihm.getChargesController()) {
+            applicationController.activerModuleCharges();
+            return;
+        }
+        throw new ControllerException("Module non géré : '" + module.getTitre() + "'.");
     }
 }

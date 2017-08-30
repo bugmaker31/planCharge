@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -30,7 +31,7 @@ import java.util.List;
  *
  * @author frederic.danna
  */
-public class RessourcesHumainesController extends AbstractController {
+public class RessourcesHumainesController extends AbstractController implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RessourcesHumainesController.class);
 
@@ -88,6 +89,8 @@ public class RessourcesHumainesController extends AbstractController {
     private TableColumn<RessourceHumaineBean, LocalDate> finMissionColumn;
 
 
+    // Constructeurs :
+
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -100,6 +103,9 @@ public class RessourcesHumainesController extends AbstractController {
         instance = this;
     }
 
+
+    // Getters/Setters
+
     @NotNull
     public TableView<RessourceHumaineBean> getRessourcesHumainesTable() {
         return ressourcesHumainesTable;
@@ -109,6 +115,17 @@ public class RessourcesHumainesController extends AbstractController {
     public ObservableList<RessourceHumaineBean> getRessourceHumainesBeans() {
         return ressourceHumainesBeans;
     }
+
+
+    // Méthodes :
+
+    // Module
+
+    @Override
+    public String getTitre() {
+        return "Ressources humaines";
+    }
+
 
     /**
      * Initializes the controller class. This method is automatically called

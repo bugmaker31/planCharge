@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,13 +12,13 @@ import javax.validation.constraints.NotNull;
  */
 public class AffichageModuleCharges extends AffichageModule {
 
-    public AffichageModuleCharges(ApplicationController.NomModule nomModulePrecedent) {
-        super(nomModulePrecedent);
+    public AffichageModuleCharges(Module modulePrecedent) {
+        super(modulePrecedent);
     }
 
     @NotNull
     @Override
-    ApplicationController.NomModule getNomModule() {
-        return ApplicationController.NomModule.CHARGES;
+    Module getModule() {
+        return PlanChargeIhm.instance().getChargesController();
     }
 }

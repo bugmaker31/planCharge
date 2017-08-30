@@ -4,6 +4,7 @@ import eu.hansolo.medusa.Gauge;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
@@ -78,27 +79,7 @@ public class ApplicationController extends AbstractController {
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
 
-    public enum NomModule {
-        // Référentiels :
-        JOURS_FERIES("Jours fériés"),
-        RESSOURCES_HUMAINES("Ressources humaines"),
-        // Gestion :
-        DISPONIBILITES("Disponibilités"),
-        TACHES("Tâches"),
-        CHARGES("Charges");
-
-        private String texte;
-
-        NomModule(String texte) {
-            this.texte = texte;
-        }
-
-        public String getTexte() {
-            return texte;
-        }
-    }
-
-    private NomModule nomModuleCourant = null;
+    private Module moduleCourant = null;
 
     @SuppressWarnings("BooleanVariableAlwaysNegated")
     private boolean manqueMemoireDejaDetecte = false;
@@ -230,8 +211,8 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private ObservableList<PlanificationTacheBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
 
-    public ApplicationController.NomModule getNomModuleCourant() {
-        return nomModuleCourant;
+    public Module getModuleCourant() {
+        return moduleCourant;
     }
 
 
@@ -392,7 +373,7 @@ public class ApplicationController extends AbstractController {
         //noinspection HardcodedFileSeparator
         titre += " - " + fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(planChargeBean.getDateEtat(), localDate -> localDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")), "N/C");
         //noinspection HardcodedFileSeparator
-        titre += " - " + fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(nomModuleCourant, nomModule -> nomModuleCourant.getTexte(), "N/C");
+        titre += " - " + fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(moduleCourant, nomModule -> moduleCourant.getTitre(), "N/C");
         ihm.definirTitre(titre);
     }
 
@@ -411,7 +392,7 @@ public class ApplicationController extends AbstractController {
     private void nouveau(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Nouveau");
 
-        if (!perteDonneesAceeptee()) {
+        if (!estAcceptableDePerdreDesDonnees()) {
             return;
         }
 
@@ -455,7 +436,7 @@ public class ApplicationController extends AbstractController {
     private void charger(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Charger");
 
-        if (!perteDonneesAceeptee()) {
+        if (!estAcceptableDePerdreDesDonnees()) {
             return;
         }
 
@@ -779,7 +760,7 @@ public class ApplicationController extends AbstractController {
     private void importerPlanChargeDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Plan charge depuis Calc");
 
-        if (!perteDonneesAceeptee()) {
+        if (!estAcceptableDePerdreDesDonnees()) {
             return;
         }
 
@@ -900,7 +881,7 @@ public class ApplicationController extends AbstractController {
     private void quitter(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Quitter");
 
-        if (!perteDonneesAceeptee()) {
+        if (!estAcceptableDePerdreDesDonnees()) {
             return;
         }
 
@@ -990,6 +971,7 @@ public class ApplicationController extends AbstractController {
     private void supprimer() throws ControllerException {
         // TODO FDA 2017/04 Coder.
         throw new NotImplementedException();
+//        moduleCourant.supprimer();
     }
 
 
@@ -1040,7 +1022,7 @@ public class ApplicationController extends AbstractController {
             LOGGER.error("Impossible de récupérer la version de l'application.", e);
         }
 
-        //noinspection HardcodedFileSeparator
+        //noinspection HardcodedFileSeparator,HardcodedLineSeparator
         ihm.afficherPopUp(
                 Alert.AlertType.INFORMATION,
                 "A propos de l'application \"" + PlanChargeIhm.APP_NAME + "\"",
@@ -1061,7 +1043,7 @@ public class ApplicationController extends AbstractController {
     private void afficherModuleJoursFeries(@SuppressWarnings("unused") ActionEvent actionEvent) {
         try {
             afficherModuleJoursFeries();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des jours fériés.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des jours fériés", Exceptions.causes(e));
         }
@@ -1070,22 +1052,23 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleJoursFeries() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
 
-        if (nomModuleCourant == ApplicationController.NomModule.JOURS_FERIES) {
+        //noinspection ObjectEquality
+        if (moduleCourant == ihm.getJoursFeriesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
         activerModuleJoursFeries();
         try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
         } catch (SuiviActionsUtilisateurException e) {
             throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
         }
     }
 
     public void activerModuleJoursFeries() throws ControllerException {
-        nomModuleCourant = NomModule.JOURS_FERIES;
+        moduleCourant = ihm.getJoursFeriesController();
         contentPane.getChildren().setAll(ihm.getJoursFeriesView());
 //        ihm.getJoursFeriesController().fireActivation();
         majTitre();
@@ -1095,7 +1078,7 @@ public class ApplicationController extends AbstractController {
     private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") ActionEvent actionEvent) {
         try {
             afficherModuleRessourcesHumaines();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des ressrouces humaines.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des ressources humaines", Exceptions.causes(e));
         }
@@ -1104,22 +1087,23 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleRessourcesHumaines() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Ressources humaines\"");
 
-        if (nomModuleCourant == NomModule.RESSOURCES_HUMAINES) {
+        //noinspection ObjectEquality
+        if (moduleCourant == ihm.getRessourcesHumainesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
         activerModuleRessourcesHumaines();
         try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(nomModulePrecedent));
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
         } catch (SuiviActionsUtilisateurException e) {
             throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
         }
     }
 
     public void activerModuleRessourcesHumaines() throws ControllerException {
-        nomModuleCourant = NomModule.RESSOURCES_HUMAINES;
+        moduleCourant = ihm.getRessourcesHumainesController();
         contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
 //        ihm.getRessourcesHumainesController().fireActivation();
         majTitre();
@@ -1130,7 +1114,7 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleDisponibilites(@SuppressWarnings("unused") ActionEvent event) {
         try {
             afficherModuleDisponibilites();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des disponibilités.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des disponibilités", Exceptions.causes(e));
         }
@@ -1139,22 +1123,23 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleDisponibilites() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
-        if (nomModuleCourant == NomModule.DISPONIBILITES) {
+        //noinspection ObjectEquality
+        if (moduleCourant == ihm.getDisponibilitesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
         activerModuleDisponibilites();
         try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(nomModulePrecedent));
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(modulePrecedent));
         } catch (SuiviActionsUtilisateurException e) {
             throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
         }
     }
 
     public void activerModuleDisponibilites() throws ControllerException {
-        nomModuleCourant = ApplicationController.NomModule.DISPONIBILITES;
+        moduleCourant = ihm.getDisponibilitesController();
         contentPane.getChildren().setAll(ihm.getDisponibilitesView());
 //        ihm.getDisponibilitesController().fireActivation();
         majTitre();
@@ -1164,7 +1149,7 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleTaches(@SuppressWarnings("unused") ActionEvent event) {
         try {
             afficherModuleTaches();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des tâches.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des tâches", Exceptions.causes(e));
         }
@@ -1173,22 +1158,23 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleTaches() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
-        if (nomModuleCourant == ApplicationController.NomModule.TACHES) {
+        //noinspection ObjectEquality
+        if (moduleCourant == ihm.getTachesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
         activerModuleTaches();
         try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(nomModulePrecedent));
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(modulePrecedent));
         } catch (SuiviActionsUtilisateurException e) {
             throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
         }
     }
 
     public void activerModuleTaches() throws ControllerException {
-        nomModuleCourant = NomModule.TACHES;
+        moduleCourant = ihm.getTachesController();
 //        ihm.getTachesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getTachesView());
 //        ihm.getTachesController().fireActivation();
@@ -1199,7 +1185,7 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleCharges(@SuppressWarnings("unused") ActionEvent event) {
         try {
             afficherModuleCharges();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des charges.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des charges", Exceptions.causes(e));
         }
@@ -1208,22 +1194,23 @@ public class ApplicationController extends AbstractController {
     public void afficherModuleCharges() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
-        if (nomModuleCourant == NomModule.CHARGES) {
+        //noinspection ObjectEquality
+        if (moduleCourant == ihm.getChargesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
         }
 
-        final NomModule nomModulePrecedent = nomModuleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'nomModuleCourant', donc il faut le mémoriser avant.
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
         activerModuleCharges();
         try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(nomModulePrecedent));
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(modulePrecedent));
         } catch (SuiviActionsUtilisateurException e) {
             throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
         }
     }
 
     public void activerModuleCharges() throws ControllerException {
-        nomModuleCourant = ApplicationController.NomModule.CHARGES;
+        moduleCourant = ihm.getChargesController();
 //        ihm.getChargesController().definirMenuContextuel();
         contentPane.getChildren().setAll(ihm.getChargesView());
 //        ihm.getChargesController().fireActivation();
@@ -1249,14 +1236,16 @@ public class ApplicationController extends AbstractController {
 
             majBarreEtat();
 
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             throw new Exception("Impossible de définir la date d'état.", e);
         }
     }
 
+    @SuppressWarnings({"MethodWithMoreThanThreeNegations", "WeakerAccess"})
     public void definirDateEtat(@Null LocalDate dateEtat) throws ControllerException {
         if (dateEtat != null) {
             if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
+                //noinspection AssignmentToMethodParameter
                 dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
             }
         }
@@ -1408,7 +1397,7 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    private boolean perteDonneesAceeptee() {
+    private boolean estAcceptableDePerdreDesDonnees() {
         if (!planChargeBean.aBesoinEtreSauvegarde()) {
             return true;
         }

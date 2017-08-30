@@ -137,13 +137,13 @@
                                       disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                             <MenuItem text="Voir l'importance de la tâche"
                                       disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <SeparatorMenuItem/>
                             <MenuItem text="Voir la tâche dans le plan de charge"
                                       onAction="#afficherPlanification"/>
                             <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
-                            <SeparatorMenuItem/>
                             <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
                                       onAction="#afficherTacheDansOutilTicketing"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
                         </items>
                     </ContextMenu>
                 </contextMenu>

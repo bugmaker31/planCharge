@@ -79,6 +79,22 @@ public class PlanChargeIhm extends Application {
 
 
     @NotNull
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
+
+
+    public static PlanChargeIhm instance() {
+        return instance;
+    }
+
+    private static PlanChargeIhm instance;
+
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+
+    @NotNull
     public static ValidationSupport validationSupport() {
         // Cf. https://stackoverflow.com/questions/29607080/textfield-component-validation-with-controls-fx
         ValidationSupport validationSupport = new ValidationSupport();
@@ -93,15 +109,6 @@ public class PlanChargeIhm extends Application {
 
 
     @NotNull
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeIhm.class);
-
-    public static PlanChargeIhm instance() {
-        return instance;
-    }
-
-    private static PlanChargeIhm instance;
-
-    @NotNull
     private static Map<String, PopupWindow> popups = new HashMap<>();
 
     //    private static Contexte contexte = Contexte.instance();
@@ -110,24 +117,12 @@ public class PlanChargeIhm extends Application {
 
     private static boolean estEnDeveloppement = false; // Par défaut.
 
+
     @NotNull
     private Stage primaryStage;
 
-
-    @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
-
-
     @NotNull
     private BorderPane applicationView;
-    /*
-        @NotNull
-        private BorderPane errorView;
-    */
-/*
-    @NotNull
-    private Region workProgressView;
-*/
     @NotNull
     private Region joursFeriesView;
     @NotNull
@@ -138,7 +133,6 @@ public class PlanChargeIhm extends Application {
     private Region tachesView;
     @NotNull
     private Region chargesView;
-
 
     @NotNull
     private Pane contentPane;
@@ -213,6 +207,31 @@ public class PlanChargeIhm extends Application {
         return applicationController;
     }
 
+    public DisponibilitesController getDisponibilitesController() {
+        return disponibilitesController;
+    }
+
+    @NotNull
+    public JoursFeriesController getJoursFeriesController() {
+        return joursFeriesController;
+    }
+
+    @NotNull
+    public RessourcesHumainesController getRessourcesHumainesController() {
+        return ressourcesHumainesController;
+    }
+
+    public TachesController getTachesController() {
+        return tachesController;
+    }
+
+    public ChargesController getChargesController() {
+        return chargesController;
+    }
+
+    @NotNull
+    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
 
     public <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
         cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
@@ -252,33 +271,6 @@ public class PlanChargeIhm extends Application {
         );
     }
 
-    public DisponibilitesController getDisponibilitesController() {
-        return disponibilitesController;
-    }
-
-    @NotNull
-    public JoursFeriesController getJoursFeriesController() {
-        return joursFeriesController;
-    }
-
-    @NotNull
-    public RessourcesHumainesController getRessourcesHumainesController() {
-        return ressourcesHumainesController;
-    }
-
-    public TachesController getTachesController() {
-        return tachesController;
-    }
-
-    public ChargesController getChargesController() {
-        return chargesController;
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 
     /**
      * Constructor
@@ -310,6 +302,64 @@ public class PlanChargeIhm extends Application {
 
         LOGGER.info("Application initialisée.");
     }
+
+    @Override
+    public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
+        try {
+            LOGGER.debug("Application en cours de démarrage...");
+
+            this.primaryStage = primaryStage;
+
+            primaryStage.setTitle(APP_NAME);
+            //
+            primaryStage.setScene(new Scene(applicationView));
+            //
+            primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
+            //
+            // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
+            Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+            double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
+            double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
+            primaryStage.setWidth(screenWidth);
+            primaryStage.setHeight(screenHeight);
+            primaryStage.setResizable(true);
+//            primaryStage.setFullScreen(true);
+            primaryStage.setMaximized(true);
+            //
+            primaryStage.show();
+
+            // Chargement des données utilisées dernièrement (if any) :
+            LocalDate dateEtatPrec = dateEtatPrecedente();
+            if (dateEtatPrec != null) {
+                applicationController.charger(dateEtatPrec);
+            }
+            // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
+            if (estEnDeveloppement) {
+//                applicationController.afficherModuleJoursFeries();
+//                applicationController.afficherModuleRessourcesHumaines();
+                //noinspection HardcodedFileSeparator
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//                applicationController.afficherModuleDisponibilites();
+//                applicationController.afficherModuleTaches();
+//                applicationController.afficherModuleCharges();
+            }
+
+            LOGGER.info("Application démarrée.");
+        } catch (Throwable e) {
+            String erreur = "Impossible de démarrer l'IHM.";
+            LOGGER.error(erreur, e);
+            throw new Exception(erreur, e);
+        }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        LOGGER.info("Application en cours d'arrêt...");
+        super.stop();
+        LOGGER.info("Application arrêtée.");
+        Platform.exit();
+    }
+
 
     private void chargerParametresApplicatifs() throws Exception {
         try {
@@ -739,68 +789,11 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    @Override
-    public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
-        try {
-            LOGGER.debug("Application en cours de démarrage...");
-
-            this.primaryStage = primaryStage;
-
-            primaryStage.setTitle(APP_NAME);
-            //
-            primaryStage.setScene(new Scene(applicationView));
-            //
-            primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
-            //
-            // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
-            Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
-            double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
-            double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
-            primaryStage.setWidth(screenWidth);
-            primaryStage.setHeight(screenHeight);
-            primaryStage.setResizable(true);
-//            primaryStage.setFullScreen(true);
-            primaryStage.setMaximized(true);
-            //
-            primaryStage.show();
-
-            // Chargement des données utilisées dernièrement (if any) :
-            LocalDate dateEtatPrec = dateEtatPrecedente();
-            if (dateEtatPrec != null) {
-                applicationController.charger(dateEtatPrec);
-            }
-            // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
-            if (estEnDeveloppement) {
-//                applicationController.afficherModuleJoursFeries();
-//                applicationController.afficherModuleRessourcesHumaines();
-                //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
-//                applicationController.afficherModuleDisponibilites();
-//                applicationController.afficherModuleTaches();
-//                applicationController.afficherModuleCharges();
-            }
-
-            LOGGER.info("Application démarrée.");
-        } catch (Throwable e) {
-            String erreur = "Impossible de démarrer l'IHM.";
-            LOGGER.error(erreur, e);
-            throw new Exception(erreur, e);
-        }
-    }
-
     @SuppressWarnings("ConstantConditions")
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
         return LocalDate.of(2017, 4, 17);
-    }
-
-    @Override
-    public void stop() throws Exception {
-        LOGGER.info("Application en cours d'arrêt...");
-        super.stop();
-        LOGGER.info("Application arrêtée.");
-        Platform.exit();
     }
 
     public void definirTitre(String titre) {

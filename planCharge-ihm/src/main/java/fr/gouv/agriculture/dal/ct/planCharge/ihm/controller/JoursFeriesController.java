@@ -1,9 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
@@ -25,7 +25,7 @@ import java.time.LocalDate;
  *
  * @author frederic.danna
  */
-public class JoursFeriesController extends AbstractController {
+public class JoursFeriesController extends AbstractController implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JoursFeriesController.class);
 
@@ -63,11 +63,6 @@ public class JoursFeriesController extends AbstractController {
     private TableColumn<JourFerieBean, String> descriptionColumn;
 
 
-    //    @Autowired
-    @NotNull
-    PlanChargeIhm ihm = PlanChargeIhm.instance();
-
-
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -79,6 +74,15 @@ public class JoursFeriesController extends AbstractController {
         }
         instance = this;
     }
+
+
+    // Module
+
+    @Override
+    public String getTitre() {
+        return "Jours fériés";
+    }
+
 
     /**
      * Initializes the controller class. This method is automatically called
@@ -165,7 +169,7 @@ public class JoursFeriesController extends AbstractController {
     private void supprimerJourFerie(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimerJourFerie...");
 
-        JourFerieBean focusedItem = joursFeriesTable.getFocusModel().getFocusedItem();
+        JourFerieBean focusedItem = TableViews.selectedItem(joursFeriesTable);
         if (focusedItem == null) {
             LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");
             return;

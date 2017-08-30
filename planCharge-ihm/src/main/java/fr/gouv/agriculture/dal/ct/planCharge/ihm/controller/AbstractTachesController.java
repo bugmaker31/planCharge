@@ -291,14 +291,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "globaux" (à la TableView, pas sur chaque TableColumn) :
         //
-        // FIXME FDA 2017/08 Ne fonctionne que si l'utilisateur a focusé sur la table avant de taper Ctrl+F. Il faudrait ajouter le handler sur la Scene du "primary" Stage, mais ce dernier n'est pas encore initialisé (NPE).
-        getTachesTable().setOnKeyReleased(event -> {
-            if (event.isControlDown() && (event.getCode() == KeyCode.F)) {
-                filtreGlobalComponent.show();
-                filtreGlobalComponent.requestFocus();
-                event.consume(); // TODO FDA 2017/08 Confirmer.
-            }
-        });
         enregistrerListenersSurFiltres();
         // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
         SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
@@ -417,8 +409,25 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         */
 
+        // FIXME FDA 2017/08 Ne fonctionne que si l'utilisateur a focusé sur la table avant de taper Ctrl+F. Il faudrait ajouter le handler sur la Scene du "primary" Stage, mais ce dernier n'est pas encore initialisé (NPE).
+        getTachesTable().setOnKeyReleased(event -> {
+            if (event.isControlDown() && (event.getCode() == KeyCode.F)) {
+                filtreGlobalComponent.show();
+                filtreGlobalComponent.requestFocus();
+                event.consume(); // TODO FDA 2017/08 Confirmer.
+                return;
+            }
+            if (event.getCode() == KeyCode.DELETE) {
+                supprimerTacheSelectionnee();
+                event.consume(); // TODO FDA 2017/08 Confirmer.
+                //noinspection UnnecessaryReturnStatement
+                return;
+            }
+        });
+
         LOGGER.info("Initialisé.");
     }
+
 
 /*
     */
@@ -621,4 +630,25 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         ihm.getPrimaryStage().setScene(new Scene(scrollPane));
     }
+
+
+    @FXML
+    private void supprimer(@NotNull ActionEvent actionEvent) {
+        LOGGER.debug("supprimer...");
+        supprimerTacheSelectionnee();
+    }
+
+    private void supprimerTacheSelectionnee() {
+        TB focusedItem = TableViews.selectedItem(getTachesTable());
+        if (focusedItem == null) {
+            LOGGER.debug("Aucune tâche sélectionnée, donc on en sait pas que supprimer, on ne fait rien.");
+            return;
+        }
+        supprimer(focusedItem);
+    }
+
+    private void supprimer(@NotNull TB tacheBean) {
+        getTachesBeans().remove(tacheBean);
+    }
+
 }

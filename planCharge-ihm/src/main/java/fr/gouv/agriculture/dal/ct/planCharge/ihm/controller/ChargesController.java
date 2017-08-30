@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
@@ -48,7 +49,7 @@ import java.util.TreeMap;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ChargesController extends AbstractTachesController<PlanificationTacheBean> {
+public class ChargesController extends AbstractTachesController<PlanificationTacheBean> implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
 
@@ -64,7 +65,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         FORMAT_CHARGE.setMinimumFractionDigits(0); // Les divisions de nbrs entiers par 8 tombent parfois juste (pas de décimale).
         FORMAT_CHARGE.setMaximumFractionDigits(3); // Les divisions de nbrs entiers par 8 se terminent par ".125", "0.25", ".325", ".5", ".625", ".75" ou ".825".
     }
-
 
     /*
      La couche métier :
@@ -253,6 +253,14 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
 
+    // Module
+
+    @Override
+    public String getTitre() {
+        return "Charge";
+    }
+
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -265,52 +273,55 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
+        planificationsTable.setCalendrierColumns(
+                semaine1Column,
+                semaine2Column,
+                semaine3Column,
+                semaine4Column,
+                semaine5Column,
+                semaine6Column,
+                semaine7Column,
+                semaine8Column,
+                semaine9Column,
+                semaine10Column,
+                semaine11Column,
+                semaine12Column
+        );
+
 //        ihm.getApplicationController().getDateEtatPicker().setValue(planChargeBean.getDateEtat());
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        //noinspection ClassHasNoToStringMethod
-        class ChargeSemaineCellCallback implements Callback<CellDataFeatures<PlanificationTacheBean, Double>, ObservableValue<Double>> {
-            private final int noSemaine;
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
+            int finalNoSemaine = noSemaine;
+            //noinspection OverlyComplexAnonymousInnerClass
+            column.setCellValueFactory(new Callback<CellDataFeatures<PlanificationTacheBean, Double>, ObservableValue<Double>>() {
 
-            public ChargeSemaineCellCallback(int noSemaine) {
-                this.noSemaine = noSemaine;
-            }
-
-            @Null
-            @Override
-            public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") CellDataFeatures<PlanificationTacheBean, Double> cell) {
-                if (planChargeBean.getDateEtat() == null) {
-                    return null;
-                }
-                try {
-                    PlanificationTacheBean planifBean = cell.getValue();
-                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    if (!planifBean.aChargePlanifiee(debutPeriode, finPeriode)) {
-                        // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
+                @Null
+                @Override
+                public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") CellDataFeatures<PlanificationTacheBean, Double> cell) {
+                    if (planChargeBean.getDateEtat() == null) {
                         return null;
                     }
-                    DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode, finPeriode);
-                    return nouvelleCharge.getValue().equals(0.0) ? null : nouvelleCharge.asObject();
-                } catch (IhmException e) {
-                    LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°" + noSemaine + " pour la tâche " + cell.getValue().noTache() + ".", e);
-                    return null;
+                    try {
+                        PlanificationTacheBean planifBean = cell.getValue();
+                        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((finalNoSemaine - 1) * 7); // // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                        LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                        if (!planifBean.aChargePlanifiee(debutPeriode, finPeriode)) {
+                            // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
+                            return null;
+                        }
+                        DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode, finPeriode);
+                        return nouvelleCharge.getValue().equals(0.0) ? null : nouvelleCharge.asObject();
+                    } catch (IhmException e) {
+                        LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°" + finalNoSemaine + " pour la tâche " + cell.getValue().noTache() + ".", e);
+                        return null;
+                    }
                 }
-            }
+            });
         }
-        semaine1Column.setCellValueFactory(new ChargeSemaineCellCallback(1));
-        semaine2Column.setCellValueFactory(new ChargeSemaineCellCallback(2));
-        semaine3Column.setCellValueFactory(new ChargeSemaineCellCallback(3));
-        semaine4Column.setCellValueFactory(new ChargeSemaineCellCallback(4));
-        semaine5Column.setCellValueFactory(new ChargeSemaineCellCallback(5));
-        semaine6Column.setCellValueFactory(new ChargeSemaineCellCallback(6));
-        semaine7Column.setCellValueFactory(new ChargeSemaineCellCallback(7));
-        semaine8Column.setCellValueFactory(new ChargeSemaineCellCallback(8));
-        semaine9Column.setCellValueFactory(new ChargeSemaineCellCallback(9));
-        semaine10Column.setCellValueFactory(new ChargeSemaineCellCallback(10));
-        semaine11Column.setCellValueFactory(new ChargeSemaineCellCallback(11));
-        semaine12Column.setCellValueFactory(new ChargeSemaineCellCallback(12));
         chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeTotaleProperty().asObject());
+
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
@@ -351,6 +362,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
+        ihm.interdireEdition(chargePlanifieeColumn, "Cette colonne n'est pas saisissable, elle est calculée.");
+
+        // Paramétrage du formatage qui symbolise les incohérences/surcharges/etc. :
         //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
@@ -376,71 +390,33 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
-        //noinspection LimitedScopeInnerClass
-        final class ChargeSemaineEditHandler implements EventHandler<CellEditEvent<PlanificationTacheBean, Double>> {
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
+            int finalNoSemaine = noSemaine;
+            column.setOnEditCommit(new EventHandler<CellEditEvent<PlanificationTacheBean, Double>>() {
 
-            private final int noSemaine;
+                @Override
+                public void handle(CellEditEvent<PlanificationTacheBean, Double> event) {
 
-            private ChargeSemaineEditHandler(int noSemaine) {
-                super();
-                this.noSemaine = noSemaine;
-            }
+                    PlanificationTacheBean planifBean = event.getRowValue();
+                    try {
+                        LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((finalNoSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                        LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                        planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
+                    } catch (IhmException e) {
+                        LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge de la tâche " + planifBean.noTache() + " pour la semaine n+" + finalNoSemaine + ".", e);
+                    }
 
-            @Override
-            public void handle(CellEditEvent<PlanificationTacheBean, Double> event) {
-
-                PlanificationTacheBean planifBean = event.getRowValue();
-                try {
-                    LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                    planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
-                } catch (IhmException e) {
-                    LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge d'une semaine.", e);
+                    planifBean.majChargePlanifieeTotale();
                 }
-
-                planifBean.majChargePlanifieeTotale();
-            }
+            });
         }
-        semaine1Column.setOnEditCommit(new ChargeSemaineEditHandler(1));
-        semaine2Column.setOnEditCommit(new ChargeSemaineEditHandler(2));
-        semaine3Column.setOnEditCommit(new ChargeSemaineEditHandler(3));
-        semaine4Column.setOnEditCommit(new ChargeSemaineEditHandler(4));
-        semaine5Column.setOnEditCommit(new ChargeSemaineEditHandler(5));
-        semaine6Column.setOnEditCommit(new ChargeSemaineEditHandler(6));
-        semaine7Column.setOnEditCommit(new ChargeSemaineEditHandler(7));
-        semaine8Column.setOnEditCommit(new ChargeSemaineEditHandler(8));
-        semaine9Column.setOnEditCommit(new ChargeSemaineEditHandler(9));
-        semaine10Column.setOnEditCommit(new ChargeSemaineEditHandler(10));
-        semaine11Column.setOnEditCommit(new ChargeSemaineEditHandler(11));
-        semaine12Column.setOnEditCommit(new ChargeSemaineEditHandler(12));
         //
-        semaine1Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 1));
-        semaine2Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 2));
-        semaine3Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 3));
-        semaine4Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 4));
-        semaine5Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 5));
-        semaine6Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 6));
-        semaine7Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 7));
-        semaine8Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 8));
-        semaine9Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 9));
-        semaine10Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 10));
-        semaine11Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 11));
-        semaine12Column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, 12));
-
-        planificationsTable.setCalendrierColumns(
-                semaine1Column,
-                semaine2Column,
-                semaine3Column,
-                semaine4Column,
-                semaine5Column,
-                semaine6Column,
-                semaine7Column,
-                semaine8Column,
-                semaine9Column,
-                semaine10Column,
-                semaine11Column,
-                semaine12Column
-        );
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
+            int finalNoSemaine = noSemaine;
+            column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, finalNoSemaine));
+        }
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 

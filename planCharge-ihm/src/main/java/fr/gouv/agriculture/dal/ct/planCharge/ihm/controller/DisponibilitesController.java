@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.PercentageStringConverter;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -50,7 +51,7 @@ import java.util.*;
  * @author frederic.danna
  */
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields"})
-public class DisponibilitesController extends AbstractController {
+public class DisponibilitesController extends AbstractController implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesController.class);
 
@@ -800,7 +801,17 @@ public class DisponibilitesController extends AbstractController {
         return nbrsJoursDispoMaxProfilBeans;
     }
 
-// Méthodes :
+
+    // Méthodes :
+
+
+    // Module
+
+    @Override
+    public String getTitre() {
+        return "Disponibilités";
+    }
+
 
     @FXML
     protected void initialize() throws IhmException {

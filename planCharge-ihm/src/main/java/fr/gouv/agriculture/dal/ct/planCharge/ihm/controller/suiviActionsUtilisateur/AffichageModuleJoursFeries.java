@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ApplicationController;
+import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,14 +12,14 @@ import javax.validation.constraints.NotNull;
  */
 public class AffichageModuleJoursFeries extends AffichageModule {
 
-    public AffichageModuleJoursFeries(ApplicationController.NomModule nomModulePrecedent) {
+    public AffichageModuleJoursFeries(Module nomModulePrecedent) {
         super(nomModulePrecedent);
     }
 
     @NotNull
     @Override
-    ApplicationController.NomModule getNomModule() {
-        return ApplicationController.NomModule.JOURS_FERIES;
+    Module getModule() {
+        return PlanChargeIhm.instance().getJoursFeriesController();
     }
 
 }
