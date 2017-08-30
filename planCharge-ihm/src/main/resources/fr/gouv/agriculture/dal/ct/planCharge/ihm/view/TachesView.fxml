@@ -11,22 +11,13 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
-        <Accordion>
+        <!--suppress JavaFxUnresolvedFxIdReference -->
+        <Accordion fx:id="filtresAccordion">
             <panes>
-                <TitledPane animated="false" text="Filtres">
+                <!--suppress JavaFxUnresolvedFxIdReference -->
+                <TitledPane fx:id="filtresPane" animated="false" text="Filtres">
                     <HBox spacing="2" alignment="CENTER_LEFT">
-                        <!--
-                                                <HBox alignment="BASELINE_LEFT">
-                                                    <Label text="Filtre global : "/>
-                                                    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
-                                                        <tooltip>
-                                                            <Tooltip
-                                                                    text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
-                                                        </tooltip>
-                                                    </TextField>
-                                                </HBox>
-                        -->
-                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent"/>
+                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion" titledPane="$filtresPane"/>
                         <SegmentedButton>
                             <buttons>
                                 <!--TODO FDA 2017/08 Coder l'action.-->

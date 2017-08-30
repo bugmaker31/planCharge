@@ -18,11 +18,13 @@
     </fx:define>
     <top>
         <VBox>
-            <Accordion>
+            <!--suppress JavaFxUnresolvedFxIdReference -->
+            <Accordion fx:id="filtresAccordion">
                 <panes>
-                    <TitledPane animated="false" text="Filtres">
+                    <!--suppress JavaFxUnresolvedFxIdReference -->
+                    <TitledPane fx:id="filtresPane" animated="false" text="Filtres">
                         <HBox spacing="2" alignment="CENTER_LEFT">
-                            <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent"/>
+                            <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion" titledPane="$filtresPane"/>
                             <VBox alignment="CENTER_LEFT">
                                 <SegmentedButton>
                                     <buttons>

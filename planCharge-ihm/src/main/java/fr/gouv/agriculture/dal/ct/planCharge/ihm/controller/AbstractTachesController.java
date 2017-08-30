@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
@@ -288,8 +289,16 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
         importanceColumn.setComparator(ImportanceComparator.COMPARATEUR);
 
-        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        // Ajout des filtres "globaux" (à la TableView, pas sur chaque TableColumn) :
         //
+        // FIXME FDA 2017/08 Ne fonctionne que si l'utilisateur a focusé sur la table avant de taper Ctrl+F. Il faudrait ajouter le handler sur la Scene du "primary" Stage, mais ce dernier n'est pas encore initialisé (NPE).
+        getTachesTable().setOnKeyReleased(event -> {
+            if (event.isControlDown() && (event.getCode() == KeyCode.F)) {
+                filtreGlobalComponent.show();
+                filtreGlobalComponent.requestFocus();
+                event.consume(); // TODO FDA 2017/08 Confirmer.
+            }
+        });
         enregistrerListenersSurFiltres();
         // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
         SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
@@ -318,7 +327,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Gestion des undo/redo :
         //
-        //noinspection ClassHasNoToStringMethod
+        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
         final class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
 
             @NotNull
@@ -423,13 +432,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         });
         */
-
-/*
-        // Définition du menu contextuel :
-        //
-        // Cf. http://o7planning.org/en/11115/javafx-contextmenu-tutorial
-        definirMenuContextuel();
-*/
 
         LOGGER.info("Initialisé.");
     }
