@@ -633,12 +633,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
 
     @FXML
-    private void supprimer(@NotNull ActionEvent actionEvent) {
+    private final void supprimer(@NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimer...");
         supprimerTacheSelectionnee();
     }
 
-    private void supprimerTacheSelectionnee() {
+    private final void supprimerTacheSelectionnee() {
         TB focusedItem = TableViews.selectedItem(getTachesTable());
         if (focusedItem == null) {
             LOGGER.debug("Aucune tâche sélectionnée, donc on en sait pas que supprimer, on ne fait rien.");
@@ -647,8 +647,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         supprimer(focusedItem);
     }
 
-    private void supprimer(@NotNull TB tacheBean) {
+    private final void supprimer(@NotNull TB tacheBean) {
         getTachesBeans().remove(tacheBean);
+        TableViews.clearSelection(getTachesTable()); // Contournement pour [issue#84:1 appui sur DELETE supprime 2 lignes]. Sinon, 2 lignes sont supprimées. Va savoir pourquoi...
     }
 
 }
