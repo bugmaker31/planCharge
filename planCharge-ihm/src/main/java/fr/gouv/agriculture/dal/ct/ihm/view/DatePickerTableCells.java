@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class DatePickerTableCells {
 
     public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forTableColumn() {
-        return p -> new DatePickerTableCell<>(PlanChargeIhm.PATRON_FORMAT_DATE);
+        return p -> new DatePickerTableCell<>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE);
     }
 
     public static <S> Callback<TableColumn<S, LocalDate>, TableCell<S, LocalDate>> forRequiredTableColumn() {

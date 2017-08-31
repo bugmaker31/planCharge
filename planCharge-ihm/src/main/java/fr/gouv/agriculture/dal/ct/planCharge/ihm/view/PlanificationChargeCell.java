@@ -37,23 +37,24 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     @Override
     public void updateItem(@Null Double item, boolean empty) {
         super.updateItem(item, empty);
-
+        formater(item, empty);
         styler(item);
+    }
 
+    private void formater(@Null Double item, boolean empty) {
         if ((item == null) || empty) {
             setText(null);
-            setGraphic(null);
             return;
         }
+        //noinspection UnnecessaryLocalVariable
+        Double charge = item;
+        setText((charge == 0.0) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
     }
 
     private void styler(@Null Double item) {
 
         // Réinit du texte et du style de la cellule :
-        setText("");
-        getStyleClass().remove("avantPeriodeDemandee");
-        getStyleClass().remove("pendantPeriodeDemandee");
-        getStyleClass().remove("apresPeriodeDemandee");
+        getStyleClass().removeAll("avantPeriodeDemandee", "pendantPeriodeDemandee", "apresPeriodeDemandee");
 
 /* Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée), ne seront pas décorées.
         // Stop, si cellule vide :
@@ -70,13 +71,11 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
             return;
         }
 
+        if (planChargeBean.getDateEtat() == null) {
+            return;
+        }
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-
-        // Formatage du texte de la cellule :
-        //noinspection UnnecessaryLocalVariable
-        Double charge = item;
-        setText(((charge == null) || (charge == 0.0)) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
 
         // Formatage du style (CSS) de la cellule :
         if (planifBean.getDebut() != null) {

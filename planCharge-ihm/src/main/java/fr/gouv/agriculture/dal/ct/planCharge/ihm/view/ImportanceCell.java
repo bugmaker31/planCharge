@@ -5,12 +5,15 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ImportanceBean;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by frederic.danna on 14/05/2017.
@@ -20,10 +23,20 @@ import javax.validation.constraints.Null;
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
 
+    public static final PseudoClass AVEC_ENGAGEMENT = PseudoClass.getPseudoClass("avecEngagement");
+    public static final PseudoClass MAXIMALE = PseudoClass.getPseudoClass("maximale");
+    public static final PseudoClass HAUTE = PseudoClass.getPseudoClass("haute");
+    public static final PseudoClass NORMALE = PseudoClass.getPseudoClass("normale");
+    public static final PseudoClass BASSE = PseudoClass.getPseudoClass("basse");
+    public static final PseudoClass MINIMALE = PseudoClass.getPseudoClass("minimale");
+    //
+    public static final List<PseudoClass> PSEUDO_CLASSES = Arrays.asList(AVEC_ENGAGEMENT, MAXIMALE, HAUTE, NORMALE, BASSE, MINIMALE);
+
+
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportanceCell.class);
 
-//    @Autowired
+    //    @Autowired
     @NotNull
     private final PlanChargeIhm ihm = PlanChargeIhm.instance();
 
@@ -38,42 +51,45 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
     public void updateItem(@Null ImportanceBean item, boolean empty) {
         super.updateItem(item, empty);
 
-        getStyleClass().removeAll("importanceAvecEngagement", "importanceMaximale", "importanceHaute", "importanceNormale", "importanceBasse");
+        PSEUDO_CLASSES.parallelStream()
+                .forEach(pseudoClass -> pseudoClassStateChanged(pseudoClass, false));
 
-        if (empty || (getItem() == null)) {
+        if (empty || (item == null)) {
             return;
         }
 
         try {
-            String styleClass = importanceStyleClass();
-            getStyleClass().add(styleClass);
+            PseudoClass pseudoClass = importanceStyleClass(item);
+            if (pseudoClass != null) {
+                pseudoClassStateChanged(pseudoClass, true);
+            }
         } catch (IhmException e) {
             LOGGER.error("Impossible de màj le style de la cellule Importance de la ligne n°'" + (getIndex() + 1) + "'.", e);
         }
     }
 
     @Null
-    private String importanceStyleClass() throws IhmException {
-        String codeImportance = getItem().getCode();
+    private PseudoClass importanceStyleClass(@NotNull ImportanceBean item) throws IhmException {
+        String codeImportance = item.getCode();
         if (codeImportance == null) {
             return null;
         }
-        if (codeImportance.equals("Avec engag.")) {
-            return "importanceAvecEngagement";
+        switch (codeImportance) {
+            case "Avec engag.":
+                return AVEC_ENGAGEMENT;
+            case "Maximale":
+                return MAXIMALE;
+            case "Haute":
+                return HAUTE;
+            case "Normale":
+                return NORMALE;
+            case "Basse":
+                return BASSE;
+            case "Minimale":
+                return MINIMALE;
+            default:
+                throw new IhmException("Importance non gérée : '" + codeImportance + "'.");
         }
-        if (codeImportance.equals("Maximale")) {
-            return "importanceMaximale";
-        }
-        if (codeImportance.equals("Haute")) {
-            return "importanceHaute";
-        }
-        if (codeImportance.equals("Normale")) {
-            return "importanceNormale";
-        }
-        if (codeImportance.equals("Basse")) {
-            return "importanceBasse";
-        }
-        throw new IhmException("Importance non gérée : '" + codeImportance + "'.");
     }
 
 }

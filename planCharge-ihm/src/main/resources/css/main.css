@@ -167,38 +167,38 @@ Tâches :
     -fx-text-alignment: baseline-center;  <-- Sans effet...
 }
 */
-
-.charge-column {
-    -fx-alignment: baseline-right;
+.echeance-column: {
+}
+.echeance-column: echue {
+    -fx-background-color: #FF00FF;
+    -fx-text-fill: white;
 }
 
-
-.importanceAvecEngagement {
+.importance-column {
+}
+.importance-column: avecEngagement {
     -fx-background-color: #990000;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
-
-.importanceMaximale {
+.importance-column: maximale {
     -fx-background-color: #CC3300;
     -fx-text-fill: white;
-    /*-fx-font-weight: bold;*/
 }
-
-.importanceHaute {
+.importance-column: haute {
     -fx-background-color: #FF6633;
-    /*-fx-font-weight: normal;*/
 }
-
-.importanceNormale {
+.importance-column: normale {
     -fx-background-color: #FF9966;
 }
-
-.importanceBasse {
+.importance-column: basse {
     -fx-background-color: #FFCC99;
 }
+.importance-column: minimale {
+}
 
-.importanceNormale {
+.charge-column {
+    -fx-alignment: baseline-right;
 }
 
 

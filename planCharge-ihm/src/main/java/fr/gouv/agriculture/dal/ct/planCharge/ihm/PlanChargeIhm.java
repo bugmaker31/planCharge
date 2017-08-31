@@ -75,6 +75,9 @@ public class PlanChargeIhm extends Application {
     public static final String PATRON_FORMAT_DATE = "ccc d MMM yyyy";
 
     @NotNull
+    public static final String PROMPT_FORMAT_DATE = "JJ/MM[/[AA]AA]";
+
+    @NotNull
     public static final DateTimeFormatter FORMAT_DATE = DateTimeFormatter.ofPattern(PATRON_FORMAT_DATE);
 
 

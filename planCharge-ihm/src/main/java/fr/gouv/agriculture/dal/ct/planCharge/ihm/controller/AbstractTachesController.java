@@ -1,8 +1,10 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
@@ -22,6 +24,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -52,6 +55,8 @@ import java.util.function.BiFunction;
 public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
+
+    public static final PseudoClass PSEUDOCLASS_ECHUE = PseudoClass.getPseudoClass("echue");
 
 
     //    @Autowired
@@ -317,7 +322,50 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 },
                 planChargeBean.getStatutsBeans()));
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
-        echeanceColumn.setCellFactory(DatePickerTableCells.forRequiredTableColumn());
+        //noinspection OverlyComplexAnonymousInnerClass
+        echeanceColumn.setCellFactory(param -> new DatePickerTableCell<TB>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE) {
+
+            @Override
+            public void updateItem(@Null LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                styler(item, empty);
+            }
+
+            private void styler(@Null LocalDate item, boolean empty) {
+
+                // Réinit du style de la cellule :
+                pseudoClassStateChanged(PSEUDOCLASS_ECHUE, false);
+
+                // Stop, si cellule vide :
+                if (empty || (item == null)) {
+                    return;
+                }
+
+                // Récupération des infos sur la cellule :
+                //noinspection unchecked
+                TableRow<TB> tableRow = getTableRow();
+                if (tableRow == null) {
+                    // TODO FDA 2017/08 Comprendre pourquoi on tombe dans ce cas-là (pas de row !?) dans le cas de ce DatePickerTableCell uniquement (pas pour PlanificationChargeCell).
+                    return;
+                }
+                TB tacheBean = tableRow.getItem();
+                if (tacheBean == null) {
+                    return;
+                }
+                //noinspection UnnecessaryLocalVariable
+                LocalDate echeance = item;
+
+                if (planChargeBean.getDateEtat() == null) {
+                    return;
+                }
+                LocalDate dateEtat = planChargeBean.getDateEtat();
+
+                // Formatage du style (CSS) de la cellule :
+                if (dateEtat.isAfter(echeance)) {
+                    pseudoClassStateChanged(PSEUDOCLASS_ECHUE, true);
+                }
+            }
+        });
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         //noinspection OverlyComplexAnonymousInnerClass
@@ -577,6 +625,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreStatutToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
         filtrePeriodeToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
 
+        // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
+
         filtrer();
     }
 
@@ -587,76 +637,127 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private void filtrer() {
         filteredTachesBeans.setPredicate(this::estTacheAVoir);
+//        getTachesTable().refresh(); // Notamment pour réappliquer les styles CSS.
     }
 
     private boolean estTacheAVoir(@NotNull TB tache) {
-
-        if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
-            if (!tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
-                return false;
+        if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) == null) {
+//            return true;
+        } else {
+            if (tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
+                return true;
             }
         }
-        if (!estTacheAvecCategorieAVoir(tache)) return false;
-        if (!estTacheAvecStatutAVoir(tache)) return false;
-        if (!estTacheAvecPeriodeAVoir(tache)) return false;
+        if (filtreCategorieToutToggleButton.isSelected()) {
+//            return true;
+        } else {
+            if (estTacheAvecCategorieAVoir(tache)) {
+                return true;
+            }
+        }
+        if (filtreStatutToutToggleButton.isSelected()) {
+//            return true;
+        } else {
+            if (estTacheAvecStatutAVoir(tache)) {
+                    return true;
+            }
+        }
+        if (filtrePeriodeToutToggleButton.isSelected()) {
+//            return true;
+        } else {
+            if (estTacheAvecPeriodeAVoir(tache)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        // Par défaut, on affiche les tâches :
-        return true;
+    private boolean estTacheAvecCategorieAVoir(@NotNull TB tache) {
+/*
+        if (filtreCategorieToutToggleButton.isSelected()) {
+            return true;
+        }
+*/
+        if (filtreCategorieProjetToggleButton.isSelected()) {
+            if (tache.matcheCategorie(CategorieTacheDTO.PROJET.getCode())) {
+                return true;
+            }
+        }
+        if (filtreCategorieServiceToggleButton.isSelected()) {
+            if (tache.matcheCategorie(CategorieTacheDTO.SERVICE.getCode())) {
+                return true;
+            }
+        }
+        if (filtreCategorieOrganisationToggleButton.isSelected()) {
+            if (tache.matcheCategorie(CategorieTacheDTO.ORGANISATION_INTERNE.getCode())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("MethodWithMoreThanThreeNegations")
-    private boolean estTacheAvecStatutAVoir(@NotNull TB tache) {
+    private boolean estTacheAvecStatutAVoir(@NotNull TB tache){
+/*
+        if (filtreStatutToutToggleButton.isSelected()) {
+            return true;
+        }
+*/
         if (filtreStatutNouveauToggleButton.isSelected()) {
             //noinspection ConstantConditions
-            return tache.matcheStatut(StatutDTO.NOUVEAU.getCode());
+            if (tache.matcheStatut(StatutDTO.NOUVEAU.getCode())) {
+                return true;
+            }
         }
         if (filtreStatutEnCoursToggleButton.isSelected()) {
             //noinspection ConstantConditions
-            return tache.matcheStatut(StatutDTO.EN_COURS.getCode());
+            if (tache.matcheStatut(StatutDTO.EN_COURS.getCode())) {
+                return true;
+            }
         }
         if (filtreStatutEnAttenteToggleButton.isSelected()) {
             //noinspection ConstantConditions
-            return tache.matcheStatut(StatutDTO.EN_ATTENTE.getCode());
+            if (tache.matcheStatut(StatutDTO.EN_ATTENTE.getCode())) {
+                return true;
+            }
         }
         if (filtreStatutRecurrentToggleButton.isSelected()) {
             //noinspection ConstantConditions
-            if (!tache.matcheStatut(StatutDTO.RECURRENT.getCode())) {
-                return false;
+            if (tache.matcheStatut(StatutDTO.RECURRENT.getCode())) {
+                return true;
             }
         }
         if (filtreStatutReporteToggleButton.isSelected()) {
             //noinspection ConstantConditions
-            return tache.matcheStatut(StatutDTO.REPORTE.getCode());
+            if (tache.matcheStatut(StatutDTO.REPORTE.getCode())) {
+                return true;
+            }
         }
         if (filtreStatutClosToggleButton.isSelected()) {
             //noinspection ConstantConditions
-            return tache.matcheStatut(StatutDTO.ANNULE.getCode())
+            if (tache.matcheStatut(StatutDTO.ANNULE.getCode())
                     || tache.matcheStatut(StatutDTO.DOUBLON.getCode())
-                    || tache.matcheStatut(StatutDTO.TERMINE.getCode());
+                    || tache.matcheStatut(StatutDTO.TERMINE.getCode())) {
+                return true;
+            }
         }
-        return true;
-    }
-
-    private boolean estTacheAvecCategorieAVoir(@NotNull TB tache) {
-        if (filtreCategorieProjetToggleButton.isSelected()) {
-            return tache.matcheCategorie(CategorieTacheDTO.PROJET.getCode());
-        }
-        if (filtreCategorieServiceToggleButton.isSelected()) {
-            return tache.matcheCategorie(CategorieTacheDTO.SERVICE.getCode());
-        }
-        if (filtreCategorieOrganisationToggleButton.isSelected()) {
-            return tache.matcheCategorie(CategorieTacheDTO.ORGANISATION_INTERNE.getCode());
-        }
-        return true;
+        return false;
     }
 
     private boolean estTacheAvecPeriodeAVoir(@NotNull TB tache) {
+/*
+        if (filtrePeriodeToutToggleButton.isSelected()) {
+            return true;
+        }
+*/
         if (filtrePeriodeEchueToggleButton.isSelected()) {
             if ((tache.getEcheance() != null) && (planChargeBean.getDateEtat() != null)) {
-                return !tache.getEcheance().isAfter(planChargeBean.getDateEtat());
+                if (tache.getEcheance().isAfter(planChargeBean.getDateEtat())) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+                    return true;
+                }
             }
         }
-        return true;
+        return false;
     }
 
 

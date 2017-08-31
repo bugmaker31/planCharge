@@ -6,6 +6,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.LocalDateStringConverter;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -16,13 +17,16 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
     @NotNull
     private final String format;
     @NotNull
+    private final String prompt;
+    @NotNull
     private DatePicker datePicker;
 
 
-    public DatePickerTableCell(@NotNull String format) {
+    public DatePickerTableCell(@NotNull String format, @NotNull String promptText) {
         super(new LocalDateStringConverter(DateTimeFormatter.ofPattern(format), DateTimeFormatter.ofPattern(format)));
 
         this.format = format;
+        this.prompt = promptText;
         this.datePicker = createDatePicker();
     }
 
@@ -38,7 +42,7 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
 
     private DatePicker createDatePicker() {
         DatePicker newDatePicker = new DatePicker();
-        newDatePicker.setPromptText(format);
+        newDatePicker.setPromptText(prompt);
         newDatePicker.setEditable(true);
         newDatePicker.setShowWeekNumbers(true); // Par défaut.
 
@@ -54,7 +58,7 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
 
 
     @Override
-    public void updateItem(LocalDate item, boolean empty) {
+    public void updateItem(@Null LocalDate item, boolean empty) {
         super.updateItem(item, empty);
         datePicker.setValue(item);
     }
@@ -67,7 +71,7 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
     }
 
     @Override
-    public void commitEdit(LocalDate newValue) {
+    public void commitEdit(@Null LocalDate newValue) {
         super.commitEdit(newValue);
         hideDatePicker();
     }
