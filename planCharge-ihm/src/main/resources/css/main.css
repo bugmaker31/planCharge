@@ -174,29 +174,31 @@ Tâches :
 
 
 .importanceAvecEngagement {
-    -fx-background-color: #bc5a45;
+    -fx-background-color: #990000;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
 .importanceMaximale {
-    -fx-background-color: #f18973;
+    -fx-background-color: #CC3300;
     -fx-text-fill: white;
     -fx-font-weight: normal;
 }
 
 .importanceHaute {
-    -fx-background-color: #f4e1d2;
+    -fx-background-color: #FF6633;
     -fx-font-weight: normal;
 }
 
 .importanceNormale {
-    /*-fx-background-color: #fdf3f3;*/
+    -fx-background-color: #FF9966;
 }
 
 .importanceBasse {
-    -fx-background-color: #b2b2b2;
-    -fx-text-fill: white;
+    -fx-background-color: #FFCC99;
+}
+
+.importanceNormale {
 }
 
 
