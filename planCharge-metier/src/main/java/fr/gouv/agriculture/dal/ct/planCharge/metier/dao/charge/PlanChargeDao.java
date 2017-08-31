@@ -45,13 +45,11 @@ import java.util.*;
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
+@SuppressWarnings({"UseOfObsoleteDateTimeApi", "ClassHasNoToStringMethod"})
+public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
 
     public static final String CLEF_PARAM_REP_PERSISTANCE = "persistance.repertoire";
     public static final String CLEF_PARAM_PATRON_FICHIER = "persistance.patronFichier";
-
-    public static final double NBR_HEURES_OUVREES_DS_UN_JOUR = 8.0;
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeDao.class);
 
@@ -178,14 +176,14 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     @NotNull
     public File fichierPlanCharge(@NotNull LocalDate dateEtat) throws PlanChargeDaoException {
 
-        final String repPersistanceDonnees;
+        String repPersistanceDonnees;
         try {
             repPersistanceDonnees = params.getParametrage(CLEF_PARAM_REP_PERSISTANCE);
         } catch (KernelException e) {
             throw new PlanChargeDaoException("Impossible de déterminer le répetoire de persistance du plan de charge.", e);
         }
 
-        final String patronFicPersistanceDonnees;
+        String patronFicPersistanceDonnees;
         try {
             patronFicPersistanceDonnees = params.getParametrage(CLEF_PARAM_PATRON_FICHIER);
         } catch (KernelException e) {
@@ -202,21 +200,22 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     /**
      * Loads data from the specified file.
      *
-     * @param ficCalc
-     * @param rapport
+     * @param ficCalc fichier OOCalc
+     * @param rapport rapport de chargement du plan de charge
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     private PlanCharge plan(@NotNull File ficCalc, @NotNull RapportChargementPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge plan;
+        //noinspection OverlyBroadCatchBlock
         try {
             JAXBContext context = JAXBContext.newInstance(
                     PlanChargeXmlWrapper.class
             );
-            Unmarshaller um = context.createUnmarshaller();
+            Unmarshaller unmarshaller = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
             rapport.setAvancement("Lecture du fichier XML...");
-            wrapper = (PlanChargeXmlWrapper) um.unmarshal(ficCalc);
+            wrapper = (PlanChargeXmlWrapper) unmarshaller.unmarshal(ficCalc);
 
             ctrlVersionsEntreXmlEtAppli(wrapper.getVersionApplication(), wrapper.getVersionFormat());
 
@@ -259,22 +258,23 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     /**
      * Saves the current data to the specified file.
      *
-     * @param ficCalc
-     * @param rapport
+     * @param ficCalc fichier OOCalc
+     * @param rapport rapport de sérialisation
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
     private void serialiserPlanCharge(@NotNull File ficCalc, @NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
+        //noinspection OverlyBroadCatchBlock
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_ENCODING, "UTF8");
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF8");
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our data.
             wrapper.init(planCharge, rapport);
 
             // Marshalling and saving XML to the file.
-            m.marshal(wrapper, ficCalc);
+            marshaller.marshal(wrapper, ficCalc);
 
         } catch (Exception e) {
             throw new PlanChargeDaoException("Impossible de sérialiser le plan de charge dans le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
@@ -318,7 +318,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         return planCharge;
     }
 
-    private PlanCharge importer(@NotNull XSpreadsheetDocument calc, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException, LibreOfficeException {
+    private PlanCharge importer(@NotNull XSpreadsheetDocument calc, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         PlanCharge planCharge;
 
         try {
@@ -389,6 +389,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private Set<JourFerie> importerJoursFeries(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Set<JourFerie> joursFeries = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
             XCell cellule = Calc.findFirst("Congés et fêtes", plageRecherche);
@@ -424,6 +425,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private Set<Importance> importerImportances(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Set<Importance> importances = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
             XCell cellule = Calc.findFirst("Importances", plageRecherche);
@@ -458,6 +460,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private Set<Profil> importerProfils(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Set<Profil> profils = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A1:A300");
             XCell cellule = Calc.findFirst("Profils", plageRecherche);
@@ -493,6 +496,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private Set<ProjetAppli> importerProjetsApplis(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Set<ProjetAppli> projetsApplis = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A:A");
             //noinspection HardcodedFileSeparator
@@ -530,6 +534,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private Set<Statut> importerStatuts(@NotNull XSpreadsheet feuilleParams) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Set<Statut> statuts = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A:A");
             XCell cellule = Calc.findFirst("Statuts", plageRecherche);
@@ -565,6 +570,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     private Set<RessourceHumaine> importerRessourcesHumaines(XSpreadsheet feuilleParams) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Set<RessourceHumaine> ressourcesHumaines = new TreeSet<>(); // TreeSet (au lieu de hashSet) pour trier, juste pour faciliter le débogage.
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleParams, "A:A");
             XCell cellule = Calc.findFirst("Ressources", plageRecherche);
@@ -647,6 +653,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         //noinspection TooBroadScope
         int noColTrigramme = 1; // Les trigrammes des ressources sont en colonne 1.
 
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A:B"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
             //noinspection HardcodedFileSeparator
@@ -718,6 +725,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         //noinspection TooBroadScope
         int noColTrigramme = 1; // Les trigrammes des ressources sont en colonne 1.
 
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A:B"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
             //noinspection HardcodedFileSeparator
@@ -779,6 +787,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         }
     }
 
+    @SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
     @NotNull
     private Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> importerPctagesDispoMaxProfil(@NotNull XSpreadsheet feuilleDisponibilites,  @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         //noinspection TooBroadScope
@@ -791,6 +800,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         //noinspection TooBroadScope
         int noColTrigramme = 1; // Les trigrammes des ressources sont en colonne 1.
 
+        //noinspection OverlyBroadCatchBlock
         try {
             XCellRange plageRecherche = Calc.getCellRange(feuilleDisponibilites, "A:B"); // Les titres sont parfois en colonne A, parfois en B. On cherche dans les 2 colonnes.
             //noinspection HardcodedFileSeparator
@@ -829,7 +839,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                 }
 
                 PROFIL : {
-                    XCell codeProfilCell = Calc.getCell(feuilleDisponibilites, noColTrigramme + 1 - 1, noLig - 1);
+                    XCell codeProfilCell = Calc.getCell(feuilleDisponibilites, (noColTrigramme + 1) - 1, noLig - 1);
                     String codeProfil = Strings.epure(Calc.getString(codeProfilCell));
                     if (codeProfil == null) {
                         throw new PlanChargeDaoException("Profil non défini.");
@@ -945,7 +955,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                     int cptCol = noColDebut;
                     COL:
                     while (true) {
-                        LOGGER.debug("Colonne n°" + cptCol);
+                        LOGGER.debug("Colonne n°{}", cptCol);
 
                         if (Calc.isEmpty(feuilleCharges, cptCol - 1, noLigPeriodes - 1)) {
                             break COL;
@@ -954,7 +964,7 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
                         Date debutPeriode = Calc.getDate(feuilleCharges, cptCol - 1, noLigPeriodes - 1);
 
                         XCell chargeCell = Calc.getCell(feuilleCharges, cptCol - 1, cptLig - 1);
-//                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : chargeArrondie((Double) Calc.getDouble(chargeCell)));
+//                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : chargeService.chargeArrondie((Double) Calc.getDouble(chargeCell)));
                         Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : Calc.getDouble(chargeCell));
 
                         calendrier.get(tache).put(Dates.asLocalDate(debutPeriode), chargePlanifiee);
@@ -970,15 +980,12 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
         return planification;
     }
 
-    private Double chargeArrondie(@NotNull Double charge) {
-        return Math.round(charge * NBR_HEURES_OUVREES_DS_UN_JOUR) / NBR_HEURES_OUVREES_DS_UN_JOUR;
-    }
-
-    private Tache importerTache(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, int noLig, @NotNull CategorieTache categorie, @Null SousCategorieTache sousCategorie) throws PlanChargeDaoException, LibreOfficeException {
+    private Tache importerTache(@NotNull XSpreadsheet feuilleCharges, @NotNull XSpreadsheet feuilleTaches, int noLig, @NotNull CategorieTache categorie, @Null SousCategorieTache sousCategorie) throws PlanChargeDaoException {
         Tache tache;
+        //noinspection OverlyBroadCatchBlock
         try {
 
-            //noinspection PointlessArithmeticExpression
+            //noinspection PointlessArithmeticExpression,LocalVariableNamingConvention
             int id = Calc.getInt(feuilleCharges, 1 - 1, noLig - 1);
 
             String noTicketIdal = Calc.getString(feuilleCharges, 2 - 1, noLig - 1);
@@ -1036,11 +1043,15 @@ public class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDate> {
     @NotNull
     private String codeStatut(int idTache, @NotNull XSpreadsheet feuilleTaches) throws PlanChargeDaoException {
 
-        final int noColIndexes = 1;
-        final int noColStatuts = 13;
+        //noinspection TooBroadScope
+        int noColIndexes = 1;
+        //noinspection TooBroadScope
+        int noColStatuts = 13;
 
-        final int noLigDebut = 4;
-        final int noLigFin = 200;
+        //noinspection TooBroadScope
+        int noLigDebut = 4;
+        //noinspection TooBroadScope
+        int noLigFin = 200;
 
         try {
 

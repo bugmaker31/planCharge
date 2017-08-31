@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -22,10 +23,17 @@ import java.util.TreeMap;
 public class
 PlanificationTacheBean extends TacheBean {
 
+
+    //@Autowired
+    @NotNull
+    private ChargeService chargeService = ChargeService.instance();
+
+
     @NotNull
     private Map<LocalDate, DoubleProperty> calendrier;
     @NotNull
     private DoubleProperty chargePlanifieeTotale = new SimpleDoubleProperty();
+
 
     public PlanificationTacheBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws IhmException {
         super(tacheBean);
@@ -74,12 +82,10 @@ PlanificationTacheBean extends TacheBean {
         return this;
     }
 
-
     @NotNull
     public Map<LocalDate, DoubleProperty> getCalendrier() {
         return calendrier;
     }
-
 
     public double getChargePlanifieeTotale() {
         return chargePlanifieeTotale.get();
@@ -104,9 +110,10 @@ PlanificationTacheBean extends TacheBean {
     }
 
     private double chargePlanifieeTotale() {
-        return calendrier.values().stream()
+        double chargePlanifiee = calendrier.values().stream()
                 .mapToDouble(ObservableDoubleValue::get)
                 .sum();
+        return chargeService.chargeArrondie(chargePlanifiee);
     }
 
     /**

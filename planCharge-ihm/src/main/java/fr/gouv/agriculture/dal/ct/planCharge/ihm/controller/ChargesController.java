@@ -21,13 +21,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
@@ -322,7 +320,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
         chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeTotaleProperty().asObject());
 
-
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         //
         // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
@@ -365,6 +362,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(chargePlanifieeColumn, "Cette colonne n'est pas saisissable, elle est calculée.");
 
         // Paramétrage du formatage qui symbolise les incohérences/surcharges/etc. :
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
+            int finalNoSemaine = noSemaine;
+            column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, finalNoSemaine));
+        }
         //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override
@@ -390,33 +392,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
-        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
-            int finalNoSemaine = noSemaine;
-            column.setOnEditCommit(new EventHandler<CellEditEvent<PlanificationTacheBean, Double>>() {
-
-                @Override
-                public void handle(CellEditEvent<PlanificationTacheBean, Double> event) {
-
-                    PlanificationTacheBean planifBean = event.getRowValue();
-                    try {
-                        LocalDate dateDebutPeriode = planChargeBean.getDateEtat().plusDays((finalNoSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                        LocalDate dateFinPeriode = dateDebutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                        planifBean.chargePlanifiee(dateDebutPeriode, dateFinPeriode).setValue(event.getNewValue());
-                    } catch (IhmException e) {
-                        LOGGER.error("Impossible de gérer l'édition d'une cellule conternant la charge de la tâche " + planifBean.noTache() + " pour la semaine n+" + finalNoSemaine + ".", e);
-                    }
-
-                    planifBean.majChargePlanifieeTotale();
-                }
-            });
-        }
-        //
-        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
-            int finalNoSemaine = noSemaine;
-            column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, finalNoSemaine));
-        }
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
@@ -481,7 +456,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         assert planChargeBean.getDateEtat() != null;
 
-        Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
+        Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
         LocalDate debutSemaine = planChargeBean.getDateEtat();
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calendrier.put(debutSemaine, new SimpleDoubleProperty(0.0));
@@ -555,7 +530,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void afficherTache() {
-        PlanificationTacheBean tacheBean = TableViews.selectedItem(getTachesTable());
+        PlanificationTacheBean tacheBean = TableViews.selectedItem(planificationsTable);
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(
@@ -571,11 +546,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         try {
             ihm.getApplicationController().afficherModuleTaches();
             TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean);
-        } catch (IhmException e) {
-            LOGGER.error("Impossible d'afficher la tâche " + tacheBean.getId() + ".", e);
+        } catch (ControllerException e) {
+            LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
-                    "Impossible d'afficher la tâche",
+                    "Impossible d'afficher la tâche" + tacheBean.noTache(),
                     Exceptions.causes(e),
                     400, 200
             );

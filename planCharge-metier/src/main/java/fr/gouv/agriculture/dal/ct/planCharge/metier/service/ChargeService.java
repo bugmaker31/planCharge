@@ -35,7 +35,11 @@ import java.util.*;
  */
 public class ChargeService extends AbstractService {
 
+    public static final double NBR_HEURES_OUVREES_DS_UN_JOUR = 8.0;
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargeService.class);
+
 
     private static ChargeService instance;
 
@@ -45,6 +49,7 @@ public class ChargeService extends AbstractService {
         }
         return instance;
     }
+
 
     //    @Autowired
     @NotNull
@@ -59,6 +64,7 @@ public class ChargeService extends AbstractService {
     private ChargeService() {
         super();
     }
+
 
     @NotNull
     public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
@@ -288,4 +294,9 @@ public class ChargeService extends AbstractService {
 
         return provisionParJour * dureePeriodeEnJours;
     }
+
+    public Double chargeArrondie(@NotNull Double charge) {
+        return Math.round(charge * NBR_HEURES_OUVREES_DS_UN_JOUR) / NBR_HEURES_OUVREES_DS_UN_JOUR;
+    }
+
 }

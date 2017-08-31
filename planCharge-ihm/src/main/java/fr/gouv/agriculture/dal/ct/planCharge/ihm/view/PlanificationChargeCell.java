@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 /**
@@ -33,8 +34,12 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     }
 
     @Override
-    public void updateItem(Double item, boolean empty) {
+    public void updateItem(@Null Double item, boolean empty) {
         super.updateItem(item, empty);
+        styler(item);
+    }
+
+    private void styler(@Null Double item) {
 
         // Réinit du texte et du style de la cellule :
         setText("");
@@ -51,11 +56,12 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
 
         // Récupération des infos sur la cellule :
         //noinspection unchecked
-        TableRow<PlanificationTacheBean> tableRow = this.getTableRow();
+        TableRow<PlanificationTacheBean> tableRow = getTableRow();
         PlanificationTacheBean planifBean = tableRow.getItem();
         if (planifBean == null) {
             return;
         }
+
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
@@ -78,5 +84,19 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
             }
         }
         getStyleClass().add("pendantPeriodeDemandee");
+    }
+
+    @Override
+    public void commitEdit(Double newValue) {
+        super.commitEdit(newValue);
+
+        //noinspection unchecked
+        TableRow<PlanificationTacheBean> tableRow = getTableRow();
+        PlanificationTacheBean planifBean = tableRow.getItem();
+        if (planifBean == null) {
+            return;
+        }
+
+        planifBean.majChargePlanifieeTotale();
     }
 }
