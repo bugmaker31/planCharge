@@ -320,53 +320,61 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
         chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeTotaleProperty().asObject());
 
-        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") et
+        // du formatage qui symbolise les incohérences/surcharges/etc. (Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/) :
         //
-        // Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/
         //noinspection OverlyComplexAnonymousInnerClass
         getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>() {
 
             @Override
-            public void updateItem(Double charge, boolean empty) {
-
+            public void updateItem(Double item, boolean empty) {
                 if (getConverter() == null) {
                     setConverter(new DoubleStringConverter()); // TODO FDA 2017/08 Mieux formater.
                 }
+                super.updateItem(item, empty);
 
-                super.updateItem(charge, empty);
+                styler(item);
 
+/*
+                if ((item == null) || empty) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+*/
+            }
+
+            private void styler(@Null Double item) {
                 setText("");
                 getStyleClass().removeAll("chargeNonPlanifiee", "incoherence");
 
-                if ((charge == null) || empty) {
+                if (item == null) {
                     setText(null);
                     setGraphic(null);
                     return;
                 }
 
                 // Format :
-                setText(FORMAT_CHARGE.format(charge));
+                setText(FORMAT_CHARGE.format(item));
 
                 // Style with a different color:
-                Double chargePlanifiee = chargePlanifieeColumn.getCellData(this.getIndex());
+                Double chargePlanifiee = chargePlanifieeColumn.getCellData(getIndex());
                 if (chargePlanifiee != null) {
-                    if (chargePlanifiee < charge) {
+                    if (chargePlanifiee < item) {
                         getStyleClass().add("chargeNonPlanifiee");
                     }
-                    if (chargePlanifiee > charge) {
+                    if (chargePlanifiee > item) {
                         getStyleClass().add("incoherence");
                     }
                 }
             }
         });
-        ihm.interdireEdition(chargePlanifieeColumn, "Cette colonne n'est pas saisissable, elle est calculée.");
-
-        // Paramétrage du formatage qui symbolise les incohérences/surcharges/etc. :
         for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
             int finalNoSemaine = noSemaine;
             column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, finalNoSemaine));
         }
+        ihm.interdireEdition(chargePlanifieeColumn, "Cette colonne n'est pas saisissable, elle est calculée.");
         //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
             @Override

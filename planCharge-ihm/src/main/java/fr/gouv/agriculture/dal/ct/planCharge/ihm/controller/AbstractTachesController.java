@@ -418,6 +418,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return;
             }
             if (event.getCode() == KeyCode.DELETE) {
+                if (!getTachesTable().isFocused()) {
+                    return;
+                }
                 supprimerTacheSelectionnee();
                 event.consume(); // TODO FDA 2017/08 Confirmer.
                 //noinspection UnnecessaryReturnStatement

@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.scene.control.TableRow;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
@@ -36,7 +37,14 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     @Override
     public void updateItem(@Null Double item, boolean empty) {
         super.updateItem(item, empty);
+
         styler(item);
+
+        if ((item == null) || empty) {
+            setText(null);
+            setGraphic(null);
+            return;
+        }
     }
 
     private void styler(@Null Double item) {
@@ -90,12 +98,20 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     public void commitEdit(Double newValue) {
         super.commitEdit(newValue);
 
+        Double charge = Objects.value(newValue, 0.0);
+
         //noinspection unchecked
         TableRow<PlanificationTacheBean> tableRow = getTableRow();
         PlanificationTacheBean planifBean = tableRow.getItem();
         if (planifBean == null) {
             return;
         }
+
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+
+        // TODO FDA 2017/08 Comprendre pourquoi il est nécessaire de setter la valeur alors qu'on a appelé "super.commitEdit(newValue)", mais juste pour les cellules qui étaient à zéro jusqu'alors.
+        planifBean.setChargePlanifiee(debutPeriode, finPeriode, charge);
 
         planifBean.majChargePlanifieeTotale();
     }

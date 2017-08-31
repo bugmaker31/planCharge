@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
@@ -35,7 +35,7 @@ PlanificationTacheBean extends TacheBean {
     private DoubleProperty chargePlanifieeTotale = new SimpleDoubleProperty();
 
 
-    public PlanificationTacheBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws IhmException {
+    public PlanificationTacheBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws BeanException {
         super(tacheBean);
         this.calendrier = calendrier;
 
@@ -46,7 +46,7 @@ PlanificationTacheBean extends TacheBean {
     public PlanificationTacheBean(
             int id, String codeCategorie, String codeSousCategorie, String noTicketIdal, String description, String codeProjetAppli, LocalDate debut, LocalDate echeance, String codeImportance, double charge, String codeRessource, String codeProfil,
             @NotNull List<Pair<LocalDate, DoubleProperty>> calendrier
-    ) throws IhmException {
+    ) throws BeanException {
         super(
                 id,
                 codeCategorie,
@@ -101,13 +101,20 @@ PlanificationTacheBean extends TacheBean {
         return calendrier.containsKey(dateDebutPeriode);
     }
 
+
     @NotNull
-    public DoubleProperty chargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode) throws IhmException {
+    public DoubleProperty chargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode) throws BeanException {
         if (!aChargePlanifiee(dateDebutPeriode, datefinPeriode)) {
-            throw new IhmException("Pas de calendrier pour la tâche " + noTache() + " sur la période du " + dateDebutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + " au " + datefinPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
+            throw new BeanException("Pas de calendrier pour la tâche " + noTache() + " sur la période du " + dateDebutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + " au " + datefinPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
         }
         return calendrier.get(dateDebutPeriode);
     }
+
+    public void setChargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode, @NotNull Double charge) {
+        DoubleProperty chargePlanifiee = calendrier.containsKey(dateDebutPeriode) ? calendrier.get(dateDebutPeriode) : new SimpleDoubleProperty();
+        chargePlanifiee.setValue(charge);
+    }
+
 
     private double chargePlanifieeTotale() {
         double chargePlanifiee = calendrier.values().stream()
@@ -129,9 +136,9 @@ PlanificationTacheBean extends TacheBean {
         try {
             return new PlanificationTacheBean(
                     original.copier(),
-                    getCalendrier() // FIXME FDA 2017/05 Copier les éléments de la liste aussi.
+                    calendrier // FIXME FDA 2017/05 Copier les éléments de la liste aussi.
             );
-        } catch (IhmException e) {
+        } catch (BeanException e) {
             throw new CopieException("Impossible de copier.", e);
         }
     }
