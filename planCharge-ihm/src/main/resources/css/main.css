@@ -182,12 +182,12 @@ Tâches :
 .importanceMaximale {
     -fx-background-color: #CC3300;
     -fx-text-fill: white;
-    -fx-font-weight: normal;
+    /*-fx-font-weight: bold;*/
 }
 
 .importanceHaute {
     -fx-background-color: #FF6633;
-    -fx-font-weight: normal;
+    /*-fx-font-weight: normal;*/
 }
 
 .importanceNormale {
