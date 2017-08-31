@@ -533,7 +533,7 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    public void interdireEdition(@NotNull TableColumn<?, ?> column, @NotNull String message, @Null ButtonType... typesBouton) {
+    public <S, T> void interdireEdition(@NotNull TableColumn<S, T> column, @NotNull String message, @Null ButtonType... typesBouton) {
         // Vu qu'on veut afficher un message lorsque l'utilisateur demande à édite une cellule de la colonne, il faut rendre la table éditable.
         if (!column.getTableView().isEditable()) {
             // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la table éditable. Trouver mieux.
@@ -553,6 +553,11 @@ public class PlanChargeIhm extends Application {
 */
         // Cf. https://stackoverflow.com/questions/25910066/javafx-handling-events-on-tableview
         column.addEventHandler(TableColumn.CellEditEvent.ANY, event -> {
+            //noinspection unchecked
+            TableColumn.CellEditEvent<S, T> cellEditEvent = (TableColumn.CellEditEvent<S, T>) event;
+            if ((cellEditEvent.getTableColumn() == null) || !cellEditEvent.getTableColumn().equals(column)) {
+                return;
+            }
             afficherInterdictionEditer(message);
             event.consume(); /// FIXME FDA 2017/08 Ne sufit pas : Consuming an event does not prevent other EventHandlers on TableView from being invoked.
         });

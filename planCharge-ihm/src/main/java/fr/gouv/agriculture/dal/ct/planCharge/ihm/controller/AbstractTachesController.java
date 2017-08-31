@@ -632,12 +632,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
 
+    @SuppressWarnings("FinalPrivateMethod")
     @FXML
     private final void supprimer(@NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimer...");
         supprimerTacheSelectionnee();
     }
 
+    @SuppressWarnings("FinalPrivateMethod")
     private final void supprimerTacheSelectionnee() {
         TB focusedItem = TableViews.selectedItem(getTachesTable());
         if (focusedItem == null) {
@@ -647,6 +649,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         supprimer(focusedItem);
     }
 
+    @SuppressWarnings("FinalPrivateMethod")
     private final void supprimer(@NotNull TB tacheBean) {
         getTachesBeans().remove(tacheBean);
         TableViews.clearSelection(getTachesTable()); // Contournement pour [issue#84:1 appui sur DELETE supprime 2 lignes]. Sinon, 2 lignes sont supprimées. Va savoir pourquoi...
