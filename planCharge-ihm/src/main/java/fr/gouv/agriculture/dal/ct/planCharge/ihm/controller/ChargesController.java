@@ -525,11 +525,21 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
 
+/* TODO FDA 2017/08 Coder.
     @FXML
     private void filtrerTachesNonPlanifieesDansLeMois(@SuppressWarnings("unused") ActionEvent actionEvent) {
         // TODO FDA 2017/07 Coder.
     }
 
+    @FXML
+    private void filtrerTachesNonPlanifieesEntierement(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        filtrerTachesNonPlanifieesEntierement();
+    }
+
+    private void filtrerTachesNonPlanifieesEntierement() {
+        getFilteredTachesBeans().setPredicate(tacheBean -> (tacheBean.getCharge() == null) || (tacheBean.getCharge() != tacheBean.getChargePlanifieeTotale()));
+    }
+*/
 
     @SuppressWarnings("unused")
     @FXML

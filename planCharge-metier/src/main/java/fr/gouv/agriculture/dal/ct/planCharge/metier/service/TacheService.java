@@ -29,7 +29,7 @@ public class TacheService extends AbstractService {
 
     public boolean estATraiter(@NotNull TacheDTO tache) {
         return (tache.getStatut() == null) // Par défaut, la tâche est à traiter. TODO FDA 2017/08 Confirmer.
-                || (tache.getStatut().compareTo(StatutDTO.REPORTEE) < 0);
+                || (tache.getStatut().compareTo(StatutDTO.REPORTE) < 0);
     }
 
     @NotNull

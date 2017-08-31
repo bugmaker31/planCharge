@@ -14,9 +14,17 @@ import java.util.List;
  */
 public class StatutDTO extends AbstractDTO<Statut, String, StatutDTO> implements Comparable<StatutDTO> {
 
+    public static final StatutDTO NOUVEAU = StatutDTO.from(Statut.NOUVEAU);
+    public static final StatutDTO EN_COURS = StatutDTO.from(Statut.EN_COURS);
+    public static final StatutDTO EN_ATTENTE = StatutDTO.from(Statut.EN_ATTENTE);
+    public static final StatutDTO RECURRENT = StatutDTO.from(Statut.RECURRENT);
+    public static final StatutDTO REPORTE = StatutDTO.from(Statut.REPORTE);
+    public static final StatutDTO ANNULE = StatutDTO.from(Statut.ANNULE);
+    public static final StatutDTO DOUBLON = StatutDTO.from(Statut.DOUBLON);
+    public static final StatutDTO TERMINE = StatutDTO.from(Statut.TERMINE);
+    public static final StatutDTO A_VENIR = StatutDTO.from(Statut.A_VENIR);
+    //
     public static final StatutDTO PROVISION = StatutDTO.from(Statut.PROVISION);
-    public static final StatutDTO REPORTEE = StatutDTO.from(Statut.REPORTEE);
-
 
     @Null
     private String code;

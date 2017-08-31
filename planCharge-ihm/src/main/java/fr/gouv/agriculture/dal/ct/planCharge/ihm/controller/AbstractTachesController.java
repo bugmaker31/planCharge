@@ -13,7 +13,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -41,7 +43,6 @@ import java.time.LocalDate;
 import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 01/05/2017.
@@ -73,6 +74,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
     private FilteredList<TB> filteredTachesBeans = new FilteredList<TB>((ObservableList<TB>) planChargeBean.getPlanificationsBeans());
+
+    @NotNull
+    public FilteredList<TB> getFilteredTachesBeans() {
+        return filteredTachesBeans;
+    }
 
     // Les tables :
 
@@ -136,6 +142,85 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     private FiltreGlobalTachesComponent filtreGlobalComponent;
 
+    /*
+        @FXML
+        @NotNull
+        @SuppressWarnings("NullableProblems")
+        private SegmentedButton filtreCategorieSegmentedButton;
+    */
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreCategorieToutToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreCategorieProjetToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreCategorieServiceToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreCategorieOrganisationToggleButton;
+
+    /*
+        @FXML
+        @NotNull
+        @SuppressWarnings("NullableProblems")
+        private SegmentedButton filtreStatutSegmentedButton;
+    */
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutToutToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutNouveauToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutEnCoursToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutEnAttenteToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutRecurrentToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutReporteToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutClosToggleButton;
+/*
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtreStatutEchuToggleButton;
+*/
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtrePeriodeToutToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtrePeriodeEchueToggleButton;
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    protected ContextMenu tachesTableContextMenu;
+
+
     @NotNull
     abstract TableView<TB> getTachesTable();
 
@@ -144,17 +229,18 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return chargeColumn;
     }
 
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    protected ContextMenu tachesTableContextMenu;
-
 
     @SuppressWarnings("OverlyLongMethod")
     @Override
     protected void initialize() throws IhmException {
         LOGGER.debug("Initialisation...");
 //        super.initialize();
+
+        // Définition dees items de la table :
+        // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
+        SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
+        sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
+        getTachesTable().setItems(sortedFilteredPlanifBeans);
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         categorieColumn.setCellValueFactory(cellData -> cellData.getValue().codeCategorieProperty());
@@ -180,6 +266,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         //noinspection OverlyComplexAnonymousInnerClass
         projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<ProjetAppliBean>() {
+
                     @Null
                     @Override
                     public String toString(@Null ProjetAppliBean projetAppliBean) {
@@ -195,10 +282,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         if (codeProjetAppli == null) {
                             return null;
                         }
-                        return planChargeBean.getProjetsApplisBeans().parallelStream()
-                                .filter(projetAppliBean -> projetAppliBean.getCode().equals(codeProjetAppli))
-                                .collect(Collectors.toList())
-                                .get(0);
+                        return Collections.any(
+                                planChargeBean.getProjetsApplisBeans(),
+                                projetAppliBean -> (projetAppliBean.getCode() != null) && projetAppliBean.getCode().equals(codeProjetAppli)
+                        );
                     }
                 },
                 planChargeBean.getProjetsApplisBeans())
@@ -222,10 +309,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         if (codeStatut == null) {
                             return null;
                         }
-                        return planChargeBean.getStatutsBeans().parallelStream()
-                                .filter(statutBean -> statutBean.getCode().equals(codeStatut))
-                                .collect(Collectors.toList())
-                                .get(0);
+                        return Collections.any(
+                                planChargeBean.getStatutsBeans(),
+                                statutBean -> (statutBean.getCode() != null) && statutBean.getCode().equals(codeStatut)
+                        );
                     }
                 },
                 planChargeBean.getStatutsBeans()));
@@ -251,10 +338,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         if (trigramme == null) {
                             return null;
                         }
-                        return planChargeBean.getRessourcesBeans().parallelStream()
-                                .filter(ressourceBean -> ressourceBean.getCode().equals(trigramme))
-                                .collect(Collectors.toList())
-                                .get(0);
+                        return Collections.any(
+                                planChargeBean.getRessourcesBeans(),
+                                ressourceBean -> (ressourceBean.getCode() != null) && ressourceBean.getCode().equals(trigramme)
+                        );
                     }
                 },
                 planChargeBean.getRessourcesBeans()));
@@ -277,10 +364,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                         if (codeProfil == null) {
                             return null;
                         }
-                        return planChargeBean.getProfilsBeans().parallelStream()
-                                .filter(profilBean -> profilBean.getCode().equals(codeProfil))
-                                .collect(Collectors.toList())
-                                .get(0);
+                        return Collections.any(
+                                planChargeBean.getProfilsBeans(),
+                                profilBean -> (profilBean.getCode() != null) && profilBean.getCode().equals(codeProfil)
+                        );
                     }
                 },
                 planChargeBean.getProfilsBeans()));
@@ -291,11 +378,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "globaux" (à la TableView, pas sur chaque TableColumn) :
         //
-        enregistrerListenersSurFiltres();
-        // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
-        SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
-        sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
-        getTachesTable().setItems(sortedFilteredPlanifBeans);
+        filtreGlobalComponent.getFiltreGlobalField().textProperty().addListener((observable, oldValue, newValue) -> {
+            LOGGER.debug("Changement pour le filtre 'filtreGlobal' : {}...", newValue);
+            filtrer();
+        });
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //
@@ -309,9 +395,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             @NotNull
             private BiConsumer<TB, T> modifieurValeur;
             @NotNull
-            private BiFunction<TB, TB, ModificationTache> actionModificationFct;
+            private BiFunction<TB, TB, ModificationTache<TB>> actionModificationFct;
 
-            private TacheTableCommitHandler(@NotNull BiConsumer<TB, T> modifieurValeur, @NotNull BiFunction<TB, TB, ModificationTache> actionModificationFct) {
+            private TacheTableCommitHandler(@NotNull BiConsumer<TB, T> modifieurValeur, @NotNull BiFunction<TB, TB, ModificationTache<TB>> actionModificationFct) {
                 super();
                 this.modifieurValeur = modifieurValeur;
                 this.actionModificationFct = actionModificationFct;
@@ -327,6 +413,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
                 TB tacheBeanAvant = null;
                 try {
+                    //noinspection unchecked
                     tacheBeanAvant = (TB) tacheBean.copier();
                 } catch (CopieException e) {
                     LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
@@ -337,7 +424,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 if (tacheBeanAvant != null) {
                     try {
 //                        ModificationTache actionModif = actionModification(tacheBeanAvant, tacheBean);
-                        ModificationTache actionModif = actionModificationFct.apply(tacheBeanAvant, tacheBean);
+                        ModificationTache<TB> actionModif = actionModificationFct.apply(tacheBeanAvant, tacheBean);
                         getSuiviActionsUtilisateur().historiser(actionModif);
                     } catch (SuiviActionsUtilisateurException e) {
                         LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
@@ -475,6 +562,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return max.isPresent() ? (max.getAsInt() + 1) : 1;
     }
 
+
     @FXML
     private void razFiltres(@SuppressWarnings("unused") ActionEvent event) {
         razFiltres();
@@ -482,73 +570,93 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     void razFiltres() {
         LOGGER.debug("RAZ des filtres...");
-/* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).
-        filtreGlobalField.clear();
-*/
+
+        filtreGlobalComponent.getFiltreGlobalField().setText("");
+        // TODO FDA 2017/08 Décocher tous les autres filtres.
+        filtreCategorieToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
+        filtreStatutToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
+        filtrePeriodeToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
+
+        filtrer();
     }
 
-    /* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
-    @NotNull
-    @SuppressWarnings({"MethodWithMoreThanThreeNegations", "MethodWithMultipleLoops", "OverlyComplexMethod", "OverlyLongMethod"})
-    private void enregistrerListenersSurFiltres() {
-        LOGGER.debug("enregistrerListenersSurFiltres...");
+    @FXML
+    private void filtrer(@SuppressWarnings("unused") ActionEvent event) {
+        filtrer();
+    }
 
-        // Cf. http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-//        filteredTachesBeans = new FilteredList<>(tachesBeans);
-        //noinspection OverlyLongLambda
-        filtreGlobalComponent.getFiltreGlobalField().textProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.debug("Changement pour le filtre 'filtreGlobal' : {}...", newValue);
-            //noinspection OverlyLongLambda
-            filteredTachesBeans.setPredicate(tache -> {
-                // If filter text is empty, display all data.
-                if ((newValue == null) || newValue.isEmpty()) {
-                    return true;
-                }
+    private void filtrer() {
+        filteredTachesBeans.setPredicate(this::estTacheAVoir);
+    }
 
-                // Compare column values with filter text.
-                if (tache.matcheCategorie(newValue)) {
-                    return true; // Filter matches
-                }
-                if (tache.matcheSousCategorie(newValue)) {
-                    return true; // Filter matches
-                }
-                if (tache.matcheNoTache(newValue)) {
-                    return true; // Filter matches
-                }
-                if (!tache.noTicketIdalProperty().isEmpty().get() && tache.matcheNoTicketIdal(newValue)) {
-                    return true; // Filter matches
-                }
-                if (!tache.descriptionProperty().isEmpty().get()) {
-                    try {
-                        if (Strings.estExpressionReguliere(newValue) && tache.matcheDescription(newValue)) {
-                            return true; // Filter matches
-                        }
-                    } catch (IhmException e) {
-                        LOGGER.error("Impossible de filtrer sur la description '" + newValue + "' pour la tâche n° " + tache.getId() + ".", e);
-                    }
-                }
-                if (!tache.debutProperty().isNull().get() && tache.matcheDebut(newValue)) {
-                    return true; // Filter matches
-                }
-                if (!tache.echeanceProperty().isNull().get() && tache.matcheEcheance(newValue)) {
-                    return true; // Filter matches
-                }
-                if (!tache.projetAppliProperty().isNull().get() && tache.matcheProjetAppli(newValue)) {
-                    return true; // Filter matches
-                }
-                if (!tache.importanceProperty().isNull().get() && tache.matcheImportance(newValue)) {
-                    return true; // Filter matches
-                }
-                if (!tache.ressourceProperty().isNull().get() && tache.matcheRessource(newValue)) {
-                    return true; // Filter matches
-                }
-                //noinspection RedundantIfStatement
-                if (!tache.profilProperty().isNull().get() && tache.matcheProfil(newValue)) {
-                    return true; // Filter matches
-                }
-                return false; // Does not match.
-            });
-        });
+    private boolean estTacheAVoir(@NotNull TB tache) {
+
+        if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
+            if (!tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
+                return false;
+            }
+        }
+        if (!estTacheAvecCategorieAVoir(tache)) return false;
+        if (!estTacheAvecStatutAVoir(tache)) return false;
+        if (!estTacheAvecPeriodeAVoir(tache)) return false;
+
+        // Par défaut, on affiche les tâches :
+        return true;
+    }
+
+    @SuppressWarnings("MethodWithMoreThanThreeNegations")
+    private boolean estTacheAvecStatutAVoir(@NotNull TB tache) {
+        if (filtreStatutNouveauToggleButton.isSelected()) {
+            //noinspection ConstantConditions
+            return tache.matcheStatut(StatutDTO.NOUVEAU.getCode());
+        }
+        if (filtreStatutEnCoursToggleButton.isSelected()) {
+            //noinspection ConstantConditions
+            return tache.matcheStatut(StatutDTO.EN_COURS.getCode());
+        }
+        if (filtreStatutEnAttenteToggleButton.isSelected()) {
+            //noinspection ConstantConditions
+            return tache.matcheStatut(StatutDTO.EN_ATTENTE.getCode());
+        }
+        if (filtreStatutRecurrentToggleButton.isSelected()) {
+            //noinspection ConstantConditions
+            if (!tache.matcheStatut(StatutDTO.RECURRENT.getCode())) {
+                return false;
+            }
+        }
+        if (filtreStatutReporteToggleButton.isSelected()) {
+            //noinspection ConstantConditions
+            return tache.matcheStatut(StatutDTO.REPORTE.getCode());
+        }
+        if (filtreStatutClosToggleButton.isSelected()) {
+            //noinspection ConstantConditions
+            return tache.matcheStatut(StatutDTO.ANNULE.getCode())
+                    || tache.matcheStatut(StatutDTO.DOUBLON.getCode())
+                    || tache.matcheStatut(StatutDTO.TERMINE.getCode());
+        }
+        return true;
+    }
+
+    private boolean estTacheAvecCategorieAVoir(@NotNull TB tache) {
+        if (filtreCategorieProjetToggleButton.isSelected()) {
+            return tache.matcheCategorie(CategorieTacheDTO.PROJET.getCode());
+        }
+        if (filtreCategorieServiceToggleButton.isSelected()) {
+            return tache.matcheCategorie(CategorieTacheDTO.SERVICE.getCode());
+        }
+        if (filtreCategorieOrganisationToggleButton.isSelected()) {
+            return tache.matcheCategorie(CategorieTacheDTO.ORGANISATION_INTERNE.getCode());
+        }
+        return true;
+    }
+
+    private boolean estTacheAvecPeriodeAVoir(@NotNull TB tache) {
+        if (filtrePeriodeEchueToggleButton.isSelected()) {
+            if ((tache.getEcheance() != null) && (planChargeBean.getDateEtat() != null)) {
+                return !tache.getEcheance().isAfter(planChargeBean.getDateEtat());
+            }
+        }
+        return true;
     }
 
 

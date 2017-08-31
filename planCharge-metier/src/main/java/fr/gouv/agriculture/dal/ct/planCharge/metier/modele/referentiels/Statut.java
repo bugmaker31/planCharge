@@ -9,8 +9,17 @@ import javax.validation.constraints.NotNull;
  */
 public class Statut extends AbstractEntity<String, Statut> {
 
-    public static final Statut PROVISION = new Statut("80-Récurrente");
-    public static final Statut REPORTEE = new Statut("85-Reportée");
+    public static final Statut NOUVEAU = new Statut("10-Nouveau");
+    public static final Statut EN_COURS = new Statut("20-En cours");
+    public static final Statut EN_ATTENTE = new Statut("50-En attente");
+    public static final Statut RECURRENT = new Statut("80-Récurrente");
+    public static final Statut REPORTE = new Statut("85-Reportée");
+    public static final Statut ANNULE = new Statut("90-Annulée");
+    public static final Statut DOUBLON = new Statut("92-Doublon");
+    public static final Statut TERMINE = new Statut("95-Terminé");
+    public static final Statut A_VENIR = new Statut("97-A venir");
+    //
+    public static final Statut PROVISION = RECURRENT;
 
     @NotNull
     private final String code;

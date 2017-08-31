@@ -14,6 +14,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.binding.StringBinding;
@@ -357,9 +358,59 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
-    /* planCharge-52 Filtre global inopérant -> Incompatible avec TableFilter. Désactivé le temps de rendre compatible (TableFilter préféré).*/
+    public boolean matcheGlobal(@Null String filtreGlobal) {
+
+        // If filter text is empty, display all data.
+        if ((filtreGlobal == null) || filtreGlobal.isEmpty()) {
+            return true;
+        }
+
+        // Compare column values with filter text.
+        if (matcheCategorie(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (matcheSousCategorie(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (matcheNoTache(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (!noTicketIdalProperty().isEmpty().get() && matcheNoTicketIdal(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (!descriptionProperty().isEmpty().get()) {
+            try {
+                if (Strings.estExpressionReguliere(filtreGlobal) && matcheDescription(filtreGlobal)) {
+                    return true; // Filter matches
+                }
+            } catch (IhmException e) {
+                LOGGER.error("Impossible de filtrer sur la description '" + filtreGlobal + "' pour la tâche n° " + getId() + ".", e);
+            }
+        }
+        if (!debutProperty().isNull().get() && matcheDebut(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (!echeanceProperty().isNull().get() && matcheEcheance(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (!projetAppliProperty().isNull().get() && matcheProjetAppli(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (!importanceProperty().isNull().get() && matcheImportance(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        if (!ressourceProperty().isNull().get() && matcheRessource(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        //noinspection RedundantIfStatement
+        if (!profilProperty().isNull().get() && matcheProfil(filtreGlobal)) {
+            return true; // Filter matches
+        }
+        return false; // Does not match.
+    }
+
     public boolean matcheNoTache(@NotNull String otherValue) {
-        if ((getId() + "").contains(otherValue)) {
+        if ((String.valueOf(getId())).contains(otherValue)) {
             return true; // matches
         }
         if (noTache().contains(otherValue)) {
@@ -424,6 +475,19 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
             return false;
         }
         if (getProjetAppli().getCode().contains(otherValue)) {
+            return true; // matches
+        }
+        return false; // does not match.
+    }
+
+    public boolean matcheStatut(@NotNull String otherValue) {
+        if (getStatut() == null) {
+            return false;
+        }
+        if (getStatut().getCode() == null) {
+            return false;
+        }
+        if (getStatut().getCode().contains(otherValue)) {
             return true; // matches
         }
         return false; // does not match.
@@ -573,4 +637,5 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 + ("<< " + (description.isNull().get() ? "N/A" : description.get()) + " >> ")
                 ;
     }
+
 }

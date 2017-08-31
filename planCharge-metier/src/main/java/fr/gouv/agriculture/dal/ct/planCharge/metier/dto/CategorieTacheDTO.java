@@ -1,14 +1,17 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
+import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -17,13 +20,25 @@ import java.util.stream.Collectors;
 // Rq : Une 'class' et non une 'enum' juste pour pouvoir implémenter un 'compareTo' spécifique.
 public class CategorieTacheDTO extends AbstractDTO<CategorieTache, String, CategorieTacheDTO> implements Comparable<CategorieTacheDTO> {
 
+    @NotNull
+    public static final CategorieTacheDTO PROJET = new CategorieTacheDTO(CategorieTache.PROJET.getCode());
+    @NotNull
+    public static final CategorieTacheDTO SERVICE = new CategorieTacheDTO(CategorieTache.SERVICE.getCode());
+    @NotNull
+    public static final CategorieTacheDTO ORGANISATION_INTERNE = new CategorieTacheDTO(CategorieTache.ORGANISATION_INTERNE.getCode());
+
+
     // Rq : L'ordre est important, car c'est cet ordre de tri (par défaut) qui est repris dans les IHMs.
     @NotNull
+    private static final CategorieTacheDTO[] VALUES = {
+            PROJET,
+            SERVICE,
+            ORGANISATION_INTERNE
+    };
+
+    @NotNull
     public static final CategorieTacheDTO[] values() {
-        return CategorieTache.CATEGORIES.stream()
-                .map(categorieTache -> new CategorieTacheDTO(categorieTache.getCode()))
-                .collect(Collectors.toList())
-                .toArray(new CategorieTacheDTO[0]);
+        return VALUES;
     }
 
     @NotNull
@@ -107,12 +122,12 @@ public class CategorieTacheDTO extends AbstractDTO<CategorieTache, String, Categ
 
         CategorieTacheDTO that = (CategorieTacheDTO) o;
 
-        return (getCode() != null) ? getCode().equals(that.getCode()) : (that.getCode() == null);
+        return getCode().equals(that.getCode());
     }
 
     @Override
     public int hashCode() {
-        return (getCode() != null) ? getCode().hashCode() : 0;
+        return getCode().hashCode();
     }
 
 
