@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.ihm.controller.calculateur;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.Executeur;
 
 import javax.validation.constraints.NotNull;
 

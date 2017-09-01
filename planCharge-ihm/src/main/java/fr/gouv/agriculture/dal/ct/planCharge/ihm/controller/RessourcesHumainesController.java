@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
@@ -95,10 +96,10 @@ public class RessourcesHumainesController extends AbstractController implements 
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public RessourcesHumainesController() throws IhmException {
+    public RessourcesHumainesController() throws ControllerException {
         super();
         if (instance != null) {
-            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+            throw new ControllerException("Instanciation à plus d'1 exemplaire.");
         }
         instance = this;
     }
@@ -132,104 +133,105 @@ public class RessourcesHumainesController extends AbstractController implements 
      * after the fxml file has been loaded.
      */
     @FXML
-    protected void initialize() throws IhmException {
-        LOGGER.debug("Initialisation...");
+    protected void initialize() throws ControllerException {
+        try {
+            LOGGER.debug("Initialisation...");
 
 /*
         FilteredList<RessourceHumaineBean> rsrcHumainesBeans = (FilteredList<RessourceHumaineBean>) planChargeBean.getRessourcesBeans().filtered(rsrcBean -> rsrcBean instanceof RessourceHumaineBean);
         Bindings.bindContentBidirectional(ressourceHumainesBeans, rsrcHumainesBeans);
 */
-        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<RessourceHumaineBean> ressourceHumaineBeansToAdd = new ArrayList<>();
-                    for (RessourceBean addedRessourceBean : change.getAddedSubList()) {
-                        if (addedRessourceBean instanceof RessourceHumaineBean) {
-                            if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
-                                ressourceHumaineBeansToAdd.add((RessourceHumaineBean) addedRessourceBean);
+            planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        List<RessourceHumaineBean> ressourceHumaineBeansToAdd = new ArrayList<>();
+                        for (RessourceBean addedRessourceBean : change.getAddedSubList()) {
+                            if (addedRessourceBean instanceof RessourceHumaineBean) {
+                                if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
+                                    ressourceHumaineBeansToAdd.add((RessourceHumaineBean) addedRessourceBean);
+                                }
                             }
                         }
+                        if (!ressourceHumaineBeansToAdd.isEmpty()) {
+                            ressourceHumainesBeans.addAll(ressourceHumaineBeansToAdd);
+                        }
                     }
-                    if (!ressourceHumaineBeansToAdd.isEmpty()) {
-                        ressourceHumainesBeans.addAll(ressourceHumaineBeansToAdd);
-                    }
-                }
-                if (change.wasRemoved()) {
-                    List<RessourceHumaineBean> ressourceHumaineBeansToRemove = new ArrayList<>();
-                    for (RessourceBean removedRessourceBean : change.getRemoved()) {
-                        if (removedRessourceBean instanceof RessourceHumaineBean) {
-                            if (ressourceHumainesBeans.contains(removedRessourceBean)) {
-                                ressourceHumaineBeansToRemove.add((RessourceHumaineBean) removedRessourceBean);
+                    if (change.wasRemoved()) {
+                        List<RessourceHumaineBean> ressourceHumaineBeansToRemove = new ArrayList<>();
+                        for (RessourceBean removedRessourceBean : change.getRemoved()) {
+                            if (removedRessourceBean instanceof RessourceHumaineBean) {
+                                if (ressourceHumainesBeans.contains(removedRessourceBean)) {
+                                    ressourceHumaineBeansToRemove.add((RessourceHumaineBean) removedRessourceBean);
+                                }
                             }
                         }
-                    }
-                    if (!ressourceHumaineBeansToRemove.isEmpty()) {
-                        ressourceHumainesBeans.removeAll(ressourceHumaineBeansToRemove);
-                    }
-                }
-            }
-        });
-        ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<RessourceBean> ressourceBeansToAdd = new ArrayList<>();
-                    for (RessourceHumaineBean addedRessourceBean : change.getAddedSubList()) {
-                        if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
-                            ressourceBeansToAdd.add(addedRessourceBean);
+                        if (!ressourceHumaineBeansToRemove.isEmpty()) {
+                            ressourceHumainesBeans.removeAll(ressourceHumaineBeansToRemove);
                         }
                     }
-                    if (!ressourceBeansToAdd.isEmpty()) {
-                        planChargeBean.getRessourcesBeans().addAll(ressourceBeansToAdd);
-                    }
                 }
-                if (change.wasRemoved()) {
-                    List<RessourceBean> ressourceBeansToRemove = new ArrayList<>();
-                    for (RessourceHumaineBean removedRessourceBean : change.getRemoved()) {
-                        if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
-                            ressourceBeansToRemove.add(removedRessourceBean);
+            });
+            ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        List<RessourceBean> ressourceBeansToAdd = new ArrayList<>();
+                        for (RessourceHumaineBean addedRessourceBean : change.getAddedSubList()) {
+                            if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
+                                ressourceBeansToAdd.add(addedRessourceBean);
+                            }
+                        }
+                        if (!ressourceBeansToAdd.isEmpty()) {
+                            planChargeBean.getRessourcesBeans().addAll(ressourceBeansToAdd);
                         }
                     }
-                    if (!ressourceBeansToRemove.isEmpty()) {
-                        planChargeBean.getRessourcesBeans().removeAll(ressourceBeansToRemove);
+                    if (change.wasRemoved()) {
+                        List<RessourceBean> ressourceBeansToRemove = new ArrayList<>();
+                        for (RessourceHumaineBean removedRessourceBean : change.getRemoved()) {
+                            if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
+                                ressourceBeansToRemove.add(removedRessourceBean);
+                            }
+                        }
+                        if (!ressourceBeansToRemove.isEmpty()) {
+                            planChargeBean.getRessourcesBeans().removeAll(ressourceBeansToRemove);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());
-        nomColumn.setCellValueFactory(cellData -> cellData.getValue().nomProperty());
-        prenomColumn.setCellValueFactory(cellData -> cellData.getValue().prenomProperty());
-        societeColumn.setCellValueFactory(cellData -> cellData.getValue().societeProperty());
-        debutMissionColumn.setCellValueFactory(cellData -> cellData.getValue().debutMissionProperty());
-        finMissionColumn.setCellValueFactory(cellData -> cellData.getValue().finMissionProperty());
+            // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+            trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());
+            nomColumn.setCellValueFactory(cellData -> cellData.getValue().nomProperty());
+            prenomColumn.setCellValueFactory(cellData -> cellData.getValue().prenomProperty());
+            societeColumn.setCellValueFactory(cellData -> cellData.getValue().societeProperty());
+            debutMissionColumn.setCellValueFactory(cellData -> cellData.getValue().debutMissionProperty());
+            finMissionColumn.setCellValueFactory(cellData -> cellData.getValue().finMissionProperty());
 
-        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        TableViews.decorateMandatoryColumns(trigrammeColumn);
-        trigrammeColumn.setCellFactory(param -> {
-            TextFieldTableCell<RessourceHumaineBean, String> trigrammeCell = new UpperCaseTextFieldTableCell<>();
+            // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+            TableViews.decorateMandatoryColumns(trigrammeColumn);
+            trigrammeColumn.setCellFactory(param -> {
+                TextFieldTableCell<RessourceHumaineBean, String> trigrammeCell = new UpperCaseTextFieldTableCell<>();
 //            PlanChargeIhm.decorateMandatoryColumns(trigrammeCell);
-            ihm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
-            return trigrammeCell;
-        });
-        TableViews.decorateMandatoryColumns(nomColumn);
-        nomColumn.setCellFactory(param -> {
-            TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            ihm.controler(cell, "Nom incorrect", this::validerNom);
-            return cell;
-        });
-        TableViews.decorateMandatoryColumns(prenomColumn);
-        prenomColumn.setCellFactory(param -> {
-            TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            ihm.controler(cell, "Prénom incorrect", this::validerPrenom);
-            return cell;
-        });
-        TableViews.decorateMandatoryColumns(societeColumn);
-        societeColumn.setCellFactory(param -> {
-            TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            ihm.controler(cell, "Société incorrecte", this::validerSociete);
-            return cell;
-        });
+                ihm.controler(trigrammeCell, "Trigramme incorrect", this::validerTrigramme);
+                return trigrammeCell;
+            });
+            TableViews.decorateMandatoryColumns(nomColumn);
+            nomColumn.setCellFactory(param -> {
+                TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+                ihm.controler(cell, "Nom incorrect", this::validerNom);
+                return cell;
+            });
+            TableViews.decorateMandatoryColumns(prenomColumn);
+            prenomColumn.setCellFactory(param -> {
+                TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+                ihm.controler(cell, "Prénom incorrect", this::validerPrenom);
+                return cell;
+            });
+            TableViews.decorateMandatoryColumns(societeColumn);
+            societeColumn.setCellFactory(param -> {
+                TableCell<RessourceHumaineBean, String> cell = EditableAwareTextFieldTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
+                ihm.controler(cell, "Société incorrecte", this::validerSociete);
+                return cell;
+            });
 /*
         PlanChargeIhm.decorateMandatoryColumns(debutMissionColumn);
         debutMissionColumn.setCellFactory(param -> {
@@ -238,15 +240,15 @@ public class RessourcesHumainesController extends AbstractController implements 
             return cell;
         });
 */
-        debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
-        finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
+            debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
+            finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
-        SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
-        sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
+            SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
+            sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
 
-        ressourcesHumainesTable.setItems(sortedBeans);
+            ressourcesHumainesTable.setItems(sortedBeans);
 
-        TableViews.enableFilteringOnColumns(ressourcesHumainesTable, trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
+            TableViews.enableFilteringOnColumns(ressourcesHumainesTable, trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
 
 /*
         ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
@@ -255,11 +257,14 @@ public class RessourcesHumainesController extends AbstractController implements 
         });
 */
 
-        definirMenuContextuel();
+            definirMenuContextuel();
 
-        definirTouches();
+            definirTouches();
 
-        LOGGER.info("Initialisé.");
+            LOGGER.info("Initialisé.");
+        } catch (IhmException e) {
+            throw new ControllerException("Impossible d'initialiser le contrôleur du module 'Ressources humaines'.", e);
+        }
     }
 
     private void definirMenuContextuel() {

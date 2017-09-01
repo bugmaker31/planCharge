@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -67,10 +68,10 @@ public class JoursFeriesController extends AbstractController implements Module 
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public JoursFeriesController() throws IhmException {
+    public JoursFeriesController() throws ControllerException {
         super();
         if (instance != null) {
-            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+            throw new ControllerException("Instanciation à plus d'1 exemplaire.");
         }
         instance = this;
     }
@@ -89,35 +90,39 @@ public class JoursFeriesController extends AbstractController implements Module 
      * after the fxml file has been loaded.
      */
     @FXML
-    protected void initialize() throws IhmException {
-        LOGGER.debug("Initialisation...");
+    protected void initialize() throws ControllerException {
+        try {
+            LOGGER.debug("Initialisation...");
 
-        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
-        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+            // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+            dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+            descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
 
-        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        TableViews.decorateMandatoryColumns(dateColumn);
-        dateColumn.setCellFactory(param -> {
-            TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
-            ihm.controler(cell, "Date incorrecte", this::validerDateFeriee);
-            return cell;
-        });
+            // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+            TableViews.decorateMandatoryColumns(dateColumn);
+            dateColumn.setCellFactory(param -> {
+                TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
+                ihm.controler(cell, "Date incorrecte", this::validerDateFeriee);
+                return cell;
+            });
 //        PlanChargeIhm.decorateMandatoryColumns(descriptionColumn);
-        descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
-        sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
+            SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
+            sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
 
-        joursFeriesTable.setItems(sortedBeans);
+            joursFeriesTable.setItems(sortedBeans);
 
-        TableViews.enableFilteringOnColumns(joursFeriesTable, dateColumn, descriptionColumn);
+            TableViews.enableFilteringOnColumns(joursFeriesTable, dateColumn, descriptionColumn);
 
-        definirMenuContextuel();
+            definirMenuContextuel();
 
-        definirTouches();
+            definirTouches();
 
-        LOGGER.info("Initialisé.");
+            LOGGER.info("Initialisé.");
+        } catch (IhmException e) {
+            throw new ControllerException("Impossible d'initialiser le contrôleur du module 'Jours fériés'.", e);
+        }
     }
 
     private void definirMenuContextuel() {

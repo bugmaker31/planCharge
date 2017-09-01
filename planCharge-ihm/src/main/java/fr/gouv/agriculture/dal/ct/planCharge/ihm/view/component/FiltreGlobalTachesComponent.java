@@ -40,7 +40,7 @@ public class FiltreGlobalTachesComponent extends HBox {
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
-            throw new RuntimeException(exception); // FDA 2017/08 Trouver mieux.
+            throw new RuntimeException(exception); // TODO FDA 2017/08 Trouver mieux.
         }
         controller = fxmlLoader.getController();
     }

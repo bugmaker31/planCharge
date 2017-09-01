@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -22,7 +23,6 @@
                             <Label text="Catégorie : "/>
                             <ButtonBar>
                                 <buttons>
-                                    <ToggleButton text="Tout" fx:id="filtreCategorieToutToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
@@ -33,7 +33,6 @@
                             <Label text="Statut : "/>
                             <ButtonBar>
                                 <buttons>
-                                    <ToggleButton text="Tout" fx:id="filtreStatutToutToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
@@ -47,7 +46,6 @@
                             <Label text="Période : "/>
                             <ButtonBar>
                                 <buttons>
-                                    <ToggleButton text="Tout" fx:id="filtrePeriodeToutToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                 </buttons>
                             </ButtonBar>
@@ -155,6 +153,7 @@
         </VBox>
     </center>
     <bottom>
+<!--
         <HBox>
             <ButtonBar>
                 <buttons>
@@ -165,7 +164,7 @@
                 <HBox styleClass="itemBarreEtat">
                     <Label text="Nombre de tâches à traiter : ">
                         <tooltip>
-                            <!--suppress JavaFxUnresolvedFxIdReference -->
+                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
                             <Tooltip fx:id="nbrTachesATraiterTooltip"
                                      text="Nombre de tâches dont le statut est inférieur à '85-Reportée'."/>
                         </tooltip>
@@ -175,7 +174,7 @@
                 <HBox styleClass="itemBarreEtat">
                     <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
                         <tooltip>
-                            <!--suppress JavaFxUnresolvedFxIdReference -->
+                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
                             <Tooltip fx:id="totalResteAFaireTooltip"
                                      text="Total des charges pour les tâches restant à traiter."/>
                         </tooltip>
@@ -183,7 +182,19 @@
                     <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
                     <Label text=" jours"/>
                 </HBox>
+                <HBox styleClass="itemBarreEtat">
+                    <Label text="Nombre de tâches affichées : ">
+                        <tooltip>
+                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                            <Tooltip fx:id="nbrTachesAfficheesTooltip"
+                                     text="Nombre de tâches affichées (après filtre)."/>
+                        </tooltip>
+                    </Label>
+                    <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
+                </HBox>
             </HBox>
         </HBox>
+-->
+        <BarreEtatTachesComponent fx:id="barreEtatComponent"/>
     </bottom>
 </BorderPane>

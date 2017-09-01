@@ -1,30 +1,23 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBeans;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -36,16 +29,12 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TachesController.class);
 
+
     private static TachesController instance;
 
     public static TachesController instance() {
         return instance;
     }
-
-
-    //    @Autowired
-    @NotNull
-    private TacheService tacheService = TacheService.instance();
 
 
     /*
@@ -56,17 +45,6 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
     @NotNull
     @FXML
     private TableView<TacheBean> tachesTable;
-
-
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    @FXML
-    private Label nbrTachesATraiterLabel;
-
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    @FXML
-    private Label totalResteAFaireLabel;
 
     /*
      La couche métier :
@@ -130,27 +108,10 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
      * after the fxml file has been loaded.
      */
     @FXML
-    protected void initialize() throws IhmException {
+    protected void initialize() throws ControllerException {
         LOGGER.debug("Initialisation...");
 
         super.initialize();
-
-        NumberFormat formatNbrTaches = new DecimalFormat("#,##0");
-        NumberFormat formatCharge = new DecimalFormat("#,##0.###");
-        tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
-
-            List<TacheDTO> tacheDTOs = TacheBeans.toDTO(tachesTable.getItems());
-            List<TacheDTO> tacheATraiterDTOs = tacheService.tachesATraiter(tacheDTOs);
-
-            long nbrTachesATraiter = tacheATraiterDTOs.size();
-            nbrTachesATraiterLabel.setText(formatNbrTaches.format(nbrTachesATraiter));
-
-            Double totalRAF = tacheATraiterDTOs.parallelStream()
-                    .mapToDouble(tacheBean -> Objects.value(tacheBean.getCharge(), 0.0))
-                    .sum();
-            totalResteAFaireLabel.setText(formatCharge.format(totalRAF));
-
-        });
 
         LOGGER.info("Initialisé.");
     }
@@ -166,32 +127,28 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         if (!tachesTableContextMenu.getItems().contains(menuVoirTacheDansPlanCharge)) {
             tachesTableContextMenu.getItems().add(menuVoirTacheDansPlanCharge);
         }
-
     }
 */
 
-    // Surchargée juste pour pouvoir ajouter le @FXML.
-    @FXML
     @NotNull
-    protected TacheBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+    protected TacheBean ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
-        //noinspection OverlyBroadCatchBlock
         try {
-            //noinspection UnnecessarySuperQualifier
+
             TacheBean tacheBean = super.ajouterTache();
 
             planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new AjoutTache<>(tacheBean, getTachesBeans()));
+            getSuiviActionsUtilisateur().historiser(new AjoutTache<>(tacheBean, planificationsBeans));
 
             ihm.getApplicationController().majBarreEtat();
             return tacheBean;
-        } catch (IhmException e) {
-            throw new Exception("Impossible d'ajouter une tâche.", e);
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'ajouter une tâche.", e);
         }
     }
 
     @Override
-    TacheBean nouveauBean() throws IhmException {
+    TacheBean nouveauBean() throws ControllerException {
         return ihm.getChargesController().nouveauBean();
     }
 

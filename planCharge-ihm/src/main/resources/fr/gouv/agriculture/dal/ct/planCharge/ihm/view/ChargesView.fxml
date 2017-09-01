@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
 <?import javafx.scene.control.*?>
@@ -28,7 +29,6 @@
                                         <Label text="Catégorie : "/>
                                         <SegmentedButton>
                                             <buttons>
-                                                <ToggleButton text="Tout" onAction="#filtrer" fx:id="filtreCategorieToutToggleButton"/>
                                                 <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
@@ -39,7 +39,6 @@
                                         <Label text="Statut : "/>
                                         <SegmentedButton>
                                             <buttons>
-                                                <ToggleButton text="Tout" fx:id="filtreStatutToutToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
@@ -53,7 +52,6 @@
                                         <Label text="Période : "/>
                                         <SegmentedButton>
                                             <buttons>
-                                                <ToggleButton text="Tout" fx:id="filtrePeriodeToutToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                             </buttons>
                                         </SegmentedButton>
@@ -65,9 +63,10 @@
                                         <SegmentedButton>
                                             <buttons>
                                                 <ToggleButton text="Tout" onAction="#filtrer"/>
-                                                <ToggleButton text="Non planifiée entièrement" onAction="#filtrer"/>
-                                                <ToggleButton text="Planifiée dans le mois" onAction="#filtrer"/>
                                                 <ToggleButton text="Demandée dans le semestre" onAction="#filtrer"/>
+                                                <ToggleButton text="Non planifiée entièrement" onAction="#filtrer"/>
+                                                <ToggleButton text="'Trop' planifiée" onAction="#filtrer"/>
+                                                <ToggleButton text="Planifiée dans le mois" onAction="#filtrer"/>
                                             </buttons>
                                         </SegmentedButton>
                                     </VBox>
@@ -78,6 +77,15 @@
                                                 <ToggleButton text="Tout" onAction="#filtrer"/>
                                                 <ToggleButton text="Avec ressource surchargée" onAction="#filtrer"/>
                                                 <ToggleButton text="Avec profil surchargé" onAction="#filtrer"/>
+                                            </buttons>
+                                        </SegmentedButton>
+                                    </VBox>
+                                    <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                        <Label text="Incohérence : "/>
+                                        <SegmentedButton>
+                                            <buttons>
+                                                <ToggleButton text="Tout" onAction="#filtrer"/>
+                                                <ToggleButton text="Avec incohérence" onAction="#filtrer"/>
                                             </buttons>
                                         </SegmentedButton>
                                     </VBox>
@@ -212,12 +220,48 @@
         </TableViewAvecCalendrier>
     </center>
     <bottom>
-        <AnchorPane>
+<!--
+        <HBox>
             <ButtonBar>
                 <buttons>
                     <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
                 </buttons>
             </ButtonBar>
-        </AnchorPane>
+            <HBox styleClass="barreEtat">
+                <HBox styleClass="itemBarreEtat">
+                    <Label text="Nombre de tâches à faire : ">
+                        <tooltip>
+                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                            <Tooltip fx:id="nbrTachesATraiterTooltip"
+                                     text="Nombre de tâches qui restent à faire, c-à-d dont le statut est inférieur strict. à '85-Reportée'."/>
+                        </tooltip>
+                    </Label>
+                    <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
+                </HBox>
+                <HBox styleClass="itemBarreEtat">
+                    <Label text="Total du RAF : " tooltip="$totalResteAFaireTooltip">
+                        <tooltip>
+                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                            <Tooltip fx:id="totalResteAFaireTooltip"
+                                     text="Total des charges pour les tâches restant à faire."/>
+                        </tooltip>
+                    </Label>
+                    <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
+                    <Label text=" jours"/>
+                </HBox>
+                <HBox styleClass="itemBarreEtat">
+                    <Label text="Nombre de tâches affichées : ">
+                        <tooltip>
+                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                            <Tooltip fx:id="nbrTachesAfficheesTooltip"
+                                     text="Nombre de tâches qu sont actuellement affichées (après filtre)."/>
+                        </tooltip>
+                    </Label>
+                    <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
+                </HBox>
+            </HBox>
+        </HBox>
+-->
+        <BarreEtatTachesComponent fx:id="barreEtatComponent"/>
     </bottom>
 </BorderPane>

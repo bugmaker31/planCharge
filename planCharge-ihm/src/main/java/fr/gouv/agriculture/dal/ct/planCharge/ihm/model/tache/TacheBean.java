@@ -449,7 +449,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    public boolean matcheDescription(@NotNull String otherValue) throws IhmException {
+    public boolean matcheDescription(@NotNull String otherValue) throws BeanException {
         if (getDescription() == null) {
             return false;
         }
@@ -457,7 +457,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         try {
             patron = Pattern.compile(otherValue);
         } catch (PatternSyntaxException e) {
-            throw new IhmException("Impossible de filtrer les descriptions des tâches à partir d'une expression régulière incorrecte : '" + otherValue + "'.", e);
+            throw new BeanException("Impossible de filtrer les descriptions des tâches à partir d'une expression régulière incorrecte : '" + otherValue + "'.", e);
         }
         Matcher matcher = patron.matcher(getDescription());
         if (matcher.find()) {

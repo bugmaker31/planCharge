@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+         type="javafx.scene.layout.HBox"
+         fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.BarreEtatTachesController"
+>
+    <ButtonBar>
+        <buttons>
+            <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
+        </buttons>
+    </ButtonBar>
+    <HBox styleClass="barreEtat">
+        <HBox styleClass="itemBarreEtat">
+            <Label text="Nombre de tâches à traiter : ">
+                <tooltip>
+                    <!--suppress JavaFxUnresolvedFxIdReference -->
+                    <Tooltip fx:id="nbrTachesATraiterTooltip"
+                             text="Nombre de tâches dont le statut est inférieur à '85-Reportée'."/>
+                </tooltip>
+            </Label>
+            <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
+        </HBox>
+        <HBox styleClass="itemBarreEtat">
+            <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
+                <tooltip>
+                    <!--suppress JavaFxUnresolvedFxIdReference -->
+                    <Tooltip fx:id="totalResteAFaireTooltip"
+                             text="Total des charges pour les tâches restant à traiter."/>
+                </tooltip>
+            </Label>
+            <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
+            <Label text=" jours"/>
+        </HBox>
+        <HBox styleClass="itemBarreEtat">
+            <Label text="Nombre de tâches affichées : ">
+                <tooltip>
+                    <!--suppress JavaFxUnresolvedFxIdReference -->
+                    <Tooltip fx:id="nbrTachesAfficheesTooltip"
+                             text="Nombre de tâches affichées (après filtre)."/>
+                </tooltip>
+            </Label>
+            <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
+        </HBox>
+    </HBox>
+</fx:root>

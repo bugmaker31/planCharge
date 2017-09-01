@@ -1,12 +1,13 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
@@ -227,10 +228,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public ChargesController() throws IhmException {
+    public ChargesController() throws ControllerException {
         super();
         if (instance != null) {
-            throw new IhmException("Instanciation à plus d'1 exemplaire.");
+            throw new ControllerException("Instanciation à plus d'1 exemplaire.");
         }
         instance = this;
     }
@@ -266,7 +267,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("OverlyLongMethod")
     @FXML
     @Override
-    protected void initialize() throws IhmException {
+    protected void initialize() throws ControllerException {
         LOGGER.debug("Initialisation...");
 
         super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
@@ -311,7 +312,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         }
                         DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode, finPeriode);
                         return nouvelleCharge.getValue().equals(0.0) ? null : nouvelleCharge.asObject();
-                    } catch (IhmException e) {
+                    } catch (BeanException e) {
                         LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°" + finalNoSemaine + " pour la tâche " + cell.getValue().noTache() + ".", e);
                         return null;
                     }
@@ -421,14 +422,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 */
 
-    @FXML
-    @NotNull
-    protected PlanificationTacheBean ajouterTache(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+    protected PlanificationTacheBean ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
+        if (planChargeBean.getDateEtat() == null) {
+            throw new ControllerException("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
+        }
         try {
-            if (planChargeBean.getDateEtat() == null) {
-                throw new IhmException("Impossible d'ajouter une tâche car la date d'état n'est pas définie. Précisez une date auparavant.");
-            }
 
             PlanificationTacheBean planifBean = super.ajouterTache();
 
@@ -438,13 +437,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             ihm.getApplicationController().majBarreEtat();
 
             return planifBean;
-        } catch (IhmException e) {
-            throw new Exception("Impossible d'ajouter une tâche.", e);
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'ajouter une tâche.", e);
         }
     }
 
     @Override
-    PlanificationTacheBean nouveauBean() throws IhmException {
+    PlanificationTacheBean nouveauBean() throws ControllerException {
 
         TacheBean tacheBean = new TacheBean(
                 idTacheSuivant(),
@@ -471,7 +470,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             debutSemaine = debutSemaine.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         }
 
-        return new PlanificationTacheBean(tacheBean, calendrier);
+        try {
+            return new PlanificationTacheBean(tacheBean, calendrier);
+        } catch (BeanException e) {
+            throw new ControllerException("Impossible d'instancier un nouvelle tâche du plan de charge.", e);
+        }
     }
 
 
@@ -491,7 +494,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         try {
             definirValeursCalendrier(dateEtat);
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible de màj la planification (valeurs du calendrier).", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
@@ -501,7 +504,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
     }
 
-    private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws IhmException {
+    private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws ControllerException {
         try {
             LOGGER.debug("Màj de la planification : ");
             PlanificationsDTO planificationsInitiales = planChargeBean.toPlanificationDTOs();
@@ -519,8 +522,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                     });
             planificationsTable.refresh();
             LOGGER.debug("Planification màj.");
-        } catch (ServiceException e) {
-            throw new IhmException("Impossible de màj la planification.", e);
+        } catch (BeanException | ServiceException e) {
+            throw new ControllerException("Impossible de màj la planification.", e);
         }
     }
 

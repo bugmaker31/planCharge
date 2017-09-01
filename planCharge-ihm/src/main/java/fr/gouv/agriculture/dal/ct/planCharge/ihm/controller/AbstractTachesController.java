@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -12,6 +13,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
@@ -43,6 +45,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -59,6 +63,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     public static final PseudoClass PSEUDOCLASS_ECHUE = PseudoClass.getPseudoClass("echue");
 
 
+    // La couche métier :
+
     //    @Autowired
     @NotNull
     final // 'final' pour empêcher de resetter cette variable.
@@ -71,19 +77,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     final // 'final' pour empêcher de resetter cette variable.
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
-    @NotNull
-    abstract ObservableList<TB> getTachesBeans();
-
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
     @SuppressWarnings("unchecked")
     @NotNull
     final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
     private FilteredList<TB> filteredTachesBeans = new FilteredList<TB>((ObservableList<TB>) planChargeBean.getPlanificationsBeans());
-
-    @NotNull
-    public FilteredList<TB> getFilteredTachesBeans() {
-        return filteredTachesBeans;
-    }
 
     // Les tables :
 
@@ -147,16 +145,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     private FiltreGlobalTachesComponent filtreGlobalComponent;
 
-    /*
-        @FXML
-        @NotNull
-        @SuppressWarnings("NullableProblems")
-        private SegmentedButton filtreCategorieSegmentedButton;
-    */
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private ToggleButton filtreCategorieToutToggleButton;
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
@@ -170,16 +158,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtreCategorieOrganisationToggleButton;
 
-    /*
-        @FXML
-        @NotNull
-        @SuppressWarnings("NullableProblems")
-        private SegmentedButton filtreStatutSegmentedButton;
-    */
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private ToggleButton filtreStatutToutToggleButton;
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
@@ -204,40 +182,50 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtreStatutClosToggleButton;
-/*
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private ToggleButton filtreStatutEchuToggleButton;
-*/
 
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private ToggleButton filtrePeriodeToutToggleButton;
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtrePeriodeEchueToggleButton;
 
+    // Les menus :
+
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    protected ContextMenu tachesTableContextMenu;
+    private ContextMenu tachesTableContextMenu;
 
+    // Les items de la barre d'état :
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private BarreEtatTachesComponent<TB> barreEtatComponent;
+
+
+    // Getters/Setters :
 
     @NotNull
     abstract TableView<TB> getTachesTable();
+
+    @NotNull
+    abstract ObservableList<TB> getTachesBeans();
 
     @NotNull
     TableColumn<TB, Double> getChargeColumn() {
         return chargeColumn;
     }
 
+    @NotNull
+    public FilteredList<TB> getFilteredTachesBeans() {
+        return filteredTachesBeans;
+    }
+
+    // Méthodes :
 
     @SuppressWarnings("OverlyLongMethod")
     @Override
-    protected void initialize() throws IhmException {
+    protected void initialize() throws ControllerException {
         LOGGER.debug("Initialisation...");
 //        super.initialize();
 
@@ -563,6 +551,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         });
 
+        // Barre d'état :
+        barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
+
         LOGGER.info("Initialisé.");
     }
 
@@ -586,24 +577,24 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 */
     @NotNull
-    protected TB ajouterTache() throws Exception {
+    protected TB ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
-        try {
-            TB nouvTache = nouveauBean();
-            getTachesBeans().add(nouvTache);
+        TB nouvTache = nouveauBean();
+        getTachesBeans().add(nouvTache);
 
-            // Positionnement sur la tâche qu'on vient d'ajouter :
+        // Positionnement sur la tâche qu'on vient d'ajouter (si elle n'est pas masquée à cause des filtres éventuellement posés par l'utilisateur) :
+        if (TableViews.itemIndex(getTachesTable(), nouvTache) < 0) {
+            // La tâche n'apparaît pas dans la liste, car filtrée.
+        } else {
             TableViews.editCell(getTachesTable(), nouvTache, descriptionColumn);
-
-            getTachesTable().refresh(); // Notamment pour recalculer les styles CSS.
-
-            return nouvTache;
-        } catch (IhmException e) {
-            throw new Exception("Impossible d'ajouter une tâche.", e);
         }
+
+//        getTachesTable().refresh(); // Notamment pour recalculer les styles CSS.
+
+        return nouvTache;
     }
 
-    abstract TB nouveauBean() throws IhmException;
+    abstract TB nouveauBean() throws ControllerException;
 
     int idTacheSuivant() {
         OptionalInt max = getTachesBeans().stream().mapToInt(TacheBean::getId).max();
@@ -621,9 +612,23 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
         // TODO FDA 2017/08 Décocher tous les autres filtres.
-        filtreCategorieToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
-        filtreStatutToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
-        filtrePeriodeToutToggleButton.setSelected(true); // TODO FDA 2017/08 Tester.
+        List<ToggleButton> filtreButtons = Arrays.asList(
+                filtreCategorieProjetToggleButton,
+                filtreCategorieServiceToggleButton,
+                filtreCategorieOrganisationToggleButton,
+                //
+                filtreStatutNouveauToggleButton,
+                filtreStatutEnCoursToggleButton,
+                filtreStatutEnAttenteToggleButton,
+                filtreStatutRecurrentToggleButton,
+                filtreStatutReporteToggleButton,
+                filtreStatutClosToggleButton,
+                //
+                filtrePeriodeEchueToggleButton
+        );
+        for (ToggleButton filtreButton : filtreButtons) {
+            filtreButton.setSelected(true);
+        }
 
         // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
 
@@ -641,120 +646,78 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     private boolean estTacheAVoir(@NotNull TB tache) {
-        if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) == null) {
-//            return true;
-        } else {
-            if (tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
-                return true;
-            }
+
+        // Si un filtre global est positionné, c'est un filtre exhaustif, il ne s'additionne pas avec les autres filtres.
+        if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
+            return tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText());
         }
-        if (filtreCategorieToutToggleButton.isSelected()) {
-//            return true;
-        } else {
-            if (estTacheAvecCategorieAVoir(tache)) {
-                return true;
-            }
+
+        if (estTacheAvecCategorieAVoir(tache)) {
+            return true;
         }
-        if (filtreStatutToutToggleButton.isSelected()) {
-//            return true;
-        } else {
-            if (estTacheAvecStatutAVoir(tache)) {
-                    return true;
-            }
+        if (estTacheAvecStatutAVoir(tache)) {
+            return true;
         }
-        if (filtrePeriodeToutToggleButton.isSelected()) {
-//            return true;
-        } else {
-            if (estTacheAvecPeriodeAVoir(tache)) {
-                return true;
-            }
+        if (estTacheAvecPeriodeAVoir(tache)) {
+            return true;
         }
         return false;
     }
 
     private boolean estTacheAvecCategorieAVoir(@NotNull TB tache) {
-/*
-        if (filtreCategorieToutToggleButton.isSelected()) {
+
+        if (filtreCategorieProjetToggleButton.isSelected() && tache.matcheCategorie(CategorieTacheDTO.PROJET.getCode())) {
             return true;
         }
-*/
-        if (filtreCategorieProjetToggleButton.isSelected()) {
-            if (tache.matcheCategorie(CategorieTacheDTO.PROJET.getCode())) {
-                return true;
-            }
+
+        if (filtreCategorieServiceToggleButton.isSelected() && tache.matcheCategorie(CategorieTacheDTO.SERVICE.getCode())) {
+            return true;
         }
-        if (filtreCategorieServiceToggleButton.isSelected()) {
-            if (tache.matcheCategorie(CategorieTacheDTO.SERVICE.getCode())) {
-                return true;
-            }
+        if (filtreCategorieOrganisationToggleButton.isSelected() && tache.matcheCategorie(CategorieTacheDTO.ORGANISATION_INTERNE.getCode())) {
+            return true;
         }
-        if (filtreCategorieOrganisationToggleButton.isSelected()) {
-            if (tache.matcheCategorie(CategorieTacheDTO.ORGANISATION_INTERNE.getCode())) {
-                return true;
-            }
+        return false;
+    }
+
+    private boolean estTacheAvecStatutAVoir(@NotNull TB tache) {
+
+        //noinspection ConstantConditions
+        if (filtreStatutNouveauToggleButton.isSelected() && tache.matcheStatut(StatutDTO.NOUVEAU.getCode())) {
+            return true;
+        }
+        //noinspection ConstantConditions
+        if (filtreStatutEnCoursToggleButton.isSelected() && tache.matcheStatut(StatutDTO.EN_COURS.getCode())) {
+            return true;
+        }
+        //noinspection ConstantConditions
+        if (filtreStatutEnAttenteToggleButton.isSelected() && tache.matcheStatut(StatutDTO.EN_ATTENTE.getCode())) {
+            return true;
+        }
+        //noinspection ConstantConditions
+        if (filtreStatutRecurrentToggleButton.isSelected() && tache.matcheStatut(StatutDTO.RECURRENT.getCode())) {
+            return true;
+        }
+        //noinspection ConstantConditions
+        if (filtreStatutReporteToggleButton.isSelected() && tache.matcheStatut(StatutDTO.REPORTE.getCode())) {
+            return true;
+        }
+        //noinspection ConstantConditions,OverlyComplexBooleanExpression
+        if (filtreStatutClosToggleButton.isSelected() && (
+                tache.matcheStatut(StatutDTO.ANNULE.getCode())
+                        || tache.matcheStatut(StatutDTO.DOUBLON.getCode())
+                        || tache.matcheStatut(StatutDTO.TERMINE.getCode())
+        )) {
+            return true;
         }
         return false;
     }
 
     @SuppressWarnings("MethodWithMoreThanThreeNegations")
-    private boolean estTacheAvecStatutAVoir(@NotNull TB tache){
-/*
-        if (filtreStatutToutToggleButton.isSelected()) {
-            return true;
-        }
-*/
-        if (filtreStatutNouveauToggleButton.isSelected()) {
-            //noinspection ConstantConditions
-            if (tache.matcheStatut(StatutDTO.NOUVEAU.getCode())) {
-                return true;
-            }
-        }
-        if (filtreStatutEnCoursToggleButton.isSelected()) {
-            //noinspection ConstantConditions
-            if (tache.matcheStatut(StatutDTO.EN_COURS.getCode())) {
-                return true;
-            }
-        }
-        if (filtreStatutEnAttenteToggleButton.isSelected()) {
-            //noinspection ConstantConditions
-            if (tache.matcheStatut(StatutDTO.EN_ATTENTE.getCode())) {
-                return true;
-            }
-        }
-        if (filtreStatutRecurrentToggleButton.isSelected()) {
-            //noinspection ConstantConditions
-            if (tache.matcheStatut(StatutDTO.RECURRENT.getCode())) {
-                return true;
-            }
-        }
-        if (filtreStatutReporteToggleButton.isSelected()) {
-            //noinspection ConstantConditions
-            if (tache.matcheStatut(StatutDTO.REPORTE.getCode())) {
-                return true;
-            }
-        }
-        if (filtreStatutClosToggleButton.isSelected()) {
-            //noinspection ConstantConditions
-            if (tache.matcheStatut(StatutDTO.ANNULE.getCode())
-                    || tache.matcheStatut(StatutDTO.DOUBLON.getCode())
-                    || tache.matcheStatut(StatutDTO.TERMINE.getCode())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private boolean estTacheAvecPeriodeAVoir(@NotNull TB tache) {
-/*
-        if (filtrePeriodeToutToggleButton.isSelected()) {
-            return true;
-        }
-*/
-        if (filtrePeriodeEchueToggleButton.isSelected()) {
-            if ((tache.getEcheance() != null) && (planChargeBean.getDateEtat() != null)) {
-                if (tache.getEcheance().isAfter(planChargeBean.getDateEtat())) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
-                    return true;
-                }
+        //noinspection OverlyComplexBooleanExpression
+        if ((tache.getEcheance() != null) && (planChargeBean.getDateEtat() != null)) {
+            if (filtrePeriodeEchueToggleButton.isSelected() && tache.getEcheance().isBefore(planChargeBean.getDateEtat())) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+                return true;
             }
         }
         return false;
