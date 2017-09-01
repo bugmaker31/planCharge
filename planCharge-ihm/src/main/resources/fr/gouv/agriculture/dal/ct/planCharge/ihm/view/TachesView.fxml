@@ -38,7 +38,11 @@
                                     <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Récurrent" fx:id="filtreStatutRecurrentToggleButton" onAction="#filtrer"/>
                                     <ToggleButton text="Reporté" fx:id="filtreStatutReporteToggleButton" onAction="#filtrer"/>
-                                    <ToggleButton text="Clos" fx:id="filtreStatutClosToggleButton" onAction="#filtrer"/>
+                                    <ToggleButton text="Clos" fx:id="filtreStatutClosToggleButton" onAction="#filtrer">
+                                        <tooltip>
+                                            <Tooltip text="Clos = Annulé ou Doublon ou Terminé"/>
+                                        </tooltip>
+                                    </ToggleButton>
                                 </buttons>
                             </ButtonBar>
                         </VBox>
@@ -46,6 +50,11 @@
                             <Label text="Période : "/>
                             <ButtonBar>
                                 <buttons>
+<!--
+                                    TODO FDA 2017/09 Coder.
+                                    <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer"/>
+                                    <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"/>
+-->
                                     <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                 </buttons>
                             </ButtonBar>

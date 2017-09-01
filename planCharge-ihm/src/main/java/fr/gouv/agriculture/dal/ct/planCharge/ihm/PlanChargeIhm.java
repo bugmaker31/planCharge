@@ -589,6 +589,15 @@ public class PlanChargeIhm extends Application {
                 .showInformation();
     }
 
+    public void afficherWarning(@NotNull String titre, @NotNull String message) {
+        new Notification()
+                .title(titre)
+                .text(message)
+                .hideAfter(Duration.INDEFINITE) // TODO FDA 2017/08 Permettre à l'utilisateur de changer ce paramètre (à mémoriser dans ses préférences ?)
+                .showWarning();
+    }
+
+
     private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
         PopupWindow popup = createFieldPopup(field, titre, message);
         field.setOnMouseEntered(event -> ((PopOver) popup).show(field));

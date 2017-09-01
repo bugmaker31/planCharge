@@ -585,6 +585,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Positionnement sur la tâche qu'on vient d'ajouter (si elle n'est pas masquée à cause des filtres éventuellement posés par l'utilisateur) :
         if (TableViews.itemIndex(getTachesTable(), nouvTache) < 0) {
             // La tâche n'apparaît pas dans la liste, car filtrée.
+            ihm.afficherWarning("Nouvelle tâche filtrée", "Tâche "+nouvTache.noTache()+" ajoutée, mais non visible à cause des filtres posés.");
         } else {
             TableViews.editCell(getTachesTable(), nouvTache, descriptionColumn);
         }

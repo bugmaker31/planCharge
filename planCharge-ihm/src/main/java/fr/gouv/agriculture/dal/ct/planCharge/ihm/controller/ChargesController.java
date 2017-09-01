@@ -10,10 +10,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
@@ -445,6 +447,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @Override
     PlanificationTacheBean nouveauBean() throws ControllerException {
 
+        // TODO FDA 2017/09 Déplacer cette RG dans la couche métier (service, DTO et/ou Entity).
         TacheBean tacheBean = new TacheBean(
                 idTacheSuivant(),
                 null,
@@ -452,7 +455,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 "(pas de ticket IDAL)",
                 null,
                 null,
-                null,
+                StatutBean.from(StatutDTO.NOUVEAU),
                 null,
                 null,
                 null,
