@@ -230,7 +230,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 //        super.initialize();
 
         // Définition dees items de la table :
-        // TODO FDA 2017/08 Comprendre pourquoi il faut trier.
         SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
         sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
         getTachesTable().setItems(sortedFilteredPlanifBeans);
