@@ -40,6 +40,16 @@ public class CalculateurDisponibilites extends Calculateur {
     private static final Logger LOGGER = LoggerFactory.getLogger(CalculateurDisponibilites.class);
 
 
+    private static CalculateurDisponibilites instance;
+
+    public static final CalculateurDisponibilites  instance() {
+        if (instance == null) {
+            instance = new CalculateurDisponibilites();
+        }
+        return instance;
+    }
+
+
     /*
      La couche métier :
     */
@@ -154,7 +164,7 @@ public class CalculateurDisponibilites extends Calculateur {
             // Nbr de jours d'absence (saisi) :
             float nbrsJoursAbsencePeriode;
             {
-                NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.any(getDisponibilitesController().getNbrsJoursAbsenceBeans(), bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
+                NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.any(getDisponibilitesController().getNbrsJoursAbsenceBeans(), bean -> bean.getRessourceBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + rsrcHumBean.getTrigramme() + "'.")*/);
                 if (nbrsJoursAbsenceBean == null) {
                     nbrsJoursAbsenceBean = new NbrsJoursAbsenceBean(ressHumBean);
                     getDisponibilitesController().getNbrsJoursAbsenceBeans().add(nbrsJoursAbsenceBean);
@@ -174,7 +184,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     throw new ControllerException("Impossible de calculer le nombre de jours de disponibilité pour l'entreprise (MinAgri).", e);
                 }
 
-                NbrsJoursDispoRsrcBean nbrsJoursDispoMinAgriBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMinAgriBeans(), bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+                NbrsJoursDispoRsrcBean nbrsJoursDispoMinAgriBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMinAgriBeans(), bean -> bean.getRessourceBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
                 if (nbrsJoursDispoMinAgriBean == null) {
                     nbrsJoursDispoMinAgriBean = new NbrsJoursDispoRsrcBean(ressHumBean);
                     getDisponibilitesController().getNbrsJoursDispoMinAgriBeans().add(nbrsJoursDispoMinAgriBean);
@@ -182,7 +192,7 @@ public class CalculateurDisponibilites extends Calculateur {
                 if (!nbrsJoursDispoMinAgriBean.containsKey(debutPeriode)) {
                     nbrsJoursDispoMinAgriBean.put(debutPeriode, new SimpleFloatProperty(nbrJoursDispoMinAgriPeriode));
                 } else {
-                    nbrsJoursDispoMinAgriBean.get(debutPeriode).set(nbrJoursDispoMinAgriPeriode);
+                    nbrsJoursDispoMinAgriBean.get(debutPeriode).setValue(nbrJoursDispoMinAgriPeriode);
                 }
             }
 
@@ -196,7 +206,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     throw new ControllerException("Impossible de calculer le pourcentage de disponibilité pour l'équipe (CT du DAL).", e);
                 }
 
-                PctagesDispoRsrcBean pctagesDispoCTBean = Collections.any(getDisponibilitesController().getPctagesDispoCTBeans(), bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+                PctagesDispoRsrcBean pctagesDispoCTBean = Collections.any(getDisponibilitesController().getPctagesDispoCTBeans(), bean -> bean.getRessourceBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
                 if (pctagesDispoCTBean == null) {
                     pctagesDispoCTBean = new PctagesDispoRsrcBean(ressHumBean);
                     getDisponibilitesController().getPctagesDispoCTBeans().add(pctagesDispoCTBean);
@@ -220,7 +230,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     throw new ControllerException("Impossible de calculer le nombre de jours de disponibilité pour l'équipe (CT du DAL).", e);
                 }
 
-                NbrsJoursDispoRsrcBean nbrsJoursDispoCTBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoCTBeans(), bean -> bean.getRessourceHumaineBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
+                NbrsJoursDispoRsrcBean nbrsJoursDispoCTBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoCTBeans(), bean -> bean.getRessourceBean().equals(ressHumBean)/*, new IhmException("Impossible de retrouver la ressource humaine '" + ressHumBean.getTrigramme() + "'.")*/);
                 if (nbrsJoursDispoCTBean == null) {
                     nbrsJoursDispoCTBean = new NbrsJoursDispoRsrcBean(ressHumBean);
                     getDisponibilitesController().getNbrsJoursDispoCTBeans().add(nbrsJoursDispoCTBean);
@@ -243,7 +253,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
                         PctagesDispoRsrcProfilBean pctagesDispoRsrcProfilBean = Collections.any(getDisponibilitesController().getPctagesDispoMaxRsrcProfilBeans(),
                                 pctagesJoursDispoRsrcProfilBean ->
-                                        pctagesJoursDispoRsrcProfilBean.getRessourceHumaineBean().equals(ressHumBean)
+                                        pctagesJoursDispoRsrcProfilBean.getRessourceBean().equals(ressHumBean)
                                                 && pctagesJoursDispoRsrcProfilBean.getProfilBean().equals(profilBean)
                         );
                         if (pctagesDispoRsrcProfilBean == null) {
@@ -263,7 +273,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     PctagesDispoRsrcProfilBean pctagesDispoMaxRsrcProfilBean = Collections.any(
                             getDisponibilitesController().getPctagesDispoMaxRsrcProfilBeans(),
                             pctagesDispoRsrcProfilBean ->
-                                    pctagesDispoRsrcProfilBean.getRessourceHumaineBean().equals(ressHumBean)
+                                    pctagesDispoRsrcProfilBean.getRessourceBean().equals(ressHumBean)
                                             && pctagesDispoRsrcProfilBean.getProfilBean().equals(profilBean),
                             new ControllerException("Impossible de retrouver les pourcentages de dispo. max. pour la ressource '" + ressHumBean.getTrigramme() + "' et le profil '" + profilBean.getCode() + "'.")
                     );
@@ -286,7 +296,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
                         NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean = Collections.any(getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilBeans(),
                                 nbrsJoursDispoRsrcProfilBean ->
-                                        nbrsJoursDispoRsrcProfilBean.getRessourceHumaineBean().equals(ressHumBean)
+                                        nbrsJoursDispoRsrcProfilBean.getRessourceBean().equals(ressHumBean)
                                                 && nbrsJoursDispoRsrcProfilBean.getProfilBean().equals(profilBean)
                         );
                         if (nbrsJoursDispoMaxRsrcProfilBean == null) {
@@ -305,7 +315,7 @@ public class CalculateurDisponibilites extends Calculateur {
                 List<ProfilBean> profilsConcernes = getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilBeans().stream()
                         .filter(
                                 nbrsJoursDispoRsrcProfilBean ->
-                                        nbrsJoursDispoRsrcProfilBean.getRessourceHumaineBean().equals(ressHumBean)
+                                        nbrsJoursDispoRsrcProfilBean.getRessourceBean().equals(ressHumBean)
                         )
                         .map(nbrsJoursDispoRsrcProfilBean -> nbrsJoursDispoRsrcProfilBean.getProfilBean())
                         .collect(Collectors.toList());
@@ -326,7 +336,7 @@ public class CalculateurDisponibilites extends Calculateur {
                     NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean = Collections.any(
                             getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilBeans(),
                             nbrsJoursDispoRsrcProfilBean ->
-                                    nbrsJoursDispoRsrcProfilBean.getRessourceHumaineBean().equals(ressHumBean)
+                                    nbrsJoursDispoRsrcProfilBean.getRessourceBean().equals(ressHumBean)
                                             && nbrsJoursDispoRsrcProfilBean.getProfilBean().equals(profilBean),
                             new ControllerException("Impossible de retrouver les nombres de jours de dispo. max. pour la resssource '" + ressHumBean.getTrigramme() + "' et le profil '" + profilBean.getCode() + "'.")
                     );

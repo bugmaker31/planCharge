@@ -33,7 +33,7 @@ public final class NbrsJoursDispoRsrcProfilBeans {
         Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> nbrsJoursDispoMaxRsrcProfilDTOs = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
         for (NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean : nbrsJoursDispoMaxRsrcProfilBeans) {
 
-            RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMaxRsrcProfilBean.getRessourceHumaineBean();
+            RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMaxRsrcProfilBean.getRessourceBean();
             RessourceHumaineDTO ressourceHumaineDTO = ressourceHumaineBean.toDto();
             if (!nbrsJoursDispoMaxRsrcProfilDTOs.containsKey(ressourceHumaineDTO)) {
                 nbrsJoursDispoMaxRsrcProfilDTOs.put(ressourceHumaineDTO, new TreeMap<>()); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.

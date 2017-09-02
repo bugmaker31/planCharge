@@ -3,7 +3,9 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.application.Platform;
+import javafx.beans.binding.DoubleBinding;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -102,20 +104,28 @@ public final class TableViews {
             for (int columnIdx = 0; columnIdx < columns.size(); columnIdx++) {
                 TableColumn<?, ?> column = columns.get(columnIdx);
 
-                TableColumn masterColumn = masterColumns.get(columnIdx);
-
-                column.prefWidthProperty().bind(masterColumn.widthProperty());
-                column.minWidthProperty().bind(masterColumn.widthProperty());
-                column.maxWidthProperty().bind(masterColumn.widthProperty());
+                TableColumn<?, ?> masterColumn = masterColumns.get(columnIdx);
+                synchronizeColumnsWidth(masterColumn, column);
             }
         }
     }
 
+    public static void synchronizeColumnsWidth(@NotNull TableColumn<?, ?> masterColumn, @NotNull TableColumn<?, ?> slaveColumn) {
+        DoubleBinding masterColumnWidthProperty = masterColumn.widthProperty().multiply(masterColumn.isVisible() ? 1 : 0);
+        slaveColumn.prefWidthProperty().bind(masterColumnWidthProperty);
+        slaveColumn.minWidthProperty().bind(masterColumnWidthProperty);
+        slaveColumn.maxWidthProperty().bind(masterColumnWidthProperty);
+    }
+
     public static <S> void ensureDisplayingAllRows(@NotNull TableView<S> table) {
+        ensureDisplayingRows(table, null);
+    }
+
+    public static <S> void ensureDisplayingRows(@NotNull TableView<S> table, @Null Integer rowCount) {
         // Cf. https://stackoverflow.com/questions/27945817/javafx-adapt-tableview-height-to-number-of-rows
 /*
-        assert table.getFixedCellSize() > 0; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
-        DoubleBinding height = new SimpleDoubleProperty(10.0); // headerRow(table).heightProperty(); // TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
+        assert table.getFixedCellSize() > 0; // _TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+        DoubleBinding height = new SimpleDoubleProperty(10.0); // headerRow(table).heightProperty(); // _TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
         DoubleBinding tableHeight = table.fixedCellSizeProperty().multiply(Bindings.size(table.getItems()).add(height));
         table.minHeightProperty().bind(tableHeight);
         table.prefHeightProperty().bind(tableHeight);
@@ -123,17 +133,20 @@ public final class TableViews {
 */
 //        adjustHeigth(table);
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
-            adjustHeigth(table);
+            adjustHeigth(table, rowCount);
+        });
+        table.fixedCellSizeProperty().addListener((observable, oldValue, newValue) -> {
+            adjustHeigth(table, rowCount);
         });
         table.itemsProperty().addListener((observable, oldValue, newValue) -> {
-            adjustHeigth(table);
+            adjustHeigth(table, rowCount);
         });
         table.getItems().addListener((ListChangeListener<? super S>) change -> {
-            adjustHeigth(table);
+            adjustHeigth(table, rowCount);
         });
     }
 
-    private static void adjustHeigth(@NotNull TableView<?> table) {
+    private static void adjustHeigth(@NotNull TableView<?> table, @Null Integer rowCount) {
         TableHeaderRow headerRow = headerRow(table);
         if (headerRow == null) {
             return;
@@ -143,9 +156,9 @@ public final class TableViews {
         assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
         double rowHeight = table.getFixedCellSize();
 
-        int rowsCount = table.getItems().size();
+        int actualRowCount = Objects.value(rowCount, table.getItems().size());
 
-        double tableHeight = headerRowHeight + (rowHeight * (rowsCount + 1)) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
+        double tableHeight = headerRowHeight + (rowHeight * (actualRowCount + 1)) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
@@ -204,9 +217,9 @@ public final class TableViews {
 
     public static <S> void ensureSorting(@NotNull TableView<S> table) {
 //        table.getItems().addListener((ListChangeListener<? super S>) change -> {
-            SortedList<S> sortedBeans = new SortedList<>(table.getItems());
-            sortedBeans.comparatorProperty().bind(table.comparatorProperty());
-            table.setItems(sortedBeans);
+        SortedList<S> sortedBeans = new SortedList<>(table.getItems());
+        sortedBeans.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedBeans);
 //        });
     }
 }

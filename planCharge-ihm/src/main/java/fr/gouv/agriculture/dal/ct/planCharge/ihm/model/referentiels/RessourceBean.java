@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceGeneriqueDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
@@ -55,6 +57,16 @@ public abstract class RessourceBean<B extends RessourceBean<B, D>, D extends Res
     public StringProperty codeProperty() {
         return code;
     }
+
+
+    public boolean estHumain() throws BeanException {
+        try {
+            return toDto().estHumain();
+        } catch (DTOException e) {
+            throw new BeanException("Impossible de déterminer si cette ressource est humaine ou non.", e);
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {

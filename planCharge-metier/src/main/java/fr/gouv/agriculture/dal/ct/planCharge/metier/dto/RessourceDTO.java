@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceGenerique;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
@@ -41,8 +42,8 @@ public abstract class RessourceDTO<E extends Ressource<E>, D extends RessourceDT
     }
 
 
-    public boolean estHumain() {
-        return this instanceof RessourceHumaineDTO;
+    public boolean estHumain() throws DTOException {
+        return toEntity().estHumain();
     }
 
 

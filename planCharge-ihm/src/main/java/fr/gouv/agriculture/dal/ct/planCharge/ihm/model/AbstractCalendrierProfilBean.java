@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractDisponibilitesProfilBean<D extends AbstractDTO, B extends AbstractDisponibilitesProfilBean<D, B, T>, T extends Property> extends AbstractDisponibilitesBean<D, B, T> {
+public abstract class AbstractCalendrierProfilBean<D extends AbstractDTO, B extends AbstractCalendrierProfilBean<D, B, T>, T extends Property> extends AbstractCalendrierBean<D, B, T> {
 
 
     // Fields :
@@ -21,12 +21,12 @@ public abstract class AbstractDisponibilitesProfilBean<D extends AbstractDTO, B 
 
     // Constructors:
 
-    public AbstractDisponibilitesProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
+    public AbstractCalendrierProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
         super(calendrier);
         this.profilBean.setValue(profilBean);
     }
 
-    public AbstractDisponibilitesProfilBean(@NotNull ProfilBean profilBean) {
+    public AbstractCalendrierProfilBean(@NotNull ProfilBean profilBean) {
         this(profilBean, new TreeMap<>()); // TreeMap juste pour trier afin de faciliter le débogage.
     }
 
@@ -40,7 +40,7 @@ public abstract class AbstractDisponibilitesProfilBean<D extends AbstractDTO, B 
 //        if (!super.equals(o)) return false;
 
         //noinspection unchecked
-        AbstractDisponibilitesProfilBean<D, B, T> that = (AbstractDisponibilitesProfilBean<D, B, T>) o;
+        AbstractCalendrierProfilBean<D, B, T> that = (AbstractCalendrierProfilBean<D, B, T>) o;
 
         return getProfilBean().equals(that.getProfilBean());
     }

@@ -270,7 +270,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
 
     @NotNull
-    public PlanChargeBean fromDto(@NotNull PlanChargeDTO planCharge) {
+    public PlanChargeBean fromDto(@NotNull PlanChargeDTO planCharge) throws BeanException {
         setDateEtat(planCharge.getDateEtat());
         // Référentiels :
         joursFeriesBeans.setAll(
@@ -386,7 +386,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         // Nbrs de jours d'absence / rsrc :
         Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsence = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (NbrsJoursAbsenceBean nbrsJoursAbsenceBean : nbrsJoursAbsenceBeans) {
-            RessourceHumaineDTO ressourceHumaine = nbrsJoursAbsenceBean.getRessourceHumaineBean().toDto();
+            RessourceHumaineDTO ressourceHumaine = nbrsJoursAbsenceBean.getRessourceBean().toDto();
             Map<LocalDate, Float> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
             for (LocalDate debutPeriode : nbrsJoursAbsenceBean.keySet()) {
                 FloatProperty nbrJoursAbsenceProperty = nbrsJoursAbsenceBean.get(debutPeriode);
@@ -398,7 +398,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         // % de dispo pour la CT / rsrc
         Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (PctagesDispoRsrcBean pctagesDispoCTBean : pctagesDispoCTBeans) {
-            RessourceHumaineDTO ressourceHumaine = pctagesDispoCTBean.getRessourceHumaineBean().toDto();
+            RessourceHumaineDTO ressourceHumaine = pctagesDispoCTBean.getRessourceBean().toDto();
             Map<LocalDate, Percentage> calendrier = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
             for (LocalDate debutPeriode : pctagesDispoCTBean.keySet()) {
                 PercentageProperty pctageDispoCTProperty = pctagesDispoCTBean.get(debutPeriode);
@@ -411,7 +411,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
         for (PctagesDispoRsrcProfilBean pctagesDispoMaxProfilBean : pctagesDispoMaxRsrcProfilBeans) {
 
-            RessourceHumaineDTO ressourceHumaine = pctagesDispoMaxProfilBean.getRessourceHumaineBean().toDto();
+            RessourceHumaineDTO ressourceHumaine = pctagesDispoMaxProfilBean.getRessourceBean().toDto();
             if (!pctagesDispoMaxProfil.containsKey(ressourceHumaine)) {
                 pctagesDispoMaxProfil.put(ressourceHumaine, new TreeMap<>()); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
             }

@@ -1292,14 +1292,17 @@ public class ApplicationController extends AbstractController {
         // Rq : Plus nécessaire de redéfinir les colonnes pour les TableView de getDisponibilitesController() autres que "*NbrsJoursOuvresTable",
         //      maintenant qu'on n'affiche plus les TableHeaderRow de ces TableView.
 
+        //noinspection rawtypes
         List<TableViewAvecCalendrier> tables = new ArrayList<>();
         // Disponibilites :
+        //noinspection CollectionAddAllCanBeReplacedWithConstructor
         tables.addAll(ihm.getDisponibilitesController().tables());
         // Charges :
-        tables.add(ihm.getChargesController().getTachesTable());
+        tables.addAll(ihm.getChargesController().tables());
         //
+        //noinspection rawtypes
         for (TableViewAvecCalendrier table : tables) {
-            //noinspection unchecked
+            //noinspection unchecked,rawtypes
             List<TableColumn> calendrierColumns = table.getCalendrierColumns();
 
             LocalDate dateDebutPeriode = null;
@@ -1308,12 +1311,14 @@ public class ApplicationController extends AbstractController {
                 dateDebutPeriode = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
             }
 
+            //noinspection rawtypes
             for (TableColumn calendrierColumn : calendrierColumns) {
                 String titreColonne;
                 if (dateDebutPeriode == null) {
                     //noinspection HardcodedFileSeparator
                     titreColonne = "N/C";
                 } else {
+                    //noinspection HardcodedLineSeparator
                     titreColonne = noSemaineFormatter.format(dateDebutPeriode)
                             + "\n" + ('[' + dateFormatter.format(dateDebutPeriode)
 /*

@@ -3,25 +3,36 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.CalendrierFractionsJoursChargeParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.CalendrierFractionsJoursCellCallback;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +40,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
@@ -40,9 +52,7 @@ import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -73,14 +83,23 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     //    @Autowired
     @NotNull
-    private ChargeService planChargeService = ChargeService.instance();
+    // 'final' pour éviter que quiconque resette cette variable.
+    private final ChargeService planChargeService = ChargeService.instance();
 
     //    @Autowired
     @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+    // 'final' pour éviter que quiconque resette cette variable.
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     @NotNull
-    private ObservableList<PlanificationTacheBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+    // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
+    private final ObservableList<PlanificationTacheBean> planificationsBeans = planChargeBean.getPlanificationsBeans();
+
+    @NotNull
+    // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
+    private final ObservableList<CalendrierFractionsJoursChargeParRessourceBean> nbrsJoursChargeRsrcBeans = FXCollections.observableArrayList();
+
+
 
     /*
      La couche "View" :
@@ -97,11 +116,16 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
-    // La Table :
+    // Les TableView :
+
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
     private TableViewAvecCalendrier<PlanificationTacheBean, Double> planificationsTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<PlanificationTacheBean, ?> tacheColumn;
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -156,66 +180,70 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> chargePlanifieeColumn;
 
-
+    @SuppressWarnings("NullableProblems")
+    @FXML
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine1Column() {
-        return semaine1Column;
-    }
-
+    private TableViewAvecCalendrier<CalendrierFractionsJoursChargeParRessourceBean, Float> nbrsJoursChargeRsrcTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine2Column() {
-        return semaine2Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, ?> espaceNbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine3Column() {
-        return semaine3Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, String> ressourceNbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine4Column() {
-        return semaine4Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, String> profilNbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine5Column() {
-        return semaine5Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine1NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine6Column() {
-        return semaine6Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine2NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine7Column() {
-        return semaine7Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine3NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine8Column() {
-        return semaine8Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine4NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine9Column() {
-        return semaine9Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine5NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine10Column() {
-        return semaine10Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine6NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine11Column() {
-        return semaine11Column;
-    }
-
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine7NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
-    public TableColumn<PlanificationTacheBean, Double> getSemaine12Column() {
-        return semaine12Column;
-    }
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine8NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine9NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine10NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine11NbrsJoursChargeRsrcColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> semaine12NbrsJoursChargeRsrcColumn;
 
     /*
     La couche "Controller" :
@@ -225,6 +253,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     private final CalculateurCharges calculateurCharges = new CalculateurCharges();
 
+
+    // Constructors:
 
     /**
      * The constructor.
@@ -238,6 +268,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         instance = this;
     }
 
+
+    // Getters/Setters:
 
     @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
@@ -253,7 +285,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return planificationsTable;
     }
 
-
     // Module
 
     @Override
@@ -261,6 +292,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return "Charge";
     }
 
+
+    // Methods:
 
     /**
      * Initializes the controller class. This method is automatically called
@@ -273,6 +306,98 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         LOGGER.debug("Initialisation...");
 
         super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
+
+        initBeans();
+        initTables();
+
+        LOGGER.info("Initialisé.");
+    }
+
+/* Le menu contextuel est défini dans le fichier FXML.
+    void definirMenuContextuel() {
+        super.definirMenuContextuel();
+
+        if (menuVoirTache == null) {
+            menuVoirTache = new MenuItem("Voir le détail de la tâche");
+            menuVoirTache.setOnAction(event -> afficherTache());
+        }
+        if (!tachesTableContextMenu.getItems().contains(menuVoirTache)) {
+            tachesTableContextMenu.getItems().add(menuVoirTache);
+        }
+
+    }
+*/
+
+    private void initBeans() {
+        initBeansPlanifications();
+        initBeansNbrsJoursCharge();
+    }
+
+    private void initBeansPlanifications() {
+        // Rien de plus... pour l'instant.
+    }
+
+    private void initBeansNbrsJoursCharge() {
+        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    List<CalendrierFractionsJoursChargeParRessourceBean> nbrsJoursChargeBeansAAjouter = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                        if (Collections.any(nbrsJoursChargeRsrcBeans, nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceBean().equals(ressourceBean)) != null) {
+                            continue;
+                        }
+                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                        try {
+                            nbrsJoursChargeBeansAAjouter.add(new CalendrierFractionsJoursChargeParRessourceBean(ressourceBean, calendrier));
+                        } catch (BeanException e) {
+                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
+                            LOGGER.error("Impossible d'ajouter la ressource " + ressourceBean.getCode() + ".", e);
+                        }
+                    }
+                    nbrsJoursChargeRsrcBeans.addAll(nbrsJoursChargeBeansAAjouter);
+                }
+                if (change.wasRemoved()) {
+                    List<CalendrierFractionsJoursChargeParRessourceBean> nbrsJoursChargeBeansASupprimer = new ArrayList<>();
+                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (nbrsJoursChargeRsrcBeans.parallelStream().noneMatch(nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceBean().equals(ressourceHumaineBean))) {
+                            continue;
+                        }
+                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                        try {
+                            nbrsJoursChargeBeansASupprimer.add(new CalendrierFractionsJoursChargeParRessourceBean(ressourceHumaineBean, calendrier));
+                        } catch (BeanException e) {
+                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
+                            LOGGER.error("Impossible d'ajouter la ressource " + ressourceBean.getCode() + ".", e);
+                        }
+                    }
+                    if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
+                        nbrsJoursChargeRsrcBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
+                    }
+                }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
+            }
+        });
+    }
+
+    public List<TableViewAvecCalendrier<?, ?>> tables() {
+        return Arrays.asList(new TableViewAvecCalendrier<?, ?>[]{
+                planificationsTable,
+                nbrsJoursChargeRsrcTable
+        });
+    }
+
+    private void initTables() {
+        initTablePlanifications();
+        initTableNbrsJoursChargeRsrc();
+
+        synchroniserLargeurColonnes();
+    }
+
+    private void initTablePlanifications() {
 
         planificationsTable.setCalendrierColumns(
                 semaine1Column,
@@ -406,24 +531,80 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        LOGGER.info("Initialisé.");
+        TableViews.ensureDisplayingRows(planificationsTable, 30);
     }
 
-/* Le menu contextuel est défini dans le fichier FXML.
-    void definirMenuContextuel() {
-        super.definirMenuContextuel();
+    private void initTableNbrsJoursChargeRsrc() {
 
-        if (menuVoirTache == null) {
-            menuVoirTache = new MenuItem("Voir le détail de la tâche");
-            menuVoirTache.setOnAction(event -> afficherTache());
-        }
-        if (!tachesTableContextMenu.getItems().contains(menuVoirTache)) {
-            tachesTableContextMenu.getItems().add(menuVoirTache);
+        nbrsJoursChargeRsrcTable.setCalendrierColumns(
+                semaine1NbrsJoursChargeRsrcColumn,
+                semaine2NbrsJoursChargeRsrcColumn,
+                semaine3NbrsJoursChargeRsrcColumn,
+                semaine4NbrsJoursChargeRsrcColumn,
+                semaine5NbrsJoursChargeRsrcColumn,
+                semaine6NbrsJoursChargeRsrcColumn,
+                semaine7NbrsJoursChargeRsrcColumn,
+                semaine8NbrsJoursChargeRsrcColumn,
+                semaine9NbrsJoursChargeRsrcColumn,
+                semaine10NbrsJoursChargeRsrcColumn,
+                semaine11NbrsJoursChargeRsrcColumn,
+                semaine12NbrsJoursChargeRsrcColumn
+        );
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        ressourceNbrsJoursChargeRsrcColumn.setCellValueFactory(cell -> cell.getValue().getRessourceBean().codeProperty());
+        //noinspection HardcodedFileSeparator
+        profilNbrsJoursChargeRsrcColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
+        {
+            int cptColonne = 0;
+            for (TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> nbrsJoursDAbsenceColumn : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
+                cptColonne++;
+                nbrsJoursDAbsenceColumn.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(planChargeBean, cptColonne));
+            }
         }
 
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(ressourceNbrsJoursChargeRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        ihm.interdireEdition(profilNbrsJoursChargeRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
+        {
+            int cptColonne = 0;
+            for (TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
+                cptColonne++;
+                int finalCptColonne = cptColonne;
+                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<CalendrierFractionsJoursChargeParRessourceBean, Float>(Converters.HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours chargé est calculé.")));
+            }
+        }
+
+        // Paramétrage des ordres de tri :
+        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursChargeRsrcTable);
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursChargeRsrcTable.setItems(nbrsJoursChargeRsrcBeans);
+
+        TableViews.disableReagencingColumns(nbrsJoursChargeRsrcTable);
+        TableViews.ensureDisplayingAllRows(nbrsJoursChargeRsrcTable);
     }
-*/
 
+    private void synchroniserLargeurColonnes() {
+
+        // Synchronisation de certaines colonnes de la 1ère table et de celles de la 2nde table :
+        TableViews.synchronizeColumnsWidth(tacheColumn, espaceNbrsJoursChargeRsrcColumn);
+
+        // Synchronisation de toutes les colonnes de la 2nde table avec les colonnes des tables affichées en dessous :
+        List<TableView<?>> tablesSuivantes = new ArrayList<>(tables());
+        tablesSuivantes.remove(planificationsTable);
+        tablesSuivantes.remove(nbrsJoursChargeRsrcTable);
+        TableViews.synchronizeColumnsWidth(nbrsJoursChargeRsrcTable, tablesSuivantes);
+    }
+
+    @NotNull
     protected PlanificationTacheBean ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
         if (planChargeBean.getDateEtat() == null) {
@@ -444,6 +625,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
     }
 
+    @NotNull
     @Override
     PlanificationTacheBean nouveauBean() throws ControllerException {
 

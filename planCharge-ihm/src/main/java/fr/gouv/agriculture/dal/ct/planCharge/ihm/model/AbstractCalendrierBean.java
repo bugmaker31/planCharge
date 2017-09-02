@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extends AbstractDisponibilitesBean<D, B, P>, P extends Property> extends AbstractBean<D, B> {
+public abstract class AbstractCalendrierBean<D extends AbstractDTO, B extends AbstractCalendrierBean<D, B, P>, P extends Property> extends AbstractBean<D, B> {
 
 
     // Fields :
@@ -26,12 +26,12 @@ public abstract class AbstractDisponibilitesBean<D extends AbstractDTO, B extend
 
     // Constructors:
 
-    AbstractDisponibilitesBean() {
+    protected AbstractCalendrierBean() {
         super();
         calendrier = new TreeMap<>(); // TreeMap, au lieu de HashMap, juste pour faciliter le débogage en gardant le tri sur la Key (date).
     }
 
-    AbstractDisponibilitesBean(@NotNull Map<LocalDate, P> calendrier) {
+    protected AbstractCalendrierBean(@NotNull Map<LocalDate, P> calendrier) {
         super();
         this.calendrier = calendrier;
     }

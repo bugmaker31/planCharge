@@ -50,11 +50,10 @@
                             <Label text="Période : "/>
                             <ButtonBar>
                                 <buttons>
-<!--
-                                    TODO FDA 2017/09 Coder.
+                                    <!--TODO FDA 2017/09 Coder.-->
                                     <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer"/>
+                                    <!--TODO FDA 2017/09 Coder.-->
                                     <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"/>
--->
                                     <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                 </buttons>
                             </ButtonBar>

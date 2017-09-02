@@ -1,8 +1,9 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.model;
 
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public abstract class AbstractDisponibilitesRessourceProfilBean<D extends AbstractDTO, B extends AbstractDisponibilitesRessourceProfilBean<D, B, T>, T extends Property> extends AbstractDisponibilitesRessourceBean<D, B, T> {
+public abstract class AbstractCalendrierRessourceProfilBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierRessourceProfilBean<R, D, B, T>, T extends Property> extends AbstractCalendrierParRessourceBean<R, D, B, T> {
 
 
     // Fields :
@@ -21,12 +22,12 @@ public abstract class AbstractDisponibilitesRessourceProfilBean<D extends Abstra
 
     // Constructors:
 
-    public AbstractDisponibilitesRessourceProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean,@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
+    public AbstractCalendrierRessourceProfilBean(@NotNull R ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) throws BeanException {
         super(ressourceHumaineBean, calendrier);
         this.profilBean.setValue(profilBean);
     }
 
-    public AbstractDisponibilitesRessourceProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean) {
+    public AbstractCalendrierRessourceProfilBean(@NotNull R ressourceHumaineBean, @NotNull ProfilBean profilBean) throws BeanException {
         super(ressourceHumaineBean);
         this.profilBean.setValue(profilBean);
     }
@@ -52,7 +53,7 @@ public abstract class AbstractDisponibilitesRessourceProfilBean<D extends Abstra
         if ((o == null) || (getClass() != o.getClass())) return false;
         if (!super.equals(o)) return false;
 
-        AbstractDisponibilitesRessourceProfilBean that = (AbstractDisponibilitesRessourceProfilBean) o;
+        AbstractCalendrierRessourceProfilBean that = (AbstractCalendrierRessourceProfilBean) o;
 
         return super.equals(that) && getProfilBean().equals(that.getProfilBean());
     }

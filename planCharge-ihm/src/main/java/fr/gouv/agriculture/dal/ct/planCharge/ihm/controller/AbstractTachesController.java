@@ -594,6 +594,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return nouvTache;
     }
 
+    @NotNull
     abstract TB nouveauBean() throws ControllerException;
 
     int idTacheSuivant() {

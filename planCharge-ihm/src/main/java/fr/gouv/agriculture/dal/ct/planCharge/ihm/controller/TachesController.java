@@ -147,6 +147,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         }
     }
 
+    @NotNull
     @Override
     TacheBean nouveauBean() throws ControllerException {
         return ihm.getChargesController().nouveauBean();

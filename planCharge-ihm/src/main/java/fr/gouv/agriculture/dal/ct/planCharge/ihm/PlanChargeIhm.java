@@ -343,7 +343,7 @@ public class PlanChargeIhm extends Application {
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 //                applicationController.afficherModuleDisponibilites();
-                applicationController.afficherModuleTaches();
+//                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }
 

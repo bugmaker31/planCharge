@@ -52,6 +52,10 @@
                                         <Label text="Période : "/>
                                         <ButtonBar>
                                             <buttons>
+                                                <!--TODO FDA 2017/09 Coder.-->
+                                                <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer"/>
+                                                <!--TODO FDA 2017/09 Coder.-->
+                                                <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"/>
                                                 <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                             </buttons>
                                         </ButtonBar>
@@ -69,9 +73,9 @@
                                                 <ToggleButton text="Planifiée dans le mois" onAction="#filtrer"/>
                                                 <!--TODO FDA 2017/09 Coder-->
                                                 <ToggleButton text="Echéance tenue ?" onAction="#filtrer" disable="true">
-                                                        <tooltip>
-                                                            <Tooltip text="Date de fin planifiée &#8828; échéance ?" />
-                                                        </tooltip>
+                                                    <tooltip>
+                                                        <Tooltip text="Date de fin planifiée &#8828; échéance ?"/>
+                                                    </tooltip>
                                                 </ToggleButton>
                                             </buttons>
                                         </SegmentedButton>
@@ -134,107 +138,207 @@
         <fx:define>
             <Double fx:id="semaineColumnPrefWidth" fx:value="50"/>
         </fx:define>
-        <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true">
-            <columns>
-                <TableColumn text="Tâche">
+        <fx:define>
+            <Double fx:id="fixedCellSize" fx:value="25"/>
+            <Boolean fx:id="arePanesAnimated" fx:value="true"/>
+        </fx:define>
+        <ScrollPane fitToWidth="true">
+            <VBox>
+                <Accordion expandedPane="$planChargePane">
+                    <panes>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <TitledPane fx:id="planChargePane"
+                                    text="Plan de charge" animated="$arePanesAnimated">
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
+                                                         fixedCellSize="$fixedCellSize">
+                                    <columns>
+                                        <TableColumn fx:id="tacheColumn" text="Tâche">
 
-                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
+                                            <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
 
-                    <columns>
-                        <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
-                        <TableColumn text="Catégories">
-                            <columns>
-                                <TableColumn fx:id="categorieColumn" text="Catégorie"
-                                             prefWidth="$categorieColumnPrefWidth" visible="false"/>
-                                <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
-                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
-                                             prefWidth="$sousCategorieColumnPrefWidth"
-                                             visible="false" style="-fx-wrap-text: true"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
-                                     editable="false" styleClass="nonModifiable"/>
-                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
-                                     prefWidth="$noTicketIdalColumnPrefWidth"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="400"
-                                     text="Description" styleClass="description-column"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
-                                     text="Projet/Appli"
-                                     styleClass="projetAppli-column"/>
-                        <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"
-                                     visible="false"/>
-                        <TableColumn text="Période souhaitée">
-                            <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
-                                             text="Echéance" styleClass="echeance-column"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance" styleClass="importance-column"/>
-                        <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
-                                     styleClass="charge-column"/>
-                        <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"/>
-                        <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"/>
-                    </columns>
-                </TableColumn>
-                <TableColumn text="Planification">
-                    <columns>
-                        <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine4Column" prefWidth="$semaineColumnPrefWidth" text="S+4"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine5Column" prefWidth="$semaineColumnPrefWidth" text="S+5"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine6Column" prefWidth="$semaineColumnPrefWidth" text="S+6"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine7Column" prefWidth="$semaineColumnPrefWidth" text="S+7"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine8Column" prefWidth="$semaineColumnPrefWidth" text="S+8"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine9Column" prefWidth="$semaineColumnPrefWidth" text="S+9"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine10Column" prefWidth="$semaineColumnPrefWidth" text="S+10"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine11Column" prefWidth="$semaineColumnPrefWidth" text="S+11"
-                                     styleClass="periodeChargee-column" sortable="false"/>
-                        <TableColumn fx:id="semaine12Column" prefWidth="$semaineColumnPrefWidth" text="S+12"
-                                     styleClass="periodeChargee-column" sortable="false"/>
+                                            <columns>
+                                                <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
+                                                <TableColumn text="Catégories">
+                                                    <columns>
+                                                        <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                                                     prefWidth="$categorieColumnPrefWidth" visible="false"/>
+                                                        <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
+                                                        <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                                                     prefWidth="$sousCategorieColumnPrefWidth"
+                                                                     visible="false" style="-fx-wrap-text: true"/>
+                                                    </columns>
+                                                </TableColumn>
+                                                <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
+                                                             editable="false" styleClass="nonModifiable"/>
+                                                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                                             prefWidth="$noTicketIdalColumnPrefWidth"/>
+                                                <TableColumn fx:id="descriptionColumn" prefWidth="400"
+                                                             text="Description" styleClass="description-column"/>
+                                                <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                                             text="Projet/Appli"
+                                                             styleClass="projetAppli-column"/>
+                                                <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"
+                                                             visible="false"/>
+                                                <TableColumn text="Période souhaitée">
+                                                    <columns>
+                                                        <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début" visible="false"/>
+                                                        <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                                                     text="Echéance" styleClass="echeance-column"/>
+                                                    </columns>
+                                                </TableColumn>
+                                                <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"
+                                                             styleClass="importance-column"/>
+                                                <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                                             styleClass="charge-column"/>
+                                                <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"/>
+                                                <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"/>
+                                            </columns>
+                                        </TableColumn>
+                                        <TableColumn text="Planification">
+                                            <columns>
+                                                <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine4Column" prefWidth="$semaineColumnPrefWidth" text="S+4"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine5Column" prefWidth="$semaineColumnPrefWidth" text="S+5"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine6Column" prefWidth="$semaineColumnPrefWidth" text="S+6"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine7Column" prefWidth="$semaineColumnPrefWidth" text="S+7"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine8Column" prefWidth="$semaineColumnPrefWidth" text="S+8"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine9Column" prefWidth="$semaineColumnPrefWidth" text="S+9"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine10Column" prefWidth="$semaineColumnPrefWidth" text="S+10"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine11Column" prefWidth="$semaineColumnPrefWidth" text="S+11"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                <TableColumn fx:id="semaine12Column" prefWidth="$semaineColumnPrefWidth" text="S+12"
+                                                             styleClass="periodeChargee-column" sortable="false"/>
 
-                        <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="60"
-                                     editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
-                    </columns>
-                </TableColumn>
-            </columns>
-            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-            <sortOrder>
-                <fx:reference source="categorieColumn"/>
-                <fx:reference source="sousCategorieColumn"/>
-                <fx:reference source="projetAppliColumn"/>
-                <fx:reference source="echeanceColumn"/>
-                <fx:reference source="noTicketIdalColumn"/>
-            </sortOrder>
-            <contextMenu>
-                <ContextMenu fx:id="tachesTableContextMenu">
-                    <items>
-                        <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
-                        <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <MenuItem text="Voir le projet/appli de la tâche"
-                                  disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                        <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache"/>
-                        <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
-                        <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
-                                  onAction="#afficherTacheDansOutilTicketing"/>
-                        <SeparatorMenuItem/>
-                        <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
-                    </items>
-                </ContextMenu>
-            </contextMenu>
-        </TableViewAvecCalendrier>
+                                                <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="60"
+                                                             editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
+                                            </columns>
+                                        </TableColumn>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="categorieColumn"/>
+                                        <fx:reference source="sousCategorieColumn"/>
+                                        <fx:reference source="projetAppliColumn"/>
+                                        <fx:reference source="echeanceColumn"/>
+                                        <fx:reference source="noTicketIdalColumn"/>
+                                    </sortOrder>
+                                    <contextMenu>
+                                        <ContextMenu fx:id="tachesTableContextMenu">
+                                            <items>
+                                                <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
+                                                <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                                <MenuItem text="Voir le projet/appli de la tâche"
+                                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                                <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                                <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache"/>
+                                                <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
+                                                <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
+                                                          onAction="#afficherTacheDansOutilTicketing"/>
+                                                <SeparatorMenuItem/>
+                                                <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
+                                </TableViewAvecCalendrier>
+                            </VBox>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <Accordion expandedPane="$nbrsJoursChargeRsrcPane">
+                    <panes>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <TitledPane fx:id="nbrsJoursChargeRsrcPane"
+                                    text="Total des charges par ressource (j)" animated="$arePanesAnimated">
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursChargeRsrcTable" editable="true"
+                                                         fixedCellSize="$fixedCellSize">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="espaceNbrsJoursChargeRsrcColumn" sortable="false"/>
+                                        <TableColumn fx:id="ressourceNbrsJoursChargeRsrcColumn" text="Rsrc"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursChargeRsrcColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursChargeRsrcColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursChargeRsrcColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursChargeRsrcColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursChargeRsrcColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursChargeRsrcColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursChargeRsrcColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursChargeRsrcColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursChargeRsrcColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursChargeRsrcColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursChargeRsrcColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursChargeRsrcColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursChargeRsrcColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursChargeRsrcColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip text="Nombres de jours de charge pour chaque ressource."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </VBox>
+        </ScrollPane>
     </center>
     <bottom>
         <!--
