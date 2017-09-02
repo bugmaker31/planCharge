@@ -570,8 +570,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<CalendrierFractionsJoursChargeParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
-                int finalCptColonne = cptColonne;
-                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<CalendrierFractionsJoursChargeParRessourceBean, Float>(Converters.HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours chargé est calculé.")));
+                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours chargé est calculé.")));
             }
         }
 
