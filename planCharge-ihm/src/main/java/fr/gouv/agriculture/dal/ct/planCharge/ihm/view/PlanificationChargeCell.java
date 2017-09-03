@@ -66,6 +66,9 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         // Récupération des infos sur la cellule :
         //noinspection unchecked
         TableRow<PlanificationTacheBean> tableRow = getTableRow();
+        if (tableRow == null) {
+            return;
+        }
         PlanificationTacheBean planifBean = tableRow.getItem();
         if (planifBean == null) {
             return;

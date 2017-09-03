@@ -68,8 +68,8 @@
                                             <buttons>
                                                 <ToggleButton text="Tout" onAction="#filtrer"/>
                                                 <ToggleButton text="Demandée dans le semestre" onAction="#filtrer"/>
-                                                <ToggleButton text="Non planifiée entièrement" onAction="#filtrer"/>
-                                                <ToggleButton text="'Trop' planifiée" onAction="#filtrer"/>
+                                                <ToggleButton text="Planif. &lt; charge" onAction="#filtrer"/>
+                                                <ToggleButton text="Planif. &gt; charge" onAction="#filtrer"/>
                                                 <ToggleButton text="Planifiée dans le mois" onAction="#filtrer"/>
                                                 <!--TODO FDA 2017/09 Coder-->
                                                 <ToggleButton text="Echéance tenue ?" onAction="#filtrer" disable="true">
