@@ -20,5 +20,5 @@ Ce fichier liste les modif à faire sur les données, pour les rendre compatible
     1) dans la section "Dispo. maxi. / profil (j)" (ligne 239)
     1) dans la section "Dispo. maxi. restante CT / profil (j)" (ligne 271)
 1) La tâche T1618 "Comité Technique DAL (COTECDAL)" doit être mise au Statut "Récurrent".
-    
+1) Passer au statut "Récurrent" les tâches de type provision mais qui sont (par erreur/oubli) en statut "Nouveau" : COTECDAL, Màj du suivi des contrats de dév/études, Intégration des RT aux plateaux Agiles, etc.
 

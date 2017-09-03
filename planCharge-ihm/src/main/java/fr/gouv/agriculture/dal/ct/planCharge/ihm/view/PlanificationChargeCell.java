@@ -78,18 +78,18 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         if (planChargeBean.getDateEtat() == null) {
             return;
         }
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-        LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((long) ((noSemaine - 1) * 7)); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // Formatage du style (CSS) de la cellule :
         if (planifBean.getDebut() != null) {
-            if (debutPeriode.isBefore(planifBean.getDebut())) {
+            if (debutPeriode.isBefore(planifBean.getDebut().minusDays(7L-1L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                 getStyleClass().add("avantPeriodeDemandee");
                 return;
             }
         }
         if (planifBean.getEcheance() != null) {
-            if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7))) {
+            if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                 getStyleClass().add("apresPeriodeDemandee");
                 return;
             }
@@ -115,8 +115,8 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         if (planChargeBean.getDateEtat() == null) {
             return;
         }
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-        LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((long) ((noSemaine - 1) * 7)); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // TODO FDA 2017/08 Comprendre pourquoi il est nécessaire de setter la valeur alors qu'on a appelé "super.commitEdit(newValue)", mais juste pour les cellules qui étaient à zéro jusqu'alors.
         planifBean.setChargePlanifiee(debutPeriode, finPeriode, charge);

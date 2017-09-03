@@ -289,7 +289,7 @@ public class ChargeService extends AbstractService {
     }
 
     public Double chargeArrondie(@NotNull Double charge) {
-        return Math.round(charge * NBR_HEURES_OUVREES_DS_UN_JOUR) / NBR_HEURES_OUVREES_DS_UN_JOUR;
+        return (double) Math.round(charge * NBR_HEURES_OUVREES_DS_UN_JOUR) / NBR_HEURES_OUVREES_DS_UN_JOUR;
     }
 
 }
