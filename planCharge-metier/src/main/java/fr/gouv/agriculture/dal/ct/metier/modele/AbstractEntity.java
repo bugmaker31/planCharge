@@ -19,13 +19,23 @@ public abstract class AbstractEntity<I extends Serializable, T extends AbstractE
     public abstract I getIdentity();
 
 
-    public boolean equals(@Null T obj) {
+    // 'final' pour éviter que les classe filles ne surchargent (mal) cette méthode.
+    @Override
+    public final boolean equals(@Null Object obj) {
         //noinspection SimplifiableIfStatement
         if (obj == null) return false;
-        return getIdentity().equals(obj.getIdentity());
+        if (!(obj instanceof AbstractEntity)) return false;
+        //noinspection unchecked
+        T other = (T) obj;
+        return getIdentity().equals(other.getIdentity());
     }
 
 
+    // 'final' pour éviter que les classe filles ne surchargent (mal) cette méthode.
+    @Override
+    public final int hashCode() {
+        return getIdentity().hashCode();
+    }
 
 
     // Pour faciliter le débogage uniquement.

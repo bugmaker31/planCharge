@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
 import javafx.fxml.Initializable;
@@ -35,7 +35,7 @@ public abstract class AbstractController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             initialize();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             // TODO FDA 2017/06 Trouver mieux, comme gestion d'erreur.
             LOGGER.error("Impossible d'initialiser le contrôleur.", e);
             throw new RuntimeException("Impossible d'initialiser le contrôleur.", e);
@@ -46,7 +46,7 @@ public abstract class AbstractController implements Initializable {
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
-    protected abstract void initialize() throws IhmException;
+    protected abstract void initialize() throws ControllerException;
 
 
     // Suivi des actions de l'utilisateur :

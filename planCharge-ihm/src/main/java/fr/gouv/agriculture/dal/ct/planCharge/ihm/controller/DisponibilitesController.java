@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
@@ -744,12 +745,16 @@ public class DisponibilitesController extends AbstractController implements Modu
 
 
     @FXML
-    protected void initialize() throws IhmException {
+    protected void initialize() throws ControllerException {
         LOGGER.debug("Initialisation...");
-        calculateurDisponibilites.executerSansCalculer(() -> {
-            initBeans();
-            initTables();
-        });
+        try {
+            Calculateur.executerSansCalculer(() -> {
+                initBeans();
+                initTables();
+            });
+        } catch (IhmException e) {
+            throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
+        }
         LOGGER.info("Initialisé.");
     }
 
@@ -773,7 +778,7 @@ public class DisponibilitesController extends AbstractController implements Modu
                         debutMissionProperty.addListener((observable, oldValue, newValue) -> {
                             try {
                                 calculateurDisponibilites.calculer(ressourceHumaineBean);
-                            } catch (IhmException e) {
+                            } catch (ControllerException e) {
                                 LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                             }
                         });
@@ -782,7 +787,7 @@ public class DisponibilitesController extends AbstractController implements Modu
                         finMissionProperty.addListener((observable, oldValue, newValue) -> {
                             try {
                                 calculateurDisponibilites.calculer(ressourceHumaineBean);
-                            } catch (IhmException e) {
+                            } catch (ControllerException e) {
                                 LOGGER.error("Impossible de calculer les disponibilités de la ressource " + ressourceHumaineBean.getTrigramme() + ".", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
                             }
                         });
@@ -1717,9 +1722,10 @@ public class DisponibilitesController extends AbstractController implements Modu
 
 
     public void calculerDisponibilites() throws ControllerException {
-//        LOGGER.debug("Calcul des disponibilités  : ");
+        LOGGER.debug("Calcul des disponibilités  : ");
         calculateurDisponibilites.calculer();
-//        LOGGER.debug("Disponibilités calculées.");
+        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
+        LOGGER.debug("Disponibilités calculées.");
     }
 
 

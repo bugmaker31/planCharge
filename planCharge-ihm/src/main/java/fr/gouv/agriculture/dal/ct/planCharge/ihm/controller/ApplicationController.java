@@ -349,6 +349,7 @@ public class ApplicationController extends AbstractController {
                 manqueMemoireDejaDetecte = true;
                 alerteManqueMemoireAffichee = true;
                 Platform.runLater(() -> {
+                    //noinspection HardcodedLineSeparator
                     ihm.afficherPopUp(
                             Alert.AlertType.WARNING,
                             "Manque de mémoire",
@@ -368,6 +369,7 @@ public class ApplicationController extends AbstractController {
     }
 
 
+    @SuppressWarnings("WeakerAccess")
     public void majTitre() {
         String titre = PlanChargeIhm.APP_NAME;
         //noinspection HardcodedFileSeparator
@@ -377,6 +379,7 @@ public class ApplicationController extends AbstractController {
         ihm.definirTitre(titre);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void majBarreEtat() {
         LOGGER.debug("majBarreEtat...");
         sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
@@ -398,7 +401,7 @@ public class ApplicationController extends AbstractController {
 
         try {
             reinitPlanCharge();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible de ré-initialiser un nouveau plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
@@ -411,7 +414,7 @@ public class ApplicationController extends AbstractController {
 
     private void reinitPlanCharge() throws ControllerException {
         definirDateEtat((LocalDate) null);
-        ObservableList[] listesBeans = {
+        ObservableList<?>[] listesBeans = {
                 // Référentiels :
                 planChargeBean.getJoursFeriesBeans(),
                 planChargeBean.getJoursFeriesBeans(),
@@ -424,7 +427,7 @@ public class ApplicationController extends AbstractController {
                 // Tâches + Charge
                 planChargeBean.getPlanificationsBeans()
         };
-        for (ObservableList listeDonnees : listesBeans) {
+        for (ObservableList<?> listeDonnees : listesBeans) {
             listeDonnees.clear();
         }
 
@@ -442,7 +445,7 @@ public class ApplicationController extends AbstractController {
 
         try {
             charger();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible de charger le plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
@@ -484,7 +487,7 @@ public class ApplicationController extends AbstractController {
         try {
             File ficCalc = planChargeService.fichierPersistancePlanCharge(dateEtat);
             charger(ficCalc);
-        } catch (Exception e) {
+        } catch (ServiceException | ControllerException e) {
             LOGGER.error("Impossible de charger le plan de charge.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
@@ -556,6 +559,7 @@ public class ApplicationController extends AbstractController {
                     },
                     () -> {
 //                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "chargerPlanCharge".
+                        //noinspection Convert2MethodRef
                         calculer();
                     }
             );
@@ -581,7 +585,7 @@ public class ApplicationController extends AbstractController {
             return;
         }
 
-        final RapportSauvegardeAvecProgression rapport = new RapportSauvegardeAvecProgression();
+        RapportSauvegardeAvecProgression rapport = new RapportSauvegardeAvecProgression();
 
         Task<RapportSauvegardeAvecProgression> sauvegarder = new Task<RapportSauvegardeAvecProgression>() {
 
@@ -603,6 +607,7 @@ public class ApplicationController extends AbstractController {
             }
         };
 
+        //noinspection OverlyBroadCatchBlock
         try {
 
             RapportSauvegarde rapportFinal = ihm.afficherProgression("Sauvegarde...", sauvegarder);
@@ -646,7 +651,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
         try {
             importerTachesDepuisCalc();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'importer les tâches.", e);
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
@@ -688,7 +693,7 @@ public class ApplicationController extends AbstractController {
 
     private void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-        final RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
+        RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
 
         Task<RapportImportTachesAvecProgression> importerTachesDepuisCalc = new Task<RapportImportTachesAvecProgression>() {
 
@@ -722,6 +727,7 @@ public class ApplicationController extends AbstractController {
             }
         };
 
+        //noinspection OverlyBroadCatchBlock
         try {
 
             RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
@@ -732,6 +738,7 @@ public class ApplicationController extends AbstractController {
             planChargeBean.vientDEtreModifie();
             getSuiviActionsUtilisateur().historiser(new ImportTaches());
 
+            //noinspection HardcodedLineSeparator
             ihm.afficherNotification("Tâches mises à jour importées",
                     "Les tâches ont été mises à jour : "
                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
@@ -766,8 +773,9 @@ public class ApplicationController extends AbstractController {
 
         try {
             importerPlanChargeDepuisCalc();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible d'importer le plan de charge.", e);
+            //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer le plan de charge",
@@ -869,6 +877,7 @@ public class ApplicationController extends AbstractController {
                     },
                     () -> {
 //                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
+                        //noinspection Convert2MethodRef
                         calculer();
                     }
             );
@@ -889,6 +898,7 @@ public class ApplicationController extends AbstractController {
             ihm.stop();
         } catch (Exception e) {
             LOGGER.error("Impossible de stopper l'application.", e);
+            //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de stopper l'application",
@@ -918,7 +928,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Editer > Annuler");
         try {
             getSuiviActionsUtilisateur().annulerAction();
-        } catch (IhmException e) {
+        } catch (SuiviActionsUtilisateurException e) {
             throw new Exception("Impossible d'annuler l'action de l'utilisateur.", e);
         }
     }
@@ -933,7 +943,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Editer > Rétablir");
         try {
             getSuiviActionsUtilisateur().retablirAction();
-        } catch (IhmException e) {
+        } catch (SuiviActionsUtilisateurException e) {
             throw new Exception("Impossible de rétablir l'action de l'utilisateur.", e);
         }
     }
@@ -948,7 +958,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Editer > Répéter");
         try {
             getSuiviActionsUtilisateur().repeterAction();
-        } catch (IhmException e) {
+        } catch (SuiviActionsUtilisateurException e) {
             throw new Exception("Impossible de répéter l'action de l'utilisateur.", e);
         }
     }
@@ -963,11 +973,12 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> Editer > Supprimer");
         try {
             supprimer();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             throw new Exception("Impossible de supprimer.", e);
         }
     }
 
+    @SuppressWarnings("RedundantThrowsDeclaration")
     private void supprimer() throws ControllerException {
         // TODO FDA 2017/04 Coder.
         throw new NotImplementedException();
@@ -1366,7 +1377,7 @@ public class ApplicationController extends AbstractController {
             getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
 
             majBarreEtat();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             throw new Exception("Impossible de se positionner au lundi précédent.", e);
         }
     }
@@ -1396,7 +1407,7 @@ public class ApplicationController extends AbstractController {
             getSuiviActionsUtilisateur().historiser(new ModificationDateEtat(dateEtatPrec));
 
             majBarreEtat();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             throw new Exception("Impossible de se positionner au lundi suivant.", e);
         }
     }
@@ -1434,13 +1445,14 @@ public class ApplicationController extends AbstractController {
     private void calculer(@SuppressWarnings("unused") @NotNull Event event) {
         try {
             calculer();
-        } catch (IhmException e) {
+        } catch (ControllerException e) {
             LOGGER.error("Impossible de calculer.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible de calculer.", Exceptions.causes(e));
         }
     }
 
     public void calculer() throws ControllerException {
+
         // TODO FDA 2017/08 Afficher une barre de progression.
         ihm.getDisponibilitesController().calculerDisponibilites();
         ihm.getChargesController().calculerCharges();
@@ -1453,5 +1465,6 @@ public class ApplicationController extends AbstractController {
                 "Calcul terminé",
                 "Les données (disponibilités, provisions, surcharges, etc.) ont été calculées."
         );
+        LOGGER.debug("Calculs faits.");
     }
 }

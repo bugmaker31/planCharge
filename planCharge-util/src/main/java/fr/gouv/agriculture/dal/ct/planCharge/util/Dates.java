@@ -60,6 +60,10 @@ public abstract class Dates {
 
     @NotNull
     public static LocalDate max(@NotNull LocalDate date1, @NotNull LocalDate date2) {
+        return (date1.compareTo(date2) > 0) ? date1 : date2;
+    }
+    @NotNull
+    public static LocalDate min(@NotNull LocalDate date1, @NotNull LocalDate date2) {
         return (date1.compareTo(date2) < 0) ? date1 : date2;
     }
 }

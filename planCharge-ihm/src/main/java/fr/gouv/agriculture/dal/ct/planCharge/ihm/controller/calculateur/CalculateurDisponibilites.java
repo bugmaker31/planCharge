@@ -95,11 +95,11 @@ public class CalculateurDisponibilites extends Calculateur {
             return;
         }
 
-        LOGGER.debug("Calcul des disponibilités : ");
+        LOGGER.debug("Calcul des disponibilités par semaine : ");
         for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             calculer(noSemaine);
         }
-        LOGGER.debug("Disponibilités calculées.");
+        LOGGER.debug("Disponibilités calculées (par semaine).");
     }
 
     private void calculer(int noSemaine) throws ControllerException {

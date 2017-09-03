@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -21,7 +21,7 @@ public class FiltreGlobalTachesController extends AbstractController {
     }
 
     @Override
-    protected void initialize() throws IhmException {
+    protected void initialize() throws ControllerException {
         // Rien... pour l'instant.
     }
 }

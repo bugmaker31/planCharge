@@ -37,22 +37,6 @@ public abstract class Ressource<T extends Ressource<T>> extends AbstractEntity<S
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Ressource ressource = (Ressource) o;
-
-        return code.equals(ressource.code);
-    }
-
-    @Override
-    public int hashCode() {
-        return code.hashCode();
-    }
-
-
     @NotNull
     @Override
     public int compareTo(@NotNull Ressource o) {

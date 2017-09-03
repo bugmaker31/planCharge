@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFerie;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieDateObligatoire;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.referentiels.RGRefJourFerieUniciteJour;
@@ -12,7 +11,6 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -88,24 +86,8 @@ public class JourFerieDTO extends AbstractDTO<JourFerie, LocalDate, JourFerieDTO
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        JourFerieDTO that = (JourFerieDTO) o;
-
-        return date != null ? date.equals(that.date) : that.date == null;
-    }
-
-
-    @Override
     public int compareTo(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull JourFerieDTO other) {
         return COMPARATOR_DEFAUT.compare(this, other);
-    }
-
-    @Override
-    public int hashCode() {
-        return date != null ? date.hashCode() : 0;
     }
 
     @NotNull

@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
@@ -110,9 +111,13 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
     @FXML
     protected void initialize() throws ControllerException {
         LOGGER.debug("Initialisation...");
-
-        super.initialize();
-
+        try {
+            Calculateur.executerSansCalculer(() -> {
+                super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
+            });
+        } catch (IhmException e) {
+            throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
+        }
         LOGGER.info("Initialisé.");
     }
 

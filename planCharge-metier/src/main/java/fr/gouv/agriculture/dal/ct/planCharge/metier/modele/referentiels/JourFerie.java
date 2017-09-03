@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -68,22 +68,6 @@ public class JourFerie extends AbstractEntity<LocalDate, JourFerie> implements C
     @Override
     public LocalDate getIdentity() {
         return date;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        JourFerie jourFerie = (JourFerie) o;
-
-        return date.equals(jourFerie.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return date.hashCode();
     }
 
 

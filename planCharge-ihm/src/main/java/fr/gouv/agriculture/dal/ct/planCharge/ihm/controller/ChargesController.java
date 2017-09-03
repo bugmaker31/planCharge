@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
@@ -316,12 +318,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @Override
     protected void initialize() throws ControllerException {
         LOGGER.debug("Initialisation...");
+        try {
+            Calculateur.executerSansCalculer(() -> {
 
-        super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
+                super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
-        initBeans();
-        initTables();
-
+                initBeans();
+                initTables();
+            });
+        } catch (IhmException e) {
+            throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
+        }
         LOGGER.info("Initialisé.");
     }
 
@@ -358,8 +365,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         if (Collections.any(nbrsJoursChargeRsrcBeans, nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceBean().equals(ressourceBean)) != null) {
                             continue;
                         }
-                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
                         try {
+                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
                             nbrsJoursChargeBeansAAjouter.add(new CalendrierFractionsJoursChargeParRessourceBean(ressourceBean, calendrier));
                         } catch (BeanException e) {
                             // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
@@ -378,8 +385,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         if (nbrsJoursChargeRsrcBeans.parallelStream().noneMatch(nbrsJoursDispoCTBean -> nbrsJoursDispoCTBean.getRessourceBean().equals(ressourceHumaineBean))) {
                             continue;
                         }
-                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
                         try {
+                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
                             nbrsJoursChargeBeansASupprimer.add(new CalendrierFractionsJoursChargeParRessourceBean(ressourceHumaineBean, calendrier));
                         } catch (BeanException e) {
                             // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
@@ -802,6 +809,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 
     public void calculerCharges() throws ControllerException {
+        LOGGER.debug("Calcul des disponibilités  : ");
         calculateurCharges.calculer();
+        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
+        LOGGER.debug("Disponibilités calculées.");
     }
 }

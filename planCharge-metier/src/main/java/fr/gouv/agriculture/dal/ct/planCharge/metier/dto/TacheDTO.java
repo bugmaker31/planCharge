@@ -222,20 +222,6 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if ((o == null) || (getClass() != o.getClass())) return false;
-        TacheDTO tache = (TacheDTO) o;
-        return id == tache.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
-
-
     // ITache
 
     public boolean estProvision() {

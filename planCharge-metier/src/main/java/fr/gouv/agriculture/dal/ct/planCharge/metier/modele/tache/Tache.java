@@ -192,22 +192,9 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if ((o == null) || (getClass() != o.getClass())) return false;
-        Tache tache = (Tache) o;
-        return id == tache.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
-
-    @Override
     public int compareTo(@Null Tache o) {
         if (o == null) {
-            return 1; // Les atstuts indéfinis sont triés en tête de liste.
+            return 1; // Les IDs indéfinis sont triés en tête de liste.
         }
         return Integer.compare(id, o.getId());
     }

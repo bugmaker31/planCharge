@@ -86,6 +86,7 @@ public class CategorieTacheDTO extends AbstractDTO<CategorieTache, String, Categ
     }
 
 
+    @SuppressWarnings("SuspiciousGetterSetter")
     @NotNull
     @Override
     public String getIdentity() {
@@ -112,22 +113,6 @@ public class CategorieTacheDTO extends AbstractDTO<CategorieTache, String, Categ
     @NotNull
     public static CategorieTacheDTO from(@NotNull CategorieTache categorie) throws DTOException {
         return new CategorieTacheDTO().fromEntity(categorie);
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CategorieTacheDTO)) return false;
-
-        CategorieTacheDTO that = (CategorieTacheDTO) o;
-
-        return getCode().equals(that.getCode());
-    }
-
-    @Override
-    public int hashCode() {
-        return getCode().hashCode();
     }
 
 

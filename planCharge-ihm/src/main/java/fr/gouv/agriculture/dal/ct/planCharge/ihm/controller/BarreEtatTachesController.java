@@ -81,7 +81,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     // Methods:
 
     @Override
-    protected void initialize() throws IhmException {
+    protected void initialize() throws ControllerException {
         // Rien... pour l'instant.
     }
 

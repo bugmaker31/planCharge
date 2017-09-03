@@ -56,22 +56,6 @@ public abstract class RessourceDTO<E extends Ressource<E>, D extends RessourceDT
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RessourceDTO ressource = (RessourceDTO) o;
-
-        return code.equals(ressource.code);
-    }
-
-    @Override
-    public int hashCode() {
-        return code.hashCode();
-    }
-
-
-    @Override
     public final int compareTo(@NotNull D o) {
         return code.compareTo(o.getCode());
     }

@@ -22,6 +22,7 @@ import java.time.LocalDate;
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<PlanificationTacheBean, Double> {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCell.class);
 
     private PlanChargeBean planChargeBean;
@@ -51,7 +52,7 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         setText((charge == 0.0) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
     }
 
-    private void styler(@Null Double item) {
+    private void styler(@SuppressWarnings("unused") @Null Double item) {
 
         // Réinit du texte et du style de la cellule :
         getStyleClass().removeAll("avantPeriodeDemandee", "pendantPeriodeDemandee", "apresPeriodeDemandee");
@@ -111,7 +112,9 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         if (planifBean == null) {
             return;
         }
-
+        if (planChargeBean.getDateEtat() == null) {
+            return;
+        }
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 

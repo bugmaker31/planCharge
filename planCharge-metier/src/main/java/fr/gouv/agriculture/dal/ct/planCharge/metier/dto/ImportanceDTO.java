@@ -77,10 +77,10 @@ public class ImportanceDTO extends AbstractDTO<Importance, String, ImportanceDTO
 
         //noinspection UnusedCatchParameter
         try {
-            String s = codeInterne.replaceFirst("-.+$", "");
-            ordre = Integer.parseInt(s);
+            String string = codeInterne.replaceFirst("-.+$", "");
+            ordre = Integer.parseInt(string);
         } catch (NumberFormatException e) {
-            throw new DTOException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.");
+            throw new DTOException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.", e);
         }
     }
 

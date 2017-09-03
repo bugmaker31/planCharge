@@ -74,8 +74,9 @@ public class PlanChargeIhm extends Application {
     @NotNull
     public static final String PATRON_FORMAT_DATE = "ccc d MMM yyyy";
 
+    @SuppressWarnings("HardcodedFileSeparator")
     @NotNull
-    public static final String PROMPT_FORMAT_DATE = "JJ/MM[/[AA]AA]";
+    public static final String PROMPT_FORMAT_DATE = "[J]J/[M]M/[AA]AA";
 
     @NotNull
     public static final DateTimeFormatter FORMAT_DATE = DateTimeFormatter.ofPattern(PATRON_FORMAT_DATE);

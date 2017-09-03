@@ -2,12 +2,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
-import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -70,7 +67,7 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
         try {
             ordre = Integer.parseInt(codeInterne.replaceFirst("-.+$", ""));
         } catch (NumberFormatException e) {
-            throw new ModeleException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.");
+            throw new ModeleException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.", e);
         }
     }
 

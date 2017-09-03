@@ -89,7 +89,8 @@ public class ChargeService extends AbstractService {
         }
     }
 
-    // RG_Gal_ControlerRegles Contrôler les règles https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-%3A-Globales#rg_gal_controlerregles-contr%C3%B4ler-les-r%C3%A8gles
+    // [RG_Gal_ControlerRegles:Contrôler les règles]
+    @SuppressWarnings("WeakerAccess")
     public void controlerReglesGestion(@NotNull PlanChargeDTO planChargeDTO) throws MetierException, ViolationsReglesGestionException {
         List<ViolationRegleGestion> violationsRegles = ControleurRegles.violations(planChargeDTO);
         if (!violationsRegles.isEmpty()) {
@@ -110,9 +111,7 @@ public class ChargeService extends AbstractService {
             planChargeDao.sauver(planCharge, rapport);
 
         } catch (MetierException e) {
-            throw new ServiceException(
-                    "Impossible de sauver le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
-                    e);
+            throw new ServiceException("Impossible de sauver le plan de charge.", e);
         }
     }
 
@@ -246,34 +245,27 @@ public class ChargeService extends AbstractService {
     }
 
     @Null
-    private Double nouvelleCharge(@NotNull TacheDTO tacheDTO, @NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode, @NotNull LocalDate dateEtat) throws ServiceException {
-        try {
-            Tache tache = tacheDTO.toEntity();
-
-            if (!tache.estProvision()) {
-                return null;
-            }
-            assert tache.estProvision();
-
-            if ((tache.getDebut() != null) && tache.getDebut().isAfter(debutPeriode)) {
-                return null;
-            }
-            if (tache.getEcheance().isBefore(debutPeriode)) {
-                return null;
-            }
-
-            return provision(tache, debutPeriode, finPeriode, dateEtat);
-
-        } catch (DTOException e) {
-            throw new ServiceException("Impossible de calculer la nouvelle charge de la tâche '" + tacheDTO.noTache() + "'.", e);
+    private Double nouvelleCharge(@NotNull TacheDTO tache, @NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode, @NotNull LocalDate dateEtat) throws ServiceException {
+        if (!tache.estProvision()) {
+            return null;
         }
+        assert tache.estProvision();
+
+        return provision(tache, debutPeriode, finPeriode, dateEtat);
     }
 
-    public double provision(@NotNull Tache tache, @NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode, @NotNull LocalDate dateEtat) throws ServiceException {
+    public double provision(@NotNull TacheDTO tache, @NotNull LocalDate debutPeriode, @NotNull LocalDate finPeriode, @NotNull LocalDate dateEtat) throws ServiceException {
+
+        if ((tache.getDebut() != null) && tache.getDebut().isAfter(finPeriode)) {
+            return 0.0;
+        }
+        if ((tache.getEcheance() != null) && tache.getEcheance().isBefore(debutPeriode)) {
+            return 0.0;
+        }
 
         double chargeTache = tache.getCharge();
-        if (chargeTache == 0) {
-            return 0;
+        if (chargeTache == 0.0) {
+            return 0.0;
         }
 
         LocalDate debutTache = tache.getDebut();
@@ -285,14 +277,15 @@ public class ChargeService extends AbstractService {
         LocalDate echeanceTache = tache.getEcheance();
 
         LocalDate debutProvision = Dates.max(debutTache, dateEtat);
+        LocalDate finProvision = echeanceTache.plusDays(1L); // "+1" car le jour d'échéance est inclus.
 
 //        Cf. http://docs.oracle.com/javase/tutorial/datetime/iso/period.html
-        long dureeRestanteTacheEnJours = ChronoUnit.DAYS.between(debutProvision, echeanceTache) + 1; // "+1" car le jour d'échéance est inclus.
-        double provisionParJour = chargeTache / dureeRestanteTacheEnJours;
+        long dureeRestanteTacheEnJours = ChronoUnit.DAYS.between(debutProvision, finProvision);
+        double provisionParJour = chargeTache / (double) dureeRestanteTacheEnJours;
 
-        long dureePeriodeEnJours = ChronoUnit.DAYS.between(debutPeriode, finPeriode); // Pas "+1" car le jour d'échéance est exclus.
+        long dureePeriodeEnJours = ChronoUnit.DAYS.between(Dates.max(debutPeriode, dateEtat), Dates.min(finPeriode, finProvision));
 
-        return provisionParJour * dureePeriodeEnJours;
+        return provisionParJour * (double) dureePeriodeEnJours;
     }
 
     public Double chargeArrondie(@NotNull Double charge) {

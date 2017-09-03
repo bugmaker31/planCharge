@@ -5,8 +5,9 @@ import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by frederic.danna on 01/05/2017.
@@ -77,22 +78,6 @@ public class CategorieTache extends AbstractEntity<String, CategorieTache> {
                 .filter(cat -> texte.equals(cat.getCode()))
                 .findAny();
         return categ.orElse(null);
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CategorieTache)) return false;
-
-        CategorieTache that = (CategorieTache) o;
-
-        return (getCode() != null) ? getCode().equals(that.getCode()) : (that.getCode() == null);
-    }
-
-    @Override
-    public int hashCode() {
-        return (getCode() != null) ? getCode().hashCode() : 0;
     }
 
 
