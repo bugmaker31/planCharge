@@ -3,9 +3,11 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -19,7 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class TableViews {
 
@@ -97,7 +101,7 @@ public final class TableViews {
 
     // Displaying :
 
-    public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull List<TableView<?>> tables) {
+    public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull List<? extends TableView<?>> tables) {
         ObservableList<? extends TableColumn<?, ?>> masterColumns = masterTable.getColumns();
         for (TableView<?> table : tables) {
             ObservableList<? extends TableColumn<?, ?>> columns = table.getColumns();
@@ -110,12 +114,42 @@ public final class TableViews {
         }
     }
 
-    public static void synchronizeColumnsWidth(@NotNull TableColumn<?, ?> masterColumn, @NotNull TableColumn<?, ?> slaveColumn) {
-        DoubleBinding masterColumnWidthProperty = masterColumn.widthProperty().multiply(masterColumn.isVisible() ? 1 : 0);
-        slaveColumn.prefWidthProperty().bind(masterColumnWidthProperty);
-        slaveColumn.minWidthProperty().bind(masterColumnWidthProperty);
-        slaveColumn.maxWidthProperty().bind(masterColumnWidthProperty);
+    public static void synchronizeColumnsWidth(@NotNull List<? extends TableColumn<?, ?>> masterColumns, @NotNull List<? extends TableColumn<?, ?>> slaveColumns) {
+        assert masterColumns.size() == slaveColumns.size();
+        for (int idxCol = 0; idxCol < masterColumns.size(); idxCol++) {
+            TableColumn<?, ?> masterColumn = masterColumns.get(idxCol);
+            TableColumn<?, ?> slaveColumn = slaveColumns.get(idxCol);
+            synchronizeColumnsWidth(masterColumn, slaveColumn);
+        }
     }
+
+    public static void synchronizeColumnsWidth(@NotNull TableColumn<?, ?> slaveColumn, @NotNull List<? extends TableColumn<?, ?>> masterColumns) {
+        DoubleBinding masterColumnsWidthSumProperty = Bindings.selectDouble(new SimpleDoubleProperty(0));
+        for (TableColumn<?, ?> masterColumn : masterColumns) {
+            DoubleBinding masterColumnWidth = synchronizedColumnWidth(masterColumn);
+            masterColumnsWidthSumProperty = masterColumnsWidthSumProperty.add(masterColumnWidth);
+        }
+        synchronizeColumnWidth(slaveColumn, masterColumnsWidthSumProperty);
+    }
+
+    public static void synchronizeColumnsWidth(@NotNull TableColumn<?, ?> masterColumn, @NotNull TableColumn<?, ?> slaveColumn) {
+        DoubleBinding masterColumnWidthProperty = synchronizedColumnWidth(masterColumn);
+        synchronizeColumnWidth(slaveColumn, masterColumnWidthProperty);
+    }
+
+    public static void synchronizeColumnWidth(@NotNull TableColumn<?, ?> column, @NotNull DoubleBinding columnWidthProperty) {
+        column.prefWidthProperty().bind(columnWidthProperty);
+        column.minWidthProperty().bind(columnWidthProperty);
+        column.maxWidthProperty().bind(columnWidthProperty);
+    }
+
+    private static DoubleBinding synchronizedColumnWidth(TableColumn<?, ?> masterColumn) {
+        return masterColumn.widthProperty().multiply(Bindings.when(masterColumn.visibleProperty()).then(1).otherwise(0));
+    }
+
+
+    private static final Map<String, ChangeListener> ensureDisplayingRowsChangeListeners = new HashMap<>();
+    private static final Map<String, ListChangeListener> ensureDisplayingRowsListChangeListeners = new HashMap<>();
 
     public static <S> void ensureDisplayingAllRows(@NotNull TableView<S> table) {
         ensureDisplayingRows(table, null);
@@ -132,37 +166,76 @@ public final class TableViews {
         table.maxHeightProperty().bind(tableHeight);
 */
 //        adjustHeigth(table);
-        table.skinProperty().addListener((observable, oldValue, newValue) -> {
-            adjustHeigth(table, rowCount);
-        });
-        table.fixedCellSizeProperty().addListener((observable, oldValue, newValue) -> {
-            adjustHeigth(table, rowCount);
-        });
-        table.itemsProperty().addListener((observable, oldValue, newValue) -> {
-            adjustHeigth(table, rowCount);
-        });
-        table.getItems().addListener((ListChangeListener<? super S>) change -> {
-            adjustHeigth(table, rowCount);
-        });
+        String tableId = table.getId();
+        assert tableId != null;
+
+        if (ensureDisplayingRowsChangeListeners.containsKey(tableId)) {
+            //noinspection rawtypes
+            ChangeListener changeListener = ensureDisplayingRowsChangeListeners.get(tableId);
+            //noinspection unchecked
+            table.skinProperty().removeListener(changeListener);
+            //noinspection unchecked
+            table.fixedCellSizeProperty().removeListener(changeListener);
+        }
+        if (ensureDisplayingRowsListChangeListeners.containsKey(tableId)) {
+            //noinspection rawtypes
+            ListChangeListener listChangeListener = ensureDisplayingRowsListChangeListeners.get(tableId);
+            //noinspection unchecked
+            table.getItems().removeListener(listChangeListener);
+        }
+
+        //noinspection rawtypes
+        ChangeListener changeListener = (observable, oldValue, newValue) -> {
+            if (!java.util.Objects.equals(oldValue, newValue)) {
+                adjustHeigth(table, rowCount);
+            }
+        };
+        ensureDisplayingRowsChangeListeners.put(tableId, changeListener);
+
+        ListChangeListener<? super S> listChangeListener = change -> {
+            boolean hasSizeChanged = false;
+            while (change.next()) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    hasSizeChanged = true;
+                    break;
+                }
+            }
+            if (hasSizeChanged) {
+                adjustHeigth(table, rowCount);
+            }
+        };
+        ensureDisplayingRowsListChangeListeners.put(tableId, listChangeListener);
+
+        //noinspection unchecked
+        table.skinProperty().addListener(changeListener); // On ajuste la hauteur de la table lorsque la Skin de la TableView est Settée ntoamment pour récupérer la hauteur de l'entête de la table (pas tout compris, copié/collé d'Internet).
+        //noinspection unchecked
+        table.fixedCellSizeProperty().addListener(changeListener);
+        table.getItems().addListener(listChangeListener);
     }
 
     private static void adjustHeigth(@NotNull TableView<?> table, @Null Integer rowCount) {
         TableHeaderRow headerRow = headerRow(table);
+        // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
         if (headerRow == null) {
             return;
         }
         double headerRowHeight = headerRow.getHeight();
+        if (headerRowHeight == 0) {
+            LOGGER.warn("Table {} without header!? (TableRowHeader.height==0)", table.getId());
+        }
 
         assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
         double rowHeight = table.getFixedCellSize();
 
-        int actualRowCount = Objects.value(rowCount, table.getItems().size());
+        int actualRowCount = ((rowCount == null) ? table.getItems().size() : Math.min(table.getItems().size(), rowCount));
 
         double tableHeight = headerRowHeight + (rowHeight * (actualRowCount + 1)) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
         table.setMaxHeight(tableHeight);
+
+        LOGGER.debug("Table height set to {} for table {}.", tableHeight, table.getId());
     }
 
     // Input :

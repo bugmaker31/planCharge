@@ -212,14 +212,75 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     abstract ObservableList<TB> getTachesBeans();
 
     @NotNull
+    public TableColumn<TB, String> getCategorieColumn() {
+        return categorieColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, String> getSousCategorieColumn() {
+        return sousCategorieColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, String> getNoTacheColumn() {
+        return noTacheColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, String> getNoTicketIdalColumn() {
+        return noTicketIdalColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, String> getDescriptionColumn() {
+        return descriptionColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, ProjetAppliBean> getProjetAppliColumn() {
+        return projetAppliColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, StatutBean> getStatutColumn() {
+        return statutColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, LocalDate> getDebutColumn() {
+        return debutColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, LocalDate> getEcheanceColumn() {
+        return echeanceColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, ImportanceBean> getImportanceColumn() {
+        return importanceColumn;
+    }
+
+    @NotNull
     TableColumn<TB, Double> getChargeColumn() {
         return chargeColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, RessourceBean> getRessourceColumn() {
+        return ressourceColumn;
+    }
+
+    @NotNull
+    public TableColumn<TB, ProfilBean> getProfilColumn() {
+        return profilColumn;
     }
 
     @NotNull
     public FilteredList<TB> getFilteredTachesBeans() {
         return filteredTachesBeans;
     }
+
 
     // Méthodes :
 

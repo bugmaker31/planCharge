@@ -716,8 +716,8 @@ public class PlanChargeIhm extends Application {
         progressDialog.getDialogPane().setPrefHeight(200);
         ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
 
-        // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
-        Thread taskThread = new Thread(task, "progressDialog");
+        // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressionDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
+        Thread taskThread = new Thread(task, "progressionDialog");
         taskThread.start();
 
         progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx

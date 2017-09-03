@@ -147,11 +147,9 @@
                 <Accordion expandedPane="$planChargePane">
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
-                        <TitledPane fx:id="planChargePane"
-                                    text="Plan de charge" animated="$arePanesAnimated">
+                        <TitledPane fx:id="planChargePane" text="Plan de charge" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true" fixedCellSize="$fixedCellSize">
                                     <columns>
                                         <TableColumn fx:id="tacheColumn" text="Tâche">
 
@@ -165,8 +163,7 @@
                                                                      prefWidth="$categorieColumnPrefWidth" visible="false"/>
                                                         <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                                                         <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
-                                                                     prefWidth="$sousCategorieColumnPrefWidth"
-                                                                     visible="false" style="-fx-wrap-text: true"/>
+                                                                     prefWidth="$sousCategorieColumnPrefWidth" visible="false" style="-fx-wrap-text: true"/>
                                                     </columns>
                                                 </TableColumn>
                                                 <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"

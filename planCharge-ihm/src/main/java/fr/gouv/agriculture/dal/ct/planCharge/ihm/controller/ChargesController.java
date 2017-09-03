@@ -116,6 +116,18 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
+/*
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TitledPane planChargePane;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private VBox planificationsTableVBox;
+*/
+
     // Les TableView :
 
     @SuppressWarnings("NullableProblems")
@@ -531,7 +543,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        TableViews.ensureDisplayingRows(planificationsTable, 30);
+        planificationsTable.getItems().addListener((ListChangeListener<? super PlanificationTacheBean>) change -> {
+            TableViews.ensureDisplayingRows(planificationsTable, Math.min(30, planificationsTable.getItems().size()));
+        });
     }
 
     private void initTableNbrsJoursChargeRsrc() {
@@ -594,7 +608,31 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     private void synchroniserLargeurColonnes() {
 
         // Synchronisation de certaines colonnes de la 1ère table et de celles de la 2nde table :
-        TableViews.synchronizeColumnsWidth(tacheColumn, espaceNbrsJoursChargeRsrcColumn);
+        TableViews.synchronizeColumnsWidth(
+                espaceNbrsJoursChargeRsrcColumn,
+                Arrays.asList(
+                        getCategorieColumn(),
+                        getSousCategorieColumn(),
+                        getSousCategorieColumn(),
+                        getNoTacheColumn(),
+                        getNoTicketIdalColumn(),
+                        getDescriptionColumn(),
+                        getProjetAppliColumn(),
+                        getStatutColumn(),
+                        getDebutColumn(),
+                        getEcheanceColumn(),
+                        getImportanceColumn(),
+                        getChargeColumn()
+/*
+                        getRessourceColumn(),
+                        getProfilColumn()
+*/
+                )
+        );
+        TableViews.synchronizeColumnsWidth(getRessourceColumn(), ressourceNbrsJoursChargeRsrcColumn);
+        TableViews.synchronizeColumnsWidth(getProfilColumn(), profilNbrsJoursChargeRsrcColumn);
+        TableViews.synchronizeColumnsWidth(planificationsTable.getCalendrierColumns(), nbrsJoursChargeRsrcTable.getCalendrierColumns());
+
 
         // Synchronisation de toutes les colonnes de la 2nde table avec les colonnes des tables affichées en dessous :
         List<TableView<?>> tablesSuivantes = new ArrayList<>(tables());
