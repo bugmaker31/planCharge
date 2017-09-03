@@ -63,6 +63,9 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
         // Récupération des infos sur la cellule :
         //noinspection unchecked
         TableRow<? extends S> tableRow = getTableRow();
+        if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+            return;
+        }
         S bean = tableRow.getItem();
         if (bean == null) {
             return;

@@ -42,6 +42,9 @@ public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean, T
 
         //noinspection unchecked
         TableRow<T> tableRow = getTableRow();
+        if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+            return;
+        }
         T nbrJoursAbsenceBean = tableRow.getItem();
         if (nbrJoursAbsenceBean == null) {
             return;

@@ -43,6 +43,9 @@ public class CalendrierPctagesParRessourceCell<R extends RessourceBean, T extend
 
         //noinspection unchecked
         TableRow<T> tableRow = getTableRow();
+        if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+            return;
+        }
         T pctagesDispoCTBean = tableRow.getItem();
         if (pctagesDispoCTBean == null) {
             return;

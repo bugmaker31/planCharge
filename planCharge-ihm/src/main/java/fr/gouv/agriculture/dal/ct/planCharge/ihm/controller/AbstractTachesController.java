@@ -392,8 +392,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 // Récupération des infos sur la cellule :
                 //noinspection unchecked
                 TableRow<TB> tableRow = getTableRow();
-                if (tableRow == null) {
-                    // TODO FDA 2017/08 Comprendre pourquoi on tombe dans ce cas-là (pas de row !?) dans le cas de ce DatePickerTableCell uniquement (pas pour PlanificationChargeCell).
+                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+                    // Rq : On tombe dans ce cas-là dans le cas de ce DatePickerTableCell (pas pour PlanificationChargeCell).
                     return;
                 }
                 TB tacheBean = tableRow.getItem();

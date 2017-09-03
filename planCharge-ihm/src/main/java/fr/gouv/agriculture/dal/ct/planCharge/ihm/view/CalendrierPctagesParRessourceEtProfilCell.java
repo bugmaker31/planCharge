@@ -41,6 +41,9 @@ public class CalendrierPctagesParRessourceEtProfilCell<T extends AbstractCalendr
 
         //noinspection unchecked
         TableRow<T> tableRow = getTableRow();
+        if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+            return;
+        }
         T pctagesDispoRsrcProfilBean = tableRow.getItem();
         if (pctagesDispoRsrcProfilBean == null) {
             return;
