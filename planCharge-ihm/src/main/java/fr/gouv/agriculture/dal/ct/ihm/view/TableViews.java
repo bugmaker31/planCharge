@@ -214,6 +214,9 @@ public final class TableViews {
     }
 
     private static void adjustHeigth(@NotNull TableView<?> table, @Null Integer rowCount) {
+
+        assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+
         TableHeaderRow headerRow = headerRow(table);
         // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
         if (headerRow == null) {
@@ -222,14 +225,14 @@ public final class TableViews {
         double headerRowHeight = headerRow.getHeight();
         if (headerRowHeight == 0) {
             LOGGER.warn("Table {} without header!? (TableRowHeader.height==0)", table.getId());
+            headerRowHeight = table.getFixedCellSize(); // Approximation.
         }
 
-        assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
-        double rowHeight = table.getFixedCellSize();
+        double datatRowHeight = table.getFixedCellSize();
 
         int actualRowCount = ((rowCount == null) ? table.getItems().size() : Math.min(table.getItems().size(), rowCount));
 
-        double tableHeight = headerRowHeight + (rowHeight * (actualRowCount + 1)) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace en plus.
+        double tableHeight = headerRowHeight + (datatRowHeight * actualRowCount) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (10 pts) en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
