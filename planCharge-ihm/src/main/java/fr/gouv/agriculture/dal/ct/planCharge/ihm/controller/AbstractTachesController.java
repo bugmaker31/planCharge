@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -703,17 +704,27 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     private void filtrer() {
-        filteredTachesBeans.setPredicate(this::estTacheAVoir);
+        filteredTachesBeans.setPredicate(tache -> {
+            try {
+                return estTacheAVoir(tache);
+            } catch (BeanException e) {
+                LOGGER.error("Impossible de filtrer les tâches.", e);
+                return true;
+            }
+        });
 //        getTachesTable().refresh(); // Notamment pour réappliquer les styles CSS.
     }
 
-    private boolean estTacheAVoir(@NotNull TB tache) {
+    private boolean estTacheAVoir(@NotNull TB tache) throws BeanException {
 
         // Si un filtre global est positionné, c'est un filtre exhaustif, il ne s'additionne pas avec les autres filtres.
         if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
-            return tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText());
+            if (tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
+                return true;
+            }
         }
 
+        // Filtres cumulatifs :
         if (estTacheAvecCategorieAVoir(tache)) {
             return true;
         }
@@ -723,8 +734,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         if (estTacheAvecPeriodeAVoir(tache)) {
             return true;
         }
+        if (estTacheAvecAutreFiltreAVoir(tache)) {
+            return true;
+        }
         return false;
     }
+
+    @SuppressWarnings("WeakerAccess")
+    protected abstract boolean estTacheAvecAutreFiltreAVoir(@NotNull TB tache) throws BeanException;
 
     private boolean estTacheAvecCategorieAVoir(@NotNull TB tache) {
 

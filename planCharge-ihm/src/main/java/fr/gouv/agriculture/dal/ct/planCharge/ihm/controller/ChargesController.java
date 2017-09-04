@@ -28,6 +28,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -38,11 +39,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
@@ -101,8 +99,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
     private final ObservableList<CalendrierFractionsJoursChargeParRessourceBean> nbrsJoursChargeRsrcBeans = FXCollections.observableArrayList();
 
-
-
     /*
      La couche "View" :
       */
@@ -118,17 +114,38 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
-/*
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    @FXML
-    private TitledPane planChargePane;
+    /*
+        @SuppressWarnings("NullableProblems")
+        @NotNull
+        @FXML
+        private TitledPane planChargePane;
 
+        @SuppressWarnings("NullableProblems")
+        @NotNull
+        @FXML
+        private VBox planificationsTableVBox;
+    */
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private VBox planificationsTableVBox;
-*/
+    private ToggleButton filtrePlanifToutToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtrePlanifDemandeeDansSemestreToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtrePlanifInfChargeToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtrePlanifSupChargeToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtrePlanifDansMoisToggleButton;
+
 
     // Les TableView :
 
@@ -550,9 +567,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        planificationsTable.getItems().addListener((ListChangeListener<? super PlanificationTacheBean>) change -> {
-            TableViews.ensureDisplayingRows(planificationsTable, Math.min(30, planificationsTable.getItems().size()));
-        });
+        Bindings.size(planificationsTable.getItems()).addListener((observable, oldValue, newValue) ->
+                TableViews.ensureDisplayingRows(planificationsTable, Math.min(30, newValue.intValue()))
+        );
     }
 
     private void initTableNbrsJoursChargeRsrc() {
@@ -805,6 +822,50 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                     400, 200
             );
         }
+    }
+
+
+    @Override
+    protected boolean estTacheAvecAutreFiltreAVoir(@NotNull PlanificationTacheBean tache) throws BeanException {
+        if (filtrePlanifToutToggleButton.isSelected()) {
+            return true;
+        }
+        if (filtrePlanifDemandeeDansSemestreToggleButton.isSelected()) {
+            if ((planChargeBean.getDateEtat() == null) || (tache.getDebut() == null)) {
+                return true;
+            }
+            if (tache.getDebut().isBefore(planChargeBean.getDateEtat().plusMonths(6L))) {
+                return true;
+            }
+        }
+        if (filtrePlanifInfChargeToggleButton.isSelected()) {
+            if (tache.getCharge() == null) {
+                return true;
+            }
+            if (tache.getChargePlanifieeTotale() < tache.getCharge()) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+                return true;
+            }
+        }
+        if (filtrePlanifSupChargeToggleButton.isSelected()) {
+            if (tache.getCharge() == null) {
+                return true;
+            }
+            if (tache.getChargePlanifieeTotale() > tache.getCharge()) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+                return true;
+            }
+        }
+        if (filtrePlanifDansMoisToggleButton.isSelected()) {
+            if (planChargeBean.getDateEtat() == null) {
+                return true;
+            }
+            LocalDate debutPeriode, finPeriode;
+            debutPeriode = planChargeBean.getDateEtat();
+            finPeriode = debutPeriode.plusMonths(1L);
+            if (tache.chargePlanifiee(debutPeriode, finPeriode).getValue() > 0.0) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+                return true;
+            }
+        }
+        return false;
     }
 
 

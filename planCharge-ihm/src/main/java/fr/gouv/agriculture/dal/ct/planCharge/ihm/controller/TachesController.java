@@ -189,4 +189,9 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         }
     }
 
+    @Override
+    protected boolean estTacheAvecAutreFiltreAVoir(@NotNull TacheBean tache) {
+        return false;
+    }
+
 }

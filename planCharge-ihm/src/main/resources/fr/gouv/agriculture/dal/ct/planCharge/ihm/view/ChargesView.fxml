@@ -53,9 +53,10 @@
                                         <ButtonBar>
                                             <buttons>
                                                 <!--TODO FDA 2017/09 Coder.-->
-                                                <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer"/>
+                                                <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer" disable="true"/>
                                                 <!--TODO FDA 2017/09 Coder.-->
-                                                <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"/>
+                                                <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"
+                                                              disable="true"/>
                                                 <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                             </buttons>
                                         </ButtonBar>
@@ -64,13 +65,18 @@
                                 <HBox alignment="CENTER">
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                         <Label text="Planification : "/>
-                                        <SegmentedButton>
+                                        <ButtonBar>
                                             <buttons>
-                                                <ToggleButton text="Tout" onAction="#filtrer"/>
-                                                <ToggleButton text="Demandée dans le semestre" onAction="#filtrer"/>
-                                                <ToggleButton text="Planif. &lt; charge" onAction="#filtrer"/>
-                                                <ToggleButton text="Planif. &gt; charge" onAction="#filtrer"/>
-                                                <ToggleButton text="Planifiée dans le mois" onAction="#filtrer"/>
+                                                <ToggleButton fx:id="filtrePlanifToutToggleButton" text="Tout" onAction="#filtrer"/>
+                                                <ToggleButton fx:id="filtrePlanifDemandeeDansSemestreToggleButton" text="Demandée dans le semestre"
+                                                              onAction="#filtrer"/>
+                                                <SegmentedButton>
+                                                    <buttons>
+                                                        <ToggleButton fx:id="filtrePlanifInfChargeToggleButton" text="Planif. &lt; charge" onAction="#filtrer"/>
+                                                        <ToggleButton fx:id="filtrePlanifSupChargeToggleButton" text="Planif. &gt; charge" onAction="#filtrer"/>
+                                                    </buttons>
+                                                </SegmentedButton>
+                                                <ToggleButton fx:id="filtrePlanifDansMoisToggleButton" text="Planifiée dans le mois" onAction="#filtrer"/>
                                                 <!--TODO FDA 2017/09 Coder-->
                                                 <ToggleButton text="Echéance tenue ?" onAction="#filtrer" disable="true">
                                                     <tooltip>
@@ -78,17 +84,7 @@
                                                     </tooltip>
                                                 </ToggleButton>
                                             </buttons>
-                                        </SegmentedButton>
-                                    </VBox>
-                                    <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
-                                        <Label text="Surcharge : "/>
-                                        <SegmentedButton>
-                                            <buttons>
-                                                <ToggleButton text="Tout" onAction="#filtrer"/>
-                                                <ToggleButton text="Avec ressource surchargée" onAction="#filtrer"/>
-                                                <ToggleButton text="Avec profil surchargé" onAction="#filtrer"/>
-                                            </buttons>
-                                        </SegmentedButton>
+                                        </ButtonBar>
                                     </VBox>
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                         <Label text="Calendrier : "/>
@@ -101,12 +97,25 @@
                                             </buttons>
                                         </SegmentedButton>
                                     </VBox>
+                                </HBox>
+                                <HBox alignment="CENTER">
+                                    <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                        <Label text="Surcharge : "/>
+                                        <SegmentedButton>
+                                            <buttons>
+                                                <ToggleButton text="Tout" onAction="#filtrer" disable="true"/>
+                                                <ToggleButton text="Avec ressource surchargée" onAction="#filtrer" disable="true"/>
+                                                <ToggleButton text="Avec profil surchargé" onAction="#filtrer" disable="true"/>
+                                            </buttons>
+                                        </SegmentedButton>
+                                    </VBox>
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                         <Label text="Incohérence : "/>
                                         <SegmentedButton>
                                             <buttons>
-                                                <ToggleButton text="Tout" onAction="#filtrer"/>
-                                                <ToggleButton text="Avec incohérence" onAction="#filtrer"/>
+                                                <ToggleButton text="Tout" onAction="#filtrer" disable="true"/>
+                                                <ToggleButton text="Incohérente" onAction="#filtrer" disable="true"/>
+                                                <ToggleButton text="Cohérente" onAction="#filtrer" disable="true"/>
                                             </buttons>
                                         </SegmentedButton>
                                     </VBox>
@@ -149,7 +158,8 @@
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="planChargePane" text="Plan de charge" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true" fixedCellSize="$fixedCellSize">
+                                <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
+                                                         fixedCellSize="$fixedCellSize">
                                     <columns>
                                         <TableColumn fx:id="tacheColumn" text="Tâche">
 

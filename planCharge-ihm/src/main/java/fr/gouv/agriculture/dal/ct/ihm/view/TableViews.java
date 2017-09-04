@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -149,7 +150,7 @@ public final class TableViews {
 
 
     private static final Map<String, ChangeListener> ensureDisplayingRowsChangeListeners = new HashMap<>();
-    private static final Map<String, ListChangeListener> ensureDisplayingRowsListChangeListeners = new HashMap<>();
+//    private static final Map<String, ListChangeListener> ensureDisplayingRowsListChangeListeners = new HashMap<>();
 
     public static <S> void ensureDisplayingAllRows(@NotNull TableView<S> table) {
         ensureDisplayingRows(table, null);
@@ -165,7 +166,8 @@ public final class TableViews {
         table.prefHeightProperty().bind(tableHeight);
         table.maxHeightProperty().bind(tableHeight);
 */
-//        adjustHeigth(table);
+        adjustHeigth(table, rowCount);
+
         String tableId = table.getId();
         assert tableId != null;
 
@@ -177,12 +179,14 @@ public final class TableViews {
             //noinspection unchecked
             table.fixedCellSizeProperty().removeListener(changeListener);
         }
+/*
         if (ensureDisplayingRowsListChangeListeners.containsKey(tableId)) {
             //noinspection rawtypes
             ListChangeListener listChangeListener = ensureDisplayingRowsListChangeListeners.get(tableId);
             //noinspection unchecked
             table.getItems().removeListener(listChangeListener);
         }
+*/
 
         //noinspection rawtypes
         ChangeListener changeListener = (observable, oldValue, newValue) -> {
@@ -192,6 +196,7 @@ public final class TableViews {
         };
         ensureDisplayingRowsChangeListeners.put(tableId, changeListener);
 
+/*
         ListChangeListener<? super S> listChangeListener = change -> {
             boolean hasSizeChanged = false;
             while (change.next()) {
@@ -205,17 +210,18 @@ public final class TableViews {
             }
         };
         ensureDisplayingRowsListChangeListeners.put(tableId, listChangeListener);
+*/
 
         //noinspection unchecked
         table.skinProperty().addListener(changeListener); // On ajuste la hauteur de la table lorsque la Skin de la TableView est Settée ntoamment pour récupérer la hauteur de l'entête de la table (pas tout compris, copié/collé d'Internet).
         //noinspection unchecked
         table.fixedCellSizeProperty().addListener(changeListener);
-        table.getItems().addListener(listChangeListener);
+//        table.getItems().addListener(listChangeListener);
     }
 
     private static void adjustHeigth(@NotNull TableView<?> table, @Null Integer rowCount) {
 
-        assert table.getFixedCellSize() > 0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+        assert table.getFixedCellSize() > 0.0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
 
         TableHeaderRow headerRow = headerRow(table);
         // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
@@ -223,16 +229,16 @@ public final class TableViews {
             return;
         }
         double headerRowHeight = headerRow.getHeight();
-        if (headerRowHeight == 0) {
-            LOGGER.warn("Table {} without header!? (TableRowHeader.height==0)", table.getId());
+        if (headerRowHeight == 0.0) {
+            LOGGER.warn("Table {} without header (TableRowHeader.height==0)!?", table.getId());
             headerRowHeight = table.getFixedCellSize(); // Approximation.
         }
 
         double datatRowHeight = table.getFixedCellSize();
 
-        int actualRowCount = ((rowCount == null) ? table.getItems().size() : Math.min(table.getItems().size(), rowCount));
+        int actualRowCount = Objects.value(rowCount, table.getItems().size()); // NB : table.getItems() peut ne encore contenir les nouveaux items, mais encore les anciens items.
 
-        double tableHeight = headerRowHeight + (datatRowHeight * actualRowCount) + 10; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (10 pts) en plus.
+        double tableHeight = headerRowHeight + (datatRowHeight * (double) actualRowCount) + 10.0; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (10 pts) en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
@@ -243,8 +249,8 @@ public final class TableViews {
 
     // Input :
 
-    public static void decorateMandatoryColumns(@NotNull TableColumn... columns) throws IhmException {
-        for (TableColumn column : columns) {
+    public static void decorateMandatoryColumns(@NotNull TableColumn<?, ?>... columns) throws IhmException {
+        for (TableColumn<?, ?> column : columns) {
             // TODO FDA 2017/07 Confirmer qu'utiliser un Label (vide) est une bonne façon de faire.
             Label label = new Label();
             PlanChargeIhm.symboliserChampsObligatoires(label);
@@ -272,6 +278,7 @@ public final class TableViews {
         decorateFilterableColumns(columns);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void decorateFilterableColumns(@NotNull TableColumn<?, ?>... columns) {
         Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
             for (TableColumn<?, ?> column : columns) {
