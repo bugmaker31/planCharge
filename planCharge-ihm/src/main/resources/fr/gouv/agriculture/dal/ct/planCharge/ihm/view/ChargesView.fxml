@@ -434,6 +434,86 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
+                <Accordion expandedPane="$nbrsJoursDispoCTRestanteRsrcPane">
+                    <panes>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <TitledPane fx:id="nbrsJoursDispoCTRestanteRsrcPane"
+                                    text="Disponibilité restant pour la CT par ressourece (j)" animated="$arePanesAnimated">
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTRestanteRsrcTable" editable="true"
+                                                         fixedCellSize="$fixedCellSize">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="espaceNbrsJoursDispoCTRestanteRsrcColumn" sortable="false"/>
+                                        <TableColumn fx:id="ressourceNbrsJoursDispoCTRestanteRsrcColumn" text="Rsrc"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursDispoCTRestanteRsrcColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursDispoCTRestanteRsrcColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursDispoCTRestanteRsrcColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursDispoCTRestanteRsrcColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursDispoCTRestanteRsrcColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursDispoCTRestanteRsrcColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursDispoCTRestanteRsrcColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursDispoCTRestanteRsrcColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursDispoCTRestanteRsrcColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursDispoCTRestanteRsrcColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursDispoCTRestanteRsrcColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursDispoCTRestanteRsrcColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursDispoCTRestanteRsrcColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursDispoCTRestanteRsrcColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip text="Nombres de jours de disponibilité restant pour la CT pour chaque ressource."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
             </VBox>
         </ScrollPane>
     </center>
