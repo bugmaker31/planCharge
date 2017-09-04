@@ -315,6 +315,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return planificationsTable;
     }
 
+    @NotNull
+    public ObservableList<CalendrierFractionsJoursChargeParRessourceBean> getNbrsJoursChargeRsrcBeans() {
+        return nbrsJoursChargeRsrcBeans;
+    }
+
     // Module
 
     @Override
