@@ -50,6 +50,7 @@ import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -167,6 +168,18 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     @FXML
     private ToggleButton filtrePlanifDansMoisToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    public ToggleButton filtreSurchargeToutToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    public ToggleButton filtreSurchargeRessourceToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    public ToggleButton filtreSurchargeProfilToggleButton;
 
 
     // Les TableView :
@@ -1374,7 +1387,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 
     @Override
-    protected boolean estTacheAvecAutreFiltreAVoir(@NotNull PlanificationTacheBean tache) throws BeanException {
+    protected boolean estTacheAvecAutreFiltreAVoir(@NotNull PlanificationTacheBean tache) throws ControllerException {
+        if (estTacheAvecFiltrePlanifAVoir(tache)) {
+            return true;
+        }
+        if (estTacheAvecFiltreSurchargeAVoir(tache)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean estTacheAvecFiltrePlanifAVoir(@NotNull PlanificationTacheBean tache) throws ControllerException {
         if (filtrePlanifToutToggleButton.isSelected()) {
             return true;
         }
@@ -1409,8 +1432,57 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             LocalDate debutPeriode, finPeriode;
             debutPeriode = planChargeBean.getDateEtat();
             finPeriode = debutPeriode.plusMonths(1L);
-            if (tache.chargePlanifiee(debutPeriode, finPeriode).getValue() > 0.0) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            Double chargePlanifiee;
+            try {
+                chargePlanifiee = tache.chargePlanifiee(debutPeriode, finPeriode).getValue();
+            } catch (BeanException e) {
+                throw new ControllerException("Impossible de déterminer la charge planifiée de la tâche " + tache.noTache() + " pour la période de " + debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + " à " + finPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".", e);
+            }
+            if (chargePlanifiee > 0.0) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean estTacheAvecFiltreSurchargeAVoir(@NotNull PlanificationTacheBean tache) throws ControllerException {
+        if (filtreSurchargeToutToggleButton.isSelected()) {
+            return true;
+        }
+        if (filtreSurchargeRessourceToggleButton.isSelected()) {
+            RessourceBean<?, ?> ressourceBean = tache.getRessource();
+            if (ressourceBean != null) {
+                NbrsJoursParRessourceBean nbrsJoursParRessourceBean = Collections.any(
+                        nbrsJoursDispoCTRestanteRsrcBeans,
+                        nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean),
+                        new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la liste des nombres de jours de disponibilité CT restante par ressource.")
+                );
+                FloatProperty unNbrJoursDispoNegatif = Collections.any(
+                        nbrsJoursParRessourceBean.values(),
+                        nbrJourDispoRestante -> (nbrJourDispoRestante != null) && (nbrJourDispoRestante.getValue() != null) && (nbrJourDispoRestante.getValue() < 0.0)
+                );
+                //noinspection VariableNotUsedInsideIf
+                if (unNbrJoursDispoNegatif != null) {// Au moins 1 période de surchargée pour cette ressource.
+                    return true;
+                }
+            }
+        }
+        if (filtreSurchargeProfilToggleButton.isSelected()) {
+            ProfilBean profilBean = tache.getProfil();
+            if (profilBean != null) {
+                NbrsJoursParProfilBean nbrsJoursParProfilBean = Collections.any(
+                        nbrsJoursDispoCTMaxRestanteProfilBeans,
+                        nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean),
+                        new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la liste des nombres de jours de disponibilité CT max restante par profil.")
+                );
+                FloatProperty unNbrJoursDispoNegatif = Collections.any(
+                        nbrsJoursParProfilBean.values(),
+                        nbrJourDispoRestante -> (nbrJourDispoRestante != null) && (nbrJourDispoRestante.getValue() != null) && (nbrJourDispoRestante.getValue() < 0.0)
+                );
+                //noinspection VariableNotUsedInsideIf
+                if (unNbrJoursDispoNegatif != null) {// Au moins 1 période de surchargée pour ce profil.
+                    return true;
+                }
             }
         }
         return false;

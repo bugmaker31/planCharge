@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
-import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
@@ -707,7 +706,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filteredTachesBeans.setPredicate(tache -> {
             try {
                 return estTacheAVoir(tache);
-            } catch (BeanException e) {
+            } catch (ControllerException e) {
                 LOGGER.error("Impossible de filtrer les tâches.", e);
                 return true;
             }
@@ -715,7 +714,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 //        getTachesTable().refresh(); // Notamment pour réappliquer les styles CSS.
     }
 
-    private boolean estTacheAVoir(@NotNull TB tache) throws BeanException {
+    private boolean estTacheAVoir(@NotNull TB tache) throws ControllerException {
 
         // Si un filtre global est positionné, c'est un filtre exhaustif, il ne s'additionne pas avec les autres filtres.
         if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
@@ -741,7 +740,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @SuppressWarnings("WeakerAccess")
-    protected abstract boolean estTacheAvecAutreFiltreAVoir(@NotNull TB tache) throws BeanException;
+    protected abstract boolean estTacheAvecAutreFiltreAVoir(@NotNull TB tache) throws ControllerException;
 
     private boolean estTacheAvecCategorieAVoir(@NotNull TB tache) {
 

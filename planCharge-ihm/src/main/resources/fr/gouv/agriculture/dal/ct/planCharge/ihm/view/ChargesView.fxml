@@ -105,9 +105,9 @@
                                         <Label text="Surcharge : "/>
                                         <SegmentedButton>
                                             <buttons>
-                                                <ToggleButton text="Tout" onAction="#filtrer" disable="true"/>
-                                                <ToggleButton text="Avec ressource surchargée" onAction="#filtrer" disable="true"/>
-                                                <ToggleButton text="Avec profil surchargé" onAction="#filtrer" disable="true"/>
+                                                <ToggleButton fx:id="filtreSurchargeToutToggleButton" text="Tout" onAction="#filtrer" />
+                                                <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Avec ressource surchargée" onAction="#filtrer" />
+                                                <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Avec profil surchargé" onAction="#filtrer" />
                                             </buttons>
                                         </SegmentedButton>
                                     </VBox>
@@ -274,7 +274,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion expandedPane="$nbrsJoursChargeRsrcPane">
+                <Accordion ><!--expandedPane="$nbrsJoursChargeRsrcPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursChargeRsrcPane"
@@ -354,7 +354,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion expandedPane="$nbrsJoursChargeProfilPane">
+                <Accordion ><!--expandedPane="$nbrsJoursChargeProfilPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursChargeProfilPane"
@@ -518,7 +518,7 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoCTMaxRestanteProfilPane"
-                                    text="Disponibilité maxi. restant pour la CT par profiol (j)" animated="$arePanesAnimated">
+                                    text="Disponibilité maxi. restant pour la CT par profil (j)" animated="$arePanesAnimated">
                             <VBox>
                                 <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTMaxRestanteProfilTable" editable="true"
                                                          fixedCellSize="$fixedCellSize">

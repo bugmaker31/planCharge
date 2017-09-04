@@ -11,7 +11,8 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractCalendrierParRessourceBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierParRessourceBean<R, D, B, P>, P extends Property> extends AbstractCalendrierBean<D, B, P> {
+public abstract class AbstractCalendrierParRessourceBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierParRessourceBean<R, D, B, P>, P
+        extends Property> extends AbstractCalendrierBean<D, B, P> {
 
     // Fields :
 
