@@ -28,7 +28,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -567,9 +566,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        Bindings.size(planificationsTable.getItems()).addListener((observable, oldValue, newValue) ->
-                TableViews.ensureDisplayingRows(planificationsTable, Math.min(30, newValue.intValue()))
-        );
+        TableViews.ensureDisplayingRows(planificationsTable, 30);
     }
 
     private void initTableNbrsJoursChargeRsrc() {

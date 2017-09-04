@@ -91,7 +91,7 @@ public class CalculateurCharges extends Calculateur {
     }
 
     private void calculerNbrsJoursChargeParRessource() {
-
+        //TODO FDA 2017/09 Coder.
     }
 
     private void calculerProvision(@NotNull PlanificationTacheBean planificationTacheBean) throws ControllerException {

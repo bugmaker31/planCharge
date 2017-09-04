@@ -7,12 +7,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
+import javafx.scene.control.Skin;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.table.TableFilter;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,8 +152,9 @@ public final class TableViews {
     }
 
 
-    private static final Map<String, ChangeListener> ensureDisplayingRowsChangeListeners = new HashMap<>();
-//    private static final Map<String, ListChangeListener> ensureDisplayingRowsListChangeListeners = new HashMap<>();
+    @SuppressWarnings("rawtypes")
+    private static final Map<String, List<ChangeListener>> ensureDisplayingRowsChangeListeners = new HashMap<>();
+    private static final Map<String, IntegerBinding> ensureDisplayingRowsBindings = new HashMap<>();
 
     public static <S> void ensureDisplayingAllRows(@NotNull TableView<S> table) {
         ensureDisplayingRows(table, null);
@@ -171,52 +175,63 @@ public final class TableViews {
         String tableId = table.getId();
         assert tableId != null;
 
+        if (ensureDisplayingRowsBindings.containsKey(tableId)) {
+            IntegerBinding binding = ensureDisplayingRowsBindings.get(tableId);
+            assert ensureDisplayingRowsChangeListeners.containsKey(tableId);
+            //noinspection rawtypes
+            List<ChangeListener> changeListeners = ensureDisplayingRowsChangeListeners.get(tableId);
+            //noinspection rawtypes
+            for (ChangeListener changeListener : changeListeners) {
+                //noinspection unchecked
+                binding.removeListener(changeListener);
+            }
+        }
         if (ensureDisplayingRowsChangeListeners.containsKey(tableId)) {
             //noinspection rawtypes
-            ChangeListener changeListener = ensureDisplayingRowsChangeListeners.get(tableId);
-            //noinspection unchecked
-            table.skinProperty().removeListener(changeListener);
-            //noinspection unchecked
-            table.fixedCellSizeProperty().removeListener(changeListener);
-        }
-/*
-        if (ensureDisplayingRowsListChangeListeners.containsKey(tableId)) {
+            List<ChangeListener> changeListeners = ensureDisplayingRowsChangeListeners.get(tableId);
             //noinspection rawtypes
-            ListChangeListener listChangeListener = ensureDisplayingRowsListChangeListeners.get(tableId);
-            //noinspection unchecked
-            table.getItems().removeListener(listChangeListener);
+            for (ChangeListener changeListener : changeListeners) {
+                //noinspection unchecked
+                table.skinProperty().removeListener(changeListener);
+                //noinspection unchecked
+                table.fixedCellSizeProperty().removeListener(changeListener);
+            }
         }
-*/
 
-        //noinspection rawtypes
-        ChangeListener changeListener = (observable, oldValue, newValue) -> {
-            if (!java.util.Objects.equals(oldValue, newValue)) {
-                adjustHeigth(table, rowCount);
-            }
-        };
-        ensureDisplayingRowsChangeListeners.put(tableId, changeListener);
-
-/*
-        ListChangeListener<? super S> listChangeListener = change -> {
-            boolean hasSizeChanged = false;
-            while (change.next()) {
-                if (change.wasAdded() || change.wasRemoved()) {
-                    hasSizeChanged = true;
-                    break;
+        ensureDisplayingRowsChangeListeners.put(tableId, new ArrayList<>());
+        // On ajuste la hauteur de la table lorsque la Skin de la TableView est Settée notamment pour récupérer la hauteur de l'entête de la table (pas tout compris, copié/collé d'Internet).
+        {
+            ChangeListener<Skin> changeListener = (observable, oldValue, newValue) -> {
+                if (!java.util.Objects.equals(oldValue, newValue)) {
+                    adjustHeigth(table, rowCount);
                 }
-            }
-            if (hasSizeChanged) {
-                adjustHeigth(table, rowCount);
-            }
-        };
-        ensureDisplayingRowsListChangeListeners.put(tableId, listChangeListener);
-*/
+            };
+            //noinspection unchecked
+            table.skinProperty().addListener(changeListener);
+            ensureDisplayingRowsChangeListeners.get(tableId).add(changeListener);
+        }
 
-        //noinspection unchecked
-        table.skinProperty().addListener(changeListener); // On ajuste la hauteur de la table lorsque la Skin de la TableView est Settée ntoamment pour récupérer la hauteur de l'entête de la table (pas tout compris, copié/collé d'Internet).
-        //noinspection unchecked
-        table.fixedCellSizeProperty().addListener(changeListener);
-//        table.getItems().addListener(listChangeListener);
+        {
+            ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> {
+                if (!java.util.Objects.equals(oldValue, newValue)) {
+                    adjustHeigth(table, rowCount);
+                }
+            };
+            //noinspection unchecked
+            table.fixedCellSizeProperty().addListener(changeListener);
+            ensureDisplayingRowsChangeListeners.get(tableId).add(changeListener);
+        }
+        {
+            IntegerBinding itemsSizeBinding = Bindings.size(table.getItems());
+            ensureDisplayingRowsBindings.put(tableId, itemsSizeBinding);
+            ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> {
+                if (!java.util.Objects.equals(oldValue, newValue)) {
+                    adjustHeigth(table, Objects.<Integer, Integer>value(rowCount, rowCountValue -> Math.min(rowCountValue, newValue.intValue()), newValue.intValue()));
+                }
+            };
+            itemsSizeBinding.addListener(changeListener);
+            ensureDisplayingRowsChangeListeners.get(tableId).add(changeListener);
+        }
     }
 
     private static void adjustHeigth(@NotNull TableView<?> table, @Null Integer rowCount) {
