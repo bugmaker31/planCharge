@@ -263,7 +263,7 @@ Charge / Plan de charge :
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
 }
 .periodeChargee-column: surcharge {
-    -fx-text-fill: darkred;
+    -fx-text-fill: red;
 }
 
 .chargePlanifiee-column {

@@ -548,7 +548,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return nbrsJoursDispoCTRestanteRsrcBeans;
     }
 
-// Module
+    @NotNull
+    public ObservableList<NbrsJoursParProfilBean> getNbrsJoursDispoCTMaxRestanteProfilBeans() {
+        return nbrsJoursDispoCTMaxRestanteProfilBeans;
+    }
+
+    // Module
 
     @Override
     public String getTitre() {
