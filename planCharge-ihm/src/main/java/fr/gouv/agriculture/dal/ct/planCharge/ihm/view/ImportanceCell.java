@@ -58,13 +58,15 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
             return;
         }
 
+        PseudoClass pseudoClass;
         try {
-            PseudoClass pseudoClass = importanceStyleClass(item);
-            if (pseudoClass != null) {
-                pseudoClassStateChanged(pseudoClass, true);
-            }
+            pseudoClass = importanceStyleClass(item);
         } catch (IhmException e) {
             LOGGER.error("Impossible de màj le style de la cellule Importance de la ligne n°'" + (getIndex() + 1) + "'.", e);
+            return;
+        }
+        if (pseudoClass != null) {
+            pseudoClassStateChanged(pseudoClass, true);
         }
     }
 

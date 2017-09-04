@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import javafx.css.PseudoClass;
 import javafx.scene.control.TableRow;
 import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by frederic.danna on 11/05/2017.
@@ -21,6 +24,12 @@ import java.time.LocalDate;
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<PlanificationTacheBean, Double> {
+
+    public static final PseudoClass AVANT_PERIODE_DEMANDEE = PseudoClass.getPseudoClass("avantPeriodeDemandee");
+    public static final PseudoClass PENDANT_PERIODE_DEMANDEE = PseudoClass.getPseudoClass("pendantPeriodeDemandee");
+    public static final PseudoClass APRES_PERIODE_DEMANDEE = PseudoClass.getPseudoClass("apresPeriodeDemandee");
+    //
+    public static final List<PseudoClass> PSEUDO_CLASSES = Arrays.asList(AVANT_PERIODE_DEMANDEE, PENDANT_PERIODE_DEMANDEE, APRES_PERIODE_DEMANDEE);
 
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCell.class);
@@ -55,7 +64,8 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     private void styler(@SuppressWarnings("unused") @Null Double item) {
 
         // Réinit du texte et du style de la cellule :
-        getStyleClass().removeAll("avantPeriodeDemandee", "pendantPeriodeDemandee", "apresPeriodeDemandee");
+        PSEUDO_CLASSES.parallelStream()
+                .forEach(pseudoClass -> pseudoClassStateChanged(pseudoClass, false));
 
 /* Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée), ne seront pas décorées.
         // Stop, si cellule vide :
@@ -84,17 +94,17 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         // Formatage du style (CSS) de la cellule :
         if (planifBean.getDebut() != null) {
             if (debutPeriode.isBefore(planifBean.getDebut().minusDays(7L-1L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                getStyleClass().add("avantPeriodeDemandee");
+                pseudoClassStateChanged(AVANT_PERIODE_DEMANDEE, true);
                 return;
             }
         }
         if (planifBean.getEcheance() != null) {
             if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                getStyleClass().add("apresPeriodeDemandee");
+                pseudoClassStateChanged(APRES_PERIODE_DEMANDEE, true);
                 return;
             }
         }
-        getStyleClass().add("pendantPeriodeDemandee");
+        pseudoClassStateChanged(PENDANT_PERIODE_DEMANDEE, true);
     }
 
     @Override

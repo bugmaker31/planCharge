@@ -20,10 +20,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBea
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.CalendrierFractionsJoursCellCallback;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationChargeCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -878,7 +875,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
-                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours chargé est calculé.")));
+                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par ressource est calculé.")));
             }
         }
 
@@ -935,7 +932,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
                 cptColonne++;
-                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours chargé est calculé.")));
+                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par profil est calculé.")));
             }
         }
 
@@ -988,12 +985,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(ressourceNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
-        {
-            int cptColonne = 0;
-            for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
-                cptColonne++;
-                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.HUITIEMES_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours chargé est calculé.")));
-            }
+        for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
+            column.setCellFactory(cell -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. CT restante  est calculé.")));
         }
 
         // Paramétrage des ordres de tri :
@@ -1012,8 +1005,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.disableReagencingColumns(nbrsJoursDispoCTRestanteRsrcTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTRestanteRsrcTable);
     }
-    
-    
+
     private void synchroniserLargeurColonnes() {
 
         // Synchronisation de certaines colonnes de la 1ère table et de celles de la 2nde table :

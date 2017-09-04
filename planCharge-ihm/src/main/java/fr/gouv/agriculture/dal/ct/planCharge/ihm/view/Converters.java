@@ -12,7 +12,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Converters {
 
     @SuppressWarnings("OverlyComplexAnonymousInnerClass")
-    public static final StringConverter<Float> HUITIEMES_JOURS_STRING_CONVERTER = new StringConverter<Float>() {
+    public static final StringConverter<Float> FRACTION_JOURS_STRING_CONVERTER = new StringConverter<Float>() {
 
         @SuppressWarnings("InstanceVariableNamingConvention")
         private /*static*/ final Logger LOGGER = getLogger(Converters.class);

@@ -19,7 +19,7 @@ public class CalendrierFractionsJoursParRessourceEtProfilCell<R extends Ressourc
 
 
     public CalendrierFractionsJoursParRessourceEtProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
-        super(planChargeBean, noSemaine, Converters.HUITIEMES_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+        super(planChargeBean, noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
     }
 
     public CalendrierFractionsJoursParRessourceEtProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {

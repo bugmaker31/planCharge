@@ -16,7 +16,7 @@ public class CalendrierNbrsDemisJoursParProfilCell<T extends AbstractCalendrierP
     private static final StringConverter<Integer> CONVERTER =  new IntegerStringConverter();
 
     public CalendrierNbrsDemisJoursParProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
-        super(planChargeBean, noSemaine, Converters.HUITIEMES_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+        super(planChargeBean, noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
     }
 
     public CalendrierNbrsDemisJoursParProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {

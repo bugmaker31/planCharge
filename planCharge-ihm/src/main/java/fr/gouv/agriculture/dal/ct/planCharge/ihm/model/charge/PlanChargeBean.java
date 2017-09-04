@@ -58,7 +58,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     private final ObservableList<ImportanceBean> importancesBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<RessourceBean> ressourcesBeans = FXCollections.observableArrayList();
+    private final ObservableList<RessourceBean<?, ?>> ressourcesBeans = FXCollections.observableArrayList();
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
     private final ObservableList<RessourceHumaineBean> ressourcesHumainesBeans = FXCollections.observableArrayList();
@@ -180,7 +180,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
     @NotNull
-    public ObservableList<RessourceBean> getRessourcesBeans() {
+    public ObservableList<RessourceBean<?, ?>> getRessourcesBeans() {
         return ressourcesBeans;
     }
 
@@ -301,7 +301,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         );
         // Ressources :
         {
-            List<RessourceBean> ressourceBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            List<RessourceBean<?, ?>> ressourceBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             ressourceBeanList.addAll(
                     planCharge.getReferentiels().getRessourcesHumaines().stream()
                             .map(RessourceHumaineBean::from)

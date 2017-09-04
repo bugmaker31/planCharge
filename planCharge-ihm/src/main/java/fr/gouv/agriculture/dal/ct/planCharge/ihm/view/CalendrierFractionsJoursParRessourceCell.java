@@ -29,7 +29,7 @@ public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean, T
 
 
     public CalendrierFractionsJoursParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
-        super(planChargeBean, noSemaine, Converters.HUITIEMES_JOURS_STRING_CONVERTER, cantEditErrorDisplayer); // TODO FDA 2017/09 Confimer le Converter.
+        super(planChargeBean, noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer); // TODO FDA 2017/09 Confimer le Converter.
     }
 
     public CalendrierFractionsJoursParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {

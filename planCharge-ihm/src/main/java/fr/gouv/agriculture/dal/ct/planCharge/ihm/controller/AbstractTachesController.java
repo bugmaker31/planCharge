@@ -61,7 +61,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
 
-    public static final PseudoClass PSEUDOCLASS_ECHUE = PseudoClass.getPseudoClass("echue");
+    public static final PseudoClass ECHUE = PseudoClass.getPseudoClass("echue");
 
 
     // La couche métier :
@@ -133,7 +133,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private TableColumn<TB, RessourceBean> ressourceColumn;
+    private TableColumn<TB, RessourceBean<?, ?>> ressourceColumn;
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
@@ -268,7 +268,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @NotNull
-    public TableColumn<TB, RessourceBean> getRessourceColumn() {
+    public TableColumn<TB, RessourceBean<?, ?>> getRessourceColumn() {
         return ressourceColumn;
     }
 
@@ -383,7 +383,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             private void styler(@Null LocalDate item, boolean empty) {
 
                 // Réinit du style de la cellule :
-                pseudoClassStateChanged(PSEUDOCLASS_ECHUE, false);
+                pseudoClassStateChanged(ECHUE, false);
 
                 // Stop, si cellule vide :
                 if (empty || (item == null)) {
@@ -411,7 +411,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
                 // Formatage du style (CSS) de la cellule :
                 if (dateEtat.isAfter(echeance)) {
-                    pseudoClassStateChanged(PSEUDOCLASS_ECHUE, true);
+                    pseudoClassStateChanged(ECHUE, true);
                 }
             }
         });
@@ -419,10 +419,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         //noinspection OverlyComplexAnonymousInnerClass
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                new StringConverter<RessourceBean>() {
+                new StringConverter<RessourceBean<?, ?>>() {
                     @Null
                     @Override
-                    public String toString(@Null RessourceBean ressourceBean) {
+                    public String toString(@Null RessourceBean<?, ?> ressourceBean) {
                         if (ressourceBean == null) {
                             return null;
                         }
@@ -431,7 +431,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
                     @Override
                     @Null
-                    public RessourceBean fromString(@Null String trigramme) {
+                    public RessourceBean<?, ?> fromString(@Null String trigramme) {
                         if (trigramme == null) {
                             return null;
                         }

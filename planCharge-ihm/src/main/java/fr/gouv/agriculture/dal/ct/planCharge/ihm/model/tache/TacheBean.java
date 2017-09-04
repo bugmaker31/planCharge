@@ -69,7 +69,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private ObjectProperty<ImportanceBean> importance = new SimpleObjectProperty<>();
     @NotNull
-    private ObjectProperty<RessourceBean> ressource = new SimpleObjectProperty<>();
+    private ObjectProperty<RessourceBean<?, ?>> ressource = new SimpleObjectProperty<>();
     @NotNull
     private DoubleProperty charge = new SimpleDoubleProperty();
     @NotNull
@@ -272,12 +272,12 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
     @Null
-    public RessourceBean getRessource() {
+    public RessourceBean<?, ?> getRessource() {
         return ressource.get();
     }
 
     @NotNull
-    public ObjectProperty<RessourceBean> ressourceProperty() {
+    public ObjectProperty<RessourceBean<?, ?>> ressourceProperty() {
         return ressource;
     }
 

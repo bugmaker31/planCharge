@@ -141,11 +141,11 @@ public class RessourcesHumainesController extends AbstractController implements 
         FilteredList<RessourceHumaineBean> rsrcHumainesBeans = (FilteredList<RessourceHumaineBean>) planChargeBean.getRessourcesBeans().filtered(rsrcBean -> rsrcBean instanceof RessourceHumaineBean);
         Bindings.bindContentBidirectional(ressourceHumainesBeans, rsrcHumainesBeans);
 */
-            planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
+            planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean<?, ?>>) change -> {
                 while (change.next()) {
                     if (change.wasAdded()) {
                         List<RessourceHumaineBean> ressourceHumaineBeansToAdd = new ArrayList<>();
-                        for (RessourceBean addedRessourceBean : change.getAddedSubList()) {
+                        for (RessourceBean<?, ?> addedRessourceBean : change.getAddedSubList()) {
                             if (addedRessourceBean instanceof RessourceHumaineBean) {
                                 if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
                                     ressourceHumaineBeansToAdd.add((RessourceHumaineBean) addedRessourceBean);
@@ -158,7 +158,7 @@ public class RessourcesHumainesController extends AbstractController implements 
                     }
                     if (change.wasRemoved()) {
                         List<RessourceHumaineBean> ressourceHumaineBeansToRemove = new ArrayList<>();
-                        for (RessourceBean removedRessourceBean : change.getRemoved()) {
+                        for (RessourceBean<?, ?> removedRessourceBean : change.getRemoved()) {
                             if (removedRessourceBean instanceof RessourceHumaineBean) {
                                 if (ressourceHumainesBeans.contains(removedRessourceBean)) {
                                     ressourceHumaineBeansToRemove.add((RessourceHumaineBean) removedRessourceBean);
@@ -174,7 +174,7 @@ public class RessourcesHumainesController extends AbstractController implements 
             ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
                 while (change.next()) {
                     if (change.wasAdded()) {
-                        List<RessourceBean> ressourceBeansToAdd = new ArrayList<>();
+                        List<RessourceBean<?, ?>> ressourceBeansToAdd = new ArrayList<>();
                         for (RessourceHumaineBean addedRessourceBean : change.getAddedSubList()) {
                             if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
                                 ressourceBeansToAdd.add(addedRessourceBean);
@@ -185,7 +185,7 @@ public class RessourcesHumainesController extends AbstractController implements 
                         }
                     }
                     if (change.wasRemoved()) {
-                        List<RessourceBean> ressourceBeansToRemove = new ArrayList<>();
+                        List<RessourceBean<?, ?>> ressourceBeansToRemove = new ArrayList<>();
                         for (RessourceHumaineBean removedRessourceBean : change.getRemoved()) {
                             if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
                                 ressourceBeansToRemove.add(removedRessourceBean);
@@ -286,7 +286,7 @@ public class RessourcesHumainesController extends AbstractController implements 
                     supprimerRessourceHumaine(ressourcesHumainesTable.getSelectionModel().getSelectedItem());
                     break;
                 default:
-                    LOGGER.debug("Touche ignorée : '" + event.getCode() + "'.");
+                    LOGGER.debug("Touche ignorée : '{}'.", event.getCode());
             }
         });
     }
@@ -301,7 +301,7 @@ public class RessourcesHumainesController extends AbstractController implements 
                 .map(RessourceHumaineBean::getTrigramme)
                 .filter(s -> (s != null) && s.equalsIgnoreCase(trigramme))
                 .count();
-        if (nbrOccurrencesTrigramme >= 2) {
+        if (nbrOccurrencesTrigramme >= 2L) {
             return "Deux ressources ne peuvent avoir le même trigramme.";
         }
         return null;

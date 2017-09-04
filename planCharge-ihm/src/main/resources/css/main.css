@@ -203,7 +203,7 @@ Tâches :
 
 
 /*
-Plan de charge :
+Charge / Plan de charge :
 */
 
 .erase-button {
@@ -261,6 +261,9 @@ Plan de charge :
 .periodeChargee-column .label .text {
     -fx-wrap-text: true;
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
+}
+.periodeChargee-column: surcharge {
+    -fx-text-fill: darkred;
 }
 
 .chargePlanifiee-column {

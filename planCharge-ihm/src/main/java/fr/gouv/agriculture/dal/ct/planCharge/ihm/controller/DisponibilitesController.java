@@ -1703,12 +1703,7 @@ public class DisponibilitesController extends AbstractController implements Modu
             calculateurDisponibilites.calculer();
 
             // Les tables ont besoin d'être réactualisées dans certains cas, par exemple quand on change la date d'état.
-            nbrsJoursOuvresTable.refresh();
-            nbrsJoursAbsenceTable.refresh();
-            nbrsJoursDispoMinAgriTable.refresh();
-            pctagesDispoCTTable.refresh();
-            nbrsJoursDispoCTTable.refresh();
-            pctagesDispoMaxRsrcProfilTable.refresh();
+            tables().forEach(TableView::refresh);
 
         } catch (ControllerException e) {
             LOGGER.error("Impossible de définir les valeurs du calendrier.", e);
