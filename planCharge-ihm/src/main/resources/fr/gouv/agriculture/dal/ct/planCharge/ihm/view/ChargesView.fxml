@@ -3,7 +3,7 @@
 
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
-<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier?>
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
@@ -424,7 +424,7 @@
                                     </columns>
                                     <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                     <sortOrder>
-                                        <fx:reference source="ressourceNbrsJoursChargeProfilColumn"/>
+                                        <fx:reference source="profilNbrsJoursChargeProfilColumn"/>
                                     </sortOrder>
                                     <tooltip>
                                         <Tooltip text="Nombres de jours de charge pour chaque profil."/>
@@ -505,6 +505,86 @@
                                     <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                     <sortOrder>
                                         <fx:reference source="ressourceNbrsJoursDispoCTRestanteRsrcColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip text="Nombres de jours de disponibilité restant pour la CT pour chaque ressource."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <Accordion expandedPane="$nbrsJoursDispoCTMaxRestanteProfilPane">
+                    <panes>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <TitledPane fx:id="nbrsJoursDispoCTMaxRestanteProfilPane"
+                                    text="Disponibilité maxi. restant pour la CT par profiol (j)" animated="$arePanesAnimated">
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTMaxRestanteProfilTable" editable="true"
+                                                         fixedCellSize="$fixedCellSize">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="espaceNbrsJoursDispoCTMaxRestanteProfilColumn" sortable="false"/>
+                                        <TableColumn fx:id="ressourceNbrsJoursDispoCTMaxRestanteProfilColumn" text="Rsrc"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursDispoCTMaxRestanteProfilColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursDispoCTMaxRestanteProfilColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="profilNbrsJoursDispoCTMaxRestanteProfilColumn"/>
                                     </sortOrder>
                                     <tooltip>
                                         <Tooltip text="Nombres de jours de disponibilité restant pour la CT pour chaque ressource."/>

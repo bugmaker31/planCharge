@@ -105,6 +105,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
     private final ObservableList<NbrsJoursParRessourceBean> nbrsJoursDispoCTRestanteRsrcBeans = FXCollections.observableArrayList();
 
+    @NotNull
+    // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
+    private final ObservableList<NbrsJoursParProfilBean> nbrsJoursDispoCTMaxRestanteProfilBeans = FXCollections.observableArrayList();
+
     /*
      La couche "View" :
       */
@@ -359,7 +363,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     private TableColumn<NbrsJoursParProfilBean, Float> semaine12NbrsJoursChargeProfilColumn;
 
-
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
@@ -424,6 +427,71 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<NbrsJoursParRessourceBean, Float> semaine12NbrsJoursDispoCTRestanteRsrcColumn;
+
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private TableViewAvecCalendrier<NbrsJoursParProfilBean, Float> nbrsJoursDispoCTMaxRestanteProfilTable;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, ?> espaceNbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, String> ressourceNbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, String> profilNbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine1NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine2NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine3NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine4NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine5NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine6NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine7NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine8NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine9NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine10NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine11NbrsJoursDispoCTMaxRestanteProfilColumn;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableColumn<NbrsJoursParProfilBean, Float> semaine12NbrsJoursDispoCTMaxRestanteProfilColumn;
 
     /*
     La couche "Controller" :
@@ -533,6 +601,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         initBeansNbrsJoursChargeRsrc();
         initBeansNbrsJoursChargeProfil();
         initBeansNbrsJoursDispoCTRestanteRsrc();
+        initBeansNbrsJoursDispoCTMaxRestanteProfil();
     }
 
     private void initBeansPlanifications() {
@@ -673,13 +742,56 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         });
     }
 
+    private void initBeansNbrsJoursDispoCTMaxRestanteProfil() {
+        planChargeBean.getProfilsBeans().addListener((ListChangeListener<? super ProfilBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    List<NbrsJoursParProfilBean> nbrsJoursChargeBeansAAjouter = new ArrayList<>();
+                    for (ProfilBean profilBean : change.getAddedSubList()) {
+                        if (Collections.any(nbrsJoursDispoCTMaxRestanteProfilBeans, nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)) != null) {
+                            continue;
+                        }
+                        try {
+                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                            nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
+                        } catch (BeanException e) {
+                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
+                            LOGGER.error("Impossible d'ajouter la ressource " + profilBean.getCode() + ".", e);
+                        }
+                    }
+                    nbrsJoursDispoCTMaxRestanteProfilBeans.addAll(nbrsJoursChargeBeansAAjouter);
+                }
+                if (change.wasRemoved()) {
+                    List<NbrsJoursParProfilBean> nbrsJoursChargeBeansASupprimer = new ArrayList<>();
+                    for (ProfilBean profilBean : change.getRemoved()) {
+                        if (nbrsJoursDispoCTMaxRestanteProfilBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean))) {
+                            continue;
+                        }
+                        try {
+                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                            nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
+                        } catch (BeanException e) {
+                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
+                            LOGGER.error("Impossible d'ajouter le profil " + profilBean.getCode() + ".", e);
+                        }
+                    }
+                    if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
+                        nbrsJoursDispoCTMaxRestanteProfilBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
+                    }
+                }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
+            }
+        });
+    }
+
 
     public List<TableViewAvecCalendrier<?, ?>> tables() {
         return Arrays.asList(new TableViewAvecCalendrier<?, ?>[]{
                 planificationsTable,
                 nbrsJoursChargeRsrcTable,
                 nbrsJoursChargeProfilTable,
-                nbrsJoursDispoCTRestanteRsrcTable
+                nbrsJoursDispoCTRestanteRsrcTable,
+                nbrsJoursDispoCTMaxRestanteProfilTable
         });
     }
 
@@ -688,6 +800,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         initTableNbrsJoursChargeRsrc();
         initTableNbrsJoursChargeProfil();
         initTableNbrsJoursDispoCTRestanteRsrc();
+        initTableNbrsJoursDispoCTMaxRestanteProfilTable();
 
         synchroniserLargeurColonnes();
     }
@@ -986,7 +1099,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
-            column.setCellFactory(cell -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. CT restante  est calculé.")));
+            column.setCellFactory(cell -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. CT restante par ressource est calculé.")));
         }
 
         // Paramétrage des ordres de tri :
@@ -1005,6 +1118,59 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.disableReagencingColumns(nbrsJoursDispoCTRestanteRsrcTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTRestanteRsrcTable);
     }
+
+    private void initTableNbrsJoursDispoCTMaxRestanteProfilTable() {
+        nbrsJoursDispoCTMaxRestanteProfilTable.setCalendrierColumns(
+                semaine1NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine2NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine3NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine4NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine5NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine6NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine7NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine8NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine9NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine10NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine11NbrsJoursDispoCTMaxRestanteProfilColumn,
+                semaine12NbrsJoursDispoCTMaxRestanteProfilColumn
+        );
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        //noinspection HardcodedFileSeparator
+        ressourceNbrsJoursDispoCTMaxRestanteProfilColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
+        profilNbrsJoursDispoCTMaxRestanteProfilColumn.setCellValueFactory(cell -> cell.getValue().getProfilBean().codeProperty());
+        {
+            int cptColonne = 0;
+            for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
+                cptColonne++;
+                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(planChargeBean, cptColonne));
+            }
+        }
+
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
+        ihm.interdireEdition(ressourceNbrsJoursDispoCTMaxRestanteProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
+        ihm.interdireEdition(profilNbrsJoursDispoCTMaxRestanteProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
+        for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
+            column.setCellFactory(cell -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. max. CT restante par profil est calculé.")));
+        }
+
+        // Paramétrage des ordres de tri :
+        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
+        TableViews.ensureSorting(nbrsJoursDispoCTMaxRestanteProfilTable);
+
+        // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
+        //Pas sur cet écran (pas nécessaire, ni même utile).
+
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursDispoCTMaxRestanteProfilTable.setItems(nbrsJoursDispoCTMaxRestanteProfilBeans);
+
+        TableViews.disableReagencingColumns(nbrsJoursDispoCTMaxRestanteProfilTable);
+        TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTMaxRestanteProfilTable);
+    }
+
 
     private void synchroniserLargeurColonnes() {
 
