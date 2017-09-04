@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractCalendrierProfilBean<D extends AbstractDTO, B extends AbstractCalendrierProfilBean<D, B, T>, T extends Property> extends AbstractCalendrierBean<D, B, T> {
+public abstract class AbstractCalendrierParProfilBean<D extends AbstractDTO, B extends AbstractCalendrierParProfilBean<D, B, T>, T extends Property> extends AbstractCalendrierBean<D, B, T> {
 
 
     // Fields :
@@ -21,12 +21,12 @@ public abstract class AbstractCalendrierProfilBean<D extends AbstractDTO, B exte
 
     // Constructors:
 
-    public AbstractCalendrierProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
+    public AbstractCalendrierParProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
         super(calendrier);
         this.profilBean.setValue(profilBean);
     }
 
-    public AbstractCalendrierProfilBean(@NotNull ProfilBean profilBean) {
+    public AbstractCalendrierParProfilBean(@NotNull ProfilBean profilBean) {
         this(profilBean, new TreeMap<>()); // TreeMap juste pour trier afin de faciliter le débogage.
     }
 
@@ -40,7 +40,7 @@ public abstract class AbstractCalendrierProfilBean<D extends AbstractDTO, B exte
 //        if (!super.equals(o)) return false;
 
         //noinspection unchecked
-        AbstractCalendrierProfilBean<D, B, T> that = (AbstractCalendrierProfilBean<D, B, T>) o;
+        AbstractCalendrierParProfilBean<D, B, T> that = (AbstractCalendrierParProfilBean<D, B, T>) o;
 
         return getProfilBean().equals(that.getProfilBean());
     }

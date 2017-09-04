@@ -5,9 +5,11 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.CalendrierFractionsJoursChargeParProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.CalendrierFractionsJoursChargeParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -85,6 +87,7 @@ public class CalculateurCharges extends Calculateur {
 
         calculerProvisions();
         calculerNbrsJoursChargeParRessource();
+        calculerNbrsJoursChargeParProfil();
         calculerSurcharges();
 
         LOGGER.debug("Charges calculées.");
@@ -186,6 +189,58 @@ public class CalculateurCharges extends Calculateur {
             nbrJoursChargePourLaRessourceBean.put(debutPeriode, new SimpleFloatProperty());
         }
         nbrJoursChargePourLaRessourceBean.get(debutPeriode).setValue(chargePlanifieePourLaRessource);
+    }
+
+
+    
+    private void calculerNbrsJoursChargeParProfil() throws ControllerException {
+        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            calculerNbrsJoursChargeParProfil(noSemaine);
+        }
+    }
+
+    private void calculerNbrsJoursChargeParProfil(int noSemaine) throws ControllerException {
+        for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
+            calculerNbrsJoursChargeParProfil(profilBean, noSemaine);
+        }
+    }
+
+    private void calculerNbrsJoursChargeParProfil(@NotNull ProfilBean profilBean, int noSemaine) throws ControllerException {
+
+        List<PlanificationTacheBean> planificationTacheProfilBeans = planChargeBean.getPlanificationsBeans().parallelStream()
+                .filter(planificationTacheBean -> (planificationTacheBean.getProfil() != null) && planificationTacheBean.getProfil().equals(profilBean))
+                .collect(Collectors.toList());
+
+        LocalDate dateEtat;
+        try {
+            dateEtat = planChargeBean.dateEtat();
+        } catch (BeanException e) {
+            throw new ControllerException("Impossible de calculer les nombres de jours de charge pour la profil '" + profilBean.getCode() + "'.", e);
+        }
+        LocalDate debutPeriode = dateEtat.plusDays(((long) noSemaine - 1L) * 7L);// TODO FDA 2017/09 [issue#26:PeriodeHebdo/Trim]
+
+        Double chargePlanifieePourLaProfil = 0.0;
+        for (PlanificationTacheBean planificationTacheProfilBean : planificationTacheProfilBeans) {
+            DoubleProperty chargePlanifieeProperty = planificationTacheProfilBean.getCalendrier().get(debutPeriode);
+            if (chargePlanifieeProperty == null) {
+                continue;
+            }
+            Double chargePlanifiee = chargePlanifieeProperty.getValue();
+            if (chargePlanifiee == 0.0) {
+                continue;
+            }
+            chargePlanifieePourLaProfil += chargePlanifiee;
+        }
+
+        CalendrierFractionsJoursChargeParProfilBean nbrJoursChargePourLaProfilBean = Collections.any(
+                getChargesController().getNbrsJoursChargeProfilBeans(),
+                nbrsJoursChargeParProfilBean -> nbrsJoursChargeParProfilBean.getProfilBean().equals(profilBean),
+                new ControllerException("Impossible de retrouver la profil '" + profilBean.getCode() + "' dans la table des nombres de jours de charge par profil.")
+        );
+        if (!nbrJoursChargePourLaProfilBean.containsKey(debutPeriode)) {
+            nbrJoursChargePourLaProfilBean.put(debutPeriode, new SimpleFloatProperty());
+        }
+        nbrJoursChargePourLaProfilBean.get(debutPeriode).setValue(chargePlanifieePourLaProfil);
     }
 
 

@@ -4,7 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.PercentageStringConverter;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurDisponibilites;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierRessourceProfilBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceEtProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesService;
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
-public class CalendrierPctagesParRessourceEtProfilCell<T extends AbstractCalendrierRessourceProfilBean<RessourceHumaineBean, AbstractDTO, T, PercentageProperty>> extends AbstractCalendrierParRessourceCell<RessourceHumaineBean, T, Percentage> {
+public class CalendrierPctagesParRessourceEtProfilCell<T extends AbstractCalendrierParRessourceEtProfilBean<RessourceHumaineBean, AbstractDTO, T, PercentageProperty>> extends AbstractCalendrierParRessourceCell<RessourceHumaineBean, T, Percentage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierPctagesParRessourceEtProfilCell.class);
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public abstract class AbstractCalendrierRessourceProfilBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierRessourceProfilBean<R, D, B, T>, T extends Property> extends AbstractCalendrierParRessourceBean<R, D, B, T> {
+public abstract class AbstractCalendrierParRessourceEtProfilBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierParRessourceEtProfilBean<R, D, B, T>, T extends Property> extends AbstractCalendrierParRessourceBean<R, D, B, T> {
 
 
     // Fields :
@@ -22,12 +22,12 @@ public abstract class AbstractCalendrierRessourceProfilBean<R extends RessourceB
 
     // Constructors:
 
-    public AbstractCalendrierRessourceProfilBean(@NotNull R ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) throws BeanException {
+    public AbstractCalendrierParRessourceEtProfilBean(@NotNull R ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) throws BeanException {
         super(ressourceHumaineBean, calendrier);
         this.profilBean.setValue(profilBean);
     }
 
-    public AbstractCalendrierRessourceProfilBean(@NotNull R ressourceHumaineBean, @NotNull ProfilBean profilBean) throws BeanException {
+    public AbstractCalendrierParRessourceEtProfilBean(@NotNull R ressourceHumaineBean, @NotNull ProfilBean profilBean) throws BeanException {
         super(ressourceHumaineBean);
         this.profilBean.setValue(profilBean);
     }
@@ -53,7 +53,7 @@ public abstract class AbstractCalendrierRessourceProfilBean<R extends RessourceB
         if ((o == null) || (getClass() != o.getClass())) return false;
         if (!super.equals(o)) return false;
 
-        AbstractCalendrierRessourceProfilBean that = (AbstractCalendrierRessourceProfilBean) o;
+        AbstractCalendrierParRessourceEtProfilBean that = (AbstractCalendrierParRessourceEtProfilBean) o;
 
         return super.equals(that) && getProfilBean().equals(that.getProfilBean());
     }

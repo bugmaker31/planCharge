@@ -354,6 +354,86 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
+                <Accordion expandedPane="$nbrsJoursChargeProfilPane">
+                    <panes>
+                        <!--suppress JavaFxUnresolvedFxIdReference -->
+                        <TitledPane fx:id="nbrsJoursChargeProfilPane"
+                                    text="Total des charges par profil (j)" animated="$arePanesAnimated">
+                            <VBox>
+                                <TableViewAvecCalendrier fx:id="nbrsJoursChargeProfilTable" editable="true"
+                                                         fixedCellSize="$fixedCellSize">
+                                    <!--styleClass="noHeader-table"-->
+                                    <columns>
+                                        <TableColumn fx:id="espaceNbrsJoursChargeProfilColumn" sortable="false"/>
+                                        <TableColumn fx:id="ressourceNbrsJoursChargeProfilColumn" text="Rsrc"
+                                                     prefWidth="$ressourceColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="profilNbrsJoursChargeProfilColumn" text="Profil"
+                                                     prefWidth="$profilColumnPrefWidth"
+                                                     styleClass="nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine1NbrsJoursChargeProfilColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2NbrsJoursChargeProfilColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3NbrsJoursChargeProfilColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4NbrsJoursChargeProfilColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5NbrsJoursChargeProfilColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6NbrsJoursChargeProfilColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7NbrsJoursChargeProfilColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8NbrsJoursChargeProfilColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9NbrsJoursChargeProfilColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10NbrsJoursChargeProfilColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11NbrsJoursChargeProfilColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12NbrsJoursChargeProfilColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                    <sortOrder>
+                                        <fx:reference source="ressourceNbrsJoursChargeProfilColumn"/>
+                                    </sortOrder>
+                                    <tooltip>
+                                        <Tooltip text="Nombres de jours de charge pour chaque profil."/>
+                                    </tooltip>
+                                </TableViewAvecCalendrier>
+                            </VBox>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
             </VBox>
         </ScrollPane>
     </center>

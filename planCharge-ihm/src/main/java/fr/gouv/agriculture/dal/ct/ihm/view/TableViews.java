@@ -249,11 +249,16 @@ public final class TableViews {
             headerRowHeight = table.getFixedCellSize(); // Approximation.
         }
 
-        double datatRowHeight = table.getFixedCellSize();
+        double dataRowHeight = table.getFixedCellSize();
 
-        int actualRowCount = Objects.value(rowCount, table.getItems().size()); // NB : table.getItems() peut ne encore contenir les nouveaux items, mais encore les anciens items.
+        int actualRowCount = Math.max(
+                1, // On assure d'avoir au moins 1 ligne pour que le message std de JavaFX "Aucun contenu dans la table" soit visible par l'utilisateur.
+                Objects.value(rowCount, table.getItems().size()) // NB : table.getItems() peut ne encore contenir les nouveaux items, mais encore les anciens items.
+        );
 
-        double tableHeight = headerRowHeight + (datatRowHeight * (double) actualRowCount) + 10.0; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (10 pts) en plus.
+        double dataRowsHeith = dataRowHeight * (double) actualRowCount;
+
+        double tableHeight = headerRowHeight + dataRowsHeith + 10.0; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (10 pts) en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);
