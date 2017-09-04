@@ -110,6 +110,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     // Les paramètres (TabedPane "Paramètres") :
 
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private TextField nbrLignesTablePlanificationsField;
+
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
 
@@ -471,8 +476,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                     }
                     try {
                         PlanificationTacheBean planifBean = cell.getValue();
-                        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((finalNoSemaine - 1) * 7); // // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                        LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) finalNoSemaine - 1L) * 7L); // // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                        LocalDate finPeriode = debutPeriode.plusDays(7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                         if (!planifBean.aChargePlanifiee(debutPeriode, finPeriode)) {
                             // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
                             return null;
@@ -571,7 +576,25 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        TableViews.ensureDisplayingRows(planificationsTable, 30);
+        nbrLignesTablePlanificationsField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Objects.equals(oldValue, newValue)) {
+                return;
+            }
+            int nbrLignes;
+            //noinspection UnusedCatchParameter
+            try {
+                nbrLignes = Integer.parseInt(newValue);
+            } catch (NumberFormatException e) {
+                try {
+                    ihm.afficherErreurSaisie(nbrLignesTablePlanificationsField, "Nombre entier attendu", "'" + newValue + "' n'est pas un nombre. Entrez un nombre (supérieur à 1).");
+                    return;
+                } catch (IhmException e1) {
+                    LOGGER.error("Impossible d'afficher l'erreur de saisie à l'utilisateur.", e1);
+                    return;
+                }
+            }
+            TableViews.ensureDisplayingRows(planificationsTable, nbrLignes);
+        });
     }
 
     private void initTableNbrsJoursChargeRsrc() {

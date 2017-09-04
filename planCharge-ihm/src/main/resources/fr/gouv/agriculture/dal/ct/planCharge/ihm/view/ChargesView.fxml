@@ -21,8 +21,14 @@
                     <!--suppress JavaFxUnresolvedFxIdReference -->
                     <TitledPane fx:id="filtresPane" animated="false" text="Filtres">
                         <HBox spacing="2" alignment="CENTER_LEFT">
-                            <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion"
-                                                         titledPane="$filtresPane"/>
+                            <VBox>
+                                <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion"
+                                                             titledPane="$filtresPane"/>
+                                <HBox>
+                                    <Label text="Nombre de lignes : "/>
+                                    <TextField fx:id="nbrLignesTablePlanificationsField" text="30"/>
+                                </HBox>
+                            </VBox>
                             <VBox alignment="CENTER">
                                 <HBox alignment="CENTER">
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
