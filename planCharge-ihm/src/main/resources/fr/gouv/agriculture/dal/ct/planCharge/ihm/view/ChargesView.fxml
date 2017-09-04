@@ -438,7 +438,7 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursDispoCTRestanteRsrcPane"
-                                    text="Disponibilité restant pour la CT par ressourece (j)" animated="$arePanesAnimated">
+                                    text="Disponibilité restant pour la CT par ressource (j)" animated="$arePanesAnimated">
                             <VBox>
                                 <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTRestanteRsrcTable" editable="true"
                                                          fixedCellSize="$fixedCellSize">

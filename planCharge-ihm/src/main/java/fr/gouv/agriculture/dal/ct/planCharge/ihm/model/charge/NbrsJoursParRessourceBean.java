@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class CalendrierFractionsJoursChargeParRessourceBean extends AbstractCalendrierParRessourceBean<RessourceBean, AbstractDTO, CalendrierFractionsJoursChargeParRessourceBean, FloatProperty> {
+public class NbrsJoursParRessourceBean extends AbstractCalendrierParRessourceBean<RessourceBean, AbstractDTO, NbrsJoursParRessourceBean, FloatProperty> {
 
 
     // Fields :
@@ -18,11 +18,11 @@ public class CalendrierFractionsJoursChargeParRessourceBean extends AbstractCale
 
     // Constructors :
 
-    public CalendrierFractionsJoursChargeParRessourceBean(@NotNull RessourceBean ressourceBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws BeanException {
+    public NbrsJoursParRessourceBean(@NotNull RessourceBean ressourceBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws BeanException {
         super(ressourceBean, calendrier);
     }
 
-    public CalendrierFractionsJoursChargeParRessourceBean(@NotNull RessourceBean ressourceBean) throws BeanException {
+    public NbrsJoursParRessourceBean(@NotNull RessourceBean ressourceBean) throws BeanException {
         super(ressourceBean);
     }
 

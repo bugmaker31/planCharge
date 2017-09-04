@@ -204,6 +204,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         return pctagesDispoMaxRsrcProfilBeans;
     }
 
+
     @NotNull
     public ObservableList<PlanificationTacheBean> getPlanificationsBeans() {
         return planificationsBeans;
