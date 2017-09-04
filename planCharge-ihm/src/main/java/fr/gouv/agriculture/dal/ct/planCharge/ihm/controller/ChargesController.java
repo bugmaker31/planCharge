@@ -110,10 +110,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     // Les paramètres (TabedPane "Paramètres") :
 
+/*
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
     private TextField nbrLignesTablePlanificationsField;
+*/
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private Spinner<Integer> nbrLignesTablePlanificationsSpinner;
 
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
@@ -576,24 +583,16 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        nbrLignesTablePlanificationsField.textProperty().addListener((observable, oldValue, newValue) -> {
+        TableViews.ensureDisplayingRows(planificationsTable, 30);
+
+        nbrLignesTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (Objects.equals(oldValue, newValue)) {
                 return;
             }
-            int nbrLignes;
-            //noinspection UnusedCatchParameter
-            try {
-                nbrLignes = Integer.parseInt(newValue);
-            } catch (NumberFormatException e) {
-                try {
-                    ihm.afficherErreurSaisie(nbrLignesTablePlanificationsField, "Nombre entier attendu", "'" + newValue + "' n'est pas un nombre. Entrez un nombre (supérieur à 1).");
-                    return;
-                } catch (IhmException e1) {
-                    LOGGER.error("Impossible d'afficher l'erreur de saisie à l'utilisateur.", e1);
-                    return;
-                }
+            if (newValue == null) {
+                newValue = 30;
             }
-            TableViews.ensureDisplayingRows(planificationsTable, nbrLignes);
+            TableViews.ensureDisplayingRows(planificationsTable, newValue);
         });
     }
 

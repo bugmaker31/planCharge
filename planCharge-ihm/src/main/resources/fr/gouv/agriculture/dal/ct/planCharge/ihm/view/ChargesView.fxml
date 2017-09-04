@@ -24,10 +24,6 @@
                             <VBox>
                                 <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion"
                                                              titledPane="$filtresPane"/>
-                                <HBox>
-                                    <Label text="Nombre de lignes : "/>
-                                    <TextField fx:id="nbrLignesTablePlanificationsField" text="30"/>
-                                </HBox>
                             </VBox>
                             <VBox alignment="CENTER">
                                 <HBox alignment="CENTER">
@@ -164,6 +160,14 @@
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="planChargePane" text="Plan de charge" animated="$arePanesAnimated">
                             <VBox>
+                                <HBox alignment="BASELINE_LEFT">
+                                    <Label text="Nombre de lignes : "/>
+                                    <Spinner fx:id="nbrLignesTablePlanificationsSpinner" prefWidth="70" editable="true">
+                                        <valueFactory>
+                                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="500" initialValue="30" amountToStepBy="5"/>
+                                        </valueFactory>
+                                    </Spinner>
+                                </HBox>
                                 <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
                                                          fixedCellSize="$fixedCellSize">
                                     <columns>
