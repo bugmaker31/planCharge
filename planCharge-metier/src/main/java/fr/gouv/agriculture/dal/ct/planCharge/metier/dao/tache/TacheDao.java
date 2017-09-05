@@ -10,10 +10,9 @@ import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceHumaineDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
-import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportImportTaches;
@@ -23,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,7 +61,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
 
     @NotNull
 //    @Autowired
-    private RessourceHumaineDao ressourceHumaineDao = RessourceHumaineDao.instance();
+    private RessourceDao ressourceDao = RessourceDao.instance();
 
     @NotNull
 //    @Autowired
@@ -115,7 +115,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
             XSpreadsheet feuilleCharge = Calc.getSheet(calc, "Tâches");
             taches = importerTaches(feuilleCharge, rapport);
         } catch (LibreOfficeException e) {
-            throw new TacheDaoException("Impossible d'importer les tâches depuis le doc OOCalc.", e);
+            throw new TacheDaoException("Impossible d'importer les tâches depuis le document OOCalc.", e);
         }
 
         return taches;
@@ -124,7 +124,8 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
     private Set<Tache> importerTaches(XSpreadsheet feuille, @NotNull RapportImportTaches rapport) throws TacheDaoException, LibreOfficeException {
         Set<Tache> taches = new HashSet<>();
 
-        final int noLigDebut = 4;
+        //noinspection TooBroadScope
+        int noLigDebut = 4;
 
         {
             int cptLig = noLigDebut;
@@ -166,9 +167,11 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
         return taches;
     }
 
+    @SuppressWarnings({"UseOfObsoleteDateTimeApi", "MagicNumber"})
     private Tache importerTache(XSpreadsheet feuille, int noLig) throws TacheDaoException, LibreOfficeException {
         Tache tache;
         try {
+            //noinspection PointlessArithmeticExpression,LocalVariableNamingConvention
             int id = Calc.getInt(feuille, 1 - 1, noLig - 1);
 
             String noTicketIdal = Calc.getString(feuille, 2 - 1, noLig - 1);
@@ -182,12 +185,14 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
             ProjetAppli projetAppli = projetAppliDao.load(codeProjetAppli);
 
             String codeStatut = Calc.getString(feuille, 13 - 1, noLig - 1);
-            Statut statut = statutDao.load(codeStatut);
+            Statut statut = statutDao.createOrUpdate(new Statut(codeStatut));
 
-            final int noColDebut = 8;
+            int noColDebut = 8;
             Date debut = (Calc.isEmpty(feuille, noColDebut - 1, noLig - 1) ? null : Calc.getDate(feuille, noColDebut - 1, noLig - 1));
 
             Date echeance = Calc.getDate(feuille, 9 - 1, noLig - 1);
+            LocalDate echeanceLocale = Dates.asLocalDate(echeance);
+            assert echeanceLocale != null;
 
             String codeImportance = Calc.getString(feuille, 11 - 1, noLig - 1);
             Importance importance = importanceDao.load(codeImportance);
@@ -195,7 +200,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
             double charge = Calc.getDouble(feuille, 18 - 1, noLig - 1);
 
             String codeRessource = Calc.getString(feuille, 7 - 1, noLig - 1);
-            Ressource ressource = ressourceHumaineDao.load(codeRessource);
+            Ressource<?> ressource = ressourceDao.load(codeRessource);
 
             tache = new Tache(
                     id,
@@ -205,7 +210,8 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
                     description,
                     projetAppli,
                     statut,
-                    Dates.asLocalDate(debut), Dates.asLocalDate(echeance),
+                    Dates.asLocalDate(debut),
+                    echeanceLocale,
                     importance,
                     charge,
                     ressource,
@@ -213,7 +219,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
             );
 
         } catch (/*ModeleException | */DaoException | LibreOfficeException e) {
-            throw new TacheDaoException("Impossible d'importer la tâche.", e);
+            throw new TacheDaoException("Impossible d'importer la tâche de la ligne n°" + noLig + ".", e);
         }
         return tache;
     }

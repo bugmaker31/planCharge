@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ProjetsApplisController"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+>
+    <center>
+        <TableView fx:id="projetsApplisTable" editable="true">
+            <columns>
+                <TableColumn fx:id="codeColumn" text="Code" prefWidth="100" />
+                <TableColumn fx:id="nomColumn" text="Nom" prefWidth="500" />
+                <TableColumn fx:id="trigrammeCPIColumn" text="CPI" prefWidth="100" />
+            </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+            <sortOrder>
+                <fx:reference source="codeColumn"/>
+            </sortOrder>
+        </TableView>
+    </center>
+    <bottom>
+        <AnchorPane>
+            <ButtonBar>
+                <buttons>
+                    <Button text="_Ajouter un projet/application" onAction="#ajouterProjetAppli"/>
+                </buttons>
+            </ButtonBar>
+        </AnchorPane>
+    </bottom>
+</BorderPane>

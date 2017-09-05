@@ -155,7 +155,7 @@ public class ChargeService extends AbstractService {
             Set<TacheDTO> tachesActuellesASupprimer = new HashSet<>();
             assert planCharge.getPlanifications() != null;
             for (TacheDTO tacheActuelle : planCharge.getPlanifications().taches()) {
-                if (!tachesImportees.contains(tacheActuelle)) {
+                if (!tachesImportees.contains(tacheActuelle.toEntity())) {
                     tachesActuellesASupprimer.add(tacheActuelle);
                 } else {
                     // Tâche déjà mise à jour, dans la boucle 'for' ci-dessus.
@@ -270,7 +270,7 @@ public class ChargeService extends AbstractService {
 
         LocalDate debutTache = tache.getDebut();
         if (debutTache == null) {
-//            throw new ServiceException("Impossible de caluler la provision de la tâche " + tache.noTache() + ", car elle n'a pas de date de début.");
+//            throw new ServiceException("Impossible de calculer la provision de la tâche " + tache.noTache() + ", car elle n'a pas de date de début.");
             debutTache = dateEtat; // TODO FDA 2017/08 Confirmer.
         }
 
@@ -291,5 +291,4 @@ public class ChargeService extends AbstractService {
     public Double chargeArrondie(@NotNull Double charge) {
         return (double) Math.round(charge * NBR_HEURES_OUVREES_DS_UN_JOUR) / NBR_HEURES_OUVREES_DS_UN_JOUR;
     }
-
 }

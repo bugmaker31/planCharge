@@ -681,13 +681,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         if (Collections.any(nbrsJoursChargeProfilBeans, nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)) != null) {
                             continue;
                         }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter la ressource " + profilBean.getCode() + ".", e);
-                        }
+                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                        nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
                     }
                     nbrsJoursChargeProfilBeans.addAll(nbrsJoursChargeBeansAAjouter);
                 }
@@ -697,13 +692,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         if (nbrsJoursChargeProfilBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean))) {
                             continue;
                         }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter le profil " + profilBean.getCode() + ".", e);
-                        }
+                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                        nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
                     }
                     if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
                         nbrsJoursChargeProfilBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
@@ -769,13 +759,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         if (Collections.any(nbrsJoursDispoCTMaxRestanteProfilBeans, nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)) != null) {
                             continue;
                         }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter la ressource " + profilBean.getCode() + ".", e);
-                        }
+                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                        nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
                     }
                     nbrsJoursDispoCTMaxRestanteProfilBeans.addAll(nbrsJoursChargeBeansAAjouter);
                 }
@@ -785,13 +770,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                         if (nbrsJoursDispoCTMaxRestanteProfilBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean))) {
                             continue;
                         }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter le profil " + profilBean.getCode() + ".", e);
-                        }
+                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
+                        nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
                     }
                     if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
                         nbrsJoursDispoCTMaxRestanteProfilBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.

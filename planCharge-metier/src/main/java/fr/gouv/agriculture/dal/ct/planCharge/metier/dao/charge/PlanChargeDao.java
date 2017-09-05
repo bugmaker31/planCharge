@@ -516,8 +516,22 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
                 if (Calc.isEmpty(codeCell)) {
                     break;
                 }
+
                 String code = Calc.getString(codeCell);
-                ProjetAppli projetAppli = new ProjetAppli(code);
+
+                String nom;
+                {
+                    XCell nomCell = Calc.getCell(feuilleParams, (noColTitre + 1) - 1, noLig - 1);
+                    nom = (Calc.isEmpty(nomCell) ? null : Calc.getString(nomCell));
+                }
+
+                String trigrammeCPI;
+                {
+                    XCell trigrammeCPICell = Calc.getCell(feuilleParams, (noColTitre + 2) - 1, noLig - 1);
+                    trigrammeCPI = (Calc.isEmpty(trigrammeCPICell) ? null : Calc.getString(trigrammeCPICell));
+                }
+
+                ProjetAppli projetAppli = new ProjetAppli(code, nom, trigrammeCPI);
                 projetsApplis.add(projetAppli);
                 projetAppliDao.createOrUpdate(projetAppli);
 
@@ -714,7 +728,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
         }
     }
 
-    private Map<RessourceHumaine, Map<LocalDate, Percentage>> importerPctagesDispoCT(@NotNull XSpreadsheet feuilleDisponibilites,  @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
+    private Map<RessourceHumaine, Map<LocalDate, Percentage>> importerPctagesDispoCT(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Map<RessourceHumaine, Map<LocalDate, Percentage>> pctagesDispoCT = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
 
@@ -789,7 +803,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
     @SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
     @NotNull
-    private Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> importerPctagesDispoMaxProfil(@NotNull XSpreadsheet feuilleDisponibilites,  @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
+    private Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> importerPctagesDispoMaxProfil(@NotNull XSpreadsheet feuilleDisponibilites, @NotNull RapportImportPlanCharge rapport) throws PlanChargeDaoException {
         //noinspection TooBroadScope
         Map<RessourceHumaine, Map<Profil, Map<LocalDate, Percentage>>> pctagesDispoMaxProfil = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
 
@@ -833,12 +847,13 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
                 RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
 
-                boolean nouvelleRessource =(trigrammePrecedent == null) || !trigramme.equals(trigrammePrecedent);
+                boolean nouvelleRessource = (trigrammePrecedent == null) || !trigramme.equals(trigrammePrecedent);
                 if (nouvelleRessource) {
                     pctagesParProfils = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
                 }
 
-                PROFIL : {
+                PROFIL:
+                {
                     XCell codeProfilCell = Calc.getCell(feuilleDisponibilites, (noColTrigramme + 1) - 1, noLig - 1);
                     String codeProfil = Strings.epure(Calc.getString(codeProfilCell));
                     if (codeProfil == null) {
@@ -910,7 +925,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             LIG:
             while (true) {
                 LOGGER.debug("Ligne n°{}", cptLig);
-                rapport.setAvancement("Import de la ligne " + cptLig + "...");
+                rapport.setAvancement("Import des tâches : ligne " + cptLig + "...");
 
                 XCell cell = Calc.getCell(feuilleCharges, 0, cptLig - 1);
 
@@ -1011,7 +1026,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             double charge = Calc.getDouble(feuilleCharges, 8 - 1, noLig - 1);
 
             String codeRessource = Calc.getString(feuilleCharges, 9 - 1, noLig - 1);
-            Ressource ressource = ressourceDao.loadAny(codeRessource);
+            Ressource ressource = ressourceDao.load(codeRessource);
 
             String codeProfil = Calc.getString(feuilleCharges, 10 - 1, noLig - 1);
             Profil profil = (

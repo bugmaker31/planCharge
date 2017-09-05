@@ -211,6 +211,24 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     }
 
 
+    public ObservableList<? extends AbstractBean<?, ?>>[] listesBeans() {
+        //noinspection unchecked
+        return new ObservableList[]{
+                // Référentiels :
+                joursFeriesBeans,
+                ressourcesBeans,
+                profilsBeans,
+                projetsApplisBeans,
+                importancesBeans,
+                statutsBeans,
+                // Disponibilités :
+                nbrsJoursAbsenceBeans,
+                nbrsJoursAbsenceBeans,
+                // Tâches + Charge
+                planificationsBeans
+        };
+    }
+
     public boolean estModifie() {
         return estModifie.getValue();
     }
@@ -359,7 +377,6 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     @Override
     public PlanChargeDTO toDto() throws BeanException {
-        assert dateEtat != null;
         ReferentielsDTO referentiels = toReferentielsDTO();
         DisponibilitesDTO disponibilites = toDisponibilitesDTO();
         PlanificationsDTO planifications = toPlanificationDTOs();

@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 
-import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
@@ -18,11 +17,11 @@ public class NbrsJoursParProfilBean extends AbstractCalendrierParProfilBean<Abst
 
     // Constructors :
 
-    public NbrsJoursParProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws BeanException {
+    public NbrsJoursParProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(profilBean, calendrier);
     }
 
-    public NbrsJoursParProfilBean(@NotNull ProfilBean profilBean) throws BeanException {
+    public NbrsJoursParProfilBean(@NotNull ProfilBean profilBean) {
         super(profilBean);
     }
 

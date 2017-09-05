@@ -11,14 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static javax.swing.UIManager.get;
-
 /**
  * Created by frederic.danna on 03/04/2017.
  *
  * @author frederic.danna
  */
-public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Serializable> implements DataAcessObject {
+public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Serializable> implements DataAcessObject<E, EI> {
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDao.class);
@@ -28,8 +26,9 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
     protected abstract Map<EI, E> getCache();
 
 
+    @SuppressWarnings("InstanceMethodNamingConvention")
     @Null
-    public E get(@NotNull EI id) throws EntityNotFoundException {
+    public E get(@NotNull EI id) {
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité retrouvée dans le cache : '{}'.", id);
@@ -55,13 +54,25 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
     }
 
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    public boolean exists(@NotNull EI id) throws DaoException {
+    public boolean exists(@NotNull EI id) {
         return get(id) != null;
     }
 
-    public void createOrUpdate(@NotNull E entity) throws DaoException {
+    public E createOrUpdate(@NotNull E entity) throws DaoException {
         getCache().put(entity.getIdentity(), entity);
         //noinspection HardcodedFileSeparator
-        LOGGER.debug("Entité '{}' créée/màj : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
+        LOGGER.debug("Entité '{}' créée ou màj : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
+        return entity;
+    }
+
+    public E create(@NotNull E entity) throws EntityAlreadyExistException {
+        //noinspection LocalVariableNamingConvention
+        EI id = entity.getIdentity();
+        if (exists(id)) {
+            throw new EntityAlreadyExistException("Une entité existe déjà avec l'ID '" + id + "'.");
+        }
+        getCache().put(entity.getIdentity(), entity);
+        LOGGER.debug("Entité '{}' créée : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
+        return entity;
     }
 }

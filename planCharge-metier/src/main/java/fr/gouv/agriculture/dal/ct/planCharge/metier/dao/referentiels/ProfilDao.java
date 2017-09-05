@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Profil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ public class ProfilDao extends AbstractDao<Profil,String> {
         super();
     }
 
+    @NotNull
     @Override
     protected Map<String, Profil> getCache() {
         return CACHE;

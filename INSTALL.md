@@ -8,7 +8,10 @@ Ce fichier liste les actions à faire pour rendre compatible une version `V` ave
 **NB** : A faire avant de migrer le fichier Calc du plan de charge.
 1) Ajouter le projet `SIPV`.
 1) Ajouter le profil `Encadrant`.
-1) Affecter le profil `Encadrant` aux 2 tâches ayant le profil `*`.
+1) Affecter le profil `Encadrant` aux tâches `T0765`  et `T0952` (au lieu du profil `*`).
+1) Mettre "(pas de ticket)" dans la colonne `N° de ticket IDAL` pour toutes les tâches dont cette colonne est vide.
+
+_(fait en t4.37)_
 
 ### Migration du fichier Calc du plan de charge (`DAL-CT_11_PIL_Plan de charge_*.ods`)
 1) Ajouter les statuts des tâches dans l'onglet "Param" (copier/coller depuis "Suivi des demandes").

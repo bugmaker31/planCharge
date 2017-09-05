@@ -17,31 +17,31 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
     @NotNull
     private StringProperty code = new SimpleStringProperty();
 
+    @NotNull
+    private StringProperty nom = new SimpleStringProperty();
 
-    private ProjetAppliBean() {
+    @NotNull
+    private StringProperty trigrammeCPI = new SimpleStringProperty();
+
+
+    public ProjetAppliBean() {
         super();
-    }
-
-    private ProjetAppliBean(@NotNull ProjetAppliDTO projetAppliDTO) {
-        this();
-        this.code.set(projetAppliDTO.getCode());
     }
 
     private ProjetAppliBean(@Null String code) {
         this();
-        this.code.set(code);
+        this.code.setValue(code);
+        this.nom.setValue(null);
+        this.trigrammeCPI.setValue(null);
     }
 
-    @NotNull
-    public static ProjetAppliBean from(@NotNull ProjetAppliDTO projetAppliDTO) {
-        return new ProjetAppliBean().fromDto(projetAppliDTO);
+    private ProjetAppliBean(@NotNull ProjetAppliDTO projetAppliDTO) {
+        this();
+        this.code.setValue(projetAppliDTO.getCode());
+        this.nom.setValue(projetAppliDTO.getNom());
+        this.trigrammeCPI.setValue(projetAppliDTO.getTrigrammeCPI());
     }
 
-    @SuppressWarnings("StaticMethodNamingConvention")
-    @NotNull
-    public static ProjetAppliDTO to(@NotNull ProjetAppliBean projetAppliBean) {
-        return projetAppliBean.toDto();
-    }
 
     @Null
     public String getCode() {
@@ -54,6 +54,38 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
     }
 
     @NotNull
+    public String getNom() {
+        return nom.get();
+    }
+
+    @NotNull
+    public StringProperty nomProperty() {
+        return nom;
+    }
+
+    @NotNull
+    public String getTrigrammeCPI() {
+        return trigrammeCPI.get();
+    }
+
+    @NotNull
+    public StringProperty trigrammeCPIProperty() {
+        return trigrammeCPI;
+    }
+
+
+    @NotNull
+    public static ProjetAppliBean from(@NotNull ProjetAppliDTO projetAppliDTO) {
+        return new ProjetAppliBean().fromDto(projetAppliDTO);
+    }
+
+    @SuppressWarnings("StaticMethodNamingConvention")
+    @NotNull
+    public static ProjetAppliDTO to(@NotNull ProjetAppliBean projetAppliBean) {
+        return projetAppliBean.toDto();
+    }
+
+    @NotNull
     @Override
     public ProjetAppliBean fromDto(@NotNull ProjetAppliDTO dto) {
         return new ProjetAppliBean(dto);
@@ -63,6 +95,7 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
     public ProjetAppliDTO toDto() {
         return new ProjetAppliDTO(code.get());
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -90,12 +123,15 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
         );
     }
 
+
     // Juste pour faciliter le débogage.
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
         return "Projet/Appli"
-                + " " + Objects.value(code.get(), "N/C");
+                + " [" + Objects.value(code.get(), "N/C") + "]"
+                + " " + Objects.value(nom.get(), "N/C")
+                + " (" + Objects.value(trigrammeCPI.get(), "N/C") + ")";
     }
 
 }

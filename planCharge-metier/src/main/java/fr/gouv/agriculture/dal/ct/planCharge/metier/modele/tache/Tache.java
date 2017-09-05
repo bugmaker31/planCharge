@@ -37,7 +37,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
     private Importance importance;
     private double charge;
     @NotNull
-    private Ressource ressource;
+    private Ressource<?> ressource;
     @NotNull
     private Profil profil;
 
@@ -165,7 +165,7 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
     }
 
     @NotNull
-    public Ressource getRessource() {
+    public Ressource<?> getRessource() {
         return ressource;
     }
 

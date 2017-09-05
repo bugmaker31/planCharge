@@ -3,20 +3,19 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
 import fr.gouv.agriculture.dal.ct.metier.dao.EntityNotFoundException;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceGenerique;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceGenerique;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 26/03/2017.
  */
-public class RessourceDao<R extends Ressource<R>> implements DataAcessObject<RessourceHumaine, String> {
+@SuppressWarnings("ClassHasNoToStringMethod")
+public /*abstract*/ class RessourceDao<R extends Ressource<R>> /*extends AbstractDao*/ implements DataAcessObject<RessourceHumaine, String> {
 
 
     private static RessourceDao instance;
@@ -41,7 +40,7 @@ public class RessourceDao<R extends Ressource<R>> implements DataAcessObject<Res
 
 
     @NotNull
-    public Ressource loadAny(@NotNull String codeRessource) throws EntityNotFoundException {
+    public Ressource<?> load(@NotNull String codeRessource) throws EntityNotFoundException {
 
         RessourceGenerique ressourceGenerique = RessourceGenerique.valeurOuNull(codeRessource);
         if (ressourceGenerique != null) {
@@ -51,7 +50,20 @@ public class RessourceDao<R extends Ressource<R>> implements DataAcessObject<Res
         return ressourceHumaineDao.load(codeRessource);
     }
 
+//    @Override
+    @NotNull
+    public Ressource createOrUpdate(@NotNull Ressource ressource) throws DaoException {
 
+        RessourceGenerique ressourceGenerique = RessourceGenerique.valeurOuNull(ressource.getCode());
+        if (ressourceGenerique != null) {
+            return ressourceGenerique;
+        }
+
+        RessourceHumaine ressourceHumaine = (RessourceHumaine) ressource;
+        return ressourceHumaineDao.createOrUpdate(ressourceHumaine);
+    }
+
+    @SuppressWarnings("rawtypes")
     @NotNull
     public List<Ressource> listAll() throws DaoException {
         List<Ressource> ressources = Arrays.asList(RessourceGenerique.RESSOURCES_GENERIQUES);

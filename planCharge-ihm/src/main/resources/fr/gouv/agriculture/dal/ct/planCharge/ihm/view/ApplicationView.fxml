@@ -81,8 +81,9 @@
                     <MenuItem text="_Ressources humaines" onAction="#afficherModuleRessourcesHumaines"/>
                     <MenuItem disable="true" text="_Profils"/>
                     <SeparatorMenuItem/>
-                    <MenuItem disable="true" text="Projets/_Applis"/>
+                    <MenuItem text="Projets/_Applis" onAction="#afficherModuleProjetsApplis"/>
                     <MenuItem disable="true" text="_Importances"/>
+                    <MenuItem disable="true" text="_Statuts"/>
                 </Menu>
                 <Menu text="_Gestion">
                     <MenuItem text="_Disponibilités" onAction="#afficherModuleDisponibilites"

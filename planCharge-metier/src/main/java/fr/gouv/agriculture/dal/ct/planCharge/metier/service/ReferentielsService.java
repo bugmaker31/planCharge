@@ -168,7 +168,7 @@ public class ReferentielsService {
     @NotNull
     public RessourceDTO ressource(@NotNull String codeRessource) throws ServiceException {
         try {
-            Ressource ressource = ressourceDao.loadAny(codeRessource);
+            Ressource ressource = ressourceDao.load(codeRessource);
             return RessourceDTO.from(ressource);
         } catch (DaoException e) {
             throw new ServiceException("Impossible de retrouver la ressource '" + codeRessource + "'.", e);

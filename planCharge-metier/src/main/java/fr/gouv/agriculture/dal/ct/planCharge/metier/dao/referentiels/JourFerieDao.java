@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.JourFeri
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class JourFerieDao extends AbstractDao<JourFerie,LocalDate> {
     }
 
 
+    @NotNull
     @Override
     protected Map<LocalDate, JourFerie> getCache() {
         return CACHE;

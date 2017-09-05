@@ -14,30 +14,54 @@ import java.util.List;
  */
 public class ProjetAppliDTO extends AbstractDTO<ProjetAppli, String, ProjetAppliDTO> implements Comparable<ProjetAppliDTO> {
 
-    @Null
+    @NotNull
     private String code;
 
+    @Null
+    private String nom;
 
-    public ProjetAppliDTO() {
+    @Null
+    private String trigrammeCPI;
+
+
+
+    private ProjetAppliDTO() {
         super();
     }
 
     public ProjetAppliDTO(@NotNull String code) {
+        this(code, null, null);
+    }
+
+    public ProjetAppliDTO(@NotNull String code, @Null String nom, @Null String trigrammeCPI) {
         this();
         this.code = code;
+        this.nom = nom;
+        this.trigrammeCPI = trigrammeCPI;
     }
 
 
-    @Null
+    @NotNull
     public String getCode() {
         return code;
     }
 
+    @Null
+    public String getNom() {
+        return nom;
+    }
 
     @Null
+    public String getTrigrammeCPI() {
+        return trigrammeCPI;
+    }
+
+
+    @SuppressWarnings("SuspiciousGetterSetter")
+    @NotNull
     @Override
     public String getIdentity() {
-        return getCode();
+        return code;
     }
 
 
@@ -45,13 +69,13 @@ public class ProjetAppliDTO extends AbstractDTO<ProjetAppli, String, ProjetAppli
     @Override
     public ProjetAppli toEntity() {
         assert code != null;
-        return new ProjetAppli(code);
+        return new ProjetAppli(code, nom, trigrammeCPI);
     }
 
     @NotNull
     @Override
     public ProjetAppliDTO fromEntity(@NotNull ProjetAppli entity) {
-        return new ProjetAppliDTO(entity.getCode());
+        return new ProjetAppliDTO(entity.getCode(), entity.getNom(), entity.getTrigrammeCPI());
     }
 
     @NotNull

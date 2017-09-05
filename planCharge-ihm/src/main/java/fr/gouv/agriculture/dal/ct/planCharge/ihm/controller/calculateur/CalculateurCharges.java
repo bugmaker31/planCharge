@@ -242,15 +242,19 @@ public class CalculateurCharges extends Calculateur {
             chargePlanifieePourLaProfil += chargePlanifiee;
         }
 
-        NbrsJoursParProfilBean nbrJoursChargePourLaProfilBean = Collections.any(
+        NbrsJoursParProfilBean nbrJoursChargePourLeProfilBean = Collections.any(
                 getChargesController().getNbrsJoursChargeProfilBeans(),
-                nbrsJoursChargeBean -> nbrsJoursChargeBean.getProfilBean().equals(profilBean),
-                new ControllerException("Impossible de retrouver la profil '" + profilBean.getCode() + "' dans la table des nombres de jours de charge par profil.")
+                nbrsJoursChargeBean -> nbrsJoursChargeBean.getProfilBean().equals(profilBean)
+//                new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la table des nombres de jours de charge par profil.")
         );
-        if (!nbrJoursChargePourLaProfilBean.containsKey(debutPeriode)) {
-            nbrJoursChargePourLaProfilBean.put(debutPeriode, new SimpleFloatProperty());
+        if (nbrJoursChargePourLeProfilBean == null) {
+            nbrJoursChargePourLeProfilBean = new NbrsJoursParProfilBean(profilBean);
+            getChargesController().getNbrsJoursChargeProfilBeans().add(nbrJoursChargePourLeProfilBean);
         }
-        nbrJoursChargePourLaProfilBean.get(debutPeriode).setValue(chargePlanifieePourLaProfil);
+        if (!nbrJoursChargePourLeProfilBean.containsKey(debutPeriode)) {
+            nbrJoursChargePourLeProfilBean.put(debutPeriode, new SimpleFloatProperty());
+        }
+        nbrJoursChargePourLeProfilBean.get(debutPeriode).setValue(chargePlanifieePourLaProfil);
     }
 
     // Nbrs de jours de dispo CT restante / ressource :

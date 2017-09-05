@@ -52,10 +52,7 @@ import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by frederic.danna on 09/04/2017.
@@ -414,23 +411,8 @@ public class ApplicationController extends AbstractController {
 
     private void reinitPlanCharge() throws ControllerException {
         definirDateEtat((LocalDate) null);
-        ObservableList<?>[] listesBeans = {
-                // Référentiels :
-                planChargeBean.getJoursFeriesBeans(),
-                planChargeBean.getJoursFeriesBeans(),
-                planChargeBean.getImportancesBeans(),
-                planChargeBean.getProfilsBeans(),
-                planChargeBean.getStatutsBeans(),
-                planChargeBean.getRessourcesBeans(),
-                // Disponibilités :
-                planChargeBean.getNbrsJoursAbsenceBeans(),
-                // Tâches + Charge
-                planChargeBean.getPlanificationsBeans()
-        };
-        for (ObservableList<?> listeDonnees : listesBeans) {
-            listeDonnees.clear();
-        }
-
+        Arrays.stream(planChargeBean.listesBeans())
+                .forEach(List::clear);
         majTitre();
         majBarreEtat();
     }
@@ -447,6 +429,7 @@ public class ApplicationController extends AbstractController {
             charger();
         } catch (ControllerException e) {
             LOGGER.error("Impossible de charger le plan de charge.", e);
+            //noinspection HardcodedLineSeparator
             ihm.afficherPopUp(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
@@ -462,6 +445,7 @@ public class ApplicationController extends AbstractController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier XML qui contient un plan de charge : ");
         fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Fichier XML du plan de charge", "planCharge_2017-04-17.xml"),
                 new FileChooser.ExtensionFilter("Fichier XML", "*.xml")
         );
         try {
@@ -667,6 +651,7 @@ public class ApplicationController extends AbstractController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LibreOffice) qui contient les tâches ('suivi des demandes'') : ");
         fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Fichier LOCalc de suivi des demandes", "DAL-CT_14_PIL_Suivi des demandes_*.ods"),
                 new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
         );
         String nomRepFicCalc;
@@ -691,7 +676,7 @@ public class ApplicationController extends AbstractController {
         importerTachesDepuisCalc(ficCalc);
     }
 
-    private void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    public void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
         RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
 
@@ -790,6 +775,7 @@ public class ApplicationController extends AbstractController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LIbreOffice) qui contient un plan de charge : ");
         fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Fichier LOCalc du plan de charge", "DAL-CT_11_PIL_Plan de charge_*.ods"),
                 new FileChooser.ExtensionFilter("LibreOffice Calc", "*.ods")
         );
         String nomRepFicCalc;
@@ -1090,7 +1076,7 @@ public class ApplicationController extends AbstractController {
         try {
             afficherModuleRessourcesHumaines();
         } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher le module des ressrouces humaines.", e);
+            LOGGER.error("Impossible d'afficher le module des ressources humaines.", e);
             ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des ressources humaines", Exceptions.causes(e));
         }
     }
@@ -1117,6 +1103,45 @@ public class ApplicationController extends AbstractController {
         moduleCourant = ihm.getRessourcesHumainesController();
         contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
 //        ihm.getRessourcesHumainesController().fireActivation();
+        majTitre();
+    }
+
+
+    @FXML
+    private void afficherModuleProjetsApplis(@NotNull ActionEvent actionEvent) {
+        try {
+            afficherModuleProjetsApplis();
+        } catch (ControllerException e) {
+            //noinspection HardcodedFileSeparator
+            LOGGER.error("Impossible d'afficher le module des projets/applis.", e);
+            //noinspection HardcodedFileSeparator
+            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des projets/applis", Exceptions.causes(e));
+        }
+    }
+
+    public void afficherModuleProjetsApplis() throws ControllerException {
+        //noinspection HardcodedFileSeparator
+        LOGGER.debug("> [...] > Module \"Projets / Applis\"");
+
+        //noinspection ObjectEquality
+        if (moduleCourant == ihm.getProjetsApplisController()) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
+        activerModuleProjetsApplis();
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
+    }
+
+    public void activerModuleProjetsApplis() throws ControllerException {
+        moduleCourant = ihm.getProjetsApplisController();
+        contentPane.getChildren().setAll(ihm.getProjetsApplisView());
+//        ihm.getProjetsApplisController().fireActivation();
         majTitre();
     }
 
@@ -1467,4 +1492,5 @@ public class ApplicationController extends AbstractController {
         );
         LOGGER.debug("Calculs faits.");
     }
+
 }

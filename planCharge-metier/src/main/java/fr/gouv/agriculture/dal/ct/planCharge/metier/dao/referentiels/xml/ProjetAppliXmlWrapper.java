@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.xml;
 
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.ProjetAppli;
 
 import javax.validation.constraints.NotNull;
@@ -12,8 +11,11 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ProjetAppliXmlWrapper {
 
+    @SuppressWarnings("InstanceVariableNamingConvention")
     private String id;
     private String code;
+    private String nom;
+    private String trigrammeCPI;
 
 
     /**
@@ -37,6 +39,16 @@ public class ProjetAppliXmlWrapper {
         return code;
     }
 
+    @XmlElement(required = false)
+    public String getNom() {
+        return nom;
+    }
+
+    @XmlElement(required = false)
+    public String getTrigrammeCPI() {
+        return trigrammeCPI;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -45,14 +57,24 @@ public class ProjetAppliXmlWrapper {
         this.code = code;
     }
 
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-    public ProjetAppliXmlWrapper init(ProjetAppli projetAppli) {
+    public void setTrigrammeCPI(String trigrammeCPI) {
+        this.trigrammeCPI = trigrammeCPI;
+    }
+
+
+    public ProjetAppliXmlWrapper init(@NotNull ProjetAppli projetAppli) {
         this.id = projetAppli.getIdentity();
         this.code = projetAppli.getCode();
+        this.nom = projetAppli.getNom();
+        this.trigrammeCPI = projetAppli.getTrigrammeCPI();
         return this;
     }
 
     public ProjetAppli extract() {
-        return new ProjetAppli(code);
+        return new ProjetAppli(code, nom, trigrammeCPI);
     }
 }

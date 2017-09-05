@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 import fr.gouv.agriculture.dal.ct.metier.dao.AbstractDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class RessourceHumaineDao extends /*RessourceDao*/ AbstractDao<RessourceH
 
 
 //    @Override
+    @NotNull
     protected Map<String, RessourceHumaine> getCache() {
         return CACHE;
     }

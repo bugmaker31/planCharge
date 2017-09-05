@@ -270,10 +270,10 @@ public class RessourcesHumainesController extends AbstractController implements 
     private void definirMenuContextuel() {
         ContextMenu contextMenu = new ContextMenu();
 
-        MenuItem menuVoirTache = new MenuItem("Supprimer");
-        menuVoirTache.setOnAction(this::supprimerRessourceHumaine);
+        MenuItem menuSupprimer = new MenuItem("Supprimer");
+        menuSupprimer.setOnAction(this::supprimerRessourceHumaine);
 
-        contextMenu.getItems().setAll(menuVoirTache);
+        contextMenu.getItems().setAll(menuSupprimer);
 
         ressourcesHumainesTable.setContextMenu(contextMenu);
     }

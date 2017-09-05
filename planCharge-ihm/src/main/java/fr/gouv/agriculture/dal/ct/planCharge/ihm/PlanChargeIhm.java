@@ -132,6 +132,8 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private Region ressourcesHumainesView;
     @NotNull
+    private Region projetsApplisView;
+    @NotNull
     private Region disponibilitesView;
     @NotNull
     private Region tachesView;
@@ -168,6 +170,11 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
+    public Region getProjetsApplisView() {
+        return projetsApplisView;
+    }
+
+    @NotNull
     public Region getDisponibilitesView() {
         return disponibilitesView;
     }
@@ -201,6 +208,8 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private RessourcesHumainesController ressourcesHumainesController;
     @NotNull
+    private ProjetsApplisController projetsApplisController;
+    @NotNull
     private DisponibilitesController disponibilitesController;
     @NotNull
     private TachesController tachesController;
@@ -223,6 +232,11 @@ public class PlanChargeIhm extends Application {
     @NotNull
     public RessourcesHumainesController getRessourcesHumainesController() {
         return ressourcesHumainesController;
+    }
+
+    @NotNull
+    public ProjetsApplisController getProjetsApplisController() {
+        return projetsApplisController;
     }
 
     public TachesController getTachesController() {
@@ -307,8 +321,9 @@ public class PlanChargeIhm extends Application {
         LOGGER.info("Application initialisée.");
     }
 
+    @SuppressWarnings("ProhibitedExceptionDeclared")
     @Override
-    public void start(@SuppressWarnings("ParameterHidesMemberVariable") @NotNull Stage primaryStage) throws Exception {
+    public void start(@SuppressWarnings({"ParameterHidesMemberVariable", "NullableProblems"}) @NotNull Stage primaryStage) throws Exception {
         try {
             LOGGER.debug("Application en cours de démarrage...");
 
@@ -322,8 +337,8 @@ public class PlanChargeIhm extends Application {
             //
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
             Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
-            double screenWidth = (int) ecranParDefaut.getBounds().getWidth();
-            double screenHeight = (int) ecranParDefaut.getBounds().getHeight();
+            double screenWidth = (double) ecranParDefaut.getBounds().getWidth();
+            double screenHeight = (double) ecranParDefaut.getBounds().getHeight();
             primaryStage.setWidth(screenWidth);
             primaryStage.setHeight(screenHeight);
             primaryStage.setResizable(true);
@@ -341,6 +356,8 @@ public class PlanChargeIhm extends Application {
             if (estEnDeveloppement) {
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
+//                applicationController.afficherModuleProjetsApplis();
+//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.37.ods"));
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
 //                applicationController.afficherModuleDisponibilites();
@@ -356,6 +373,7 @@ public class PlanChargeIhm extends Application {
         }
     }
 
+    @SuppressWarnings("ProhibitedExceptionDeclared")
     @Override
     public void stop() throws Exception {
         LOGGER.info("Application en cours d'arrêt...");
@@ -365,6 +383,7 @@ public class PlanChargeIhm extends Application {
     }
 
 
+    @SuppressWarnings("ProhibitedExceptionDeclared")
     private void chargerParametresApplicatifs() throws Exception {
         try {
             paramsMetier.init();
@@ -430,6 +449,12 @@ public class PlanChargeIhm extends Application {
             loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/RessourcesHumainesView.fxml"));
             ressourcesHumainesView = loader.load();
             ressourcesHumainesController = loader.getController();
+        }
+        {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ProjetsApplisView.fxml"));
+            projetsApplisView = loader.load();
+            projetsApplisController = loader.getController();
         }
         {
             FXMLLoader loader = new FXMLLoader();
@@ -509,13 +534,14 @@ public class PlanChargeIhm extends Application {
 //        });
     }
 
-    public void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @NotNull List<ViolationRegleGestion> violations) {
+    public void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @SuppressWarnings("rawtypes") @NotNull List<ViolationRegleGestion> violations) {
 //        Platform.runLater(() -> {
 
         masquerNotificationsViolationsReglesGestion();
 
+        //noinspection rawtypes
         for (ViolationRegleGestion violation : violations) {
-            //noinspection HardcodedLineSeparator
+            //noinspection HardcodedLineSeparator,unchecked
             Notification notifErreur = new Notification()
                     .title(titre)
                     .text(
@@ -529,7 +555,7 @@ public class PlanChargeIhm extends Application {
 //    });
     }
 
-    @SuppressWarnings("StaticMethodNamingConvention")
+    @SuppressWarnings({"WeakerAccess"})
     public void masquerNotificationsViolationsReglesGestion() {
         for (Notification notification : notificationsViolationsReglesGestion) {
             notification.hide();
@@ -586,7 +612,7 @@ public class PlanChargeIhm extends Application {
         new Notification()
                 .title(titre)
                 .text(message)
-                .hideAfter(new Duration(5000)) // TODO FDA 2017/08 Permettre à l'utilisateur de changer ce paramètre (à mémoriser dans ses préférences ?)
+                .hideAfter(new Duration(5000)) // 5 secondes. TODO FDA 2017/08 Permettre à l'utilisateur de changer ce paramètre (à mémoriser dans ses préférences ?)
                 .showInformation();
     }
 

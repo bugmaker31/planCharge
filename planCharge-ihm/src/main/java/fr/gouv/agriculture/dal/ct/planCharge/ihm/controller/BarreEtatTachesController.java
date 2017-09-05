@@ -94,7 +94,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
             List<TacheDTO> tacheDTOs = TacheBeans.<TacheDTO>toDTO((List<TacheBean>) tachesBeans);
             List<TacheDTO> tacheATraiterDTOs = tacheService.tachesATraiter(tacheDTOs);
 
-            long nbrTachesAAfficher = tacheATraiterDTOs.size();
+            long nbrTachesAAfficher = (long) tacheATraiterDTOs.size();
             nbrTachesATraiterLabel.setText(formatNbrTaches.format(nbrTachesAAfficher));
 
             Double totalRAF = tacheATraiterDTOs.parallelStream()
@@ -103,7 +103,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
             totalResteAFaireLabel.setText(formatCharge.format(totalRAF));
         });
         tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
-            long nbrTachesAffichees = tachesTable.getItems().size();
+            long nbrTachesAffichees = (long) tachesTable.getItems().size();
             nbrTachesAfficheesLabel.setText(formatNbrTaches.format(nbrTachesAffichees));
         });
     }
@@ -113,7 +113,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         try {
             fonctionAjouterTache.executer();
         } catch (IhmException e) {
-            throw new ControllerException("Impossible d'exécuter la fonction d'ajout d'une tâche.", e);
+            throw new ControllerException("Impossible d'ajouter une tâche.", e);
         }
     }
 }
