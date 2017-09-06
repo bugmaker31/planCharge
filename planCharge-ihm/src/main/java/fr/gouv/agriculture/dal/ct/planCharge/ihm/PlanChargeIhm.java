@@ -359,7 +359,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleProjetsApplis();
 //                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.37.ods"));
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s16_t3.18.ods"));
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.35.ods"));
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
@@ -739,7 +739,7 @@ public class PlanChargeIhm extends Application {
         progressDialog.setHeaderText(titre);
 //        task.messageProperty().addListener((observable, oldValue, newValue) -> progressDialog.setContentText(newValue)); Redondant, car le ProgressDialog doit déjà le faire (ou un autre compsant JavaFX)
         progressDialog.setResizable(true);
-        progressDialog.getDialogPane().setPrefWidth(500);
+        progressDialog.getDialogPane().setPrefWidth(1000);
         progressDialog.getDialogPane().setPrefHeight(200);
         ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
 
@@ -837,7 +837,7 @@ public class PlanChargeIhm extends Application {
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-        return LocalDate.of(2017, 4, 17);
+        return LocalDate.of(2017, 8, 21);
     }
 
     public void definirTitre(String titre) {

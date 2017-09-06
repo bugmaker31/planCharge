@@ -93,7 +93,7 @@ public class ProjetAppliBean extends AbstractBean<ProjetAppliDTO, ProjetAppliBea
 
     @NotNull
     public ProjetAppliDTO toDto() {
-        return new ProjetAppliDTO(code.get());
+        return new ProjetAppliDTO(code.get(), nom.get(), trigrammeCPI.get());
     }
 
 

@@ -13,7 +13,7 @@ _(fait en t4.37)_
 
 ## Migration du fichier Calc du plan de charge (`DAL-CT_11_PIL_Plan de charge_*.ods`)
 1) Ajouter les statuts des tâches dans l'onglet "Param" (copier/coller depuis "Suivi des demandes").
-1) Màj la liste des projets : ajouter `SOCTEC_V2`, `EQUAR`, `BDNI-Mig`, `SIPV`, etc. (copier/coller depuis "Suivi des demandes").
+1) Màj la liste des projets : ajouter `SOCTEC_V2`, `EQUAR`, `BDNI-MigBDD`, `SIPV`, etc. (copier/coller depuis "Suivi des demandes").
 1) Ajouter le profil `Encadrant` dans l'onglet `Param`.
 1) Affecter le profil `Encadrant` aux tâches `T0765`  et `T0952` (au lieu du profil `*`).
 1) Ajouter le profil `Encadrant` à l'onglet `Charge`, en copiant/collant les formules des colonnes hebdo/trimestrielles (`L` à `AC`) :

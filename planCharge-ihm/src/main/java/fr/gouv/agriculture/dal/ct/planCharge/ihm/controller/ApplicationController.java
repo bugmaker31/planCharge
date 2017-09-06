@@ -445,7 +445,7 @@ public class ApplicationController extends AbstractController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier XML qui contient un plan de charge : ");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Fichier XML du plan de charge", "planCharge_2017-04-17.xml"),
+                new FileChooser.ExtensionFilter("Fichier XML du plan de charge", "planCharge_*.xml"),
                 new FileChooser.ExtensionFilter("Fichier XML", "*.xml")
         );
         try {
@@ -801,7 +801,7 @@ public class ApplicationController extends AbstractController {
         importerPlanChargeDepuisCalc(ficCalc);
     }
 
-    private void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    public void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
         RapportImportPlanChargeAvecProgression rapport = new RapportImportPlanChargeAvecProgression();
 

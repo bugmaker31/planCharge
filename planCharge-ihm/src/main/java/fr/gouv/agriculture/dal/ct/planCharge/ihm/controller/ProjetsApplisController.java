@@ -267,19 +267,24 @@ public class ProjetsApplisController extends AbstractController implements Modul
 
     @Null
     private String validerNom(@Null String nom) {
+/*
         if ((nom == null) || nom.trim().isEmpty()) {
             return "Un nom est obligatoire.";
         }
+*/
         return null;
     }
 
     @Null
-    private String validerTrigrammeCPI(@Null String societe) {
-        if ((societe == null) || societe.trim().isEmpty()) {
-            return "La société est obligatoire.";
+    private String validerTrigrammeCPI(@Null String trigrammeCPI) {
+/*
+        if ((trigrammeCPI == null) || trigrammeCPI.trim().isEmpty()) {
+            return "Le trigramme du CPI est obligatoire.";
         }
+*/
         return null;
     }
+
 
     @FXML
     private void ajouterProjetAppli(@SuppressWarnings("unused") ActionEvent actionEvent) {

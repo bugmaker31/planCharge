@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels;
 
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -61,7 +62,9 @@ public class ProjetAppli extends AbstractEntity<String, ProjetAppli> implements 
     // pour déboguer, uniquement.
     @Override
     public String toString() {
-        return code;
+        return "[" + code + "]"
+                + " " + Objects.value(nom, "N/C")
+                + " (" + Objects.value(trigrammeCPI, "N/C") + ")";
     }
 
 }

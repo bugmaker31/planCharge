@@ -347,18 +347,32 @@ public class CalculateurCharges extends Calculateur {
         float nbrsJoursDispo;
         NbrsJoursDispoProfilBean nbrsJoursDispoRsrcBean = Collections.any(
                 disponibilitesController.getNbrsJoursDispoMaxProfilBeans(),
-                nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean),
-                new ControllerException("impossible de retrouver la disponibilité du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
+                nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
+//                new ControllerException("impossible de retrouver la disponibilité du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
         );
+        if (nbrsJoursDispoRsrcBean == null) {
+            nbrsJoursDispoRsrcBean = new NbrsJoursDispoProfilBean(profilBean);
+            disponibilitesController.getNbrsJoursDispoMaxProfilBeans().add(nbrsJoursDispoRsrcBean);
+        }
+        if (!nbrsJoursDispoRsrcBean.containsKey(debutPeriode)) {
+            nbrsJoursDispoRsrcBean.put(debutPeriode, new SimpleFloatProperty());
+        }
         nbrsJoursDispo = nbrsJoursDispoRsrcBean.get(debutPeriode).getValue();
 
         float nbrJoursCharge;
         {
             NbrsJoursParProfilBean nbrJoursChargeBean = Collections.any(
                     getChargesController().getNbrsJoursChargeProfilBeans(),
-                    nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean),
-                    new ControllerException("impossible de retrouver la charge totale du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
+                    nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
+//                    new ControllerException("Impossible de retrouver la charge totale du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
             );
+            if (nbrJoursChargeBean ==null) {
+                nbrJoursChargeBean = new NbrsJoursParProfilBean(profilBean);
+                getChargesController().getNbrsJoursChargeProfilBeans().add(nbrJoursChargeBean);
+            }
+            if (!nbrJoursChargeBean.containsKey(debutPeriode)) {
+                nbrJoursChargeBean.put(debutPeriode, new SimpleFloatProperty());
+            }
             nbrJoursCharge = nbrJoursChargeBean.get(debutPeriode).getValue();
         }
 
@@ -367,9 +381,13 @@ public class CalculateurCharges extends Calculateur {
         {
             NbrsJoursParProfilBean nbrJoursChargeBean = Collections.any(
                     getChargesController().getNbrsJoursDispoCTMaxRestanteProfilBeans(),
-                    nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean),
-                    new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la table des nombres de jours de disponibilité CT max. restant pour la CT par profil.")
+                    nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
+//                    new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la table des nombres de jours de disponibilité CT max. restant pour la CT par profil.")
             );
+            if (nbrJoursChargeBean == null) {
+                nbrJoursChargeBean = new NbrsJoursParProfilBean(profilBean);
+                getChargesController().getNbrsJoursDispoCTMaxRestanteProfilBeans().add(nbrJoursChargeBean);
+            }
             if (!nbrJoursChargeBean.containsKey(debutPeriode)) {
                 nbrJoursChargeBean.put(debutPeriode, new SimpleFloatProperty());
             }

@@ -4,6 +4,7 @@ import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.CellAddress;
+import com.sun.star.table.CellContentType;
 import com.sun.star.table.XCell;
 import com.sun.star.table.XCellRange;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
@@ -508,11 +509,17 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             CellAddress adrCell = Calc.getCellAddress(cellule);
             int noLigTitre = adrCell.Row + 1;
             int noColTitre = adrCell.Column + 1;
-            assert Calc.getString(feuilleParams, noColTitre - 1, (noLigTitre + 1) - 1).equals("Code");
-            assert Calc.getString(feuilleParams, (noColTitre + 1) - 1, (noLigTitre + 1) - 1).equals("Nom");
+            int noLigEntetes = noLigTitre + 1;
+            //noinspection UnnecessaryLocalVariable
+            int noColCode = noColTitre;
+            int noColNom = noColTitre + 1;
+            int noColTrigrammeCPI = noColTitre + 4; // Attention aux colonnes fusionnées.
+            assert Calc.getString(feuilleParams, noColCode - 1, noLigEntetes - 1).equals("Code");
+            assert Calc.getString(feuilleParams, noColNom - 1, noLigEntetes - 1).equals("Nom");
+            assert Calc.getString(feuilleParams, noColTrigrammeCPI - 1, noLigEntetes - 1).equals("CPI");
             int noLig = noLigTitre + 2;
             while (true) {
-                XCell codeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
+                XCell codeCell = Calc.getCell(feuilleParams, noColCode - 1, noLig - 1);
                 if (Calc.isEmpty(codeCell)) {
                     break;
                 }
@@ -521,13 +528,13 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
                 String nom;
                 {
-                    XCell nomCell = Calc.getCell(feuilleParams, (noColTitre + 1) - 1, noLig - 1);
+                    XCell nomCell = Calc.getCell(feuilleParams, noColNom - 1, noLig - 1);
                     nom = (Calc.isEmpty(nomCell) ? null : Calc.getString(nomCell));
                 }
 
                 String trigrammeCPI;
                 {
-                    XCell trigrammeCPICell = Calc.getCell(feuilleParams, (noColTitre + 2) - 1, noLig - 1);
+                    XCell trigrammeCPICell = Calc.getCell(feuilleParams, noColTrigrammeCPI - 1, noLig - 1);
                     trigrammeCPI = (Calc.isEmpty(trigrammeCPICell) ? null : Calc.getString(trigrammeCPICell));
                 }
 
@@ -604,6 +611,10 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             while (true) {
                 XCell trigrammeCell = Calc.getCell(feuilleParams, noColTitre - 1, noLig - 1);
                 if (Calc.isEmpty(trigrammeCell)) {
+                    break;
+                }
+                if (trigrammeCell.getType() == CellContentType.FORMULA) {
+                    // La colonne "Trigramme" peut contenir le nombre de ressources.
                     break;
                 }
                 String trigramme = Strings.epure(Calc.getString(trigrammeCell));
@@ -841,7 +852,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
                     throw new PlanChargeDaoException("Trigramme non défini.");
                 }
                 //noinspection HardcodedFileSeparator
-                if (trigramme.equals("Dispo. maxi. / rsrc /profil (j)")) {
+                if (trigramme.equals("Dispo. maxi. / rsrc / profil (j)")) {
                     break;
                 }
 
@@ -925,7 +936,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             LIG:
             while (true) {
                 LOGGER.debug("Ligne n°{}", cptLig);
-                rapport.setAvancement("Import des tâches : ligne " + cptLig + "...");
+                rapport.setAvancement("Import des taches et de leurs planifications : ligne " + cptLig + "...");
 
                 XCell cell = Calc.getCell(feuilleCharges, 0, cptLig - 1);
 
@@ -1050,7 +1061,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             );
 
         } catch (/*ModeleException |*/ DaoException | LibreOfficeException e) {
-            throw new PlanChargeDaoException("Impossible d'importer la tâche.", e);
+            throw new PlanChargeDaoException("Impossible d'importer la tâche de la ligne n°" + noLig + ".", e);
         }
         return tache;
     }
@@ -1059,29 +1070,32 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
     private String codeStatut(int idTache, @NotNull XSpreadsheet feuilleTaches) throws PlanChargeDaoException {
 
         //noinspection TooBroadScope
-        int noColIndexes = 1;
+        int noColIds = 1;
         //noinspection TooBroadScope
         int noColStatuts = 13;
 
         //noinspection TooBroadScope
         int noLigDebut = 4;
-        //noinspection TooBroadScope
-        int noLigFin = 200;
 
         try {
 
             // Recherche de la tâche, identifiée par son ID :
             Integer noLigTache = null;
-            for (int cptLig = noLigDebut; cptLig <= noLigFin; cptLig++) {
-                XCell idCell = feuilleTaches.getCellByPosition(noColIndexes - 1, cptLig - 1);
+            int cptLig = noLigDebut;
+            while (true) {
+                XCell idCell = feuilleTaches.getCellByPosition(noColIds - 1, cptLig - 1);
+                if (Calc.isEmpty(idCell)) {
+                    break;
+                }
                 Integer idCourant = Calc.getInt(idCell);
                 if (idCourant.equals(idTache)) {
                     noLigTache = cptLig;
                     break;
                 }
+                cptLig++;
             }
             if (noLigTache == null) {
-                throw new PlanChargeDaoException("impossible de trouver la tâche n°" + idTache + " dans la feuille Calc.");
+                throw new PlanChargeDaoException("Impossible de trouver la tâche n°" + idTache + " dans la feuille Calc.");
             }
             assert noLigTache != null;
 
