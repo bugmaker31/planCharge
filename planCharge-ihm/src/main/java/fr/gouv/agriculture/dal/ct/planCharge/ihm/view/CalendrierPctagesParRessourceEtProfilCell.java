@@ -18,7 +18,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
-public class CalendrierPctagesParRessourceEtProfilCell<T extends AbstractCalendrierParRessourceEtProfilBean<RessourceHumaineBean, AbstractDTO, T, PercentageProperty>> extends AbstractCalendrierParRessourceCell<RessourceHumaineBean, T, Percentage> {
+public class CalendrierPctagesParRessourceEtProfilCell<T extends AbstractCalendrierParRessourceEtProfilBean<RessourceHumaineBean, AbstractDTO, T, PercentageProperty>>
+        extends AbstractCalendrierParRessourceCell<RessourceHumaineBean, T, Percentage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierPctagesParRessourceEtProfilCell.class);
 
@@ -52,7 +53,7 @@ public class CalendrierPctagesParRessourceEtProfilCell<T extends AbstractCalendr
             LOGGER.warn("Date d'état non définie !?");
             return;
         }
-        LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays(((long) getNoSemaine() - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         if (!pctagesDispoRsrcProfilBean.containsKey(debutPeriode)) {
             pctagesDispoRsrcProfilBean.put(debutPeriode, new PercentageProperty(DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT.floatValue()));
         }

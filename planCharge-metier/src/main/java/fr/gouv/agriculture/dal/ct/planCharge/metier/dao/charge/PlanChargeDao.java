@@ -623,15 +623,15 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
                 }
                 String prenom = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 1) - 1, noLig - 1));
                 if (prenom == null) {
-                    throw new PlanChargeDaoException("Trigramme non défini.");
+                    throw new PlanChargeDaoException("Prénom non défini.");
                 }
                 String nom = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 2) - 1, noLig - 1));
                 if (nom == null) {
-                    throw new PlanChargeDaoException("Trigramme non défini.");
+                    throw new PlanChargeDaoException("Nom non défini.");
                 }
                 String societe = Strings.epure(Calc.getString(feuilleParams, (noColTitre + 3) - 1, noLig - 1));
                 if (societe == null) {
-                    throw new PlanChargeDaoException("Trigramme non défini.");
+                    throw new PlanChargeDaoException("Société non définie.");
                 }
                 XCell debutMissionCell = Calc.getCell(feuilleParams, (noColTitre + 4) - 1, noLig - 1);
                 //noinspection HardcodedFileSeparator,ConstantConditions

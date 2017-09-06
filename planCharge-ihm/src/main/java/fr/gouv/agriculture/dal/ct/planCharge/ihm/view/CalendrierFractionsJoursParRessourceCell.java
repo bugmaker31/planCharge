@@ -19,7 +19,7 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, FloatProperty>> extends AbstractCalendrierParRessourceCell<R, T, Float> {
+public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, FloatProperty>> extends AbstractCalendrierParRessourceCell<R, T, Float> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierFractionsJoursParRessourceCell.class);
 

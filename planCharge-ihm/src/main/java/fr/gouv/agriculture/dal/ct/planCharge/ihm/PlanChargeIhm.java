@@ -12,6 +12,7 @@ import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -350,23 +352,27 @@ public class PlanChargeIhm extends Application {
             // Chargement des données utilisées dernièrement (if any) :
             LocalDate dateEtatPrec = dateEtatPrecedente();
             if (dateEtatPrec != null) {
-                applicationController.charger(dateEtatPrec);
+                ChargeService planChargeService = ChargeService.instance();
+                File ficCalc = planChargeService.fichierPersistancePlanCharge(dateEtatPrec);
+                if (ficCalc.exists()) {
+                    applicationController.charger(dateEtatPrec);
+                }
             }
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.afficherModuleProjetsApplis();
-//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.37.ods"));
+//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.39.ods"));
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.35.ods"));
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.36.ods"));
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
             }
 
             LOGGER.info("Application démarrée.");
-        } catch (Throwable e) {
+        } catch (Exception e) {
             String erreur = "Impossible de démarrer l'IHM.";
             LOGGER.error(erreur, e);
             throw new Exception(erreur, e);
@@ -627,9 +633,9 @@ public class PlanChargeIhm extends Application {
 
     private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
         PopupWindow popup = createFieldPopup(field, titre, message);
-        field.setOnMouseEntered(event -> ((PopOver) popup).show(field));
-        field.setOnMouseExited(event -> popup.hide());
         ((PopOver) popup).show(field);
+        field.setOnMouseEntered(event -> ((PopOver) popup).show(field));
+        field.setOnMouseExited(event -> popup.hide()); // NB : Planifier le "hide" après avoir appelé "show", car sinon l'utilisateur peut déclencher un "onMousExited" avant qu'on ait eu le temps de "show"er la PopUp (ce qui provoque des NPE).
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -837,7 +843,7 @@ public class PlanChargeIhm extends Application {
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-        return LocalDate.of(2017, 8, 21);
+        return LocalDate.of(2017, 9, 11);
     }
 
     public void definirTitre(String titre) {
