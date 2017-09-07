@@ -10,10 +10,10 @@ public interface RapportService {
     String getAvancement();
 
 
-    void setProgressionMax(int progressionMax);
+    void setProgressionMax(long progressionMax);
 
-    int getProgressionMax();
+    long getProgressionMax();
 
 
-    void setProgressionCourante(int progressionCourante);
+    void setProgressionCourante(long progressionCourante);
 }

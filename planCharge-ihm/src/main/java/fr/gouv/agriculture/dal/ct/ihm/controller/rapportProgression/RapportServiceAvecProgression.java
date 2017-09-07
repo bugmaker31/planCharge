@@ -1,17 +1,21 @@
 package fr.gouv.agriculture.dal.ct.ihm.controller.rapportProgression;
 
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
-import javafx.beans.property.*;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Created by frederic.danna on 20/06/2017.
  */
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class RapportServiceAvecProgression implements RapportService {
 
     private StringProperty avancement = new SimpleStringProperty();
 
-    private IntegerProperty progressionMax = new SimpleIntegerProperty();
-    private IntegerProperty progressionCourante = new SimpleIntegerProperty();
+    private LongProperty progressionMax = new SimpleLongProperty();
+    private LongProperty progressionCourante = new SimpleLongProperty();
 
     public String getAvancement() {
         return avancement.get();
@@ -25,28 +29,28 @@ public class RapportServiceAvecProgression implements RapportService {
         this.avancement.set(avancement);
     }
 
-    public void setProgressionMax(int progressionMax) {
+    public void setProgressionMax(long progressionMax) {
         this.progressionMax.set(progressionMax);
     }
 
     @Override
-    public int getProgressionMax() {
+    public long getProgressionMax() {
         return progressionMax.get();
     }
 
-    public IntegerProperty progressionMaxProperty() {
+    public LongProperty progressionMaxProperty() {
         return progressionMax;
     }
 
-    public int getProgressionCourante() {
+    public long getProgressionCourante() {
         return progressionCourante.get();
     }
 
-    public IntegerProperty progressionCouranteProperty() {
+    public LongProperty progressionCouranteProperty() {
         return progressionCourante;
     }
 
-    public void setProgressionCourante(int progressionCourante) {
+    public void setProgressionCourante(long progressionCourante) {
         this.progressionCourante.set(progressionCourante);
     }
 }

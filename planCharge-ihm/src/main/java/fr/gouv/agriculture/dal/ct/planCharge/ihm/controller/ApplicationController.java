@@ -486,6 +486,9 @@ public class ApplicationController extends AbstractController {
 
         RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
 
+        PlanChargeBean[] planChargeBeanAvantChargement = new PlanChargeBean[1];
+        PlanChargeDTO[] planCharge = new PlanChargeDTO[1];
+
         Task<RapportChargementAvecProgression> chargerPlanCharge = new Task<RapportChargementAvecProgression>() {
 
             @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
@@ -495,14 +498,9 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
-                PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
+                planChargeBeanAvantChargement[0] = planChargeBean.copier();
 
-                PlanChargeDTO planCharge = planChargeService.charger(ficPlanCharge, rapport);
-
-                planChargeBean.fromDto(planCharge);
-
-                planChargeBean.vientDEtreCharge();
-                getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
+                planCharge[0] = planChargeService.charger(ficPlanCharge, rapport);
 
                 return rapport;
             }
@@ -516,6 +514,14 @@ public class ApplicationController extends AbstractController {
                             RapportChargementAvecProgression rapportFinal =
                                     ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
                             assert rapportFinal != null;
+                            assert planChargeBeanAvantChargement[0] != null;
+                            assert planCharge[0] != null;
+
+                            planChargeBean.fromDto(planCharge[0]);
+
+                            planChargeBean.vientDEtreCharge();
+                            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement[0]));
+
 
                             definirDateEtat(planChargeBean.getDateEtat());
 
@@ -680,6 +686,8 @@ public class ApplicationController extends AbstractController {
 
         RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
 
+        PlanChargeDTO[] planCharge = new PlanChargeDTO[1];
+
         Task<RapportImportTachesAvecProgression> importerTachesDepuisCalc = new Task<RapportImportTachesAvecProgression>() {
 
             @Override
@@ -688,25 +696,11 @@ public class ApplicationController extends AbstractController {
                 rapport.setProgressionMax(1);
 
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
-                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
-                PlanChargeDTO planCharge = planChargeBean.toDto();
+                planCharge[0] = planChargeBean.toDto();
 
-                planChargeService.majTachesDepuisCalc(planCharge, ficCalc, rapport);
-
-                planChargeBean.fromDto(planCharge);
-
-/*
-                // TODO FDA 2017/08 La liste contenant les référentiels devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-                rapport.setAvancement("Alimentation des référentiels...");
-                ihm.getTachesController().populerReferentiels();
-                ihm.getChargesController().populerReferentiels();
-
-                // TODO FDA 2017/08 Les listes des filtres devraient être chargées au démarrage de l'appli, mais tant que les référentiels seront bouchonnés on n'a pas le choix.
-                rapport.setAvancement("Alimentation des filtres...");
-                ihm.getTachesController().populerFiltres();
-                ihm.getChargesController().populerFiltres();
-*/
+                planChargeService.majTachesDepuisCalc(planCharge[0], ficCalc, rapport);
 
                 return rapport;
             }
@@ -717,6 +711,8 @@ public class ApplicationController extends AbstractController {
 
             RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
             assert rapport != null;
+
+            planChargeBean.fromDto(planCharge[0]);
 
             definirDateEtat(planChargeBean.getDateEtat());
 
@@ -804,6 +800,7 @@ public class ApplicationController extends AbstractController {
     public void importerPlanChargeDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
         RapportImportPlanChargeAvecProgression rapport = new RapportImportPlanChargeAvecProgression();
+        PlanChargeDTO[] planCharge = new PlanChargeDTO[1];
 
         Task<RapportImportPlanChargeAvecProgression> importerPlanChargeDepuisCalc = new Task<RapportImportPlanChargeAvecProgression>() {
 
@@ -817,12 +814,7 @@ public class ApplicationController extends AbstractController {
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
 
                 rapport.setAvancement("Import depuis Calc...");
-                PlanChargeDTO planCharge = planChargeService.importerDepuisCalc(ficCalc, rapport);
-
-                planChargeBean.fromDto(planCharge);
-
-                planChargeBean.vientDEtreModifie();
-                getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
+                planCharge[0] = planChargeService.importerDepuisCalc(ficCalc, rapport);
 
                 return rapport;
             }
@@ -836,6 +828,12 @@ public class ApplicationController extends AbstractController {
                             RapportImportPlanCharge rapportFinal =
                                     ihm.afficherProgression("Import du plan de charge", importerPlanChargeDepuisCalc);
                             assert rapportFinal != null;
+                            assert planCharge[0] != null;
+
+                            planChargeBean.fromDto(planCharge[0]);
+
+                            planChargeBean.vientDEtreModifie();
+                            getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
 
                             definirDateEtat(planChargeBean.getDateEtat());
 
