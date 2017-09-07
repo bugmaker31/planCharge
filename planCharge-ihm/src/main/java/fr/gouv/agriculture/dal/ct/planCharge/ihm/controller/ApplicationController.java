@@ -1387,11 +1387,11 @@ public class ApplicationController extends AbstractController {
             if (planChargeBean.getDateEtat() == null) {
                 dateEtat = LocalDate.now();
                 if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                    dateEtat = dateEtat.minusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                    dateEtat = dateEtat.minusDays((7L - (long) dateEtat.getDayOfWeek().getValue()));
                 }
             } else {
                 assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
-                dateEtat = planChargeBean.getDateEtat().minusDays(7);
+                dateEtat = planChargeBean.getDateEtat().minusDays(7L);
             }
             assert dateEtat != null;
             assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
@@ -1493,4 +1493,21 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("Calculs faits.");
     }
 
+
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final String THEME_SOMBRE_RSRC = ApplicationController.class.getResource("/css/dark.css").toExternalForm();
+
+    public void basculerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();
+        if (stylesheets.contains(THEME_SOMBRE_RSRC)) {
+            stylesheets.remove(THEME_SOMBRE_RSRC);
+        }
+    }
+
+    public void basculerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();
+        if (!stylesheets.contains(THEME_SOMBRE_RSRC)) {
+            stylesheets.add(THEME_SOMBRE_RSRC);
+        }
+    }
 }

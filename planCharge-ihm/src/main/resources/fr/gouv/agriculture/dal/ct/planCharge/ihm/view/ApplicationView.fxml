@@ -13,11 +13,8 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <stylesheets>
+        <URL value="@/css/dark.css"/>
         <URL value="@/css/main.css"/>
-        <!--<URL value="@/css/moderna_dark.css"/>-->
-        <!--<URL value="@/css/dark.css"/>-->
-        <!--<URL value="@/css/dark_theme.css"/>-->
-        <!--<URL value="@/css/DarkTheme.css"/>-->
     </stylesheets>
     <top>
         <VBox>
@@ -74,10 +71,8 @@
                 </Menu>
                 <Menu text="_Suivi" disable="true"/>
                 <Menu text="_Référentiels">
-                    <!--suppress JavaFxEventHandler -->
                     <MenuItem text="Jours _fériés" onAction="#afficherModuleJoursFeries"/>
                     <SeparatorMenuItem/>
-                    <!--suppress JavaFxEventHandler -->
                     <MenuItem text="_Ressources humaines" onAction="#afficherModuleRessourcesHumaines"/>
                     <MenuItem text="_Profils" disable="true"/>
                     <SeparatorMenuItem/>
@@ -92,8 +87,15 @@
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Aide">
+                <Menu text="Autre" mnemonicParsing="false" >
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
+                    <MenuItem text="Aide..." mnemonicParsing="false" disable="true" />
+                    <Menu text="Thème">
+                        <items>
+                            <MenuItem text="Thème standard (Moderna)" onAction="#basculerThemeStandard" />
+                            <MenuItem text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre" />
+                        </items>
+                    </Menu>
                 </Menu>
             </MenuBar>
             <Accordion>
