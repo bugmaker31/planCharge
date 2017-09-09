@@ -17,18 +17,18 @@ public class ChargePlanifieeCell<S> extends EditableAwareTextFieldTableCell<S, F
     @Override
     public void updateItem(Float item, boolean empty) {
         super.updateItem(item, empty);
-        styler(item, empty);
+        styler();
     }
 
-    private void styler(@Null Float item, boolean empty) {
+    private void styler() {
         pseudoClassStateChanged(SURCHARGE, false);
 
-        if (empty || (item == null)) {
+        if (isEmpty() || (getItem() == null)) {
             return;
         }
 
         //noinspection UnnecessaryLocalVariable
-        Float chargePlanifiee = item;
+        Float chargePlanifiee = getItem();
         if (chargePlanifiee < 0.0) {
             pseudoClassStateChanged(SURCHARGE, true);
         }

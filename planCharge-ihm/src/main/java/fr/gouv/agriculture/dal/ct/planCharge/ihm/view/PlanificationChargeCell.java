@@ -3,13 +3,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.FloatProperty;
-import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.scene.control.TableRow;
 import javafx.util.converter.DoubleStringConverter;
@@ -41,7 +41,14 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCell.class);
 
+//    @Autowired
+    @NotNull
     private final PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+    //    @Autowired
+    @NotNull
+    private final ChargesController chargesController = ihm.getChargesController();
+
 
     private PlanChargeBean planChargeBean;
     private final int noSemaine;
@@ -120,26 +127,53 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         }
         FORMAT_SURCHARGE:
         {
-            if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
-                break FORMAT_SURCHARGE;
-            }
-            ObservableList<NbrsJoursParRessourceBean> nbrsJoursDispoCTRestanteRsrcBeans = ihm.getChargesController().getNbrsJoursDispoCTRestanteRsrcBeans();
-            NbrsJoursParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
-                    nbrsJoursDispoCTRestanteRsrcBeans,
-                    nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getRessourceBean().equals(planifBean.getTacheBean().getRessource())
-            );
-            if (nbrsJoursDispoRestanteBean == null) {
-                break FORMAT_SURCHARGE;
-            }
-            FloatProperty nbrJoursDispoRestanteSurPeriodeProperty = nbrsJoursDispoRestanteBean.get(debutPeriode);
-            if (nbrJoursDispoRestanteSurPeriodeProperty == null) {
-                break FORMAT_SURCHARGE;
-            }
-            boolean estRessourceSurchargeeSurPeriode = nbrJoursDispoRestanteSurPeriodeProperty.get() < 0.0f; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
-            if (estRessourceSurchargeeSurPeriode) {
+            if (estRessourceSurchargeeSurPeriode(planifBean, debutPeriode)) {
                 pseudoClassStateChanged(SURCHARGE, true);
+                break FORMAT_SURCHARGE;
+            }
+            if (estProfilSurchargeeSurPeriode(planifBean, debutPeriode)) {
+                pseudoClassStateChanged(SURCHARGE, true);
+                //noinspection UnnecessaryBreak
+                break FORMAT_SURCHARGE;
             }
         }
+    }
+
+
+    private boolean estRessourceSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean, @NotNull LocalDate debutPeriode) {
+        if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
+            return false;
+        }
+        NbrsJoursParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
+                chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
+                nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getRessourceBean().equals(planifBean.getTacheBean().getRessource())
+        );
+        if (nbrsJoursDispoRestanteBean == null) {
+            return false;
+        }
+        FloatProperty nbrJoursDispoRestanteSurPeriodeProperty = nbrsJoursDispoRestanteBean.get(debutPeriode);
+        if (nbrJoursDispoRestanteSurPeriodeProperty == null) {
+            return false;
+        }
+        return nbrJoursDispoRestanteSurPeriodeProperty.get() < 0.0f; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+    }
+
+    private boolean estProfilSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean, @NotNull LocalDate debutPeriode) {
+        if (planifBean.getTacheBean().getProfil() == null) {
+            return false;
+        }
+        NbrsJoursParProfilBean nbrsJoursDispoRestanteBean = Collections.any(
+                chargesController.getNbrsJoursDispoCTMaxRestanteProfilBeans(),
+                nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getProfilBean().equals(planifBean.getTacheBean().getProfil())
+        );
+        if (nbrsJoursDispoRestanteBean == null) {
+            return false;
+        }
+        FloatProperty nbrJoursDispoRestanteSurPeriodeProperty = nbrsJoursDispoRestanteBean.get(debutPeriode);
+        if (nbrJoursDispoRestanteSurPeriodeProperty == null) {
+            return false;
+        }
+        return nbrJoursDispoRestanteSurPeriodeProperty.get() < 0.0f; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
     }
 
     @Override
@@ -164,9 +198,8 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((long) ((noSemaine - 1) * 7)); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
-        // TODO FDA 2017/08 Comprendre pourquoi il est nécessaire de setter la valeur alors qu'on a appelé "super.commitEdit(newValue)", mais juste pour les cellules qui étaient à zéro jusqu'alors.
         planifBean.setChargePlanifiee(debutPeriode, finPeriode, charge);
 
-        planifBean.majChargePlanifieeTotale();
+        getTableView().refresh(); // Pour que les styles CSS soient re-appliqués (notamment celui de la colonne "Charge".
     }
 }

@@ -292,6 +292,14 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
+    public void setDebut(@NotNull LocalDate debut) {
+        this.debut.set(debut);
+    }
+
+    public void setEcheance(@NotNull LocalDate echeance) {
+        this.echeance.set(echeance);
+    }
+
     @Null
     public StringBinding noTacheProperty() {
         return idProperty().asString(Tache.FORMAT_NO_TACHE);

@@ -89,4 +89,8 @@ public class Converters {
         }
     };
 
+    public static final  RessourceBeanConverter RESSOURCE_BEAN_CONVERTER = new RessourceBeanConverter();
+
+    public static final  ProfilBeanConverter PROFIL_BEAN_CONVERTER = new ProfilBeanConverter();
+
 }

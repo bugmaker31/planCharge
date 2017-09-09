@@ -110,24 +110,40 @@ PlanificationTacheBean extends TacheBean {
         return calendrier.get(dateDebutPeriode);
     }
 
+    /**
+     * Définit la charge planifiée pour la péridoe donnée.
+     * <p>
+     * <p>Rq : Cette méthode appelle {@link #majChargePlanifieeTotale()}. Donc inutile d'appeler {@link #majChargePlanifieeTotale()}.</p>
+     *
+     * @param dateDebutPeriode début de la période considérée
+     * @param datefinPeriode   début de la période considérée
+     * @param charge           charge planifiée
+     */
     public void setChargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode, @NotNull Double charge) {
-        DoubleProperty chargePlanifiee = calendrier.containsKey(dateDebutPeriode) ? calendrier.get(dateDebutPeriode) : new SimpleDoubleProperty();
+        if (!calendrier.containsKey(dateDebutPeriode)) {
+            calendrier.put(dateDebutPeriode, new SimpleDoubleProperty());
+        }
+        DoubleProperty chargePlanifiee = calendrier.get(dateDebutPeriode);
         chargePlanifiee.setValue(charge);
+
+        majChargePlanifieeTotale();
     }
 
+
+    /**
+     * Met à jour la charge planifiée totale (= somme des charges planifiées pour toutes les périodes couvertes par la planification de cette tâche).
+     * <p>
+     * Méthode à appeler à chaque fois que la planification change, pour mettre à jour la charge totale qui est planifiée pour {@link #getTacheBean() la tâche}.
+     * </p>     */
+    public void majChargePlanifieeTotale() {
+        chargePlanifieeTotale.setValue(chargePlanifieeTotale());
+    }
 
     private double chargePlanifieeTotale() {
         double chargePlanifiee = calendrier.values().stream()
                 .mapToDouble(ObservableDoubleValue::get)
                 .sum();
         return chargeService.chargeArrondie(chargePlanifiee);
-    }
-
-    /**
-     * Méthode à appeler à chaque fois que la planification change, pour mettre à jour la charge totale qui est planifiée pour {@link #getTacheBean() la tâche}.
-     */
-    public void majChargePlanifieeTotale() {
-        chargePlanifieeTotale.setValue(chargePlanifieeTotale());
     }
 
 

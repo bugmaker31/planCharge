@@ -33,47 +33,5 @@ public abstract class AbstractCalendrierParProfilCell<S extends AbstractCalendri
         return noSemaine;
     }
 
-/* Rien de spécial... pour l'instant.
-        @Override
-        public void updateItem(T item, boolean empty) {
-            super.updateItem(item, empty);
-            styler();
-        }
-
-        private void styler() {
-
-            // Réinit des style spécifiques :
-            getStyleClass().removeAll("avantMission", "pendantMission", "apresMission");
-
-            // Récupération des infos sur la cellule :
-            //noinspection unchecked
-            TableRow<? extends S> tableRow = getTableRow();
-            S dispoBean = tableRow.getItem();
-            if (dispoBean == null) {
-                return;
-            }
-            LocalDate debutMission = dispoBean.getRessourceHumaineBean().getDebutMission();
-            LocalDate finMission = dispoBean.getRessourceHumaineBean().getFinMission();
-
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-            LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-
-            // Formatage du style (CSS) de la cellule :
-            if (debutMission != null) {
-                if (debutPeriode.isBefore(debutMission)) {
-                    getStyleClass().add("avantMission");
-                    return;
-                }
-            }
-            if (finMission != null) {
-                if (finPeriode.isAfter(finMission.plusDays(7))) {
-                    getStyleClass().add("apresMission");
-                    return;
-                }
-            }
-            getStyleClass().add("pendantMission");
-        }
-*/
-
 }
 

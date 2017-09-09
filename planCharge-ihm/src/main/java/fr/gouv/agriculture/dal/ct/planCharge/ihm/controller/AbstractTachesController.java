@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
@@ -12,6 +11,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.EcheanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
@@ -26,7 +27,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -59,8 +59,6 @@ import java.util.function.BiFunction;
 public abstract class AbstractTachesController<TB extends TacheBean> extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTachesController.class);
-
-    public static final PseudoClass ECHUE = PseudoClass.getPseudoClass("echue");
 
 
     // La couche métier :
@@ -262,7 +260,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @NotNull
-    TableColumn<TB, Double> getChargeColumn() {
+    public TableColumn<TB, Double> getChargeColumn() {
         return chargeColumn;
     }
 
@@ -370,103 +368,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 },
                 planChargeBean.getStatutsBeans()));
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
-        //noinspection OverlyComplexAnonymousInnerClass
-        echeanceColumn.setCellFactory(param -> new DatePickerTableCell<TB>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE) {
-
-            @Override
-            public void updateItem(@Null LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                styler(item, empty);
-            }
-
-            private void styler(@Null LocalDate item, boolean empty) {
-
-                // Réinit du style de la cellule :
-                pseudoClassStateChanged(ECHUE, false);
-
-                // Stop, si cellule vide :
-                if (empty || (item == null)) {
-                    return;
-                }
-
-                // Récupération des infos sur la cellule :
-                //noinspection unchecked
-                TableRow<TB> tableRow = getTableRow();
-                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
-                    // Rq : On tombe dans ce cas-là dans le cas de ce DatePickerTableCell (pas pour PlanificationChargeCell).
-                    return;
-                }
-                TB tacheBean = tableRow.getItem();
-                if (tacheBean == null) {
-                    return;
-                }
-                //noinspection UnnecessaryLocalVariable
-                LocalDate echeance = item;
-
-                if (planChargeBean.getDateEtat() == null) {
-                    return;
-                }
-                LocalDate dateEtat = planChargeBean.getDateEtat();
-
-                // Formatage du style (CSS) de la cellule :
-                if (dateEtat.isAfter(echeance)) {
-                    pseudoClassStateChanged(ECHUE, true);
-                }
-            }
-        });
+        echeanceColumn.setCellFactory(param -> new EcheanceCell<>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, getTachesTable()));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter())); // TODO FDA 2017/08 Mieux formater.
-        //noinspection OverlyComplexAnonymousInnerClass
-        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                new StringConverter<RessourceBean<?, ?>>() {
-                    @Null
-                    @Override
-                    public String toString(@Null RessourceBean<?, ?> ressourceBean) {
-                        if (ressourceBean == null) {
-                            return null;
-                        }
-                        return ressourceBean.getCode();
-                    }
-
-                    @Override
-                    @Null
-                    public RessourceBean<?, ?> fromString(@Null String trigramme) {
-                        if (trigramme == null) {
-                            return null;
-                        }
-                        return Collections.any(
-                                planChargeBean.getRessourcesBeans(),
-                                ressourceBean -> (ressourceBean.getCode() != null) && ressourceBean.getCode().equals(trigramme)
-                        );
-                    }
-                },
-                planChargeBean.getRessourcesBeans()));
-        //noinspection OverlyComplexAnonymousInnerClass
-        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                new StringConverter<ProfilBean>() {
-
-                    @Null
-                    @Override
-                    public String toString(@Null ProfilBean profilBean) {
-                        if (profilBean == null) {
-                            return null;
-                        }
-                        return profilBean.getCode();
-                    }
-
-                    @Override
-                    @Null
-                    public ProfilBean fromString(@Null String codeProfil) {
-                        if (codeProfil == null) {
-                            return null;
-                        }
-                        return Collections.any(
-                                planChargeBean.getProfilsBeans(),
-                                profilBean -> (profilBean.getCode() != null) && profilBean.getCode().equals(codeProfil)
-                        );
-                    }
-                },
-                planChargeBean.getProfilsBeans()));
+        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.RESSOURCE_BEAN_CONVERTER, planChargeBean.getRessourcesBeans()));
+        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()));
 
         // Paramétrage des ordres de tri :
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
@@ -592,6 +498,15 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
         */
 
+        definirRaccourcisClavier();
+
+        // Barre d'état :
+        barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
+
+        LOGGER.info("Initialisé.");
+    }
+
+    private void definirRaccourcisClavier() {
         // FIXME FDA 2017/08 Ne fonctionne que si l'utilisateur a focusé sur la table avant de taper Ctrl+F. Il faudrait ajouter le handler sur la Scene du "primary" Stage, mais ce dernier n'est pas encore initialisé (NPE).
         getTachesTable().setOnKeyReleased(event -> {
             if (event.isControlDown() && (event.getCode() == KeyCode.F)) {
@@ -600,6 +515,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 event.consume(); // TODO FDA 2017/08 Confirmer.
                 return;
             }
+/* Trop dangereux pour le module des Charges (tant qu'on n'a pas programmé le "undo"/Ctrl+Z). Seul le module des Tâches aura ce raccourci-clavier.
             if (event.getCode() == KeyCode.DELETE) {
                 if (!getTachesTable().isFocused()) {
                     return;
@@ -609,12 +525,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 //noinspection UnnecessaryReturnStatement
                 return;
             }
+*/
         });
-
-        // Barre d'état :
-        barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
-
-        LOGGER.info("Initialisé.");
     }
 
 
@@ -893,7 +805,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @SuppressWarnings("FinalPrivateMethod")
-    private final void supprimerTacheSelectionnee() {
+    final void supprimerTacheSelectionnee() {
         TB focusedItem = TableViews.selectedItem(getTachesTable());
         if (focusedItem == null) {
             LOGGER.debug("Aucune tâche sélectionnée, donc on en sait pas que supprimer, on ne fait rien.");

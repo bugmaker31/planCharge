@@ -107,7 +107,6 @@ Validation de la saisie depuis l'IHM :
 Dispo :
 */
 
-
 .periodeDispo-column {
     -fx-font-size: 80%;
     -fx-alignment: baseline-center;
@@ -116,30 +115,24 @@ Dispo :
 .periodeDispo-column .label {
     -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
+..periodeDispo-column: avantMission {
+    -fx-background-color: RGB(52,101,143, 0.2); /*rgba(221, 221, 221, 0.3);*/ /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/
 
-
-.avantMission {
-    /*-fx-background-color: rgba(224, 255, 255, 0.25); !*lightcyan #e0ffff *!*/
-    /*-fx-background-color: #DCDCDC;*/
-    -fx-opacity: 50%; /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
-    -fx-background-image: url("/images/tropTot.gif");
+    -fx-background-image: url("/images/tropTot.png");
+    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
-
-.pendantMission {
+.periodeDispo-column: pendantMission {
     /*
     -fx-background-color: #778899;
     -fx-text-fill: white;
     */
 }
+.periodeDispo-column: apresMission {
+    -fx-background-color: RGB(35,100,156, 0.2); /*rgba(192, 192, 192, 0.3);*/ /*rgba(173, 216, 230, 0.25) lightblue #add8e6*/
 
-.apresMission {
-    /*-fx-background-color: rgba(173, 216, 230, 0.25); !*lightblue #add8e6*!*/
-    /*-fx-background-color: #696969;*/
-    /*-fx-text-fill: white;*/
-    -fx-opacity: 50%; /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
-    -fx-background-image: url("/images/tropTard.gif");
+    -fx-background-image: url("/images/tropTard.png");
+    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
-
 
 
 /*
@@ -161,40 +154,55 @@ Tâches :
 .echeance-column: {
 }
 .echeance-column: echue {
-    -fx-background-color: #FF00FF;
-    -fx-text-fill: white; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-background-color: #FF00FF; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: white;
+}
+.echeance-column: echeanceNonTenue {
+    -fx-text-fill: red;
 }
 
 .importance-column {
 }
 .importance-column: avecEngagement {
-    -fx-background-color: #990000;
-    -fx-text-fill: white; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-background-color: #990000; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 .importance-column: maximale {
-    -fx-background-color: #CC3300;
-    -fx-text-fill: white; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-background-color: #CC3300; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: white;
 }
 .importance-column: haute {
-    -fx-background-color: #FF6633;
+    -fx-background-color: #FF6633; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: black;
 }
 .importance-column: normale {
-    -fx-background-color: #FF9966;
+    -fx-background-color: #FF9966; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: black;
 }
 .importance-column: basse {
-    -fx-background-color: #FFCC99;
+    -fx-background-color: #FFCC99; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: black;
 }
 .importance-column: minimale {
+    /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
 }
 
 .charge-column {
     -fx-alignment: baseline-right;
 }
 .charge-column:chargeNonPlanifiee {
-    -fx-background-color: #EA4335;
+    -fx-background-color: #EA4335; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     /*-fx-text-fill: white;*/
     /*-fx-opacity: 50%;*/
+}
+
+.ressource-column:surcharge {
+    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+}
+
+.profil-column:surcharge {
+    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
 }
 
 
@@ -219,6 +227,9 @@ Charge / Plan de charge :
     */
 }
 
+.tache-column {
+}
+
 .periodeChargee-column {
     -fx-font-size: 80%;
     -fx-alignment: baseline-center;
@@ -228,24 +239,22 @@ Charge / Plan de charge :
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
 }
 .periodeChargee-column: avantPeriodeDemandee {
-    -fx-background-color: rgba(221, 221, 221, 0.3); /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/
-    /*-fx-background-color: #DCDCDC;*/
+    -fx-background-color: RGB(52,101,143, 0.2); /*rgba(221, 221, 221, 0.3);*/ /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/
     /*-fx-text-fill: white;*/
 
-    /*-fx-background-image: url("/images/tropTot.gif");*/
+    -fx-background-image: url("/images/tropTot.png");
     /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
 .periodeChargee-column: pendantPeriodeDemandee {
     /*-fx-background-color: #778899;*/
-    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
     /*-fx-text-fill: white;*/
 }
 .periodeChargee-column: apresPeriodeDemandee {
-    -fx-background-color: rgba(192, 192, 192, 0.3); /*rgba(173, 216, 230, 0.25) lightblue #add8e6*/
-    /*-fx-background-color: #696969;*/
+    -fx-background-color: RGB(35,100,156, 0.2); /*rgba(192, 192, 192, 0.3);*/ /*rgba(173, 216, 230, 0.25) lightblue #add8e6*/
     /*-fx-text-fill: white;*/
-    /*-fx-background-image: url("/images/tropTard.png");*/
-    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires, et continuer à lire les nombres. */
+
+    -fx-background-image: url("/images/tropTard.png");
+    /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
 .periodeChargee-column: surcharge {
     -fx-text-fill: red;

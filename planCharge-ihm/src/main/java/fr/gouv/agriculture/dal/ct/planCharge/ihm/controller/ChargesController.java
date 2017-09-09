@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
@@ -26,6 +27,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
@@ -40,6 +42,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
@@ -59,16 +62,18 @@ import java.util.*;
  *
  * @author frederic.danna
  */
-@SuppressWarnings("ClassHasNoToStringMethod")
+@SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields", "OverlyComplexClass"})
 public class ChargesController extends AbstractTachesController<PlanificationTacheBean> implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
+
 
     private static ChargesController instance;
 
     public static ChargesController instance() {
         return instance;
     }
+
 
     public static final DecimalFormat FORMAT_CHARGE = new DecimalFormat("0", DecimalFormatSymbols.getInstance());
 
@@ -77,9 +82,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         FORMAT_CHARGE.setMaximumFractionDigits(3); // Les divisions de nbrs entiers par 8 se terminent par ".125", "0.25", ".325", ".5", ".625", ".75" ou ".825".
     }
 
+
     public static final PseudoClass CHARGE_NON_PLANIFIEE = PseudoClass.getPseudoClass("chargeNonPlanifiee");
     public static final PseudoClass INCOHERENCE = PseudoClass.getPseudoClass("incoherence");
     public static final PseudoClass SURCHARGE = PseudoClass.getPseudoClass("surcharge");
+    public static final PseudoClass ECHEANCE_NON_TENUE = PseudoClass.getPseudoClass("echeanceNonTenue");
 
 
     /*
@@ -598,6 +605,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
                 initBeans();
                 initTables();
+
             });
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
@@ -863,6 +871,58 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") et
         // du formatage qui symbolise les incohérences/surcharges/etc. (Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/) :
         //
+        getDebutColumn().setOnEditCommit(event -> { // On ajoute un Handler sur "onCommit" plutôt que un CellFactory pour ne pas écraser la CellFactory définie par la classe mère.
+            PlanificationTacheBean planificationTacheBean = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            planificationTacheBean.setDebut(event.getNewValue());
+
+            planificationsTable.refresh(); // Pour que les styles CSS soient re-appliqués (notamment ceux des colonnes du calendrier).
+        });
+        //noinspection OverlyComplexAnonymousInnerClass
+        getEcheanceColumn().setCellFactory(param -> new EcheanceCell<PlanificationTacheBean>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, planificationsTable){
+
+            @Override
+            protected void styler() {
+                super.styler();
+
+                // Réinit du style de la cellule :
+                pseudoClassStateChanged(ECHEANCE_NON_TENUE, false);
+
+                // Stop, si cellule vide :
+                if (isEmpty() || (getItem() == null)) {
+                    return;
+                }
+
+                // Récupération des infos sur la cellule :
+                //noinspection unchecked
+                TableRow<PlanificationTacheBean> tableRow = getTableRow();
+                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+                    // Rq : On tombe dans ce cas-là dans le cas de ce DatePickerTableCell (pas pour PlanificationChargeCell).
+                    return;
+                }
+                PlanificationTacheBean planifBean = tableRow.getItem();
+                if (planifBean == null) {
+                    return;
+                }
+
+                // Formatage du style (CSS) de la cellule :
+                boolean estEcheanceTenue = estEcheanceTenue(planifBean);
+                if (!estEcheanceTenue) {
+                    pseudoClassStateChanged(ECHEANCE_NON_TENUE, true);
+                }
+            }
+
+            // TODO FDA 2017/09 Coder cette RG dans la couche métier.
+            private boolean estEcheanceTenue(@NotNull PlanificationTacheBean planifBean) {
+                LocalDate echeance = planifBean.getEcheance();
+                if (echeance == null) {
+                    return true;
+                }
+                LocalDate debutDernierePeriodePlanifiee = Dates.max(planifBean.getCalendrier().keySet());
+                LocalDate finDernierePeriodePlanifiee = debutDernierePeriodePlanifiee.plusDays(7L); // TODO [issue#26:PeriodeHebdo/Trim]
+                return !finDernierePeriodePlanifiee.isAfter(echeance);
+            }
+
+        });
         //noinspection OverlyComplexAnonymousInnerClass
         getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>(new DoubleStringConverter()) {// TODO FDA 2017/08 Mieux formater.
 
@@ -909,6 +969,87 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int finalNoSemaine = noSemaine;
             column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, finalNoSemaine));
         }
+        //noinspection OverlyComplexAnonymousInnerClass
+        getRessourceColumn().setCellFactory(param -> new ComboBoxTableCell<PlanificationTacheBean, RessourceBean<?, ?>>(Converters.RESSOURCE_BEAN_CONVERTER, planChargeBean.getRessourcesBeans()) {
+
+            @Override
+            public void updateItem(RessourceBean<?, ?> item, boolean empty) {
+                super.updateItem(item, empty);
+                formater();
+                styler();
+            }
+
+            private void formater() {
+                setText("");
+                if (isEmpty() || (getItem() == null)) {
+                    return;
+                }
+                setText(getItem().getCode());
+            }
+
+            private void styler() {
+                pseudoClassStateChanged(SURCHARGE, false);
+
+                if (isEmpty() || (getItem() == null)) {
+                    return;
+                }
+
+                // Récupération des infos sur la cellule :
+                //noinspection unchecked
+                TableRow<PlanificationTacheBean> tableRow = getTableRow();
+                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+                    return;
+                }
+                PlanificationTacheBean planifBean = tableRow.getItem();
+                if (planifBean == null) {
+                    return;
+                }
+
+                if (estRessourceSurchargeeSurPeriode(planifBean)) {
+                    pseudoClassStateChanged(SURCHARGE, true);
+                }
+            }
+        });
+        //noinspection OverlyComplexAnonymousInnerClass
+        getProfilColumn().setCellFactory(param -> new ComboBoxTableCell<PlanificationTacheBean, ProfilBean>(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()) {
+            @Override
+            public void updateItem(ProfilBean item, boolean empty) {
+                super.updateItem(item, empty);
+                formater();
+                styler();
+            }
+
+            private void formater() {
+                setText("");
+                if (isEmpty() || (getItem() == null)) {
+                    return;
+                }
+                setText(getItem().getCode());
+            }
+
+            private void styler() {
+                pseudoClassStateChanged(SURCHARGE, false);
+
+                if (isEmpty() || (getItem() == null)) {
+                    return;
+                }
+
+                // Récupération des infos sur la cellule :
+                //noinspection unchecked
+                TableRow<PlanificationTacheBean> tableRow = getTableRow();
+                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+                    return;
+                }
+                PlanificationTacheBean planifBean = tableRow.getItem();
+                if (planifBean == null) {
+                    return;
+                }
+
+                if (estProfilSurchargeeSurPeriode(planifBean)) {
+                    pseudoClassStateChanged(SURCHARGE, true);
+                }
+            }
+        });
         ihm.interdireEdition(chargePlanifieeColumn, "Cette colonne n'est pas saisissable, elle est calculée.");
         //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
@@ -944,7 +1085,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
         });
 
-//        planificationsTable.getSelectionModel().setCellSelectionEnabled(true);
+//        planificationsTable.getSelectionModel().setCellSelectionEnabled(true); Fait dans le FXML.
 
         TableViews.ensureDisplayingRows(planificationsTable, 30);
 
@@ -952,10 +1093,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             if (Objects.equals(oldValue, newValue)) {
                 return;
             }
-            if (newValue == null) {
-                newValue = 30;
-            }
-            TableViews.ensureDisplayingRows(planificationsTable, newValue);
+            Integer nbrlignes = fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(newValue, 30);
+            TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
     }
 
@@ -1176,6 +1315,35 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         TableViews.disableReagencingColumns(nbrsJoursDispoCTMaxRestanteProfilTable);
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTMaxRestanteProfilTable);
+    }
+
+
+    private boolean estRessourceSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean) {
+        if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
+            return false;
+        }
+        NbrsJoursParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
+                nbrsJoursDispoCTRestanteRsrcBeans,
+                nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getRessourceBean().equals(planifBean.getTacheBean().getRessource())
+        );
+        if (nbrsJoursDispoRestanteBean == null) {
+            return false;
+        }
+        return true; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+    }
+
+    private boolean estProfilSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean) {
+        if (planifBean.getTacheBean().getProfil() == null) {
+            return false;
+        }
+        NbrsJoursParProfilBean nbrsJoursDispoRestanteBean = Collections.any(
+                nbrsJoursDispoCTMaxRestanteProfilBeans,
+                nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getProfilBean().equals(planifBean.getTacheBean().getProfil())
+        );
+        if (nbrsJoursDispoRestanteBean == null) {
+            return false;
+        }
+        return true; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
     }
 
 
@@ -1441,7 +1609,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
         if (filtreSurchargeRessourceToggleButton.isSelected()) {
             RessourceBean<?, ?> ressourceBean = tache.getRessource();
-            if (ressourceBean != null) {
+            if ((ressourceBean != null) && ressourceBean.estHumain()) {
                 NbrsJoursParRessourceBean nbrsJoursParRessourceBean = Collections.any(
                         nbrsJoursDispoCTRestanteRsrcBeans,
                         nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean),

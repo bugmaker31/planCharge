@@ -1307,6 +1307,9 @@ public class ApplicationController extends AbstractController {
 
         majCalendriers();
         majTitre();
+
+        ihm.getTachesController().getTachesTable().refresh(); // pour réappliquer les styles CSS, notamment pour faire afficher en violet les échéances < à la nouvelle date d'état.
+        ihm.getChargesController().getTachesTable().refresh(); // pour réappliquer les styles CSS, notamment pour faire afficher en violet les échéances < à la nouvelle date d'état.
     }
 
 

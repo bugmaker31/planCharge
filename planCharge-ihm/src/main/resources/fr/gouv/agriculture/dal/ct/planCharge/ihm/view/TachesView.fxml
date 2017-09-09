@@ -122,9 +122,10 @@
                                  styleClass="charge-column"/>
                     <TableColumn text="Ressource">
                         <columns>
-                            <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth"
-                                         text="Trigramme"/>
-                            <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"/>
+                            <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Trigramme"
+                                         styleClass="ressource-column"/>
+                            <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
+                                         styleClass="profil-column"/>
                         </columns>
                     </TableColumn>
                 </columns>
@@ -161,48 +162,48 @@
         </VBox>
     </center>
     <bottom>
-<!--
-        <HBox>
-            <ButtonBar>
-                <buttons>
-                    <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
-                </buttons>
-            </ButtonBar>
-            <HBox styleClass="barreEtat">
-                <HBox styleClass="itemBarreEtat">
-                    <Label text="Nombre de tâches à traiter : ">
-                        <tooltip>
-                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
-                            <Tooltip fx:id="nbrTachesATraiterTooltip"
-                                     text="Nombre de tâches dont le statut est inférieur à '85-Reportée'."/>
-                        </tooltip>
-                    </Label>
-                    <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
+        <!--
+                <HBox>
+                    <ButtonBar>
+                        <buttons>
+                            <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
+                        </buttons>
+                    </ButtonBar>
+                    <HBox styleClass="barreEtat">
+                        <HBox styleClass="itemBarreEtat">
+                            <Label text="Nombre de tâches à traiter : ">
+                                <tooltip>
+                                    &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                                    <Tooltip fx:id="nbrTachesATraiterTooltip"
+                                             text="Nombre de tâches dont le statut est inférieur à '85-Reportée'."/>
+                                </tooltip>
+                            </Label>
+                            <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
+                        </HBox>
+                        <HBox styleClass="itemBarreEtat">
+                            <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
+                                <tooltip>
+                                    &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                                    <Tooltip fx:id="totalResteAFaireTooltip"
+                                             text="Total des charges pour les tâches restant à traiter."/>
+                                </tooltip>
+                            </Label>
+                            <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
+                            <Label text=" jours"/>
+                        </HBox>
+                        <HBox styleClass="itemBarreEtat">
+                            <Label text="Nombre de tâches affichées : ">
+                                <tooltip>
+                                    &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
+                                    <Tooltip fx:id="nbrTachesAfficheesTooltip"
+                                             text="Nombre de tâches affichées (après filtre)."/>
+                                </tooltip>
+                            </Label>
+                            <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
+                        </HBox>
+                    </HBox>
                 </HBox>
-                <HBox styleClass="itemBarreEtat">
-                    <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
-                        <tooltip>
-                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
-                            <Tooltip fx:id="totalResteAFaireTooltip"
-                                     text="Total des charges pour les tâches restant à traiter."/>
-                        </tooltip>
-                    </Label>
-                    <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
-                    <Label text=" jours"/>
-                </HBox>
-                <HBox styleClass="itemBarreEtat">
-                    <Label text="Nombre de tâches affichées : ">
-                        <tooltip>
-                            &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
-                            <Tooltip fx:id="nbrTachesAfficheesTooltip"
-                                     text="Nombre de tâches affichées (après filtre)."/>
-                        </tooltip>
-                    </Label>
-                    <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
-                </HBox>
-            </HBox>
-        </HBox>
--->
+        -->
         <BarreEtatTachesComponent fx:id="barreEtatComponent"/>
     </bottom>
 </BorderPane>

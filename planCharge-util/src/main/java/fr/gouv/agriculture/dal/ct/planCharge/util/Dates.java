@@ -7,6 +7,7 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by frederic.danna on 28/04/2017.
@@ -62,8 +63,21 @@ public abstract class Dates {
     public static LocalDate max(@NotNull LocalDate date1, @NotNull LocalDate date2) {
         return (date1.compareTo(date2) > 0) ? date1 : date2;
     }
+
     @NotNull
     public static LocalDate min(@NotNull LocalDate date1, @NotNull LocalDate date2) {
         return (date1.compareTo(date2) < 0) ? date1 : date2;
+    }
+
+
+    @NotNull
+    public static LocalDate max(@NotNull Set<LocalDate> dates) {
+        if (dates.size() == 1) {
+            return dates.iterator().next();
+        } else {
+            LocalDate firstDate = dates.iterator().next();
+            dates.remove(firstDate);
+            return max(firstDate, max(dates));
+        }
     }
 }

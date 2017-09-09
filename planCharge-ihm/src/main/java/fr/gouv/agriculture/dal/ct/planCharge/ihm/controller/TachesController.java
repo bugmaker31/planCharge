@@ -11,10 +11,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,9 @@ import javax.validation.constraints.NotNull;
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class TachesController extends AbstractTachesController<TacheBean> implements Module {
+
+    public static final PseudoClass ECHUE = PseudoClass.getPseudoClass("echue");
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TachesController.class);
 
@@ -113,7 +118,22 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         LOGGER.debug("Initialisation...");
         try {
             Calculateur.executerSansCalculer(() -> {
+
                 super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
+
+                tachesTable.setOnKeyReleased(event -> {
+                    if (event.getCode() == KeyCode.DELETE) {
+                        if (!tachesTable.isFocused()) {
+                            return;
+                        }
+                        supprimerTacheSelectionnee();
+                        event.consume(); // TODO FDA 2017/08 Confirmer.
+                        //noinspection UnnecessaryReturnStatement
+                        return;
+                    }
+                });
+
+
             });
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);

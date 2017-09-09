@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
@@ -111,14 +112,17 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
     protected void styler() {
 
         // Réinit des style spécifiques :
-        getStyleClass().removeAll("avantMission", "pendantMission", "apresMission");
+        pseudoClassStateChanged(DisponibilitesController.AVANT_MISSION, false);
+        pseudoClassStateChanged(DisponibilitesController.PENDANT_MISSION, false);
+        pseudoClassStateChanged(DisponibilitesController.APRES_MISSION, false);
 
-            /* Non, surtout pas, sinon les cellules vides, ne seront pas stylées/décorées.
-            // Stop, si cellule vide :
-            if (empty || (item == null)) {
-                return;
-            }
-            */
+
+        /* Non, surtout pas, sinon les cellules vides, ne seront pas stylées/décorées.
+        // Stop, si cellule vide :
+        if (empty || (item == null)) {
+            return;
+        }
+        */
 
         // Récupération des infos sur la cellule :
         //noinspection unchecked
@@ -155,19 +159,22 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
         LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // Formatage du style (CSS) de la cellule :
-        if (debutMission != null) {
-            if (debutPeriode.isBefore(debutMission)) {
-                getStyleClass().add("avantMission");
-                return;
+        FORMAT_PERIODE :
+        {
+            if (debutMission != null) {
+                if (debutPeriode.isBefore(debutMission)) {
+                    pseudoClassStateChanged(DisponibilitesController.AVANT_MISSION, true);
+                    break FORMAT_PERIODE;
+                }
             }
-        }
-        if (finMission != null) {
-            if (finPeriode.isAfter(finMission.plusDays(7))) {
-                getStyleClass().add("apresMission");
-                return;
+            if (finMission != null) {
+                if (finPeriode.isAfter(finMission.plusDays(7))) {
+                    pseudoClassStateChanged(DisponibilitesController.APRES_MISSION, true);
+                    break FORMAT_PERIODE;
+                }
             }
+            pseudoClassStateChanged(DisponibilitesController.PENDANT_MISSION, true);
         }
-        getStyleClass().add("pendantMission");
     }
 
 }

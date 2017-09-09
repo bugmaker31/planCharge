@@ -922,7 +922,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
         Planifications planification;
 
         //noinspection TooBroadScope
-        int noLigPeriodes = 1;
+        int noLigDatesDebutsPeriodes = 1;
         //noinspection TooBroadScope
         int noLigDebut = 4;
         //noinspection TooBroadScope
@@ -941,7 +941,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
                 XCell cell = Calc.getCell(feuilleCharges, 0, cptLig - 1);
 
                 if (Calc.isEmpty(cell)) {
-                    LOGGER.debug("La ligne n°{} commence par une cellule vide, donc il n'y a plus de tâche à parser.", cptLig);
+                    LOGGER.debug("La ligne n°{} commence par une cellule vide, donc il n'y a plus de tâche à importer.", cptLig);
                     break LIG;
                 }
 
@@ -978,16 +978,17 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
                 calendrier.put(tache, new TreeMap<>()); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
                 {
+                    int noLigNumerosPeriodes = 3;
                     int cptCol = noColDebut;
                     COL:
                     while (true) {
                         LOGGER.debug("Colonne n°{}", cptCol);
 
-                        if (Calc.isEmpty(feuilleCharges, cptCol - 1, noLigPeriodes - 1)) {
+                        if (Calc.isEmpty(feuilleCharges, cptCol - 1, noLigNumerosPeriodes - 1)) {
                             break COL;
                         }
 
-                        Date debutPeriode = Calc.getDate(feuilleCharges, cptCol - 1, noLigPeriodes - 1);
+                        Date debutPeriode = Calc.getDate(feuilleCharges, cptCol - 1, noLigDatesDebutsPeriodes - 1);
 
                         XCell chargeCell = Calc.getCell(feuilleCharges, cptCol - 1, cptLig - 1);
 //                        Double chargePlanifiee = (Calc.isEmpty(chargeCell) ? 0.0 : chargeService.chargeArrondie((Double) Calc.getDouble(chargeCell)));

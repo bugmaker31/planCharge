@@ -31,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -52,6 +53,11 @@ import static fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters.NBRS_JOU
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields"})
 public class DisponibilitesController extends AbstractController implements Module {
 
+    public static final PseudoClass AVANT_MISSION = PseudoClass.getPseudoClass("avantMission");
+    public static final PseudoClass PENDANT_MISSION = PseudoClass.getPseudoClass("pendantMission");
+    public static final PseudoClass APRES_MISSION = PseudoClass.getPseudoClass("apresMission");
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DisponibilitesController.class);
 
 
@@ -60,6 +66,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     public static DisponibilitesController instance() {
         return instance;
     }
+
 
 
     /*

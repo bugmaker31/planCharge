@@ -105,9 +105,10 @@
                                         <Label text="Surcharge : "/>
                                         <SegmentedButton>
                                             <buttons>
-                                                <ToggleButton fx:id="filtreSurchargeToutToggleButton" text="Tout" onAction="#filtrer" />
-                                                <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Avec ressource surchargée" onAction="#filtrer" />
-                                                <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Avec profil surchargé" onAction="#filtrer" />
+                                                <ToggleButton fx:id="filtreSurchargeToutToggleButton" text="Tout" onAction="#filtrer"/>
+                                                <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Avec ressource surchargée"
+                                                              onAction="#filtrer"/>
+                                                <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Avec profil surchargé" onAction="#filtrer"/>
                                             </buttons>
                                         </SegmentedButton>
                                     </VBox>
@@ -141,9 +142,9 @@
             <Double fx:id="statutColumnPrefWidth" fx:value="75"/>
             <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
             <Double fx:id="echeanceColumnPrefWidth" fx:value="80"/>
-            <Double fx:id="importanceColumnPrefWidth" fx:value="75"/>
-            <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
-            <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
+            <Double fx:id="importanceColumnPrefWidth" fx:value="80"/>
+            <Double fx:id="chargeColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
         </fx:define>
         <fx:define>
@@ -170,8 +171,13 @@
                                 </HBox>
                                 <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
                                                          fixedCellSize="$fixedCellSize">
+                                    <!--
+                                                                        <selectionModel>
+                                                                            <TableViewSpanSelectionModel cellSelectionEnabled="true" />
+                                                                        </selectionModel>
+                                    -->
                                     <columns>
-                                        <TableColumn fx:id="tacheColumn" text="Tâche">
+                                        <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
 
                                             <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
 
@@ -208,8 +214,10 @@
                                                              styleClass="importance-column"/>
                                                 <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
                                                              styleClass="charge-column"/>
-                                                <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"/>
-                                                <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"/>
+                                                <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"
+                                                             styleClass="ressource-column"/>
+                                                <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
+                                                             styleClass="profil-column"/>
                                             </columns>
                                         </TableColumn>
                                         <TableColumn text="Planification">
@@ -264,8 +272,10 @@
                                                 <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
                                                 <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
                                                           onAction="#afficherTacheDansOutilTicketing"/>
-                                                <SeparatorMenuItem/>
-                                                <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
+                                                <!-- Trop dangereux pour le module des Charges (tant qu'on n'a pas programmé le "undo"/Ctrl+Z). Seul le module des Tâches aura ce raccourci-clavier.
+                                                                                                <SeparatorMenuItem/>
+                                                                                                <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
+                                                -->
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
@@ -274,7 +284,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion ><!--expandedPane="$nbrsJoursChargeRsrcPane"-->
+                <Accordion><!--expandedPane="$nbrsJoursChargeRsrcPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursChargeRsrcPane"
@@ -354,7 +364,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion ><!--expandedPane="$nbrsJoursChargeProfilPane"-->
+                <Accordion><!--expandedPane="$nbrsJoursChargeProfilPane"-->
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursChargeProfilPane"
