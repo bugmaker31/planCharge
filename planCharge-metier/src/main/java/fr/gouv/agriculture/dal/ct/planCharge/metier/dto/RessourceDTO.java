@@ -57,6 +57,12 @@ public abstract class RessourceDTO<E extends Ressource<E>, D extends RessourceDT
 
     @Override
     public final int compareTo(@NotNull D o) {
+        if (code == null) {
+            return -1; // Les ressources sans code sont triées en tête de liste.
+        }
+        if (o.getCode() == null) {
+            return 1; // Les ressources sans code sont triées en tête de liste.
+        }
         return code.compareTo(o.getCode());
     }
 

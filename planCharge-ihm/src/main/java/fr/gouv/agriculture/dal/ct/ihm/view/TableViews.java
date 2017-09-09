@@ -201,7 +201,7 @@ public final class TableViews {
         ensureDisplayingRowsChangeListeners.put(tableId, new ArrayList<>());
         // On ajuste la hauteur de la table lorsque la Skin de la TableView est Settée notamment pour récupérer la hauteur de l'entête de la table (pas tout compris, copié/collé d'Internet).
         {
-            ChangeListener<Skin> changeListener = (observable, oldValue, newValue) -> {
+            ChangeListener<Skin<?>> changeListener = (observable, oldValue, newValue) -> {
                 if (!java.util.Objects.equals(oldValue, newValue)) {
                     adjustHeigth(table, rowCount);
                 }
@@ -258,7 +258,7 @@ public final class TableViews {
 
         double dataRowsHeith = dataRowHeight * (double) actualRowCount;
 
-        double tableHeight = headerRowHeight + dataRowsHeith + 10.0; // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (10 pts) en plus.
+        double tableHeight = headerRowHeight + dataRowsHeith + (1.0 * (double) actualRowCount); // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (1 pt par ligne) en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);

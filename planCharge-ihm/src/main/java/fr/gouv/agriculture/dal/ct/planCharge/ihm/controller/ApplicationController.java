@@ -4,6 +4,7 @@ import eu.hansolo.medusa.Gauge;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
@@ -585,7 +586,7 @@ public class ApplicationController extends AbstractController {
                 rapport.setProgressionMax(1);
 
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
-                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
                 PlanChargeDTO planCharge = planChargeBean.toDto();
 
@@ -706,38 +707,50 @@ public class ApplicationController extends AbstractController {
             }
         };
 
-        //noinspection OverlyBroadCatchBlock
         try {
+            Calculateur.executerPuisCalculer(
+                    () -> {
+                        try {
+                            RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
+                            assert rapport != null;
 
-            RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
-            assert rapport != null;
+                            planChargeBean.fromDto(planCharge[0]);
 
-            planChargeBean.fromDto(planCharge[0]);
+                            definirDateEtat(planChargeBean.getDateEtat());
 
-            definirDateEtat(planChargeBean.getDateEtat());
+                            planChargeBean.vientDEtreModifie();
+                            getSuiviActionsUtilisateur().historiser(new ImportTaches());
 
-            planChargeBean.vientDEtreModifie();
-            getSuiviActionsUtilisateur().historiser(new ImportTaches());
+                            //noinspection HardcodedLineSeparator
+                            ihm.afficherNotification("Tâches mises à jour importées",
+                                    "Les tâches ont été mises à jour : "
+                                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                                            + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
+                                            + "\n- nombre de lignes importées : " + rapportFinal.getNbrTachesImportees()
+                                            + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
+                                            + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
+                                            + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
+                                            + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size()
+                            );
 
-            //noinspection HardcodedLineSeparator
-            ihm.afficherNotification("Tâches mises à jour importées",
-                    "Les tâches ont été mises à jour : "
-                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                            + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
-                            + "\n- nombre de lignes importées : " + rapportFinal.getNbrTachesImportees()
-                            + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
-                            + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
-                            + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
-                            + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size()
-            );
+                            afficherModuleTaches();
 
-            afficherModuleTaches();
+                            majBarreEtat();
+                        } catch (ViolationsReglesGestionException e) {
+                            ihm.afficherViolationsReglesGestion(
+                                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                                    e.getViolations()
+                            );
+                        } catch (ControllerException | BeanException | SuiviActionsUtilisateurException e) {
+                            throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
+                        }
+                    },
+                    () -> {
+//                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
+                        //noinspection Convert2MethodRef
+                        calculer();
 
-            majBarreEtat();
-        } catch (ViolationsReglesGestionException e) {
-            ihm.afficherViolationsReglesGestion(
-                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
-                    e.getViolations()
+                    }
             );
         } catch (IhmException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
@@ -811,7 +824,7 @@ public class ApplicationController extends AbstractController {
                 rapport.setProgressionMax(1);
 
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
-                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
                 rapport.setAvancement("Import depuis Calc...");
                 planCharge[0] = planChargeService.importerDepuisCalc(ficCalc, rapport);

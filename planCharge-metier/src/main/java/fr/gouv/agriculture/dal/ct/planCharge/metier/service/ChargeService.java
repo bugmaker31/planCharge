@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
@@ -138,7 +139,7 @@ public class ChargeService extends AbstractService {
                     assert planCharge.getDateEtat() != null;
                     planCharge.getPlanifications().ajouter(tacheImporteeDTO, planCharge.getDateEtat());
                     rapport.incrNbrTachesAjoutees();
-                    LOGGER.debug("Tâche " + tacheImportee + " ajoutée.");
+                    LOGGER.debug("Tâche {} ajoutée.", tacheImportee);
                 } else {
                     assert planCharge.getPlanifications().taches().contains(tacheImporteeDTO);
 
@@ -146,9 +147,13 @@ public class ChargeService extends AbstractService {
                     TacheDTO tacheActuelleDTO = planCharge.getPlanifications().tache(tacheImportee.getId());
                     assert tacheActuelleDTO != null;
                     Map<LocalDate, Double> calendrierTache = planCharge.getPlanifications().calendrier(tacheActuelleDTO);
+                    // NB : Il faut supprimer la tâche avant de la remettre, sinon ses attributs ne sont pas mis à jour (l'échéance, notamment).
+                    // (La Map doit croire qu'il s'agit de la même entité vu qu'elles ont le même hashCode, donc un simple "put" est sans effet puisque la Map croit qu'elle contient déjà l'instance.)
+                    planCharge.getPlanifications().remove(tacheActuelleDTO);
                     planCharge.getPlanifications().put(tacheImporteeDTO, calendrierTache);
+                    //
                     rapport.incrNbrTachesMisesAJour();
-                    LOGGER.debug("Tâche " + tacheActuelleDTO + " màj.");
+                    LOGGER.debug("Tâche {} màj.", tacheActuelleDTO);
                 }
             }
             // Suppression des tâches qui n'existent plus (terminée/annulée/etc.) :
@@ -164,10 +169,10 @@ public class ChargeService extends AbstractService {
             tachesActuellesASupprimer.forEach(tacheActuelle -> {
                 planCharge.getPlanifications().remove(tacheActuelle);
                 rapport.incrNbrTachesSupprimees();
-                LOGGER.debug("Tâche " + tacheActuelle + " supprimée.");
+                LOGGER.debug("Tâche {} supprimée.", tacheActuelle);
             });
 
-        } catch (DTOException | DaoException | TacheSansPlanificationException e) {
+        } catch (DTOException | TacheDaoException | TacheSansPlanificationException e) {
             throw new ServiceException(
                     "Impossible de màj les tâches depuis le fichier Calc '" + ficCalcTaches.getAbsolutePath() + "'.",
                     e);

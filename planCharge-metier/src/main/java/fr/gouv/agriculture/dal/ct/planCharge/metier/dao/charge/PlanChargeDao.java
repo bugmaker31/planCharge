@@ -13,7 +13,7 @@ import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
 import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
-import fr.gouv.agriculture.dal.ct.metier.dao.EntityNotFoundException;
+import fr.gouv.agriculture.dal.ct.metier.dao.EntityNotFoundDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.xml.PlanChargeXmlWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
@@ -117,12 +117,12 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
     @NotNull
 //    @Override
-    public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundException, PlanChargeDaoException {
+    public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws EntityNotFoundDaoException, PlanChargeDaoException {
         PlanCharge plan;
 
         File fichierPlanif = fichierPlanCharge(dateEtat);
         if (fichierPlanif == null) {
-            throw new EntityNotFoundException("Fichier inexistant pour la date d'état du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
+            throw new EntityNotFoundDaoException("Fichier inexistant pour la date d'état du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".");
         }
 
         try {

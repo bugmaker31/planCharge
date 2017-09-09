@@ -1248,13 +1248,14 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 null
         );
 
-        assert planChargeBean.getDateEtat() != null;
-
+        // TODO FDA 2017/09 Bloc à supprimer, sans doute.
         Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
-        LocalDate debutSemaine = planChargeBean.getDateEtat();
-        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            calendrier.put(debutSemaine, new SimpleDoubleProperty(0.0));
-            debutSemaine = debutSemaine.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        if (planChargeBean.getDateEtat() != null) {
+            LocalDate debutSemaine = planChargeBean.getDateEtat();
+            for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+                calendrier.put(debutSemaine, new SimpleDoubleProperty(0.0));
+                debutSemaine = debutSemaine.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            }
         }
 
         try {

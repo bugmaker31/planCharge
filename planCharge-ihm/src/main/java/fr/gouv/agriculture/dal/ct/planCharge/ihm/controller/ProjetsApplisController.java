@@ -3,13 +3,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 13/07/2017.
@@ -126,58 +124,7 @@ public class ProjetsApplisController extends AbstractController implements Modul
         try {
             LOGGER.debug("Initialisation...");
 
-            planChargeBean.getProjetsApplisBeans().addListener((ListChangeListener<? super ProjetAppliBean>) change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        List<ProjetAppliBean> beansToAdd = new ArrayList<>();
-                        for (ProjetAppliBean addedBean : change.getAddedSubList()) {
-                            if (!projetsApplisBeans.contains(addedBean)) {
-                                beansToAdd.add(addedBean);
-                            }
-                        }
-                        if (!beansToAdd.isEmpty()) {
-                            projetsApplisBeans.addAll(beansToAdd);
-                        }
-                    }
-                    if (change.wasRemoved()) {
-                        List<ProjetAppliBean> beansToRemove = new ArrayList<>();
-                        for (ProjetAppliBean removedBean : change.getRemoved()) {
-                            if (projetsApplisBeans.contains(removedBean)) {
-                                beansToRemove.add(removedBean);
-                            }
-                        }
-                        if (!beansToRemove.isEmpty()) {
-                            projetsApplisBeans.removeAll(beansToRemove);
-                        }
-                    }
-                }
-            });
-            projetsApplisBeans.addListener((ListChangeListener<? super ProjetAppliBean>) change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        List<ProjetAppliBean> beansToAdd = new ArrayList<>();
-                        for (ProjetAppliBean addedBean : change.getAddedSubList()) {
-                            if (!planChargeBean.getProjetsApplisBeans().contains(addedBean)) {
-                                beansToAdd.add(addedBean);
-                            }
-                        }
-                        if (!beansToAdd.isEmpty()) {
-                            planChargeBean.getProjetsApplisBeans().addAll(beansToAdd);
-                        }
-                    }
-                    if (change.wasRemoved()) {
-                        List<ProjetAppliBean> beansToRemove = new ArrayList<>();
-                        for (ProjetAppliBean removedBean : change.getRemoved()) {
-                            if (planChargeBean.getProjetsApplisBeans().contains(removedBean)) {
-                                beansToRemove.add(removedBean);
-                            }
-                        }
-                        if (!beansToRemove.isEmpty()) {
-                            planChargeBean.getProjetsApplisBeans().removeAll(beansToRemove);
-                        }
-                    }
-                }
-            });
+            ObservableLists.ensureSameContents(planChargeBean.getProjetsApplisBeans(), projetsApplisBeans);
 
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             codeColumn.setCellValueFactory(cellData -> cellData.getValue().codeProperty());

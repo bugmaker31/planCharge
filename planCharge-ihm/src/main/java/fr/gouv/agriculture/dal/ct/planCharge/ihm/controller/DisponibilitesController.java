@@ -1042,7 +1042,7 @@ public class DisponibilitesController extends AbstractController implements Modu
                 }
                 if (change.wasRemoved()) {
                     List<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeansASupprimer = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                    for (RessourceBean<?, ?> ressourceBean : change.getRemoved()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
                         }

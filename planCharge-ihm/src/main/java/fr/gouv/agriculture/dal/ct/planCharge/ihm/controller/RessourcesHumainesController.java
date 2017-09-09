@@ -3,15 +3,14 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -24,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by frederic.danna on 13/07/2017.
@@ -138,65 +135,11 @@ public class RessourcesHumainesController extends AbstractController implements 
             LOGGER.debug("Initialisation...");
 
 /*
-        FilteredList<RessourceHumaineBean> rsrcHumainesBeans = (FilteredList<RessourceHumaineBean>) planChargeBean.getRessourcesBeans().filtered(rsrcBean -> rsrcBean instanceof RessourceHumaineBean);
-        Bindings.bindContentBidirectional(ressourceHumainesBeans, rsrcHumainesBeans);
+            FilteredList<RessourceHumaineBean> rsrcHumainesBeans = (FilteredList<RessourceHumaineBean>) planChargeBean.getRessourcesBeans().filtered(rsrcBean -> rsrcBean instanceof RessourceHumaineBean);
+            Bindings.bindContentBidirectional(ressourceHumainesBeans, rsrcHumainesBeans);
 */
-            planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean<?, ?>>) change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        List<RessourceHumaineBean> ressourceHumaineBeansToAdd = new ArrayList<>();
-                        for (RessourceBean<?, ?> addedRessourceBean : change.getAddedSubList()) {
-                            if (addedRessourceBean instanceof RessourceHumaineBean) {
-                                if (!ressourceHumainesBeans.contains(addedRessourceBean)) {
-                                    ressourceHumaineBeansToAdd.add((RessourceHumaineBean) addedRessourceBean);
-                                }
-                            }
-                        }
-                        if (!ressourceHumaineBeansToAdd.isEmpty()) {
-                            ressourceHumainesBeans.addAll(ressourceHumaineBeansToAdd);
-                        }
-                    }
-                    if (change.wasRemoved()) {
-                        List<RessourceHumaineBean> ressourceHumaineBeansToRemove = new ArrayList<>();
-                        for (RessourceBean<?, ?> removedRessourceBean : change.getRemoved()) {
-                            if (removedRessourceBean instanceof RessourceHumaineBean) {
-                                if (ressourceHumainesBeans.contains(removedRessourceBean)) {
-                                    ressourceHumaineBeansToRemove.add((RessourceHumaineBean) removedRessourceBean);
-                                }
-                            }
-                        }
-                        if (!ressourceHumaineBeansToRemove.isEmpty()) {
-                            ressourceHumainesBeans.removeAll(ressourceHumaineBeansToRemove);
-                        }
-                    }
-                }
-            });
-            ressourceHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        List<RessourceBean<?, ?>> ressourceBeansToAdd = new ArrayList<>();
-                        for (RessourceHumaineBean addedRessourceBean : change.getAddedSubList()) {
-                            if (!planChargeBean.getRessourcesBeans().contains(addedRessourceBean)) {
-                                ressourceBeansToAdd.add(addedRessourceBean);
-                            }
-                        }
-                        if (!ressourceBeansToAdd.isEmpty()) {
-                            planChargeBean.getRessourcesBeans().addAll(ressourceBeansToAdd);
-                        }
-                    }
-                    if (change.wasRemoved()) {
-                        List<RessourceBean<?, ?>> ressourceBeansToRemove = new ArrayList<>();
-                        for (RessourceHumaineBean removedRessourceBean : change.getRemoved()) {
-                            if (planChargeBean.getRessourcesBeans().contains(removedRessourceBean)) {
-                                ressourceBeansToRemove.add(removedRessourceBean);
-                            }
-                        }
-                        if (!ressourceBeansToRemove.isEmpty()) {
-                            planChargeBean.getRessourcesBeans().removeAll(ressourceBeansToRemove);
-                        }
-                    }
-                }
-            });
+
+            ObservableLists.ensureSameContents(planChargeBean.getRessourcesHumainesBeans(), ressourceHumainesBeans);
 
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());

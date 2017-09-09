@@ -6,8 +6,7 @@ import com.sun.star.table.XCell;
 import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.libreoffice.Calc;
 import fr.gouv.agriculture.dal.ct.libreoffice.LibreOfficeException;
-import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
-import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
+import fr.gouv.agriculture.dal.ct.metier.dao.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
@@ -218,7 +217,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
                     profil
             );
 
-        } catch (/*ModeleException | */DaoException | LibreOfficeException e) {
+        } catch (/*ModeleException | */EntityNotFoundDaoException | CantReadEntityDaoException | CantCreateEntityDaoException | CantUpdateEntityDaoException | LibreOfficeException e) {
             throw new TacheDaoException("Impossible d'importer la tâche de la ligne n°" + noLig + ".", e);
         }
         return tache;

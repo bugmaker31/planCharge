@@ -3,9 +3,9 @@ package fr.gouv.agriculture.dal.ct.metier.dao;
 /**
  * Created by frederic.danna on 22/04/2017.
  */
-public class EntityAlreadyExistException extends DaoException {
+public class EntityNotFoundDaoException extends DaoException {
 
-    public EntityAlreadyExistException(String message) {
+    public EntityNotFoundDaoException(String message) {
         super(message);
     }
 }

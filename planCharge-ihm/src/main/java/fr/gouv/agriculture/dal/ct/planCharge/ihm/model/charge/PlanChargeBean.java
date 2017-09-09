@@ -16,6 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanChargeBean> implements Copiable<PlanChargeBean> {
 
     // Statics :
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeBean.class);
 
     private static final PlanChargeBean INSTANCE = new PlanChargeBean();
 
@@ -89,12 +93,14 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             while (change.next()) {
                 if (change.wasAdded()) {
                     List<RessourceHumaineBean> ressourcesHumainesBeansToAdd = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
+                    for (RessourceBean<?, ?> ressourceBean : change.getAddedSubList()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        ressourcesHumainesBeansToAdd.add(ressourceHumaineBean);
+                        if (!ressourcesHumainesBeans.contains(ressourceHumaineBean)) {
+                            ressourcesHumainesBeansToAdd.add(ressourceHumaineBean);
+                        }
                     }
                     if (!ressourcesHumainesBeansToAdd.isEmpty()) {
                         ressourcesHumainesBeans.addAll(ressourcesHumainesBeansToAdd);
@@ -102,15 +108,48 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 }
                 if (change.wasRemoved()) {
                     List<RessourceHumaineBean> ressourcesHumainesBeansToRemove = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getRemoved()) {
+                    for (RessourceBean<?, ?> ressourceBean : change.getRemoved()) {
                         if (!(ressourceBean instanceof RessourceHumaineBean)) {
                             continue;
                         }
                         RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (ressourcesHumainesBeans.contains(ressourceHumaineBean)) {
+                            ressourcesHumainesBeansToRemove.add(ressourceHumaineBean);
+                        }
                         ressourcesHumainesBeansToRemove.add(ressourceHumaineBean);
                     }
                     if (!ressourcesHumainesBeansToRemove.isEmpty()) {
                         ressourcesHumainesBeans.removeAll(ressourcesHumainesBeansToRemove);
+                    }
+                }
+            }
+        });
+        ressourcesHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    List<RessourceBean<?, ?>> ressourcesBeansToAdd = new ArrayList<>();
+                    for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
+                        if (!ressourcesBeans.contains(ressourceHumaineBean)) {
+                            ressourcesBeansToAdd.add(ressourceHumaineBean);
+                        }
+                    }
+                    if (!ressourcesBeansToAdd.isEmpty()) {
+                        ressourcesBeans.addAll(ressourcesBeansToAdd);
+                    }
+                }
+                if (change.wasRemoved()) {
+                    List<RessourceBean<?, ?>> ressourcesBeansToRemove = new ArrayList<>();
+                    for (RessourceBean<?, ?> ressourceBean : change.getRemoved()) {
+                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
+                            continue;
+                        }
+                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
+                        if (ressourcesBeans.contains(ressourceHumaineBean)) {
+                            ressourcesBeansToRemove.add(ressourceHumaineBean);
+                        }
+                    }
+                    if (!ressourcesBeansToRemove.isEmpty()) {
+                        ressourcesBeans.removeAll(ressourcesBeansToRemove);
                     }
                 }
             }
@@ -291,27 +330,37 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     public PlanChargeBean fromDto(@NotNull PlanChargeDTO planCharge) throws BeanException {
         setDateEtat(planCharge.getDateEtat());
+
+        /*
+        NB : Il faut faire un "clear" avant de faire un "setAll" sinon les Listener s'appellent en boucle et au final certaines List se retrouvent vides.
+        */
+
         // Référentiels :
+        joursFeriesBeans.clear();
         joursFeriesBeans.setAll(
                 planCharge.getReferentiels().getJoursFeries().stream()
                         .map(JourFerieBean::from)
                         .collect(Collectors.toList())
         );
+        importancesBeans.clear();
         importancesBeans.setAll(
                 planCharge.getReferentiels().getImportances().stream()
                         .map(ImportanceBean::from)
                         .collect(Collectors.toList())
         );
+        profilsBeans.clear();
         profilsBeans.setAll(
                 planCharge.getReferentiels().getProfils().stream()
                         .map(ProfilBean::from)
                         .collect(Collectors.toList())
         );
+        projetsApplisBeans.clear();
         projetsApplisBeans.setAll(
                 planCharge.getReferentiels().getProjetsApplis().stream()
                         .map(ProjetAppliBean::from)
                         .collect(Collectors.toList())
         );
+        statutsBeans.clear();
         statutsBeans.setAll(
                 planCharge.getReferentiels().getStatuts().stream()
                         .map(StatutBean::from)
@@ -330,6 +379,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                             .map(RessourceGeneriqueBean::from)
                             .collect(Collectors.toList())
             );
+            ressourcesBeans.clear();
             ressourcesBeans.setAll(ressourceBeanList);
         }
         // Disponibilités :
@@ -341,6 +391,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleFloatProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate)))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
                 nbrsJoursAbsenceBeanList.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
+            nbrsJoursAbsenceBeans.clear();
             nbrsJoursAbsenceBeans.setAll(nbrsJoursAbsenceBeanList);
         }
         { // Pctages de dispo pour la CT / rsrc :
@@ -351,6 +402,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue()))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
                 pctagesDispoCTBeanList.add(new PctagesDispoRsrcBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
+            pctagesDispoCTBeans.clear();
             pctagesDispoCTBeans.setAll(pctagesDispoCTBeanList);
         }
         { // Pctages de dispo max / rsrc / profil :
@@ -363,9 +415,11 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                     pctagesDispoMaxRsrcProfilBeanList.add(new PctagesDispoRsrcProfilBean(RessourceHumaineBean.from(ressourceHumaineDTO), ProfilBean.from(profilDTO), calendrierAbsences));
                 }
             }
+            pctagesDispoMaxRsrcProfilBeans.clear();
             pctagesDispoMaxRsrcProfilBeans.setAll(pctagesDispoMaxRsrcProfilBeanList); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
         }
         // Tâches + Charge :
+        planificationsBeans.clear();
         planificationsBeans.setAll(
                 planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationTacheBean(planif.getKey(), planif.getValue()))

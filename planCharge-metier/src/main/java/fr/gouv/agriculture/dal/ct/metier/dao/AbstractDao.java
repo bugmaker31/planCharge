@@ -28,7 +28,7 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
 
     @SuppressWarnings("InstanceMethodNamingConvention")
     @Null
-    public E get(@NotNull EI id) {
+    public E get(@NotNull EI id) throws CantReadEntityDaoException {
 
         if (getCache().containsKey(id)) {
             LOGGER.debug("Entité retrouvée dans le cache : '{}'.", id);
@@ -39,37 +39,37 @@ public abstract class AbstractDao<E extends AbstractEntity<EI, E>, EI extends Se
 
 
     @NotNull
-    public E load(@NotNull EI id) throws EntityNotFoundException {
+    public E load(@NotNull EI id) throws EntityNotFoundDaoException, CantReadEntityDaoException {
         E entity = get(id);
         if (entity == null) {
-            throw new EntityNotFoundException("Aucune entité connue avec l'ID '" + id + "'.");
+            throw new EntityNotFoundDaoException("Aucune entité connue avec l'ID '" + id + "'.");
         }
         return entity;
     }
 
     @NotNull
-    public List<E> list() throws DaoException {
+    public List<E> list() throws CantReadEntityDaoException {
         // TODO FDA 2017/07 Pour l'instant, lister les valeurs revient à lister celles qu'on connaît, donc celles du cache.
         return new ArrayList<>(getCache().values());
     }
 
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    public boolean exists(@NotNull EI id) {
+    public boolean exists(@NotNull EI id) throws CantReadEntityDaoException {
         return get(id) != null;
     }
 
-    public E createOrUpdate(@NotNull E entity) throws DaoException {
+    public E createOrUpdate(@NotNull E entity) throws CantCreateEntityDaoException, CantUpdateEntityDaoException {
         getCache().put(entity.getIdentity(), entity);
         //noinspection HardcodedFileSeparator
         LOGGER.debug("Entité '{}' créée ou màj : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());
         return entity;
     }
 
-    public E create(@NotNull E entity) throws EntityAlreadyExistException {
+    public E create(@NotNull E entity) throws EntityAlreadyExistDaoException, CantCreateEntityDaoException, CantReadEntityDaoException {
         //noinspection LocalVariableNamingConvention
         EI id = entity.getIdentity();
         if (exists(id)) {
-            throw new EntityAlreadyExistException("Une entité existe déjà avec l'ID '" + id + "'.");
+            throw new EntityAlreadyExistDaoException("Une entité existe déjà avec l'ID '" + id + "'.");
         }
         getCache().put(entity.getIdentity(), entity);
         LOGGER.debug("Entité '{}' créée : '{}'.", entity.getClass().getSimpleName(), entity.getIdentity());

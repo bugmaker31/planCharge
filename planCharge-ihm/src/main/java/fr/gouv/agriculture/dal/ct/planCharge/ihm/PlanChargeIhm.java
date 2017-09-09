@@ -363,9 +363,10 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.afficherModuleProjetsApplis();
-//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.39.ods"));
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.36.ods"));
+                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.42.ods"));
+                //noinspection HardcodedFileSeparator
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.37.ods"));
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
@@ -762,6 +763,7 @@ public class PlanChargeIhm extends Application {
 //            taskThread.join(); // Pas nécessaire.
         } catch (CancellationException | InterruptedException | ExecutionException e) {
             if (e.getCause() instanceof ViolationsReglesGestionException) {
+                //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
                 throw (ViolationsReglesGestionException) e.getCause();
             }
             throw new IhmException("Impossible d'exécuter le traitement.", e);
@@ -843,7 +845,8 @@ public class PlanChargeIhm extends Application {
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-        return LocalDate.of(2017, 9, 11);
+        return LocalDate.of(2017, 8, 21);
+//        return LocalDate.of(2017, 9, 11);
     }
 
     public void definirTitre(String titre) {

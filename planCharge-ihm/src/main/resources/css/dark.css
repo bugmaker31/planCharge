@@ -3,7 +3,7 @@
     /* Redefine base colors */
     /*-fx-base: rgb(50, 50, 50);*/
     -fx-base: #1d1d1d;
-    /*-fx-background: rgb(50, 50, 50);*/
+    -fx-background: rgb(50, 50, 50);
     -fx-background-color: #1d1d1d;
     -fx-control-inner-background:  rgb(50, 50, 50);
 
@@ -67,6 +67,10 @@
     -fx-opacity: 0.9;
 }
 
+.menu .label {
+    -fx-text-fill: white;
+    -fx-opacity: 0.9;
+}
 .menu .left-container {
     -fx-background-color: black;
 }
@@ -114,22 +118,24 @@
 .button {
     /*-fx-background-color: transparent;*/
     /*-fx-padding: 5 22 5 22;*/
-    -fx-border-color: #e2e2e2;
+    /*-fx-border-color: #e2e2e2;*/
+    -fx-border-color: yellow;
     /*-fx-border-width: 2;*/
-    -fx-background-radius: 1;
+    -fx-background-radius: 10;
     -fx-background-color: #1d1d1d;
 /*
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
 */
-    -fx-text-fill: yellow;
+    -fx-text-fill: white;
     /*-fx-text-fill: #d8d8d8;*/
     /*-fx-background-insets: 0 0 0 0, 0, 1, 2;*/
 }
 
-.button:pressed, .button:default:hover:pressed {
+.button:pressed, .button:default:pressed {
     fx-background-color: black;
     -fx-text-fill: white;
+    -fx-border-color: darkred;
 }
 .button:focused {
 /*
@@ -156,6 +162,7 @@
     /*-fx-background-color: derive(-fx-focus-color,30%);*/
     -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
     -fx-color: -fx-hover-base;
+    -fx-border-color: white;
 }
 
 /* Table ---------------------------------------------*/

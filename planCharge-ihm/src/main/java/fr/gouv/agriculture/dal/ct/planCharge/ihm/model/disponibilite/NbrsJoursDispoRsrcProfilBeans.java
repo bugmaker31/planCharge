@@ -34,6 +34,10 @@ public final class NbrsJoursDispoRsrcProfilBeans {
         for (NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean : nbrsJoursDispoMaxRsrcProfilBeans) {
 
             RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMaxRsrcProfilBean.getRessourceBean();
+            if (ressourceHumaineBean.getCode() == null) {
+                // Ressource pas encore renseignée suffisamment pour qu'on la considère (en cours de saisie).
+                continue;
+            }
             RessourceHumaineDTO ressourceHumaineDTO = ressourceHumaineBean.toDto();
             if (!nbrsJoursDispoMaxRsrcProfilDTOs.containsKey(ressourceHumaineDTO)) {
                 nbrsJoursDispoMaxRsrcProfilDTOs.put(ressourceHumaineDTO, new TreeMap<>()); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
@@ -41,6 +45,9 @@ public final class NbrsJoursDispoRsrcProfilBeans {
 
             ProfilBean profilBean = nbrsJoursDispoMaxRsrcProfilBean.getProfilBean();
             ProfilDTO profilDTO = profilBean.toDto();
+            if (!nbrsJoursDispoMaxRsrcProfilDTOs.containsKey(ressourceHumaineDTO)) {
+                nbrsJoursDispoMaxRsrcProfilDTOs.put(ressourceHumaineDTO, new TreeMap<>()); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.);
+            }
             if (!nbrsJoursDispoMaxRsrcProfilDTOs.get(ressourceHumaineDTO).containsKey(profilDTO)) {
                 nbrsJoursDispoMaxRsrcProfilDTOs.get(ressourceHumaineDTO).put(profilDTO, new TreeMap<>()); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
             }

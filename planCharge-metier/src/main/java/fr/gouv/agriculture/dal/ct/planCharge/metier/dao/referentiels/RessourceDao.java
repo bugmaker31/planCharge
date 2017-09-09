@@ -1,8 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels;
 
-import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
-import fr.gouv.agriculture.dal.ct.metier.dao.DataAcessObject;
-import fr.gouv.agriculture.dal.ct.metier.dao.EntityNotFoundException;
+import fr.gouv.agriculture.dal.ct.metier.dao.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceGenerique;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.RessourceHumaine;
@@ -40,7 +38,7 @@ public /*abstract*/ class RessourceDao<R extends Ressource<R>> /*extends Abstrac
 
 
     @NotNull
-    public Ressource<?> load(@NotNull String codeRessource) throws EntityNotFoundException {
+    public Ressource<?> load(@NotNull String codeRessource) throws EntityNotFoundDaoException, CantReadEntityDaoException {
 
         RessourceGenerique ressourceGenerique = RessourceGenerique.valeurOuNull(codeRessource);
         if (ressourceGenerique != null) {
@@ -52,7 +50,7 @@ public /*abstract*/ class RessourceDao<R extends Ressource<R>> /*extends Abstrac
 
 //    @Override
     @NotNull
-    public Ressource createOrUpdate(@NotNull Ressource ressource) throws DaoException {
+    public Ressource createOrUpdate(@NotNull Ressource ressource) throws CantCreateEntityDaoException, CantUpdateEntityDaoException {
 
         RessourceGenerique ressourceGenerique = RessourceGenerique.valeurOuNull(ressource.getCode());
         if (ressourceGenerique != null) {
@@ -65,7 +63,7 @@ public /*abstract*/ class RessourceDao<R extends Ressource<R>> /*extends Abstrac
 
     @SuppressWarnings("rawtypes")
     @NotNull
-    public List<Ressource> listAll() throws DaoException {
+    public List<Ressource> listAll() throws CantReadEntityDaoException {
         List<Ressource> ressources = Arrays.asList(RessourceGenerique.RESSOURCES_GENERIQUES);
         ressources.addAll(ressourceHumaineDao.list());
         return ressources;
