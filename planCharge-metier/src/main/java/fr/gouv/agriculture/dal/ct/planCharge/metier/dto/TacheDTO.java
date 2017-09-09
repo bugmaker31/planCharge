@@ -158,6 +158,15 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     }
 
 
+    public void setCategorie(@Null CategorieTacheDTO categorie) {
+        this.categorie = categorie;
+    }
+
+    public void setSousCategorie(@Null SousCategorieTacheDTO sousCategorie) {
+        this.sousCategorie = sousCategorie;
+    }
+
+
     @Null
     @Override
     public Integer getIdentity() {
@@ -254,5 +263,4 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
                 + " " + ("<< " + description + " >> ")
                 ;
     }
-
 }

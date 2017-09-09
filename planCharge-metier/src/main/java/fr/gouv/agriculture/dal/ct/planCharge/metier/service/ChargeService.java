@@ -150,7 +150,10 @@ public class ChargeService extends AbstractService {
                     // NB : Il faut supprimer la tâche avant de la remettre, sinon ses attributs ne sont pas mis à jour (l'échéance, notamment).
                     // (La Map doit croire qu'il s'agit de la même entité vu qu'elles ont le même hashCode, donc un simple "put" est sans effet puisque la Map croit qu'elle contient déjà l'instance.)
                     planCharge.getPlanifications().remove(tacheActuelleDTO);
-                    planCharge.getPlanifications().put(tacheImporteeDTO, calendrierTache);
+
+                    TacheDTO tacheAJourDTO = majTache(tacheActuelleDTO, tacheImporteeDTO);
+
+                    planCharge.getPlanifications().put(tacheAJourDTO, calendrierTache);
                     //
                     rapport.incrNbrTachesMisesAJour();
                     LOGGER.debug("Tâche {} màj.", tacheActuelleDTO);
@@ -178,6 +181,18 @@ public class ChargeService extends AbstractService {
                     e);
         }
         return rapport;
+    }
+
+    @NotNull
+    private TacheDTO majTache(@NotNull TacheDTO tacheActuelle, @NotNull TacheDTO tacheImportee) {
+        // Le fichier Calc de suivi des demandes (depuis lequel on vient d'importer les tâches à jour)
+        // n'a pas la certaines notions (notamment catégorie et sous-catégorie).
+        // Donc on garde les infos qu'on a plutôt que celles "devinées" lors de l'import.
+
+        tacheImportee.setCategorie(tacheActuelle.getCategorie());
+        tacheImportee.setSousCategorie(tacheActuelle.getSousCategorie());
+
+        return tacheImportee;
     }
 
     @NotNull
