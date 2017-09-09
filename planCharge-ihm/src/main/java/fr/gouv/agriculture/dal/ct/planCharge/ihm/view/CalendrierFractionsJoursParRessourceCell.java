@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
-import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurDisponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceBean;
@@ -53,7 +52,7 @@ public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?,
             LOGGER.warn("Date d'état non définie !?");
             return;
         }
-        LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays((getNoSemaine() - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = getPlanChargeBean().getDateEtat().plusDays(((long) getNoSemaine() - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         if (!nbrJoursAbsenceBean.containsKey(debutPeriode)) {
             nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
         }
@@ -66,7 +65,7 @@ public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?,
                 RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
                 calculateurDisponibilites.calculer(ressourceHumaineBean, getNoSemaine());
             }
-        } catch (BeanException | ControllerException e) {
+        } catch (/*BeanException |*/ ControllerException e) {
             // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
             LOGGER.error("Impossible de calculer.", e);
         }

@@ -283,11 +283,11 @@ public class CalculateurCharges extends Calculateur {
 
         float nbrsJoursDispo;
         boolean estRessourceHumaine;
-        try {
+//        try {
             estRessourceHumaine = ressourceBean.estHumain();
-        } catch (BeanException e) {
-            throw new ControllerException("Impossible de déterminer si la ressource est humaine.", e);
-        }
+//        } catch (BeanException e) {
+//            throw new ControllerException("Impossible de déterminer si la ressource est humaine.", e);
+//        }
         if (!estRessourceHumaine) {
             nbrsJoursDispo = 0.0f;
         } else {

@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
-import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceBean;
@@ -132,16 +131,20 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
             return;
         }
         RessourceHumaineBean ressourceHumaineBean;
+/*
         try {
+*/
             if (!bean.getRessourceBean().estHumain()) {
                 return;
             }
             ressourceHumaineBean = (RessourceHumaineBean) bean.getRessourceBean();
+/*
         } catch (BeanException e) {
             // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
             LOGGER.error("Impossible de déterminer si la ressource '" + bean.getRessourceBean().getCode() + "' est humaine.", e);
             return;
         }
+*/
         LocalDate debutMission = ressourceHumaineBean.getDebutMission();
         LocalDate finMission = ressourceHumaineBean.getFinMission();
 

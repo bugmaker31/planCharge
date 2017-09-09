@@ -9,6 +9,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.RessourceHumaineDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -17,6 +19,9 @@ import javax.validation.constraints.Null;
  * Created by frederic.danna on 01/07/2017.
  */
 public abstract class RessourceBean<B extends RessourceBean<B, D>, D extends RessourceDTO> extends AbstractBean<D, B>  {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RessourceBean.class);
+
 
     @NotNull
     private StringProperty code = new SimpleStringProperty();
@@ -59,11 +64,12 @@ public abstract class RessourceBean<B extends RessourceBean<B, D>, D extends Res
     }
 
 
-    public boolean estHumain() throws BeanException {
+    public boolean estHumain() /*throws BeanException*/ {
         try {
             return toDto().estHumain();
-        } catch (DTOException e) {
-            throw new BeanException("Impossible de déterminer si cette ressource est humaine ou non.", e);
+        } catch (BeanException | DTOException e) {
+            LOGGER.error("Impossible de déterminer si cette ressource est humaine ou non.", e);
+            return false; // Par défaut. TODO FDA 2017/09 A confirmer.
         }
     }
 

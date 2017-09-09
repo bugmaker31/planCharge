@@ -1,10 +1,15 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import javafx.beans.property.FloatProperty;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.scene.control.TableRow;
 import javafx.util.converter.DoubleStringConverter;
@@ -29,10 +34,14 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     public static final PseudoClass PENDANT_PERIODE_DEMANDEE = PseudoClass.getPseudoClass("pendantPeriodeDemandee");
     public static final PseudoClass APRES_PERIODE_DEMANDEE = PseudoClass.getPseudoClass("apresPeriodeDemandee");
     //
-    public static final List<PseudoClass> PSEUDO_CLASSES = Arrays.asList(AVANT_PERIODE_DEMANDEE, PENDANT_PERIODE_DEMANDEE, APRES_PERIODE_DEMANDEE);
+    public static final List<PseudoClass> PSEUDO_CLASSES_PERIODE = Arrays.asList(AVANT_PERIODE_DEMANDEE, PENDANT_PERIODE_DEMANDEE, APRES_PERIODE_DEMANDEE);
+
+    private static final PseudoClass SURCHARGE = ChargesController.SURCHARGE;
 
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCell.class);
+
+    private final PlanChargeIhm ihm = PlanChargeIhm.instance();
 
     private PlanChargeBean planChargeBean;
     private final int noSemaine;
@@ -47,29 +56,30 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
     @Override
     public void updateItem(@Null Double item, boolean empty) {
         super.updateItem(item, empty);
-        formater(item, empty);
-        styler(item);
+        formater();
+        styler();
     }
 
-    private void formater(@Null Double item, boolean empty) {
-        if ((item == null) || empty) {
+    private void formater() {
+        if ((getItem() == null) || isEmpty()) {
             setText(null);
             return;
         }
         //noinspection UnnecessaryLocalVariable
-        Double charge = item;
+        Double charge = getItem();
         setText((charge == 0.0) ? "" : ChargesController.FORMAT_CHARGE.format(charge));
     }
 
-    private void styler(@SuppressWarnings("unused") @Null Double item) {
+    private void styler() {
 
         // Réinit du texte et du style de la cellule :
-        PSEUDO_CLASSES.parallelStream()
+        PSEUDO_CLASSES_PERIODE.parallelStream()
                 .forEach(pseudoClass -> pseudoClassStateChanged(pseudoClass, false));
+        pseudoClassStateChanged(SURCHARGE, false);
 
 /* Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée), ne seront pas décorées.
         // Stop, si cellule vide :
-        if (empty || (item == null)) {
+        if ((getItem() == null) || isEmpty()) {
             return;
         }
 */
@@ -92,19 +102,44 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // Formatage du style (CSS) de la cellule :
-        if (planifBean.getDebut() != null) {
-            if (debutPeriode.isBefore(planifBean.getDebut().minusDays(7L-1L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                pseudoClassStateChanged(AVANT_PERIODE_DEMANDEE, true);
-                return;
+        FORMAT_PERIODE:
+        {
+            if (planifBean.getDebut() != null) {
+                if (debutPeriode.isBefore(planifBean.getDebut().minusDays(7L - 1L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    pseudoClassStateChanged(AVANT_PERIODE_DEMANDEE, true);
+                    break FORMAT_PERIODE;
+                }
+            }
+            if (planifBean.getEcheance() != null) {
+                if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                    pseudoClassStateChanged(APRES_PERIODE_DEMANDEE, true);
+                    break FORMAT_PERIODE;
+                }
+            }
+            pseudoClassStateChanged(PENDANT_PERIODE_DEMANDEE, true);
+        }
+        FORMAT_SURCHARGE:
+        {
+            if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
+                break FORMAT_SURCHARGE;
+            }
+            ObservableList<NbrsJoursParRessourceBean> nbrsJoursDispoCTRestanteRsrcBeans = ihm.getChargesController().getNbrsJoursDispoCTRestanteRsrcBeans();
+            NbrsJoursParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
+                    nbrsJoursDispoCTRestanteRsrcBeans,
+                    nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getRessourceBean().equals(planifBean.getTacheBean().getRessource())
+            );
+            if (nbrsJoursDispoRestanteBean == null) {
+                break FORMAT_SURCHARGE;
+            }
+            FloatProperty nbrJoursDispoRestanteSurPeriodeProperty = nbrsJoursDispoRestanteBean.get(debutPeriode);
+            if (nbrJoursDispoRestanteSurPeriodeProperty == null) {
+                break FORMAT_SURCHARGE;
+            }
+            boolean estRessourceSurchargeeSurPeriode = nbrJoursDispoRestanteSurPeriodeProperty.get() < 0.0f; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+            if (estRessourceSurchargeeSurPeriode) {
+                pseudoClassStateChanged(SURCHARGE, true);
             }
         }
-        if (planifBean.getEcheance() != null) {
-            if (finPeriode.isAfter(planifBean.getEcheance().plusDays(7L))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                pseudoClassStateChanged(APRES_PERIODE_DEMANDEE, true);
-                return;
-            }
-        }
-        pseudoClassStateChanged(PENDANT_PERIODE_DEMANDEE, true);
     }
 
     @Override
@@ -122,6 +157,7 @@ public class PlanificationChargeCell extends EditableAwareTextFieldTableCell<Pla
         if (planifBean == null) {
             return;
         }
+
         if (planChargeBean.getDateEtat() == null) {
             return;
         }

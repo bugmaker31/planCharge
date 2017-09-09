@@ -79,6 +79,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     public static final PseudoClass CHARGE_NON_PLANIFIEE = PseudoClass.getPseudoClass("chargeNonPlanifiee");
     public static final PseudoClass INCOHERENCE = PseudoClass.getPseudoClass("incoherence");
+    public static final PseudoClass SURCHARGE = PseudoClass.getPseudoClass("surcharge");
 
 
     /*
