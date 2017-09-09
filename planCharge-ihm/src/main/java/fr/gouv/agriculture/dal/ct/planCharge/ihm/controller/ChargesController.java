@@ -35,6 +35,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -75,6 +76,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         FORMAT_CHARGE.setMinimumFractionDigits(0); // Les divisions de nbrs entiers par 8 tombent parfois juste (pas de décimale).
         FORMAT_CHARGE.setMaximumFractionDigits(3); // Les divisions de nbrs entiers par 8 se terminent par ".125", "0.25", ".325", ".5", ".625", ".75" ou ".825".
     }
+
+    public static final PseudoClass CHARGE_NON_PLANIFIEE = PseudoClass.getPseudoClass("chargeNonPlanifiee");
+    public static final PseudoClass INCOHERENCE = PseudoClass.getPseudoClass("incoherence");
+
 
     /*
      La couche métier :
@@ -858,47 +863,42 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // du formatage qui symbolise les incohérences/surcharges/etc. (Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/) :
         //
         //noinspection OverlyComplexAnonymousInnerClass
-        getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>() {
+        getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>(new DoubleStringConverter()) {// TODO FDA 2017/08 Mieux formater.
 
             @Override
             public void updateItem(Double item, boolean empty) {
-                if (getConverter() == null) {
-                    setConverter(new DoubleStringConverter()); // TODO FDA 2017/08 Mieux formater.
-                }
                 super.updateItem(item, empty);
-
-                styler(item);
-
-/*
-                if ((item == null) || empty) {
-                    setText(null);
-                    setGraphic(null);
-                    return;
-                }
-*/
+                formater();
+                styler();
             }
 
-            private void styler(@Null Double item) {
-                setText("");
-                getStyleClass().removeAll("chargeNonPlanifiee", "incoherence");
-
-                if (item == null) {
+            private void formater() {
+                if ((getItem() == null) || isEmpty()) {
                     setText(null);
                     setGraphic(null);
                     return;
                 }
+                setText(FORMAT_CHARGE.format(getItem()));
+            }
 
-                // Format :
-                setText(FORMAT_CHARGE.format(item));
+            private void styler() {
+
+                // Réinit du texte et du style de la cellule :
+                pseudoClassStateChanged(INCOHERENCE, false);
+                pseudoClassStateChanged(CHARGE_NON_PLANIFIEE, false);
+
+                if ((getItem() == null) || isEmpty()) {
+                    return;
+                }
 
                 // Style with a different color:
                 Double chargePlanifiee = chargePlanifieeColumn.getCellData(getIndex());
                 if (chargePlanifiee != null) {
-                    if (chargePlanifiee < item) {
-                        getStyleClass().add("chargeNonPlanifiee");
+                    if (chargePlanifiee < getItem()) {
+                        pseudoClassStateChanged(CHARGE_NON_PLANIFIEE, true);
                     }
-                    if (chargePlanifiee > item) {
-                        getStyleClass().add("incoherence");
+                    if (chargePlanifiee > getItem()) {
+                        pseudoClassStateChanged(INCOHERENCE, true);
                     }
                 }
             }
@@ -914,23 +914,31 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             @Override
             protected void updateItem(Double chargePlanifiee, boolean empty) {
                 super.updateItem(chargePlanifiee, empty);
+                formater();
+                styler();
+            }
 
+            private void formater() {
                 setText("");
-                getStyleClass().removeAll("incoherence");
-
-                if ((chargePlanifiee == null) || empty) {
+                if ((getItem() == null) || isEmpty()) {
                     setText(null);
                     setGraphic(null);
                     return;
                 }
+                setText(FORMAT_CHARGE.format(getItem()));
+            }
 
-                // Format :
-                setText(FORMAT_CHARGE.format(chargePlanifiee));
+            private void styler() {
+                pseudoClassStateChanged(INCOHERENCE, false);
+
+                if ((getItem() == null) || isEmpty()) {
+                    return;
+                }
 
                 // Style with a different color:
-                Double charge = getChargeColumn().getCellData(this.getIndex());
-                if (chargePlanifiee > charge) {
-                    getStyleClass().add("incoherence");
+                Double charge = getChargeColumn().getCellData(getIndex());
+                if (getItem() > charge) {
+                    pseudoClassStateChanged(INCOHERENCE, true);
                 }
             }
         });

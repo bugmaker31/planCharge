@@ -258,7 +258,7 @@ public final class TableViews {
 
         double dataRowsHeith = dataRowHeight * (double) actualRowCount;
 
-        double tableHeight = headerRowHeight + dataRowsHeith + (1.0 * (double) actualRowCount); // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (1 pt par ligne) en plus.
+        double tableHeight = headerRowHeight + dataRowsHeith + Math.max(15.0, (1.0 * (double) actualRowCount)); // TODO FDA 2017/08 Comprendre pourquoi il faut ajouter un peu d'espace (1 pt par ligne) en plus.
 
         table.setMinHeight(tableHeight);
         table.setPrefHeight(tableHeight);

@@ -415,7 +415,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         });
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
-        chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter())); // TODO FDA 2017/08 Mieux formater.
         //noinspection OverlyComplexAnonymousInnerClass
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<RessourceBean<?, ?>>() {

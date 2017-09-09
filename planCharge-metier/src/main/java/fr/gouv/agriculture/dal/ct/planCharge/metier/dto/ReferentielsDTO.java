@@ -1,15 +1,16 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
-import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -20,17 +21,17 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
 
     /* Rq : Contrairement à l'entité associée (Referentiels) qui utilise des Set, on utilise des List pour pouvoi g&rer les éventuels doublons dans la saisie. */
 
-    @Null
+    @NotNull
     private List<JourFerieDTO> joursFeries;
-    @Null
+    @NotNull
     private List<ImportanceDTO> importances;
-    @Null
+    @NotNull
     private List<ProfilDTO> profils;
-    @Null
+    @NotNull
     private List<ProjetAppliDTO> projetsApplis;
-    @Null
+    @NotNull
     private List<StatutDTO> statuts;
-    @Null
+    @NotNull
     private List<RessourceHumaineDTO> ressourcesHumaines;
 
 
@@ -38,7 +39,7 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
         super();
     }
 
-    public ReferentielsDTO(@Null List<JourFerieDTO> joursFeries, @Null List<ImportanceDTO> importances, @Null List<ProfilDTO> profils, @Null List<ProjetAppliDTO> projetsApplis, @Null List<StatutDTO> statuts, @Null List<RessourceHumaineDTO> ressourcesHumaines) {
+    public ReferentielsDTO(@NotNull List<JourFerieDTO> joursFeries, @NotNull List<ImportanceDTO> importances, @NotNull List<ProfilDTO> profils, @NotNull List<ProjetAppliDTO> projetsApplis, @NotNull List<StatutDTO> statuts, @NotNull List<RessourceHumaineDTO> ressourcesHumaines) {
         this.joursFeries = joursFeries;
         this.importances = importances;
         this.profils = profils;
@@ -52,32 +53,32 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
         return new ReferentielsDTO().fromEntity(referentiels);
     }
 
-    @Null
+    @NotNull
     public List<JourFerieDTO> getJoursFeries() {
         return joursFeries;
     }
 
-    @Null
+    @NotNull
     public List<ImportanceDTO> getImportances() {
         return importances;
     }
 
-    @Null
+    @NotNull
     public List<ProfilDTO> getProfils() {
         return profils;
     }
 
-    @Null
+    @NotNull
     public List<ProjetAppliDTO> getProjetsApplis() {
         return projetsApplis;
     }
 
-    @Null
+    @NotNull
     public List<StatutDTO> getStatuts() {
         return statuts;
     }
 
-    @Null
+    @NotNull
     public List<RessourceHumaineDTO> getRessourcesHumaines() {
         return ressourcesHumaines;
     }
@@ -110,12 +111,14 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
     @Override
     public Referentiels toEntity() {
         /* Rq : La transformation des List en Set enlève les éventuels doublons. */
+/*
         assert joursFeries != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         assert importances != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         assert profils != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         assert projetsApplis != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         assert statuts != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
         assert ressourcesHumaines != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+*/
         return new Referentiels(
                 joursFeries.stream().map(JourFerieDTO::toEntity).collect(Collectors.toSet()),
                 importances.stream().map(ImportanceDTO::toEntity).collect(Collectors.toSet()),

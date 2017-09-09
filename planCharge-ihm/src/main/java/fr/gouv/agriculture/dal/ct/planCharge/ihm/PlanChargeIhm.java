@@ -364,7 +364,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.afficherModuleProjetsApplis();
                 //noinspection HardcodedFileSeparator
-                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.42.ods"));
+//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.42.ods"));
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.37.ods"));
 //                applicationController.afficherModuleDisponibilites();
@@ -845,8 +845,8 @@ public class PlanChargeIhm extends Application {
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-        return LocalDate.of(2017, 8, 21);
-//        return LocalDate.of(2017, 9, 11);
+//        return LocalDate.of(2017, 8, 21);
+        return LocalDate.of(2017, 9, 11);
     }
 
     public void definirTitre(String titre) {
