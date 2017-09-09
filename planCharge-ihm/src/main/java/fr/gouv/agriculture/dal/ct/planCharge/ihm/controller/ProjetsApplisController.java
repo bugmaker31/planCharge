@@ -3,13 +3,11 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
-import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -46,7 +44,7 @@ public class ProjetsApplisController extends AbstractController implements Modul
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<ProjetAppliBean> projetsApplisBeans = FXCollections.observableArrayList();
+    private final ObservableList<ProjetAppliBean> projetsApplisBeans = planChargeBean.getProjetsApplisBeans();
 
 /*
     //    @Autowired
@@ -124,7 +122,9 @@ public class ProjetsApplisController extends AbstractController implements Modul
         try {
             LOGGER.debug("Initialisation...");
 
-            ObservableLists.ensureSameContents(planChargeBean.getProjetsApplisBeans(), projetsApplisBeans);
+            SortedList<ProjetAppliBean> sortedBeans = new SortedList<>(projetsApplisBeans);
+            sortedBeans.comparatorProperty().bind(projetsApplisTable.comparatorProperty());
+            projetsApplisTable.setItems(sortedBeans);
 
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             codeColumn.setCellValueFactory(cellData -> cellData.getValue().codeProperty());
@@ -152,16 +152,11 @@ public class ProjetsApplisController extends AbstractController implements Modul
                 return cell;
             });
 
-            SortedList<ProjetAppliBean> sortedBeans = new SortedList<>(projetsApplisBeans);
-            sortedBeans.comparatorProperty().bind(projetsApplisTable.comparatorProperty());
-
-            projetsApplisTable.setItems(sortedBeans);
-
             TableViews.enableFilteringOnColumns(projetsApplisTable, codeColumn, nomColumn, trigrammeCPIColumn);
 
             definirMenuContextuel();
 
-            definirTouches();
+            definirRaccourcisClavier();
 
             LOGGER.info("Initialisé.");
         } catch (IhmException e) {
@@ -181,7 +176,7 @@ public class ProjetsApplisController extends AbstractController implements Modul
         projetsApplisTable.setContextMenu(contextMenu);
     }
 
-    private void definirTouches() {
+    private void definirRaccourcisClavier() {
         // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
         projetsApplisTable.setOnKeyPressed(event -> {
             switch (event.getCode()) {

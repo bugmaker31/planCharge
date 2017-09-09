@@ -3,14 +3,12 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
-import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -48,7 +46,7 @@ public class RessourcesHumainesController extends AbstractController implements 
 
     // 'final' car personne ne doit (re)set'er cette ObservableList, sinon on perdra les Listeners qu'on a enregistré dessus.
     @NotNull
-    private final ObservableList<RessourceHumaineBean> ressourceHumainesBeans = FXCollections.observableArrayList();
+    private final ObservableList<RessourceHumaineBean> ressourceHumainesBeans = planChargeBean.getRessourcesHumainesBeans();
 
 /*
     //    @Autowired
@@ -109,11 +107,6 @@ public class RessourcesHumainesController extends AbstractController implements 
         return ressourcesHumainesTable;
     }
 
-    @NotNull
-    public ObservableList<RessourceHumaineBean> getRessourceHumainesBeans() {
-        return ressourceHumainesBeans;
-    }
-
 
     // Méthodes :
 
@@ -134,12 +127,9 @@ public class RessourcesHumainesController extends AbstractController implements 
         try {
             LOGGER.debug("Initialisation...");
 
-/*
-            FilteredList<RessourceHumaineBean> rsrcHumainesBeans = (FilteredList<RessourceHumaineBean>) planChargeBean.getRessourcesBeans().filtered(rsrcBean -> rsrcBean instanceof RessourceHumaineBean);
-            Bindings.bindContentBidirectional(ressourceHumainesBeans, rsrcHumainesBeans);
-*/
-
-            ObservableLists.ensureSameContents(planChargeBean.getRessourcesHumainesBeans(), ressourceHumainesBeans);
+            SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
+            sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
+            ressourcesHumainesTable.setItems(sortedBeans);
 
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());
@@ -186,23 +176,11 @@ public class RessourcesHumainesController extends AbstractController implements 
             debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
             finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
-            SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
-            sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
-
-            ressourcesHumainesTable.setItems(sortedBeans);
-
             TableViews.enableFilteringOnColumns(ressourcesHumainesTable, trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
-
-/*
-        ressourceHumainesBeans.addListener((ListChangeListener<RessourceHumaineBean>) changeListener -> {
-//            ressourcesHumainesTable.setPrefHeight(Region.USE_COMPUTED_SIZE);
-//            ressourcesHumainesTableFilter.executeFilter();
-        });
-*/
 
             definirMenuContextuel();
 
-            definirTouches();
+            definirRaccourcisClavier();
 
             LOGGER.info("Initialisé.");
         } catch (IhmException e) {
@@ -221,7 +199,7 @@ public class RessourcesHumainesController extends AbstractController implements 
         ressourcesHumainesTable.setContextMenu(contextMenu);
     }
 
-    private void definirTouches() {
+    private void definirRaccourcisClavier() {
         // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
         ressourcesHumainesTable.setOnKeyPressed(event -> {
             switch (event.getCode()) {

@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
+import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAbsenceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcProfilBean;
@@ -13,7 +14,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     private final ObservableList<PlanificationTacheBean> planificationsBeans = FXCollections.observableArrayList();
     @Null
-    private LocalDate dateEtat = null;
+    private LocalDate dateEtat;
 
     private BooleanProperty estModifie = new SimpleBooleanProperty(false);
 
@@ -89,71 +89,11 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     private PlanChargeBean() {
         super();
 
-        ressourcesBeans.addListener((ListChangeListener<? super RessourceBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<RessourceHumaineBean> ressourcesHumainesBeansToAdd = new ArrayList<>();
-                    for (RessourceBean<?, ?> ressourceBean : change.getAddedSubList()) {
-                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
-                            continue;
-                        }
-                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (!ressourcesHumainesBeans.contains(ressourceHumaineBean)) {
-                            ressourcesHumainesBeansToAdd.add(ressourceHumaineBean);
-                        }
-                    }
-                    if (!ressourcesHumainesBeansToAdd.isEmpty()) {
-                        ressourcesHumainesBeans.addAll(ressourcesHumainesBeansToAdd);
-                    }
-                }
-                if (change.wasRemoved()) {
-                    List<RessourceHumaineBean> ressourcesHumainesBeansToRemove = new ArrayList<>();
-                    for (RessourceBean<?, ?> ressourceBean : change.getRemoved()) {
-                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
-                            continue;
-                        }
-                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (ressourcesHumainesBeans.contains(ressourceHumaineBean)) {
-                            ressourcesHumainesBeansToRemove.add(ressourceHumaineBean);
-                        }
-                        ressourcesHumainesBeansToRemove.add(ressourceHumaineBean);
-                    }
-                    if (!ressourcesHumainesBeansToRemove.isEmpty()) {
-                        ressourcesHumainesBeans.removeAll(ressourcesHumainesBeansToRemove);
-                    }
-                }
-            }
-        });
-        ressourcesHumainesBeans.addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<RessourceBean<?, ?>> ressourcesBeansToAdd = new ArrayList<>();
-                    for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
-                        if (!ressourcesBeans.contains(ressourceHumaineBean)) {
-                            ressourcesBeansToAdd.add(ressourceHumaineBean);
-                        }
-                    }
-                    if (!ressourcesBeansToAdd.isEmpty()) {
-                        ressourcesBeans.addAll(ressourcesBeansToAdd);
-                    }
-                }
-                if (change.wasRemoved()) {
-                    List<RessourceBean<?, ?>> ressourcesBeansToRemove = new ArrayList<>();
-                    for (RessourceBean<?, ?> ressourceBean : change.getRemoved()) {
-                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
-                            continue;
-                        }
-                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (ressourcesBeans.contains(ressourceHumaineBean)) {
-                            ressourcesBeansToRemove.add(ressourceHumaineBean);
-                        }
-                    }
-                    if (!ressourcesBeansToRemove.isEmpty()) {
-                        ressourcesBeans.removeAll(ressourcesBeansToRemove);
-                    }
-                }
-            }
-        });
+        ObservableLists.ensureSameContents(
+                ressourcesBeans,
+                ressourceBean -> (ressourceBean instanceof RessourceHumaineBean) ? (RessourceHumaineBean) ressourceBean : null,
+                ressourcesHumainesBeans
+        );
     }
 
     @NotNull
@@ -255,7 +195,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         return new ObservableList[]{
                 // Référentiels :
                 joursFeriesBeans,
-                ressourcesBeans,
+                ressourcesBeans, ressourcesHumainesBeans,
                 profilsBeans,
                 projetsApplisBeans,
                 importancesBeans,
@@ -333,34 +273,35 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
         /*
         NB : Il faut faire un "clear" avant de faire un "setAll" sinon les Listener s'appellent en boucle et au final certaines List se retrouvent vides.
+        TODO FDA 2017/09 Confirmer.
         */
 
         // Référentiels :
-        joursFeriesBeans.clear();
+//        joursFeriesBeans.clear();
         joursFeriesBeans.setAll(
                 planCharge.getReferentiels().getJoursFeries().stream()
                         .map(JourFerieBean::from)
                         .collect(Collectors.toList())
         );
-        importancesBeans.clear();
+//        importancesBeans.clear();
         importancesBeans.setAll(
                 planCharge.getReferentiels().getImportances().stream()
                         .map(ImportanceBean::from)
                         .collect(Collectors.toList())
         );
-        profilsBeans.clear();
+//        profilsBeans.clear();
         profilsBeans.setAll(
                 planCharge.getReferentiels().getProfils().stream()
                         .map(ProfilBean::from)
                         .collect(Collectors.toList())
         );
-        projetsApplisBeans.clear();
+//        projetsApplisBeans.clear();
         projetsApplisBeans.setAll(
                 planCharge.getReferentiels().getProjetsApplis().stream()
                         .map(ProjetAppliBean::from)
                         .collect(Collectors.toList())
         );
-        statutsBeans.clear();
+//        statutsBeans.clear();
         statutsBeans.setAll(
                 planCharge.getReferentiels().getStatuts().stream()
                         .map(StatutBean::from)
@@ -368,19 +309,24 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         );
         // Ressources :
         {
-            List<RessourceBean<?, ?>> ressourceBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
-            ressourceBeanList.addAll(
+            // NB : Il faut faire un "clear" avant de faire les "setAll"/"addAll"/..., sinon (les Listeners de ressourcesBeans et ressourcesHumainesBeans s'appellent en boucle et au final) la List se retrouve vide.
+            ressourcesBeans.clear();
+
+            List<RessourceHumaineBean> ressourceHumaineBeanList = new ArrayList<>(
                     planCharge.getReferentiels().getRessourcesHumaines().stream()
                             .map(RessourceHumaineBean::from)
                             .collect(Collectors.toList())
             );
-            ressourceBeanList.addAll(
+            // Rq : On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            ressourcesBeans.addAll(ressourceHumaineBeanList);
+
+            List<RessourceBean<?, ?>> ressourceBeanList = new ArrayList<>(
                     Arrays.stream(RessourceGeneriqueDTO.values())
                             .map(RessourceGeneriqueBean::from)
                             .collect(Collectors.toList())
             );
-            ressourcesBeans.clear();
-            ressourcesBeans.setAll(ressourceBeanList);
+            // Rq : On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            ressourcesBeans.addAll(ressourceBeanList);
         }
         // Disponibilités :
         { // Nbrs de jours d'absence / rsrc :
@@ -391,7 +337,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleFloatProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate)))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
                 nbrsJoursAbsenceBeanList.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
-            nbrsJoursAbsenceBeans.clear();
+//            nbrsJoursAbsenceBeans.clear();
             nbrsJoursAbsenceBeans.setAll(nbrsJoursAbsenceBeanList);
         }
         { // Pctages de dispo pour la CT / rsrc :
@@ -402,7 +348,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue()))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
                 pctagesDispoCTBeanList.add(new PctagesDispoRsrcBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
-            pctagesDispoCTBeans.clear();
+//            pctagesDispoCTBeans.clear();
             pctagesDispoCTBeans.setAll(pctagesDispoCTBeanList);
         }
         { // Pctages de dispo max / rsrc / profil :
@@ -415,11 +361,11 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                     pctagesDispoMaxRsrcProfilBeanList.add(new PctagesDispoRsrcProfilBean(RessourceHumaineBean.from(ressourceHumaineDTO), ProfilBean.from(profilDTO), calendrierAbsences));
                 }
             }
-            pctagesDispoMaxRsrcProfilBeans.clear();
+//            pctagesDispoMaxRsrcProfilBeans.clear();
             pctagesDispoMaxRsrcProfilBeans.setAll(pctagesDispoMaxRsrcProfilBeanList); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
         }
         // Tâches + Charge :
-        planificationsBeans.clear();
+//        planificationsBeans.clear();
         planificationsBeans.setAll(
                 planCharge.getPlanifications().entrySet().parallelStream()
                         .map(planif -> new PlanificationTacheBean(planif.getKey(), planif.getValue()))
@@ -444,11 +390,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         List<ProfilDTO> profils = profilsBeans.stream().map(ProfilBean::to).collect(Collectors.toList());
         List<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliBean::to).collect(Collectors.toList());
         List<StatutDTO> statuts = statutsBeans.stream().map(StatutBean::to).collect(Collectors.toList());
-        List<RessourceHumaineDTO> ressourcesHumaines = ressourcesBeans.stream()
-                .filter(ressourceBean -> ressourceBean instanceof RessourceHumaineBean)
-                .map(ressourceBean -> (RessourceHumaineBean) ressourceBean)
-                .map(RessourceHumaineBean::to)
-                .collect(Collectors.toList());
+        List<RessourceHumaineDTO> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::to).collect(Collectors.toList());
         return new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
     }
 
