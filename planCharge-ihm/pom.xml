@@ -152,6 +152,13 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
         <!--Dépendance vers le métier de cette application :-->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -186,6 +193,7 @@
                     <version>1.1.1</version>
                 </dependency>
         -->
+
 
     </dependencies>
 

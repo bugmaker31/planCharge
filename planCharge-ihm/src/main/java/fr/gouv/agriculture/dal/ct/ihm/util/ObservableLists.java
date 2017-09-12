@@ -81,7 +81,7 @@ public final class ObservableLists {
      * @param <T1>         Type of elements of the first list
      * @param <T2>         Type of elements of the second list
      */
-    public static <T, T1 extends T, T2 extends T> void ensureContains(@NotNull ObservableList<T1> l1, @Null Function<T1, T2> transformFct, @NotNull ObservableList<T2> l2) {
+    public static <T1, T2> void ensureContains(@NotNull ObservableList<T1> l1, @Null Function<T1, T2> transformFct, @NotNull ObservableList<T2> l2) {
         l1.addListener((ListChangeListener<? super T1>) (ListChangeListener.Change<? extends T1> change) -> {
             while (change.next()) {
                 if (change.wasAdded()) {
