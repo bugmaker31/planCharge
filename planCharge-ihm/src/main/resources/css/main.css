@@ -97,9 +97,12 @@ Validation de la saisie depuis l'IHM :
     -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
 }
 
-.messageErreurSaisie {
+.popup {
     /* Cf. ControlsFX */
     -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
+}
+.popup .label {
+    -fx-text-fill: black;
 }
 
 

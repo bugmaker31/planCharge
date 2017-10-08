@@ -172,9 +172,9 @@
                                 <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
                                                          fixedCellSize="$fixedCellSize">
                                     <!--
-                                                                        <selectionModel>
-                                                                            <TableViewSpanSelectionModel cellSelectionEnabled="true" />
-                                                                        </selectionModel>
+                                    <selectionModel>
+                                        <TableViewSpanSelectionModel cellSelectionEnabled="true" />
+                                    </selectionModel>
                                     -->
                                     <columns>
                                         <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
@@ -223,7 +223,7 @@
                                         <TableColumn text="Planification">
                                             <columns>
                                                 <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                                             styleClass="periodeChargee-column" sortable="false" />
                                                 <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
                                                              styleClass="periodeChargee-column" sortable="false"/>
                                                 <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
@@ -247,7 +247,7 @@
                                                 <TableColumn fx:id="semaine12Column" prefWidth="$semaineColumnPrefWidth" text="S+12"
                                                              styleClass="periodeChargee-column" sortable="false"/>
 
-                                                <TableColumn fx:id="chargePlanifieeColumn" text="Charge planifiée" prefWidth="60"
+                                                <TableColumn fx:id="chargePlanifieeTotaleColumn" text="Charge planifiée" prefWidth="60"
                                                              editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
                                             </columns>
                                         </TableColumn>

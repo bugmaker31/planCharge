@@ -18,11 +18,11 @@ public class NbrsJoursDispoRsrcBean extends AbstractCalendrierParRessourceBean<R
 
     // Constructors :
 
-    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws BeanException {
+    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(ressourceHumaineBean, calendrier);
     }
 
-    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) throws BeanException {
+    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
         super(ressourceHumaineBean);
     }
 

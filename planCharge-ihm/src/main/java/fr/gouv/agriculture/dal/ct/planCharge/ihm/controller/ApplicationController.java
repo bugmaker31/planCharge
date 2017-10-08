@@ -88,12 +88,15 @@ public class ApplicationController extends AbstractController {
     // Les menus :
 
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Menu menuEditer;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private MenuItem menuAnnuler;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Menu sousMenuAnnuler;
     /*
@@ -102,9 +105,11 @@ public class ApplicationController extends AbstractController {
         private SeparatorMenuItem separateurMenusAnnuler;
     */
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private MenuItem menuRetablir;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Menu sousMenuRetablir;
     /*
@@ -113,9 +118,11 @@ public class ApplicationController extends AbstractController {
         private SeparatorMenuItem separateurMenusRetablir;
     */
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private MenuItem menuRepeter;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Menu sousMenuRepeter;
 
@@ -132,10 +139,12 @@ public class ApplicationController extends AbstractController {
 */
 
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Pane contentPane;
 
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private DatePicker dateEtatPicker;
 
@@ -143,14 +152,17 @@ public class ApplicationController extends AbstractController {
     // La barre d'état :
 
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private CheckBox sauvegardeRequiseCheckbox;
 
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private CheckBox calculRequisCheckbox;
 
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Gauge memoryGauge;
 
@@ -186,9 +198,11 @@ public class ApplicationController extends AbstractController {
     private String moduleCourant;
 */
 
+/*
     //    @Autowired
     @NotNull
-    private final CalculateurDisponibilites calculateurDisponibilites = new CalculateurDisponibilites();
+    private final CalculateurDisponibilites calculateurDisponibilites = CalculateurDisponibilites.instance();
+*/
 
     // Les services métier :
 
@@ -297,7 +311,7 @@ public class ApplicationController extends AbstractController {
         );
 */
 
-        memoryGauge.setMaxValue(Runtime.getRuntime().maxMemory()); // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
+        memoryGauge.setMaxValue((double) Runtime.getRuntime().maxMemory()); // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
         DecimalFormat ramFormat = new DecimalFormat("0");
         memoryGauge.getTooltip().setText(
                 memoryGauge.getTooltip().getText()
@@ -309,7 +323,10 @@ public class ApplicationController extends AbstractController {
 
             @Override
             public void handle(long now) {
-                double usedMem = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
+                long maxMem = Runtime.getRuntime().maxMemory();
+                long totalMem = Runtime.getRuntime().totalMemory();
+                long freeMem = Runtime.getRuntime().freeMemory() + (maxMem - totalMem);
+                long usedMem = maxMem - freeMem; // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
                 memoryGauge.setValue(usedMem);
             }
         };
@@ -319,7 +336,7 @@ public class ApplicationController extends AbstractController {
             long totalMem = Runtime.getRuntime().totalMemory();
             long freeMem = Runtime.getRuntime().freeMemory() + (maxMem - totalMem);
             long usedMem = maxMem - freeMem; // // Cf. https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory?answertab=votes#tab-top
-            int pcMemLibre = new Double(((freeMem * 100) / maxMem)).intValue();
+            int pcMemLibre = new Double((double) ((freeMem * 100L) / maxMem)).intValue();
 
             if (pcMemLibrePrecedent == pcMemLibre) {
                 return;
@@ -348,7 +365,7 @@ public class ApplicationController extends AbstractController {
                 alerteManqueMemoireAffichee = true;
                 Platform.runLater(() -> {
                     //noinspection HardcodedLineSeparator
-                    ihm.afficherPopUp(
+                    ihm.afficherDialog(
                             Alert.AlertType.WARNING,
                             "Manque de mémoire",
                             "On frôle le crash à cause d'un manque de mémoire (plus que " + pcMemLibre + "% de RAM libre)."
@@ -401,7 +418,7 @@ public class ApplicationController extends AbstractController {
             reinitPlanCharge();
         } catch (ControllerException e) {
             LOGGER.error("Impossible de ré-initialiser un nouveau plan de charge.", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de ré-initialiser un nouveau plan de charge",
                     "Impossible de ré-initialiser un nouveau plan de charge : \n" + Exceptions.causes(e),
@@ -431,7 +448,7 @@ public class ApplicationController extends AbstractController {
         } catch (ControllerException e) {
             LOGGER.error("Impossible de charger le plan de charge.", e);
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
                     "Impossible de charger le plan de charge : \n" + Exceptions.causes(e),
@@ -449,14 +466,20 @@ public class ApplicationController extends AbstractController {
                 new FileChooser.ExtensionFilter("Fichier XML du plan de charge", "planCharge_*.xml"),
                 new FileChooser.ExtensionFilter("Fichier XML", "*.xml")
         );
+        File repPersistance;
         try {
-            fileChooser.setInitialDirectory(new File(paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE)));
+            String nomRepPersistance = paramsMetier.getParametrage(PlanChargeDao.CLEF_PARAM_REP_PERSISTANCE);
+            repPersistance = new File(nomRepPersistance);
+            if (!repPersistance.exists()) {
+                throw new ControllerException("Le répertoire de stockage des fichiers XML (" + nomRepPersistance + ") n'existe pas.");
+            }
         } catch (KernelException e) {
             throw new ControllerException("Impossible de déterminer le répertoire de persistance du plan de charge (fichiers XML).", e);
         }
+        fileChooser.setInitialDirectory(repPersistance);
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.INFORMATION,
                     "Chargement annulé",
                     "Le chargement a été annulé par l'utilisateur.",
@@ -474,7 +497,7 @@ public class ApplicationController extends AbstractController {
             charger(ficCalc);
         } catch (ServiceException | ControllerException e) {
             LOGGER.error("Impossible de charger le plan de charge.", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de charger le plan de charge",
                     Exceptions.causes(e),
@@ -487,7 +510,7 @@ public class ApplicationController extends AbstractController {
 
         RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
 
-        PlanChargeBean[] planChargeBeanAvantChargement = new PlanChargeBean[1];
+//        PlanChargeBean[] planChargeBeanAvantChargement = new PlanChargeBean[1];
         PlanChargeDTO[] planCharge = new PlanChargeDTO[1];
 
         Task<RapportChargementAvecProgression> chargerPlanCharge = new Task<RapportChargementAvecProgression>() {
@@ -497,9 +520,9 @@ public class ApplicationController extends AbstractController {
             protected RapportChargementAvecProgression call() throws Exception {
 
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
-                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.intValue(), rapport.getProgressionMax()));
+                rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
-                planChargeBeanAvantChargement[0] = planChargeBean.copier();
+//                planChargeBeanAvantChargement[0] = planChargeBean.copier();
 
                 planCharge[0] = planChargeService.charger(ficPlanCharge, rapport);
 
@@ -514,15 +537,13 @@ public class ApplicationController extends AbstractController {
 
                             RapportChargementAvecProgression rapportFinal =
                                     ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
-                            assert rapportFinal != null;
-                            assert planChargeBeanAvantChargement[0] != null;
+//                            assert planChargeBeanAvantChargement[0] != null;
                             assert planCharge[0] != null;
 
                             planChargeBean.fromDto(planCharge[0]);
 
                             planChargeBean.vientDEtreCharge();
-                            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement[0]));
-
+//                            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement[0]));
 
                             definirDateEtat(planChargeBean.getDateEtat());
 
@@ -530,7 +551,7 @@ public class ApplicationController extends AbstractController {
                             ihm.getChargesController().razFiltres();
 
                             //noinspection HardcodedLineSeparator
-                            ihm.afficherNotification(
+                            ihm.afficherNotificationInfo(
                                     "Chargement terminé",
                                     "Le chargement est terminé :"
                                             + "\n- date d'état : " + planChargeBean.getDateEtat()
@@ -567,7 +588,7 @@ public class ApplicationController extends AbstractController {
 
         if ((planChargeBean.getDateEtat() == null) || planChargeBean.getPlanificationsBeans().isEmpty()) {
             LOGGER.warn("Impossible de sauver un plan de charge non défini.");
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.WARNING,
                     "Impossible de sauver le plan de charge",
                     "Impossible de sauver un plan de charge sans date d'état, ou sans planification.",
@@ -609,7 +630,7 @@ public class ApplicationController extends AbstractController {
 
             //noinspection unused
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
-            ihm.afficherNotification("Sauvegarde effectuée.",
+            ihm.afficherNotificationInfo("Sauvegarde effectuée.",
                     "Le plan de charge"
                             + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
                             + " a été sauvegardé"
@@ -628,7 +649,7 @@ public class ApplicationController extends AbstractController {
             // TODO FDA 2017/05 Positionner l'affichage sur la 1ère ligne/colonne en erreur.
         } catch (IhmException | ServiceException e) {
             LOGGER.warn("Impossible de sauver le plan de charge.", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de sauver le plan de charge.",
                     Exceptions.causes(e),
@@ -644,7 +665,7 @@ public class ApplicationController extends AbstractController {
             importerTachesDepuisCalc();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'importer les tâches.", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer les tâches",
                     "Impossible d'importer les tâches : \n" + Exceptions.causes(e),
@@ -671,7 +692,7 @@ public class ApplicationController extends AbstractController {
         fileChooser.setInitialDirectory(new File(nomRepFicCalc));
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.INFORMATION,
                     "MàJ annulée",
                     "La mise à jour des tâches depuis un fichier Calc a été annulé par l'utilisateur.",
@@ -699,6 +720,8 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
+//                planChargeBeanAvantChargement[0] = planChargeBean.copier();
+
                 planCharge[0] = planChargeBean.toDto();
 
                 planChargeService.majTachesDepuisCalc(planCharge[0], ficCalc, rapport);
@@ -719,10 +742,10 @@ public class ApplicationController extends AbstractController {
                             definirDateEtat(planChargeBean.getDateEtat());
 
                             planChargeBean.vientDEtreModifie();
-                            getSuiviActionsUtilisateur().historiser(new ImportTaches());
+//                            getSuiviActionsUtilisateur().historiser(new ImportTaches(planChargeBeanAvantChargement[0]));
 
                             //noinspection HardcodedLineSeparator
-                            ihm.afficherNotification("Tâches mises à jour importées",
+                            ihm.afficherNotificationInfo("Tâches mises à jour importées",
                                     "Les tâches ont été mises à jour : "
                                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                                             + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
@@ -770,7 +793,7 @@ public class ApplicationController extends AbstractController {
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'importer le plan de charge.", e);
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'importer le plan de charge",
                     "Impossible d'importer le plan de charge : \n" + Exceptions.causes(e),
@@ -798,7 +821,7 @@ public class ApplicationController extends AbstractController {
         fileChooser.setInitialDirectory(new File(nomRepFicCalc));
         ficCalc = fileChooser.showOpenDialog(ihm.getPrimaryStage());
         if (ficCalc == null) {
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.INFORMATION,
                     "Import annulé",
                     "L'import depuis un fichier Calc a été annulé par l'utilisateur.",
@@ -826,6 +849,8 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
+//                planChargeBeanAvantChargement[0] = planChargeBean.copier();
+
                 rapport.setAvancement("Import depuis Calc...");
                 planCharge[0] = planChargeService.importerDepuisCalc(ficCalc, rapport);
 
@@ -846,7 +871,7 @@ public class ApplicationController extends AbstractController {
                             planChargeBean.fromDto(planCharge[0]);
 
                             planChargeBean.vientDEtreModifie();
-                            getSuiviActionsUtilisateur().historiser(new ImportPlanCharge());
+//                            getSuiviActionsUtilisateur().historiser(new ImportPlanCharge(planChargeBeanAvantChargement[0]));
 
                             definirDateEtat(planChargeBean.getDateEtat());
 
@@ -854,7 +879,7 @@ public class ApplicationController extends AbstractController {
                             ihm.getChargesController().razFiltres();
 
                             //noinspection HardcodedLineSeparator,HardcodedFileSeparator
-                            ihm.afficherNotification("Données importées",
+                            ihm.afficherNotificationInfo("Données importées",
                                     "Le plan de charge a été importé : "
                                             + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                                             + "\n- date d'état : " + planChargeBean.getDateEtat()
@@ -896,7 +921,7 @@ public class ApplicationController extends AbstractController {
         } catch (Exception e) {
             LOGGER.error("Impossible de stopper l'application.", e);
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de stopper l'application",
                     "Erreur interne : \n" + Exceptions.causes(e)
@@ -1031,7 +1056,7 @@ public class ApplicationController extends AbstractController {
         }
 
         //noinspection HardcodedFileSeparator,HardcodedLineSeparator
-        ihm.afficherPopUp(
+        ihm.afficherDialog(
                 Alert.AlertType.INFORMATION,
                 "A propos de l'application \"" + PlanChargeIhm.APP_NAME + "\"",
                 "Fonctionnalité : Gestion du plan de charge d'une équipe d'un centre de service."
@@ -1053,14 +1078,14 @@ public class ApplicationController extends AbstractController {
             afficherModuleJoursFeries();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des jours fériés.", e);
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des jours fériés", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des jours fériés", Exceptions.causes(e));
         }
     }
 
     public void afficherModuleJoursFeries() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
 
-        //noinspection ObjectEquality
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
         if (moduleCourant == ihm.getJoursFeriesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
@@ -1088,14 +1113,14 @@ public class ApplicationController extends AbstractController {
             afficherModuleRessourcesHumaines();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des ressources humaines.", e);
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des ressources humaines", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des ressources humaines", Exceptions.causes(e));
         }
     }
 
     public void afficherModuleRessourcesHumaines() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Ressources humaines\"");
 
-        //noinspection ObjectEquality
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
         if (moduleCourant == ihm.getRessourcesHumainesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
@@ -1126,7 +1151,7 @@ public class ApplicationController extends AbstractController {
             //noinspection HardcodedFileSeparator
             LOGGER.error("Impossible d'afficher le module des projets/applis.", e);
             //noinspection HardcodedFileSeparator
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des projets/applis", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des projets/applis", Exceptions.causes(e));
         }
     }
 
@@ -1134,7 +1159,7 @@ public class ApplicationController extends AbstractController {
         //noinspection HardcodedFileSeparator
         LOGGER.debug("> [...] > Module \"Projets / Applis\"");
 
-        //noinspection ObjectEquality
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
         if (moduleCourant == ihm.getProjetsApplisController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
@@ -1157,20 +1182,20 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    //    @FXML
-    public void afficherModuleDisponibilites(@SuppressWarnings("unused") ActionEvent event) {
+    @FXML
+    private void afficherModuleDisponibilites(@SuppressWarnings("unused") ActionEvent event) {
         try {
             afficherModuleDisponibilites();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des disponibilités.", e);
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des disponibilités", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des disponibilités", Exceptions.causes(e));
         }
     }
 
     public void afficherModuleDisponibilites() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
 
-        //noinspection ObjectEquality
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
         if (moduleCourant == ihm.getDisponibilitesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
@@ -1192,20 +1217,20 @@ public class ApplicationController extends AbstractController {
         majTitre();
     }
 
-    //    @FXML
-    public void afficherModuleTaches(@SuppressWarnings("unused") ActionEvent event) {
+    @FXML
+    private void afficherModuleTaches(@SuppressWarnings("unused") ActionEvent event) {
         try {
             afficherModuleTaches();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des tâches.", e);
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des tâches", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des tâches", Exceptions.causes(e));
         }
     }
 
     public void afficherModuleTaches() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
 
-        //noinspection ObjectEquality
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
         if (moduleCourant == ihm.getTachesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
@@ -1228,20 +1253,20 @@ public class ApplicationController extends AbstractController {
         majTitre();
     }
 
-    //    @FXML
-    public void afficherModuleCharges(@SuppressWarnings("unused") ActionEvent event) {
+    @FXML
+    private void afficherModuleCharges(@SuppressWarnings("unused") ActionEvent event) {
         try {
             afficherModuleCharges();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher le module des charges.", e);
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible d'afficher le module des charges", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des charges", Exceptions.causes(e));
         }
     }
 
     public void afficherModuleCharges() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Charges\"");
 
-        //noinspection ObjectEquality
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
         if (moduleCourant == ihm.getChargesController()) {
             LOGGER.debug("Déjà le module affiché, rien à faire.");
             return;
@@ -1293,38 +1318,53 @@ public class ApplicationController extends AbstractController {
         if (dateEtat != null) {
             if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
                 //noinspection AssignmentToMethodParameter
-                dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                dateEtat = dateEtat.plusDays((7L - (long) dateEtat.getDayOfWeek().getValue()) + 1L);// TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
             }
         }
         assert (dateEtat == null) || (dateEtat.getDayOfWeek() == DayOfWeek.MONDAY);
 
-        if ((dateEtat == null) || !dateEtat.equals(planChargeBean.getDateEtat())) {
+        boolean majEstRequise = false;
+        if (!Objects.equals(dateEtat, planChargeBean.getDateEtat())) {
             planChargeBean.setDateEtat(dateEtat);
+            majEstRequise = true;
         }
-        if ((dateEtat == null) || !dateEtat.equals(dateEtatPicker.getValue())) {
+        if (!Objects.equals(dateEtat, dateEtatPicker.getValue())) {
             dateEtatPicker.setValue(dateEtat);
+            majEstRequise = true;
         }
 
-        majCalendriers();
-        majTitre();
+        if (majEstRequise) {
 
-        ihm.getTachesController().getTachesTable().refresh(); // pour réappliquer les styles CSS, notamment pour faire afficher en violet les échéances < à la nouvelle date d'état.
-        ihm.getChargesController().getTachesTable().refresh(); // pour réappliquer les styles CSS, notamment pour faire afficher en violet les échéances < à la nouvelle date d'état.
+            majCalendriers();
+            majTitre();
+
+            // pour réappliquer les styles CSS, notamment pour faire afficher en violet les échéances < à la nouvelle date d'état.
+            ihm.getTachesController().getTachesTable().refresh();
+            ihm.getChargesController().getTachesTable().refresh();
+        }
     }
 
 
+/*
     @Null
     private LocalDate dateEtatPrecedentePourMajCalendriers = null;
+*/
 
     private void majCalendriers() throws ControllerException {
+/*
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if ((dateEtatPrecedentePourMajCalendriers == null) || (dateEtat == null) || !dateEtat.equals(dateEtatPrecedentePourMajCalendriers)) {
+*/
             definirNomsPeriodes();
             definirValeursCalendriers();
+/*
         }
-        if (dateEtat != null) {
+        if (dateEtat == null) {
+            dateEtatPrecedentePourMajCalendriers = null;
+        } else {
             dateEtatPrecedentePourMajCalendriers = LocalDate.of(dateEtat.getYear(), dateEtat.getMonth(), dateEtat.getDayOfMonth());
         }
+*/
     }
 
     private void definirNomsPeriodes() throws ControllerException {
@@ -1334,16 +1374,16 @@ public class ApplicationController extends AbstractController {
         //noinspection HardcodedLineSeparator
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("'S 'w E\ndd/MM");
 */
-        // Format = "S " + n° de semaine dans l'année + retour à la ligne + jour au format 'JJ/MM'.
-        //noinspection HardcodedLineSeparator
+        // Format = "S " + n° de semaine dans l'année.
         DateTimeFormatter noSemaineFormatter = DateTimeFormatter.ofPattern("'S 'w");
+        // Format = jour au format 'JJ/MM'
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
         // Rq : Plus nécessaire de redéfinir les colonnes pour les TableView de getDisponibilitesController() autres que "*NbrsJoursOuvresTable",
         //      maintenant qu'on n'affiche plus les TableHeaderRow de ces TableView.
 
         //noinspection rawtypes
-        List<TableViewAvecCalendrier> tables = new ArrayList<>();
+        List<TableViewAvecCalendrier> tables = new ArrayList<>(20);
         // Disponibilites :
         //noinspection CollectionAddAllCanBeReplacedWithConstructor
         tables.addAll(ihm.getDisponibilitesController().tables());
@@ -1401,11 +1441,11 @@ public class ApplicationController extends AbstractController {
             if (planChargeBean.getDateEtat() == null) {
                 dateEtat = LocalDate.now();
                 if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                    dateEtat = dateEtat.minusDays((7L - (long) dateEtat.getDayOfWeek().getValue()));
+                    dateEtat = dateEtat.minusDays((7L - (long) dateEtat.getDayOfWeek().getValue()));// TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
                 }
             } else {
                 assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
-                dateEtat = planChargeBean.getDateEtat().minusDays(7L);
+                dateEtat = planChargeBean.getDateEtat().minusDays(7L);// TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
             }
             assert dateEtat != null;
             assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
@@ -1432,11 +1472,11 @@ public class ApplicationController extends AbstractController {
             if (planChargeBean.getDateEtat() == null) {
                 dateEtat = LocalDate.now();
                 if (dateEtat.getDayOfWeek() != DayOfWeek.MONDAY) {
-                    dateEtat = dateEtat.plusDays((7 - dateEtat.getDayOfWeek().getValue()) + 1);
+                    dateEtat = dateEtat.plusDays((7L - (long) dateEtat.getDayOfWeek().getValue()) + 1L);// TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
                 }
             } else {
                 assert planChargeBean.getDateEtat().getDayOfWeek() == DayOfWeek.MONDAY;
-                dateEtat = planChargeBean.getDateEtat().plusDays(7);
+                dateEtat = planChargeBean.getDateEtat().plusDays(7L);// TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
             }
             assert dateEtat.getDayOfWeek() == DayOfWeek.MONDAY;
 
@@ -1457,7 +1497,7 @@ public class ApplicationController extends AbstractController {
             return true;
         }
         //noinspection HardcodedLineSeparator
-        Optional<ButtonType> result = ihm.afficherPopUp(
+        Optional<ButtonType> result = ihm.afficherDialog(
                 Alert.AlertType.CONFIRMATION,
                 "Perdre les modifications ?",
                 "Des données ont été modifiées. Si vous continuez, ces modifications seront perdues."
@@ -1486,7 +1526,7 @@ public class ApplicationController extends AbstractController {
             calculer();
         } catch (ControllerException e) {
             LOGGER.error("Impossible de calculer.", e);
-            ihm.afficherPopUp(Alert.AlertType.ERROR, "Impossible de calculer.", Exceptions.causes(e));
+            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible de calculer.", Exceptions.causes(e));
         }
     }
 
@@ -1495,12 +1535,12 @@ public class ApplicationController extends AbstractController {
         // TODO FDA 2017/08 Afficher une barre de progression.
         ihm.getDisponibilitesController().calculerDisponibilites();
         ihm.getChargesController().calculerCharges();
-        // Ajouter ici les autres calculs (surcharges, etc.)
+        // Ajouter ici les calculs.
 
         planChargeBean.vientDEtreCalcule();
         majBarreEtat();
 
-        ihm.afficherNotification(
+        ihm.afficherNotificationInfo(
                 "Calcul terminé",
                 "Les données (disponibilités, provisions, surcharges, etc.) ont été calculées."
         );

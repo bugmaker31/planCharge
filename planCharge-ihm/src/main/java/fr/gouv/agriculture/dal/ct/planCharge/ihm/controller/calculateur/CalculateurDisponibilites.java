@@ -42,7 +42,7 @@ public class CalculateurDisponibilites extends Calculateur {
 
     private static CalculateurDisponibilites instance;
 
-    public static final CalculateurDisponibilites  instance() {
+    public static final CalculateurDisponibilites instance() {
         if (instance == null) {
             instance = new CalculateurDisponibilites();
         }
@@ -66,21 +66,16 @@ public class CalculateurDisponibilites extends Calculateur {
      La couche controller :
     */
 
-    /*
-        //    @Autowired
-        @NotNull
-        private final DisponibilitesController disponibilitesController = DisponibilitesController.instance();
-    */
     //    @Autowired
     @NotNull
-    private final DisponibilitesController getDisponibilitesController() {
+    private DisponibilitesController getDisponibilitesController() {
         return DisponibilitesController.instance();
     }
 
 
     // Constructeurs :
 
-    public CalculateurDisponibilites() {
+    private CalculateurDisponibilites() {
         super();
         // Rien... pour l'instant.
     }
@@ -108,6 +103,7 @@ public class CalculateurDisponibilites extends Calculateur {
             return;
         }
 //        LOGGER.debug("Calcul des disponibilités pour la semaine {} : ", noSemaine);
+        calculerNbrsJoursOuvres(noSemaine);
         for (RessourceHumaineBean ressourceHumaineBean : planChargeBean.getRessourcesHumainesBeans()) {
             calculer(ressourceHumaineBean, noSemaine);
         }
@@ -119,6 +115,30 @@ public class CalculateurDisponibilites extends Calculateur {
         LOGGER.debug("Disponibilités calculées pour la semaine {}.", noSemaine);
     }
 
+    private void calculerNbrsJoursOuvres(int noSemaine) throws ControllerException {
+        if (!estActive()) {
+            LOGGER.debug("Calculateur désactivé, donc sans effet.");
+            return;
+        }
+
+        try {
+            LocalDate debutPeriode = planChargeBean.dateEtat().plusDays((noSemaine - 1L) * 7L); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
+            LocalDate finPeriode = debutPeriode.plusDays(7L); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
+
+            int nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
+
+            if (!getDisponibilitesController().getNbrsJoursOuvresBean().containsKey(debutPeriode)) {
+                getDisponibilitesController().getNbrsJoursOuvresBean().put(debutPeriode, new SimpleIntegerProperty(nbrJoursOuvresPeriode));
+            } else {
+                getDisponibilitesController().getNbrsJoursOuvresBean().get(debutPeriode).set(nbrJoursOuvresPeriode);
+            }
+
+        } catch (BeanException | ServiceException e) {
+            throw new ControllerException("Impossible de calculer le nombre de jours ouvrés.", e);
+        }
+
+    }
+
     public void calculer(@NotNull RessourceHumaineBean ressHumBean) throws ControllerException {
         if (!estActive()) {
             LOGGER.debug("Calculateur désactivé, donc sans effet.");
@@ -126,6 +146,7 @@ public class CalculateurDisponibilites extends Calculateur {
         }
 //        LOGGER.debug("Calcul des disponibilités pour la ressource {} : ", ressHumBean);
         for (int noSemaine = 1; noSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
+            calculerNbrsJoursOuvres(noSemaine);
             calculer(ressHumBean, noSemaine);
         }
 //        LOGGER.debug("Disponibilités calculées pour la ressource {}.", ressHumBean);
@@ -139,8 +160,8 @@ public class CalculateurDisponibilites extends Calculateur {
 //        LOGGER.debug("Calcul des disponibilités pour la ressource {} et la semaine n° {} : ", ressHumBean, noSemaine);
 
         try {
-            LocalDate debutPeriode = planChargeBean.dateEtat().plusDays(7 * (noSemaine - 1)); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
-            LocalDate finPeriode = debutPeriode.plusDays(7); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
+            LocalDate debutPeriode = planChargeBean.dateEtat().plusDays((noSemaine - 1L) * 7L); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
+            LocalDate finPeriode = debutPeriode.plusDays(7L); // TODO FDA 2017/08 [issue#26:PeriodeHebdo/Trim]
 
             LocalDate debutMission = Objects.value(ressHumBean.debutMissionProperty(), ObjectProperty::get);
             LocalDate finMission = Objects.value(ressHumBean.finMissionProperty(), ObjectProperty::get);
@@ -148,17 +169,8 @@ public class CalculateurDisponibilites extends Calculateur {
             // Nbr de jours ouvrés (calculé) :
             int nbrJoursOuvresPeriode;
             {
-                try {
-                    nbrJoursOuvresPeriode = disponibilitesService.nbrJoursOuvres(debutPeriode, finPeriode);
-                } catch (ServiceException e) {
-                    throw new ControllerException("Impossible de calculer le nombre de jours ouvrés.", e);
-                }
-
-                if (!getDisponibilitesController().getNbrsJoursOuvresBean().containsKey(debutPeriode)) {
-                    getDisponibilitesController().getNbrsJoursOuvresBean().put(debutPeriode, new SimpleIntegerProperty(nbrJoursOuvresPeriode));
-                } else {
-                    getDisponibilitesController().getNbrsJoursOuvresBean().get(debutPeriode).set(nbrJoursOuvresPeriode);
-                }
+                assert getDisponibilitesController().getNbrsJoursOuvresBean().containsKey(debutPeriode);
+                nbrJoursOuvresPeriode = getDisponibilitesController().getNbrsJoursOuvresBean().get(debutPeriode).get();
             }
 
             // Nbr de jours d'absence (saisi) :
@@ -391,7 +403,7 @@ public class CalculateurDisponibilites extends Calculateur {
             ObservableList<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeans = getDisponibilitesController().getNbrsJoursDispoMaxRsrcProfilBeans();
             Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> nbrsJoursDispoMaxRsrcProfil = NbrsJoursDispoRsrcProfilBeans.toDTO(nbrsJoursDispoMaxRsrcProfilBeans);
             nbsrJoursDispoMaxProfil = disponibilitesService.nbrsJoursDispoMaxProfil(debutPeriode, nbrsJoursDispoMaxRsrcProfil);
-        } catch (ServiceException | BeanException  e) {
+        } catch (ServiceException | BeanException e) {
             throw new ControllerException("Impossible de calculer le nombre de jours de disponibilité max. par profil.", e);
         }
         for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {

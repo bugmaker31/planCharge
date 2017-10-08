@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -101,8 +103,8 @@ public class JoursFeriesController extends AbstractController implements Module 
             // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
             TableViews.decorateMandatoryColumns(dateColumn);
             dateColumn.setCellFactory(param -> {
-                TableCell<JourFerieBean, LocalDate> cell = DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
-                ihm.controler(cell, "Date incorrecte", this::validerDateFeriee);
+                DatePickerTableCell<JourFerieBean> cell = (DatePickerTableCell<JourFerieBean>) DatePickerTableCells.<JourFerieBean>forRequiredTableColumn().call(param);
+                ihm.controler(cell, /*cell.valueProperty(),*/"Date incorrecte", this::validerDateFeriee);
                 return cell;
             });
 //        PlanChargeIhm.decorateMandatoryColumns(descriptionColumn);
@@ -113,11 +115,11 @@ public class JoursFeriesController extends AbstractController implements Module 
 
             joursFeriesTable.setItems(sortedBeans);
 
-            TableViews.enableFilteringOnColumns(joursFeriesTable, dateColumn, descriptionColumn);
+            TableViews.enableFilteringOnColumns(joursFeriesTable, Arrays.asList(dateColumn, descriptionColumn));
 
             definirMenuContextuel();
 
-            definirTouches();
+            definirRaccourcisClaviers();
 
             LOGGER.info("Initialisé.");
         } catch (IhmException e) {
@@ -125,6 +127,7 @@ public class JoursFeriesController extends AbstractController implements Module 
         }
     }
 
+//    TODO FDA 2017/09 Déporter dans le FXML.
     private void definirMenuContextuel() {
         ContextMenu contextMenu = new ContextMenu();
 
@@ -136,13 +139,13 @@ public class JoursFeriesController extends AbstractController implements Module 
         joursFeriesTable.setContextMenu(contextMenu);
     }
 
-    private void definirTouches() {
+    private void definirRaccourcisClaviers() {
         // Cf. https://stackoverflow.com/questions/27314495/delete-javafx-table-row-with-delete-key
         joursFeriesTable.setOnKeyPressed(event -> {
             //noinspection EnumSwitchStatementWhichMissesCases
             switch (event.getCode()) {
                 case DELETE:
-                    supprimerJourFerie(joursFeriesTable.getSelectionModel().getSelectedItem());
+                    supprimerJourFerie();
                     break;
                 default:
                     LOGGER.debug("Touche ignorée : '{}'.", event.getCode());
@@ -153,7 +156,7 @@ public class JoursFeriesController extends AbstractController implements Module 
     @Null
     private String validerDateFeriee(@Null LocalDate dateFeriee) {
         if (dateFeriee == null) {
-            return "Le date du jour fériée est obligatoire.";
+            return "La date du jour férié est obligatoire.";
         }
         return null;
     }
@@ -164,7 +167,6 @@ public class JoursFeriesController extends AbstractController implements Module 
 
         JourFerieBean nouvJourFerieBean = new JourFerieBean();
         joursFeriesBeans.add(nouvJourFerieBean);
-//        joursFeriesTable.refresh();
 
         // Positionnement sur le jour férié qu'on vient d'ajouter :
         TableViews.editCell(joursFeriesTable, nouvJourFerieBean, dateColumn);
@@ -173,7 +175,10 @@ public class JoursFeriesController extends AbstractController implements Module 
     @FXML
     private void supprimerJourFerie(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimerJourFerie...");
+        supprimerJourFerie();
+    }
 
+    private void supprimerJourFerie() {
         JourFerieBean focusedItem = TableViews.selectedItem(joursFeriesTable);
         if (focusedItem == null) {
             LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");
@@ -183,7 +188,6 @@ public class JoursFeriesController extends AbstractController implements Module 
     }
 
     private void supprimerJourFerie(@NotNull JourFerieBean focusedItem) {
-        LOGGER.debug("supprimerJourFerie...");
         joursFeriesBeans.remove(focusedItem);
     }
 }

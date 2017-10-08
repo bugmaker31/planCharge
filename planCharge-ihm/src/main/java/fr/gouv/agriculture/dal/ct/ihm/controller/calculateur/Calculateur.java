@@ -5,7 +5,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.Executeur;
 
 import javax.validation.constraints.NotNull;
 
-@SuppressWarnings("ClassHasNoToStringMethod")
+@SuppressWarnings({"ClassHasNoToStringMethod", "ClassNamePrefixedWithPackageName", "ClassWithoutLogger"})
 public abstract class Calculateur {
 
 

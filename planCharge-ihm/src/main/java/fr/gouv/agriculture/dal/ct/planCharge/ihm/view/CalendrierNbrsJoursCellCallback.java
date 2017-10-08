@@ -3,8 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
-import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
@@ -16,9 +16,9 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierPctagesCellCallback<T extends AbstractCalendrierBean<AbstractDTO, T, PercentageProperty>> implements Callback<TableColumn.CellDataFeatures<T, Percentage>, ObservableValue<Percentage>> {
+public class CalendrierNbrsJoursCellCallback<T extends AbstractCalendrierBean<AbstractDTO, T, IntegerProperty>> implements Callback<TableColumn.CellDataFeatures<T, Integer>, ObservableValue<Integer>> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierPctagesCellCallback.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierNbrsJoursCellCallback.class);
 
     //    Autowired
     @NotNull
@@ -28,7 +28,7 @@ public class CalendrierPctagesCellCallback<T extends AbstractCalendrierBean<Abst
     private int noSemaine;
 
 
-    public CalendrierPctagesCellCallback(int noSemaine) {
+    public CalendrierNbrsJoursCellCallback(int noSemaine) {
         super();
         this.noSemaine = noSemaine;
     }
@@ -36,21 +36,21 @@ public class CalendrierPctagesCellCallback<T extends AbstractCalendrierBean<Abst
 
     @Null
     @Override
-    public ObservableValue<Percentage> call(TableColumn.CellDataFeatures<T, Percentage> cell) {
+    public ObservableValue<Integer> call(TableColumn.CellDataFeatures<T, Integer> cell) {
         if (cell == null) {
             return null;
         }
-        T pctagesDispoBean = cell.getValue();
         if (planChargeBean.getDateEtat() == null) {
             LOGGER.warn("Date d'état non définie !?");
             return null;
         }
+        T nbrsJoursPeriodeBean = cell.getValue();
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-        if (!pctagesDispoBean.containsKey(debutPeriode)) {
-            pctagesDispoBean.put(debutPeriode, new PercentageProperty(0));
+        if (!nbrsJoursPeriodeBean.containsKey(debutPeriode)) {
+            nbrsJoursPeriodeBean.put(debutPeriode, new SimpleIntegerProperty());
         }
-        PercentageProperty pctageDispoProperty = pctagesDispoBean.get(debutPeriode);
-        return pctageDispoProperty;
+        IntegerProperty nbrJoursPeriodeProperty = nbrsJoursPeriodeBean.get(debutPeriode);
+        return nbrJoursPeriodeProperty.asObject();
     }
 }
 

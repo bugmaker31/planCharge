@@ -10,19 +10,23 @@ import javax.validation.constraints.Null;
 
 public abstract class AbstractCalendrierParProfilCell<S extends AbstractCalendrierParProfilBean<?, ?, ?>, T> extends EditableAwareTextFieldTableCell<S, T> {
 
+    //    Autowired
     @NotNull
-    private PlanChargeBean planChargeBean;
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+
     private int noSemaine;
 
-    protected AbstractCalendrierParProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
+
+    protected AbstractCalendrierParProfilCell(int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
         super(stringConverter, cantEditErrorDisplayer);
-        this.planChargeBean = planChargeBean;
         this.noSemaine = noSemaine;
     }
 
-    protected AbstractCalendrierParProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
-        this(planChargeBean, noSemaine, stringConverter, null);
+    protected AbstractCalendrierParProfilCell(int noSemaine, @NotNull StringConverter<T> stringConverter) {
+        this(noSemaine, stringConverter, null);
     }
+
 
     @NotNull
     protected PlanChargeBean getPlanChargeBean() {

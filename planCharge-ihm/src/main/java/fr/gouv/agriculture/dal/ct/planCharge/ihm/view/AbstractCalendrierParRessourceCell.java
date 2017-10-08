@@ -21,28 +21,32 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
-public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean<?, ?>, S extends AbstractCalendrierParRessourceBean<R, ?, ?, ?>, T extends Number>
+public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean<?, ?>, S extends AbstractCalendrierParRessourceBean<R, ?, S, ?>, T extends Number>
         extends EditableAwareTextFieldTableCell<S, T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCalendrierParRessourceCell.class);
 
+    //    Autowired
     @NotNull
-    private PlanChargeBean planChargeBean;
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+
     private int noSemaine;
 
-    protected AbstractCalendrierParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
+
+    protected AbstractCalendrierParRessourceCell(int noSemaine, @NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
         super(stringConverter, cantEditErrorDisplayer);
-        this.planChargeBean = planChargeBean;
         this.noSemaine = noSemaine;
 
         definirMenuContextuel();
     }
 
-    protected AbstractCalendrierParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @NotNull StringConverter<T> stringConverter) {
-        this(planChargeBean, noSemaine, stringConverter, null);
+    protected AbstractCalendrierParRessourceCell(int noSemaine, @NotNull StringConverter<T> stringConverter) {
+        this(noSemaine, stringConverter, null);
     }
 
 
+    @NotNull
     protected PlanChargeBean getPlanChargeBean() {
         return planChargeBean;
     }
@@ -80,7 +84,7 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
             try {
                 Calculateur.executerPuisCalculer(() -> {
                             for (int cptSemaine = noSemaine + 1; cptSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; cptSemaine++) {
-                                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((long) (cptSemaine - 1) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) cptSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                                 //noinspection unchecked
                                 item.get(debutPeriode).setValue(valeur);
                             }
@@ -104,9 +108,19 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
     }
 
     @Override
-    public void updateItem(T item, boolean empty) {
+    public void updateItem(@Null T item, boolean empty) {
         super.updateItem(item, empty);
+//        formater();
         styler();
+    }
+
+    private void formater() {
+        if ((getItem() == null) || isEmpty()) {
+            setText(null);
+            setGraphic(null);
+            return;
+        }
+        setText(getConverter().toString(getItem()));
     }
 
     protected void styler() {
@@ -155,8 +169,8 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
         if (planChargeBean.getDateEtat() == null) {
             return;
         }
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-        LocalDate finPeriode = debutPeriode.plusDays(7);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
         // Formatage du style (CSS) de la cellule :
         FORMAT_PERIODE :
@@ -168,7 +182,7 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
                 }
             }
             if (finMission != null) {
-                if (finPeriode.isAfter(finMission.plusDays(7))) {
+                if (finPeriode.isAfter(finMission.plusDays(7))) { // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     pseudoClassStateChanged(DisponibilitesController.APRES_MISSION, true);
                     break FORMAT_PERIODE;
                 }

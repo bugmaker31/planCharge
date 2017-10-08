@@ -8,6 +8,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDisp
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
@@ -79,17 +81,18 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     @NotNull
     private final ObservableList<PlanificationTacheBean> planificationsBeans = FXCollections.observableArrayList();
     @Null
-    private LocalDate dateEtat;
+    private LocalDate dateEtat = null;
 
-    private BooleanProperty estModifie = new SimpleBooleanProperty(false);
+    private final BooleanProperty estModifie = new SimpleBooleanProperty(false);
 
-    private BooleanProperty aBesoinEtreCalcule = new SimpleBooleanProperty(false);
+    private final BooleanProperty aBesoinEtreCalcule = new SimpleBooleanProperty(false);
 
     // 'private' pour empêcher quiconque d'autre d'instancier cette classe (pattern "Factory").
     private PlanChargeBean() {
         super();
 
-        ObservableLists.ensureSameContents(
+        ObservableLists.Binding binding = new ObservableLists.Binding("ressourcesBeans", "ressourcesHumainesBeans");
+        binding.ensureContains(
                 ressourcesBeans,
                 ressourceBean -> (ressourceBean instanceof RessourceHumaineBean) ? (RessourceHumaineBean) ressourceBean : null,
                 ressourcesHumainesBeans
@@ -310,22 +313,18 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         // Ressources :
         {
             // NB : Il faut faire un "clear" avant de faire les "setAll"/"addAll"/..., sinon (les Listeners de ressourcesBeans et ressourcesHumainesBeans s'appellent en boucle et au final) la List se retrouve vide.
-            ressourcesBeans.clear();
-
-            List<RessourceHumaineBean> ressourceHumaineBeanList = new ArrayList<>(
+//            ressourcesBeans.clear();
+            // Rq : On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            List<RessourceBean<?, ?>> ressourceBeanList = new ArrayList<>(
                     planCharge.getReferentiels().getRessourcesHumaines().stream()
                             .map(RessourceHumaineBean::from)
                             .collect(Collectors.toList())
             );
-            // Rq : On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
-            ressourcesBeans.addAll(ressourceHumaineBeanList);
-
-            List<RessourceBean<?, ?>> ressourceBeanList = new ArrayList<>(
+            ressourceBeanList.addAll(
                     Arrays.stream(RessourceGeneriqueDTO.values())
                             .map(RessourceGeneriqueBean::from)
                             .collect(Collectors.toList())
             );
-            // Rq : On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             ressourcesBeans.addAll(ressourceBeanList);
         }
         // Disponibilités :
@@ -365,12 +364,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             pctagesDispoMaxRsrcProfilBeans.setAll(pctagesDispoMaxRsrcProfilBeanList); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
         }
         // Tâches + Charge :
-//        planificationsBeans.clear();
-        planificationsBeans.setAll(
-                planCharge.getPlanifications().entrySet().parallelStream()
-                        .map(planif -> new PlanificationTacheBean(planif.getKey(), planif.getValue()))
-                        .collect(Collectors.toList())
-        );
+        fromPlanificationDTOs(planCharge.getPlanifications());
         return this;
     }
 
@@ -453,14 +447,55 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
             TacheDTO tache = planificationBean.getTacheBean().extract();
 
             Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-            Map<LocalDate, DoubleProperty> ligne = planificationBean.getCalendrier();
-            ligne.forEach((date, charge) -> calendrier.put(date, charge.getValue()));
+            Set<LocalDate> debutsPeriodesPlanifiees = planificationBean.getDebutsPeriodesPlanifiees();
+            debutsPeriodesPlanifiees.forEach((LocalDate debutPeriode) -> {
+                DoubleProperty chargePlanifieeProperty = planificationBean.chargePlanifieePropertyOuNull(debutPeriode);
+                if ((chargePlanifieeProperty != null) && (chargePlanifieeProperty.getValue() != null)) {
+                    calendrier.put(debutPeriode, chargePlanifieeProperty.getValue());
+                }
+            });
 
             planifications.ajouter(tache, calendrier);
         }
         return planifications;
     }
 
+    public void fromPlanificationDTOs(@NotNull PlanificationsDTO planificationsDTO) throws BeanException {
+
+        // On "oublie" la planification actuelle :
+        for (PlanificationTacheBean planifBean : planificationsBeans) {
+            for (LocalDate debutPeriodePlanifiee : planifBean.getDebutsPeriodesPlanifiees()) {
+                planifBean.setChargePlanifiee(debutPeriodePlanifiee, null);
+            }
+        }
+
+        // On récupère la "nouvelle" planification :
+        List<PlanificationTacheBean> planificationsBeanstoAdd = new ArrayList<>(50);
+        for (Map.Entry<TacheDTO, Map<LocalDate, Double>> planifDTOEntry : planificationsDTO.entrySet()) {
+            TacheDTO tacheDTO = planifDTOEntry.getKey();
+            PlanificationTacheBean planifBean = Collections.any(
+                    planificationsBeans,
+                    planificationBean -> planificationBean.getTacheBean().getId() == tacheDTO.getId()
+                    //new BeanException("Impossible de retrouver la tâche " + tache.noTache() + ".")
+            );
+            if (planifBean == null) {
+                planifBean = new PlanificationTacheBean(tacheDTO);
+                planificationsBeanstoAdd.add(planifBean);
+            }
+            for (LocalDate debutPeriode : planifDTOEntry.getValue().keySet()) {
+                double chargePlanifiee = planifDTOEntry.getValue().get(debutPeriode);
+                if (chargePlanifiee == 0.0) {
+                    continue;
+                }
+                planifBean.setChargePlanifiee(debutPeriode, chargePlanifiee);
+            }
+        }
+        if (!planificationsBeanstoAdd.isEmpty()) {
+            planificationsBeans.addAll(planificationsBeanstoAdd);
+        }
+    }
+
+    @NotNull
     @Override
     public PlanChargeBean copier() throws CopieException {
         return copier(this);

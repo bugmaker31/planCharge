@@ -133,13 +133,13 @@ public class DisponibilitesDTO extends AbstractDTO<Disponibilites, Integer, Disp
         Map<RessourceHumaineDTO, Map<LocalDate, Float>> nbrsJoursAbsenceDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
         //noinspection SimplifyStreamApiCallChains
         entity.getNbrsJoursAbsence().keySet().stream()
-                .forEachOrdered(ressourceHumaine -> nbrsJoursAbsenceDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getNbrsJoursAbsence().get(ressourceHumaine)));
+                .forEach(ressourceHumaine -> nbrsJoursAbsenceDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getNbrsJoursAbsence().get(ressourceHumaine)));
 
         // Pctages de dispo pour la CT / rsrc :
         Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCTDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.
         //noinspection SimplifyStreamApiCallChains
         entity.getPctagesDispoCT().keySet().stream()
-                .forEachOrdered(ressourceHumaine -> pctagesDispoCTDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getPctagesDispoCT().get(ressourceHumaine)));
+                .forEach(ressourceHumaine -> pctagesDispoCTDTO.put(RessourceHumaineDTO.from(ressourceHumaine), entity.getPctagesDispoCT().get(ressourceHumaine)));
 
         // Pctages de dispo max / rsrc / profil :
         Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfilDTO = new TreeMap<>(); // TreeMap pour trier, juste pour faciliter le débogage.

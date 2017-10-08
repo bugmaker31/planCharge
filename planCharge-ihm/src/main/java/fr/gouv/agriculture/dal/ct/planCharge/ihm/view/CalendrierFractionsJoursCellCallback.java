@@ -16,32 +16,35 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierFractionsJoursCellCallback<T extends AbstractCalendrierBean<AbstractDTO, T, FloatProperty>> implements Callback<TableColumn.CellDataFeatures<T, Float>, ObservableValue<Float>> {
+public class CalendrierFractionsJoursCellCallback<T extends AbstractCalendrierBean<AbstractDTO, T, FloatProperty>>
+        implements Callback<TableColumn.CellDataFeatures<T, Float>, ObservableValue<Float>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierFractionsJoursCellCallback.class);
 
+    //    Autowired
     @NotNull
-    private PlanChargeBean planChargeBean;
-    private int noSemaine;
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
-    public CalendrierFractionsJoursCellCallback(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+
+    private final int noSemaine;
+
+    public CalendrierFractionsJoursCellCallback(int noSemaine) {
         super();
-        this.planChargeBean = planChargeBean;
         this.noSemaine = noSemaine;
     }
 
     @Null
     @Override
-    public ObservableValue<Float> call(TableColumn.CellDataFeatures<T, Float> cell) {
-        if (cell == null) {
+    public ObservableValue<Float> call(TableColumn.CellDataFeatures<T, Float> param) {
+        if (param == null) {
             return null;
         }
         if (planChargeBean.getDateEtat() == null) {
             LOGGER.warn("Date d'état non définie !?");
             return null;
         }
-        T fractionJoursPeriodeBean = cell.getValue();
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        T fractionJoursPeriodeBean = param.getValue();
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         if (!fractionJoursPeriodeBean.containsKey(debutPeriode)) {
             fractionJoursPeriodeBean.put(debutPeriode, new SimpleFloatProperty());
         }

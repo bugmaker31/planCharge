@@ -15,7 +15,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public abstract class AbstractCalendrierBean<D extends AbstractDTO, B extends AbstractCalendrierBean<D, B, P>, P extends Property> extends AbstractBean<D, B> {
+public abstract class AbstractCalendrierBean<D extends AbstractDTO, B extends AbstractCalendrierBean<D, B, P>, P extends Property>
+        extends AbstractBean<D, B> {
 
 
     // Fields :
@@ -57,8 +58,6 @@ public abstract class AbstractCalendrierBean<D extends AbstractDTO, B extends Ab
     public P get(LocalDate key) {
         return calendrier.get(key);
     }
-
-
 
     public P put(LocalDate key, P value) {
         return calendrier.put(key, value);

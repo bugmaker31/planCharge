@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.Arrays;
 
 /**
  * Created by frederic.danna on 13/07/2017.
@@ -61,15 +62,19 @@ public class ProjetsApplisController extends AbstractController implements Modul
         private PlanChargeIhm ihm = PlanChargeIhm.instance();
     */
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableView<ProjetAppliBean> projetsApplisTable;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<ProjetAppliBean, String> codeColumn;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<ProjetAppliBean, String> nomColumn;
     @FXML
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<ProjetAppliBean, String> trigrammeCPIColumn;
 
@@ -134,10 +139,10 @@ public class ProjetsApplisController extends AbstractController implements Modul
             // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
             TableViews.decorateMandatoryColumns(codeColumn);
             codeColumn.setCellFactory(param -> {
-                TextFieldTableCell<ProjetAppliBean, String> codeCell = new UpperCaseTextFieldTableCell<>();
+                TextFieldTableCell<ProjetAppliBean, String> cell = new UpperCaseTextFieldTableCell<>();
 //            PlanChargeIhm.decorateMandatoryColumns(codeCell);
-                ihm.controler(codeCell, "Code incorrect", this::validerCode);
-                return codeCell;
+                ihm.controler(cell, "Code incorrect", this::validerCode);
+                return cell;
             });
 //            TableViews.decorateMandatoryColumns(nomColumn);
             nomColumn.setCellFactory(param -> {
@@ -152,7 +157,7 @@ public class ProjetsApplisController extends AbstractController implements Modul
                 return cell;
             });
 
-            TableViews.enableFilteringOnColumns(projetsApplisTable, codeColumn, nomColumn, trigrammeCPIColumn);
+            TableViews.enableFilteringOnColumns(projetsApplisTable, Arrays.asList(codeColumn, nomColumn, trigrammeCPIColumn));
 
             definirMenuContextuel();
 
@@ -243,7 +248,10 @@ public class ProjetsApplisController extends AbstractController implements Modul
     @FXML
     private void supprimerProjetAppli(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimerProjetAppli...");
+        supperimerProjetAppli();
+    }
 
+    private void supperimerProjetAppli() {
         ProjetAppliBean focusedItem = TableViews.selectedItem(projetsApplisTable);
         if (focusedItem == null) {
             LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");

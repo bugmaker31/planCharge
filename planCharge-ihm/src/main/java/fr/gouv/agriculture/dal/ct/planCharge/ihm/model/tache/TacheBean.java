@@ -115,21 +115,21 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         );
     }
 
-    public TacheBean(@NotNull TacheDTO tache) {
+    public TacheBean(@NotNull TacheDTO tacheDTO) {
         this(
-                tache.getId(),
-                Objects.value(tache.getCategorie(), CategorieTacheDTO::getCode),
-                Objects.value(tache.getSousCategorie(), SousCategorieTacheDTO::getCode),
-                tache.getNoTicketIdal(),
-                tache.getDescription(),
-                Objects.value(tache.getProjetAppli(), ProjetAppliBean::from),
-                Objects.value(tache.getStatut(), StatutBean::from),
-                tache.getDebut(),
-                tache.getEcheance(),
-                Objects.value(tache.getImportance(), ImportanceBean::from),
-                tache.getCharge(),
-                Objects.value(tache.getRessource(), RessourceBean::from),
-                Objects.value(tache.getProfil(), ProfilBean::from)
+                tacheDTO.getId(),
+                Objects.value(tacheDTO.getCategorie(), CategorieTacheDTO::getCode),
+                Objects.value(tacheDTO.getSousCategorie(), SousCategorieTacheDTO::getCode),
+                tacheDTO.getNoTicketIdal(),
+                tacheDTO.getDescription(),
+                Objects.value(tacheDTO.getProjetAppli(), ProjetAppliBean::from),
+                Objects.value(tacheDTO.getStatut(), StatutBean::from),
+                tacheDTO.getDebut(),
+                tacheDTO.getEcheance(),
+                Objects.value(tacheDTO.getImportance(), ImportanceBean::from),
+                tacheDTO.getCharge(),
+                Objects.value(tacheDTO.getRessource(), RessourceBean::from),
+                Objects.value(tacheDTO.getProfil(), ProfilBean::from)
         );
     }
 
@@ -591,12 +591,11 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Null Object o) {
+        if (o == null) return false;
         if (this == o) return true;
         if (!(o instanceof TacheBean)) return false;
-
         TacheBean tacheBean = (TacheBean) o;
-
         return getId() == tacheBean.getId();
     }
 
@@ -608,6 +607,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     // Implémentation de Copiable :
 
+    @NotNull
     @Override
     public TacheBean copier() throws CopieException {
         return new TacheBean(this);
@@ -633,14 +633,11 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public String toString() {
         return "Tâche"
-                /*(codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
+                + " " + noTache()
                 + " "
-                +*/
+                + ("/" + (noTicketIdal.isNull().get() ? "N/A" : noTicketIdal.get()))
+                //+ " " + (codeCategorie.get() + (codeSousCategorie.get() == null ? "" : ("::" + codeSousCategorie.get())))
                 + " " + ("[" + (projetAppli.isNull().get() ? "N/A" : projetAppli.get()) + "]")
-                + " "
-                + noTache()
-                + " "
-                + ("(" + (noTicketIdal.isNull().get() ? "N/A" : noTicketIdal.get()) + ")")
                 + " "
                 + ("<< " + (description.isNull().get() ? "N/A" : description.get()) + " >> ")
                 ;

@@ -18,12 +18,12 @@ public class CalendrierFractionsJoursParRessourceEtProfilCell<R extends Ressourc
     @SuppressWarnings("OverlyComplexAnonymousInnerClass")
 
 
-    public CalendrierFractionsJoursParRessourceEtProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
-        super(planChargeBean, noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+    public CalendrierFractionsJoursParRessourceEtProfilCell(int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+        super(noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
     }
 
-    public CalendrierFractionsJoursParRessourceEtProfilCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
-        this(planChargeBean, noSemaine, null);
+    public CalendrierFractionsJoursParRessourceEtProfilCell(int noSemaine) {
+        this(noSemaine, null);
     }
 
 }

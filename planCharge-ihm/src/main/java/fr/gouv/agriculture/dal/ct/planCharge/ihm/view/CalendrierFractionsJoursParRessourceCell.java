@@ -18,7 +18,8 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, FloatProperty>> extends AbstractCalendrierParRessourceCell<R, T, Float> {
+public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, FloatProperty>>
+        extends AbstractCalendrierParRessourceCell<R, T, Float> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierFractionsJoursParRessourceCell.class);
 
@@ -27,12 +28,12 @@ public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?,
     private final CalculateurDisponibilites calculateurDisponibilites = CalculateurDisponibilites.instance(); /*new CalculateurDisponibilites();*/
 
 
-    public CalendrierFractionsJoursParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
-        super(planChargeBean, noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer); // TODO FDA 2017/09 Confimer le Converter.
+    public CalendrierFractionsJoursParRessourceCell(int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+        super(noSemaine, Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer); // TODO FDA 2017/09 Confimer le Converter.
     }
 
-    public CalendrierFractionsJoursParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
-        this(planChargeBean, noSemaine, null);
+    public CalendrierFractionsJoursParRessourceCell(int noSemaine) {
+        this(noSemaine, null);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class CalendrierFractionsJoursParRessourceCell<R extends RessourceBean<?,
             nbrJoursAbsenceBean.put(debutPeriode, new SimpleFloatProperty());
         }
         FloatProperty nbrJoursDAbsencePeriode = nbrJoursAbsenceBean.get(debutPeriode);
-        nbrJoursDAbsencePeriode.set(newValue);
+        nbrJoursDAbsencePeriode.setValue(newValue);
 
         try {
             R ressourceBean = nbrJoursAbsenceBean.getRessourceBean();

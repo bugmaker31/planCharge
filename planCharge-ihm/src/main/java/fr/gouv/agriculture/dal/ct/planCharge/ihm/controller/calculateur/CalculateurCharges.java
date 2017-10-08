@@ -14,12 +14,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDi
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoRsrcBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +36,20 @@ public class CalculateurCharges extends Calculateur {
     private static final Logger LOGGER = LoggerFactory.getLogger(CalculateurCharges.class);
 
 
+    private static CalculateurCharges instance;
+
+    public static final CalculateurCharges  instance() {
+        if (instance == null) {
+            instance = new CalculateurCharges();
+        }
+        return instance;
+    }
+
+
     /*
      La couche métier :
     */
 
-    /*
-        //    @Autowired
-        @NotNull
-        private final DisponibilitesService disponibilitesService = DisponibilitesService.instance();
-    */
 //    @Autowired
     @NotNull
     private final ChargeService chargeService = ChargeService.instance();
@@ -57,23 +62,20 @@ public class CalculateurCharges extends Calculateur {
      La couche controller :
     */
 
-    //    @Autowired
-    @NotNull
-    private final DisponibilitesController disponibilitesController = DisponibilitesController.instance();
-
-    //    @Autowired
-    @NotNull
-    private final ChargesController chargesController = ChargesController.instance();
-
     @NotNull
     private ChargesController getChargesController() {
         return ChargesController.instance();
     }
 
+    @NotNull
+    private DisponibilitesController getDisponibilitesController() {
+        return DisponibilitesController.instance();
+    }
+
 
     // Constructeurs :
 
-    public CalculateurCharges() {
+    private CalculateurCharges() {
         super();
         // Rien... pour l'instant.
     }
@@ -133,7 +135,6 @@ public class CalculateurCharges extends Calculateur {
         }
 
         LocalDate debutPeriode = dateEtat.plusDays(((long) noSemaine - 1L) * 7L); // TODO FDA 2017/09 [issue#26:PeriodeHebdo/Trim]
-
         LocalDate finPeriode = debutPeriode.plusDays(7L); // TODO FDA 2017/09 [issue#26:PeriodeHebdo/Trim]
 
         double provision;
@@ -143,10 +144,7 @@ public class CalculateurCharges extends Calculateur {
             throw new ControllerException("Impossible de calculer la provision pour la tâche " + planificationTacheBean.getId() + " et la semaine n° " + noSemaine + ".", e);
         }
 
-        if (!planificationTacheBean.getCalendrier().containsKey(debutPeriode)) {
-            planificationTacheBean.getCalendrier().put(debutPeriode, new SimpleDoubleProperty());
-        }
-        planificationTacheBean.getCalendrier().get(debutPeriode).setValue(provision);
+        planificationTacheBean.setChargePlanifiee(debutPeriode/*, finPeriode*/, provision);
     }
 
     // Nbrs de jours de charge / ressource :
@@ -179,7 +177,7 @@ public class CalculateurCharges extends Calculateur {
 
         Double chargePlanifieePourLaRessource = 0.0;
         for (PlanificationTacheBean planificationTacheRessourceBean : planificationTacheRessourceBeans) {
-            DoubleProperty chargePlanifieeProperty = planificationTacheRessourceBean.getCalendrier().get(debutPeriode);
+            DoubleProperty chargePlanifieeProperty = planificationTacheRessourceBean.chargePlanifieePropertyOuNull(debutPeriode);
             if (chargePlanifieeProperty == null) {
                 continue;
             }
@@ -231,7 +229,7 @@ public class CalculateurCharges extends Calculateur {
 
         Double chargePlanifieePourLaProfil = 0.0;
         for (PlanificationTacheBean planificationTacheProfilBean : planificationTacheProfilBeans) {
-            DoubleProperty chargePlanifieeProperty = planificationTacheProfilBean.getCalendrier().get(debutPeriode);
+            DoubleProperty chargePlanifieeProperty = planificationTacheProfilBean.chargePlanifieePropertyOuNull(debutPeriode);
             if (chargePlanifieeProperty == null) {
                 continue;
             }
@@ -289,13 +287,20 @@ public class CalculateurCharges extends Calculateur {
 //            throw new ControllerException("Impossible de déterminer si la ressource est humaine.", e);
 //        }
         if (!estRessourceHumaine) {
-            nbrsJoursDispo = 0.0f;
+            nbrsJoursDispo = 0.0f; // TODO FDA 2017/09 Mettre cette valeur dans un Service.
         } else {
+            RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
             NbrsJoursDispoRsrcBean nbrsJoursDispoRsrcBean = Collections.any(
-                    disponibilitesController.getNbrsJoursDispoCTBeans(),
-                    nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean),
-                    new ControllerException("impossible de retrouver la disponibilité de la ressource " + ressourceBean.getCode() + " pour la semaine " + noSemaine + ".")
+                    getDisponibilitesController().getNbrsJoursDispoCTBeans(),
+                    nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean)
+//                    new ControllerException("impossible de retrouver la disponibilité de la ressource " + ressourceBean.getCode() + " pour la semaine " + noSemaine + ".")
             );
+            if (nbrsJoursDispoRsrcBean==null)  {
+                nbrsJoursDispoRsrcBean = new NbrsJoursDispoRsrcBean(ressourceHumaineBean);
+            }
+            if (!nbrsJoursDispoRsrcBean.containsKey(debutPeriode)) {
+                nbrsJoursDispoRsrcBean.put(debutPeriode, new SimpleFloatProperty(0.0f)); // TODO FDA 2017/09 Mettre cette valeur dans un Service.
+            }
             nbrsJoursDispo = nbrsJoursDispoRsrcBean.get(debutPeriode).getValue();
         }
 
@@ -346,13 +351,13 @@ public class CalculateurCharges extends Calculateur {
 
         float nbrsJoursDispo;
         NbrsJoursDispoProfilBean nbrsJoursDispoRsrcBean = Collections.any(
-                disponibilitesController.getNbrsJoursDispoMaxProfilBeans(),
+                getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans(),
                 nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
 //                new ControllerException("impossible de retrouver la disponibilité du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
         );
         if (nbrsJoursDispoRsrcBean == null) {
             nbrsJoursDispoRsrcBean = new NbrsJoursDispoProfilBean(profilBean);
-            disponibilitesController.getNbrsJoursDispoMaxProfilBeans().add(nbrsJoursDispoRsrcBean);
+            getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans().add(nbrsJoursDispoRsrcBean);
         }
         if (!nbrsJoursDispoRsrcBean.containsKey(debutPeriode)) {
             nbrsJoursDispoRsrcBean.put(debutPeriode, new SimpleFloatProperty());

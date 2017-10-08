@@ -28,13 +28,14 @@ public class CalendrierPctagesParRessourceCell<R extends RessourceBean<?, ?>, T 
     private final CalculateurDisponibilites calculateurDisponibilites = CalculateurDisponibilites.instance(); /*new CalculateurDisponibilites();*/
 
 
-    public CalendrierPctagesParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine, @Null Runnable cantEditErrorDisplayer) {
-        super(planChargeBean, noSemaine, new PercentageStringConverter(), cantEditErrorDisplayer);
+    public CalendrierPctagesParRessourceCell(int noSemaine, @Null Runnable cantEditErrorDisplayer) {
+        super(noSemaine, new PercentageStringConverter(), cantEditErrorDisplayer);
     }
 
-    public CalendrierPctagesParRessourceCell(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
-        this(planChargeBean, noSemaine, null);
+    public CalendrierPctagesParRessourceCell(int noSemaine) {
+        this(noSemaine, null);
     }
+
 
     @Override
     public void commitEdit(Percentage newValue) {

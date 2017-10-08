@@ -18,11 +18,11 @@ public class PctagesDispoRsrcBean extends AbstractCalendrierParRessourceBean<Res
 
     // Constructors :
 
-    public PctagesDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, PercentageProperty> calendrier) throws BeanException {
+    public PctagesDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, PercentageProperty> calendrier) /*throws BeanException*/ {
         super(ressourceHumaineBean, calendrier);
     }
 
-    public PctagesDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) throws BeanException {
+    public PctagesDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) /*throws BeanException*/ {
         super(ressourceHumaineBean);
     }
 

@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.ActionRepetable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
@@ -22,10 +23,13 @@ import java.util.stream.Collectors;
  */
 public class SuiviActionsUtilisateur {
 
+    @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(SuiviActionsUtilisateur.class);
 
+    @NotNull
     private static final SuiviActionsUtilisateur INSTANCE = new SuiviActionsUtilisateur();
 
+    @NotNull
     public static SuiviActionsUtilisateur instance() {
         return INSTANCE;
     }
@@ -226,15 +230,16 @@ public class SuiviActionsUtilisateur {
 
         menuAnnuler.setText(texteMenuAnnuler + " " + actionAnnulable.getTexte());
 
-// TODO FDA 2017/05 Réactiver, une fois terminé de codé (évo pas priorisée).
-        // Ajout des sous-menus, 1 pour chacune des dernières actions annulables :
-        if (plusDUneAnnulationPossible) {
-            final int[] indexActionAnnulable = {0};
-            List<MenuItem> menusAnnuler = actionsAnnulables().stream()
-                    .skip(1) // On ne retient pas la 1ère action, car déjà affichée dans le menu ci-dessus.
-                    .map(action -> new MenuItem((++(indexActionAnnulable[0])) + ") " + action.getTexte()))
-                    .collect(Collectors.toList());
-            sousMenuAnnuler.getItems().setAll(menusAnnuler);
+        if (PlanChargeIhm.estEnDeveloppement()) {
+            // Ajout des sous-menus, 1 pour chacune des dernières actions annulables :
+            if (plusDUneAnnulationPossible) {
+                final int[] indexActionAnnulable = {0};
+                List<MenuItem> menusAnnuler = actionsAnnulables().stream()
+                        .skip(1) // On ne retient pas la 1ère action, car déjà affichée dans le menu ci-dessus.
+                        .map(action -> new MenuItem((++(indexActionAnnulable[0])) + ") " + action.getTexte()))
+                        .collect(Collectors.toList());
+                sousMenuAnnuler.getItems().setAll(menusAnnuler);
+            }
         }
     }
 
@@ -258,15 +263,16 @@ public class SuiviActionsUtilisateur {
 
         menuRetablir.setText(texteMenuRetablir + " " + actionSuivante.getTexte());
 
-// TODO FDA 2017/05 Réactiver, une fois terminé de codé (évo pas priorisée).
-        // Ajout des sous-menus, 1 pour chacune des dernières actions rétablissables :
-        if (plusDUnRetablissementPossible) {
-            final int[] indexActionRetablissable = {0};
-            List<MenuItem> menusRetablir = actionRetablissables.stream()
-                    .skip(1) // On ne retient pas la 1ère action, car déjà affichée dans le menu ci-dessus.
-                    .map(action -> new MenuItem((++(indexActionRetablissable[0])) + ") " + action.getTexte()))
-                    .collect(Collectors.toList());
-            sousMenuRetablir.getItems().setAll(menusRetablir);
+        if (PlanChargeIhm.estEnDeveloppement()) {
+            // Ajout des sous-menus, 1 pour chacune des dernières actions rétablissables :
+            if (plusDUnRetablissementPossible) {
+                final int[] indexActionRetablissable = {0};
+                List<MenuItem> menusRetablir = actionRetablissables.stream()
+                        .skip(1) // On ne retient pas la 1ère action, car déjà affichée dans le menu ci-dessus.
+                        .map(action -> new MenuItem((++(indexActionRetablissable[0])) + ") " + action.getTexte()))
+                        .collect(Collectors.toList());
+                sousMenuRetablir.getItems().setAll(menusRetablir);
+            }
         }
     }
 
@@ -290,7 +296,7 @@ public class SuiviActionsUtilisateur {
 
         menuRepeter.setText(texteMenuRepeter + " " + actionRepetable.getTexte());
 
-/* TODO FDA 2017/05 Réactiver, une fois terminé de codé (évo pas priorisée).
+/* TODO FDA 2017/05 Coder (qd priorisée).
         // Ajout des sous-menus, 1 pour chacune des dernières actions rétablissables :
 //        separateurMenusRetablir.setVisible(plusDUnRetablissementPossible);
 */

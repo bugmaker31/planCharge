@@ -257,7 +257,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         //noinspection HardcodedFileSeparator
         return /*(categorie.getCode() + (sousCategorie == null ? "" : ("::" + sousCategorie.getCode())))
                 + " " +*/ noTache()
-                + " " + ("(" + (noTicketIdal.isEmpty() ? "N/A" : noTicketIdal) + ")")
+                + " " + ((noTicketIdal.isEmpty() ? "N/A" : noTicketIdal))
                 + " " + ("[" + projetAppli + "]")
                 + " " + ("{" + statut.getIdentity() + "}")
                 + " " + ("<< " + description + " >> ")

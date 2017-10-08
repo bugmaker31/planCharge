@@ -28,6 +28,7 @@
     -fx-selection-bar-non-focused: rgb(50, 50, 50);
 }
 
+
 /* Labels ---------------------------------------------*/
 
 .label {
@@ -210,6 +211,23 @@
     -fx-opacity: 0.5;/*FIXME FDA 2017/09 Sans effet*/
     -fx-visible: FALSE;/*FIXME FDA 2017/09 Sans effet*/
 }
+
+.table-row-cell:empty {
+    -fx-background-color: #1D1D1D;
+    -fx-border-color: #1D1D1D;
+}
+
+.table-cell:empty{
+    -fx-background-color: #1D1D1D;
+    -fx-border-color: #1D1D1D;
+}
+
+/* Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows */
+.text-field-table-cell:empty {
+    -fx-background-color: #1D1D1D;
+    -fx-border-color: #1D1D1D;
+}
+
 
 /* SplitPane ---------------------------------------------*/
 

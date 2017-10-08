@@ -3,7 +3,9 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
@@ -16,23 +18,27 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class CalendrierNbrsDemisJoursCellCallback<T extends AbstractCalendrierBean<AbstractDTO, T, IntegerProperty>> implements Callback<TableColumn.CellDataFeatures<T, Integer>, ObservableValue<Integer>> {
+public class CalendrierNbrsDemisJoursCellCallback<T extends AbstractCalendrierBean<AbstractDTO, T, FloatProperty>> implements Callback<TableColumn.CellDataFeatures<T, Float>, ObservableValue<Float>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierNbrsDemisJoursCellCallback.class);
 
+    //    Autowired
     @NotNull
-    private PlanChargeBean planChargeBean;
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
+
+
     private int noSemaine;
 
-    public CalendrierNbrsDemisJoursCellCallback(@NotNull PlanChargeBean planChargeBean, int noSemaine) {
+
+    public CalendrierNbrsDemisJoursCellCallback(int noSemaine) {
         super();
-        this.planChargeBean = planChargeBean;
         this.noSemaine = noSemaine;
     }
 
+
     @Null
     @Override
-    public ObservableValue<Integer> call(TableColumn.CellDataFeatures<T, Integer> cell) {
+    public ObservableValue<Float> call(TableColumn.CellDataFeatures<T, Float> cell) {
         if (cell == null) {
             return null;
         }
@@ -41,11 +47,11 @@ public class CalendrierNbrsDemisJoursCellCallback<T extends AbstractCalendrierBe
             return null;
         }
         T nbrsJoursPeriodeBean = cell.getValue();
-        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         if (!nbrsJoursPeriodeBean.containsKey(debutPeriode)) {
-            nbrsJoursPeriodeBean.put(debutPeriode, new SimpleIntegerProperty());
+            nbrsJoursPeriodeBean.put(debutPeriode, new SimpleFloatProperty());
         }
-        IntegerProperty nbrJoursPeriodeProperty = nbrsJoursPeriodeBean.get(debutPeriode);
+        FloatProperty nbrJoursPeriodeProperty = nbrsJoursPeriodeBean.get(debutPeriode);
         return nbrJoursPeriodeProperty.asObject();
     }
 }

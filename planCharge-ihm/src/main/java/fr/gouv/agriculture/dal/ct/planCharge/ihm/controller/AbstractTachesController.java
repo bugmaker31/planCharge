@@ -65,21 +65,21 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     //    @Autowired
     @NotNull
-    final // 'final' pour empêcher de resetter cette variable.
-    private ReferentielsService referentielsService = ReferentielsService.instance();
+    // 'final' pour empêcher de resetter cette variable.
+    private final ReferentielsService referentielsService = ReferentielsService.instance();
 
     // Les beans :
 
     //    @Autowired
     @NotNull
-    final // 'final' pour empêcher de resetter cette variable.
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+    // 'final' pour empêcher de resetter cette variable.
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
-    @SuppressWarnings("unchecked")
     @NotNull
-    final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
-    private FilteredList<TB> filteredTachesBeans = new FilteredList<TB>((ObservableList<TB>) planChargeBean.getPlanificationsBeans());
+    @SuppressWarnings("unchecked")
+    // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
+    private final FilteredList<TB> filteredTachesBeans = new FilteredList<>((ObservableList<TB>) planChargeBean.getPlanificationsBeans());
 
     // Les tables :
 
@@ -274,10 +274,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return profilColumn;
     }
 
+/*
     @NotNull
     public FilteredList<TB> getFilteredTachesBeans() {
         return filteredTachesBeans;
     }
+*/
 
 
     // Méthodes :
@@ -289,9 +291,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 //        super.initialize();
 
         // Définition dees items de la table :
-        SortedList<TB> sortedFilteredPlanifBeans = new SortedList<>(filteredTachesBeans);
-        sortedFilteredPlanifBeans.comparatorProperty().bind(getTachesTable().comparatorProperty());
-        getTachesTable().setItems(sortedFilteredPlanifBeans);
+        getTachesTable().setItems(filteredTachesBeans);
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         categorieColumn.setCellValueFactory(cellData -> cellData.getValue().codeCategorieProperty());
@@ -370,13 +370,15 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         echeanceColumn.setCellFactory(param -> new EcheanceCell<>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, getTachesTable()));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
-        chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter())); // TODO FDA 2017/08 Mieux formater.
+        chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(Converters.CHARGE_STRING_CONVERTER)); // TODO FDA 2017/08 Mieux formater.
         ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.RESSOURCE_BEAN_CONVERTER, planChargeBean.getRessourcesBeans()));
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()));
 
         // Paramétrage des ordres de tri :
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
         importanceColumn.setComparator(ImportanceComparator.COMPARATEUR);
+        //
+        TableViews.ensureSorting(getTachesTable());
 
         // Ajout des filtres "globaux" (à la TableView, pas sur chaque TableColumn) :
         //
@@ -387,12 +389,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //
-        TableViews.enableFilteringOnColumns(getTachesTable(), categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn);
+        TableViews.enableFilteringOnColumns(getTachesTable(), Arrays.asList(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn));
 
         // Gestion des undo/redo :
         //
-        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass
-        final class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
+        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass,ClassWithOnlyPrivateConstructors,ClassWithoutLogger
+        class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
 
             @NotNull
             private BiConsumer<TB, T> modifieurValeur;
@@ -530,24 +532,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
 
-/*
-    */
-
-    /**
-     * Gagne à être surchargé, en veillant à appeler <code>super.definirMenuContextuel()</code>.
-     *//*
-
-    void definirMenuContextuel() {
-
-        MenuItem menuVoirRessourceHumaine = new MenuItem("Voir la ressource humaine");
-        menuVoirRessourceHumaine.setOnAction(event -> afficherRessourceHumaine());
-
-        MenuItem menuVoirOutilTicketing = new MenuItem("Voir la tâche dans l'outil de ticketing");
-        menuVoirOutilTicketing.setOnAction(event -> afficherTacheDansOutilTicketing());
-
-        tachesTableContextMenu.getItems().setAll(menuVoirRessourceHumaine, menuVoirOutilTicketing);
-    }
-*/
     @NotNull
     protected TB ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
@@ -557,7 +541,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Positionnement sur la tâche qu'on vient d'ajouter (si elle n'est pas masquée à cause des filtres éventuellement posés par l'utilisateur) :
         if (TableViews.itemIndex(getTachesTable(), nouvTache) < 0) {
             // La tâche n'apparaît pas dans la liste, car filtrée.
-            ihm.afficherWarning("Nouvelle tâche filtrée", "Tâche "+nouvTache.noTache()+" ajoutée, mais non visible à cause des filtres posés.");
+            ihm.afficherNotificationWarning("Nouvelle tâche filtrée", "Tâche " + nouvTache.noTache() + " ajoutée, mais non visible à cause des filtres posés.");
         } else {
             TableViews.editCell(getTachesTable(), nouvTache, descriptionColumn);
         }
@@ -628,11 +612,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     private boolean estTacheAVoir(@NotNull TB tache) throws ControllerException {
 
-        // Si un filtre global est positionné, c'est un filtre exhaustif, il ne s'additionne pas avec les autres filtres.
         if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
+            // Si un filtre global est positionné, c'est un filtre exhaustif, il ne s'additionne pas avec les autres filtres.
+/*
             if (tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
                 return true;
             }
+*/
+            return tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText());
         }
 
         // Filtres cumulatifs :
@@ -724,7 +711,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         TB tacheBean = TableViews.selectedItem(getTachesTable());
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la tâche",
                     "Aucune tâche n'est actuellement sélectionnée."
@@ -737,7 +724,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         RessourceBean ressourceBean = tacheBean.getRessource();
         if (ressourceBean == null) {
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la ressource",
                     "Aucune ressource n'est (encore) affectée à la tâche sélectionnée (" + tacheBean.noTache() + ")."
@@ -749,7 +736,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         if (!(ressourceBean instanceof RessourceHumaineBean)) {
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la ressource",
                     "La ressource (" + ressourceBean.getCode() + ") affectée à la tâche sélectionnée (" + tacheBean.noTache() + ") n'est pas une ressource humaine.",
@@ -764,7 +751,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             TableViews.focusOnItem(ihm.getRessourcesHumainesController().getRessourcesHumainesTable(), ressourceHumaineBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la ressource humaine " + ressourceHumaineBean.getTrigramme() + ".", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la ressource humaine '" + ressourceHumaineBean.getTrigramme() + "'",
                     Exceptions.causes(e),

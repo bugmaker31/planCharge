@@ -105,6 +105,7 @@ public final class ColumnFilter<T, R> {
     private final ListChangeListener<FilterValue<T, R>> filterValueListChangeListener = (ListChangeListener.Change<? extends FilterValue<T, R>> lc) -> {
         while (lc.next()) {
             if (lc.wasRemoved()) {
+                //noinspection SuspiciousMethodCalls
                 lc.getRemoved().stream()
                         .filter(v -> !v.selectedProperty().get())
                         .forEach(unselectedValues::remove);
@@ -187,7 +188,7 @@ public final class ColumnFilter<T, R> {
     }
 
     public boolean isFiltered() {
-        return isDirty || (unselectedValues.size() > 0);
+        return isDirty || (!unselectedValues.isEmpty());
     }
 
     public boolean valueIsVisible(R value) {

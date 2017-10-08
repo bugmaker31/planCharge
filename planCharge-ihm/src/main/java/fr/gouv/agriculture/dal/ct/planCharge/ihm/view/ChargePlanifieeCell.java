@@ -6,6 +6,7 @@ import javafx.css.PseudoClass;
 
 import javax.validation.constraints.Null;
 
+@SuppressWarnings("ClassWithoutLogger")
 public class ChargePlanifieeCell<S> extends EditableAwareTextFieldTableCell<S, Float> {
 
     private static final PseudoClass SURCHARGE = ChargesController.SURCHARGE;
@@ -17,7 +18,19 @@ public class ChargePlanifieeCell<S> extends EditableAwareTextFieldTableCell<S, F
     @Override
     public void updateItem(Float item, boolean empty) {
         super.updateItem(item, empty);
+//        formater();
         styler();
+    }
+
+    private void formater() {
+        if (isEmpty() || (getItem() == null)) {
+            setText(null);
+            setGraphic(null);
+            return;
+        }
+        //noinspection UnnecessaryLocalVariable
+        Float charge = getItem();
+        setText(getConverter().toString(charge));
     }
 
     private void styler() {

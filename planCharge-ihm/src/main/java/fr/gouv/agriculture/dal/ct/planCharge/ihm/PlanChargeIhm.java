@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.Notification;
@@ -9,15 +10,18 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
+import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,6 +31,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.PopupWindow;
@@ -34,6 +39,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.decoration.Decoration;
 import org.controlsfx.control.decoration.Decorator;
 import org.controlsfx.control.decoration.GraphicDecoration;
 import org.controlsfx.control.decoration.StyleClassDecoration;
@@ -59,7 +65,9 @@ import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class PlanChargeIhm extends Application {
 
     @NotNull
@@ -68,7 +76,7 @@ public class PlanChargeIhm extends Application {
     public static final int NBR_SEMAINES_PLANIFIEES = Planifications.NBR_SEMAINES_PLANIFIEES;
 
     /**
-     * Format : <code>&lt;abr. du jour de la semaine ("lun.", "mar.", etc.)&gt; &lt;jour sur 2 chiffres&gt;/&lt;mois sur 2 chiffres&gt;/&lt;année sur 4 chiffres&gt;</code>.
+     * Format : {@code <abr. du jour de la semaine ("lun.", "mar.", etc.)> <jour sur 2 chiffres>/<mois sur 2 chiffres>/<année sur 4 chiffres>}.
      * Exemple : "mar. 15/07/2018".
      *
      * @see DateTimeFormatter
@@ -79,9 +87,6 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     @NotNull
     public static final String PROMPT_FORMAT_DATE = "[J]J/[M]M/[AA]AA";
-
-    @NotNull
-    public static final DateTimeFormatter FORMAT_DATE = DateTimeFormatter.ofPattern(PATRON_FORMAT_DATE);
 
 
     @NotNull
@@ -114,34 +119,44 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    @NotNull
-    private static Map<String, PopupWindow> popups = new HashMap<>();
-
+    private static ParametresIhm paramsIhm = ParametresIhm.instance();
     //    private static Contexte contexte = Contexte.instance();
     private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
-    private static ParametresIhm paramsIhm = ParametresIhm.instance();
 
     private static boolean estEnDeveloppement = false; // Par défaut.
 
+    public static boolean estEnDeveloppement() {
+        return estEnDeveloppement;
+    }
 
+
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Stage primaryStage;
 
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private BorderPane applicationView;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Region joursFeriesView;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Region ressourcesHumainesView;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Region projetsApplisView;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Region disponibilitesView;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Region tachesView;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Region chargesView;
 
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private Pane contentPane;
 
@@ -152,6 +167,7 @@ public class PlanChargeIhm extends Application {
 */
 
 
+    @NotNull
     public Stage getPrimaryStage() {
         return primaryStage;
     }
@@ -195,6 +211,7 @@ public class PlanChargeIhm extends Application {
     La couche "Controller" :
      */
 
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private ApplicationController applicationController;
     /*
@@ -205,23 +222,31 @@ public class PlanChargeIhm extends Application {
     @NotNull
     private WorkProgressController workProgressController;
 */
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private JoursFeriesController joursFeriesController;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private RessourcesHumainesController ressourcesHumainesController;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private ProjetsApplisController projetsApplisController;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private DisponibilitesController disponibilitesController;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private TachesController tachesController;
+    @SuppressWarnings("NullableProblems")
     @NotNull
     private ChargesController chargesController;
 
+    @NotNull
     public ApplicationController getApplicationController() {
         return applicationController;
     }
 
+    @NotNull
     public DisponibilitesController getDisponibilitesController() {
         return disponibilitesController;
     }
@@ -241,69 +266,67 @@ public class PlanChargeIhm extends Application {
         return projetsApplisController;
     }
 
+    @NotNull
     public TachesController getTachesController() {
         return tachesController;
     }
 
+    @NotNull
     public ChargesController getChargesController() {
         return chargesController;
     }
 
+/*
     @NotNull
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
+*/
 
 
     public <S, T> void controler(@NotNull TableCell<S, T> cell, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
-        cell.itemProperty().addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
-                    Platform.runLater(() -> { // Requis, sinon java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
-                                try {
-                                    masquerErreurSaisie(cell);
-                                    String error = validator.apply(newValue);
-                                    if (error != null) {
-                                        afficherErreurSaisie(cell, title, error);
-                                    }
-                                } catch (IhmException e) {
-                                    // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                                    throw new RuntimeException("Impossible de contrôler la saisie de la cellule '" + cell.getId() + "' de la table " + cell.getTableView().getId() + ".", e);
-                                }
-                            }
-                    );
-                }
-        );
+        //noinspection RedundantTypeArguments
+        this.<T>controler(cell, cell.itemProperty(), title, validator, (Control field) -> cell.getIndex() != -1);
     }
 
-    public void controler(@NotNull TextField field, @NotNull String title, @NotNull Function<String, String> validator) /*throws IhmException*/ {
-        field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-                    Platform.runLater(() -> { // Requis, sinon java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
-                                try {
-                                    masquerErreurSaisie(field);
-                                    String error = validator.apply(newValue);
-                                    if (error != null) {
-                                        afficherErreurSaisie(field, title, error);
-                                    }
-                                } catch (IhmException e) {
-                                    // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                                    throw new RuntimeException("Impossible de contrôler la saisie du champ '" + field.getId() + "'.", e);
-                                }
-                            }
-                    );
+    public <T> void controler(@NotNull TextInputControl field, @NotNull String title, @NotNull Function<T, String> validator) /*throws IhmException*/ {
+        //noinspection RedundantTypeArguments
+        this.<T>controler(field, (ObservableValue<? extends T>) field.textProperty(), title, validator, null);
+    }
+
+    private <T> void controler(@NotNull Control field, @NotNull ObservableValue<? extends T> obsValue, @NotNull String title, @NotNull Function<T, String> validator, @Null Predicate<Control> filter) {
+        obsValue.addListener((ObservableValue<? extends T> observable, T oldValue, T newValue) -> {
+//            Platform.runLater(() -> { // Surtout pas, sinon JavaFX est "perdu" et affiche tous les champs d'une TableView en erreur car déclenche avec newValue à null (voir TableCell#isFirstRun).
+            if ((filter != null) && !filter.test(field)) {
+                return;
+            }
+            try {
+                masquerErreurSaisie(field);
+                String error = validator.apply(newValue);
+                if (error != null) {
+                    LOGGER.debug("Erreur de saisie sur le champ {} pour la valeur '{}' : << {} >>", id(field), newValue, error);
+                    afficherErreurSaisie(field, title, error);
                 }
-        );
+            } catch (IhmException e) {
+                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                throw new RuntimeException("Impossible de contrôler la saisie du champ '" + field.getId() + "'.", e);
+            }
+        });
+//        });
     }
 
 
     /**
      * Constructor
      */
+    @SuppressWarnings("RedundantNoArgConstructor")
     public PlanChargeIhm() {
         super();
+        instance = this;
     }
 
 
     @Override
     public void init() throws Exception {
         LOGGER.info("Application en cours d'initialisation...");
-        instance = this;
 
         // Cf. http://stackoverflow.com/questions/26361559/general-exception-handling-in-javafx-8
         Thread.setDefaultUncaughtExceptionHandler(this::showError);
@@ -326,6 +349,7 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("ProhibitedExceptionDeclared")
     @Override
     public void start(@SuppressWarnings({"ParameterHidesMemberVariable", "NullableProblems"}) @NotNull Stage primaryStage) throws Exception {
+        //noinspection OverlyBroadCatchBlock
         try {
             LOGGER.debug("Application en cours de démarrage...");
 
@@ -339,8 +363,8 @@ public class PlanChargeIhm extends Application {
             //
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
             Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
-            double screenWidth = (double) ecranParDefaut.getBounds().getWidth();
-            double screenHeight = (double) ecranParDefaut.getBounds().getHeight();
+            double screenWidth = ecranParDefaut.getBounds().getWidth();
+            double screenHeight = ecranParDefaut.getBounds().getHeight();
             primaryStage.setWidth(screenWidth);
             primaryStage.setHeight(screenHeight);
             primaryStage.setResizable(true);
@@ -364,9 +388,9 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.afficherModuleProjetsApplis();
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.42.ods"));
+//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.46.ods"));
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s34_t3.37.ods"));
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s39_t3.39.ods"));
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
@@ -525,21 +549,9 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    private Set<Notification> notificationsViolationsReglesGestion = new HashSet<>();
+    // Notifiactions des violations des Règles de Gestion ---------------------------------------
 
-    @SuppressWarnings("WeakerAccess")
-    public void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
-//        Platform.runLater(() -> {
-        Decorator.addDecoration(field, new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight()));
-        Decorator.addDecoration(field, new StyleClassDecoration("erreurSaisie"));
-        try {
-            afficherPopUpErreurSaisie(field, titre, message);
-        } catch (IhmException e) {
-            // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-            throw new RuntimeException("Impossible d'afficher l'erreur de saisie à l'IHM.", e);
-        }
-//        });
-    }
+    private Set<Notification> notificationsViolationsReglesGestion = new HashSet<>(10);
 
     public void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @SuppressWarnings("rawtypes") @NotNull List<ViolationRegleGestion> violations) {
 //        Platform.runLater(() -> {
@@ -569,18 +581,19 @@ public class PlanChargeIhm extends Application {
         }
     }
 
+    // Saisie ---------------------------------------
 
     public <S, T> void interdireEdition(@NotNull TableColumn<S, T> column, @NotNull String message, @Null ButtonType... typesBouton) {
         // Vu qu'on veut afficher un message lorsque l'utilisateur demande à édite une cellule de la colonne, il faut rendre la table éditable.
         if (!column.getTableView().isEditable()) {
             // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la table éditable. Trouver mieux.
             column.getTableView().setEditable(true);
-            LOGGER.info("La table '{}' vient d'être rendue éditable.", column.getTableView().getId());
+            LOGGER.warn("La table '{}' vient d'être rendue éditable.", column.getTableView().getId());
         }
         if (!column.isEditable()) {
             // TODO FDA 2017/08 Un peu dangereux comme implémentation, de rendre la colonne éditable. Trouver mieux.
             column.setEditable(true);
-            LOGGER.info("La colonne '{}' vient d'être rendue éditable.", column.getId());
+            LOGGER.warn("La colonne '{}' vient d'être rendue éditable.", column.getId());
         }
 /* N'empêche pas le passage en mode "édition" pour la cellule.
         column.setOnEditStart(event -> {
@@ -592,7 +605,7 @@ public class PlanChargeIhm extends Application {
         column.addEventHandler(TableColumn.CellEditEvent.ANY, event -> {
             //noinspection unchecked
             TableColumn.CellEditEvent<S, T> cellEditEvent = (TableColumn.CellEditEvent<S, T>) event;
-            if ((cellEditEvent.getTableColumn() == null) || !cellEditEvent.getTableColumn().equals(column)) {
+            if ((cellEditEvent.getTableColumn() == null)/* || !cellEditEvent.getTableColumn().equals(column)*/) {
                 return;
             }
             afficherInterdictionEditer(message);
@@ -601,8 +614,28 @@ public class PlanChargeIhm extends Application {
     }
 
     public void afficherInterdictionEditer(@NotNull String message) {
-        afficherPopUp(AlertType.WARNING, "Données non modifiables", message, 400, 200);
+        afficherDialog(AlertType.WARNING, "Données non modifiables", message, 400, 200);
     }
+
+
+    @SuppressWarnings("WeakerAccess")
+    public static void symboliserChampsObligatoires(@NotNull Control... fields) throws IhmException {
+        for (Control field : fields) {
+            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les EditableAwareTextFieldTableCell, la 2nde fait l'inverse).
+            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
+            validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
+        }
+    }
+
+    public static void symboliserNoeudsFiltrables(@NotNull Node... nodes) throws IhmException {
+//        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
+            for (Node node : nodes) {
+                Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
+            }
+//        });
+    }
+
+    // Notifications ---------------------------------------
 
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image REQUIRED_INDICATOR_IMAGE = new Image("/images/required-indicator.png");
@@ -615,7 +648,7 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
-    public void afficherNotification(@NotNull String titre, @NotNull String message) {
+    public static void afficherNotificationInfo(@NotNull String titre, @NotNull String message) {
         new Notification()
                 .title(titre)
                 .text(message)
@@ -623,7 +656,7 @@ public class PlanChargeIhm extends Application {
                 .showInformation();
     }
 
-    public void afficherWarning(@NotNull String titre, @NotNull String message) {
+    public static void afficherNotificationWarning(@NotNull String titre, @NotNull String message) {
         new Notification()
                 .title(titre)
                 .text(message)
@@ -632,44 +665,194 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    private static void afficherPopUpErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
-        PopupWindow popup = createFieldPopup(field, titre, message);
+    // Pop-ups ---------------------------------------
+
+    @NotNull
+    private static final Map<Control, PopupControl> popups = new HashMap<>(10);
+
+    @NotNull
+    private static final Map<Control, EventHandler<MouseEvent>> popupsMouseEnteredHandlers = new HashMap<>(10);
+    @NotNull
+    private static final Map<Control, EventHandler<MouseEvent>> popupsMouseExitedHandlers = new HashMap<>(10);
+
+    public static void activerPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        // On "programme" les actions sur ces 2 événements du champ :
+//        String idPopup = idPopup(field);
+        {
+            EventHandler<MouseEvent> mouseEnteredHandler = event -> {
+                try {
+                    afficherPopup(field, titre, message);
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible d'afficher la pop-up.", e);
+                }
+            };
+            assert !popupsMouseEnteredHandlers.containsKey(field);
+            popupsMouseEnteredHandlers.put(field, mouseEnteredHandler);
+            field.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnteredHandler);
+        }
+        {
+            // NB : Planifier le "hide" après avoir appelé "show", car sinon l'utilisateur peut déclencher un "onMouseExited" avant qu'on ait eu le temps de "show"er la PopUp (ce qui provoque des NPE).
+            EventHandler<MouseEvent> mouseExitedHandler = event -> {
+                try {
+                    masquerPopup(field);
+                } catch (IhmException e) {
+                    LOGGER.error("Impossible de masquer la pop-up.", e);
+                }
+            };
+            assert !popupsMouseExitedHandlers.containsKey(field);
+            popupsMouseExitedHandlers.put(field, mouseExitedHandler);
+            field.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitedHandler);
+        }
+    }
+
+    public static void desactiverPopup(@NotNull Control field) throws IhmException {
+        // On "déprogramme" les actions sur ces 2 événements du champ :
+//        String idPopup = idPopup(field);
+        {
+            assert popupsMouseEnteredHandlers.containsKey(field);
+            EventHandler<MouseEvent> mouseEnteredEventHandler = popupsMouseEnteredHandlers.get(field);
+            assert mouseEnteredEventHandler != null;
+            field.removeEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnteredEventHandler);
+            popupsMouseEnteredHandlers.remove(field);
+        }
+        {
+            assert popupsMouseExitedHandlers.containsKey(field);
+            EventHandler<MouseEvent> mouseExitedEventHandler = popupsMouseExitedHandlers.get(field);
+            assert mouseExitedEventHandler != null;
+            field.removeEventHandler(MouseEvent.MOUSE_EXITED, mouseExitedEventHandler);
+            popupsMouseExitedHandlers.remove(field);
+        }
+    }
+
+    public static void afficherPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        PopupWindow popup = createPopup(field, titre, message);
         ((PopOver) popup).show(field);
-        field.setOnMouseEntered(event -> ((PopOver) popup).show(field));
-        field.setOnMouseExited(event -> popup.hide()); // NB : Planifier le "hide" après avoir appelé "show", car sinon l'utilisateur peut déclencher un "onMousExited" avant qu'on ait eu le temps de "show"er la PopUp (ce qui provoque des NPE).
+    }
+
+    public static void masquerPopup(@NotNull Control field) throws IhmException {
+//        String idPopup = idPopup(field);
+        if (!popups.containsKey(field)) {
+            throw new IhmException("Impossible de retrouver la popup associée au champ " + id(field) + " (la popup qui affiche le message d'erreur de saisie).");
+        }
+        PopupWindow popup = popups.get(field);
+        popup.hide();
+        popups.remove(field);
+    }
+
+    @NotNull
+    private static PopupControl createPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+//        String idPopup = idPopup(field);
+        if (popups.containsKey(field)) {
+            return popups.get(field);
+        }
+
+        PopOver popup = new PopOver();
+        popup.setId("popup"); // Juste par soucis de clarté (pour faciliter le débogage, aussi).
+
+        popup.setHeaderAlwaysVisible(true);
+
+        Label label = new Label(message);
+//        label.setId(idLabelPopup(field));
+
+        popup.setTitle(titre);
+        popup.setContentNode(label);
+
+        popup.getStyleClass().add("popup");
+
+        popups.put(field, popup);
+        return popup;
+    }
+
+/*
+    private static String idPopup(@NotNull Control field) {
+        //noinspection StringConcatenationMissingWhitespace
+        return id(field) + FIELD_ID_SEPARATOR + "popup";
+    }
+*/
+
+
+    // DOM ---------------------------------------
+
+    private static final String FIELD_ID_SEPARATOR = ".";
+
+    @NotNull
+    private static String id(@NotNull Node noeud) {
+        String idNoeud = idNoeud(noeud);
+        if (noeud.getParent() == null) {
+            return idNoeud;
+        }
+        String idParent = id(noeud.getParent());
+        assert !idParent.isEmpty();
+        return idParent + FIELD_ID_SEPARATOR + idNoeud; // TODO FDA 2017/09 S'assurer qu'on génère bien ainsi un ID *unique*.
+    }
+
+    private static String idNoeud(Node noeud) {
+        if ((noeud instanceof IndexedCell) && (noeud.getId() == null)) {
+            return "<" + noeud.getClass().getSimpleName() + ">" + "#" + ((IndexedCell) noeud).getIndex();
+        }
+        if ((noeud.getId() == null) || noeud.getId().isEmpty()) {
+            return "<" + noeud.getClass().getSimpleName() + ">";
+        }
+        return noeud.getId();
+    }
+
+
+    // Erreurs de saisie ---------------------------------------
+
+    private static final Map<Node, Set<Decoration>> nodesDecorations = new HashMap<>(10);
+
+    @SuppressWarnings("WeakerAccess")
+    public static void afficherErreurSaisie(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
+        Platform.runLater(() -> { // Sinon les Décorations ne sont pas affichées. TODO FDA 2017/09 Comprendre pourquoi.
+            GraphicDecoration graphicDecoration = new GraphicDecoration(new ImageView(ERROR_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -ERROR_INDICATOR_IMAGE.getWidth(), -ERROR_INDICATOR_IMAGE.getHeight());
+            StyleClassDecoration styleDecoration = new StyleClassDecoration("erreurSaisie");
+            Decorator.addDecoration(field, graphicDecoration);
+            Decorator.addDecoration(field, styleDecoration);
+            assert !nodesDecorations.containsKey(field);
+            nodesDecorations.put(field, new HashSet<>(2));
+            nodesDecorations.get(field).add(graphicDecoration);
+            nodesDecorations.get(field).add(styleDecoration);
+            try {
+                activerPopup(field, titre, message);
+            } catch (IhmException e) {
+                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                throw new RuntimeException("Impossible d'activer l'affichage de l'erreur de saisie à l'IHM.", e);
+            }
+        });
     }
 
     @SuppressWarnings("WeakerAccess")
     public static void masquerErreurSaisie(@NotNull Control field) throws IhmException {
-        if (!popups.containsKey(idVBoxErreurSaisie(field))) {
+        Platform.runLater(() -> { // Sinon les Décorations ne sont pas affichées. TODO FDA 2017/09 Comprendre pourquoi.
+            if (!popups.containsKey(field)) {
 //            LOGGER.debug("Pas d'erreur de saisie affichée actuellement pour le champ {}, rien à masquer donc.", field.getId());
-            return;
-        }
-        Decorator.removeAllDecorations(field);
-        masquerPopupErreurSaisie(field);
+                return;
+            }
+            assert nodesDecorations.containsKey(field) && (nodesDecorations.get(field) != null);
+            for (Decoration decoration : nodesDecorations.get(field)) {
+                Decorator.removeDecoration(field, decoration);
+            }
+            nodesDecorations.remove(field);
+            try {
+                desactiverPopup(field);
+            } catch (IhmException e) {
+                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+                throw new RuntimeException("Impossible de désactiver l'affichage de l'erreur de saisie à l'IHM.", e);
+            }
+        });
     }
 
-    private static void masquerPopupErreurSaisie(@NotNull Control field) throws IhmException {
-        if (!popups.containsKey(idVBoxErreurSaisie(field))) {
-            throw new IhmException("Impossible de retrouver la popup associée au control " + field.getId() + " (pour afficher l'erreur de saisie).");
-        }
-        PopupWindow popup = popups.get(idVBoxErreurSaisie(field));
-        // On "oublie" les actions sur ces 2 événements du champ :
-        field.setOnMouseEntered(event -> {
-        });
-        field.setOnMouseExited(event -> {
-        });
-        popup.hide();
-    }
+
+    // Dialogs ---------------------------------------
 
     @NotNull
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message) {
+    public Optional<ButtonType> afficherDialog(@NotNull Alert.AlertType type, @NotNull String titre, @NotNull String message) {
         //noinspection ConstantConditions
         if (primaryStage == null) {
             LOGGER.warn("Impossbile d'afficher le message, application non entièrement initialisée (en cours de démarrage ?).");
             return Optional.empty();
         }
-        return afficherPopUp(type,
+        return afficherDialog(type,
                 titre, message,
                 Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
                 null
@@ -677,8 +860,8 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, ButtonType boutonParDefaut, ButtonType... bouttons) {
-        return afficherPopUp(type,
+    public Optional<ButtonType> afficherDialog(@NotNull Alert.AlertType type, @NotNull String titre, @NotNull String message, @NotNull ButtonType boutonParDefaut, @NotNull ButtonType... bouttons) {
+        return afficherDialog(type,
                 titre, message,
                 Math.max(100, primaryStage.getWidth() - 100), Math.max(primaryStage.getHeight() - 100, 100),
                 boutonParDefaut, bouttons
@@ -686,8 +869,8 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
-    public Optional<ButtonType> afficherPopUp(Alert.AlertType type, String titre, String message, double width, double height) {
-        return afficherPopUp(type,
+    public Optional<ButtonType> afficherDialog(@NotNull Alert.AlertType type, @NotNull String titre, @NotNull String message, double width, double height) {
+        return afficherDialog(type,
                 titre, message,
                 width, height,
                 null
@@ -696,106 +879,7 @@ public class PlanChargeIhm extends Application {
 
 
     @NotNull
-    private static PopupWindow createFieldPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
-        PopOver popup = new PopOver();
-        popup.setHeaderAlwaysVisible(true);
-
-        Label label = new Label(message);
-        label.setId(idLabelErreurSaisie(field));
-
-        popup.setTitle(titre);
-        popup.setContentNode(label);
-
-        popup.getStyleClass().add("messageErreurSaisie");
-
-        popups.put(idVBoxErreurSaisie(field), popup);
-        return popup;
-    }
-
-    private static String idLabelErreurSaisie(@NotNull Control field) {
-        //noinspection StringConcatenationMissingWhitespace
-        return field.getId() + "ErreurSaisie-label";
-    }
-
-    private static String idVBoxErreurSaisie(@NotNull Control field) {
-        //noinspection StringConcatenationMissingWhitespace
-        return field.getId() + "ErreurSaisie-vbox";
-    }
-
-
-/*
-    private void showErrorDialog(@NotNull String titre,  String errorMsg) {
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
-        try {
-            Parent root = loader.load();
-            ((ErrorController) loader.getController()).setErrorText(errorMsg);
-            dialog.setScene(new Scene(root, 800, 400));
-            dialog.show();
-        } catch (IOException e) {
-            LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
-        }
-    }
-*/
-
-    @NotNull
-    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws IhmException, ViolationsReglesGestionException {
-        ProgressDialog progressDialog = new ProgressDialog(task);
-        progressDialog.setTitle(titre);
-        progressDialog.setHeaderText(titre);
-//        task.messageProperty().addListener((observable, oldValue, newValue) -> progressDialog.setContentText(newValue)); Redondant, car le ProgressDialog doit déjà le faire (ou un autre compsant JavaFX)
-        progressDialog.setResizable(true);
-        progressDialog.getDialogPane().setPrefWidth(1000);
-        progressDialog.getDialogPane().setPrefHeight(200);
-        ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
-
-        // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressionDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
-        Thread taskThread = new Thread(task, "progressionDialog");
-        taskThread.start();
-
-        progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
-        progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce dialog, "on succeeded".
-
-        R resultat;
-        try {
-            resultat = task.get(); // Waits until task is completed.
-//            taskThread.join(); // Pas nécessaire.
-        } catch (CancellationException | InterruptedException | ExecutionException e) {
-            if (e.getCause() instanceof ViolationsReglesGestionException) {
-                //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-                throw (ViolationsReglesGestionException) e.getCause();
-            }
-            throw new IhmException("Impossible d'exécuter le traitement.", e);
-        }
-
-        /// Utile ? Impossible d'arriver à passer dans ce cas...
-        if ((task.getState() != Worker.State.SUCCEEDED) || (task.getException() != null)) {
-            throw new IhmException("Impossible d'exécuter le traitement.", task.getException());
-        }
-
-        return resultat;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public static void symboliserChampsObligatoires(@NotNull Control... fields) throws IhmException {
-        for (Control field : fields) {
-            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les EditableAwareTextFieldTableCell, la 2nde fait l'inverse).
-            Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
-            validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
-        }
-    }
-
-    public static void symboliserNoeudsFiltrables(@NotNull Node... nodes) throws IhmException {
-        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
-            for (Node node : nodes) {
-                Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
-            }
-        });
-    }
-
-    @NotNull
-    public Optional<ButtonType> afficherPopUp(@NotNull AlertType type, @NotNull String titre, @NotNull String message, double width, double height, @Null ButtonType typeBoutonParDefaut, @Null ButtonType... typesBouton) {
+    public Optional<ButtonType> afficherDialog(@NotNull AlertType type, @NotNull String titre, @NotNull String message, double width, double height, @Null ButtonType typeBoutonParDefaut, @Null ButtonType... typesBouton) {
         Alert alert = new Alert(type);
 
         alert.setTitle(APP_NAME + " - " + titre);
@@ -840,13 +924,69 @@ public class PlanChargeIhm extends Application {
         return alert.showAndWait();
     }
 
+/*
+    private void showErrorDialog(@NotNull String titre,  String errorMsg) {
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
+        try {
+            Parent root = loader.load();
+            ((ErrorController) loader.getController()).setErrorText(errorMsg);
+            dialog.setScene(new Scene(root, 800, 400));
+            dialog.show();
+        } catch (IOException e) {
+            LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
+        }
+    }
+*/
+
+    // Progression Dialog -------------------------------------
+
+    @NotNull
+    public <R extends RapportService> R afficherProgression(@NotNull String titre, @NotNull Task<R> task) throws IhmException, ViolationsReglesGestionException {
+        ProgressDialog progressDialog = new ProgressDialog(task);
+        progressDialog.setTitle(titre);
+        progressDialog.setHeaderText(titre);
+//        task.messageProperty().addListener((observable, oldValue, newValue) -> progressDialog.setContentText(newValue)); Redondant, car le ProgressDialog doit déjà le faire (ou un autre compsant JavaFX)
+        progressDialog.setResizable(true);
+        progressDialog.getDialogPane().setPrefWidth(1000);
+        progressDialog.getDialogPane().setPrefHeight(200);
+        ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
+
+        // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressionDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
+        Thread taskThread = new Thread(task, "progressionDialog");
+        taskThread.start();
+
+        progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
+        progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce dialog, "on succeeded".
+
+        R resultat;
+        try {
+            resultat = task.get(); // Waits until task is completed.
+//            taskThread.join(); // Pas nécessaire.
+        } catch (CancellationException | InterruptedException | ExecutionException e) {
+            if (e.getCause() instanceof ViolationsReglesGestionException) {
+                //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
+                throw (ViolationsReglesGestionException) e.getCause();
+            }
+            throw new IhmException("Impossible d'exécuter le traitement.", e);
+        }
+
+        /// Utile ? Impossible d'arriver à passer dans ce cas...
+        if ((task.getState() != Worker.State.SUCCEEDED) || (task.getException() != null)) {
+            throw new IhmException("Impossible d'exécuter le traitement.", task.getException());
+        }
+
+        return resultat;
+    }
+
 
     @SuppressWarnings("ConstantConditions")
     @Null
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
 //        return LocalDate.of(2017, 8, 21);
-        return LocalDate.of(2017, 9, 11);
+        return LocalDate.of(2017, 9, 25);
     }
 
     public void definirTitre(String titre) {

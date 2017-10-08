@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class EcheanceCell<TB extends TacheBean> extends DatePickerTableCell<TB> {
 
     public static final PseudoClass ECHUE = TachesController.ECHUE;
@@ -35,7 +36,17 @@ public class EcheanceCell<TB extends TacheBean> extends DatePickerTableCell<TB> 
     @Override
     public void updateItem(@Null LocalDate item, boolean empty) {
         super.updateItem(item, empty);
+//        formater();
         styler();
+    }
+
+    private void formater() {
+        if (isEmpty() || (getItem() == null)) {
+            setText(null);
+            setGraphic(null);
+            return;
+        }
+        setText(getConverter().toString(getItem()));
     }
 
     protected void styler() {

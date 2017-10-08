@@ -100,7 +100,7 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
 
 
     @Override
-    public int compareTo(PlanChargeDTO o) {
+    public int compareTo(@NotNull PlanChargeDTO o) {
         return 0; // TODO FDA 2017/07 Trouver mieux comme code.
     }
 

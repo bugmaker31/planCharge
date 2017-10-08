@@ -5,20 +5,28 @@ import org.slf4j.Logger;
 
 import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Converters {
 
-    @SuppressWarnings("OverlyComplexAnonymousInnerClass")
-    public static final StringConverter<Float> FRACTION_JOURS_STRING_CONVERTER = new StringConverter<Float>() {
+    public static final FractionJoursStringConverter FRACTION_JOURS_STRING_CONVERTER = new FractionJoursStringConverter();
 
-        @SuppressWarnings("InstanceVariableNamingConvention")
-        private /*static*/ final Logger LOGGER = getLogger(Converters.class);
+    private static class FractionJoursStringConverter extends StringConverter<Float> {
+
+        @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
+        private /*static*/ final Logger LOGGER = getLogger(FractionJoursStringConverter.class);
 
         @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
         private /*static*/ final DecimalFormat FORMATEUR = new DecimalFormat("#.###");
+
+        {
+            DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance();
+            formatSymbols.setDecimalSeparator('.');
+            FORMATEUR.setDecimalFormatSymbols(formatSymbols);
+        }
 
         @Null
         @Override
@@ -26,7 +34,7 @@ public class Converters {
             if (f == null) {
                 return null;
             }
-            if (f == 0) {
+            if (f == 0.0) {
                 return "-";
             }
             return FORMATEUR.format(f);
@@ -39,7 +47,7 @@ public class Converters {
                 return null;
             }
             if (s.equals("-")) {
-                return 0f;
+                return 0.0f;
             }
             try {
                 return FORMATEUR.parse(s).floatValue();
@@ -48,13 +56,61 @@ public class Converters {
                 return null;
             }
         }
-    };
+    }
 
-    @SuppressWarnings("OverlyComplexAnonymousInnerClass")
-    public static final StringConverter<Integer> NBRS_JOURS_STRING_CONVERTER = new StringConverter<Integer>() {
+    public static final ChargeStringConverter CHARGE_STRING_CONVERTER = new ChargeStringConverter();
+
+    private static class ChargeStringConverter extends StringConverter<Double> {
 
         @SuppressWarnings("InstanceVariableNamingConvention")
-        private /*static*/ final Logger LOGGER = getLogger(Converters.class);
+        private /*static*/ final Logger LOGGER = getLogger(ChargeStringConverter.class);
+
+        @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
+        private /*static*/ final DecimalFormat FORMATEUR = new DecimalFormat("#.###");
+
+        {
+            DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance();
+            formatSymbols.setDecimalSeparator('.');
+            FORMATEUR.setDecimalFormatSymbols(formatSymbols);
+        }
+
+        @Null
+        @Override
+        public String toString(Double d) {
+            if (d == null) {
+                return null;
+            }
+            if (d == 0.0) {
+                return "-";
+            }
+            return FORMATEUR.format(d);
+        }
+
+        @Null
+        @Override
+        public Double fromString(String s) {
+            if ((s == null) || s.isEmpty()) {
+                return null;
+            }
+            if (s.equals("-")) {
+                return 0.0;
+            }
+            try {
+                return FORMATEUR.parse(s).doubleValue();
+            } catch (ParseException e) {
+                LOGGER.error("Impossible de décoder une valeur décimale dans la chaîne '" + s + "'.", e); // TODO FDA 2017/08 Trouver mieux que de loguer une erreur.
+                return null;
+            }
+        }
+    }
+
+
+    public static final NbrsJoursStringConverter NBRS_JOURS_STRING_CONVERTER = new NbrsJoursStringConverter();
+
+    private static final class NbrsJoursStringConverter extends StringConverter<Integer> {
+
+        @SuppressWarnings("InstanceVariableNamingConvention")
+        private /*static*/ final Logger LOGGER = getLogger(NbrsJoursStringConverter.class);
 
         @SuppressWarnings("InstanceVariableNamingConvention")
         private /*static*/ final DecimalFormat FORMATEUR = new DecimalFormat("#");
@@ -87,10 +143,10 @@ public class Converters {
                 return null;
             }
         }
-    };
+    }
 
-    public static final  RessourceBeanConverter RESSOURCE_BEAN_CONVERTER = new RessourceBeanConverter();
+    public static final RessourceBeanConverter RESSOURCE_BEAN_CONVERTER = new RessourceBeanConverter();
 
-    public static final  ProfilBeanConverter PROFIL_BEAN_CONVERTER = new ProfilBeanConverter();
+    public static final ProfilBeanConverter PROFIL_BEAN_CONVERTER = new ProfilBeanConverter();
 
 }

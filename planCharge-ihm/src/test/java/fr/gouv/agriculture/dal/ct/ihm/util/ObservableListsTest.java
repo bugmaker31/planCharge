@@ -1,33 +1,38 @@
 package fr.gouv.agriculture.dal.ct.ihm.util;
 
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.ArrayList;
 import java.util.function.Function;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("LocalVariableNamingConvention")
 public class ObservableListsTest {
-
-    private static final Integer ELT1_NBR = 1;
-    private static final Integer ELT2_NBR = 2;
-    private static final Integer ELT3_NBR = 3;
-    private static final Integer ELT4_NBR = 4;
-    private static final String ELT1_STR = String.valueOf(ELT1_NBR);
-    private static final String ELT2_STR = String.valueOf(ELT2_NBR);
-    private static final String ELT3_STR = String.valueOf(ELT3_NBR);
-    private static final String ELT4_STR = String.valueOf(ELT4_NBR);
 
     @Test
     public void ensureSameContents_WithoutTransformFunction() throws Exception {
-        ObservableList<String> l1 = FXCollections.observableArrayList();
-        ObservableList<String> l2 = FXCollections.observableArrayList();
+
+        //noinspection ClassWithoutConstructor,LimitedScopeInnerClass,ClassNamingConvention
+        class C {
+        }
+
+        C ELT1_STR = new C();
+        C ELT2_STR = new C();
+        C ELT3_STR = new C();
+        C ELT4_STR = new C();
+
+        ObservableList<C> l1 = FXCollections.observableArrayList();
+        ObservableList<C> l2 = FXCollections.observableArrayList();
 
         ObservableLists.ensureSameContents(l1, l2);
 
@@ -41,36 +46,103 @@ public class ObservableListsTest {
         assertSameContents(l1, l2);
     }
 
+    @SuppressWarnings({"UnnecessaryLocalVariable", "MessageMissingOnJUnitAssertion"})
     @Test
     public void ensureSameContents_WithTransformFunction() throws Exception {
-        ObservableList<Integer> l1 = FXCollections.observableArrayList();
-        ObservableList<String> l2 = FXCollections.observableArrayList();
 
-        ObservableLists.ensureSameContents(l1, l2);
+        //noinspection LimitedScopeInnerClass,ClassWithoutLogger
+        class NamedData {
+            @SuppressWarnings("InstanceVariableNamingConvention")
+            @NotNull
+            private final String id;
 
-        l1.add(ELT1_NBR);
+            NamedData(@NotNull String id) {
+                super();
+                this.id = id;
+            }
+
+            @Override
+            public String toString() {
+                //noinspection MagicCharacter
+                return "C1" + "=" + id;
+            }
+        }
+
+        //noinspection ClassWithoutConstructor,LimitedScopeInnerClass,ClassNamingConvention,ClassWithoutLogger,EmptyClass,ClassWithOnlyPrivateConstructors
+        class C1 extends NamedData {
+            private C1(String id) {
+                super(id);
+            }
+        }
+
+        //noinspection ClassWithoutConstructor,LimitedScopeInnerClass,ClassNamingConvention,ClassWithoutLogger,EmptyClass,ClassWithOnlyPrivateConstructors,ClassTooDeepInInheritanceTree
+        class C2 extends C1 {
+            private C2(String id) {
+                super(id);
+            }
+        }
+
+        C2 elt2_1 = new C2("elt1");
+        C1 elt1_1 = elt2_1;
+
+        C2 elt2_2 = new C2("elt2");
+        C1 elt1_2 = elt2_2;
+
+        //noinspection ClassWithOnlyPrivateConstructors,LimitedScopeInnerClass,ClassWithoutLogger
+        class NamedObservableList<E> extends ObservableListWrapper<E> {
+            private final String id;
+
+            private NamedObservableList(@NotNull String id) {
+                super(new ArrayList<>(0));
+                this.id = id;
+            }
+
+            @Override
+            public String toString() {
+                return id + "=" + super.toString();
+            }
+        }
+
+        NamedObservableList<C1> l1 = new NamedObservableList<>("list1");
+        NamedObservableList<C2> l2 = new NamedObservableList<>("list2");
+
+        Function<C1, C2> transform = elt1 -> (elt1 instanceof C2) ? (C2) elt1 : null;
+
+        ObservableLists.ensureSameContents(l1, transform, l2);
+
+        l1.add(elt1_1);
         assertSameContents(l1, l2);
-        assertTrue(l1.contains(ELT1_NBR));
-        assertTrue(l2.contains(ELT1_STR));
+        Assert.assertThat(l1, hasItem(elt1_1));
+        Assert.assertThat(l2, hasItem(elt2_1));
 
-        l2.add(ELT2_STR);
+        l1.add(elt1_2);
         assertSameContents(l1, l2);
-        assertTrue(l1.contains(ELT2_NBR));
-        assertTrue(l2.contains(ELT2_STR));
+        Assert.assertThat(l1, hasItem(elt1_2));
+        Assert.assertThat(l2, hasItem(elt2_2));
 
-        l1.add(ELT3_NBR);
+        l2.add(elt2_1);
         assertSameContents(l1, l2);
-        assertTrue(l1.contains(ELT3_NBR));
-        assertTrue(l2.contains(ELT3_STR));
+        Assert.assertThat(l1, hasItem(elt1_1));
+        Assert.assertThat(l2, hasItem(elt2_1));
 
-        l2.add(ELT4_STR);
+        l2.add(elt2_2);
         assertSameContents(l1, l2);
-        assertTrue(l1.contains(ELT4_NBR));
-        assertTrue(l2.contains(ELT4_STR));
+        Assert.assertThat(l1, hasItem(elt2_2));
+        Assert.assertThat(l2, hasItem(elt2_2));
     }
 
+    @SuppressWarnings({"TooBroadScope", "MessageMissingOnJUnitAssertion"})
     @Test
     public void ensureContains() throws Exception {
+        Integer ELT1_NBR = 1;
+        Integer ELT2_NBR = 2;
+        Integer ELT3_NBR = 3;
+        Integer ELT4_NBR = 4;
+        String ELT1_STR = String.valueOf(ELT1_NBR);
+        String ELT2_STR = String.valueOf(ELT2_NBR);
+        String ELT3_STR = String.valueOf(ELT3_NBR);
+        String ELT4_STR = String.valueOf(ELT4_NBR);
+
         ObservableList<Integer> l1 = FXCollections.observableArrayList();
         ObservableList<String> l2 = FXCollections.observableArrayList();
 
@@ -80,38 +152,41 @@ public class ObservableListsTest {
 
         l1.add(ELT1_NBR);
         assertContains(l1, transform, l2);
-        assertTrue(l1.contains(ELT1_NBR));
-        assertTrue(l2.contains(ELT1_STR));
+        Assert.assertThat(l1, hasItem(ELT1_NBR));
+        Assert.assertThat(l2, hasItem(ELT1_STR));
 
         l2.add(ELT2_STR);
         assertContains(l1, transform, l2);
-        assertTrue(l2.contains(ELT2_STR));
-        assertFalse(l1.contains(ELT2_NBR));
+        Assert.assertThat(l2, hasItem(ELT2_STR));
+        Assert.assertThat(l1, not(hasItem(ELT2_NBR)));
 
         l1.add(ELT3_NBR);
         assertContains(l1, transform, l2);
-        assertTrue(l1.contains(ELT3_NBR));
-        assertTrue(l2.contains(ELT3_STR));
+        Assert.assertThat(l1, hasItem(ELT3_NBR));
+        Assert.assertThat(l2, hasItem(ELT3_STR));
 
         l2.add(ELT4_STR);
         assertContains(l1, transform, l2);
-        assertTrue(l2.contains(ELT4_STR));
-        assertFalse(l1.contains(ELT4_NBR));
+        Assert.assertThat(l2, hasItem(ELT4_STR));
+        Assert.assertThat(l1, not(hasItem(ELT4_NBR)));
     }
 
 
-    private <T, T1 extends T, T2 extends T> void assertSameContents(@NotNull ObservableList<T1> l1, @NotNull ObservableList<T2> l2) {
-        assertTrue(l1.size() == l2.size());
+    @SuppressWarnings("MessageMissingOnJUnitAssertion")
+    private static <T, T1 extends T, T2 extends T> void assertSameContents(@NotNull ObservableList<T1> l1, @NotNull ObservableList<T2> l2) {
+//        Assert.assertThat(l1.size(), is(l2.size()));
         assertContains(l1, null, l2);
         assertContains(l2, null, l1);
     }
 
-    private <T1, T2> void assertContains(@NotNull ObservableList<T1> l1, @Null Function<T1, T2> transform, @NotNull ObservableList<T2> l2) {
-        assertTrue(l1.size() <= l2.size());
+    @SuppressWarnings("MessageMissingOnJUnitAssertion")
+    private static <T1, T2> void assertContains(@NotNull ObservableList<T1> l1, @Null Function<T1, T2> transform, @NotNull ObservableList<T2> l2) {
+        //noinspection MigrateAssertToMatcherAssert
+//        assertTrue(l1.size() <= l2.size());
         for (T1 e1 : l1) {
             //noinspection unchecked
-            T2 e2 = transform == null ? (T2) e1 : transform.apply(e1);
-            assertTrue(l2.contains(e2));
+            T2 e2 = (transform == null) ? (T2) e1 : transform.apply(e1);
+            Assert.assertThat(l2, hasItem(e2));
         }
     }
 }

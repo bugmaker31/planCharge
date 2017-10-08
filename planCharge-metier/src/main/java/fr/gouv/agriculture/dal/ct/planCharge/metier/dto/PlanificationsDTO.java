@@ -36,7 +36,7 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     }
 
 
-    @Null
+    @NotNull
     @Override
     public Serializable getIdentity() {
         return null; // TODO FDA 2017/07 Trouver mieux comme code.
@@ -44,7 +44,7 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
 
 
     @Override
-    public int compareTo(PlanificationsDTO o) {
+    public int compareTo(@NotNull PlanificationsDTO o) {
         return 0; // TODO FDA 2017/07 Trouver mieux comme code.
     }
 
@@ -63,7 +63,6 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     }
 
 
-    @NotNull
     public double chargePlanifiee(@NotNull TacheDTO tache) throws TacheSansPlanificationException {
         double chargePlanifiee;
 
@@ -71,11 +70,9 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
         if (calendrier == null) {
             chargePlanifiee = 0.0;
         } else {
-            chargePlanifiee = 0.0;
-            for (LocalDate dateSemaine : calendrier.keySet()) {
-                Double chargeSemaine = calendrier.get(dateSemaine);
-                chargePlanifiee += chargeSemaine;
-            }
+            chargePlanifiee = calendrier.values().parallelStream()
+                    .mapToDouble(Double::doubleValue)
+                    .sum();
         }
 
         return chargePlanifiee;
@@ -150,17 +147,17 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     }
 
 
-    public int size() {
-        return plan.size();
-    }
+//    public int size() {
+//        return plan.size();
+//    }
 
-    public boolean isEmpty() {
-        return plan.isEmpty();
-    }
+//    public boolean isEmpty() {
+//        return plan.isEmpty();
+//    }
 
-    public boolean containsKey(TacheDTO key) {
-        return plan.containsKey(key);
-    }
+//    public boolean containsKey(TacheDTO key) {
+//        return plan.containsKey(key);
+//    }
 
     public Map<LocalDate, Double> get(TacheDTO key) {
         return plan.get(key);
@@ -174,32 +171,32 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
         return plan.remove(key);
     }
 
-    public void clear() {
-        plan.clear();
-    }
+//    public void clear() {
+//        plan.clear();
+//    }
 
-    public Collection<Map<LocalDate, Double>> values() {
-        return plan.values();
-    }
+//    public Collection<Map<LocalDate, Double>> values() {
+//        return plan.values();
+//    }
 
     public Set<Map.Entry<TacheDTO, Map<LocalDate, Double>>> entrySet() {
         return plan.entrySet();
     }
 
-    public boolean remove(TacheDTO key, Map<LocalDate, Double> value) {
-        return plan.remove(key, value);
-    }
+//    public boolean remove(TacheDTO key, Map<LocalDate, Double> value) {
+//        return plan.remove(key, value);
+//    }
 
     public Set<TacheDTO> keySet() {
         return plan.keySet();
     }
 
-    public void forEach(BiConsumer<? super TacheDTO, ? super Map<LocalDate, Double>> action) {
-        plan.forEach(action);
-    }
+//    public void forEach(BiConsumer<? super TacheDTO, ? super Map<LocalDate, Double>> action) {
+//        plan.forEach(action);
+//    }
 
-    public void putAll(Map<? extends TacheDTO, ? extends Map<LocalDate, Double>> m) {
-        plan.putAll(m);
-    }
+//    public void putAll(Map<? extends TacheDTO, ? extends Map<LocalDate, Double>> m) {
+//        plan.putAll(m);
+//    }
 
 }

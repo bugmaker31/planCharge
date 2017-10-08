@@ -57,14 +57,14 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
       */
     @SuppressWarnings("NullableProblems")
     @NotNull
-    final // 'final' pour empêcher de resetter cette variable.
-    private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+    // 'final' pour empêcher de resetter cette variable.
+    private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
     @SuppressWarnings({"unchecked", "rawtypes"})
     @NotNull
-    final // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
-    private ObservableList<TacheBean> planificationsBeans = (ObservableList) planChargeBean.getPlanificationsBeans();
+    // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
+    private final ObservableList<TacheBean> planificationsBeans = (ObservableList) planChargeBean.getPlanificationsBeans();
 
 
     // Constructeurs :
@@ -187,7 +187,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         TacheBean tacheBean = TableViews.selectedItem(tachesTable);
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator,MagicNumber
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification pour la tâche",
                     "Aucune tâche n'est actuellement sélectionnée."
@@ -201,7 +201,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
             TableViews.focusOnItem(ihm.getChargesController().getTachesTable(), tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification pour la tâche",
                     Exceptions.causes(e)

@@ -11,23 +11,23 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractCalendrierParRessourceBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierParRessourceBean<R, D, B, P>, P
-        extends Property> extends AbstractCalendrierBean<D, B, P> {
+public abstract class AbstractCalendrierParRessourceBean<R extends RessourceBean, D extends AbstractDTO, B extends AbstractCalendrierParRessourceBean<R, D, B, P>, P extends Property>
+        extends AbstractCalendrierBean<D, B, P> {
 
     // Fields :
 
     @NotNull
-    private Property<R> ressourceBean = new SimpleObjectProperty<>();
+    private final Property<R> ressourceBean = new SimpleObjectProperty<>();
 
 
     // Constructors:
 
-    public AbstractCalendrierParRessourceBean(@NotNull R ressourceBean, @NotNull Map<LocalDate, P> calendrier) throws BeanException {
+    public AbstractCalendrierParRessourceBean(@NotNull R ressourceBean, @NotNull Map<LocalDate, P> calendrier) {
         super(calendrier);
         this.ressourceBean.setValue(ressourceBean);
     }
 
-    public AbstractCalendrierParRessourceBean(@NotNull R ressourceBean) throws BeanException {
+    public AbstractCalendrierParRessourceBean(@NotNull R ressourceBean) {
         this(ressourceBean, new TreeMap<>()); // TreeMap juste pour trier afin de faciliter le débogage.
     }
 

@@ -50,6 +50,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -72,6 +73,7 @@ public final class FilterPanel<T, R> extends VBox {
     private final ListView<FilterValue> checkListView;
 
     // This collection will reference column header listeners. References must be kept locally because weak listeners are registered
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private final Collection<InvalidationListener> columnHeadersChangeListeners = new ArrayList();
     private final ChangeListener<Skin<?>> skinListener = (w, o, n) -> {
         // Clear references to listeners, this will (eventually) cause the WeakListeners to expire
@@ -212,6 +214,7 @@ public final class FilterPanel<T, R> extends VBox {
         }
     }
 
+    @Null
     private static TableColumnHeader scan(TableColumn<?, ?> search,
                                           TableColumnHeader header) {
         // firstly test that the parent isn't what we are looking for
@@ -249,7 +252,7 @@ public final class FilterPanel<T, R> extends VBox {
     }
 
     void unSelectValue(Object value) {
-        checkListView.getItems().stream().filter(item -> item.getValue() == value)
+        checkListView.getItems().stream().filter(item -> item.getValue().equals(value))
                 .forEach(item -> item.selectedProperty().set(false));
     }
 

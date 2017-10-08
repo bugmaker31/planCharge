@@ -15,15 +15,17 @@ import java.util.function.*;
  *
  * Created by frederic.danna on 20/03/2017.
  */
+@SuppressWarnings({"ClassWithoutLogger", "ClassHasNoToStringMethod"})
 public class Planifications extends AbstractEntity<Serializable, Planifications> {
 
-    public static final int NBR_SEMAINES_PLANIFIEES = 12;
+    public static final int NBR_SEMAINES_PLANIFIEES = 12; // 12 semaines, donc 3 mois.
 
     @NotNull
-    private Map<Tache, Map<LocalDate, Double>> plan;
+    private final Map<Tache, Map<LocalDate, Double>> plan;
 
 
     public Planifications() {
+        super();
         this.plan = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
     }
 
@@ -39,7 +41,7 @@ public class Planifications extends AbstractEntity<Serializable, Planifications>
     }
 
     @Override
-    public int compareTo(Planifications o) {
+    public int compareTo(@NotNull Planifications o) {
         return 0; // TODO FDA 2017/07 Trouver mieux comme code.
     }
 
@@ -49,7 +51,6 @@ public class Planifications extends AbstractEntity<Serializable, Planifications>
         return plan.keySet();
     }
 
-    @NotNull
     public double chargePlanifiee(@NotNull Tache tache) throws TacheSansPlanificationException {
         double chargePlanifiee;
 
@@ -57,25 +58,23 @@ public class Planifications extends AbstractEntity<Serializable, Planifications>
         if (calendrier == null) {
             chargePlanifiee = 0.0;
         } else {
-            chargePlanifiee = 0.0;
-            for (LocalDate dateSemaine : calendrier.keySet()) {
-                Double chargeSemaine = calendrier.get(dateSemaine);
-                chargePlanifiee += chargeSemaine;
-            }
+            chargePlanifiee = calendrier.values().parallelStream()
+                    .mapToDouble(Double::doubleValue)
+                    .sum();
         }
 
         return chargePlanifiee;
     }
 
     @Null
-    public Tache tache(@NotNull int idTache) {
+    public Tache tache(int idTache) {
         Optional<Tache> optTache = plan.keySet().parallelStream()
                 .filter(tache -> tache.getId() == idTache)
                 .findAny();
         return (optTache.orElse(null));
     }
 
-    @NotNull
+    @Null
     public Map<LocalDate, Double> calendrier(@NotNull Tache tache) throws TacheSansPlanificationException {
         if (!plan.containsKey(tache)) {
             throw new TacheSansPlanificationException(tache);
@@ -89,7 +88,7 @@ public class Planifications extends AbstractEntity<Serializable, Planifications>
         LocalDate dateSemaine = dateEtat;
         for (int noSemaine = 1; noSemaine <= NBR_SEMAINES_PLANIFIEES; noSemaine++) {
             planification.put(dateSemaine, 0.0);
-            dateSemaine = dateSemaine.plusDays(7);
+            dateSemaine = dateSemaine.plusDays(7); // TODO [issue#26:PeriodeHebdo/Trim]
         }
 
         ajouter(tache, planification);

@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 /**
  * Created by frederic.danna on 13/07/2017.
@@ -169,14 +170,14 @@ public class RessourcesHumainesController extends AbstractController implements 
         PlanChargeIhm.decorateMandatoryColumns(debutMissionColumn);
         debutMissionColumn.setCellFactory(param -> {
             TableCell<RessourceHumaineBean, LocalDate> cell = DatePickerTableCells.<RessourceHumaineBean>forRequiredTableColumn().call(param);
-            PlanChargeIhm.controler(cell, "Date de début incorrecte", this::validerDebutMission);
+            PlanChargeIhm.controler(cell, cell.textProperty(), "Date de début incorrecte", this::validerDebutMission);
             return cell;
         });
 */
             debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
             finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
 
-            TableViews.enableFilteringOnColumns(ressourcesHumainesTable, trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn);
+            TableViews.enableFilteringOnColumns(ressourcesHumainesTable, Arrays.asList(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn));
 
             definirMenuContextuel();
 

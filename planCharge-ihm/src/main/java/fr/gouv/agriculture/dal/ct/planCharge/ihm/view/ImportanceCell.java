@@ -50,17 +50,20 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
     @Override
     public void updateItem(@Null ImportanceBean item, boolean empty) {
         super.updateItem(item, empty);
+        styler();
+    }
 
+    private void styler() {
         PSEUDO_CLASSES.parallelStream()
                 .forEach(pseudoClass -> pseudoClassStateChanged(pseudoClass, false));
 
-        if (empty || (item == null)) {
+        if (isEmpty() || (getItem() == null)) {
             return;
         }
 
         PseudoClass pseudoClass;
         try {
-            pseudoClass = importanceStyleClass(item);
+            pseudoClass = importanceStyleClass(getItem());
         } catch (IhmException e) {
             LOGGER.error("Impossible de màj le style de la cellule Importance de la ligne n°'" + (getIndex() + 1) + "'.", e);
             return;
@@ -70,8 +73,9 @@ public class ImportanceCell<S> extends ComboBoxTableCell<S, ImportanceBean> {
         }
     }
 
+    @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Null
-    private PseudoClass importanceStyleClass(@NotNull ImportanceBean item) throws IhmException {
+    private static PseudoClass importanceStyleClass(@NotNull ImportanceBean item) throws IhmException {
         String codeImportance = item.getCode();
         if (codeImportance == null) {
             return null;

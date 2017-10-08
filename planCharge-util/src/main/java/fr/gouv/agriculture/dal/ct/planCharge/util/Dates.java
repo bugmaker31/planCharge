@@ -7,6 +7,7 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -16,6 +17,7 @@ public abstract class Dates {
 
     // Cf. http://stackoverflow.com/questions/22929237/convert-java-time-localdate-into-java-util-date-type
 
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
     @Null
     public static Date asDate(@Null LocalDate localDate) {
         if (localDate == null) {
@@ -24,6 +26,7 @@ public abstract class Dates {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
     @Null
     public static Date asDate(@Null LocalDateTime localDateTime) {
         if (localDateTime == null) {
@@ -32,6 +35,7 @@ public abstract class Dates {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
     @Null
     public static LocalDate asLocalDate(@Null Date date) {
         if (date == null) {
@@ -40,6 +44,7 @@ public abstract class Dates {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
     @Null
     public static LocalDateTime asLocalDateTime(@Null Date date) {
         if (date == null) {
@@ -70,14 +75,9 @@ public abstract class Dates {
     }
 
 
-    @NotNull
+    @Null
     public static LocalDate max(@NotNull Set<LocalDate> dates) {
-        if (dates.size() == 1) {
-            return dates.iterator().next();
-        } else {
-            LocalDate firstDate = dates.iterator().next();
-            dates.remove(firstDate);
-            return max(firstDate, max(dates));
-        }
+        Optional<LocalDate> maxOpt = dates.parallelStream().max(LocalDate::compareTo);
+        return maxOpt.orElse(null);
     }
 }

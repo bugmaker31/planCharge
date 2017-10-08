@@ -51,6 +51,7 @@ public abstract class AbstractController implements Initializable {
 
     // Suivi des actions de l'utilisateur :
 
+    @NotNull
     SuiviActionsUtilisateur getSuiviActionsUtilisateur() {
         return suiviActionsUtilisateur;
     }

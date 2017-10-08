@@ -109,7 +109,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     }
 
     @FXML
-    private void ajouterTache(@NotNull ActionEvent actionEvent) throws ControllerException {
+    private void ajouterTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         try {
             fonctionAjouterTache.executer();
         } catch (IhmException e) {

@@ -231,9 +231,10 @@ public class ChargeService extends AbstractService {
         // et initialiser les charges de chaque tâche en cas d'ajout :
         //noinspection UnnecessaryLocalVariable
         LocalDate debutPlanif = dateEtat;
-        LocalDate finPlanif = dateEtat.plusDays(Planifications.NBR_SEMAINES_PLANIFIEES * 7); // TODO FDA 2017/07 [issue#26:PeriodeHebdo/Trim]
-        for (TacheDTO tache : planifications.keySet()) {
-            Map<LocalDate, Double> planifTache = planifications.get(tache);
+        LocalDate finPlanif = dateEtat.plusDays((long) Planifications.NBR_SEMAINES_PLANIFIEES * 7L); // TODO FDA 2017/07 [issue#26:PeriodeHebdo/Trim]
+        for (Map.Entry<TacheDTO, Map<LocalDate, Double>> planifEntry : planifications.entrySet()) {
+            TacheDTO tache = planifEntry.getKey();
+            Map<LocalDate, Double> planifTache = planifEntry.getValue();
 
             // On supprime les périodes qui sont en dehors de la période de planification ([date d'état.. date d'état + Planifications.NBR_SEMAINES_PLANIFIEES semaines]) :
             Set<LocalDate> periodesASupprimer = new TreeSet<>(); // Un TreeSet pour garder le tri (par date), juste pour faciliter le débogage.
@@ -245,18 +246,18 @@ public class ChargeService extends AbstractService {
             periodesASupprimer.forEach(debutPeriodeTache -> {
                 //noinspection Convert2MethodRef
                 planifTache.remove(debutPeriodeTache);
-                LOGGER.debug("Période commençant le {} supprimée pour la tâche {}.", debutPeriodeTache, tache.noTache());
+                LOGGER.debug("Période commençant le {} supprimée pour la tâche {} ({}).", debutPeriodeTache, tache.noTache(), tache.getStatut());
             });
 
             // On ajoute les planifications qui manquent au calendrier :
             for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-                LocalDate debutPeriodeTache = dateEtat.plusDays((noSemaine - 1) * 7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+                LocalDate debutPeriodeTache = dateEtat.plusDays(((long) noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                 if (!planifTache.containsKey(debutPeriodeTache)) {
                     LocalDate finPeriodeTache = debutPeriodeTache.plusDays(7); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
                     Double chargeTachePeriode = nouvelleCharge(tache, debutPeriodeTache, finPeriodeTache, dateEtat);
                     if (chargeTachePeriode != null) {
                         planifTache.put(debutPeriodeTache, chargeTachePeriode);
-                        LOGGER.debug("Période commençant le {} ajoutée pour la tâche {} avec une charge de {}.", debutPeriodeTache.format(DateTimeFormatter.ISO_LOCAL_DATE), tache.noTache(), chargeTachePeriode);
+                        LOGGER.debug("Période commençant le {} ajoutée pour la tâche {} ({}) avec une charge de {}.", debutPeriodeTache.format(DateTimeFormatter.ISO_LOCAL_DATE), tache.noTache(), tache.getStatut(), chargeTachePeriode);
                     }
                 }
             }

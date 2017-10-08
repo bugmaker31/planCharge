@@ -18,11 +18,11 @@ public class NbrsJoursAbsenceBean extends AbstractCalendrierParRessourceBean<Res
 
     // Constructors:
 
-    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean) throws BeanException {
+    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean) /*throws BeanException*/ {
         super(ressourceHumaineBean, new TreeMap<>()); // TreeMap juste pour trier afin de faciliter le débogage.
     }
 
-    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws BeanException {
+    public NbrsJoursAbsenceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) /*throws BeanException*/ {
         super(ressourceHumaineBean, calendrier);
     }
 

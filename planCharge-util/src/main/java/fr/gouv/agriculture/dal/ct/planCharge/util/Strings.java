@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.util;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -9,7 +10,12 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Created by frederic.danna on 14/07/2017.
  */
-public class Strings {
+@SuppressWarnings("FinalClass")
+public final class Strings {
+
+    private Strings() {
+        super();
+    }
 
     public static boolean estExpressionReguliere(@NotNull String string) {
         //noinspection UnusedCatchParameter
@@ -22,46 +28,55 @@ public class Strings {
         }
     }
 
-    // Cf. https://stackoverflow.com/questions/801935/formatting-file-sizes-in-java-jstl
-    private static final int ONE_KILO = 1024;
-
     @Null
     public static String epure(@Null String s) {
         if (s == null) {
             return null;
         }
-        String ns = s.trim();
-        if (ns.isEmpty()) {
-            ns = null;
+        String epuredString = s.trim();
+        if (epuredString.isEmpty()) {
+            epuredString = null;
         }
-        return ns;
+        return epuredString;
     }
 
     public static boolean isEmpty(@Null String s) {
         return epure(s) == null;
     }
 
+
+    // Cf. https://stackoverflow.com/questions/801935/formatting-file-sizes-in-java-jstl
+    private static final long ONE_KILO = 1024L;
+
     public static String humanReadable(long number, @NotNull DecimalFormat decimalFormat) {
-        long absNumber = Math.abs(number);
         double result;
         String suffix;
-        //noinspection IfStatementWithTooManyBranches
-        if (absNumber < ONE_KILO) {
-            result = number;
-            suffix = "";
-        } else if (absNumber < (ONE_KILO * ONE_KILO)) {
-            result = number / ONE_KILO;
-            suffix = "K";
-        } else if (absNumber < (ONE_KILO * ONE_KILO * ONE_KILO)) {
-            result = number / (ONE_KILO * ONE_KILO);
-            suffix = "M";
-        } else if (absNumber < (ONE_KILO * ONE_KILO * ONE_KILO * ONE_KILO)) {
-            result = number / (ONE_KILO * ONE_KILO * ONE_KILO);
-            suffix = "M";
-        } else {
-            result = number / (ONE_KILO * ONE_KILO * ONE_KILO * ONE_KILO);
+        CALCUL_FORMAT : {
+            long absNumber = Math.abs(number);
+            if (absNumber < ONE_KILO) {
+                result = (double) number;
+                suffix = "";
+                break CALCUL_FORMAT;
+            }
+            if (absNumber < (ONE_KILO * ONE_KILO)) {
+                result = (double) (number / ONE_KILO);
+                suffix = "K";
+                break CALCUL_FORMAT;
+            }
+            if (absNumber < (ONE_KILO * ONE_KILO * ONE_KILO)) {
+                result = (double) (number / (ONE_KILO * ONE_KILO));
+                suffix = "M";
+                break CALCUL_FORMAT;
+            }
+            if (absNumber < (ONE_KILO * ONE_KILO * ONE_KILO * ONE_KILO)) {
+                result = (double) (number / (ONE_KILO * ONE_KILO * ONE_KILO));
+                suffix = "M";
+                break CALCUL_FORMAT;
+            }
+            result = (double) (number / (ONE_KILO * ONE_KILO * ONE_KILO * ONE_KILO));
             suffix = "G";
         }
+        //noinspection StringConcatenation,StringConcatenationMissingWhitespace
         return decimalFormat.format(result) + suffix;
     }
 }

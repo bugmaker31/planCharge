@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
@@ -18,7 +19,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
@@ -29,23 +29,17 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
-import javafx.util.converter.DoubleStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +56,7 @@ import java.util.*;
  *
  * @author frederic.danna
  */
-@SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields", "OverlyComplexClass"})
+@SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields", "OverlyComplexClass", "AnonymousInnerClass"})
 public class ChargesController extends AbstractTachesController<PlanificationTacheBean> implements Module {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
@@ -257,7 +251,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<PlanificationTacheBean, Double> chargePlanifieeColumn;
+    private TableColumn<PlanificationTacheBean, Double> chargePlanifieeTotaleColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
@@ -525,7 +519,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     //    @Autowired
     @NotNull
-    private final CalculateurCharges calculateurCharges = new CalculateurCharges();
+    private final CalculateurCharges calculateurCharges = CalculateurCharges.instance();
 
 
     // Constructors:
@@ -641,159 +635,39 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void initBeansNbrsJoursChargeRsrc() {
-        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<NbrsJoursParRessourceBean> nbrsJoursChargeBeansAAjouter = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
-                        if (Collections.any(nbrsJoursChargeRsrcBeans, nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean)) != null) {
-                            continue;
-                        }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParRessourceBean(ressourceBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter la ressource " + ressourceBean.getCode() + ".", e);
-                        }
-                    }
-                    nbrsJoursChargeRsrcBeans.addAll(nbrsJoursChargeBeansAAjouter);
-                }
-                if (change.wasRemoved()) {
-                    List<NbrsJoursParRessourceBean> nbrsJoursChargeBeansASupprimer = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getRemoved()) {
-                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
-                            continue;
-                        }
-                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (nbrsJoursChargeRsrcBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceHumaineBean))) {
-                            continue;
-                        }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParRessourceBean(ressourceHumaineBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter la ressource " + ressourceBean.getCode() + ".", e);
-                        }
-                    }
-                    if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
-                        nbrsJoursChargeRsrcBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
-                    }
-                }
-                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
-            }
-        });
+        ObservableLists.Binding binding = new ObservableLists.Binding("ressourcesBeans", "nbrsJoursChargeRsrcBeans");
+        binding.ensureContains(
+                planChargeBean.getRessourcesBeans(),
+                ressourceBean -> new NbrsJoursParRessourceBean(ressourceBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                nbrsJoursChargeRsrcBeans
+        );
     }
 
     private void initBeansNbrsJoursChargeProfil() {
-        planChargeBean.getProfilsBeans().addListener((ListChangeListener<? super ProfilBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<NbrsJoursParProfilBean> nbrsJoursChargeBeansAAjouter = new ArrayList<>();
-                    for (ProfilBean profilBean : change.getAddedSubList()) {
-                        if (Collections.any(nbrsJoursChargeProfilBeans, nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)) != null) {
-                            continue;
-                        }
-                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                    }
-                    nbrsJoursChargeProfilBeans.addAll(nbrsJoursChargeBeansAAjouter);
-                }
-                if (change.wasRemoved()) {
-                    List<NbrsJoursParProfilBean> nbrsJoursChargeBeansASupprimer = new ArrayList<>();
-                    for (ProfilBean profilBean : change.getRemoved()) {
-                        if (nbrsJoursChargeProfilBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean))) {
-                            continue;
-                        }
-                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                    }
-                    if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
-                        nbrsJoursChargeProfilBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
-                    }
-                }
-                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
-            }
-        });
+        ObservableLists.Binding binding = new ObservableLists.Binding("profilsBeans", "nbrsJoursChargeProfilBeans");
+        binding.ensureContains(
+                planChargeBean.getProfilsBeans(),
+                profilBean -> new NbrsJoursParProfilBean(profilBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                nbrsJoursChargeProfilBeans
+        );
     }
 
     private void initBeansNbrsJoursDispoCTRestanteRsrc() {
-        planChargeBean.getRessourcesBeans().addListener((ListChangeListener<? super RessourceBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<NbrsJoursParRessourceBean> nbrsJoursChargeBeansAAjouter = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getAddedSubList()) {
-                        if (Collections.any(nbrsJoursDispoCTRestanteRsrcBeans, nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean)) != null) {
-                            continue;
-                        }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParRessourceBean(ressourceBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter la ressource " + ressourceBean.getCode() + ".", e);
-                        }
-                    }
-                    nbrsJoursDispoCTRestanteRsrcBeans.addAll(nbrsJoursChargeBeansAAjouter);
-                }
-                if (change.wasRemoved()) {
-                    List<NbrsJoursParRessourceBean> nbrsJoursChargeBeansASupprimer = new ArrayList<>();
-                    for (RessourceBean ressourceBean : change.getRemoved()) {
-                        if (!(ressourceBean instanceof RessourceHumaineBean)) {
-                            continue;
-                        }
-                        RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-                        if (nbrsJoursDispoCTRestanteRsrcBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceHumaineBean))) {
-                            continue;
-                        }
-                        try {
-                            Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                            nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParRessourceBean(ressourceHumaineBean, calendrier));
-                        } catch (BeanException e) {
-                            // TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                            LOGGER.error("Impossible d'ajouter la ressource " + ressourceBean.getCode() + ".", e);
-                        }
-                    }
-                    if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
-                        nbrsJoursDispoCTRestanteRsrcBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
-                    }
-                }
-                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
-            }
-        });
+        ObservableLists.Binding binding = new ObservableLists.Binding("ressourcesBeans", "nbrsJoursDispoCTRestanteRsrcBeans");
+        binding.ensureContains(
+                planChargeBean.getRessourcesBeans(),
+                ressourceHumaineBean -> new NbrsJoursParRessourceBean(ressourceHumaineBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                nbrsJoursDispoCTRestanteRsrcBeans
+        );
     }
 
     private void initBeansNbrsJoursDispoCTMaxRestanteProfil() {
-        planChargeBean.getProfilsBeans().addListener((ListChangeListener<? super ProfilBean>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    List<NbrsJoursParProfilBean> nbrsJoursChargeBeansAAjouter = new ArrayList<>();
-                    for (ProfilBean profilBean : change.getAddedSubList()) {
-                        if (Collections.any(nbrsJoursDispoCTMaxRestanteProfilBeans, nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)) != null) {
-                            continue;
-                        }
-                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursChargeBeansAAjouter.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                    }
-                    nbrsJoursDispoCTMaxRestanteProfilBeans.addAll(nbrsJoursChargeBeansAAjouter);
-                }
-                if (change.wasRemoved()) {
-                    List<NbrsJoursParProfilBean> nbrsJoursChargeBeansASupprimer = new ArrayList<>();
-                    for (ProfilBean profilBean : change.getRemoved()) {
-                        if (nbrsJoursDispoCTMaxRestanteProfilBeans.parallelStream().noneMatch(nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean))) {
-                            continue;
-                        }
-                        Map<LocalDate, FloatProperty> calendrier = new TreeMap<>();
-                        nbrsJoursChargeBeansASupprimer.add(new NbrsJoursParProfilBean(profilBean, calendrier));
-                    }
-                    if (!nbrsJoursChargeBeansASupprimer.isEmpty()) {
-                        nbrsJoursDispoCTMaxRestanteProfilBeans.removeAll(nbrsJoursChargeBeansASupprimer); // FIXME FDA 2017/08 La liste contient toujours les éléments à supprimer, bien qu'on ait implémneté les méthode equals/hashCode.
-                    }
-                }
-                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
-            }
-        });
+        ObservableLists.Binding binding = new ObservableLists.Binding("profilsBeans", "nbrsJoursDispoCTMaxRestanteProfilBeans");
+        binding.ensureContains(
+                planChargeBean.getProfilsBeans(),
+                profilBean -> new NbrsJoursParProfilBean(profilBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                nbrsJoursDispoCTMaxRestanteProfilBeans
+        );
     }
 
 
@@ -819,7 +693,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void initTablePlanifications() {
 
-        planificationsTable.setCalendrierColumns(
+        // Définition du contenu de la table (ses lignes) :
+//        planificationsTable.setItems(planificationsBeans); Non, sinon le filtre global ne fontionnera plus (défini par la classe mère lors "super.initialize()").
+
+        planificationsTable.setCalendrierColumns(Arrays.asList(
                 semaine1Column,
                 semaine2Column,
                 semaine3Column,
@@ -832,41 +709,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine10Column,
                 semaine11Column,
                 semaine12Column
-        );
-
-//        ihm.getApplicationController().getDateEtatPicker().setValue(planChargeBean.getDateEtat());
+        ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
-        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
-            int finalNoSemaine = noSemaine;
-            //noinspection OverlyComplexAnonymousInnerClass
-            column.setCellValueFactory(new Callback<CellDataFeatures<PlanificationTacheBean, Double>, ObservableValue<Double>>() {
-
-                @Null
-                @Override
-                public ObservableValue<Double> call(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") CellDataFeatures<PlanificationTacheBean, Double> cell) {
-                    if (planChargeBean.getDateEtat() == null) {
-                        return null;
-                    }
-                    try {
-                        PlanificationTacheBean planifBean = cell.getValue();
-                        LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) finalNoSemaine - 1L) * 7L); // // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                        LocalDate finPeriode = debutPeriode.plusDays(7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                        if (!planifBean.aChargePlanifiee(debutPeriode, finPeriode)) {
-                            // TODO FDA 2017/06 Gérér les périodes trimestrielles aussi.
-                            return null;
-                        }
-                        DoubleProperty nouvelleCharge = planifBean.chargePlanifiee(debutPeriode, finPeriode);
-                        return nouvelleCharge.getValue().equals(0.0) ? null : nouvelleCharge.asObject();
-                    } catch (BeanException e) {
-                        LOGGER.error("Impossible de formatter la cellule contenant la charge de la semaine n°" + finalNoSemaine + " pour la tâche " + cell.getValue().noTache() + ".", e);
-                        return null;
-                    }
-                }
-            });
+        for (int cptColonne = 1; cptColonne <= planificationsTable.getCalendrierColumns().size(); cptColonne++) {
+            TableColumn<PlanificationTacheBean, Double> colonne = planificationsTable.getCalendrierColumns().get(cptColonne - 1);
+            CalendrierChargeCellCallback calendrierChargeCellCallback = new CalendrierChargeCellCallback(cptColonne);
+            colonne.setCellValueFactory(calendrierChargeCellCallback);
         }
-        chargePlanifieeColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeTotaleProperty().asObject());
+        chargePlanifieeTotaleColumn.setCellValueFactory(cellData -> cellData.getValue().chargePlanifieeTotaleProperty().asObject());
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") et
         // du formatage qui symbolise les incohérences/surcharges/etc. (Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/) :
@@ -875,10 +726,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             PlanificationTacheBean planificationTacheBean = event.getTableView().getItems().get(event.getTablePosition().getRow());
             planificationTacheBean.setDebut(event.getNewValue());
 
-            planificationsTable.refresh(); // Pour que les styles CSS soient re-appliqués (notamment ceux des colonnes du calendrier).
+//            planificationsTable.refresh(); // Pour que les styles CSS soient re-appliqués (notamment ceux des colonnes du calendrier).
         });
         //noinspection OverlyComplexAnonymousInnerClass
-        getEcheanceColumn().setCellFactory(param -> new EcheanceCell<PlanificationTacheBean>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, planificationsTable){
+        getEcheanceColumn().setCellFactory(param -> new EcheanceCell<PlanificationTacheBean>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, planificationsTable) {
 
             @Override
             protected void styler() {
@@ -917,19 +768,22 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 if (echeance == null) {
                     return true;
                 }
-                LocalDate debutDernierePeriodePlanifiee = Dates.max(planifBean.getCalendrier().keySet());
+                LocalDate debutDernierePeriodePlanifiee = Dates.max(planifBean.getDebutsPeriodesPlanifiees());
+                if (debutDernierePeriodePlanifiee == null) {
+                    return false; // TODO FDA 2017/10 Confirmer.
+                }
                 LocalDate finDernierePeriodePlanifiee = debutDernierePeriodePlanifiee.plusDays(7L); // TODO [issue#26:PeriodeHebdo/Trim]
                 return !finDernierePeriodePlanifiee.isAfter(echeance);
             }
 
         });
         //noinspection OverlyComplexAnonymousInnerClass
-        getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>(new DoubleStringConverter()) {// TODO FDA 2017/08 Mieux formater.
+        getChargeColumn().setCellFactory(column -> new TextFieldTableCell<PlanificationTacheBean, Double>(Converters.CHARGE_STRING_CONVERTER) {// TODO FDA 2017/08 Mieux formater.
 
             @Override
             public void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
-                formater();
+//                formater();
                 styler();
             }
 
@@ -953,7 +807,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
 
                 // Style with a different color:
-                Double chargePlanifiee = chargePlanifieeColumn.getCellData(getIndex());
+                Double chargePlanifiee = chargePlanifieeTotaleColumn.getCellData(getIndex());
                 if (chargePlanifiee != null) {
                     if (chargePlanifiee < getItem()) {
                         pseudoClassStateChanged(CHARGE_NON_PLANIFIEE, true);
@@ -964,27 +818,23 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
-        for (int noSemaine = 1; noSemaine <= Planifications.NBR_SEMAINES_PLANIFIEES; noSemaine++) {
-            TableColumn<PlanificationTacheBean, Double> column = planificationsTable.getCalendrierColumns().get(noSemaine - 1);
-            int finalNoSemaine = noSemaine;
-            column.setCellFactory(col -> new PlanificationChargeCell(planChargeBean, finalNoSemaine));
-        }
         //noinspection OverlyComplexAnonymousInnerClass
         getRessourceColumn().setCellFactory(param -> new ComboBoxTableCell<PlanificationTacheBean, RessourceBean<?, ?>>(Converters.RESSOURCE_BEAN_CONVERTER, planChargeBean.getRessourcesBeans()) {
 
             @Override
             public void updateItem(RessourceBean<?, ?> item, boolean empty) {
                 super.updateItem(item, empty);
-                formater();
+//                formater();
                 styler();
             }
 
             private void formater() {
-                setText("");
                 if (isEmpty() || (getItem() == null)) {
+                    setText(null);
+                    setGraphic(null);
                     return;
                 }
-                setText(getItem().getCode());
+                setText(getConverter().toString(getItem()));
             }
 
             private void styler() {
@@ -1015,16 +865,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             @Override
             public void updateItem(ProfilBean item, boolean empty) {
                 super.updateItem(item, empty);
-                formater();
+//                formater();
                 styler();
             }
 
             private void formater() {
-                setText("");
                 if (isEmpty() || (getItem() == null)) {
+                    setText(null);
+                    setGraphic(null);
                     return;
                 }
-                setText(getItem().getCode());
+                setText(getConverter().toString(getItem()));
             }
 
             private void styler() {
@@ -1050,27 +901,32 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
             }
         });
-        ihm.interdireEdition(chargePlanifieeColumn, "Cette colonne n'est pas saisissable, elle est calculée.");
+        for (int cptColonne = 1; cptColonne <= planificationsTable.getCalendrierColumns().size(); cptColonne++) {
+            TableColumn<PlanificationTacheBean, Double> colonne = planificationsTable.getCalendrierColumns().get(cptColonne - 1);
+            int finalCptColonne = cptColonne;
+            colonne.setCellFactory(param -> new PlanificationChargeCell(finalCptColonne));
+        }
         //noinspection OverlyComplexAnonymousInnerClass
-        chargePlanifieeColumn.setCellFactory(column -> new TableCell<PlanificationTacheBean, Double>() {
+        chargePlanifieeTotaleColumn.setCellFactory(column -> new EditableAwareTextFieldTableCell<PlanificationTacheBean, Double>(Converters.CHARGE_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Cette colonne n'est pas saisissable, elle est calculée.")) {
+
             @Override
-            protected void updateItem(Double chargePlanifiee, boolean empty) {
-                super.updateItem(chargePlanifiee, empty);
-                formater();
+            public void updateItem(@Null Double item, boolean empty) {
+                super.updateItem(item, empty);
+//                formater();
                 styler();
             }
 
             private void formater() {
-                setText("");
                 if ((getItem() == null) || isEmpty()) {
                     setText(null);
                     setGraphic(null);
                     return;
                 }
-                setText(FORMAT_CHARGE.format(getItem()));
+                setText(getConverter().toString(getItem()));
             }
 
             private void styler() {
+
                 pseudoClassStateChanged(INCOHERENCE, false);
 
                 if ((getItem() == null) || isEmpty()) {
@@ -1087,8 +943,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 //        planificationsTable.getSelectionModel().setCellSelectionEnabled(true); Fait dans le FXML.
 
-        TableViews.ensureDisplayingRows(planificationsTable, 30);
+//        FIXME FDA 2017/10 Les colonnes sont toujours réagençables.
+        TableViews.disableReagencingColumns(planificationsTable);
 
+        TableViews.ensureDisplayingRows(planificationsTable, 30);
         nbrLignesTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (Objects.equals(oldValue, newValue)) {
                 return;
@@ -1100,7 +958,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void initTableNbrsJoursChargeRsrc() {
 
-        nbrsJoursChargeRsrcTable.setCalendrierColumns(
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursChargeRsrcTable.setItems(nbrsJoursChargeRsrcBeans);
+
+        nbrsJoursChargeRsrcTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursChargeRsrcColumn,
                 semaine2NbrsJoursChargeRsrcColumn,
                 semaine3NbrsJoursChargeRsrcColumn,
@@ -1113,7 +974,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine10NbrsJoursChargeRsrcColumn,
                 semaine11NbrsJoursChargeRsrcColumn,
                 semaine12NbrsJoursChargeRsrcColumn
-        );
+        ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursChargeRsrcColumn.setCellValueFactory(cell -> cell.getValue().getRessourceBean().codeProperty());
@@ -1123,7 +984,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
-                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(planChargeBean, cptColonne));
+                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
         }
 
@@ -1131,15 +992,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursChargeRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursChargeRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            int cptColonne = 0;
             for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
-                cptColonne++;
-                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par ressource est calculé.")));
+                column.setCellFactory(owningColumn -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par ressource est calculé.")));
             }
         }
 
         // Paramétrage des ordres de tri :
-        //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
         TableViews.ensureSorting(nbrsJoursChargeRsrcTable);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
@@ -1148,16 +1006,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursChargeRsrcTable.setItems(nbrsJoursChargeRsrcBeans);
-
         TableViews.disableReagencingColumns(nbrsJoursChargeRsrcTable);
+
         TableViews.ensureDisplayingAllRows(nbrsJoursChargeRsrcTable);
     }
 
     private void initTableNbrsJoursChargeProfil() {
 
-        nbrsJoursChargeProfilTable.setCalendrierColumns(
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursChargeProfilTable.setItems(nbrsJoursChargeProfilBeans);
+
+        nbrsJoursChargeProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursChargeProfilColumn,
                 semaine2NbrsJoursChargeProfilColumn,
                 semaine3NbrsJoursChargeProfilColumn,
@@ -1170,7 +1029,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine10NbrsJoursChargeProfilColumn,
                 semaine11NbrsJoursChargeProfilColumn,
                 semaine12NbrsJoursChargeProfilColumn
-        );
+        ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //noinspection HardcodedFileSeparator
@@ -1180,7 +1039,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
                 cptColonne++;
-                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(planChargeBean, cptColonne));
+                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
         }
 
@@ -1188,10 +1047,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursChargeProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursChargeProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            int cptColonne = 0;
             for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
-                cptColonne++;
-                column.setCellFactory(cell -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par profil est calculé.")));
+                column.setCellFactory(owningColumn -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par profil est calculé.")));
             }
         }
 
@@ -1205,16 +1062,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursChargeProfilTable.setItems(nbrsJoursChargeProfilBeans);
-
         TableViews.disableReagencingColumns(nbrsJoursChargeProfilTable);
+
         TableViews.ensureDisplayingAllRows(nbrsJoursChargeProfilTable);
     }
 
     private void initTableNbrsJoursDispoCTRestanteRsrc() {
 
-        nbrsJoursDispoCTRestanteRsrcTable.setCalendrierColumns(
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursDispoCTRestanteRsrcTable.setItems(nbrsJoursDispoCTRestanteRsrcBeans);
+
+        nbrsJoursDispoCTRestanteRsrcTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoCTRestanteRsrcColumn,
                 semaine2NbrsJoursDispoCTRestanteRsrcColumn,
                 semaine3NbrsJoursDispoCTRestanteRsrcColumn,
@@ -1227,7 +1085,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine10NbrsJoursDispoCTRestanteRsrcColumn,
                 semaine11NbrsJoursDispoCTRestanteRsrcColumn,
                 semaine12NbrsJoursDispoCTRestanteRsrcColumn
-        );
+        ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         ressourceNbrsJoursDispoCTRestanteRsrcColumn.setCellValueFactory(cell -> cell.getValue().getRessourceBean().codeProperty());
@@ -1237,7 +1095,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
-                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(planChargeBean, cptColonne));
+                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
         }
 
@@ -1245,7 +1103,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
-            column.setCellFactory(cell -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. CT restante par ressource est calculé.")));
+            column.setCellFactory(owningColumn -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. CT restante par ressource est calculé.")));
         }
 
         // Paramétrage des ordres de tri :
@@ -1258,15 +1116,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoCTRestanteRsrcTable.setItems(nbrsJoursDispoCTRestanteRsrcBeans);
-
         TableViews.disableReagencingColumns(nbrsJoursDispoCTRestanteRsrcTable);
+
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTRestanteRsrcTable);
     }
 
     private void initTableNbrsJoursDispoCTMaxRestanteProfilTable() {
-        nbrsJoursDispoCTMaxRestanteProfilTable.setCalendrierColumns(
+
+        // Définition du contenu de la table (ses lignes) :
+        nbrsJoursDispoCTMaxRestanteProfilTable.setItems(nbrsJoursDispoCTMaxRestanteProfilBeans);
+
+        nbrsJoursDispoCTMaxRestanteProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoCTMaxRestanteProfilColumn,
                 semaine2NbrsJoursDispoCTMaxRestanteProfilColumn,
                 semaine3NbrsJoursDispoCTMaxRestanteProfilColumn,
@@ -1279,7 +1139,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 semaine10NbrsJoursDispoCTMaxRestanteProfilColumn,
                 semaine11NbrsJoursDispoCTMaxRestanteProfilColumn,
                 semaine12NbrsJoursDispoCTMaxRestanteProfilColumn
-        );
+        ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //noinspection HardcodedFileSeparator
@@ -1289,7 +1149,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             int cptColonne = 0;
             for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
                 cptColonne++;
-                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(planChargeBean, cptColonne));
+                column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
         }
 
@@ -1297,7 +1157,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursDispoCTMaxRestanteProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTMaxRestanteProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
-            column.setCellFactory(cell -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. max. CT restante par profil est calculé.")));
+            column.setCellFactory(owningColumn -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. max. CT restante par profil est calculé.")));
         }
 
         // Paramétrage des ordres de tri :
@@ -1310,10 +1170,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoCTMaxRestanteProfilTable.setItems(nbrsJoursDispoCTMaxRestanteProfilBeans);
-
         TableViews.disableReagencingColumns(nbrsJoursDispoCTMaxRestanteProfilTable);
+
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTMaxRestanteProfilTable);
     }
 
@@ -1448,7 +1306,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if (dateEtat == null) {
 /*
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la planification (valeurs du calendrier)",
                     "Date d'état non définie."
@@ -1461,7 +1319,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             definirValeursCalendrier(dateEtat);
         } catch (ControllerException e) {
             LOGGER.error("Impossible de màj la planification (valeurs du calendrier).", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de mettre à jour la planification (valeurs du calendrier)",
                     Exceptions.causes(e)
@@ -1472,20 +1330,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     private void definirValeursCalendrier(@NotNull LocalDate dateEtat) throws ControllerException {
         try {
             LOGGER.debug("Màj de la planification : ");
+
             PlanificationsDTO planificationsInitiales = planChargeBean.toPlanificationDTOs();
             PlanificationsDTO planifications = planChargeService.replanifier(planificationsInitiales, dateEtat);
-            planifications
-                    .forEach((tache, planifTache) -> {
-                        Optional<PlanificationTacheBean> planifBeanOpt = planChargeBean.getPlanificationsBeans().parallelStream()
-                                .filter(planificationBean -> planificationBean.getId() == tache.getId())
-                                .findAny();
-                        assert planifBeanOpt.isPresent();
-                        PlanificationTacheBean planifBean = planifBeanOpt.get();
-                        Map<LocalDate, DoubleProperty> calendrierTache = planifBean.getCalendrier();
-                        calendrierTache.clear();
-                        planifTache.forEach((debutPeriode, charge) -> calendrierTache.put(debutPeriode, new SimpleDoubleProperty(charge)));
-                    });
-            planificationsTable.refresh();
+
+            planChargeBean.fromPlanificationDTOs(planifications);
+
+//            planificationsTable.refresh();
             LOGGER.debug("Planification màj.");
         } catch (BeanException | ServiceException e) {
             throw new ControllerException("Impossible de màj la planification.", e);
@@ -1519,7 +1370,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         PlanificationTacheBean tacheBean = TableViews.selectedItem(planificationsTable);
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la tâche",
                     "Aucune ligne du plan de charge n'est actuellement sélectionnée."
@@ -1534,7 +1385,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean);
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);
-            ihm.afficherPopUp(
+            ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible d'afficher la tâche" + tacheBean.noTache(),
                     Exceptions.causes(e),
@@ -1590,13 +1441,14 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             LocalDate debutPeriode, finPeriode;
             debutPeriode = planChargeBean.getDateEtat();
             finPeriode = debutPeriode.plusMonths(1L);
-            Double chargePlanifiee;
+            DoubleProperty chargePlanifiee;
             try {
-                chargePlanifiee = tache.chargePlanifiee(debutPeriode, finPeriode).getValue();
+                // FIXME FDA 2017/09 Calcule la charge sur 1 p&riode, donc actuellement 1 semaine, pas sur le mois.
+                chargePlanifiee = tache.chargePlanifieeProperty(debutPeriode/*, finPeriode*/)/*.getValue()*/;
             } catch (BeanException e) {
                 throw new ControllerException("Impossible de déterminer la charge planifiée de la tâche " + tache.noTache() + " pour la période de " + debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + " à " + finPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".", e);
             }
-            if (chargePlanifiee > 0.0) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            if ((chargePlanifiee.getValue() != null) && (chargePlanifiee.getValue() > 0.0)) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
                 return true;
             }
         }
@@ -1648,9 +1500,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 
     public void calculerCharges() throws ControllerException {
-        LOGGER.debug("Calcul des disponibilités  : ");
+        LOGGER.debug("Calcul des charges  : ");
         calculateurCharges.calculer();
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
-        LOGGER.debug("Disponibilités calculées.");
+        LOGGER.debug("Charges calculées.");
     }
 }

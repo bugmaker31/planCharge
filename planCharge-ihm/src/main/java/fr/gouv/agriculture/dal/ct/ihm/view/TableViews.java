@@ -3,18 +3,15 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
-import javafx.scene.control.Skin;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.table.TableFilter;
@@ -24,10 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class TableViews {
 
@@ -70,17 +64,17 @@ public final class TableViews {
 
     public static <S> void disableReagencingColumns(@NotNull TableView<S> table) {
         // Cf. https://stackoverflow.com/questions/10598639/how-to-disable-column-reordering-in-a-javafx2-tableview
-        //noinspection OverlyComplexAnonymousInnerClass
+        //noinspection OverlyComplexAnonymousInnerClass,AnonymousInnerClass
         table.getColumns().addListener(new ListChangeListener<TableColumn<S, ?>>() {
 
             @SuppressWarnings("BooleanVariableAlwaysNegated")
             private boolean suspended = false;
 
             @NotNull
-            private TableColumn[] orginalColumnsOrder = table.getColumns().toArray(new TableColumn[0]);
+            private final TableColumn[] orginalColumnsOrder = table.getColumns().toArray(new TableColumn[table.getColumns().size()]);
 
             @Override
-            public void onChanged(Change<? extends TableColumn<S, ?>> change) {
+            public void onChanged(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") Change<? extends TableColumn<S, ?>> change) {
                 while (change.next()) {
                     if (change.wasReplaced() && !suspended) {
                         suspended = true;
@@ -152,9 +146,10 @@ public final class TableViews {
     }
 
 
-    @SuppressWarnings("rawtypes")
-    private static final Map<String, List<ChangeListener>> ensureDisplayingRowsChangeListeners = new HashMap<>();
-    private static final Map<String, IntegerBinding> ensureDisplayingRowsBindings = new HashMap<>();
+/*
+    private static final Map<String, List<ChangeListener>> ensureDisplayingRowsChangeListeners = new HashMap<>(10);
+    private static final Map<String, IntegerBinding> ensureDisplayingRowsBindings = new HashMap<>(10);
+*/
 
     public static <S> void ensureDisplayingAllRows(@NotNull TableView<S> table) {
         ensureDisplayingRows(table, null);
@@ -170,7 +165,8 @@ public final class TableViews {
         table.prefHeightProperty().bind(tableHeight);
         table.maxHeightProperty().bind(tableHeight);
 */
-        adjustHeigth(table, rowCount);
+/*
+        adjustHeight(table, rowCount);
 
         String tableId = table.getId();
         assert tableId != null;
@@ -198,12 +194,12 @@ public final class TableViews {
             }
         }
 
-        ensureDisplayingRowsChangeListeners.put(tableId, new ArrayList<>());
+        ensureDisplayingRowsChangeListeners.put(tableId, new ArrayList<>(0));
         // On ajuste la hauteur de la table lorsque la Skin de la TableView est Settée notamment pour récupérer la hauteur de l'entête de la table (pas tout compris, copié/collé d'Internet).
         {
             ChangeListener<Skin<?>> changeListener = (observable, oldValue, newValue) -> {
                 if (!java.util.Objects.equals(oldValue, newValue)) {
-                    adjustHeigth(table, rowCount);
+                    adjustHeight(table, rowCount);
                 }
             };
             //noinspection unchecked
@@ -214,7 +210,7 @@ public final class TableViews {
         {
             ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> {
                 if (!java.util.Objects.equals(oldValue, newValue)) {
-                    adjustHeigth(table, rowCount);
+                    adjustHeight(table, rowCount);
                 }
             };
             //noinspection unchecked
@@ -226,15 +222,37 @@ public final class TableViews {
             ensureDisplayingRowsBindings.put(tableId, itemsSizeBinding);
             ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> {
                 if (!java.util.Objects.equals(oldValue, newValue)) {
-                    adjustHeigth(table, Objects.<Integer, Integer>value(rowCount, rowCountValue -> Math.min(rowCountValue, newValue.intValue()), newValue.intValue()));
+                    adjustHeight(table, Objects.<Integer, Integer>value(rowCount, rowCountValue -> Math.min(rowCountValue, newValue.intValue()), newValue.intValue()));
                 }
             };
             itemsSizeBinding.addListener(changeListener);
             ensureDisplayingRowsChangeListeners.get(tableId).add(changeListener);
         }
+*/
+
+        IntegerBinding rowCountBinding = (IntegerBinding) Bindings.max(
+                1, // On assure d'avoir au moins 1 ligne pour que le message std de JavaFX "Aucun contenu dans la table" soit visible par l'utilisateur.
+                (rowCount != null) ? new IntegerBinding() {
+                    @Override
+                    protected int computeValue() {
+                        return rowCount;
+                    }
+                } : Bindings.size(table.getItems()) // NB : table.getItems() peut ne pas encore contenir les nouveaux items, mais encore les anciens items.
+        );
+
+        assert table.getFixedCellSize() > 0.0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+
+        // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
+        DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(40.0);// Additional pixels are for tableview's header heght.
+
+        table.prefHeightProperty().unbind();
+        table.prefHeightProperty().bind(tableHeightBinding);
+
+        LOGGER.debug("Table height ensured for table {}.", table.getId());
     }
 
-    private static void adjustHeigth(@NotNull TableView<?> table, @Null Integer rowCount) {
+/*
+    private static void adjustHeight(@NotNull TableView<?> table, @Null Integer rowCount) {
 
         assert table.getFixedCellSize() > 0.0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
 
@@ -266,6 +284,8 @@ public final class TableViews {
 
         LOGGER.debug("Table height set to {} for table {}.", tableHeight, table.getId());
     }
+*/
+
 
     // Input :
 
@@ -290,17 +310,17 @@ public final class TableViews {
 
     // Filtering :
 
-    @SafeVarargs
-    public static <S> void enableFilteringOnColumns(@NotNull TableView<S> table, @NotNull TableColumn<S, ?>... columns) {
+    public static <S> void enableFilteringOnColumns(@NotNull TableView<S> table, @NotNull List<TableColumn<S, ?>> columns) {
         Builder<S> filterBuilder = TableFilter.forTableView(table);
 //        filter.lazy(true); // FDA 2017/07 Confirmer (ne semble rien changer).
         filterBuilder.apply();
+
         decorateFilterableColumns(columns);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void decorateFilterableColumns(@NotNull TableColumn<?, ?>... columns) {
-        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
+    public static <S> void decorateFilterableColumns(@NotNull Collection<TableColumn<S, ?>> columns) {
+//        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
             for (TableColumn<?, ?> column : columns) {
                 if (column.getGraphic() == null) {
                     Label label = new Label();
@@ -314,15 +334,22 @@ public final class TableViews {
                     throw new RuntimeException("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
                 }
             }
-        });
+//        });
     }
-    // FIXME FDA 2017/08 Ne fonctionne pas à 100% : quelques lignes ne sont parfois pas dans l'ordre défini par le sortOrder du FXML (ressource humaine). Et quand il y a un 2nd critère de tri (le profil), la 2nde colonne n'est vraiment pazs triée.
 
     public static <S> void ensureSorting(@NotNull TableView<S> table) {
 //        table.getItems().addListener((ListChangeListener<? super S>) change -> {
-        SortedList<S> sortedBeans = new SortedList<>(table.getItems());
+        SortedList<S> sortedBeans = new SortedList<>(originalUnsortedItems(table.getItems()));
         sortedBeans.comparatorProperty().bind(table.comparatorProperty());
         table.setItems(sortedBeans);
 //        });
+    }
+
+    private static <S> ObservableList<S> originalUnsortedItems(@NotNull ObservableList<S> list) {
+        if (!(list instanceof SortedList)) {
+            return list;
+        }
+        //noinspection unchecked
+        return TableViews.<S>originalUnsortedItems(((SortedList)list).getSource());
     }
 }

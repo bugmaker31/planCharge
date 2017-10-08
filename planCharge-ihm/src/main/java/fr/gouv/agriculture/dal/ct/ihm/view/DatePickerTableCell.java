@@ -1,6 +1,8 @@
 package fr.gouv.agriculture.dal.ct.ihm.view;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.LocalDateStringConverter;
@@ -11,22 +13,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 // Inspiré de http://physalix.com/javafx8-render-a-datepicker-cell-in-a-tableview/
-@SuppressWarnings("ClassHasNoToStringMethod")
+@SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithoutLogger"})
 public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
 
     @NotNull
-    private final String format;
-    @NotNull
     private final String prompt;
     @NotNull
-    private DatePicker datePicker;
+    private final DatePicker datePicker;
 
 
     public DatePickerTableCell(@NotNull String format, @NotNull String promptText) {
         super(new LocalDateStringConverter(DateTimeFormatter.ofPattern(format), DateTimeFormatter.ofPattern(format)));
-
-        this.format = format;
         this.prompt = promptText;
+
         this.datePicker = createDatePicker();
     }
 
@@ -37,6 +36,11 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
 
     public void setShowWeekNumbers(boolean value) {
         datePicker.setShowWeekNumbers(value);
+    }
+
+    @NotNull
+    public ObjectProperty<LocalDate> valueProperty() {
+        return datePicker.valueProperty();
     }
 
 
@@ -56,13 +60,21 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
         return newDatePicker;
     }
 
-
     @Override
     public void updateItem(@Null LocalDate item, boolean empty) {
         super.updateItem(item, empty);
-        datePicker.setValue(item);
+        datePicker.setValue(getItem());
+        formater();
     }
 
+    private void formater() {
+        if ((getItem() == null) || isEmpty()) {
+            setText(null);
+            setGraphic(null);
+            return;
+        }
+        setText(getConverter().toString(getItem()));
+    }
 
     @Override
     public void startEdit() {
@@ -94,7 +106,5 @@ public class DatePickerTableCell<S> extends TextFieldTableCell<S, LocalDate> {
 //        setContentDisplay(ContentDisplay.TEXT_ONLY);
 //        setAlignment(originalAlignment);
     }
-
-
 
 }
