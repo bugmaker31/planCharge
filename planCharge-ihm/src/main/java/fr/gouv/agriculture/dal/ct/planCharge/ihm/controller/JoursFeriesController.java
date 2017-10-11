@@ -96,6 +96,8 @@ public class JoursFeriesController extends AbstractController implements Module 
         try {
             LOGGER.debug("Initialisation...");
 
+//            joursFeriesTable.setItems(joursFeriesBeans);
+
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
             descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
@@ -110,10 +112,7 @@ public class JoursFeriesController extends AbstractController implements Module 
 //        PlanChargeIhm.decorateMandatoryColumns(descriptionColumn);
             descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-            SortedList<JourFerieBean> sortedBeans = new SortedList<>(joursFeriesBeans);
-            sortedBeans.comparatorProperty().bind(joursFeriesTable.comparatorProperty());
-
-            joursFeriesTable.setItems(sortedBeans);
+            TableViews.ensureSorting(joursFeriesTable, joursFeriesBeans);
 
             TableViews.enableFilteringOnColumns(joursFeriesTable, Arrays.asList(dateColumn, descriptionColumn));
 
@@ -121,13 +120,14 @@ public class JoursFeriesController extends AbstractController implements Module 
 
             definirRaccourcisClaviers();
 
+
             LOGGER.info("Initialisé.");
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur du module 'Jours fériés'.", e);
         }
     }
 
-//    TODO FDA 2017/09 Déporter dans le FXML.
+    //    TODO FDA 2017/09 Déporter dans le FXML.
     private void definirMenuContextuel() {
         ContextMenu contextMenu = new ContextMenu();
 

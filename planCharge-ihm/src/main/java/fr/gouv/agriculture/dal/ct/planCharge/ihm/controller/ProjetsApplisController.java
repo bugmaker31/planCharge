@@ -127,10 +127,6 @@ public class ProjetsApplisController extends AbstractController implements Modul
         try {
             LOGGER.debug("Initialisation...");
 
-            SortedList<ProjetAppliBean> sortedBeans = new SortedList<>(projetsApplisBeans);
-            sortedBeans.comparatorProperty().bind(projetsApplisTable.comparatorProperty());
-            projetsApplisTable.setItems(sortedBeans);
-
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             codeColumn.setCellValueFactory(cellData -> cellData.getValue().codeProperty());
             nomColumn.setCellValueFactory(cellData -> cellData.getValue().nomProperty());
@@ -156,6 +152,8 @@ public class ProjetsApplisController extends AbstractController implements Modul
                 ihm.controler(cell, "Trigramme du CPI incorrect", this::validerTrigrammeCPI);
                 return cell;
             });
+
+            TableViews.ensureSorting(projetsApplisTable, projetsApplisBeans);
 
             TableViews.enableFilteringOnColumns(projetsApplisTable, Arrays.asList(codeColumn, nomColumn, trigrammeCPIColumn));
 

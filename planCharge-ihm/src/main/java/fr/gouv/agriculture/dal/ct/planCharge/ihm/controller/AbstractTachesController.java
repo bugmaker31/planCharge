@@ -290,9 +290,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         LOGGER.debug("Initialisation...");
 //        super.initialize();
 
-        // Définition dees items de la table :
-        getTachesTable().setItems(filteredTachesBeans);
-
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         categorieColumn.setCellValueFactory(cellData -> cellData.getValue().codeCategorieProperty());
         sousCategorieColumn.setCellValueFactory(cellData -> cellData.getValue().codeSousCategorieProperty());
@@ -378,7 +375,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
         importanceColumn.setComparator(ImportanceComparator.COMPARATEUR);
         //
-        TableViews.ensureSorting(getTachesTable());
+        TableViews.ensureSorting(getTachesTable(), filteredTachesBeans);
 
         // Ajout des filtres "globaux" (à la TableView, pas sur chaque TableColumn) :
         //

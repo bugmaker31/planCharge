@@ -3,7 +3,8 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import javafx.application.Platform;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -11,6 +12,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -240,7 +242,7 @@ public final class TableViews {
                 } : Bindings.size(table.getItems()) // NB : table.getItems() peut ne pas encore contenir les nouveaux items, mais encore les anciens items.
         );
 
-        assert table.getFixedCellSize() > 0.0 : "La tableView doit avoir la propriété 'fixedCellSize' définie."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+        assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
 
         // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
         DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(40.0);// Additional pixels are for tableview's header heght.
@@ -248,7 +250,7 @@ public final class TableViews {
         table.prefHeightProperty().unbind();
         table.prefHeightProperty().bind(tableHeightBinding);
 
-        LOGGER.debug("Table height ensured for table {}.", table.getId());
+        LOGGER.debug("Table height is ensured for table '{}'.", table.getId());
     }
 
 /*
@@ -321,35 +323,73 @@ public final class TableViews {
     @SuppressWarnings("WeakerAccess")
     public static <S> void decorateFilterableColumns(@NotNull Collection<TableColumn<S, ?>> columns) {
 //        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
-            for (TableColumn<?, ?> column : columns) {
-                if (column.getGraphic() == null) {
-                    Label label = new Label();
-                    column.setGraphic(label);
-                }
-                try {
-                    PlanChargeIhm.symboliserNoeudsFiltrables(column.getGraphic());
-                } catch (IhmException e) {
-                    // TODO FDA 2017/07 Trouver mieux que thrower une loguer et/ou une RuntimeException.
-                    LOGGER.error("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
-                    throw new RuntimeException("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
-                }
+        for (TableColumn<?, ?> column : columns) {
+            if (column.getGraphic() == null) {
+                Label label = new Label();
+                column.setGraphic(label);
             }
+            try {
+                PlanChargeIhm.symboliserNoeudsFiltrables(column.getGraphic());
+            } catch (IhmException e) {
+                // TODO FDA 2017/07 Trouver mieux que thrower une loguer et/ou une RuntimeException.
+                LOGGER.error("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
+                throw new RuntimeException("Impossible de symboliser le caractère filtrable d'une colonne de la table.", e);
+            }
+        }
 //        });
     }
 
+
+    // Sorting :
+
+/*
     public static <S> void ensureSorting(@NotNull TableView<S> table) {
-//        table.getItems().addListener((ListChangeListener<? super S>) change -> {
-        SortedList<S> sortedBeans = new SortedList<>(originalUnsortedItems(table.getItems()));
-        sortedBeans.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(sortedBeans);
-//        });
+        ensureSorting(table, table.getItems());
+    }
+*/
+
+    public static <S> void ensureSorting(@NotNull TableView<S> table, @NotNull ObservableList<S> items) {
+        bindSortOrder(table, items);
+/*
+        table.itemsProperty().addListener((observable, oldValue, newValue) -> {
+            bindSortOrder(table, newValue);
+        });
+        table.getItems().addListener((ListChangeListener<? super S>) c -> {
+            while (c.next()) {
+                // Rien.
+            }
+            bindSortOrder(table, table.getItems());
+        });
+        items.addListener((ListChangeListener<? super S>) c -> {
+            while (c.next()) {
+                // Rien.
+            }
+            bindSortOrder(table, items);
+        });
+        items.addListener((InvalidationListener) observable -> {
+            bindSortOrder(table, items);
+        });
+*/
+        LOGGER.debug("Table '{}' is ensured to be sorted as table' comparator.", table.getId());
     }
 
-    private static <S> ObservableList<S> originalUnsortedItems(@NotNull ObservableList<S> list) {
+    private static <S> void bindSortOrder(@NotNull TableView<S> table, @NotNull ObservableList<S> items) {
+        ObservableList<S> unsortedSourceItems = unsortedSourceItems(items);
+        SortedList<S> sortedSourceItems = new SortedList<>(unsortedSourceItems);
+        sortedSourceItems.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedSourceItems);
+        LOGGER.debug("Table '{}' is ensured to be sorted as table' comparator.", table.getId());
+    }
+
+    @NotNull
+    private static <S> ObservableList<S> unsortedSourceItems(@NotNull ObservableList<S> list) {
         if (!(list instanceof SortedList)) {
             return list;
         }
         //noinspection unchecked
-        return TableViews.<S>originalUnsortedItems(((SortedList)list).getSource());
+        SortedList<S> sortedItems = (SortedList) list;
+        //noinspection unchecked
+        ObservableList<S> sourceItems = (ObservableList<S>) sortedItems.getSource();
+        return unsortedSourceItems(sourceItems);
     }
 }

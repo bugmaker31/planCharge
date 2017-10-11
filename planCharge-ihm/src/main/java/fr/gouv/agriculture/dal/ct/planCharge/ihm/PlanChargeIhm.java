@@ -302,7 +302,7 @@ public class PlanChargeIhm extends Application {
                 masquerErreurSaisie(field);
                 String error = validator.apply(newValue);
                 if (error != null) {
-                    LOGGER.debug("Erreur de saisie sur le champ {} pour la valeur '{}' : << {} >>", id(field), newValue, error);
+                    LOGGER.debug("Erreur de saisie détectée au niveau du champ '{}' pour la valeur '{}' : << {} >>", id(field), newValue, error);
                     afficherErreurSaisie(field, title, error);
                 }
             } catch (IhmException e) {
@@ -388,9 +388,9 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.afficherModuleProjetsApplis();
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.46.ods"));
+//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.50.ods"));
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s39_t3.39.ods"));
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s41_t3.41.ods"));
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
@@ -629,9 +629,9 @@ public class PlanChargeIhm extends Application {
 
     public static void symboliserNoeudsFiltrables(@NotNull Node... nodes) throws IhmException {
 //        Platform.runLater(() -> { // TODO FDA 2017/07 Supprimer si non nécessaire/utile.
-            for (Node node : nodes) {
-                Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
-            }
+        for (Node node : nodes) {
+            Decorator.addDecoration(node, new GraphicDecoration(new ImageView(FILTERABLE_INDICATOR_IMAGE), Pos.BOTTOM_RIGHT, -FILTERABLE_INDICATOR_IMAGE.getWidth() / 2, -FILTERABLE_INDICATOR_IMAGE.getHeight() / 2));
+        }
 //        });
     }
 
@@ -823,23 +823,24 @@ public class PlanChargeIhm extends Application {
 
     @SuppressWarnings("WeakerAccess")
     public static void masquerErreurSaisie(@NotNull Control field) throws IhmException {
-        Platform.runLater(() -> { // Sinon les Décorations ne sont pas affichées. TODO FDA 2017/09 Comprendre pourquoi.
-            if (!popups.containsKey(field)) {
+        if (!popups.containsKey(field)) {
 //            LOGGER.debug("Pas d'erreur de saisie affichée actuellement pour le champ {}, rien à masquer donc.", field.getId());
-                return;
-            }
-            assert nodesDecorations.containsKey(field) && (nodesDecorations.get(field) != null);
-            for (Decoration decoration : nodesDecorations.get(field)) {
-                Decorator.removeDecoration(field, decoration);
-            }
-            nodesDecorations.remove(field);
-            try {
-                desactiverPopup(field);
-            } catch (IhmException e) {
-                // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
-                throw new RuntimeException("Impossible de désactiver l'affichage de l'erreur de saisie à l'IHM.", e);
-            }
-        });
+            return;
+        }
+        if (!nodesDecorations.containsKey(field) || (nodesDecorations.get(field) == null)) {
+            LOGGER.error("Le noeud '" + field.getId() + "' a bien une pop-up pour afficher l'erreur de saisie, mais n'a pas de décoration pour symboliser l'erreur de saisie.");
+            return;
+        }
+        for (Decoration decoration : nodesDecorations.get(field)) {
+            Decorator.removeDecoration(field, decoration);
+        }
+        nodesDecorations.remove(field);
+        try {
+            desactiverPopup(field);
+        } catch (IhmException e) {
+            // TODO FDA 2017/07 Trouver mieux que thrower une RuntimeException.
+            throw new RuntimeException("Impossible de masquer l'erreur de saisie à l'IHM.", e);
+        }
     }
 
 
@@ -986,7 +987,7 @@ public class PlanChargeIhm extends Application {
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
 //        return LocalDate.of(2017, 8, 21);
-        return LocalDate.of(2017, 9, 25);
+        return LocalDate.of(2017, 10, 9);
     }
 
     public void definirTitre(String titre) {

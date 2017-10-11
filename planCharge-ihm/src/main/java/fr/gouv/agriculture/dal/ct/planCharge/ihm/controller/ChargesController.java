@@ -19,6 +19,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
@@ -32,6 +33,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
@@ -628,6 +630,42 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         initBeansNbrsJoursChargeProfil();
         initBeansNbrsJoursDispoCTRestanteRsrc();
         initBeansNbrsJoursDispoCTMaxRestanteProfil();
+
+/* TODO FDA 2017/10 Calculer les charges pour la RH ajoutée.
+        planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
+            Set<RessourceHumaineBean> ressourcesHumainesARecalculer = new HashSet<>(10);
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    ressourcesHumainesARecalculer.addAll(change.getAddedSubList());
+                }
+                // TODO FDA 2017/08 Coder les autres changements (permutations, etc. ?).
+            }
+            if (!ressourcesHumainesARecalculer.isEmpty()) {
+                for (RessourceHumaineBean ressourceHumaineBean : ressourcesHumainesARecalculer) {
+
+                    ObjectProperty<LocalDate> debutMissionProperty = ressourceHumaineBean.debutMissionProperty();
+                    debutMissionProperty.addListener((observable, oldValue, newValue) -> {
+                        try {
+                            calculateurCharges.calculer(ressourceHumaineBean);
+                        } catch (ControllerException e) {
+                            //noinspection DuplicateStringLiteralInspection
+                            LOGGER.error("Impossible de calculer les charges de la ressource " + ressourceHumaineBean.getTrigramme() + " en fonction de sa date de début de mission.", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                        }
+                    });
+
+                    ObjectProperty<LocalDate> finMissionProperty = ressourceHumaineBean.finMissionProperty();
+                    finMissionProperty.addListener((observable, oldValue, newValue) -> {
+                        try {
+                            calculateurCharges.calculer(ressourceHumaineBean);
+                        } catch (ControllerException e) {
+                            //noinspection DuplicateStringLiteralInspection
+                            LOGGER.error("Impossible de calculer les charges de la ressource " + ressourceHumaineBean.getTrigramme() + " en fonction de sa date de fin de mission.", e); // TODO FDA 2017/08 Trouver mieux que juste loguer une erreur.
+                        }
+                    });
+                }
+            }
+        });
+*/
     }
 
     private void initBeansPlanifications() {
@@ -958,9 +996,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void initTableNbrsJoursChargeRsrc() {
 
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursChargeRsrcTable.setItems(nbrsJoursChargeRsrcBeans);
-
         nbrsJoursChargeRsrcTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursChargeRsrcColumn,
                 semaine2NbrsJoursChargeRsrcColumn,
@@ -998,7 +1033,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
 
         // Paramétrage des ordres de tri :
-        TableViews.ensureSorting(nbrsJoursChargeRsrcTable);
+        TableViews.ensureSorting(nbrsJoursChargeRsrcTable, nbrsJoursChargeRsrcBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1012,9 +1047,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void initTableNbrsJoursChargeProfil() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursChargeProfilTable.setItems(nbrsJoursChargeProfilBeans);
 
         nbrsJoursChargeProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursChargeProfilColumn,
@@ -1054,7 +1086,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursChargeProfilTable);
+        TableViews.ensureSorting(nbrsJoursChargeProfilTable, nbrsJoursChargeProfilBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1068,9 +1100,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void initTableNbrsJoursDispoCTRestanteRsrc() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoCTRestanteRsrcTable.setItems(nbrsJoursDispoCTRestanteRsrcBeans);
 
         nbrsJoursDispoCTRestanteRsrcTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoCTRestanteRsrcColumn,
@@ -1108,7 +1137,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursDispoCTRestanteRsrcTable);
+        TableViews.ensureSorting(nbrsJoursDispoCTRestanteRsrcTable, nbrsJoursDispoCTRestanteRsrcBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1122,9 +1151,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void initTableNbrsJoursDispoCTMaxRestanteProfilTable() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoCTMaxRestanteProfilTable.setItems(nbrsJoursDispoCTMaxRestanteProfilBeans);
 
         nbrsJoursDispoCTMaxRestanteProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoCTMaxRestanteProfilColumn,
@@ -1162,7 +1188,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursDispoCTMaxRestanteProfilTable);
+        TableViews.ensureSorting(nbrsJoursDispoCTMaxRestanteProfilTable, nbrsJoursDispoCTMaxRestanteProfilBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).

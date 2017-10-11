@@ -852,7 +852,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         );
 
         pctagesDispoCTBeans.addListener((ListChangeListener<? super PctagesDispoRsrcBean>) change -> {
-            List<RessourceHumaineBean> ressourcesHumainesARecalculer = new ArrayList<>(10);
+            Set<RessourceHumaineBean> ressourcesHumainesARecalculer = new HashSet<>(10);
             while (change.next()) {
                 //noinspection UnclearExpression
                 List<? extends PctagesDispoRsrcBean> pctagesDispoRsrcBeansModifies =
@@ -892,7 +892,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         planChargeBean.getRessourcesHumainesBeans().addListener((ListChangeListener<? super RessourceHumaineBean>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    List<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeansAAjouter = new ArrayList<>(10);
+                    Set<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeansAAjouter = new HashSet<>(10);
                     for (RessourceHumaineBean ressourceHumaineBean : change.getAddedSubList()) {
                         if (pctagesDispoMaxRsrcProfilBeans.parallelStream().anyMatch(pctagesDispoMaxRsrcProfilBean -> pctagesDispoMaxRsrcProfilBean.getRessourceBean().equals(ressourceHumaineBean))) {
                             continue;
@@ -1130,9 +1130,6 @@ public class DisponibilitesController extends AbstractController implements Modu
 
     private void initTableNbrsJoursAbsence() {
 
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursAbsenceTable.setItems(nbrsJoursAbsenceBeans);
-
         nbrsJoursAbsenceTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursAbsenceColumn,
                 semaine2NbrsJoursAbsenceColumn,
@@ -1170,7 +1167,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursAbsenceTable);
+        TableViews.ensureSorting(nbrsJoursAbsenceTable, nbrsJoursAbsenceBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1179,13 +1176,11 @@ public class DisponibilitesController extends AbstractController implements Modu
         //Pas sur cet écran (pas nécessaire, ni même utile).
 
         TableViews.disableReagencingColumns(nbrsJoursAbsenceTable);
+
         TableViews.ensureDisplayingAllRows(nbrsJoursAbsenceTable);
     }
 
     private void initTableNbrsJoursDispoMinAgri() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoMinAgriTable.setItems(nbrsJoursDispoMinAgriBeans);
 
         nbrsJoursDispoMinAgriTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoMinAgriColumn,
@@ -1223,7 +1218,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursDispoMinAgriTable);
+        TableViews.ensureSorting(nbrsJoursDispoMinAgriTable, nbrsJoursDispoMinAgriBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1236,9 +1231,6 @@ public class DisponibilitesController extends AbstractController implements Modu
     }
 
     private void initTablePctagesDispoCT() {
-
-        // Définition du contenu de la table (ses lignes) :
-        pctagesDispoCTTable.setItems(pctagesDispoCTBeans);
 
         pctagesDispoCTTable.setCalendrierColumns(Arrays.asList(
                 semaine1PctagesDispoCTColumn,
@@ -1276,7 +1268,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(pctagesDispoCTTable);
+        TableViews.ensureSorting(pctagesDispoCTTable, pctagesDispoCTBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1289,9 +1281,6 @@ public class DisponibilitesController extends AbstractController implements Modu
     }
 
     private void initTableNbrsJoursDispoCT() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoCTTable.setItems(nbrsJoursDispoCTBeans);
 
         nbrsJoursDispoCTTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoCTColumn,
@@ -1329,7 +1318,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursDispoCTTable);
+        TableViews.ensureSorting(nbrsJoursDispoCTTable, nbrsJoursDispoCTBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1342,9 +1331,6 @@ public class DisponibilitesController extends AbstractController implements Modu
     }
 
     private void initTablePctagesDispoMaxRsrcProfil() {
-
-        // Définition du contenu de la table (ses lignes) :
-        pctagesDispoMaxRsrcProfilTable.setItems(pctagesDispoMaxRsrcProfilBeans);
 
         pctagesDispoMaxRsrcProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1PctagesDispoMaxRsrcProfilColumn,
@@ -1381,7 +1367,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(pctagesDispoMaxRsrcProfilTable);
+        TableViews.ensureSorting(pctagesDispoMaxRsrcProfilTable, pctagesDispoMaxRsrcProfilBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1394,9 +1380,6 @@ public class DisponibilitesController extends AbstractController implements Modu
     }
 
     private void initTableNbrsJoursDispoMaxRsrcProfil() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoMaxRsrcProfilTable.setItems(nbrsJoursDispoMaxRsrcProfilBeans);
 
         nbrsJoursDispoMaxRsrcProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoMaxRsrcProfilColumn,
@@ -1433,7 +1416,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursDispoMaxRsrcProfilTable);
+        TableViews.ensureSorting(nbrsJoursDispoMaxRsrcProfilTable, nbrsJoursDispoMaxRsrcProfilBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1446,9 +1429,6 @@ public class DisponibilitesController extends AbstractController implements Modu
     }
 
     private void initTableNbrsJoursDispoMaxProfil() {
-
-        // Définition du contenu de la table (ses lignes) :
-        nbrsJoursDispoMaxProfilTable.setItems(nbrsJoursDispoMaxProfilBeans);
 
         nbrsJoursDispoMaxProfilTable.setCalendrierColumns(Arrays.asList(
                 semaine1NbrsJoursDispoMaxProfilColumn,
@@ -1484,10 +1464,9 @@ public class DisponibilitesController extends AbstractController implements Modu
             colonne.setCellFactory(cell -> new CalendrierNbrsDemisJoursParProfilCell<>(finalCptColonne, () -> ihm.afficherInterdictionEditer("Le nombre de jours de disponibilité max. par profil est calculé à partir des pourcentages.")));
         }
 
-
         // Paramétrage des ordres de tri :
         //Pas sur cet écran (pas d'ordre de tri spécial, les tris standards de JavaFX font l'affaire).
-        TableViews.ensureSorting(nbrsJoursDispoMaxProfilTable);
+        TableViews.ensureSorting(nbrsJoursDispoMaxProfilTable, nbrsJoursDispoMaxProfilBeans);
 
         // Ajout des filtres "globaux" (à la TableList, pas sur chaque TableColumn) :
         //Pas sur cet écran (pas nécessaire, ni même utile).
@@ -1496,6 +1475,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         //Pas sur cet écran.
 
         TableViews.disableReagencingColumns(nbrsJoursDispoMaxProfilTable);
+
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoMaxProfilTable);
     }
 

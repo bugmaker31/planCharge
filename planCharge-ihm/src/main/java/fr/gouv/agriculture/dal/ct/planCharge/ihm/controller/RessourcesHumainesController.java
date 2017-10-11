@@ -128,10 +128,6 @@ public class RessourcesHumainesController extends AbstractController implements 
         try {
             LOGGER.debug("Initialisation...");
 
-            SortedList<RessourceHumaineBean> sortedBeans = new SortedList<>(ressourceHumainesBeans);
-            sortedBeans.comparatorProperty().bind(ressourcesHumainesTable.comparatorProperty());
-            ressourcesHumainesTable.setItems(sortedBeans);
-
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());
             nomColumn.setCellValueFactory(cellData -> cellData.getValue().nomProperty());
@@ -176,6 +172,8 @@ public class RessourcesHumainesController extends AbstractController implements 
 */
             debutMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
             finMissionColumn.setCellFactory(DatePickerTableCells.forTableColumn());
+
+            TableViews.ensureSorting(ressourcesHumainesTable, ressourceHumainesBeans);
 
             TableViews.enableFilteringOnColumns(ressourcesHumainesTable, Arrays.asList(trigrammeColumn, nomColumn, prenomColumn, societeColumn, debutMissionColumn, finMissionColumn));
 
