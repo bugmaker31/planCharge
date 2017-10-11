@@ -28,7 +28,7 @@
     </appender>
 
     <logger name="fr.gouv.agriculture.dal" level="INFO"/>
-    <logger name="fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists" level="DEBUG"/>
+    <logger name="fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists" level="INFO"/>
     <logger name="fr.gouv.agriculture.dal.ct.ihm.view.TableViews" level="INFO"/>
 
 
