@@ -110,25 +110,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 
     @Override
     public void updateItem(@Null Double item, boolean empty) {
-/*
-        // Cf. http://docs.oracle.com/javase/8/javafx/fxml-tutorial/tablecellfactory-code.htm
-        //noinspection EqualityOperatorComparesObjects,NumberEquality
-        if ((item == getItem()) || java.util.Objects.equals(item, getItem())) {
-            return;
-        }
-*/
-        assert ((TableViewAvecCalendrier) getTableView()).getCalendrierColumns().indexOf(getTableColumn()) == (noPeriode - 1);
-
         super.updateItem(item, empty);
-        assert empty == isEmpty();
-        //noinspection EqualityOperatorComparesObjects,NumberEquality
-        assert item == getItem();
-
-        if (empty || (item == null)) {
-            setText(null);
-            setGraphic(null);
-            return;
-        }
 
 //        formater();
         styler();
@@ -154,13 +136,10 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
         pseudoClassStateChanged(APRES_PERIODE_DEMANDEE, false);
         pseudoClassStateChanged(SURCHARGE, false);
 
-// Non, surtout pas, sinon les cellules vides (donc avant et après la période planifiée), ne seront pas décorées.
-/*
         // Stop, si cellule vide :
         if ((getItem() == null) || isEmpty()) {
             return;
         }
-*/
 
         PlanificationTacheBean planifBean = planificationTacheBean();
         if (planifBean == null) {

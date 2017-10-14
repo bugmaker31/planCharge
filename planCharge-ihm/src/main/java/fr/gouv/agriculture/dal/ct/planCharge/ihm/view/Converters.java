@@ -7,10 +7,14 @@ import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Converters {
+
+    private static final Pattern DECIMAL_SYMBOL = Pattern.compile("\\.");
 
     public static final FractionJoursStringConverter FRACTION_JOURS_STRING_CONVERTER = new FractionJoursStringConverter();
 
@@ -22,9 +26,9 @@ public class Converters {
         @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
         private /*static*/ final DecimalFormat FORMATEUR = new DecimalFormat("#.###");
 
-        {
+        /*static*/ {
             DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance();
-            formatSymbols.setDecimalSeparator('.');
+            formatSymbols.setDecimalSeparator(',');
             FORMATEUR.setDecimalFormatSymbols(formatSymbols);
         }
 
@@ -50,7 +54,9 @@ public class Converters {
                 return 0.0f;
             }
             try {
-                return FORMATEUR.parse(s).floatValue();
+                Matcher matcher = DECIMAL_SYMBOL.matcher(s);
+                String str = matcher.replaceAll(FORMATEUR.getDecimalFormatSymbols().getDecimalSeparator() + "");
+                return FORMATEUR.parse(str).floatValue();
             } catch (ParseException e) {
                 LOGGER.error("Impossible de décoder une valeur décimale dans la chaîne '" + s + "'.", e); // TODO FDA 2017/08 Trouver mieux que de loguer une erreur.
                 return null;
@@ -70,7 +76,7 @@ public class Converters {
 
         {
             DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance();
-            formatSymbols.setDecimalSeparator('.');
+            formatSymbols.setDecimalSeparator(',');
             FORMATEUR.setDecimalFormatSymbols(formatSymbols);
         }
 
@@ -96,7 +102,9 @@ public class Converters {
                 return 0.0;
             }
             try {
-                return FORMATEUR.parse(s).doubleValue();
+                Matcher matcher = DECIMAL_SYMBOL.matcher(s);
+                String str = matcher.replaceAll(FORMATEUR.getDecimalFormatSymbols().getDecimalSeparator() + "");
+                return FORMATEUR.parse(str).doubleValue();
             } catch (ParseException e) {
                 LOGGER.error("Impossible de décoder une valeur décimale dans la chaîne '" + s + "'.", e); // TODO FDA 2017/08 Trouver mieux que de loguer une erreur.
                 return null;
