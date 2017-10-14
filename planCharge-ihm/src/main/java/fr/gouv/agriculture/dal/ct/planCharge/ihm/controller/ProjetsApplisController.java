@@ -125,7 +125,6 @@ public class ProjetsApplisController extends AbstractController implements Modul
     @FXML
     protected void initialize() throws ControllerException {
         try {
-            LOGGER.debug("Initialisation...");
 
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             codeColumn.setCellValueFactory(cellData -> cellData.getValue().codeProperty());
@@ -161,7 +160,6 @@ public class ProjetsApplisController extends AbstractController implements Modul
 
             definirRaccourcisClavier();
 
-            LOGGER.info("Initialisé.");
         } catch (IhmException e) {
             //noinspection HardcodedFileSeparator
             throw new ControllerException("Impossible d'initialiser le contrôleur du module 'Projets / Applis'.", e);

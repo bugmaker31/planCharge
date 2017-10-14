@@ -94,7 +94,6 @@ public class JoursFeriesController extends AbstractController implements Module 
     @FXML
     protected void initialize() throws ControllerException {
         try {
-            LOGGER.debug("Initialisation...");
 
 //            joursFeriesTable.setItems(joursFeriesBeans);
 
@@ -120,8 +119,6 @@ public class JoursFeriesController extends AbstractController implements Module 
 
             definirRaccourcisClaviers();
 
-
-            LOGGER.info("Initialisé.");
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur du module 'Jours fériés'.", e);
         }

@@ -593,7 +593,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @FXML
     @Override
     protected void initialize() throws ControllerException {
-        LOGGER.debug("Initialisation...");
         try {
             Calculateur.executerSansCalculer(() -> {
 
@@ -606,7 +605,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
         }
-        LOGGER.info("Initialisé.");
     }
 
 /* Le menu contextuel est défini dans le fichier FXML.

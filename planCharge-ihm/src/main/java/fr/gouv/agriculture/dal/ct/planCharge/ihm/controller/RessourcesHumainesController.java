@@ -126,7 +126,6 @@ public class RessourcesHumainesController extends AbstractController implements 
     @FXML
     protected void initialize() throws ControllerException {
         try {
-            LOGGER.debug("Initialisation...");
 
             // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
             trigrammeColumn.setCellValueFactory(cellData -> cellData.getValue().trigrammeProperty());
@@ -181,7 +180,6 @@ public class RessourcesHumainesController extends AbstractController implements 
 
             definirRaccourcisClavier();
 
-            LOGGER.info("Initialisé.");
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur du module 'Ressources humaines'.", e);
         }

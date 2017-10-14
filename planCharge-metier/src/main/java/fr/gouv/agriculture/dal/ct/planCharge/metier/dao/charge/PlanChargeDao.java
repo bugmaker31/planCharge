@@ -691,46 +691,54 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
             int noLig = noLigTitre + 1;
             while (true) {
-                XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
-                if (Calc.isEmpty(trigrammeCell)) {
-                    break;
-                }
-
-                rapport.setAvancement("Import des disponibilités - nombres de jours d'absence : ligne n°" + noLig + "...");
-
-                String trigramme = Strings.epure(Calc.getString(trigrammeCell));
-                if (trigramme == null) {
-                    throw new PlanChargeDaoException("Trigramme non défini.");
-                }
-
-                Map<LocalDate, Float> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
-                int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
-                while (true) {
-
-                    XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
-                    if (Calc.isEmpty(noSemaineCell)) {
+                IMPORT_LIGNE:
+                {
+                    XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
+                    if (Calc.isEmpty(trigrammeCell)) {
                         break;
                     }
 
-                    XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
-                    if (Calc.isEmpty(debutPeriodeCell)) {
-                        throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                    rapport.setAvancement("Import des disponibilités - nombres de jours d'absence : ligne n°" + noLig + "...");
+
+                    String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                    if (trigramme == null) {
+                        throw new PlanChargeDaoException("Trigramme non défini.");
                     }
-                    LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
-
-                    XCell nbrJoursAbsenceCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
-                    Double nbrJoursAbsence = (Calc.isEmpty(nbrJoursAbsenceCell) ? null : Calc.getDouble(nbrJoursAbsenceCell));
-
-                    if (nbrJoursAbsence != null) {
-                        calendrier.put(debutPeriode, nbrJoursAbsence.floatValue());
+                    //noinspection HardcodedFileSeparator
+                    if (trigramme.equals("N/A")) {
+                        //noinspection HardcodedFileSeparator
+                        LOGGER.debug("Trigramme = 'N/A', donc ligne {} skippée.", noLig);
+                        break IMPORT_LIGNE;
                     }
 
-                    noCol++;
+                    Map<LocalDate, Float> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                    int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
+                    while (true) {
+
+                        XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
+                        if (Calc.isEmpty(noSemaineCell)) {
+                            break;
+                        }
+
+                        XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
+                        if (Calc.isEmpty(debutPeriodeCell)) {
+                            throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                        }
+                        LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
+
+                        XCell nbrJoursAbsenceCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
+                        Double nbrJoursAbsence = (Calc.isEmpty(nbrJoursAbsenceCell) ? null : Calc.getDouble(nbrJoursAbsenceCell));
+
+                        if (nbrJoursAbsence != null) {
+                            calendrier.put(debutPeriode, nbrJoursAbsence.floatValue());
+                        }
+
+                        noCol++;
+                    }
+
+                    RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
+                    nbrsJoursAbsence.put(rsrcHum, calendrier);
                 }
-
-                RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
-                nbrsJoursAbsence.put(rsrcHum, calendrier);
-
                 noLig++;
             }
             return nbrsJoursAbsence;
@@ -763,51 +771,58 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
 
             int noLig = noLigTitre + 1;
             while (true) {
-                XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
-                if (Calc.isEmpty(trigrammeCell)) {
-                    break;
-                }
-
-                rapport.setAvancement("Import des disponibilités - % de dispo. pour l'équipe (la CT) : ligne n°" + noLig + "...");
-
-                String trigramme = Strings.epure(Calc.getString(trigrammeCell));
-                if (trigramme == null) {
-                    throw new PlanChargeDaoException("Trigramme non défini.");
-                }
-
-                Map<LocalDate, Percentage> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
-                int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
-                while (true) {
-
-                    XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
-                    if (Calc.isEmpty(noSemaineCell)) {
+                IMPORT_LIGNE:
+                {
+                    XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
+                    if (Calc.isEmpty(trigrammeCell)) {
                         break;
                     }
 
-                    XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
-                    if (Calc.isEmpty(debutPeriodeCell)) {
-                        throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                    rapport.setAvancement("Import des disponibilités - % de dispo. pour l'équipe (la CT) : ligne n°" + noLig + "...");
+
+                    String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                    if (trigramme == null) {
+                        throw new PlanChargeDaoException("Trigramme non défini.");
                     }
-                    LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
+                    //noinspection HardcodedFileSeparator
+                    if (trigramme.equals("N/A")) {
+                        LOGGER.debug("Trigramme = 'N/A', donc ligne {} skippée.", noLig);
+                        break IMPORT_LIGNE;
+                    }
 
-                    XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
-                    Percentage pctageDispoCT = (
-                            Calc.isEmpty(pctageDispoCTCell) ? DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT
-                                    : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
-                    );
+                    Map<LocalDate, Percentage> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                    int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
+                    while (true) {
 
-                    calendrier.put(debutPeriode, pctageDispoCT);
+                        XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
+                        if (Calc.isEmpty(noSemaineCell)) {
+                            break;
+                        }
 
-                    noCol++;
+                        XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
+                        if (Calc.isEmpty(debutPeriodeCell)) {
+                            throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                        }
+                        LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
+
+                        XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
+                        Percentage pctageDispoCT = (
+                                Calc.isEmpty(pctageDispoCTCell) ? DisponibilitesService.PCTAGE_DISPO_RSRC_DEFAUT
+                                        : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
+                        );
+
+                        calendrier.put(debutPeriode, pctageDispoCT);
+
+                        noCol++;
+                    }
+
+                    RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
+                    pctagesDispoCT.put(rsrcHum, calendrier);
                 }
-
-                RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
-                pctagesDispoCT.put(rsrcHum, calendrier);
-
                 noLig++;
             }
             return pctagesDispoCT;
-        } catch (Exception e) {
+        } catch (DaoException | LibreOfficeException e) {
             throw new PlanChargeDaoException("Impossible d'importer les pourcentages de disponibilité pour la CT.", e);
         }
     }
@@ -840,75 +855,84 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             String trigrammePrecedent = null;
             Map<Profil, Map<LocalDate, Percentage>> pctagesParProfils = null;
             while (true) {
-                XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
-                if (Calc.isEmpty(trigrammeCell)) {
-                    break;
-                }
-
-                rapport.setAvancement("Import des disponibilités - % de dispo. max. par ressource et profil : ligne n°" + noLig + "...");
-
-                String trigramme = Strings.epure(Calc.getString(trigrammeCell));
-                if (trigramme == null) {
-                    throw new PlanChargeDaoException("Trigramme non défini.");
-                }
-                //noinspection HardcodedFileSeparator
-                if (trigramme.equals("Dispo. maxi. / rsrc / profil (j)")) {
-                    break;
-                }
-
-                RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
-
-                boolean nouvelleRessource = (trigrammePrecedent == null) || !trigramme.equals(trigrammePrecedent);
-                if (nouvelleRessource) {
-                    pctagesParProfils = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
-                }
-
-                PROFIL:
+                IMPORT_LIGNE:
                 {
-                    XCell codeProfilCell = Calc.getCell(feuilleDisponibilites, (noColTrigramme + 1) - 1, noLig - 1);
-                    String codeProfil = Strings.epure(Calc.getString(codeProfilCell));
-                    if (codeProfil == null) {
-                        throw new PlanChargeDaoException("Profil non défini.");
+                    XCell trigrammeCell = Calc.getCell(feuilleDisponibilites, noColTrigramme - 1, noLig - 1);
+                    if (Calc.isEmpty(trigrammeCell)) {
+                        break;
                     }
-                    if (codeProfil.equals("Total")) {
-                        break PROFIL;
+
+                    rapport.setAvancement("Import des disponibilités - % de dispo. max. par ressource et profil : ligne n°" + noLig + "...");
+
+                    String trigramme = Strings.epure(Calc.getString(trigrammeCell));
+                    if (trigramme == null) {
+                        throw new PlanChargeDaoException("Trigramme non défini.");
                     }
-                    Profil profil = profilDao.load(codeProfil);
+                    //noinspection HardcodedFileSeparator
+                    if (trigramme.equals("Dispo. maxi. / rsrc / profil (j)")) {
+                        break;
+                    }
+                    //noinspection HardcodedFileSeparator
+                    if (trigramme.equals("N/A")) {
+                        //noinspection HardcodedFileSeparator
+                        LOGGER.debug("Trigramme = 'N/A', donc ligne {} skippée.", noLig);
+                        break IMPORT_LIGNE;
+                    }
 
-                    Map<LocalDate, Percentage> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
-                    int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
-                    while (true) {
+                    RessourceHumaine rsrcHum = ressourceHumaineDao.load(trigramme);
 
-                        XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
-                        if (Calc.isEmpty(noSemaineCell)) {
-                            break;
+                    boolean nouvelleRessource = (trigrammePrecedent == null) || !trigramme.equals(trigrammePrecedent);
+                    if (nouvelleRessource) {
+                        pctagesParProfils = new TreeMap<>(); // TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                    }
+
+                    PROFIL:
+                    {
+                        XCell codeProfilCell = Calc.getCell(feuilleDisponibilites, (noColTrigramme + 1) - 1, noLig - 1);
+                        String codeProfil = Strings.epure(Calc.getString(codeProfilCell));
+                        if (codeProfil == null) {
+                            throw new PlanChargeDaoException("Profil non défini.");
+                        }
+                        if (codeProfil.equals("Total")) {
+                            break PROFIL;
+                        }
+                        Profil profil = profilDao.load(codeProfil);
+
+                        Map<LocalDate, Percentage> calendrier = new TreeMap<>();// TreeMap (au lieu de HashMap) pour trier, juste pour faciliter le débogage.
+                        int noCol = noColTrigramme + 3; // Il y a 2 colonnes vides entre la colonne des trigrammes et la 1ère colonne contenant les jours d'absence.
+                        while (true) {
+
+                            XCell noSemaineCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigNumerosSemaine - 1);
+                            if (Calc.isEmpty(noSemaineCell)) {
+                                break;
+                            }
+
+                            XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
+                            if (Calc.isEmpty(debutPeriodeCell)) {
+                                throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
+                            }
+                            LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
+
+                            XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
+                            Percentage pctageDispoCT = (
+                                    Calc.isEmpty(pctageDispoCTCell) ? new Percentage(0)
+                                            : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
+                            );
+
+                            calendrier.put(debutPeriode, pctageDispoCT);
+
+                            noCol++;
                         }
 
-                        XCell debutPeriodeCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLigDebutsPeriodes - 1);
-                        if (Calc.isEmpty(debutPeriodeCell)) {
-                            throw new PlanChargeDaoException("Impossible de retrouver le début de la période lors de l'import des absences de la ressource '" + trigramme + "'. Pas de date en ligne " + noLigDebutsPeriodes + " et colonne " + noCol + " ?");
-                        }
-                        LocalDate debutPeriode = Dates.asLocalDate(Calc.getDate(debutPeriodeCell));
-
-                        XCell pctageDispoCTCell = Calc.getCell(feuilleDisponibilites, noCol - 1, noLig - 1);
-                        Percentage pctageDispoCT = (
-                                Calc.isEmpty(pctageDispoCTCell) ? new Percentage(0)
-                                        : new Percentage(new Double(Calc.getDouble(pctageDispoCTCell) * 100).floatValue())
-                        );
-
-                        calendrier.put(debutPeriode, pctageDispoCT);
-
-                        noCol++;
+                        pctagesParProfils.put(profil, calendrier);
                     }
 
-                    pctagesParProfils.put(profil, calendrier);
-                }
+                    if (nouvelleRessource) {
+                        pctagesDispoMaxProfil.put(rsrcHum, pctagesParProfils);
+                    }
 
-                if (nouvelleRessource) {
-                    pctagesDispoMaxProfil.put(rsrcHum, pctagesParProfils);
+                    trigrammePrecedent = trigramme;
                 }
-
-                trigrammePrecedent = trigramme;
                 noLig++;
             }
             return pctagesDispoMaxProfil;

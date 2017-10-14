@@ -115,7 +115,6 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
      */
     @FXML
     protected void initialize() throws ControllerException {
-        LOGGER.debug("Initialisation...");
         try {
             Calculateur.executerSansCalculer(() -> {
 
@@ -138,7 +137,6 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
         }
-        LOGGER.info("Initialisé.");
     }
 
 /* Le menu contextuel est défini dans le fichier FXML.

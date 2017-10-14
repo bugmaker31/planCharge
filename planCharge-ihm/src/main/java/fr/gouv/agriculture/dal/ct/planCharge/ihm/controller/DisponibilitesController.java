@@ -748,7 +748,6 @@ public class DisponibilitesController extends AbstractController implements Modu
 
     @FXML
     protected void initialize() throws ControllerException {
-        LOGGER.debug("Initialisation...");
         try {
             Calculateur.executerSansCalculer(() -> {
                 initBeans();
@@ -757,7 +756,6 @@ public class DisponibilitesController extends AbstractController implements Modu
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
         }
-        LOGGER.info("Initialisé.");
     }
 
     private void initBeans() {
