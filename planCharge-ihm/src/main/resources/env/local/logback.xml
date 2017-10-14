@@ -31,7 +31,6 @@
     <logger name="fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists" level="INFO"/>
     <logger name="fr.gouv.agriculture.dal.ct.ihm.view.TableViews" level="INFO"/>
 
-
     <logger name="fr.gouv.agriculture.dal.ct.planCharge" level="DEBUG"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.dao" level="INFO"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur" level="INFO"/>

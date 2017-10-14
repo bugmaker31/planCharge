@@ -3,7 +3,10 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
+import impl.org.controlsfx.table.ColumnFilter;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -158,15 +161,6 @@ public final class TableViews {
     }
 
     public static <S> void ensureDisplayingRows(@NotNull TableView<S> table, @Null Integer rowCount) {
-        // Cf. https://stackoverflow.com/questions/27945817/javafx-adapt-tableview-height-to-number-of-rows
-/*
-        assert table.getFixedCellSize() > 0; // _TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
-        DoubleBinding height = new SimpleDoubleProperty(10.0); // headerRow(table).heightProperty(); // _TODO FDA 2017/08 Debugger (voir F I X M E dans méthode "headerRow"), puis réactiver.
-        DoubleBinding tableHeight = table.fixedCellSizeProperty().multiply(Bindings.size(table.getItems()).add(height));
-        table.minHeightProperty().bind(tableHeight);
-        table.prefHeightProperty().bind(tableHeight);
-        table.maxHeightProperty().bind(tableHeight);
-*/
 /*
         adjustHeight(table, rowCount);
 
@@ -232,25 +226,30 @@ public final class TableViews {
         }
 */
 
+        // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
+
+        IntegerBinding itemsCountBinding = Bindings.size(table.getItems()); // NB : table.getItems() peut ne pas encore contenir les nouveaux items, mais encore les anciens items.
+        itemsCountBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' contains {} items.", table.getId(), itemsCountBinding.get()));
+        IntegerBinding maxRowsCountBinding = (rowCount == null) ? itemsCountBinding :
+                (IntegerBinding) Bindings.min(
+                        rowCount,
+                        itemsCountBinding
+                );
         IntegerBinding rowCountBinding = (IntegerBinding) Bindings.max(
                 1, // On assure d'avoir au moins 1 ligne pour que le message std de JavaFX "Aucun contenu dans la table" soit visible par l'utilisateur.
-                (rowCount != null) ? new IntegerBinding() {
-                    @Override
-                    protected int computeValue() {
-                        return rowCount;
-                    }
-                } : Bindings.size(table.getItems()) // NB : table.getItems() peut ne pas encore contenir les nouveaux items, mais encore les anciens items.
+                maxRowsCountBinding
         );
 
         assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+//        TODO FDA 2017/10 Trouver mieux que de statuer que la hauteur de l'entête de la table est de 3 lignes. La solution donnée sur https://stackoverflow.com/questions/35254054/height-of-tableviews-header ne fonctionne pas quand on définit la hauteur à l'initisalition car la CSS n'est pas encore appliquée/calculée.
+        DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(3 * table.getFixedCellSize());// Additional pixels are for tableview's header heght (3 lines).
+//        tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
 
-        // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
-        DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(40.0);// Additional pixels are for tableview's header heght.
-
-        table.prefHeightProperty().unbind();
+        table.minHeightProperty().bind(tableHeightBinding);
         table.prefHeightProperty().bind(tableHeightBinding);
+        table.maxHeightProperty().bind(tableHeightBinding);
 
-        LOGGER.debug("Table height is ensured for table '{}'.", table.getId());
+        LOGGER.debug("Table '{}' height is ensured.", table.getId());
     }
 
 /*
@@ -312,12 +311,14 @@ public final class TableViews {
 
     // Filtering :
 
-    public static <S> void enableFilteringOnColumns(@NotNull TableView<S> table, @NotNull List<TableColumn<S, ?>> columns) {
+    public static <S> TableFilter<S> enableFilteringOnColumns(@NotNull TableView<S> table, @NotNull List<TableColumn<S, ?>> columns) {
         Builder<S> filterBuilder = TableFilter.forTableView(table);
 //        filter.lazy(true); // FDA 2017/07 Confirmer (ne semble rien changer).
-        filterBuilder.apply();
+        TableFilter<S> tableFilter = filterBuilder.apply();
 
         decorateFilterableColumns(columns);
+
+        return tableFilter;
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -339,6 +340,17 @@ public final class TableViews {
 //        });
     }
 
+    public static void applyFilter(@NotNull TableColumn<PlanificationTacheBean, RessourceBean<?, ?>> ressourceColumn, @NotNull TableFilter<PlanificationTacheBean> tableFilter, @NotNull RessourceBean ressourceBean) {
+        Optional<ColumnFilter<PlanificationTacheBean, ?>> ressourceColumnFilterOpt = tableFilter.getColumnFilter(ressourceColumn);
+        if (!ressourceColumnFilterOpt.isPresent()) {
+            LOGGER.warn("Filtrage non actvé sur la colonne 'Ressource'.");
+            return;
+        }
+        ColumnFilter<PlanificationTacheBean, RessourceBean> ressourceColumnFilter = (ColumnFilter<PlanificationTacheBean, RessourceBean>) ressourceColumnFilterOpt.get();
+        ressourceColumnFilter.unSelectAllValues();
+        ressourceColumnFilter.selectValue(ressourceBean);
+        ressourceColumnFilter.applyFilter();
+    }
 
     // Sorting :
 
@@ -392,4 +404,5 @@ public final class TableViews {
         ObservableList<S> sourceItems = (ObservableList<S>) sortedItems.getSource();
         return unsortedSourceItems(sourceItems);
     }
+
 }

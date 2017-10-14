@@ -39,6 +39,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
+import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +81,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("unchecked")
     // 'final' pour empêcher de resetter cette ObsevableList, ce qui enleverait les Listeners.
     private final FilteredList<TB> filteredTachesBeans = new FilteredList<>((ObservableList<TB>) planChargeBean.getPlanificationsBeans());
+
+    @NotNull
+    FilteredList<TB> getFilteredTachesBeans() {
+        return filteredTachesBeans;
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TableFilter<TB> tableFilter;
+
+    @NotNull
+    public TableFilter<TB> getTableFilter() {
+        return tableFilter;
+    }
 
     // Les tables :
 
@@ -386,7 +401,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //
-        TableViews.enableFilteringOnColumns(getTachesTable(), Arrays.asList(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn));
+        tableFilter = TableViews.enableFilteringOnColumns(getTachesTable(), Arrays.asList(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn));
+
 
         // Gestion des undo/redo :
         //

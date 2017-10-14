@@ -19,7 +19,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
@@ -30,10 +29,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import impl.org.controlsfx.table.ColumnFilter;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
@@ -41,7 +40,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -891,7 +889,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                     return;
                 }
 
-                if (estRessourceSurchargeeSurPeriode(planifBean)) {
+                if (estRessourceSurchargee(planifBean)) {
                     pseudoClassStateChanged(SURCHARGE, true);
                 }
             }
@@ -932,7 +930,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                     return;
                 }
 
-                if (estProfilSurchargeeSurPeriode(planifBean)) {
+                if (estProfilSurcharge(planifBean)) {
                     pseudoClassStateChanged(SURCHARGE, true);
                 }
             }
@@ -984,10 +982,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         TableViews.ensureDisplayingRows(planificationsTable, 30);
         nbrLignesTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.equals(oldValue, newValue)) {
-                return;
-            }
-            Integer nbrlignes = fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(newValue, 30);
+            Integer nbrlignes = Objects.value(newValue, 30);
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
     }
@@ -1146,6 +1141,33 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.disableReagencingColumns(nbrsJoursDispoCTRestanteRsrcTable);
 
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTRestanteRsrcTable);
+
+        definirMenuContextuelColonneRessource(nbrsJoursDispoCTRestanteRsrcTable, ressourceNbrsJoursDispoCTRestanteRsrcColumn);
+    }
+
+    private void definirMenuContextuelColonneRessource(@NotNull TableViewAvecCalendrier<NbrsJoursParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursParRessourceBean, String> ressourceColumn) {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem = new MenuItem("Filtrer les tâches sur la ressource");
+        menuItem.setOnAction(event -> {
+
+            NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(table);
+            if (nbrsJoursParRessourceBean == null) {
+                ihm.afficherDialog(
+                        Alert.AlertType.WARNING,
+                        "Aucune ressource sélectionnée",
+                        "Sélectionnez d'abord une ligne, puis recliquez.",
+                        400, 100
+                );
+                return;
+            }
+
+            RessourceBean ressourceBean = nbrsJoursParRessourceBean.getRessourceBean();
+            assert ressourceBean != null;
+
+            TableViews.applyFilter(getRessourceColumn(), getTableFilter(), ressourceBean);
+        });
+        contextMenu.getItems().add(menuItem);
+        ressourceColumn.setContextMenu(contextMenu);
     }
 
     private void initTableNbrsJoursDispoCTMaxRestanteProfilTable() {
@@ -1199,8 +1221,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.ensureDisplayingAllRows(nbrsJoursDispoCTMaxRestanteProfilTable);
     }
 
-
-    private boolean estRessourceSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean) {
+    // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+    private boolean estRessourceSurchargee(@NotNull PlanificationTacheBean planifBean) {
         if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
             return false;
         }
@@ -1211,10 +1233,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         if (nbrsJoursDispoRestanteBean == null) {
             return false;
         }
-        return true; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+        for (Map.Entry<LocalDate, FloatProperty> entry : nbrsJoursDispoRestanteBean.entrySet()) {
+            FloatProperty nbrJoursDispoRestantePeriode = entry.getValue();
+            if (nbrJoursDispoRestantePeriode.get() < 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private boolean estProfilSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean) {
+    // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+    private boolean estProfilSurcharge(@NotNull PlanificationTacheBean planifBean) {
         if (planifBean.getTacheBean().getProfil() == null) {
             return false;
         }
@@ -1225,7 +1254,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         if (nbrsJoursDispoRestanteBean == null) {
             return false;
         }
-        return true; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+        for (Map.Entry<LocalDate, FloatProperty> entry : nbrsJoursDispoRestanteBean.entrySet()) {
+            FloatProperty nbrJoursDispoRestantePeriode = entry.getValue();
+            if (nbrJoursDispoRestantePeriode.get() < 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
