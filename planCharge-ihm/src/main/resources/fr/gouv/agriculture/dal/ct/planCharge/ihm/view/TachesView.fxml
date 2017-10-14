@@ -140,19 +140,14 @@
                 <contextMenu>
                     <ContextMenu fx:id="tachesTableContextMenu">
                         <items>
-                            <MenuItem text="Voir la ressource humain de la tâche"
-                                      onAction="#afficherRessourceHumaine"/>
-                            <MenuItem text="Voir le profil de la tâche"
-                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir le projet/appli de la tâche"
-                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir l'importance de la tâche"
-                                      disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir la tâche dans le plan de charge"
-                                      onAction="#afficherPlanification"/>
+                            <MenuItem text="Voir la ressource humain de la tâche" onAction="#afficherRessourceHumaine"/>
+                            <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherPlanification"/>
                             <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
-                            <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
-                                      onAction="#afficherTacheDansOutilTicketing"/>
+                            <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
                             <SeparatorMenuItem/>
                             <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
                         </items>

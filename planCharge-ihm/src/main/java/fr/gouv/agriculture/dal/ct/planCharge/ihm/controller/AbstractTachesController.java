@@ -517,43 +517,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         definirRaccourcisClavier();
 
-//        definirMenusContextuels();
-
         // Barre d'état :
         barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
 
         LOGGER.info("Initialisé.");
-    }
-
-/*
-    private void definirMenusContextuels() {
-        definirMenuContextuelColonneRessource();
-    }
-*/
-
-    private void definirMenuContextuelColonneRessource(@NotNull TableViewAvecCalendrier<NbrsJoursParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursParRessourceBean, String> ressourceColumn) {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem menuItem = new MenuItem("Filtrer les tâches sur la ressource");
-        menuItem.setOnAction(event -> {
-
-            NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(table);
-            if (nbrsJoursParRessourceBean == null) {
-                ihm.afficherDialog(
-                        Alert.AlertType.WARNING,
-                        "Aucune ressource sélectionnée",
-                        "Sélectionnez d'abord une ligne, puis recliquez.",
-                        400, 100
-                );
-                return;
-            }
-
-            RessourceBean ressourceBean = nbrsJoursParRessourceBean.getRessourceBean();
-            assert ressourceBean != null;
-
-            TableViews.applyFilter(getRessourceColumn(), getTableFilter(), ressourceBean);
-        });
-        contextMenu.getItems().add(menuItem);
-        ressourceColumn.setContextMenu(contextMenu);
     }
 
     private void definirRaccourcisClavier() {
@@ -746,6 +713,61 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         }
         return false;
+    }
+
+
+    @FXML
+    private void filtrerSurRessource(@SuppressWarnings("unused") ActionEvent event) {
+        filtrerSurRessource();
+    }
+
+    private void filtrerSurRessource() {
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucune ressource sélectionnée",
+                    "Sélectionnez d'abord une tâche, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        RessourceBean ressourceBean = tacheBean.getRessource();
+        assert ressourceBean != null;
+
+        filtrerSurRessource(ressourceBean);
+    }
+
+    void filtrerSurRessource(@NotNull RessourceBean ressourceBean) {
+        TableViews.applyFilter(ressourceColumn, getTableFilter(), ressourceBean);
+    }
+
+    @FXML
+    private void filtrerSurProfil(@SuppressWarnings("unused") ActionEvent event) {
+        filtrerSurProfil();
+    }
+
+    private void filtrerSurProfil() {
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucune ressource sélectionnée",
+                    "Sélectionnez d'abord une tâche, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        ProfilBean profil = tacheBean.getProfil();
+        assert profil != null;
+
+        filtrerSurProfil(profil);
+    }
+
+    void filtrerSurProfil(@NotNull ProfilBean profilBean) {
+        TableViews.applyFilter(profilColumn, getTableFilter(), profilBean);
     }
 
 

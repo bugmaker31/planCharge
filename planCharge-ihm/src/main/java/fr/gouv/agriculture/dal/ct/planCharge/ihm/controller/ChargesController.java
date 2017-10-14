@@ -30,7 +30,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import impl.org.controlsfx.table.ColumnFilter;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -139,7 +138,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private Spinner<Integer> nbrLignesTablePlanificationsSpinner;
+    private Spinner<Integer> nbrLignesMaxTablePlanificationsSpinner;
 
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
@@ -981,7 +980,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.disableReagencingColumns(planificationsTable);
 
         TableViews.ensureDisplayingRows(planificationsTable, 30);
-        nbrLignesTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+        nbrLignesMaxTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             Integer nbrlignes = Objects.value(newValue, 30);
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
@@ -1164,7 +1163,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             RessourceBean ressourceBean = nbrsJoursParRessourceBean.getRessourceBean();
             assert ressourceBean != null;
 
-            TableViews.applyFilter(getRessourceColumn(), getTableFilter(), ressourceBean);
+            filtrerSurRessource(ressourceBean);
         });
         contextMenu.getItems().add(menuItem);
         ressourceColumn.setContextMenu(contextMenu);
@@ -1564,4 +1563,102 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
         LOGGER.debug("Charges calculées.");
     }
+
+
+    @FXML
+    private void filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc();
+    }
+
+    private void filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc() {
+
+        NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(nbrsJoursDispoCTRestanteRsrcTable);
+        if (nbrsJoursParRessourceBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucune ressource sélectionnée",
+                    "Sélectionnez d'abord une ligne, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        RessourceBean ressourceBean = nbrsJoursParRessourceBean.getRessourceBean();
+        assert ressourceBean != null;
+
+        filtrerSurRessource(ressourceBean);
+    }
+
+    @FXML
+    private void filtrerSurProfilTableNbrsJoursChargeProfil(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        filtrerSurProfilTableNbrsJoursChargeProfil();
+    }
+
+    private void filtrerSurProfilTableNbrsJoursChargeProfil() {
+
+        NbrsJoursParProfilBean nbrsJoursParProfilBean = TableViews.selectedItem(nbrsJoursChargeProfilTable);
+        if (nbrsJoursParProfilBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucun profil sélectionné",
+                    "Sélectionnez d'abord une ligne, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        ProfilBean profilBean = nbrsJoursParProfilBean.getProfilBean();
+        assert profilBean != null;
+
+        filtrerSurProfil(profilBean);
+    }
+
+    @FXML
+    private void filtrerSurRessourceTableNbrsJoursChargeRsrc(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        filtrerSurRessourceTableNbrsJoursChargeRsrc();
+    }
+
+    private void filtrerSurRessourceTableNbrsJoursChargeRsrc() {
+
+        NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(nbrsJoursChargeRsrcTable);
+        if (nbrsJoursParRessourceBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucune ressource sélectionnée",
+                    "Sélectionnez d'abord une ligne, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        RessourceBean ressourceBean = nbrsJoursParRessourceBean.getRessourceBean();
+        assert ressourceBean != null;
+
+        filtrerSurRessource(ressourceBean);
+    }
+
+    @FXML
+    private void filtrerSurProfilTableNbrsJoursDispoCTMaxRestanteProfil(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        filtrerSurProfilTableNbrsJoursDispoCTMaxRestanteProfil();
+    }
+
+    private void filtrerSurProfilTableNbrsJoursDispoCTMaxRestanteProfil() {
+
+        NbrsJoursParProfilBean nbrsJoursParProfilBean = TableViews.selectedItem(nbrsJoursDispoCTMaxRestanteProfilTable);
+        if (nbrsJoursParProfilBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucune ressource sélectionnée",
+                    "Sélectionnez d'abord une ligne, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        ProfilBean profilBean = nbrsJoursParProfilBean.getProfilBean();
+        assert profilBean != null;
+
+        filtrerSurProfil(profilBean);
+    }
+
 }

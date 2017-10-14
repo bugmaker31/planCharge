@@ -242,7 +242,7 @@ public final class TableViews {
 
         assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
 //        TODO FDA 2017/10 Trouver mieux que de statuer que la hauteur de l'entête de la table est de 3 lignes. La solution donnée sur https://stackoverflow.com/questions/35254054/height-of-tableviews-header ne fonctionne pas quand on définit la hauteur à l'initisalition car la CSS n'est pas encore appliquée/calculée.
-        DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(3 * table.getFixedCellSize());// Additional pixels are for tableview's header heght (3 lines).
+        DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(3 * table.getFixedCellSize() + 7);// Additional pixels are for tableview's header heght (3 lines).
 //        tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
 
         table.minHeightProperty().bind(tableHeightBinding);

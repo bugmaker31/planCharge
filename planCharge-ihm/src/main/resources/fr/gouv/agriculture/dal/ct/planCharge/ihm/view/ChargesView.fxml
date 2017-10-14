@@ -162,8 +162,8 @@
                         <TitledPane fx:id="planChargePane" text="Plan de charge" animated="$arePanesAnimated">
                             <VBox>
                                 <HBox alignment="BASELINE_LEFT">
-                                    <Label text="Nombre de lignes : "/>
-                                    <Spinner fx:id="nbrLignesTablePlanificationsSpinner" prefWidth="70" editable="true">
+                                    <Label text="Nombre de lignes max. : "/>
+                                    <Spinner fx:id="nbrLignesMaxTablePlanificationsSpinner" prefWidth="70" editable="true">
                                         <valueFactory>
                                             <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="500" initialValue="30" amountToStepBy="5"/>
                                         </valueFactory>
@@ -223,7 +223,7 @@
                                         <TableColumn text="Planification">
                                             <columns>
                                                 <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
-                                                             styleClass="periodeChargee-column" sortable="false" />
+                                                             styleClass="periodeChargee-column" sortable="false"/>
                                                 <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
                                                              styleClass="periodeChargee-column" sortable="false"/>
                                                 <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
@@ -265,17 +265,19 @@
                                             <items>
                                                 <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
                                                 <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                                <MenuItem text="Voir le projet/appli de la tâche"
-                                                          disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                                <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                                                 <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
+                                                <SeparatorMenuItem/>
                                                 <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache"/>
                                                 <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
-                                                <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)"
-                                                          onAction="#afficherTacheDansOutilTicketing"/>
+                                                <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
                                                 <!-- Trop dangereux pour le module des Charges (tant qu'on n'a pas programmé le "undo"/Ctrl+Z). Seul le module des Tâches aura ce raccourci-clavier.
                                                                                                 <SeparatorMenuItem/>
                                                                                                 <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
                                                 -->
+                                                <SeparatorMenuItem/>
+                                                <MenuItem text="Filtrer les tâches sur la ressource" onAction="#filtrerSurRessource"/>
+                                                <MenuItem text="Filtrer les tâches sur le profil" onAction="#filtrerSurProfil"/>
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
@@ -359,6 +361,13 @@
                                     <tooltip>
                                         <Tooltip text="Nombres de jours de charge pour chaque ressource."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Filtrer les tâches sur la ressource" onAction="#filtrerSurRessourceTableNbrsJoursChargeRsrc"/>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
@@ -439,6 +448,13 @@
                                     <tooltip>
                                         <Tooltip text="Nombres de jours de charge pour chaque profil."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Filtrer les tâches sur le profil" onAction="#filtrerSurProfilTableNbrsJoursChargeProfil"/>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
@@ -519,6 +535,14 @@
                                     <tooltip>
                                         <Tooltip text="Nombres de jours de disponibilité restant pour la CT pour chaque ressource."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Filtrer les tâches sur la ressource"
+                                                          onAction="#filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc"/>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
@@ -599,6 +623,14 @@
                                     <tooltip>
                                         <Tooltip text="Nombres de jours de disponibilité restant pour la CT pour chaque ressource."/>
                                     </tooltip>
+                                    <contextMenu>
+                                        <ContextMenu>
+                                            <items>
+                                                <MenuItem text="Filtrer les tâches sur le profil"
+                                                          onAction="#filtrerSurProfilTableNbrsJoursDispoCTMaxRestanteProfil"/>
+                                            </items>
+                                        </ContextMenu>
+                                    </contextMenu>
                                 </TableViewAvecCalendrier>
                             </VBox>
                         </TitledPane>
