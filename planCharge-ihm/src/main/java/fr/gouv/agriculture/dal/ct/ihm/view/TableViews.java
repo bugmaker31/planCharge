@@ -340,16 +340,17 @@ public final class TableViews {
 //        });
     }
 
-    public static void applyFilter(@NotNull TableColumn<PlanificationTacheBean, RessourceBean<?, ?>> ressourceColumn, @NotNull TableFilter<PlanificationTacheBean> tableFilter, @NotNull RessourceBean ressourceBean) {
-        Optional<ColumnFilter<PlanificationTacheBean, ?>> ressourceColumnFilterOpt = tableFilter.getColumnFilter(ressourceColumn);
-        if (!ressourceColumnFilterOpt.isPresent()) {
+    public static <S, R> void applyFilter(@NotNull TableColumn<S, R> column, @NotNull TableFilter<S> tableFilter, @NotNull R bean) {
+        Optional<ColumnFilter<S, ?>> columnFilterOpt = tableFilter.getColumnFilter(column);
+        if (!columnFilterOpt.isPresent()) {
             LOGGER.warn("Filtrage non actvé sur la colonne 'Ressource'.");
             return;
         }
-        ColumnFilter<PlanificationTacheBean, RessourceBean> ressourceColumnFilter = (ColumnFilter<PlanificationTacheBean, RessourceBean>) ressourceColumnFilterOpt.get();
-        ressourceColumnFilter.unSelectAllValues();
-        ressourceColumnFilter.selectValue(ressourceBean);
-        ressourceColumnFilter.applyFilter();
+        //noinspection unchecked
+        ColumnFilter<S, R> columnFilter = (ColumnFilter<S, R>) columnFilterOpt.get();
+        columnFilter.unSelectAllValues();
+        columnFilter.selectValue(bean);
+        columnFilter.applyFilter();
     }
 
     // Sorting :

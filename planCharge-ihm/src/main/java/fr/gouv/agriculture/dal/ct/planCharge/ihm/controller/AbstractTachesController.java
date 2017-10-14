@@ -8,12 +8,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.EcheanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
@@ -515,10 +517,43 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         definirRaccourcisClavier();
 
+//        definirMenusContextuels();
+
         // Barre d'état :
         barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
 
         LOGGER.info("Initialisé.");
+    }
+
+/*
+    private void definirMenusContextuels() {
+        definirMenuContextuelColonneRessource();
+    }
+*/
+
+    private void definirMenuContextuelColonneRessource(@NotNull TableViewAvecCalendrier<NbrsJoursParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursParRessourceBean, String> ressourceColumn) {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem = new MenuItem("Filtrer les tâches sur la ressource");
+        menuItem.setOnAction(event -> {
+
+            NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(table);
+            if (nbrsJoursParRessourceBean == null) {
+                ihm.afficherDialog(
+                        Alert.AlertType.WARNING,
+                        "Aucune ressource sélectionnée",
+                        "Sélectionnez d'abord une ligne, puis recliquez.",
+                        400, 100
+                );
+                return;
+            }
+
+            RessourceBean ressourceBean = nbrsJoursParRessourceBean.getRessourceBean();
+            assert ressourceBean != null;
+
+            TableViews.applyFilter(getRessourceColumn(), getTableFilter(), ressourceBean);
+        });
+        contextMenu.getItems().add(menuItem);
+        ressourceColumn.setContextMenu(contextMenu);
     }
 
     private void definirRaccourcisClavier() {
