@@ -77,7 +77,7 @@ public abstract class Dates {
 
     @Null
     public static LocalDate max(@NotNull Set<LocalDate> dates) {
-        Optional<LocalDate> maxOpt = dates.parallelStream().max(LocalDate::compareTo);
+        Optional<LocalDate> maxOpt = dates.parallelStream().reduce(Dates::max);
         return maxOpt.orElse(null);
     }
 }

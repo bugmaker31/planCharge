@@ -777,13 +777,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
 
                 // Récupération des infos sur la cellule :
-                //noinspection unchecked
-                TableRow<PlanificationTacheBean> tableRow = getTableRow();
-                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
-                    // Rq : On tombe dans ce cas-là dans le cas de ce DatePickerTableCell (pas pour PlanificationChargeCell).
-                    return;
-                }
-                PlanificationTacheBean planifBean = tableRow.getItem();
+                PlanificationTacheBean planifBean = tacheBean();
                 if (planifBean == null) {
                     return;
                 }
@@ -803,7 +797,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 }
                 LocalDate debutDernierePeriodePlanifiee = Dates.max(planifBean.getDebutsPeriodesPlanifiees());
                 if (debutDernierePeriodePlanifiee == null) {
-                    return false; // TODO FDA 2017/10 Confirmer.
+                    return false;
                 }
                 LocalDate finDernierePeriodePlanifiee = debutDernierePeriodePlanifiee.plusDays(7L); // TODO [issue#26:PeriodeHebdo/Trim]
                 return !finDernierePeriodePlanifiee.isAfter(echeance);

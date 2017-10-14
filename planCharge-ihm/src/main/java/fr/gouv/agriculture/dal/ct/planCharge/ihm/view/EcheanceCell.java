@@ -59,17 +59,11 @@ public class EcheanceCell<TB extends TacheBean> extends DatePickerTableCell<TB> 
             return;
         }
 
-        // Récupération des infos sur la cellule :
-        //noinspection unchecked
-        TableRow<TB> tableRow = getTableRow();
-        if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
-            // Rq : On tombe dans ce cas-là dans le cas de ce DatePickerTableCell (pas pour PlanificationChargeCell).
-            return;
-        }
-        TB tacheBean = tableRow.getItem();
+        TB tacheBean = tacheBean();
         if (tacheBean == null) {
             return;
         }
+
         //noinspection UnnecessaryLocalVariable
         LocalDate echeance = getItem();
 
@@ -82,5 +76,26 @@ public class EcheanceCell<TB extends TacheBean> extends DatePickerTableCell<TB> 
         if (dateEtat.isAfter(echeance)) {
             pseudoClassStateChanged(ECHUE, true);
         }
+    }
+
+    /**
+     * Récupération des infos sur la cellule.
+     */
+    @Null
+    protected TB tacheBean() {
+
+        //noinspection unchecked
+        TableRow<TB> tableRow = getTableRow();
+        if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+            // Rq : On tombe dans ce cas-là dans le cas de ce DatePickerTableCell (pas pour PlanificationChargeCell).
+            return null;
+        }
+
+        TB tacheBean = tableRow.getItem();
+        if (tacheBean == null) {
+            return null;
+        }
+
+        return tacheBean;
     }
 }

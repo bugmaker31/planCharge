@@ -17,6 +17,7 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -104,7 +105,7 @@ public class PlanificationTacheBean extends TacheBean {
 
     // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
     public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode/*, @NotNull LocalDate datefinPeriode*/) {
-        return calendrier.containsKey(dateDebutPeriode) && (calendrier.get(dateDebutPeriode) != null);
+        return calendrier.containsKey(dateDebutPeriode) && (calendrier.get(dateDebutPeriode) != null) && (calendrier.get(dateDebutPeriode).get() != 0.0);
     }
 
     /**
@@ -114,7 +115,10 @@ public class PlanificationTacheBean extends TacheBean {
      */
     @NotNull
     public Set<LocalDate> getDebutsPeriodesPlanifiees() {
-        return calendrier.keySet();
+        return calendrier.entrySet().parallelStream()
+                .filter(entry -> (entry.getValue() != null) && (entry.getValue().get() != 0.0))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
     }
 
     @Null
