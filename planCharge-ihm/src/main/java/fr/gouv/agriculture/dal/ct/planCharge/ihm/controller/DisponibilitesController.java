@@ -1109,8 +1109,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         ihm.interdireEdition(profilNbrsJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
         for (int cptColonne = 1; cptColonne <= nbrsJoursOuvresTable.getCalendrierColumns().size(); cptColonne++) {
             TableColumn<NbrsJoursOuvresBean, Integer> colonne = nbrsJoursOuvresTable.getCalendrierColumns().get(cptColonne - 1);
-            EditableAwareTextFieldTableCell<NbrsJoursOuvresBean, Integer> nbrJoursOuvresCell = new EditableAwareTextFieldTableCell<>(Converters.NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés."));
-            colonne.setCellFactory(column -> nbrJoursOuvresCell);
+            colonne.setCellFactory(column -> new EditableAwareTextFieldTableCell<>(Converters.NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.")));
         }
 
         // Paramétrage des ordres de tri :
