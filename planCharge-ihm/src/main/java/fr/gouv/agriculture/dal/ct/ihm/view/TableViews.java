@@ -229,18 +229,18 @@ public final class TableViews {
 
         DoubleProperty headerRowHeightProperty = new SimpleDoubleProperty();
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
-//            if (!Objects.equals(oldValue, newValue)) {
-            TableHeaderRow headerRow = headerRow(table);
-            // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
-            if (headerRow == null) {
-                assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
-                headerRowHeightProperty.setValue(table.getFixedCellSize()); // Approximation.
-                LOGGER.debug("Table '{}' without header (CSS not applied yet?), height approximated to {}.", table.getId(), headerRowHeightProperty.get());
-            } else {
-                headerRowHeightProperty.bind(headerRow.heightProperty());
-                LOGGER.debug("Table '{}' header height is {}.", table.getId(), headerRowHeightProperty.get());
+            if (!Objects.equals(oldValue, newValue)) {
+                TableHeaderRow headerRow = headerRow(table);
+                // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
+                if (headerRow == null) {
+                    assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+                    headerRowHeightProperty.setValue(table.getFixedCellSize()); // Approximation.
+                    LOGGER.debug("Table '{}' without header (CSS not applied yet?), height approximated to {}.", table.getId(), headerRowHeightProperty.get());
+                } else {
+                    headerRowHeightProperty.bind(headerRow.heightProperty());
+                    LOGGER.debug("Table '{}' header height is {}.", table.getId(), headerRowHeightProperty.get());
+                }
             }
-//            }
         });
         headerRowHeightProperty.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' header new height is {}.", table.getId(), headerRowHeightProperty.get()));
 
