@@ -33,6 +33,8 @@
 
     <logger name="fr.gouv.agriculture.dal.ct.planCharge" level="DEBUG"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.dao" level="INFO"/>
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.service" level="DEBUG"/>
+    <logger name="fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService" level="INFO"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur" level="INFO"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur" level="INFO"/>
     <logger name="fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean" level="INFO"/>

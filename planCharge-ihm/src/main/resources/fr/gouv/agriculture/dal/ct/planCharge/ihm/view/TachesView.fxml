@@ -87,7 +87,7 @@
             <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
                 <columns>
 
-                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent).-->
+                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
 
                     <TableColumn text="Catégories">
                         <columns>
@@ -152,7 +152,7 @@
                             <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
                             <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
                             <SeparatorMenuItem/>
-                            <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
+                            <MenuItem text="Supprimer" onAction="#supprimer" /> <!--accelerator="DELETE" Trop dangereux.-->
                         </items>
                     </ContextMenu>
                 </contextMenu>

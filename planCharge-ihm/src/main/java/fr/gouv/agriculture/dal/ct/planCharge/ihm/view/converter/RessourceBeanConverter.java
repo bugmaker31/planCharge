@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;

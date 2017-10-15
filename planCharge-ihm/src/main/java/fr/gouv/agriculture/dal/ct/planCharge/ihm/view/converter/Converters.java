@@ -1,4 +1,4 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter;
 
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
@@ -156,5 +156,7 @@ public class Converters {
     public static final RessourceBeanConverter RESSOURCE_BEAN_CONVERTER = new RessourceBeanConverter();
 
     public static final ProfilBeanConverter PROFIL_BEAN_CONVERTER = new ProfilBeanConverter();
+
+    public static final ProjetAppliBeanConverter PROJET_APPLI_STRING_CONVERTER = new ProjetAppliBeanConverter();
 
 }

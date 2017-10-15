@@ -22,6 +22,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBea
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -846,7 +847,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
         });
         //noinspection OverlyComplexAnonymousInnerClass
-        getRessourceColumn().setCellFactory(param -> new RessourceCell<PlanificationTacheBean>(planChargeBean.getRessourcesBeans(), this::filtrerSurRessource) {
+        getRessourceColumn().setCellFactory(param -> new RessourceCell<PlanificationTacheBean>(planChargeBean.getRessourcesBeans(), this::afficherRessourceHumaine, this::filtrerSurRessource) {
 
             @Override
             public void updateItem(RessourceBean<?, ?> item, boolean empty) {

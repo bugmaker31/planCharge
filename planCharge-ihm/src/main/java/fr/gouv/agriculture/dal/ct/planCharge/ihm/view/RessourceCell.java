@@ -3,11 +3,10 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.cell.ComboBoxTableCell;
 
 import javax.validation.constraints.NotNull;
@@ -15,43 +14,50 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class RessourceCell<TB extends TacheBean> extends ComboBoxTableCell<TB, RessourceBean<?, ?>> {
 
-    private final Runnable filtrerSurRessourceRunnable;
-    private MenuItem menuItem;
+    private final ContextMenu contextMenu = new ContextMenu();
+    private final MenuItem afficherRessourceHumaineMenuItem = new MenuItem();
+    private final MenuItem filtrerSurRessourceMenuItem = new MenuItem();
 
-    public RessourceCell(@NotNull ObservableList<RessourceBean<?, ?>> items, @NotNull Runnable filtrerSurRessourceRunnable) {
+
+    public RessourceCell(@NotNull ObservableList<RessourceBean<?, ?>> items, @NotNull Runnable afficherRessourceHumaineRunnable, @NotNull Runnable filtrerSurRessourceRunnable) {
         super(Converters.RESSOURCE_BEAN_CONVERTER, items);
-        this.filtrerSurRessourceRunnable = filtrerSurRessourceRunnable;
-        definirMenuContextuel();
+
+        afficherRessourceHumaineMenuItem.setOnAction(event -> afficherRessourceHumaineRunnable.run());
+        filtrerSurRessourceMenuItem.setOnAction(event -> filtrerSurRessourceRunnable.run());
+
+        setContextMenu(contextMenu);
     }
+
 
     @Override
     public void updateItem(RessourceBean<?, ?> item, boolean empty) {
         super.updateItem(item, empty);
-        if ((item == null) || empty) {
-            return;
-        }
-        String nomRsrc;
-        if (!item.estHumain()) {
-            nomRsrc = "'" + item.getCode() + "'";
-        } else {
-            RessourceHumaineBean rsrcHum = (RessourceHumaineBean) item;
-            nomRsrc = rsrcHum.getPrenom() + " " + rsrcHum.getNom();
-        }
-        menuItem.setText("Filtrer sur " + nomRsrc);
+        definirMenuContextuel();
     }
 
     private void definirMenuContextuel() {
 
-        menuItem = new MenuItem();
-        menuItem.setOnAction(event -> filtrerSurRessourceRunnable.run());
+        contextMenu.getItems().clear();
 
-        ContextMenu contextMenu = Objects.value(getContextMenu(), new ContextMenu());
-        if (!contextMenu.getItems().isEmpty())  {
-            contextMenu.getItems().add(new SeparatorMenuItem());
+        if ((getItem() == null) || isEmpty()) {
+            return;
         }
-        contextMenu.getItems().addAll(
-                menuItem
-        );
-        setContextMenu(contextMenu);
+
+        String nomRsrc;
+        if (!getItem().estHumain()) {
+            nomRsrc = "'" + getItem().getCode() + "'";
+        } else {
+            RessourceHumaineBean rsrcHum = (RessourceHumaineBean) getItem();
+            nomRsrc = rsrcHum.getPrenom() + " " + rsrcHum.getNom();
+        }
+
+        if (getItem().estHumain()) {
+            afficherRessourceHumaineMenuItem.setText("Afficher la ressource humaine " + nomRsrc);
+            contextMenu.getItems().add(afficherRessourceHumaineMenuItem);
+        }
+
+        filtrerSurRessourceMenuItem.setText("Filtrer sur " + nomRsrc);
+        contextMenu.getItems().add(filtrerSurRessourceMenuItem);
+
     }
 }

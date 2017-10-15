@@ -182,7 +182,7 @@
                                     <columns>
                                         <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
 
-                                            <!--TODO FDA 2017/07 Factoriser les colonnes communes à ModuleChargesView et à ModuleTachesView (include ?).-->
+                                            <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
 
                                             <columns>
                                                 <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
@@ -277,8 +277,8 @@
                                                 <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
                                                 <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
                                                 <!-- Trop dangereux pour le module des Charges (tant qu'on n'a pas programmé le "undo"/Ctrl+Z). Seul le module des Tâches aura ce raccourci-clavier.
-                                                                                                <SeparatorMenuItem/>
-                                                                                                <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
+                                                <SeparatorMenuItem/>
+                                                <MenuItem text="Supprimer" onAction="#supprimer" <!-accelerator="DELETE" Trop dangereux ->/>
                                                 -->
                                                 <SeparatorMenuItem/>
                                                 <MenuItem text="Filtrer les tâches sur la ressource" onAction="#filtrerSurRessource"/>

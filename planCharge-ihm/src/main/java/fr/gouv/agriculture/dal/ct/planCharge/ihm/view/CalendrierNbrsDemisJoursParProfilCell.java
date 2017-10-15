@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoProfilBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import javafx.beans.property.FloatProperty;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;

@@ -49,13 +49,13 @@
                         <MenuItem text="Coller" onAction="#coller" accelerator="Shortcut+V"/>
                     -->
                     <!--
-                                        TODO FDA 2017/08 Remettre, si on arrive à factoriser le code, qui est mis actuellement dans chaque module.
-                                        <MenuItem text="Supprimer" onAction="#supprimer" accelerator="DELETE"/>
+                        TODO FDA 2017/08 Remettre, si on arrive à factoriser le code, qui est mis actuellement dans chaque module.
+                        <MenuItem text="Supprimer" onAction="#supprimer" /> <!-accelerator="DELETE" Trop dangereux ->
                     -->
                     <!--
-                                        TODO FDA 2017/08 Coder, si finalement on ne limite plus la fonction de recherche aux 2 listes des Tâches/Charges.
-                                        <SeparatorMenuItem/>
-                                        <MenuItem text="Rechercher" onAction="#rechercher" accelerator="Shortcut+F"/>
+                        TODO FDA 2017/08 Coder, si finalement on ne limite plus la fonction de recherche aux 2 listes des Tâches/Charges.
+                        <SeparatorMenuItem/>
+                        <MenuItem text="Rechercher" onAction="#rechercher" accelerator="Shortcut+F"/>
                     -->
                     <SeparatorMenuItem/>
                     <MenuItem text="Calculer" onAction="#calculer">

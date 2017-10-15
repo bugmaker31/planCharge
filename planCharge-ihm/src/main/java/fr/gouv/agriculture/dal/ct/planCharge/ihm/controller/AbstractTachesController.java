@@ -11,7 +11,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ProjetAppliCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.EcheanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.RessourceCell;
@@ -26,9 +27,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -328,10 +326,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
         actionsColumn.setCellValueFactory(cellData -> {
             MenuButton actionsMenu = new MenuButton("Actions");
+            MenuItem menuItemSupprimer = new MenuItem("_Supprimer");
+            menuItemSupprimer.setOnAction(event -> {
+                TB tacheBean = cellData.getValue();
+                supprimer(tacheBean);
+            });
             actionsMenu.getItems().setAll(
-                    new MenuItem("action 1"),
-                    new MenuItem("action 2")
-            ); // TODO FDA 2017/10 Coder.
+                    menuItemSupprimer
+            );
             return new SimpleObjectProperty<>(actionsMenu);
         });
 
@@ -342,32 +344,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         //noinspection OverlyComplexAnonymousInnerClass
-        projetAppliColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                new StringConverter<ProjetAppliBean>() {
-
-                    @Null
-                    @Override
-                    public String toString(@Null ProjetAppliBean projetAppliBean) {
-                        if (projetAppliBean == null) {
-                            return null;
-                        }
-                        return projetAppliBean.getCode();
-                    }
-
-                    @Null
-                    @Override
-                    public ProjetAppliBean fromString(@Null String codeProjetAppli) {
-                        if (codeProjetAppli == null) {
-                            return null;
-                        }
-                        return Collections.any(
-                                planChargeBean.getProjetsApplisBeans(),
-                                projetAppliBean -> (projetAppliBean.getCode() != null) && projetAppliBean.getCode().equals(codeProjetAppli)
-                        );
-                    }
-                },
-                planChargeBean.getProjetsApplisBeans())
-        );
+        projetAppliColumn.setCellFactory(param -> {
+            ComboBoxTableCell<TB, ProjetAppliBean> cell = new ProjetAppliCell<>(planChargeBean.getProjetsApplisBeans(), this::afficherprojetAppli, this::filtrerSurProjetAppli);
+            return cell;
+        });
         //noinspection OverlyComplexAnonymousInnerClass
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<StatutBean>() {
@@ -399,7 +379,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(Converters.CHARGE_STRING_CONVERTER)); // TODO FDA 2017/08 Mieux formater.
         ressourceColumn.setCellFactory(param -> {
-            ComboBoxTableCell<TB, RessourceBean<?, ?>> cell = new RessourceCell<TB>(planChargeBean.getRessourcesBeans(), this::filtrerSurRessource);
+            ComboBoxTableCell<TB, RessourceBean<?, ?>> cell = new RessourceCell<>(planChargeBean.getRessourcesBeans(), this::afficherRessourceHumaine, this::filtrerSurRessource);
             return cell;
         });
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()));
@@ -773,6 +753,33 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtrer();
     }
 
+    @FXML
+    private void filtrerSurProjetAppli(@SuppressWarnings("unused") ActionEvent event) {
+        filtrerSurProjetAppli();
+    }
+
+    private void filtrerSurProjetAppli() {
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            ihm.afficherDialog(
+                    Alert.AlertType.WARNING,
+                    "Aucun projet/appli sélectionné",
+                    "Sélectionnez d'abord une tâche, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+
+        ProjetAppliBean projetAppliBean = tacheBean.getProjetAppli();
+        assert projetAppliBean != null;
+
+        filtrerSurProjetAppli(projetAppliBean);
+    }
+
+    private void filtrerSurProjetAppli(@NotNull ProjetAppliBean projetAppliBean) {
+        TableViews.applyFilter(projetAppliColumn, getTableFilter(), projetAppliBean);
+    }
+
 
     @FXML
     private void filtrerSurRessource(@SuppressWarnings("unused") ActionEvent event) {
@@ -835,7 +842,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         afficherRessourceHumaine();
     }
 
-    private void afficherRessourceHumaine() {
+    void afficherRessourceHumaine() {
         TB tacheBean = TableViews.selectedItem(getTachesTable());
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
@@ -909,6 +916,53 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // TODO FDA 2017/07 Terminer de coder.
 
         ihm.getPrimaryStage().setScene(new Scene(scrollPane));
+    }
+
+    @SuppressWarnings("unused")
+    @FXML
+    private void afficherprojetAppli(ActionEvent actionEvent) {
+        afficherprojetAppli();
+    }
+
+    void afficherprojetAppli() {
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher le projet/appli",
+                    "Aucune tâche n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        ProjetAppliBean projetAppliBean = tacheBean.getProjetAppli();
+        if (projetAppliBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher le projet/appli",
+                    "Aucun projet/appli n'est (encore) indiqué pour la tâche sélectionnée (" + tacheBean.noTache() + ")."
+                            + "\nIndiquez d'abord un projet/appli, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        try {
+            ihm.getApplicationController().afficherModuleProjetsApplis();
+            TableViews.focusOnItem(ihm.getProjetsApplisController().getProjetsApplisTable(), projetAppliBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le projet/appli " + projetAppliBean.getCode() + ".", e);
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher le projet/appli '" + projetAppliBean.getCode() + "'",
+                    Exceptions.causes(e),
+                    400, 200
+            );
+        }
     }
 
 

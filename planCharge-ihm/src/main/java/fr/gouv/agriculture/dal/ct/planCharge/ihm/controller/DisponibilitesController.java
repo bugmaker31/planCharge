@@ -18,6 +18,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.ProfilDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.DisponibilitesService;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
@@ -1515,7 +1516,7 @@ public class DisponibilitesController extends AbstractController implements Modu
 
 
     public void calculerDisponibilites() throws ControllerException {
-        LOGGER.debug("Calcul des disponibilités  : ");
+        LOGGER.debug("Calcul des disponibilités : ");
         calculateurDisponibilites.calculer();
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
         LOGGER.debug("Disponibilités calculées.");
