@@ -229,18 +229,20 @@ public final class TableViews {
 
         DoubleProperty headerRowHeightProperty = new SimpleDoubleProperty();
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Objects.equals(oldValue, newValue)) {
-                TableHeaderRow headerRow = headerRow(table);
-                // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
+//            if (!Objects.equals(oldValue, newValue)) {
+            TableHeaderRow headerRow = headerRow(table);
+            // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
+            if (headerRow == null) {
                 assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
-                double headerRowHeight = ((headerRow != null) ? headerRow.getHeight() : table.getFixedCellSize()); // Approximation.
-                if (headerRowHeight == 0.0) {
-                    LOGGER.warn("Table {} without header (TableRowHeader.height==0)!?", table.getId());
-                    headerRowHeight = table.getFixedCellSize(); // Approximation.
-                }
-                headerRowHeightProperty.setValue(headerRowHeight);
+                headerRowHeightProperty.setValue(table.getFixedCellSize()); // Approximation.
+                LOGGER.debug("Table '{}' without header (CSS not applied yet?), height approximated to {}.", table.getId(), headerRowHeightProperty.get());
+            } else {
+                headerRowHeightProperty.bind(headerRow.heightProperty());
+                LOGGER.debug("Table '{}' header height is {}.", table.getId(), headerRowHeightProperty.get());
             }
+//            }
         });
+        headerRowHeightProperty.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' header new height is {}.", table.getId(), headerRowHeightProperty.get()));
 
         IntegerBinding itemsCountBinding = Bindings.size(table.getItems()); // NB : table.getItems() peut ne pas encore contenir les nouveaux items, mais encore les anciens items.
         itemsCountBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' contains {} items.", table.getId(), itemsCountBinding.get()));
@@ -256,8 +258,8 @@ public final class TableViews {
 
         DoubleBinding tableHeightBinding = headerRowHeightProperty
                 .add(rowCountBinding.multiply(table.getFixedCellSize()))
-                .add(10); // TODO FDA 2017/10 Comprendre pourquoi il faut ajouter un peu d'espace.
-//        tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
+                .add(10); // TODO FDA 2017/10 Comprendre pourquoi il faut ajouter une dizaine de pixels.
+        tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
 
         table.minHeightProperty().bind(tableHeightBinding);
         table.prefHeightProperty().bind(tableHeightBinding);
