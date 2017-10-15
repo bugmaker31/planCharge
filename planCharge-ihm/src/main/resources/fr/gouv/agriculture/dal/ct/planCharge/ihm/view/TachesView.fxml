@@ -81,7 +81,7 @@
             <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
             <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
-            <Double fx:id="actionsColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
         <VBox VBox.vgrow="ALWAYS">
             <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
@@ -130,7 +130,7 @@
                                          styleClass="profil-column"/>
                         </columns>
                     </TableColumn>
-                    <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" />
+                    <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" editable="false" />
                 </columns>
                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                 <sortOrder>

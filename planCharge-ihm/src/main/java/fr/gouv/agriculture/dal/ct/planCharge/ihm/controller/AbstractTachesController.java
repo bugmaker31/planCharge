@@ -156,7 +156,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private TableColumn<TB, ComboBox<String>> actionsColumn;
+    private TableColumn<TB, MenuButton> actionsColumn;
 
     // Les filtres :
 
@@ -327,9 +327,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
         actionsColumn.setCellValueFactory(cellData -> {
-            ComboBox<String> actionsCombobox = new ComboBox<>();
-            actionsCombobox.getItems().setAll("action 1", "action 2"); // TODO FDA 2017/10 Coder.
-            return new SimpleObjectProperty<>(actionsCombobox);
+            MenuButton actionsMenu = new MenuButton("Actions");
+            actionsMenu.getItems().setAll(
+                    new MenuItem("action 1"),
+                    new MenuItem("action 2")
+            ); // TODO FDA 2017/10 Coder.
+            return new SimpleObjectProperty<>(actionsMenu);
         });
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
@@ -734,6 +737,40 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         }
         return false;
+    }
+
+
+    @FXML
+    private void activerTousFiltres(@SuppressWarnings("unused") ActionEvent event) {
+        activerTousFiltres();
+    }
+
+    void activerTousFiltres() {
+        LOGGER.debug("RAZ des filtres...");
+
+        filtreGlobalComponent.getFiltreGlobalField().setText("");
+        // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
+
+        // TODO FDA 2017/08 Cocher tous les autres filtres.
+        List<ToggleButton> filtreButtons = Arrays.asList(
+                filtreCategorieProjetToggleButton,
+                filtreCategorieServiceToggleButton,
+                filtreCategorieOrganisationToggleButton,
+                //
+                filtreStatutNouveauToggleButton,
+                filtreStatutEnCoursToggleButton,
+                filtreStatutEnAttenteToggleButton,
+                filtreStatutRecurrentToggleButton,
+                filtreStatutReporteToggleButton,
+                filtreStatutClosToggleButton,
+                //
+                filtrePeriodeEchueToggleButton
+        );
+        for (ToggleButton filtreButton : filtreButtons) {
+            filtreButton.setSelected(false);
+        }
+
+        filtrer();
     }
 
 

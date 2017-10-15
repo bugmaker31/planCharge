@@ -124,7 +124,8 @@
                                     </VBox>
                                 </HBox>
                             </VBox>
-                            <Button text="RAZ" onAction="#razFiltres" styleClass="erase-button"/>
+                            <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
+                            <Button text="Rien" onAction="#activerTousFiltres" />
                         </HBox>
                     </TitledPane>
                 </panes>
@@ -138,6 +139,7 @@
             <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
             <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
             <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
+            <Double fx:id="descriptionColumnPrefWidth" fx:value="350"/>
             <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
             <Double fx:id="statutColumnPrefWidth" fx:value="75"/>
             <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
@@ -146,7 +148,7 @@
             <Double fx:id="chargeColumnPrefWidth" fx:value="60"/>
             <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
-            <Double fx:id="actionsColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
         <fx:define>
             <Double fx:id="semaineColumnPrefWidth" fx:value="50"/>
@@ -197,7 +199,7 @@
                                                              editable="false" styleClass="nonModifiable"/>
                                                 <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
                                                              prefWidth="$noTicketIdalColumnPrefWidth"/>
-                                                <TableColumn fx:id="descriptionColumn" prefWidth="400"
+                                                <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
                                                              text="Description" styleClass="description-column"/>
                                                 <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
                                                              text="Projet/Appli"
@@ -252,7 +254,8 @@
                                                              editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
                                             </columns>
                                         </TableColumn>
-                                        <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" />
+                                        <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
+                                                     editable="false"/>
                                     </columns>
                                     <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                                     <sortOrder>
