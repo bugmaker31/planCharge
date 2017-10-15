@@ -104,8 +104,18 @@ public class PlanificationTacheBean extends TacheBean {
 */
 
     // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-    public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode/*, @NotNull LocalDate datefinPeriode*/) {
-        return calendrier.containsKey(dateDebutPeriode) && (calendrier.get(dateDebutPeriode) != null) && (calendrier.get(dateDebutPeriode).get() != 0.0);
+    public boolean aChargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode) throws BeanException {
+        Double chargePlanifieeDsPeriode = chargePlanifiee(dateDebutPeriode, datefinPeriode);
+        return (chargePlanifieeDsPeriode != null) && (chargePlanifieeDsPeriode > 0.0);
+    }
+
+    @Null
+    public Double chargePlanifiee(@NotNull LocalDate dateDebutPeriode, @NotNull LocalDate datefinPeriode) throws BeanException {
+        Double chargePlanifiee = calendrier.keySet().parallelStream()
+                .filter(debutPeriodeCalendrier -> !debutPeriodeCalendrier.isBefore(dateDebutPeriode) && debutPeriodeCalendrier.isBefore(datefinPeriode))
+                .mapToDouble(debutPeriodeCalendrier -> calendrier.get(debutPeriodeCalendrier).getValue())
+                .sum();
+        return chargePlanifiee;
     }
 
     /**
@@ -122,37 +132,18 @@ public class PlanificationTacheBean extends TacheBean {
     }
 
     @Null
-    public DoubleProperty chargePlanifieePropertyOuNull(@NotNull LocalDate dateDebutPeriode/*, @NotNull LocalDate datefinPeriode*/) {
+    public DoubleProperty chargePlanifieePropertyOuNull(@NotNull LocalDate dateDebutPeriode) {
         return calendrier.get(dateDebutPeriode);
     }
 
     @NotNull
-    public DoubleProperty chargePlanifieeProperty(@NotNull LocalDate dateDebutPeriode/*, @NotNull LocalDate datefinPeriode*/) throws BeanException {
+    public DoubleProperty chargePlanifieeProperty(@NotNull LocalDate dateDebutPeriode) throws BeanException {
         if (!calendrier.containsKey(dateDebutPeriode)) {
             throw new BeanException("Pas de calendrier pour la tâche " + noTache() + " sur la période du " + dateDebutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE)
-//                    + " au " + datefinPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE)
                     + ".");
         }
         return calendrier.get(dateDebutPeriode);
     }
-
-    @Null
-    public Double chargePlanifiee(@NotNull LocalDate dateDebutPeriode/*, @NotNull LocalDate datefinPeriode*/) throws BeanException {
-        return chargePlanifieeProperty(dateDebutPeriode).getValue();
-    }
-
-/*
-    @Null
-    public Double chargePlanifieeOuNull(@NotNull LocalDate dateDebutPeriode*/
-/*, @NotNull LocalDate datefinPeriode*//*
-) {
-        DoubleProperty chargeProperty = chargePlanifieePropertyOuNull(dateDebutPeriode);
-        if (chargeProperty == null) {
-            return null;
-        }
-        return chargeProperty.getValue();
-    }
-*/
 
 
     /**
@@ -160,10 +151,9 @@ public class PlanificationTacheBean extends TacheBean {
      * <p>Rq : Cette méthode appelle {@link #majChargePlanifieeTotale()}. Donc inutile d'appeler {@link #majChargePlanifieeTotale()}.</p>
      *
      * @param debutPeriode début de la période considérée
-     * @param finPeriode   fin de la période considérée
      * @param charge       charge planifiée
      */
-    public void setChargePlanifiee(@NotNull LocalDate debutPeriode/*, @NotNull LocalDate finPeriode*/, @Null Double charge) {
+    public void setChargePlanifiee(@NotNull LocalDate debutPeriode, @Null Double charge) {
 
 /*
         if (charge == null) {

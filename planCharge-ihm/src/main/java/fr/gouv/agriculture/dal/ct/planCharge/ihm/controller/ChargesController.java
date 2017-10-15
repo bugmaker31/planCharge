@@ -1476,7 +1476,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             if (tache.getCharge() == null) {
                 return true;
             }
-            if (tache.getChargePlanifieeTotale() < tache.getCharge()) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            if (tache.getChargePlanifieeTotale() < tache.getCharge()) {
                 return true;
             }
         }
@@ -1484,7 +1485,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             if (tache.getCharge() == null) {
                 return true;
             }
-            if (tache.getChargePlanifieeTotale() > tache.getCharge()) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            if (tache.getChargePlanifieeTotale() > tache.getCharge()) {
                 return true;
             }
         }
@@ -1492,18 +1494,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             if (planChargeBean.getDateEtat() == null) {
                 return true;
             }
-            LocalDate debutPeriode, finPeriode;
-            debutPeriode = planChargeBean.getDateEtat();
-            finPeriode = debutPeriode.plusMonths(1L);
-            DoubleProperty chargePlanifiee;
+            // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+            LocalDate debutPeriode = planChargeBean.getDateEtat();
+            LocalDate finPeriode = debutPeriode.plusDays((long) (4 * 7));
             try {
-                // FIXME FDA 2017/09 Calcule la charge sur 1 p&riode, donc actuellement 1 semaine, pas sur le mois.
-                chargePlanifiee = tache.chargePlanifieeProperty(debutPeriode/*, finPeriode*/)/*.getValue()*/;
+                if (tache.aChargePlanifiee(debutPeriode, finPeriode)) {
+                    return true;
+                }
             } catch (BeanException e) {
                 throw new ControllerException("Impossible de déterminer la charge planifiée de la tâche " + tache.noTache() + " pour la période de " + debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + " à " + finPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".", e);
-            }
-            if ((chargePlanifiee.getValue() != null) && (chargePlanifiee.getValue() > 0.0)) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
-                return true;
             }
         }
         return false;

@@ -717,7 +717,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     void activerTousFiltres() {
-        LOGGER.debug("RAZ des filtres...");
+        LOGGER.debug("activerTousFiltres...");
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
         // TODO FDA 2017/08 RAZ les filtres / colonne aussi.

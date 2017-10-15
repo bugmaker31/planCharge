@@ -49,11 +49,11 @@ public class CalendrierChargeCellCallback implements Callback<TableColumn.CellDa
         }
         LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-        if (!planificationTacheBean.aChargePlanifiee(debutPeriode/*, finPeriode*/)) {
-            planificationTacheBean.setChargePlanifiee(debutPeriode/*, finPeriode*/, 0.0);
-        }
         try {
-            DoubleProperty chargePeriodeProperty = planificationTacheBean.chargePlanifieeProperty(debutPeriode/*, finPeriode*/);
+            if (!planificationTacheBean.aChargePlanifiee(debutPeriode, finPeriode)) {
+                planificationTacheBean.setChargePlanifiee(debutPeriode, 0.0);
+            }
+            DoubleProperty chargePeriodeProperty = planificationTacheBean.chargePlanifieeProperty(debutPeriode);
             assert chargePeriodeProperty != null;
             return chargePeriodeProperty.asObject();
         } catch (BeanException e) {

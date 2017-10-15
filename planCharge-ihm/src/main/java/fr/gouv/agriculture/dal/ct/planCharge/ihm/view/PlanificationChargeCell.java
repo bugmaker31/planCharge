@@ -261,7 +261,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
             try {
-                chargePrecedente = planifBean.chargePlanifiee(debutPeriode/*, finPeriode*/);
+                chargePrecedente = planifBean.chargePlanifiee(debutPeriode, finPeriode);
             } catch (BeanException e) {
                 LOGGER.error("Impossible de retrouver la charge planifiée.", e);
                 return;
