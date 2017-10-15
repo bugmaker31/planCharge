@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
+<?import com.sun.javafx.scene.control.skin.SplitPaneSkin.Content?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TachesController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
@@ -80,6 +81,7 @@
             <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
             <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="actionsColumnPrefWidth" fx:value="60"/>
         </fx:define>
         <VBox VBox.vgrow="ALWAYS">
             <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
@@ -128,6 +130,7 @@
                                          styleClass="profil-column"/>
                         </columns>
                     </TableColumn>
+                    <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" />
                 </columns>
                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                 <sortOrder>

@@ -8,11 +8,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.EcheanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.RessourceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
@@ -21,12 +23,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,9 +41,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
-import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +153,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     @SuppressWarnings("NullableProblems")
     private TableColumn<TB, ProfilBean> profilColumn;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private TableColumn<TB, ComboBox<String>> actionsColumn;
 
     // Les filtres :
 
@@ -320,6 +326,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
+        actionsColumn.setCellValueFactory(cellData -> {
+            ComboBox<String> actionsCombobox = new ComboBox<>();
+            actionsCombobox.getItems().setAll("action 1", "action 2"); // TODO FDA 2017/10 Coder.
+            return new SimpleObjectProperty<>(actionsCombobox);
+        });
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         categorieColumn.setCellFactory(ComboBoxTableCell.forTableColumn(CategorieTacheDTO.CODES_CATEGORIES));
@@ -389,6 +400,15 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             return cell;
         });
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()));
+/*
+        actionsColumn.setCellFactory(param -> {
+            ComboBoxTableCell<TB, ComboBox<?>> actionsComboBox = new ComboBoxTableCell<>();
+            actionsComboBox.getItems().setAll(
+                    new ComboBox<>(FXCollections.observableArrayList("action 1", "action 2"))
+            );
+            return actionsComboBox;
+        });
+*/
 
         // Paramétrage des ordres de tri :
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
