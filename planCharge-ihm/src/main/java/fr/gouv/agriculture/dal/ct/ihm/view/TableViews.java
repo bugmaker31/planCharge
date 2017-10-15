@@ -3,23 +3,16 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import impl.org.controlsfx.table.ColumnFilter;
-import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventType;
 import javafx.scene.control.Label;
-import javafx.scene.control.Skin;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.table.TableFilter;
@@ -29,7 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public final class TableViews {
 
