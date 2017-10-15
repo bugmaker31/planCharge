@@ -212,8 +212,8 @@ Tâches :
 }
 .charge-column:chargeNonPlanifiee {
     -fx-background-color: #EA4335; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-opacity: 75%;
     /*-fx-text-fill: white;*/
-    /*-fx-opacity: 50%;*/
 }
 
 .ressource-column:surcharge {

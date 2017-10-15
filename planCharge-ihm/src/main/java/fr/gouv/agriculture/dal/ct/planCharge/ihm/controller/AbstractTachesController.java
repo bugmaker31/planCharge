@@ -11,11 +11,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ProjetAppliCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.EcheanceCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.RessourceCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
@@ -326,14 +323,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
         actionsColumn.setCellValueFactory(cellData -> {
             MenuButton actionsMenu = new MenuButton("Actions");
-            MenuItem menuItemSupprimer = new MenuItem("_Supprimer");
-            menuItemSupprimer.setOnAction(event -> {
-                TB tacheBean = cellData.getValue();
-                supprimer(tacheBean);
-            });
-            actionsMenu.getItems().setAll(
-                    menuItemSupprimer
-            );
+            {
+                MenuItem menuItemSupprimer = new MenuItem("_Supprimer");
+                menuItemSupprimer.setOnAction(event -> {
+                    TB tacheBean = cellData.getValue();
+                    supprimer(tacheBean);
+                });
+                actionsMenu.getItems().add(menuItemSupprimer);
+            }
             return new SimpleObjectProperty<>(actionsMenu);
         });
 
@@ -344,10 +341,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         noTicketIdalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         //noinspection OverlyComplexAnonymousInnerClass
-        projetAppliColumn.setCellFactory(param -> {
-            ComboBoxTableCell<TB, ProjetAppliBean> cell = new ProjetAppliCell<>(planChargeBean.getProjetsApplisBeans(), this::afficherprojetAppli, this::filtrerSurProjetAppli);
-            return cell;
-        });
+        projetAppliColumn.setCellFactory(param -> new ProjetAppliCell<>(planChargeBean.getProjetsApplisBeans(), this::afficherProjetAppli, this::filtrerSurProjetAppli));
         //noinspection OverlyComplexAnonymousInnerClass
         statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
                 new StringConverter<StatutBean>() {
@@ -378,11 +372,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         echeanceColumn.setCellFactory(param -> new EcheanceCell<>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, getTachesTable()));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(Converters.CHARGE_STRING_CONVERTER)); // TODO FDA 2017/08 Mieux formater.
-        ressourceColumn.setCellFactory(param -> {
-            ComboBoxTableCell<TB, RessourceBean<?, ?>> cell = new RessourceCell<>(planChargeBean.getRessourcesBeans(), this::afficherRessourceHumaine, this::filtrerSurRessource);
-            return cell;
-        });
-        profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()));
+        ressourceColumn.setCellFactory(param -> new RessourceCell<>(planChargeBean.getRessourcesBeans(), this::afficherRessourceHumaine, this::filtrerSurRessource));
+        profilColumn.setCellFactory(param -> new ProfilCell<>(planChargeBean.getProfilsBeans(), this::afficherProfil, this::filtrerSurProfil));
 /*
         actionsColumn.setCellFactory(param -> {
             ComboBoxTableCell<TB, ComboBox<?>> actionsComboBox = new ComboBoxTableCell<>();
@@ -813,7 +804,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtrerSurProfil();
     }
 
-    private void filtrerSurProfil() {
+    void filtrerSurProfil() {
         TB tacheBean = TableViews.selectedItem(getTachesTable());
         if (tacheBean == null) {
             ihm.afficherDialog(
@@ -895,7 +886,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         }
     }
 
-
     @FXML
     private void afficherTacheDansOutilTicketing(@SuppressWarnings("unused") ActionEvent mouseEvent) {
         afficherTacheDansOutilTicketing();
@@ -920,11 +910,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @SuppressWarnings("unused")
     @FXML
-    private void afficherprojetAppli(ActionEvent actionEvent) {
-        afficherprojetAppli();
+    private void afficherProjetAppli(ActionEvent actionEvent) {
+        afficherProjetAppli();
     }
 
-    void afficherprojetAppli() {
+    void afficherProjetAppli() {
         TB tacheBean = TableViews.selectedItem(getTachesTable());
         if (tacheBean == null) {
             //noinspection HardcodedLineSeparator
@@ -963,6 +953,55 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     400, 200
             );
         }
+    }
+
+    @SuppressWarnings("unused")
+    @FXML
+    private void afficherProfil(ActionEvent actionEvent) {
+        afficherProfil();
+    }
+
+    void afficherProfil() {
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher le profil",
+                    "Aucune tâche n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        ProfilBean profilBean = tacheBean.getProfil();
+        if (profilBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher le profil",
+                    "Aucun profil n'est (encore) indiqué pour la tâche sélectionnée (" + tacheBean.noTache() + ")."
+                            + "\nIndiquez d'abord un profil, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+/* TODO FDA 2017/10 Décommenter, une fois le module de gestion du réfénretiel des profils codé.
+        try {
+            ihm.getApplicationController().afficherModuleProfils();
+            TableViews.focusOnItem(ihm.getProfilsController().getProfilsTable(), profilBean);
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher le profil " + profilBean.getCode() + ".", e);
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher le profil '" + profilBean.getCode() + "'",
+                    Exceptions.causes(e),
+                    400, 200
+            );
+        }
+*/
     }
 
 

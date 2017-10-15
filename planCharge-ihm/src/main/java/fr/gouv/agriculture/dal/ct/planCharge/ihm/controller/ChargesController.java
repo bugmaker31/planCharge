@@ -889,7 +889,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
         });
         //noinspection OverlyComplexAnonymousInnerClass
-        getProfilColumn().setCellFactory(param -> new ComboBoxTableCell<PlanificationTacheBean, ProfilBean>(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()) {
+        getProfilColumn().setCellFactory(param -> new ProfilCell<PlanificationTacheBean>(planChargeBean.getProfilsBeans(), this::afficherProfil, this::filtrerSurProfil) {
             @Override
             public void updateItem(ProfilBean item, boolean empty) {
                 super.updateItem(item, empty);
