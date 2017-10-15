@@ -283,6 +283,8 @@
                                                 <SeparatorMenuItem/>
                                                 <MenuItem text="Filtrer les tâches sur la ressource" onAction="#filtrerSurRessource"/>
                                                 <MenuItem text="Filtrer les tâches sur le profil" onAction="#filtrerSurProfil"/>
+                                                <SeparatorMenuItem/>
+                                                <MenuItem text="Provisionner la tâche" onAction="#provisionnerTache"/>
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>

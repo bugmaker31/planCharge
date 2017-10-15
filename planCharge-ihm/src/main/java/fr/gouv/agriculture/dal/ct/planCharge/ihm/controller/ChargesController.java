@@ -969,8 +969,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
         });
 
-//        planificationsTable.getSelectionModel().setCellSelectionEnabled(true); Fait dans le FXML.
-
 //        FIXME FDA 2017/10 Les colonnes sont toujours réagençables.
         TableViews.disableReagencingColumns(planificationsTable);
 
@@ -1557,6 +1555,27 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         calculateurCharges.calculer();
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
         LOGGER.debug("Charges calculées.");
+    }
+
+    @FXML
+    private void provisionnerTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        provisionnerTache();
+    }
+
+    private void provisionnerTache() throws ControllerException {
+        LOGGER.debug("Provionning de la tâche sélectionnée  : ");
+        PlanificationTacheBean tacheSelectionnee = TableViews.selectedItem(planificationsTable);
+        if (tacheSelectionnee == null) {
+            ihm.afficherDialog(Alert.AlertType.ERROR,
+                    "Impossible de provisionner",
+                    "Aucune tâche n'est sélectionnée. Sélectionnez une tâche, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+        calculateurCharges.calculerProvision(tacheSelectionnee);
+        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
+        LOGGER.debug("Tâche provisionnée.");
     }
 
 

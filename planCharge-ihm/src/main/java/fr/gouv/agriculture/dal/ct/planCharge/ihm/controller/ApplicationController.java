@@ -1542,7 +1542,7 @@ public class ApplicationController extends AbstractController {
 
         ihm.afficherNotificationInfo(
                 "Calcul terminé",
-                "Les données (disponibilités, provisions, surcharges, etc.) ont été calculées."
+                "Les données (disponibilités, surcharges, etc.) ont été calculées."
         );
         LOGGER.debug("Calculs faits.");
     }

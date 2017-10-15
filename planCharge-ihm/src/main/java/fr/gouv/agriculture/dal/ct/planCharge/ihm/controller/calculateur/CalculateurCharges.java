@@ -92,7 +92,7 @@ public class CalculateurCharges extends Calculateur {
 
         LOGGER.debug("Calcul des charges : ");
 
-        calculerProvisions();
+//        calculerProvisions();
 
         calculerNbrsJoursChargeParRessource();
         calculerNbrsJoursChargeParProfil();
@@ -112,7 +112,7 @@ public class CalculateurCharges extends Calculateur {
         LOGGER.debug("Charges à provisionner calculées.");
     }
 
-    private void calculerProvision(@NotNull PlanificationTacheBean planificationTacheBean) throws ControllerException {
+    public void calculerProvision(@NotNull PlanificationTacheBean planificationTacheBean) throws ControllerException {
         if (!planificationTacheBean.getTacheBean().estProvision()) {
             LOGGER.debug("La tâche {} n'est pas une provision, donc rien à calculer.", planificationTacheBean.noTache());
             return;
