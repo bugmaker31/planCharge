@@ -11,12 +11,15 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Skin;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.table.TableFilter;
@@ -228,6 +231,21 @@ public final class TableViews {
 
         // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
 
+        DoubleProperty headerRowHeightProperty = new SimpleDoubleProperty();
+        table.skinProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Objects.equals(oldValue, newValue)) {
+                TableHeaderRow headerRow = headerRow(table);
+                // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
+                assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
+                double headerRowHeight = ((headerRow != null) ? headerRow.getHeight() : table.getFixedCellSize()); // Approximation.
+                if (headerRowHeight == 0.0) {
+                    LOGGER.warn("Table {} without header (TableRowHeader.height==0)!?", table.getId());
+                    headerRowHeight = table.getFixedCellSize(); // Approximation.
+                }
+                headerRowHeightProperty.setValue(headerRowHeight);
+            }
+        });
+
         IntegerBinding itemsCountBinding = Bindings.size(table.getItems()); // NB : table.getItems() peut ne pas encore contenir les nouveaux items, mais encore les anciens items.
         itemsCountBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' contains {} items.", table.getId(), itemsCountBinding.get()));
         IntegerBinding maxRowsCountBinding = (rowCount == null) ? itemsCountBinding :
@@ -240,9 +258,9 @@ public final class TableViews {
                 maxRowsCountBinding
         );
 
-        assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
-//        TODO FDA 2017/10 Trouver mieux que de statuer que la hauteur de l'entête de la table est de 3 lignes. La solution donnée sur https://stackoverflow.com/questions/35254054/height-of-tableviews-header ne fonctionne pas quand on définit la hauteur à l'initisalition car la CSS n'est pas encore appliquée/calculée.
-        DoubleBinding tableHeightBinding = rowCountBinding.multiply(table.getFixedCellSize()).add(3 * table.getFixedCellSize() + 7);// Additional pixels are for tableview's header heght (3 lines).
+        DoubleBinding tableHeightBinding = headerRowHeightProperty
+                .add(rowCountBinding.multiply(table.getFixedCellSize()))
+                .add(10); // TODO FDA 2017/10 Comprendre pourquoi il faut ajouter un peu d'espace.
 //        tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
 
         table.minHeightProperty().bind(tableHeightBinding);
