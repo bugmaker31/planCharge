@@ -12,10 +12,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessou
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.Converters;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.EcheanceCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.ImportanceCell;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
@@ -24,6 +21,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.collections.ObservableList;
@@ -39,6 +37,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.table.TableFilter;
@@ -385,7 +384,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         echeanceColumn.setCellFactory(param -> new EcheanceCell<>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, getTachesTable()));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(Converters.CHARGE_STRING_CONVERTER)); // TODO FDA 2017/08 Mieux formater.
-        ressourceColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.RESSOURCE_BEAN_CONVERTER, planChargeBean.getRessourcesBeans()));
+        ressourceColumn.setCellFactory(param -> {
+            ComboBoxTableCell<TB, RessourceBean<?, ?>> cell = new RessourceCell<TB>(planChargeBean.getRessourcesBeans(), this::filtrerSurRessource);
+            return cell;
+        });
         profilColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.PROFIL_BEAN_CONVERTER, planChargeBean.getProfilsBeans()));
 
         // Paramétrage des ordres de tri :
@@ -545,7 +547,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 */
         });
     }
-
 
     @NotNull
     protected TB ajouterTache() throws ControllerException {
@@ -721,7 +722,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtrerSurRessource();
     }
 
-    private void filtrerSurRessource() {
+    void filtrerSurRessource() {
         TB tacheBean = TableViews.selectedItem(getTachesTable());
         if (tacheBean == null) {
             ihm.afficherDialog(

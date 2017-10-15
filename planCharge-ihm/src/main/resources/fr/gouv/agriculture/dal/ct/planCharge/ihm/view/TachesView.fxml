@@ -140,7 +140,7 @@
                 <contextMenu>
                     <ContextMenu fx:id="tachesTableContextMenu">
                         <items>
-                            <MenuItem text="Voir la ressource humain de la tâche" onAction="#afficherRessourceHumaine"/>
+                            <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
                             <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                             <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
                             <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->

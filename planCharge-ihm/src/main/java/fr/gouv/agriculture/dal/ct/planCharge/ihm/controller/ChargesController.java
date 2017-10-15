@@ -846,7 +846,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
         });
         //noinspection OverlyComplexAnonymousInnerClass
-        getRessourceColumn().setCellFactory(param -> new ComboBoxTableCell<PlanificationTacheBean, RessourceBean<?, ?>>(Converters.RESSOURCE_BEAN_CONVERTER, planChargeBean.getRessourcesBeans()) {
+        getRessourceColumn().setCellFactory(param -> new RessourceCell<PlanificationTacheBean>(planChargeBean.getRessourcesBeans(), this::filtrerSurRessource) {
 
             @Override
             public void updateItem(RessourceBean<?, ?> item, boolean empty) {
@@ -978,6 +978,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             Integer nbrlignes = Objects.value(newValue, 30);
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
+
     }
 
     private void initTableNbrsJoursChargeRsrc() {

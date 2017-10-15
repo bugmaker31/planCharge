@@ -162,13 +162,15 @@ Tâches :
 }
 .echeance-column:echeanceNonTenue {
     -fx-text-fill: DARKSALMON;
-    -fx-font-weight: bold;
+    /*-fx-font-weight: bold;*/
 }
+/*
 .echeance-column:echue:echeanceNonTenue {
-    -fx-background-color: #FF0066; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-background-color: #FF0066; *//*_TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*//*
     -fx-text-fill: DARKSALMON;
     -fx-font-weight: bold;
 }
+*/
 
 .importance-column {
 }
