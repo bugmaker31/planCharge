@@ -27,7 +27,6 @@
             <properties>
                 <libreoffice.dir>C:/Program Files/LibreOffice 5</libreoffice.dir>
                 <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
-                <libreoffice.classes.dir>${libreoffice.program.dir}/classes</libreoffice.classes.dir>
             </properties>
             <build>
                 <resources>
@@ -54,8 +53,6 @@
                     <groupId>org.libreoffice</groupId>
                     <artifactId>officebean</artifactId>
                     <version>${libreoffice.version}</version>
-                    <scope>system</scope>
-                    <systemPath>${libreoffice.classes.dir}/officebean.jar</systemPath>
                 </dependency>
             </dependencies>
         </profile>
@@ -64,7 +61,6 @@
             <properties>
                 <libreoffice.dir>/usr/lib/libreoffice</libreoffice.dir>
                 <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
-                <libreoffice.classes.dir>/usr/share/java</libreoffice.classes.dir>
             </properties>
             <build>
                 <resources>
@@ -72,7 +68,7 @@
                         <directory>${libreoffice.program.dir}</directory>
                         <includes>
                             <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
-                            <include>soffice.exe</include>
+                            <include>soffice</include>
                         </includes>
                     </resource>
                     <!--
@@ -159,9 +155,9 @@
     </build>
     <repositories>
         <repository>
-            <id>MavenRepository</id>
-            <name>MavenRepository</name>
-            <url>https://mvnrepository.com/artifact</url>
+            <id>Alfresco</id>
+            <name>Alfresco</name>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/public</url>
             <releases>
                 <enabled>true</enabled>
                 <checksumPolicy>fail</checksumPolicy>
@@ -172,9 +168,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>Alfresco</id>
-            <name>Alfresco</name>
-            <url>https://artifacts.alfresco.com/nexus/content/repositories/public</url>
+            <id>boundlessgeo</id>
+            <name>Boundless Repository</name>
+            <url>https://repo.boundlessgeo.com/main/</url>
             <releases>
                 <enabled>true</enabled>
                 <checksumPolicy>fail</checksumPolicy>
@@ -215,8 +211,6 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>jurt</artifactId>
             <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/jurt.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/ridl -->
@@ -224,8 +218,6 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>ridl</artifactId>
             <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/ridl.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/juh -->
@@ -233,8 +225,6 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>juh</artifactId>
             <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/juh.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/unoloader -->
@@ -242,8 +232,6 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>unoloader</artifactId>
             <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/unoloader.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.libreoffice/unoil -->
@@ -251,8 +239,6 @@
             <groupId>org.libreoffice</groupId>
             <artifactId>unoil</artifactId>
             <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/unoil.jar</systemPath>
         </dependency>
 
         <!--
@@ -263,8 +249,6 @@
                     <artifactId>libreoffice-dist</artifactId>
                     &lt;!&ndash;<classifier>alfresco</classifier>&ndash;&gt;
                     &lt;!&ndash;
-                    <scope>system</scope>
-                    <systemPath>.../libreoffice-dist.jar</systemPath>
                     &ndash;&gt;
                     <version>${libreoffice.dist.version}</version>
                 </dependency>
@@ -272,12 +256,11 @@
 
         <!--Certains binaires "soffice" doivent être dans le classpath, lors de l'exécution.-->
         <!--TODO FDA 2017/05 Vérifier qu'on a besoin de cette dépendance pour exécuter sous Unix.-->
+        <!-- https://mvnrepository.com/artifact/org.beanshell/bsh -->
         <dependency>
-            <groupId>org.libreoffice</groupId>
+            <groupId>org.beanshell</groupId>
             <artifactId>bsh</artifactId>
-            <version>${libreoffice.version}</version>
-            <scope>system</scope>
-            <systemPath>${libreoffice.classes.dir}/bsh.jar</systemPath>
+            <version>2.1b5</version>
         </dependency>
 
         <!--Pour les tests :-->
