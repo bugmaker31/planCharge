@@ -37,14 +37,6 @@
                             <include>soffice.exe</include>
                         </includes>
                     </resource>
-                    <!--
-                                        <resource>
-                                            <directory>${libreoffice.classes.dir}</directory>
-                                            <includes>
-                                                <include>*.jar</include>
-                                            </includes>
-                                        </resource>
-                    -->
                 </resources>
             </build>
             <dependencies>
