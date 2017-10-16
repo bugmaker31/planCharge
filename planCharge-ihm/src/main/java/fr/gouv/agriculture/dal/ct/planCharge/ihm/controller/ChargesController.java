@@ -38,7 +38,6 @@ import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,6 +174,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     @FXML
     private ToggleButton filtrePlanifDansMoisToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtreEcheanceTenueToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
@@ -1448,6 +1451,26 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 
     @Override
+    List<ToggleButton> filtresButtons() {
+        List<ToggleButton> buttons = new ArrayList<>(30);
+        buttons.addAll(super.filtresButtons());
+        buttons.addAll(Arrays.asList(
+                filtrePlanifToutToggleButton,
+                filtrePlanifDemandeeDansSemestreToggleButton,
+                filtrePlanifInfChargeToggleButton,
+                filtrePlanifSupChargeToggleButton,
+                filtrePlanifDansMoisToggleButton,
+                //
+                filtreEcheanceTenueToggleButton,
+                //
+                filtreSurchargeToutToggleButton,
+                filtreSurchargeRessourceToggleButton,
+                filtreSurchargeProfilToggleButton
+        ));
+        return buttons;
+    }
+
+    @Override
     protected boolean estTacheAvecAutreFiltreAVoir(@NotNull PlanificationTacheBean tache) throws ControllerException {
         if (estTacheAvecFiltrePlanifAVoir(tache)) {
             return true;
@@ -1550,35 +1573,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
 
-    public void calculerCharges() throws ControllerException {
-        LOGGER.debug("Calcul des charges  : ");
-        calculateurCharges.calculer();
-        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
-        LOGGER.debug("Charges calculées.");
-    }
-
-    @FXML
-    private void provisionnerTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        provisionnerTache();
-    }
-
-    private void provisionnerTache() throws ControllerException {
-        LOGGER.debug("Provionning de la tâche sélectionnée  : ");
-        PlanificationTacheBean tacheSelectionnee = TableViews.selectedItem(planificationsTable);
-        if (tacheSelectionnee == null) {
-            ihm.afficherDialog(Alert.AlertType.ERROR,
-                    "Impossible de provisionner",
-                    "Aucune tâche n'est sélectionnée. Sélectionnez une tâche, puis recliquez.",
-                    400, 100
-            );
-            return;
-        }
-        calculateurCharges.calculerProvision(tacheSelectionnee);
-        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
-        LOGGER.debug("Tâche provisionnée.");
-    }
-
-
     @FXML
     private void filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc();
@@ -1675,4 +1669,32 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         filtrerSurProfil(profilBean);
     }
 
+
+    public void calculerCharges() throws ControllerException {
+        LOGGER.debug("Calcul des charges  : ");
+        calculateurCharges.calculer();
+        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
+        LOGGER.debug("Charges calculées.");
+    }
+
+    @FXML
+    private void provisionnerTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        provisionnerTache();
+    }
+
+    private void provisionnerTache() throws ControllerException {
+        LOGGER.debug("Provionning de la tâche sélectionnée  : ");
+        PlanificationTacheBean tacheSelectionnee = TableViews.selectedItem(planificationsTable);
+        if (tacheSelectionnee == null) {
+            ihm.afficherDialog(Alert.AlertType.ERROR,
+                    "Impossible de provisionner",
+                    "Aucune tâche n'est sélectionnée. Sélectionnez une tâche, puis recliquez.",
+                    400, 100
+            );
+            return;
+        }
+        calculateurCharges.calculerProvision(tacheSelectionnee);
+        tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
+        LOGGER.debug("Tâche provisionnée.");
+    }
 }

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
@@ -198,6 +199,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtreStatutClosToggleButton;
 
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtrePeriodeAVenirToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtrePeriodeContemporaineToggleButton;
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
@@ -576,11 +585,22 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     void razFiltres() {
-        LOGGER.debug("RAZ des filtres...");
+        LOGGER.debug("razFiltres...");
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
         // TODO FDA 2017/08 Décocher tous les autres filtres.
-        List<ToggleButton> filtreButtons = Arrays.asList(
+
+        for (ToggleButton filtreButton : filtresButtons()) {
+            filtreButton.setSelected(true);
+        }
+
+        // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
+
+        filtrer();
+    }
+
+    List<ToggleButton> filtresButtons() {
+        return Arrays.asList(
                 filtreCategorieProjetToggleButton,
                 filtreCategorieServiceToggleButton,
                 filtreCategorieOrganisationToggleButton,
@@ -592,15 +612,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 filtreStatutReporteToggleButton,
                 filtreStatutClosToggleButton,
                 //
+                filtrePeriodeAVenirToggleButton,
+                filtrePeriodeContemporaineToggleButton,
                 filtrePeriodeEchueToggleButton
+                // TODO FDA 2017/08 Cocher tous les autres filtres.
         );
-        for (ToggleButton filtreButton : filtreButtons) {
-            filtreButton.setSelected(true);
-        }
-
-        // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
-
-        filtrer();
     }
 
     @FXML
@@ -722,22 +738,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtreGlobalComponent.getFiltreGlobalField().setText("");
         // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
 
-        // TODO FDA 2017/08 Cocher tous les autres filtres.
-        List<ToggleButton> filtreButtons = Arrays.asList(
-                filtreCategorieProjetToggleButton,
-                filtreCategorieServiceToggleButton,
-                filtreCategorieOrganisationToggleButton,
-                //
-                filtreStatutNouveauToggleButton,
-                filtreStatutEnCoursToggleButton,
-                filtreStatutEnAttenteToggleButton,
-                filtreStatutRecurrentToggleButton,
-                filtreStatutReporteToggleButton,
-                filtreStatutClosToggleButton,
-                //
-                filtrePeriodeEchueToggleButton
-        );
-        for (ToggleButton filtreButton : filtreButtons) {
+        for (ToggleButton filtreButton : filtresButtons()) {
             filtreButton.setSelected(false);
         }
 

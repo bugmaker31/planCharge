@@ -79,8 +79,7 @@
                                                     </buttons>
                                                 </SegmentedButton>
                                                 <ToggleButton fx:id="filtrePlanifDansMoisToggleButton" text="Planifiée dans le mois" onAction="#filtrer"/>
-                                                <!--TODO FDA 2017/09 Coder-->
-                                                <ToggleButton text="Echéance tenue ?" onAction="#filtrer" disable="true">
+                                                <ToggleButton fx:id="filtreEcheanceTenueToggleButton" text="Echéance tenue ?" onAction="#filtrer" disable="true">
                                                     <tooltip>
                                                         <Tooltip text="Date de fin planifiée &#8828; échéance ?"/>
                                                     </tooltip>
