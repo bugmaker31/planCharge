@@ -21,11 +21,27 @@ public class RevueWizardController extends AbstractController {
     @SuppressWarnings("NullableProblems")
     @NotNull
     private WizardPane etapeDefinirDateEtatPane;
-
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private WizardPane etapeMajDisponibilitesPane;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
     private WizardPane etapeMajTachesPane;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private WizardPane etapeMajPlanChargePane;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private WizardPane etapeResoudreSurchargesPane;
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private WizardPane etapeDiffuserPane;
+
 
 
     @Override
@@ -41,7 +57,14 @@ public class RevueWizardController extends AbstractController {
 
         // create and assign the flow
         Wizard wizard = new Wizard(wizardStage.getOwner());
-        wizard.setFlow(new Wizard.LinearFlow(etapeDefinirDateEtatPane, etapeMajTachesPane));
+        wizard.setFlow(new Wizard.LinearFlow(
+                etapeDefinirDateEtatPane,
+                etapeMajDisponibilitesPane,
+                etapeMajTachesPane,
+                etapeMajPlanChargePane,
+                etapeResoudreSurchargesPane,
+                etapeDiffuserPane
+        ));
         wizard.resultProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Assistant de revue terminé (résultat = {}).", wizard.getResult().getButtonData());
             prendreEnCompte();
