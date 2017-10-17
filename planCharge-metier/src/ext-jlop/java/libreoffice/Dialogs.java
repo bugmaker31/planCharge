@@ -10,11 +10,11 @@ package libreoffice;
          http://api.libreoffice.org/examples/DevelopersGuide/examples.html#GraphicalUserInterfaces
 
    The method categories:
-     * load & execute a dialog
-     * access a control/component inside a dialog
-     * convert dialog into other forms
-     * create a dialog
-     * add a component to a dialog: 
+     * load & execute a impl.org.controlsfx.dialog
+     * access a control/component inside a impl.org.controlsfx.dialog
+     * convert impl.org.controlsfx.dialog into other forms
+     * create a impl.org.controlsfx.dialog
+     * add a component to a impl.org.controlsfx.dialog:
          label, button, text field, password field, 
          combo box, check box 
 
@@ -31,7 +31,7 @@ import com.sun.star.uno.Exception;
 public class Dialogs
 {
 
-  // -------------- load & execute a dialog -----------------
+  // -------------- load & execute a impl.org.controlsfx.dialog -----------------
 
 
   public static XDialog loadDialog(String scriptName)
@@ -48,7 +48,7 @@ public class Dialogs
                                              "?location=application");
     }
     catch (java.lang.Exception e) {
-      System.out.println("Could not load the dialog: \"" + 
+      System.out.println("Could not load the impl.org.controlsfx.dialog: \"" +
                                                 scriptName + "\": " + e);
       return null;
     }
@@ -70,14 +70,14 @@ public class Dialogs
                                           extensionID + "/" + dialogFnm);
     }
     catch (java.lang.Exception e) {
-      System.out.println("Could not load the dialog: \"" + dialogFnm + "\": " + e);
+      System.out.println("Could not load the impl.org.controlsfx.dialog: \"" + dialogFnm + "\": " + e);
       return null;
     }
   }  // end of loadAddonDialog()
 
 
 
-  // --------- access a control/component inside a dialog -------------------
+  // --------- access a control/component inside a impl.org.controlsfx.dialog -------------------
 
 
   public static XControl findControl(XControl dialogCtrl, String name)
@@ -149,7 +149,7 @@ public class Dialogs
   {  return Lo.qi(XControl.class, event.Source);  }
 
 
-  // --------------- convert dialog into other forms ------------------
+  // --------------- convert impl.org.controlsfx.dialog into other forms ------------------
 
 
   public static XDialog getDialog(XControl dialogCtrl)
@@ -167,7 +167,7 @@ public class Dialogs
 
 
 
-  // ----------------- create a dialog ------------------------------
+  // ----------------- create a impl.org.controlsfx.dialog ------------------------------
 
 
   public static XControl createDialogControl(int x, int y, int width, int height, String title)
@@ -197,7 +197,7 @@ public class Dialogs
       return dialogCtrl;
     }
     catch (Exception ex) {
-      System.out.println("Could not create dialog control: " + ex);
+      System.out.println("Could not create impl.org.controlsfx.dialog control: " + ex);
       return null;
     }
   }  // end of createDialogControl()
@@ -205,11 +205,11 @@ public class Dialogs
 
 
   public static XDialog createDialogPeer(XControl dialogCtrl)
-  // create a peer for this dialog, using the Office desktop window as a parent
+  // create a peer for this impl.org.controlsfx.dialog, using the Office desktop window as a parent
   {
     XWindow xWindow = (XWindow) Lo.qi(XWindow.class, dialogCtrl);
     xWindow.setVisible(false);
-                  // set the dialog window invisible until it is executed
+                  // set the impl.org.controlsfx.dialog window invisible until it is executed
 
     XToolkit xToolkit = Lo.createInstanceMCF(XToolkit.class, "com.sun.star.awt.Toolkit");
     XWindowPeer windowParentPeer = xToolkit.getDesktopWindow();
@@ -223,7 +223,7 @@ public class Dialogs
     XComponent dialogComponent = Lo.qi(XComponent.class, dialogCtrl);
     XDialog dialog = getDialog(dialogCtrl);
     // dialogComponent.dispose();      // free window resources
-        /* commented out or the Add-on dialog crashes when called a second time
+        /* commented out or the Add-on impl.org.controlsfx.dialog crashes when called a second time
            because createPeer() cannot find a dto */
     return dialog;
   }  // end of createDialogPeer()
@@ -233,7 +233,7 @@ public class Dialogs
 
 
 
-  // ---------------- add components to a dialog -----------------------------
+  // ---------------- add components to a impl.org.controlsfx.dialog -----------------------------
   // label, button, text field, password field, 
   // combo box, check box
 
@@ -257,7 +257,7 @@ public class Dialogs
       props.setPropertyValue("Label", label);
       props.setPropertyValue("Name", nm);
       
-      // Add the dto to the dialog
+      // Add the dto to the impl.org.controlsfx.dialog
       nameCon.insertByName(nm, model);
       
       // reference the control by name
@@ -323,13 +323,13 @@ public class Dialogs
       props.setPropertyValue("PushButtonType", new Short((short) pushButtonType));
       props.setPropertyValue("Name", nm);
       
-      // Add the dto to the dialog
+      // Add the dto to the impl.org.controlsfx.dialog
       nameCon.insertByName(nm, model);
       
-      // get the dialog's container holding all the control views
+      // get the impl.org.controlsfx.dialog's container holding all the control views
       XControlContainer ctrlCon = Lo.qi(XControlContainer.class, dialogCtrl);
 
-      // use the dto's name to get its view inside the dialog
+      // use the dto's name to get its view inside the impl.org.controlsfx.dialog
       return ctrlCon.getControl(nm);
     }
     catch (Exception ex) {
@@ -375,7 +375,7 @@ public class Dialogs
       if (echoChar == '*')    // for password fields
         props.setPropertyValue("EchoChar",  new Short((short) echoChar));
       
-      // Add the dto to the dialog
+      // Add the dto to the impl.org.controlsfx.dialog
       nameCon.insertByName(nm, model);
       
       // reference the control by name
@@ -411,7 +411,7 @@ public class Dialogs
       props.setPropertyValue("MaxTextLen", new Short((short) 10));
       props.setPropertyValue("ReadOnly", false);
 
-      // add the dto to the dialog
+      // add the dto to the impl.org.controlsfx.dialog
       nameCon.insertByName(nm, model);
 
       // reference the control by name
@@ -447,7 +447,7 @@ public class Dialogs
       props.setPropertyValue("TriState", true);
       props.setPropertyValue("State", new Short((short) 1));
 
-      // add the dto to the dialog
+      // add the dto to the impl.org.controlsfx.dialog
       nameCon.insertByName(nm, model);
 
       // reference the control by name

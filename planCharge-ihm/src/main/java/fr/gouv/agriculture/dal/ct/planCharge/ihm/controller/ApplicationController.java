@@ -12,7 +12,6 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurDisponibilites;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportChargementAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportPlanChargeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
@@ -1073,7 +1072,7 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void afficherModuleJoursFeries(@SuppressWarnings("unused") ActionEvent actionEvent) {
+    private void afficherModuleJoursFeries(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         try {
             afficherModuleJoursFeries();
         } catch (ControllerException e) {
@@ -1108,7 +1107,7 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") ActionEvent actionEvent) {
+    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         try {
             afficherModuleRessourcesHumaines();
         } catch (ControllerException e) {
@@ -1144,7 +1143,7 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void afficherModuleProjetsApplis(@NotNull ActionEvent actionEvent) {
+    private void afficherModuleProjetsApplis(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         try {
             afficherModuleProjetsApplis();
         } catch (ControllerException e) {
@@ -1183,7 +1182,7 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void afficherModuleDisponibilites(@SuppressWarnings("unused") ActionEvent event) {
+    private void afficherModuleDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent event) {
         try {
             afficherModuleDisponibilites();
         } catch (ControllerException e) {
@@ -1218,7 +1217,7 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void afficherModuleTaches(@SuppressWarnings("unused") ActionEvent event) {
+    private void afficherModuleTaches(@SuppressWarnings("unused") @NotNull ActionEvent event) {
         try {
             afficherModuleTaches();
         } catch (ControllerException e) {
@@ -1254,7 +1253,7 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void afficherModuleCharges(@SuppressWarnings("unused") ActionEvent event) {
+    private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent event) {
         try {
             afficherModuleCharges();
         } catch (ControllerException e) {
@@ -1291,7 +1290,19 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void definirDateEtat(@SuppressWarnings("unused") ActionEvent event) throws Exception {
+    private void afficherAssistantDeRevue(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        afficherAssistantRevue();
+    }
+
+    public void afficherAssistantRevue() {
+        LOGGER.debug("> [...] > Assistant \"Revue\"");
+
+        ihm.getRevueWizardController().showAndWait();
+    }
+
+
+    @FXML
+    private void definirDateEtat(@SuppressWarnings("unused") @NotNull  ActionEvent event) throws Exception {
         LOGGER.debug("definirDateEtat...");
         try {
             LocalDate dateEtatActuelle = planChargeBean.getDateEtat();
@@ -1564,4 +1575,6 @@ public class ApplicationController extends AbstractController {
             stylesheets.add(THEME_SOMBRE_RSRC);
         }
     }
+
+
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.dialog.WizardPane?>
+<?import javafx.scene.control.Label?>
+<?import org.controlsfx.dialog.Wizard?>
+<!--<?import org.controlsfx.dialog.Wizard.LinearFlow?>-->
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RevueWizardController"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+>
+    <!--
+        <flow>
+            <LinearFlow>
+    -->
+        <WizardPane fx:id="etapeDefinirDateEtatPane" headerText="Définir la nouvelle date d'état">
+            <content>
+                <Label text="Indiquer la nouvelle date d'état (généralement la date d'état actuelle + 1 semaine)."/>
+            </content>
+        </WizardPane>
+        <WizardPane fx:id="etapeMajTachesPane" headerText="Mettre à jour les tâches">
+            <content>
+                <Label text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."/>
+            </content>
+        </WizardPane>
+    <!--
+            </LinearFlow>
+        </flow>
+    -->
+</AnchorPane>

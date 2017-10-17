@@ -158,7 +158,7 @@ public class Mail
                                         String body, String fnm) 
   // Send an e-mail using the SimpleSystemMail service (or SimpleCommandMail) to 
   // communicate with the OSes default e-mail client.
-  // A "Confirm" dialog appears before the e-mail is sent.
+  // A "Confirm" impl.org.controlsfx.dialog appears before the e-mail is sent.
   {
     System.out.println("Sending e-mail by client...");
     try {
@@ -193,7 +193,7 @@ public class Mail
       }
 
       mc.sendSimpleMailMessage(msg, SimpleMailClientFlags.NO_USER_INTERFACE);
-           // hides GUI but still displays a "Confirm" dialog 
+           // hides GUI but still displays a "Confirm" impl.org.controlsfx.dialog
     }
     catch(com.sun.star.uno.Exception e)
     {  System.out.println(e);  }

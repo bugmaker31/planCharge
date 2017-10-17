@@ -46,7 +46,7 @@ application/cybercash
 application/davmount+xml			davmount
 application/dca-rft
 application/dec-dx
-application/dialog-info+xml
+application/impl.org.controlsfx.dialog-info+xml
 application/dicom				dcm
 application/dns
 application/dskpp+xml				xmls
@@ -792,17 +792,17 @@ application/vnd.quobject-quoxdocument		quox quiz
 application/vnd.radisys.moml+xml
 application/vnd.radisys.msml-audit-conf+xml
 application/vnd.radisys.msml-audit-conn+xml
-application/vnd.radisys.msml-audit-dialog+xml
+application/vnd.radisys.msml-audit-impl.org.controlsfx.dialog+xml
 application/vnd.radisys.msml-audit-stream+xml
 application/vnd.radisys.msml-audit+xml
 application/vnd.radisys.msml-conf+xml
-application/vnd.radisys.msml-dialog-base+xml
-application/vnd.radisys.msml-dialog-fax-detect+xml
-application/vnd.radisys.msml-dialog-fax-sendrecv+xml
-application/vnd.radisys.msml-dialog-group+xml
-application/vnd.radisys.msml-dialog-speech+xml
-application/vnd.radisys.msml-dialog-transform+xml
-application/vnd.radisys.msml-dialog+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog-base+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog-fax-detect+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog-fax-sendrecv+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog-group+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog-speech+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog-transform+xml
+application/vnd.radisys.msml-impl.org.controlsfx.dialog+xml
 application/vnd.radisys.msml+xml
 application/vnd.rainstor.data			tree
 application/vnd.rapid

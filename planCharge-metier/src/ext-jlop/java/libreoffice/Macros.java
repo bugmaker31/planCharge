@@ -33,7 +33,7 @@ public class Macros
 {
 
   // simple macro security level words
-  // matches those values used in Tools > Options> Security; Macro Security Button dialog
+  // matches those values used in Tools > Options> Security; Macro Security Button impl.org.controlsfx.dialog
   public static final int LOW = 0;
   public static final int MEDIUM = 1;
   public static final int HIGH = 2;
@@ -259,7 +259,7 @@ public class Macros
 
       if (macroVal == MacroExecMode.NEVER_EXECUTE)   
         // System.out.println("  Macros cannot be executed (0)");   
-            // the documentation seems wrong; it doesn't match the "Macro Security" dialog
+            // the documentation seems wrong; it doesn't match the "Macro Security" impl.org.controlsfx.dialog
         System.out.println("  Macros executed without confirmation (0)");
  
       else if (macroVal == MacroExecMode.ALWAYS_EXECUTE)

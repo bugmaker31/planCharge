@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ParametresIhm;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.Notification;
@@ -10,14 +9,11 @@ import fr.gouv.agriculture.dal.ct.kernel.ParametresMetiers;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
-import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -155,6 +151,9 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("NullableProblems")
     @NotNull
     private Region chargesView;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private Region revueWizardView;
 
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -207,6 +206,12 @@ public class PlanChargeIhm extends Application {
         return chargesView;
     }
 
+    @NotNull
+    public Region getRevueWizardView() {
+        return revueWizardView;
+    }
+
+
     /*
     La couche "Controller" :
      */
@@ -240,6 +245,9 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("NullableProblems")
     @NotNull
     private ChargesController chargesController;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private RevueWizardController revueWizardController;
 
     @NotNull
     public ApplicationController getApplicationController() {
@@ -276,7 +284,12 @@ public class PlanChargeIhm extends Application {
         return chargesController;
     }
 
-/*
+    @NotNull
+    public RevueWizardController getRevueWizardController() {
+        return revueWizardController;
+    }
+
+    /*
     @NotNull
     private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 */
@@ -373,6 +386,7 @@ public class PlanChargeIhm extends Application {
             //
             primaryStage.show();
 
+/*
             // Chargement des données utilisées dernièrement (if any) :
             LocalDate dateEtatPrec = dateEtatPrecedente();
             if (dateEtatPrec != null) {
@@ -382,6 +396,7 @@ public class PlanChargeIhm extends Application {
                     applicationController.charger(dateEtatPrec);
                 }
             }
+*/
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
 //                applicationController.afficherModuleJoursFeries();
@@ -394,6 +409,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
+                applicationController.afficherAssistantRevue();
             }
 
             LOGGER.info("Application démarrée.");
@@ -505,6 +521,12 @@ public class PlanChargeIhm extends Application {
             chargesView = loader.load();
             chargesController = loader.getController();
         }
+        {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/RevueWizardView.fxml"));
+            revueWizardView = loader.load();
+            revueWizardController = loader.getController();
+        }
     }
 
     private void showError(@NotNull Thread thread, @NotNull Throwable throwable) {
@@ -540,7 +562,7 @@ public class PlanChargeIhm extends Application {
                 expContent.add(label, 0, 0);
                 expContent.add(textArea, 0, 1);
 
-                // Set expandable Exception into the dialog pane.
+                // Set expandable Exception into the impl.org.controlsfx.dialog pane.
                 alert.getDialogPane().setExpandableContent(expContent);
             }
 
@@ -927,14 +949,14 @@ public class PlanChargeIhm extends Application {
 
 /*
     private void showErrorDialog(@NotNull String titre,  String errorMsg) {
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage impl.org.controlsfx.dialog = new Stage();
+        impl.org.controlsfx.dialog.initModality(Modality.APPLICATION_MODAL);
         FXMLLoader loader = new FXMLLoader(PlanChargeIhm.class.getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ErrorView.fxml"));
         try {
             Parent root = loader.load();
             ((ErrorController) loader.getController()).setErrorText(errorMsg);
-            dialog.setScene(new Scene(root, 800, 400));
-            dialog.show();
+            impl.org.controlsfx.dialog.setScene(new Scene(root, 800, 400));
+            impl.org.controlsfx.dialog.show();
         } catch (IOException e) {
             LOGGER.error("Impossible d'afficher la boîte de dialogue avec l'erreur.", e);
         }
@@ -959,7 +981,7 @@ public class PlanChargeIhm extends Application {
         taskThread.start();
 
         progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
-        progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce dialog, "on succeeded".
+        progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce impl.org.controlsfx.dialog, "on succeeded".
 
         R resultat;
         try {

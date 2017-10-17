@@ -9,7 +9,7 @@
                  org.fusesource.jansi:jansi:1.8 on the class path.  Note that
                  Unix-based operating systems such as Linux and Mac OS X
                  support ANSI color codes by default. -->
-        <withJansi>true</withJansi>
+        <!--<withJansi>true</withJansi>-->
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
             <pattern>%date{HH:mm:ss} %highlight(%-5level) - %gray(%msg) %cyan(at %class{5}#%method) \(%file:%line\) %n%boldRed(%xException{0})</pattern>

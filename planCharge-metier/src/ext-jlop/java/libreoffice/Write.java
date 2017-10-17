@@ -1552,7 +1552,7 @@ public class Write
     String langExt = pip.getPackageLocation(
                             "org.openoffice.en.hunspell.dictionaries");
     System.out.println("Lang Ext: " + langExt);
-    String url = langExt + "/dialog/en.xdl";
+    String url = langExt + "/impl.org.controlsfx.dialog/en.xdl";
 
     PropertyValue[] props = Props.makeProps("OptionsPageURL", url);
     Lo.dispatchCmd("OptionsTreeDialog", props);
@@ -1561,7 +1561,7 @@ public class Write
 
 
   public static void openSpellGrammarDialog()
-  // activate dialog in  Tools > Speling and Grammar...
+  // activate impl.org.controlsfx.dialog in  Tools > Speling and Grammar...
   {  Lo.dispatchCmd("SpellingAndGrammarDialog");  
      Lo.wait(2000);    // is slow to load the first time
   }
@@ -1573,7 +1573,7 @@ public class Write
 
 
   public static void openThesaurusDialog()
-  // activate dialog in  Tools > Thesaurus...
+  // activate impl.org.controlsfx.dialog in  Tools > Thesaurus...
   {  Lo.dispatchCmd("ThesaurusDialog");  }
 
 
