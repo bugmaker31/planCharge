@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -24,21 +25,23 @@
     <profiles>
         <profile>
             <id>os_exec.windows</id>
-            <properties>
-                <libreoffice.dir>C:/Program Files/LibreOffice 5</libreoffice.dir>
-                <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
-            </properties>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>${libreoffice.program.dir}</directory>
-                        <includes>
-                            <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
-                            <include>soffice.exe</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </build>
+            <!--
+                <properties>
+                    <libreoffice.dir>C:/Program Files/LibreOffice 5</libreoffice.dir>
+                    <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
+                </properties>
+                <build>
+                    <resources>
+                        <resource>
+                            <directory>${libreoffice.program.dir}</directory>
+                            <includes>
+                                &lt;!&ndash;L'exécutable "soffice" doit se trouver dans le classpath.&ndash;&gt;
+                                <include>soffice.exe</include>
+                            </includes>
+                        </resource>
+                    </resources>
+                </build>
+            -->
             <dependencies>
                 <!-- https://mvnrepository.com/artifact/org.libreoffice/officebean -->
                 <dependency>
@@ -50,29 +53,23 @@
         </profile>
         <profile>
             <id>os_exec.unix</id>
-            <properties>
-                <libreoffice.dir>/usr/lib/libreoffice</libreoffice.dir>
-                <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
-            </properties>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>${libreoffice.program.dir}</directory>
-                        <includes>
-                            <!--L'exécutable "soffice" doit se trouver dans le classpath.-->
-                            <include>soffice</include>
-                        </includes>
-                    </resource>
-                    <!--
-                                        <resource>
-                                            <directory>${libreoffice.program.dir}/classes</directory>
-                                            <includes>
-                                                <include>*.jar</include>
-                                            </includes>
-                                        </resource>
-                    -->
-                </resources>
-            </build>
+            <!--
+                <properties>
+                    <libreoffice.dir>/usr/lib/libreoffice</libreoffice.dir>
+                    <libreoffice.program.dir>${libreoffice.dir}/program</libreoffice.program.dir>
+                </properties>
+                <build>
+                    <resources>
+                        <resource>
+                            <directory>${libreoffice.program.dir}</directory>
+                            <includes>
+                                &lt;!&ndash;L'exécutable "soffice" doit se trouver dans le classpath.&ndash;&gt;
+                                <include>soffice</include>
+                            </includes>
+                        </resource>
+                    </resources>
+                </build>
+            -->
         </profile>
     </profiles>
 

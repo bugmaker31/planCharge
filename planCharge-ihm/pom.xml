@@ -152,6 +152,7 @@
 
     <dependencies>
 
+        <!--On a des TU sur la couche Control, donc on a besoin de JUnit pour l'IHM.-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
