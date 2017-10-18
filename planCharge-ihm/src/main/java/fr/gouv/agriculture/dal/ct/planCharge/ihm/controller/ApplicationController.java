@@ -142,6 +142,18 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private Pane contentPane;
 
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private Accordion parametresAccordion;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TitledPane parametresTitledPane;
+
+
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -1289,6 +1301,11 @@ public class ApplicationController extends AbstractController {
     }
 
 
+    public void deplierAccordeonParametres() {
+        parametresAccordion.setExpandedPane(parametresTitledPane);
+    }
+
+
     @FXML
     private void afficherAssistantDeRevue(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         afficherAssistantRevue();
@@ -1297,7 +1314,7 @@ public class ApplicationController extends AbstractController {
     public void afficherAssistantRevue() {
         LOGGER.debug("> [...] > Assistant \"Revue\"");
 
-        ihm.getRevueWizardController().showAndWait();
+        ihm.getRevueWizardController().show();
     }
 
 

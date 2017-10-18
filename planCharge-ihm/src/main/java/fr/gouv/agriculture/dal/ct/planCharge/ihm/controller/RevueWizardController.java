@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -11,11 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 // Cf. https://controlsfx.bitbucket.io/org/controlsfx/dialog/Wizard.html
 public class RevueWizardController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RevueWizardController.class);
+
+    @Null
+    private Stage wizardStage;
+
+    @Null
+    private Wizard wizard;
 
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -36,12 +44,12 @@ public class RevueWizardController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private WizardPane etapeResoudreSurchargesPane;
-    @FXML
-    @SuppressWarnings("NullableProblems")
-    @NotNull
     private WizardPane etapeDiffuserPane;
 
+
+    public RevueWizardController() {
+        super();
+    }
 
 
     @Override
@@ -49,29 +57,30 @@ public class RevueWizardController extends AbstractController {
         // Rien, pour l'instant.
     }
 
-    void showAndWait() {
+    void show() {
 
-        Stage wizardStage = new Stage();
+//        if (wizardStage == null) {
+        wizardStage = new Stage();
         wizardStage.setTitle(PlanChargeIhm.APP_NAME + " - Assistant de revue");
         wizardStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
+//        }
 
-        // create and assign the flow
-        Wizard wizard = new Wizard(wizardStage.getOwner());
+//        if (wizard == null) {
+        wizard = new Wizard(wizardStage.getOwner());
         wizard.setFlow(new Wizard.LinearFlow(
                 etapeDefinirDateEtatPane,
                 etapeMajDisponibilitesPane,
                 etapeMajTachesPane,
                 etapeMajPlanChargePane,
-                etapeResoudreSurchargesPane,
                 etapeDiffuserPane
         ));
         wizard.resultProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Assistant de revue terminé (résultat = {}).", wizard.getResult().getButtonData());
-            prendreEnCompte();
-            wizardStage.close();
+            wizardStage.hide();
             LOGGER.debug("Assistant de revue masqué.");
         });
-        // show wizard and wait for response
+//        }
+
 /*
         wizard.showAndWait().ifPresent(result -> {
             if (Objects.equals(result, ButtonType.FINISH)) {
@@ -82,10 +91,29 @@ public class RevueWizardController extends AbstractController {
 //        wizard.show();
         wizardStage.setScene(wizard.getScene());
         wizardStage.show();
+
         LOGGER.debug("Assistant de revue affiché.");
     }
 
-    private void prendreEnCompte() {
-        // TODO FDA 2017/10 Coder.
+    @FXML
+    private void afficherModuleDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleDisponibilites();
+    }
+
+    @FXML
+    private void afficherModuleTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleTaches();
+    }
+
+    @FXML
+    private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleCharges();
+    }
+
+    @FXML
+    private void deplierAccordeonParametres(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().deplierAccordeonParametres();
+        ihm.getPrimaryStage().requestFocus();
+        ihm.getApplicationController().getDateEtatPicker().show();
     }
 }

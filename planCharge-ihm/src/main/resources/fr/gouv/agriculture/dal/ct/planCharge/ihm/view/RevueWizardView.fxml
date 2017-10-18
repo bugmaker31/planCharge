@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import org.controlsfx.dialog.WizardPane?>
-<?import javafx.scene.control.Label?>
-<?import org.controlsfx.dialog.Wizard?>
+<!--<?import org.controlsfx.dialog.Wizard?>-->
 <!--<?import org.controlsfx.dialog.Wizard.LinearFlow?>-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.controlsfx.dialog.*?>
 <?import java.lang.Double?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RevueWizardController"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <fx:define>
         <Double fx:id="panePrefWidth" fx:value="600"/>
@@ -23,31 +21,48 @@
     <WizardPane fx:id="etapeDefinirDateEtatPane" headerText="Définir la nouvelle date d'état" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
         <content>
             <Label text="Indiquer la nouvelle date d'état (généralement la date d'état actuelle + 1 semaine)."/>
+            <ButtonBar>
+                <buttons>
+                    <Button text="Modifier la date détat" onAction="#deplierAccordeonParametres"/>
+                </buttons>
+            </ButtonBar>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajDisponibilitesPane" headerText="Mettre à jour les disponibilités" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
         <content>
             <Label text="Saisir les prévisions d'absence des ressources (penser aux formations, aux journées département, etc.)."/>
+            <ButtonBar>
+                <buttons>
+                    <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"/>
+                </buttons>
+            </ButtonBar>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajTachesPane" headerText="Mettre à jour les tâches" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
         <content>
             <Label text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."/>
+            <ButtonBar>
+                <buttons>
+                    <Button text="Gérer les tâches" onAction="#afficherModuleTaches"/>
+                </buttons>
+            </ButtonBar>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajPlanChargePane" headerText="Mettre à jour le plan de charge" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
         <content>
             <Label text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."/>
-        </content>
-    </WizardPane>
-    <WizardPane fx:id="etapeResoudreSurchargesPane" headerText="Résoudre les surcharges" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
-        <content>
             <Label text="Eliminer toutes les surcharges (ressources et profils)."/>
+            <ButtonBar>
+                <buttons>
+                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"/>
+                </buttons>
+            </ButtonBar>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeDiffuserPane" headerText="Diffuser aux personnes concernées" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
         <content>
-            <Label text="Envoyer le nouveau plan de charge aux CPI et aux RT."/>
+            <Label text="Envoyer le nouveau plan de charge aux CPI, avec les changements et l'ordre de priorité global entre projet/appli."/>
+            <Label text="Envoyer le nouveau plan de charge aux RT, ainsi que l'ordre de priorité global entre projet/appli."/>
         </content>
     </WizardPane>
     <!--

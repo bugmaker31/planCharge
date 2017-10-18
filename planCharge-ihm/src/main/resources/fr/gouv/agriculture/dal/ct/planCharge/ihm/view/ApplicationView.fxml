@@ -100,9 +100,9 @@
                     </Menu>
                 </Menu>
             </MenuBar>
-            <Accordion>
+            <Accordion fx:id="parametresAccordion">
                 <panes>
-                    <TitledPane animated="false" text="Paramètres">
+                    <TitledPane fx:id="parametresTitledPane" animated="false" text="Paramètres">
                         <HBox spacing="2" alignment="BASELINE_LEFT">
                             <fx:define>
                                 <Double fx:id="lundisButtonsPrefWidth" fx:value="150"/>
