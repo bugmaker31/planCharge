@@ -6,63 +6,88 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.dialog.*?>
 <?import java.lang.Double?>
+<?import javafx.scene.layout.VBox?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RevueWizardController"
 >
     <fx:define>
         <Double fx:id="panePrefWidth" fx:value="600"/>
         <Double fx:id="panePrefHeight" fx:value="200"/>
+        <Double fx:id="paneMinHeight" fx:value="100"/>
     </fx:define>
 
     <!--
         <flow>
             <LinearFlow>
     -->
-    <WizardPane fx:id="etapeDefinirDateEtatPane" headerText="Définir la nouvelle date d'état" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
+    <WizardPane fx:id="etapeDefinirDateEtatPane" headerText="Définir la nouvelle date d'état"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+    >
         <content>
-            <Label text="Indiquer la nouvelle date d'état (généralement la date d'état actuelle + 1 semaine)."/>
-            <ButtonBar>
-                <buttons>
-                    <Button text="Modifier la date détat" onAction="#deplierAccordeonParametres"/>
-                </buttons>
-            </ButtonBar>
+            <VBox>
+                <Label text="Indiquer la nouvelle date d'état (généralement la date d'état actuelle + 1 semaine)."/>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Modifier la date détat" onAction="#deplierAccordeonParametres"/>
+                    </buttons>
+                </ButtonBar>
+            </VBox>
         </content>
     </WizardPane>
-    <WizardPane fx:id="etapeMajDisponibilitesPane" headerText="Mettre à jour les disponibilités" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
+    <WizardPane fx:id="etapeMajDisponibilitesPane" headerText="Mettre à jour les disponibilités"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+    >
         <content>
-            <Label text="Saisir les prévisions d'absence des ressources (penser aux formations, aux journées département, etc.)."/>
-            <ButtonBar>
-                <buttons>
-                    <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"/>
-                </buttons>
-            </ButtonBar>
+            <VBox>
+                <Label text="Saisir les jours fériés."/>
+                <Label text="Saisir les ressources humaines, et leurs périodes de mission."/>
+                <Label text="Saisir les prévisions d'absence des ressources humaines (penser aux formations, aux journées département, provisionner des absences imprévues, etc.)."/>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Gérer les ressources humaines" onAction="#afficherModuleRessourcesHumaines"/>
+                        <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"/>
+                    </buttons>
+                </ButtonBar>
+            </VBox>
         </content>
     </WizardPane>
-    <WizardPane fx:id="etapeMajTachesPane" headerText="Mettre à jour les tâches" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
+    <WizardPane fx:id="etapeMajTachesPane" headerText="Mettre à jour les tâches"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+    >
         <content>
-            <Label text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."/>
-            <ButtonBar>
-                <buttons>
-                    <Button text="Gérer les tâches" onAction="#afficherModuleTaches"/>
-                </buttons>
-            </ButtonBar>
+            <VBox>
+                <Label text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."/>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Gérer les tâches" onAction="#afficherModuleTaches"/>
+                    </buttons>
+                </ButtonBar>
+            </VBox>
         </content>
     </WizardPane>
-    <WizardPane fx:id="etapeMajPlanChargePane" headerText="Mettre à jour le plan de charge" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
+    <WizardPane fx:id="etapeMajPlanChargePane" headerText="Mettre à jour le plan de charge"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+    >
         <content>
-            <Label text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."/>
-            <Label text="Eliminer toutes les surcharges (ressources et profils)."/>
-            <ButtonBar>
-                <buttons>
-                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"/>
-                </buttons>
-            </ButtonBar>
+            <VBox>
+                <Label text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."/>
+                <Label text="Eliminer toutes les surcharges (ressources et profils)."/>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"/>
+                    </buttons>
+                </ButtonBar>
+            </VBox>
         </content>
     </WizardPane>
-    <WizardPane fx:id="etapeDiffuserPane" headerText="Diffuser aux personnes concernées" prefWidth="$panePrefWidth" prefHeight="$panePrefHeight">
+    <WizardPane fx:id="etapeDiffuserPane" headerText="Diffuser aux personnes concernées"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+    >
         <content>
-            <Label text="Envoyer le nouveau plan de charge aux CPI, avec les changements et l'ordre de priorité global entre projet/appli."/>
-            <Label text="Envoyer le nouveau plan de charge aux RT, ainsi que l'ordre de priorité global entre projet/appli."/>
+            <VBox>
+                <Label text="Envoyer le nouveau plan de charge aux CPI, avec les changements et l'ordre de priorité global entre projet/appli."/>
+                <Label text="Envoyer le nouveau plan de charge aux RT, ainsi que l'ordre de priorité global entre projet/appli."/>
+            </VBox>
         </content>
     </WizardPane>
     <!--

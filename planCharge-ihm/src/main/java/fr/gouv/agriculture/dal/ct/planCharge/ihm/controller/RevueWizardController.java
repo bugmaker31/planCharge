@@ -96,6 +96,11 @@ public class RevueWizardController extends AbstractController {
     }
 
     @FXML
+    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleRessourcesHumaines();
+    }
+
+    @FXML
     private void afficherModuleDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleDisponibilites();
     }
