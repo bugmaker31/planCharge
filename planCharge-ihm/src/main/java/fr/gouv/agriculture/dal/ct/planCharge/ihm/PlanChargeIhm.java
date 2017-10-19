@@ -407,7 +407,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
-                applicationController.afficherAssistantRevue();
+//                applicationController.afficherAssistantRevue();
             }
 
             LOGGER.info("Application démarrée.");

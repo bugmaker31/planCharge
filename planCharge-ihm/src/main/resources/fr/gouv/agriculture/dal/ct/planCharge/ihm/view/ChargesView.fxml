@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?language javascript?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*?>
@@ -79,7 +79,8 @@
                                                     </buttons>
                                                 </SegmentedButton>
                                                 <ToggleButton fx:id="filtrePlanifDansMoisToggleButton" text="Planifiée dans le mois" onAction="#filtrer"/>
-                                                <ToggleButton fx:id="filtreEcheanceTenueToggleButton" text="Echéance tenue ?" onAction="#filtrer" disable="true">
+                                                <ToggleButton fx:id="filtreEcheanceTenueToggleButton" text="Echéance tenue ?" onAction="#filtrer"
+                                                              disable="true">
                                                     <tooltip>
                                                         <Tooltip text="Date de fin planifiée &#8828; échéance ?"/>
                                                     </tooltip>
@@ -124,7 +125,7 @@
                                 </HBox>
                             </VBox>
                             <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
-                            <Button text="Rien" onAction="#activerTousFiltres" />
+                            <Button text="Rien" onAction="#activerTousFiltres"/>
                         </HBox>
                     </TitledPane>
                 </panes>
@@ -173,10 +174,11 @@
                                 </HBox>
                                 <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
                                                          fixedCellSize="$fixedCellSize">
-                                    <!--
-                                    <selectionModel>
-                                        <TableViewSpanSelectionModel cellSelectionEnabled="true" />
-                                    </selectionModel>
+                                    <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
+                                        <selectionModel>
+                                            &lt;!&ndash;<TableViewSpanSelectionModel cellSelectionEnabled="true" />&ndash;&gt;
+                                            <SelectionMode fx:constant="MULTIPLE"/>
+                                        </selectionModel>
                                     -->
                                     <columns>
                                         <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">

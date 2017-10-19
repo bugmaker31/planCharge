@@ -9,7 +9,6 @@ import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -182,7 +181,7 @@ public class ProjetsApplisController extends AbstractController implements Modul
         projetsApplisTable.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case DELETE:
-                    supprimerProjetAppli(projetsApplisTable.getSelectionModel().getSelectedItem());
+                    supprimerProjetAppli();
                     break;
                 default:
                     LOGGER.debug("Touche ignorée : '{}'.", event.getCode());
@@ -244,10 +243,10 @@ public class ProjetsApplisController extends AbstractController implements Modul
     @FXML
     private void supprimerProjetAppli(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         LOGGER.debug("supprimerProjetAppli...");
-        supperimerProjetAppli();
+        supprimerProjetAppli();
     }
 
-    private void supperimerProjetAppli() {
+    private void supprimerProjetAppli() {
         ProjetAppliBean focusedItem = TableViews.selectedItem(projetsApplisTable);
         if (focusedItem == null) {
             LOGGER.debug("Aucun item sélectionné, donc on en sait pas que supprimer, on ne fait rien.");

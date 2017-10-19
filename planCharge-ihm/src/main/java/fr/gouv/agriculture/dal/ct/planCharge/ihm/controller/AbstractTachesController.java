@@ -410,7 +410,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         //
         tableFilter = TableViews.enableFilteringOnColumns(getTachesTable(), Arrays.asList(categorieColumn, sousCategorieColumn, noTacheColumn, noTicketIdalColumn, descriptionColumn, projetAppliColumn, statutColumn, debutColumn, echeanceColumn, importanceColumn, ressourceColumn, chargeColumn, profilColumn));
 
-
         // Gestion des undo/redo :
         //
         //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass,ClassWithOnlyPrivateConstructors,ClassWithoutLogger
@@ -524,6 +523,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Barre d'état :
         barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
+
+        // Gestion de la sélection :
+        getTachesTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
+        getTachesTable().getSelectionModel().setCellSelectionEnabled(true);
 
         LOGGER.info("Initialisé.");
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?language javascript?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
 <?import javafx.scene.control.*?>
@@ -58,7 +59,8 @@
                                 </buttons>
                             </ButtonBar>
                         </VBox>
-                        <Button text="RAZ" onAction="#razFiltres" styleClass="erase-button"/>
+                        <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
+                        <Button text="Rien" onAction="#activerTousFiltres"/>
                     </HBox>
                 </TitledPane>
             </panes>
@@ -84,6 +86,12 @@
         </fx:define>
         <VBox VBox.vgrow="ALWAYS">
             <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+                <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
+                    <selectionModel>
+                        <TableViewSpanSelectionModel cellSelectionEnabled="true" />
+                        <SelectionMode fx:constant="MULTIPLE"/>
+                    </selectionModel>
+                -->
                 <columns>
 
                     <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
@@ -129,7 +137,7 @@
                                          styleClass="profil-column"/>
                         </columns>
                     </TableColumn>
-                    <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" editable="false" />
+                    <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" editable="false"/>
                 </columns>
                 <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
                 <sortOrder>
@@ -151,7 +159,7 @@
                             <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
                             <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
                             <SeparatorMenuItem/>
-                            <MenuItem text="Supprimer" onAction="#supprimer" /> <!--accelerator="DELETE" Trop dangereux.-->
+                            <MenuItem text="Supprimer" onAction="#supprimer"/> <!--accelerator="DELETE" Trop dangereux.-->
                         </items>
                     </ContextMenu>
                 </contextMenu>
