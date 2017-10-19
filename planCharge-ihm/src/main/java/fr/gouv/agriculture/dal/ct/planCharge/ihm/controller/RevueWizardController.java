@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -13,16 +14,20 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.Optional;
 
 // Cf. https://controlsfx.bitbucket.io/org/controlsfx/dialog/Wizard.html
 public class RevueWizardController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RevueWizardController.class);
 
-    @Null
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
     private Stage wizardStage;
 
-    @Null
+    @SuppressWarnings("NullableProblems")
+    @NotNull
     private Wizard wizard;
 
     @FXML
@@ -47,6 +52,12 @@ public class RevueWizardController extends AbstractController {
     private WizardPane etapeDiffuserPane;
 
 
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private Integer noEtapeCourante;
+
+    private WizardPane[] etapes;
+
     public RevueWizardController() {
         super();
     }
@@ -54,7 +65,13 @@ public class RevueWizardController extends AbstractController {
 
     @Override
     protected void initialize() throws ControllerException {
-        // Rien, pour l'instant.
+        etapes = new WizardPane[]{
+                etapeDefinirDateEtatPane,
+                etapeMajDisponibilitesPane,
+                etapeMajTachesPane,
+                etapeMajPlanChargePane,
+                etapeDiffuserPane
+        };
     }
 
     void show() {
@@ -67,13 +84,7 @@ public class RevueWizardController extends AbstractController {
 
 //        if (wizard == null) {
         wizard = new Wizard(wizardStage.getOwner());
-        wizard.setFlow(new Wizard.LinearFlow(
-                etapeDefinirDateEtatPane,
-                etapeMajDisponibilitesPane,
-                etapeMajTachesPane,
-                etapeMajPlanChargePane,
-                etapeDiffuserPane
-        ));
+        wizard.setFlow(new Wizard.LinearFlow(etapes));
         wizard.resultProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.debug("Assistant de revue terminé (résultat = {}).", wizard.getResult().getButtonData());
             wizardStage.hide();
@@ -90,9 +101,15 @@ public class RevueWizardController extends AbstractController {
 */
 //        wizard.show();
         wizardStage.setScene(wizard.getScene());
+        noEtapeCourante = 1;
         wizardStage.show();
 
         LOGGER.debug("Assistant de revue affiché.");
+    }
+
+    @FXML
+    private void afficherModuleJoursFeries(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleJoursFeries();
     }
 
     @FXML
@@ -119,6 +136,32 @@ public class RevueWizardController extends AbstractController {
     private void deplierAccordeonParametres(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().deplierAccordeonParametres();
         ihm.getPrimaryStage().requestFocus();
+        {
+            ChangeListener changeListener = (observable, oldValue, newValue) -> {
+                try {
+                    passerEtapeSuivante();
+                } catch (ControllerException e) {
+                    LOGGER.error("Impossibile de déplier l'accordéaon des paramètres suite à une modification de la date d'état.", e);
+                }
+            };
+            ihm.getApplicationController().getDateEtatPicker().valueProperty().addListener(changeListener);
+            ihm.getApplicationController().getDateEtatPicker().valueProperty().addListener((observable, oldValue, newValue) -> {
+                ihm.getApplicationController().getDateEtatPicker().valueProperty().removeListener(changeListener);
+            });
+        }
         ihm.getApplicationController().getDateEtatPicker().show();
+    }
+
+    private void passerEtapeSuivante() throws ControllerException {
+
+        WizardPane etapeCourante = etapes[noEtapeCourante - 1];
+
+        // FIXME FDA 2017/08 Sans effet : ne passe pas à l'étape suivanrte.
+        Optional<WizardPane> etapeSuivante = wizard.getFlow().advance(etapeCourante);
+        if (!etapeSuivante.isPresent()) {
+            throw new ControllerException("Impossible de passer à l'étape suivante.");
+        }
+
+        noEtapeCourante++;
     }
 }

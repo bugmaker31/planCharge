@@ -121,7 +121,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
     }
 
     private Set<Tache> importerTaches(XSpreadsheet feuille, @NotNull RapportImportTaches rapport) throws TacheDaoException, LibreOfficeException {
-        Set<Tache> taches = new HashSet<>();
+        Set<Tache> taches = new HashSet<>(200);
 
         //noinspection TooBroadScope
         int noLigDebut = 4;
@@ -130,7 +130,7 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
             int cptLig = noLigDebut;
             LIG:
             while (true) {
-                LOGGER.debug("Ligne n°" + cptLig);
+                LOGGER.debug("Ligne n°{}", cptLig);
                 rapport.setAvancement("Import de la ligne n°" + cptLig + "...");
                 rapport.incrNbrTachesImportees();
                 PARSE_LIG:
@@ -138,13 +138,13 @@ public class TacheDao implements DataAcessObject<Tache, Integer> {
                     XCell cell = Calc.getCell(feuille, 0, cptLig - 1);
 
                     if (Calc.isEmpty(cell)) {
-                        LOGGER.debug("La ligne n°" + cptLig + " commence par une cellule vide, donc il n'y a plus de tâche à parser.");
+                        LOGGER.debug("La ligne n°{} commence par une cellule vide, donc il n'y a plus de tâche à parser.", cptLig);
                         break LIG;
                     }
 
                     String statutTache = Calc.getString(feuille, 13 - 1, cptLig - 1);
                     if (statutTache.compareTo("85-Reportée") >= 0) {
-                        LOGGER.debug("Tâche avec statut '" + statutTache + "' (< \"85-Reportée\"), skippée.");
+                        LOGGER.debug("Tâche avec statut '{}' (< \"85-Reportée\"), skippée.", statutTache);
                         break PARSE_LIG;
                     }
 
