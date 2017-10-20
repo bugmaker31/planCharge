@@ -21,6 +21,9 @@ public class TableViewAvecCalendrier<S, T> extends TableView<S> {
     public TableViewAvecCalendrier() {
         super();
         calendrierColumns = new ArrayList<>(PlanChargeIhm.NBR_SEMAINES_PLANIFIEES);
+
+        // Une table avec un calendrier ne doit pas voir ses colonnes retaillées.
+        setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
 
 

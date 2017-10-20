@@ -726,6 +726,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         initTableNbrsJoursDispoCTMaxRestanteProfilTable();
 
         synchroniserLargeurColonnes();
+        synchronizerAscenceursHorizontaux();
     }
 
     private void initTablePlanifications() {
@@ -980,7 +981,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             Integer nbrlignes = Objects.value(newValue, 30);
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
-
     }
 
     private void initTableNbrsJoursChargeRsrc() {
@@ -1295,6 +1295,38 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         tablesSuivantes.remove(nbrsJoursChargeRsrcTable);
         TableViews.synchronizeColumnsWidth(nbrsJoursChargeRsrcTable, tablesSuivantes);
     }
+
+    private void synchronizerAscenceursHorizontaux() {
+
+//        FIXME FDA 2017/10 Sans effet : les ascenceurs horizontaux ne sont pas synchronisés.
+        planificationsTable.setOnScrollToColumn(event -> {
+            TableColumn<PlanificationTacheBean, ?> scrollColumnTarget = event.getScrollTarget();
+            TableView<PlanificationTacheBean> table = scrollColumnTarget.getTableView();
+            int scrollColumnIndex = table.getColumns().indexOf(scrollColumnTarget);
+            nbrsJoursChargeRsrcTable.scrollToColumnIndex(scrollColumnIndex);
+        });
+
+    }
+
+    @Override
+    MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<PlanificationTacheBean, MenuButton> cellData) {
+        MenuButton menuActions = super.menuActions(cellData);
+        {
+            PlanificationTacheBean tacheBean = cellData.getValue();
+            MenuItem menuItemProvisionner = new MenuItem("_Provisionner");
+            menuItemProvisionner.setOnAction(event -> {
+                try {
+                    provisionnerTache(tacheBean);
+                } catch (ControllerException e) {
+                    LOGGER.error("Impossible de provisionner la tâche " + tacheBean.noTache() + ".", e);
+                }
+            });
+            menuItemProvisionner.disableProperty().bind(tacheBean.statutProperty().isNotEqualTo(StatutBean.PROVISION));
+            menuActions.getItems().add(menuItemProvisionner);
+        }
+        return menuActions;
+    }
+
 
     @NotNull
     protected PlanificationTacheBean ajouterTache() throws ControllerException {
@@ -1679,22 +1711,25 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     @FXML
     private void provisionnerTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        LOGGER.debug("provisionnerTache...");
         provisionnerTache();
     }
 
-    private void provisionnerTache() throws ControllerException {
-        LOGGER.debug("Provionning de la tâche sélectionnée  : ");
-        PlanificationTacheBean tacheSelectionnee = TableViews.selectedItem(planificationsTable);
-        if (tacheSelectionnee == null) {
-            ihm.afficherDialog(Alert.AlertType.ERROR,
-                    "Impossible de provisionner",
-                    "Aucune tâche n'est sélectionnée. Sélectionnez une tâche, puis recliquez.",
-                    400, 100
-            );
+    @SuppressWarnings("FinalPrivateMethod")
+    final void provisionnerTache() throws ControllerException {
+        PlanificationTacheBean focusedItem = TableViews.selectedItem(getTachesTable());
+        if (focusedItem == null) {
+            LOGGER.debug("Aucune tâche sélectionnée, donc on en sait pas que provisionner, on ne fait rien.");
             return;
         }
-        calculateurCharges.calculerProvision(tacheSelectionnee);
+        provisionnerTache(focusedItem);
+    }
+
+
+    private void provisionnerTache(@NotNull PlanificationTacheBean tacheBean) throws ControllerException {
+        LOGGER.debug("Provisionning de la tâche {} : ", tacheBean.noTache());
+        calculateurCharges.calculerProvision(tacheBean);
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
-        LOGGER.debug("Tâche provisionnée.");
+        LOGGER.debug("Tâche {} provisionnée.", tacheBean.noTache());
     }
 }

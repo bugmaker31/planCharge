@@ -7,6 +7,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBeans;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
+import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -115,5 +116,11 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'ajouter une tâche.", e);
         }
+    }
+
+    @FXML
+    private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+//        TODO FDA 2017/10 Coder.
+        throw new NotImplementedException();
     }
 }

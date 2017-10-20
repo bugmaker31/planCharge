@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels;
 
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Statut;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -13,6 +14,19 @@ import javax.validation.constraints.Null;
  * Created by frederic.danna on 01/07/2017.
  */
 public class StatutBean extends AbstractBean<StatutDTO, StatutBean> implements Comparable<StatutBean> {
+
+    public static final StatutBean NOUVEAU = StatutBean.from(StatutDTO.NOUVEAU);
+    public static final StatutBean EN_COURS = StatutBean.from(StatutDTO.EN_COURS);
+    public static final StatutBean EN_ATTENTE = StatutBean.from(StatutDTO.EN_ATTENTE);
+    public static final StatutBean RECURRENT = StatutBean.from(StatutDTO.RECURRENT);
+    public static final StatutBean REPORTE = StatutBean.from(StatutDTO.REPORTE);
+    public static final StatutBean ANNULE = StatutBean.from(StatutDTO.ANNULE);
+    public static final StatutBean DOUBLON = StatutBean.from(StatutDTO.DOUBLON);
+    public static final StatutBean TERMINE = StatutBean.from(StatutDTO.TERMINE);
+    public static final StatutBean A_VENIR = StatutBean.from(StatutDTO.A_VENIR);
+    //
+    public static final StatutBean PROVISION = StatutBean.from(StatutDTO.PROVISION);
+
 
     // Fields :
 

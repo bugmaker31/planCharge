@@ -57,7 +57,7 @@ Barre d'état :
     -fx-border-style: solid;
     -fx-border-insets: 0pt;
 
-    -fx-spacing: 0pt;
+    -fx-spacing: 1pt;
 
     -fx-alignment: CENTER_LEFT;
 }

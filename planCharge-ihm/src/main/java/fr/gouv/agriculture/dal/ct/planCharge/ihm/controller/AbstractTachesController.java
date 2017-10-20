@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
@@ -152,7 +151,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private TableColumn<TB, MenuButton> actionsColumn;
+    private TableColumn<TB, MenuButton> menuActionsColumn;
+
 
     // Les filtres :
 
@@ -300,7 +300,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return profilColumn;
     }
 
-/*
+    /*
     @NotNull
     public FilteredList<TB> getFilteredTachesBeans() {
         return filteredTachesBeans;
@@ -330,16 +330,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         chargeColumn.setCellValueFactory(cellData -> cellData.getValue().chargeProperty().asObject());
         ressourceColumn.setCellValueFactory(cellData -> cellData.getValue().ressourceProperty());
         profilColumn.setCellValueFactory(cellData -> cellData.getValue().profilProperty());
-        actionsColumn.setCellValueFactory(cellData -> {
-            MenuButton actionsMenu = new MenuButton("Actions");
-            {
-                MenuItem menuItemSupprimer = new MenuItem("_Supprimer");
-                menuItemSupprimer.setOnAction(event -> {
-                    TB tacheBean = cellData.getValue();
-                    supprimer(tacheBean);
-                });
-                actionsMenu.getItems().add(menuItemSupprimer);
-            }
+        menuActionsColumn.setCellValueFactory((TableColumn.CellDataFeatures<TB, MenuButton> cellData) -> {
+            MenuButton actionsMenu = menuActions(cellData);
             return new SimpleObjectProperty<>(actionsMenu);
         });
 
@@ -529,6 +521,19 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         getTachesTable().getSelectionModel().setCellSelectionEnabled(true);
 
         LOGGER.info("Initialisé.");
+    }
+
+    MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TB, MenuButton> cellData) {
+        MenuButton menuActions = new MenuButton("_Actions");
+        {
+            MenuItem menuItemSupprimer = new MenuItem("_Supprimer");
+            menuItemSupprimer.setOnAction(event -> {
+                TB tacheBean = cellData.getValue();
+                supprimerTache(tacheBean);
+            });
+            menuActions.getItems().add(menuItemSupprimer);
+        }
+        return menuActions;
     }
 
     private void definirRaccourcisClavier() {
@@ -992,7 +997,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             return;
         }
 
-/* TODO FDA 2017/10 Décommenter, une fois le module de gestion du réfénretiel des profils codé.
+/* TODO FDA 2017/10 Décommenter, une fois le module de gestion des profils codé.
         try {
             ihm.getApplicationController().afficherModuleProfils();
             TableViews.focusOnItem(ihm.getProfilsController().getProfilsTable(), profilBean);
@@ -1011,8 +1016,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @SuppressWarnings("FinalPrivateMethod")
     @FXML
-    private final void supprimer(@NotNull ActionEvent actionEvent) {
-        LOGGER.debug("supprimer...");
+    private final void supprimerTache(@NotNull ActionEvent actionEvent) {
+        LOGGER.debug("supprimerTache...");
         supprimerTacheSelectionnee();
     }
 
@@ -1023,11 +1028,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             LOGGER.debug("Aucune tâche sélectionnée, donc on en sait pas que supprimer, on ne fait rien.");
             return;
         }
-        supprimer(focusedItem);
+        supprimerTache(focusedItem);
     }
 
     @SuppressWarnings("FinalPrivateMethod")
-    private final void supprimer(@NotNull TB tacheBean) {
+    private final void supprimerTache(@NotNull TB tacheBean) {
         getTachesBeans().remove(tacheBean);
         TableViews.clearSelection(getTachesTable()); // Contournement pour [issue#84:1 appui sur DELETE supprime 2 lignes]. Sinon, 2 lignes sont supprimées. Va savoir pourquoi...
     }

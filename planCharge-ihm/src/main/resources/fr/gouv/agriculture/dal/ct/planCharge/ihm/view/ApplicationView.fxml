@@ -50,7 +50,7 @@
                     -->
                     <!--
                         TODO FDA 2017/08 Remettre, si on arrive à factoriser le code, qui est mis actuellement dans chaque module.
-                        <MenuItem text="Supprimer" onAction="#supprimer" /> <!-accelerator="DELETE" Trop dangereux ->
+                        <MenuItem text="Supprimer" onAction="#supprimerTache" /> <!-accelerator="DELETE" Trop dangereux ->
                     -->
                     <!--
                         TODO FDA 2017/08 Coder, si finalement on ne limite plus la fonction de recherche aux 2 listes des Tâches/Charges.

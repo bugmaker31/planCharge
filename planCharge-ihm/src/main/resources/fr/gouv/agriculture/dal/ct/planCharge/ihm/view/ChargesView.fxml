@@ -173,7 +173,8 @@
                                     </Spinner>
                                 </HBox>
                                 <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                                         fixedCellSize="$fixedCellSize"
+                                >
                                     <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
                                         <selectionModel>
                                             &lt;!&ndash;<TableViewSpanSelectionModel cellSelectionEnabled="true" />&ndash;&gt;
@@ -255,7 +256,7 @@
                                                              editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
                                             </columns>
                                         </TableColumn>
-                                        <TableColumn fx:id="actionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
+                                        <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
                                                      editable="false"/>
                                     </columns>
                                     <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
@@ -279,7 +280,7 @@
                                                 <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
                                                 <!-- Trop dangereux pour le module des Charges (tant qu'on n'a pas programmé le "undo"/Ctrl+Z). Seul le module des Tâches aura ce raccourci-clavier.
                                                 <SeparatorMenuItem/>
-                                                <MenuItem text="Supprimer" onAction="#supprimer" <!-accelerator="DELETE" Trop dangereux ->/>
+                                                <MenuItem text="Supprimer" onAction="#supprimerTache" <!-accelerator="DELETE" Trop dangereux ->/>
                                                 -->
                                                 <SeparatorMenuItem/>
                                                 <MenuItem text="Filtrer les tâches sur la ressource" onAction="#filtrerSurRessource"/>
@@ -648,48 +649,6 @@
         </ScrollPane>
     </center>
     <bottom>
-        <!--
-                <HBox>
-                    <ButtonBar>
-                        <buttons>
-                            <Button text="_Ajouter une tâche" onAction="#ajouterTache"/>
-                        </buttons>
-                    </ButtonBar>
-                    <HBox styleClass="barreEtat">
-                        <HBox styleClass="itemBarreEtat">
-                            <Label text="Nombre de tâches à faire : ">
-                                <tooltip>
-                                    &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
-                                    <Tooltip fx:id="nbrTachesATraiterTooltip"
-                                             text="Nombre de tâches qui restent à faire, c-à-d dont le statut est inférieur strict. à '85-Reportée'."/>
-                                </tooltip>
-                            </Label>
-                            <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
-                        </HBox>
-                        <HBox styleClass="itemBarreEtat">
-                            <Label text="Total du RAF : " tooltip="$totalResteAFaireTooltip">
-                                <tooltip>
-                                    &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
-                                    <Tooltip fx:id="totalResteAFaireTooltip"
-                                             text="Total des charges pour les tâches restant à faire."/>
-                                </tooltip>
-                            </Label>
-                            <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
-                            <Label text=" jours"/>
-                        </HBox>
-                        <HBox styleClass="itemBarreEtat">
-                            <Label text="Nombre de tâches affichées : ">
-                                <tooltip>
-                                    &lt;!&ndash;suppress JavaFxUnresolvedFxIdReference &ndash;&gt;
-                                    <Tooltip fx:id="nbrTachesAfficheesTooltip"
-                                             text="Nombre de tâches qu sont actuellement affichées (après filtre)."/>
-                                </tooltip>
-                            </Label>
-                            <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
-                        </HBox>
-                    </HBox>
-                </HBox>
-        -->
         <BarreEtatTachesComponent fx:id="barreEtatComponent"/>
     </bottom>
 </BorderPane>

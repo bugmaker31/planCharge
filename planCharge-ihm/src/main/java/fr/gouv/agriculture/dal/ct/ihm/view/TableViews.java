@@ -230,6 +230,7 @@ public final class TableViews {
         DoubleProperty headerRowHeightProperty = new SimpleDoubleProperty();
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
             if (!Objects.equals(oldValue, newValue)) {
+
                 TableHeaderRow headerRow = headerRow(table);
                 // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
                 if (headerRow == null) {
@@ -258,6 +259,7 @@ public final class TableViews {
 
         DoubleBinding tableHeightBinding = headerRowHeightProperty
                 .add(rowCountBinding.multiply(table.getFixedCellSize()))
+                .add(table.getFixedCellSize()) // For horizontal scrollbar. TODO FDA 2017/10 N'ajouter la hauteur de l'ascenceur horizontal que s'il est affiché. Et ajouter exactement sa hauteur, plutôt qu'une approximation (la hauteur d'1 ligne).
                 .add(10); // TODO FDA 2017/10 Comprendre pourquoi il faut ajouter une dizaine de pixels.
         tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
 
