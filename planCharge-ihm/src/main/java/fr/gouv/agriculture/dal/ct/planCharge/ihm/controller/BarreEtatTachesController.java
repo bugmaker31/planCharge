@@ -26,6 +26,7 @@ import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.function.Function;
 
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithoutConstructor"})
 public class BarreEtatTachesController<TB extends TacheBean> extends AbstractController {
@@ -169,13 +170,22 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         }
     }
 
+    private static DecimalFormat DECIMAL_FORMATER = new DecimalFormat("0.###");
+
+    private static final Function<Double, String> FORMATEUR_SOMME = somme -> {
+        if (somme == null) {
+            return "N/C";
+        }
+        return DECIMAL_FORMATER.format(somme);
+    };
+
     @Null
     private ListChangeListener<? super TablePosition> calculSommeChangeListener = c -> {
         if (!calculerSommeRadioMenuItem.isSelected()) {
             return;
         }
         Double somme = TableViews.sumSelected(tachesTable);
-        calculSommeLabel.setText(Objects.value(somme, "N/C") + ""); // TODO FDA 2017/10 Formater.
+        calculSommeLabel.setText(FORMATEUR_SOMME.apply(somme));
     };
 
     private void activerCalculSomme() {
@@ -206,13 +216,20 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         }
     }
 
+    private static final Function<Long, String> FORMATEUR_NOMBRE = nombre -> {
+        if (nombre == null) {
+            return "N/C";
+        }
+        return nombre + "";
+    };
+
     @Null
     private ListChangeListener<? super TablePosition> calculNombreChangeListener = c -> {
         if (!calculerNombreRadioMenuItem.isSelected()) {
             return;
         }
         Long nombre = TableViews.countSelected(tachesTable);
-        calculNombreLabel.setText(Objects.value(nombre, "N/C") + ""); // TODO FDA 2017/10 Formater.
+        calculNombreLabel.setText(FORMATEUR_NOMBRE.apply(nombre));
     };
 
     private void activerCalculNombre() {
