@@ -488,15 +488,15 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TB, MenuButton> cellData) {
-        MenuButton menuActions = new MenuButton("Actions");
+        MenuButton menuActions = new MenuButton("_Actions");
         TB tacheBean = cellData.getValue();
         {
-            MenuItem menuItemSupprimer = new MenuItem("_Supprimer la tâche " + tacheBean.noTache());
+            MenuItem menuItemSupprimer = new MenuItem("Supprimer la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> supprimerTache(tacheBean));
             menuActions.getItems().add(menuItemSupprimer);
         }
         {
-            MenuItem menuItemSupprimer = new MenuItem("Voir la tâche "+tacheBean.noTache()+" dans _outil de ticketing");
+            MenuItem menuItemSupprimer = new MenuItem("Voir la tâche "+tacheBean.noTache()+" dans outil de ticketing");
             menuItemSupprimer.setOnAction(event -> {
                 try {
                     afficherTacheDansOutilTicketing(tacheBean);

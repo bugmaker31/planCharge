@@ -1297,15 +1297,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private void synchronizerAscenceursHorizontaux() {
-
-//        FIXME FDA 2017/10 Sans effet : les ascenceurs horizontaux ne sont pas synchronisés.
+/* FIXME FDA 2017/10 Sans effet : les ascenceurs horizontaux ne sont pas synchronisés.
         planificationsTable.setOnScrollToColumn(event -> {
             TableColumn<PlanificationTacheBean, ?> scrollColumnTarget = event.getScrollTarget();
             TableView<PlanificationTacheBean> table = scrollColumnTarget.getTableView();
             int scrollColumnIndex = table.getColumns().indexOf(scrollColumnTarget);
+            assert  scrollColumnIndex != -1 ;
             nbrsJoursChargeRsrcTable.scrollToColumnIndex(scrollColumnIndex);
         });
-
+*/
     }
 
     @Override
@@ -1313,7 +1313,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         MenuButton menuActions = super.menuActions(cellData);
         PlanificationTacheBean tacheBean = cellData.getValue();
         {
-            MenuItem menuItemProvisionner = new MenuItem("_Provisionner la tâche " + tacheBean.noTache());
+            MenuItem menuItemProvisionner = new MenuItem("Provisionner la tâche " + tacheBean.noTache());
             menuItemProvisionner.setOnAction(event -> {
                 try {
                     provisionnerTache(tacheBean);
@@ -1325,7 +1325,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             menuActions.getItems().add(menuItemProvisionner);
         }
         {
-            MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la _tâche " + tacheBean.noTache());
+            MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> {
                 afficherTache(tacheBean);
             });
@@ -1478,7 +1478,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     private void afficherTache(@NotNull PlanificationTacheBean tacheBean) {
         try {
             ihm.getApplicationController().afficherModuleTaches();
-            TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean);
+            TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean, ihm.getTachesController().getNoTacheColumn());
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);
             ihm.afficherDialog(

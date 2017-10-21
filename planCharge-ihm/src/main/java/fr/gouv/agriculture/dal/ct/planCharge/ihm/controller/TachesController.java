@@ -203,7 +203,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
     private void afficherPlanification(@NotNull TacheBean tacheBean) {
         try {
             ihm.getApplicationController().afficherModuleCharges();
-            TableViews.focusOnItem(tachesTable, tacheBean);
+            TableViews.focusOnItem(ihm.getChargesController().getTachesTable(), (PlanificationTacheBean) tacheBean, ihm.getChargesController().getNoTacheColumn());
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherDialog(
@@ -226,7 +226,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         MenuButton menuActions = super.menuActions(cellData);
         TacheBean tacheBean = cellData.getValue();
         {
-            MenuItem menuItemSupprimer = new MenuItem("Voir la _planification de la charge de la tâche " + tacheBean.noTache());
+            MenuItem menuItemSupprimer = new MenuItem("Voir la planification de la charge de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> afficherPlanification(tacheBean));
             menuActions.getItems().add(menuItemSupprimer);
         }

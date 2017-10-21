@@ -13,6 +13,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.table.TableFilter;
@@ -56,17 +57,41 @@ public final class TableViews {
         int itemIdx = itemIndex(table, item);
         assert itemIdx != -1;
 
-        TableColumn<S, ?> column = table.getColumns().get(0);
-
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
         table.requestFocus();
+//        table.getFocusModel().focus(itemIdx);
         table.getSelectionModel().clearAndSelect(itemIdx);
-        table.getFocusModel().focus(itemIdx, column); // FIXME FDA 2017/10 Génère une erreur.
 
         // Il faut aussi scroller jusqu'à la ligne sélectionnée,
         // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
         // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
         table.scrollTo(itemIdx);
+    }
+
+    public static <S, T> void focusOnItem(@NotNull TableView<S> table, @NotNull S item, @NotNull TableColumn<S, T> column) {
+
+        int itemIdx = itemIndex(table, item);
+        assert itemIdx != -1;
+
+        // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
+        table.requestFocus();
+//        table.getFocusModel().focus(itemIdx, column); // FDA 2017/10 Rq : Génère une NPE (getScene == null) si on met des mnemoniques dans des MenuButtons de la TableView (!?).
+        table.getSelectionModel().clearAndSelect(itemIdx, column);
+/*
+        {
+            boolean wasCellSelectionPrevioulyEnabled = table.getSelectionModel().isCellSelectionEnabled();
+            table.getSelectionModel().setCellSelectionEnabled(true);
+            table.getSelectionModel().clearAndSelect(itemIdx);
+            table.getSelectionModel().setCellSelectionEnabled(wasCellSelectionPrevioulyEnabled);
+        }
+*/
+
+        // Il faut aussi scroller jusqu'à la ligne sélectionnée,
+        // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
+        // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
+        table.scrollTo(itemIdx);
+        // Idem pour les colonnes :
+        table.scrollToColumn(column);
     }
 
 
@@ -323,7 +348,7 @@ public final class TableViews {
 
     public static <S, T> void editCell(@NotNull TableView<S> table, @NotNull S item, @NotNull TableColumn<S, T> column) {
 
-        focusOnItem(table, item);
+        focusOnItem(table, item, column);
 
         int itemIdx = itemIndex(table, item);
         assert itemIdx != -1;
