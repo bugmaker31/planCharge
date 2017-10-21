@@ -88,10 +88,7 @@
             <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
                 <columnResizePolicy><TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                 <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
-                    <selectionModel>
-                        <TableViewSpanSelectionModel cellSelectionEnabled="true" />
-                        <SelectionMode fx:constant="MULTIPLE"/>
-                    </selectionModel>
+                <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
                 -->
                 <columns>
 
@@ -148,22 +145,6 @@
                     <fx:reference source="echeanceColumn"/>
                     <fx:reference source="noTacheColumn"/>
                 </sortOrder>
-                <contextMenu>
-                    <ContextMenu fx:id="tachesTableContextMenu">
-                        <items>
-                            <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
-                            <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Voir la tâche dans le plan de charge" onAction="#afficherPlanification"/>
-                            <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+C"' ne fonctionne pas, c'est le menu "Gestion > Charges" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+C. -->
-                            <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Supprimer" onAction="#supprimerTache"/> <!--accelerator="DELETE" Trop dangereux.-->
-                        </items>
-                    </ContextMenu>
-                </contextMenu>
             </TableView>
         </VBox>
     </center>

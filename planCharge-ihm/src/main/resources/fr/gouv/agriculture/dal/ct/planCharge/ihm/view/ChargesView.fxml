@@ -172,14 +172,11 @@
                                         </valueFactory>
                                     </Spinner>
                                 </HBox>
-                                <TableViewAvecCalendrier fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
-                                                         fixedCellSize="$fixedCellSize"
+                                <PlanificationTableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
+                                                        fixedCellSize="$fixedCellSize"
                                 >
                                     <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
-                                        <selectionModel>
-                                            &lt;!&ndash;<TableViewSpanSelectionModel cellSelectionEnabled="true" />&ndash;&gt;
-                                            <SelectionMode fx:constant="MULTIPLE"/>
-                                        </selectionModel>
+                                    <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
                                     -->
                                     <columns>
                                         <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
@@ -267,30 +264,7 @@
                                         <fx:reference source="echeanceColumn"/>
                                         <fx:reference source="noTicketIdalColumn"/>
                                     </sortOrder>
-                                    <contextMenu>
-                                        <ContextMenu fx:id="tachesTableContextMenu">
-                                            <items>
-                                                <MenuItem text="Voir la ressource humaine de la tâche" onAction="#afficherRessourceHumaine"/>
-                                                <MenuItem text="Voir le profil de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                                <MenuItem text="Voir le projet/appli de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                                <MenuItem text="Voir l'importance de la tâche" disable="true"/> <!--TODO FDA 2017/08 Coder.-->
-                                                <SeparatorMenuItem/>
-                                                <MenuItem text="Voir la tâche dans la liste des tâches" onAction="#afficherTache"/>
-                                                <!-- TODO FDA 2017/08 'accelerator="Shortcut+Shift+T"' ne fonctionne pas, c'est le menu "Gestion > Tâches" qui capte le clic souris,sans doute parce que le menu contextuel n'est pas affiché qd on entre Ctrl+Shift+T. -->
-                                                <MenuItem text="Voir la tâche dans l'outil de ticketing (IDAL)" onAction="#afficherTacheDansOutilTicketing"/>
-                                                <!-- Trop dangereux pour le module des Charges (tant qu'on n'a pas programmé le "undo"/Ctrl+Z). Seul le module des Tâches aura ce raccourci-clavier.
-                                                <SeparatorMenuItem/>
-                                                <MenuItem text="Supprimer" onAction="#supprimerTache" <!-accelerator="DELETE" Trop dangereux ->/>
-                                                -->
-                                                <SeparatorMenuItem/>
-                                                <MenuItem text="Filtrer les tâches sur la ressource" onAction="#filtrerSurRessource"/>
-                                                <MenuItem text="Filtrer les tâches sur le profil" onAction="#filtrerSurProfil"/>
-                                                <SeparatorMenuItem/>
-                                                <MenuItem text="Provisionner la tâche" onAction="#provisionnerTache"/>
-                                            </items>
-                                        </ContextMenu>
-                                    </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -301,8 +275,8 @@
                         <TitledPane fx:id="nbrsJoursChargeRsrcPane"
                                     text="Total des charges par ressource (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursChargeRsrcTable" editable="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                <PlanificationTableView fx:id="nbrsJoursChargeRsrcTable" editable="true"
+                                                        fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="espaceNbrsJoursChargeRsrcColumn" sortable="false"/>
@@ -377,7 +351,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -388,8 +362,8 @@
                         <TitledPane fx:id="nbrsJoursChargeProfilPane"
                                     text="Total des charges par profil (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursChargeProfilTable" editable="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                <PlanificationTableView fx:id="nbrsJoursChargeProfilTable" editable="true"
+                                                        fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="espaceNbrsJoursChargeProfilColumn" sortable="false"/>
@@ -464,7 +438,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -475,8 +449,8 @@
                         <TitledPane fx:id="nbrsJoursDispoCTRestanteRsrcPane"
                                     text="Disponibilité restant pour la CT par ressource (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTRestanteRsrcTable" editable="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                <PlanificationTableView fx:id="nbrsJoursDispoCTRestanteRsrcTable" editable="true"
+                                                        fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="espaceNbrsJoursDispoCTRestanteRsrcColumn" sortable="false"/>
@@ -552,7 +526,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -563,8 +537,8 @@
                         <TitledPane fx:id="nbrsJoursDispoCTMaxRestanteProfilPane"
                                     text="Disponibilité maxi. restant pour la CT par profil (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTMaxRestanteProfilTable" editable="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                <PlanificationTableView fx:id="nbrsJoursDispoCTMaxRestanteProfilTable" editable="true"
+                                                        fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="espaceNbrsJoursDispoCTMaxRestanteProfilColumn" sortable="false"/>
@@ -640,7 +614,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>

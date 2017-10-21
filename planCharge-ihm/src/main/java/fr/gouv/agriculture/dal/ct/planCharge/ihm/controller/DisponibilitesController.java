@@ -142,7 +142,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresTable;
+    private PlanificationTableView<NbrsJoursOuvresBean, Integer> nbrsJoursOuvresTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -203,7 +203,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursAbsenceBean, Float> nbrsJoursAbsenceTable;
+    private PlanificationTableView<NbrsJoursAbsenceBean, Float> nbrsJoursAbsenceTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -264,7 +264,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriTable;
+    private PlanificationTableView<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoMinAgriTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -325,7 +325,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<PctagesDispoRsrcBean, Percentage> pctagesDispoCTTable;
+    private PlanificationTableView<PctagesDispoRsrcBean, Percentage> pctagesDispoCTTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -386,7 +386,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoCTTable;
+    private PlanificationTableView<NbrsJoursDispoRsrcBean, Float> nbrsJoursDispoCTTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -447,7 +447,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilTable;
+    private PlanificationTableView<PctagesDispoRsrcProfilBean, Percentage> pctagesDispoMaxRsrcProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -508,7 +508,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoRsrcProfilBean, Float> nbrsJoursDispoMaxRsrcProfilTable;
+    private PlanificationTableView<NbrsJoursDispoRsrcProfilBean, Float> nbrsJoursDispoMaxRsrcProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -569,7 +569,7 @@ public class DisponibilitesController extends AbstractController implements Modu
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursDispoProfilBean, Float> nbrsJoursDispoMaxProfilTable;
+    private PlanificationTableView<NbrsJoursDispoProfilBean, Float> nbrsJoursDispoMaxProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -655,42 +655,42 @@ public class DisponibilitesController extends AbstractController implements Modu
 
 /*
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursOuvresBean, Integer> getNbrsJoursOuvresTable() {
+    public PlanificationTableView<NbrsJoursOuvresBean, Integer> getNbrsJoursOuvresTable() {
         return nbrsJoursOuvresTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursAbsenceBean, Float> getNbrsJoursDAbsenceTable() {
+    public PlanificationTableView<NbrsJoursAbsenceBean, Float> getNbrsJoursDAbsenceTable() {
         return nbrsJoursAbsenceTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> getNbrsJoursDispoMinAgriTable() {
+    public PlanificationTableView<NbrsJoursDispoRsrcBean, Float> getNbrsJoursDispoMinAgriTable() {
         return nbrsJoursDispoMinAgriTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<PctagesDispoRsrcBean, Percentage> getPctagesDispoCTTable() {
+    public PlanificationTableView<PctagesDispoRsrcBean, Percentage> getPctagesDispoCTTable() {
         return pctagesDispoCTTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoRsrcBean, Float> getNbrsJoursDispoCTTable() {
+    public PlanificationTableView<NbrsJoursDispoRsrcBean, Float> getNbrsJoursDispoCTTable() {
         return nbrsJoursDispoCTTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<PctagesDispoRsrcProfilBean, Percentage> getPctagesDispoMaxRsrcProfilTable() {
+    public PlanificationTableView<PctagesDispoRsrcProfilBean, Percentage> getPctagesDispoMaxRsrcProfilTable() {
         return pctagesDispoMaxRsrcProfilTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoRsrcProfilBean, Float> getNbrsJoursDispoMaxRsrcProfilTable() {
+    public PlanificationTableView<NbrsJoursDispoRsrcProfilBean, Float> getNbrsJoursDispoMaxRsrcProfilTable() {
         return nbrsJoursDispoMaxRsrcProfilTable;
     }
 
     @NotNull
-    public TableViewAvecCalendrier<NbrsJoursDispoProfilBean, Float> getNbrsJoursDispoMaxProfilTable() {
+    public PlanificationTableView<NbrsJoursDispoProfilBean, Float> getNbrsJoursDispoMaxProfilTable() {
         return nbrsJoursDispoMaxProfilTable;
     }
 */
@@ -1043,8 +1043,8 @@ public class DisponibilitesController extends AbstractController implements Modu
     }
 
 
-    public List<TableViewAvecCalendrier<?, ?>> tables() {
-        return Arrays.asList(new TableViewAvecCalendrier<?, ?>[]{
+    public List<PlanificationTableView<?, ?>> tables() {
+        return Arrays.asList(new PlanificationTableView<?, ?>[]{
                 nbrsJoursOuvresTable,
                 nbrsJoursAbsenceTable,
                 nbrsJoursDispoMinAgriTable,

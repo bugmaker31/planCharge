@@ -115,9 +115,9 @@ public class PlanChargeIhm extends Application {
     }
 
 
-    private static ParametresIhm paramsIhm = ParametresIhm.instance();
+    public static final ParametresIhm paramsIhm = ParametresIhm.instance();
     //    private static Contexte contexte = Contexte.instance();
-    private static ParametresMetiers paramsMetier = ParametresMetiers.instance();
+    public static final  ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
     private static boolean estEnDeveloppement = false; // Par défaut.
 

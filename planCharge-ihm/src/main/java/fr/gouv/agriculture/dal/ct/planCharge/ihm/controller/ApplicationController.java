@@ -20,7 +20,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.TableViewAvecCalendrier;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.PlanificationTableView;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanChargeDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
@@ -1411,7 +1411,7 @@ public class ApplicationController extends AbstractController {
         //      maintenant qu'on n'affiche plus les TableHeaderRow de ces TableView.
 
         //noinspection rawtypes
-        List<TableViewAvecCalendrier> tables = new ArrayList<>(20);
+        List<PlanificationTableView> tables = new ArrayList<>(20);
         // Disponibilites :
         //noinspection CollectionAddAllCanBeReplacedWithConstructor
         tables.addAll(ihm.getDisponibilitesController().tables());
@@ -1419,7 +1419,7 @@ public class ApplicationController extends AbstractController {
         tables.addAll(ihm.getChargesController().tables());
         //
         //noinspection rawtypes
-        for (TableViewAvecCalendrier table : tables) {
+        for (PlanificationTableView table : tables) {
             //noinspection unchecked,rawtypes
             List<TableColumn> calendrierColumns = table.getCalendrierColumns();
 

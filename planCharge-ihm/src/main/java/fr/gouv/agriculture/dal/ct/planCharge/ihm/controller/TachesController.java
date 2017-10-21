@@ -8,14 +8,15 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,22 +197,40 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
             );
             return;
         }
+        afficherPlanification(tacheBean);
+    }
+
+    private void afficherPlanification(@NotNull TacheBean tacheBean) {
         try {
             ihm.getApplicationController().afficherModuleCharges();
-            TableViews.focusOnItem(ihm.getChargesController().getTachesTable(), tacheBean);
+            TableViews.focusOnItem(tachesTable, tacheBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
             ihm.afficherDialog(
                     Alert.AlertType.ERROR,
-                    "Impossible d'afficher la planification pour la tâche",
+                    "Impossible d'afficher la planification pour la tâche" + tacheBean.getId() + ".",
                     Exceptions.causes(e)
             );
         }
     }
 
+
     @Override
     protected boolean estTacheAvecAutreFiltreAVoir(@NotNull TacheBean tache) {
         return false;
+    }
+
+
+    @Override
+    MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TacheBean, MenuButton> cellData) {
+        MenuButton menuActions = super.menuActions(cellData);
+        TacheBean tacheBean = cellData.getValue();
+        {
+            MenuItem menuItemSupprimer = new MenuItem("Voir la _planification de la charge de la tâche " + tacheBean.noTache());
+            menuItemSupprimer.setOnAction(event -> afficherPlanification(tacheBean));
+            menuActions.getItems().add(menuItemSupprimer);
+        }
+        return menuActions;
     }
 
 }

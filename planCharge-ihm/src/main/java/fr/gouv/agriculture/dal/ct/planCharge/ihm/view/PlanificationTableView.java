@@ -11,14 +11,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithoutLogger"})
-public class TableViewAvecCalendrier<S, T> extends TableView<S> {
+public class PlanificationTableView<S, T> extends TableView<S> {
 
     @NotNull
     private List<TableColumn<S, T>> calendrierColumns;
 
 
     /* Constructeur requis par JavaFX */
-    public TableViewAvecCalendrier() {
+    public PlanificationTableView() {
         super();
         calendrierColumns = new ArrayList<>(PlanChargeIhm.NBR_SEMAINES_PLANIFIEES);
 

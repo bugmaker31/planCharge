@@ -4,9 +4,6 @@ import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
@@ -40,7 +37,7 @@ public class CalendrierChargeCellCallback implements Callback<TableColumn.CellDa
     @Override
     public ObservableValue<Double> call(@Null TableColumn.CellDataFeatures<PlanificationTacheBean, Double> param) {
         assert param != null;
-        assert ((TableViewAvecCalendrier) param.getTableView()).getCalendrierColumns().indexOf(param.getTableColumn()) == (noSemaine - 1);
+        assert ((PlanificationTableView) param.getTableView()).getCalendrierColumns().indexOf(param.getTableColumn()) == (noSemaine - 1);
         PlanificationTacheBean planificationTacheBean = param.getValue();
         assert planificationTacheBean != null;
         if (planChargeBean.getDateEtat() == null) {

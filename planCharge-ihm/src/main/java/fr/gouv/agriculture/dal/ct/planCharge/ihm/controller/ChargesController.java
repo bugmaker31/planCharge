@@ -197,7 +197,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private TableViewAvecCalendrier<PlanificationTacheBean, Double> planificationsTable;
+    private PlanificationTableView<PlanificationTacheBean, Double> planificationsTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -259,7 +259,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursParRessourceBean, Float> nbrsJoursChargeRsrcTable;
+    private PlanificationTableView<NbrsJoursParRessourceBean, Float> nbrsJoursChargeRsrcTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -324,7 +324,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursParProfilBean, Float> nbrsJoursChargeProfilTable;
+    private PlanificationTableView<NbrsJoursParProfilBean, Float> nbrsJoursChargeProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -389,7 +389,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursParRessourceBean, Float> nbrsJoursDispoCTRestanteRsrcTable;
+    private PlanificationTableView<NbrsJoursParRessourceBean, Float> nbrsJoursDispoCTRestanteRsrcTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -454,7 +454,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private TableViewAvecCalendrier<NbrsJoursParProfilBean, Float> nbrsJoursDispoCTMaxRestanteProfilTable;
+    private PlanificationTableView<NbrsJoursParProfilBean, Float> nbrsJoursDispoCTMaxRestanteProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -552,7 +552,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     @SuppressWarnings("SuspiciousGetterSetter")
     @Override
-    TableViewAvecCalendrier<PlanificationTacheBean, Double> getTachesTable() {
+    PlanificationTableView<PlanificationTacheBean, Double> getTachesTable() {
         return planificationsTable;
     }
 
@@ -708,8 +708,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
 
-    public List<TableViewAvecCalendrier<?, ?>> tables() {
-        return Arrays.asList(new TableViewAvecCalendrier<?, ?>[]{
+    public List<PlanificationTableView<?, ?>> tables() {
+        return Arrays.asList(new PlanificationTableView<?, ?>[]{
                 planificationsTable,
                 nbrsJoursChargeRsrcTable,
                 nbrsJoursChargeProfilTable,
@@ -1141,7 +1141,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         definirMenuContextuelColonneRessource(nbrsJoursDispoCTRestanteRsrcTable, ressourceNbrsJoursDispoCTRestanteRsrcColumn);
     }
 
-    private void definirMenuContextuelColonneRessource(@NotNull TableViewAvecCalendrier<NbrsJoursParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursParRessourceBean, String> ressourceColumn) {
+    private void definirMenuContextuelColonneRessource(@NotNull PlanificationTableView<NbrsJoursParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursParRessourceBean, String> ressourceColumn) {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Filtrer les tâches sur la ressource");
         menuItem.setOnAction(event -> {
@@ -1311,9 +1311,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @Override
     MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<PlanificationTacheBean, MenuButton> cellData) {
         MenuButton menuActions = super.menuActions(cellData);
+        PlanificationTacheBean tacheBean = cellData.getValue();
         {
-            PlanificationTacheBean tacheBean = cellData.getValue();
-            MenuItem menuItemProvisionner = new MenuItem("_Provisionner");
+            MenuItem menuItemProvisionner = new MenuItem("_Provisionner la tâche " + tacheBean.noTache());
             menuItemProvisionner.setOnAction(event -> {
                 try {
                     provisionnerTache(tacheBean);
@@ -1324,9 +1324,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             menuItemProvisionner.disableProperty().bind(tacheBean.statutProperty().isNotEqualTo(StatutBean.PROVISION));
             menuActions.getItems().add(menuItemProvisionner);
         }
+        {
+            MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la _tâche " + tacheBean.noTache());
+            menuItemSupprimer.setOnAction(event -> {
+                afficherTache(tacheBean);
+            });
+            menuActions.getItems().add(menuItemSupprimer);
+        }
         return menuActions;
     }
-
 
     @NotNull
     protected PlanificationTacheBean ajouterTache() throws ControllerException {
@@ -1466,7 +1472,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             );
             return;
         }
+        afficherTache(tacheBean);
+    }
 
+    private void afficherTache(@NotNull PlanificationTacheBean tacheBean) {
         try {
             ihm.getApplicationController().afficherModuleTaches();
             TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean);

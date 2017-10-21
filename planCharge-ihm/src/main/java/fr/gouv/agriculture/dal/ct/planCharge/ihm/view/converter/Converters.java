@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 
@@ -159,4 +161,5 @@ public class Converters {
 
     public static final ProjetAppliBeanConverter PROJET_APPLI_STRING_CONVERTER = new ProjetAppliBeanConverter();
 
+    public static final StatutBeanConverter STATUT_STRING_CONVERTER = new StatutBeanConverter();
 }

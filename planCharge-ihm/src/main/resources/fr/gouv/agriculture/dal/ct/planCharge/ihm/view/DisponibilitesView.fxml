@@ -24,8 +24,8 @@
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="nbrsJoursOuvresPane" text="Ouvré (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursOuvresTable" fixedCellSize="$fixedCellSize"
-                                                         editable="false">
+                                <PlanificationTableView fx:id="nbrsJoursOuvresTable" fixedCellSize="$fixedCellSize"
+                                                        editable="false">
                                     <columns>
                                         <TableColumn fx:id="ressourceNbrsJoursOuvresColumn" text="N/A"
                                                      prefWidth="$ressourceColumnPrefWidth"
@@ -96,7 +96,7 @@
                                         <Tooltip
                                                 text="Nombre de jours ouvrés. Calculé à partir du référentiel des jours fériés."/>
                                     </tooltip>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -107,8 +107,8 @@
                         <TitledPane fx:id="nbrsJoursAbsencePane"
                                     text="Absence (vacances, formation, etc.) / rsrc (j)" animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursAbsenceTable" editable="true"
-                                                         fixedCellSize="$fixedCellSize">
+                                <PlanificationTableView fx:id="nbrsJoursAbsenceTable" editable="true"
+                                                        fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourceNbrsJoursAbsenceColumn" text="Ressource"
@@ -175,7 +175,7 @@
                                     <tooltip>
                                         <Tooltip text="Entrez le nombre de jours d'absence de chaque ressource."/>
                                     </tooltip>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -186,9 +186,9 @@
                         <TitledPane fx:id="nbrsJoursDispoMinAgriPane" text="Dispo MinAgri / rsrc (j)"
                                     animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoMinAgriTable"
-                                                         fixedCellSize="$fixedCellSize"
-                                                         editable="false">
+                                <PlanificationTableView fx:id="nbrsJoursDispoMinAgriTable"
+                                                        fixedCellSize="$fixedCellSize"
+                                                        editable="false">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourceNbrsJoursDispoMinAgriColumn" text="Ressource"
@@ -275,7 +275,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -285,8 +285,8 @@
                         <TitledPane fx:id="pctagesDispoCTPane" text="Dispo CT / rsrc (%)"
                                     animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="pctagesDispoCTTable" fixedCellSize="$fixedCellSize"
-                                                         editable="true">
+                                <PlanificationTableView fx:id="pctagesDispoCTTable" fixedCellSize="$fixedCellSize"
+                                                        editable="true">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourcePctagesDispoCTColumn" text="Ressource"
@@ -365,7 +365,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -376,8 +376,8 @@
                         <TitledPane fx:id="nbrsJoursDispoCTPane" text="Dispo CT / rsrc (j)"
                                     animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoCTTable" fixedCellSize="$fixedCellSize"
-                                                         editable="false">
+                                <PlanificationTableView fx:id="nbrsJoursDispoCTTable" fixedCellSize="$fixedCellSize"
+                                                        editable="false">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourceNbrsJoursDispoCTColumn" text="Ressource"
@@ -467,7 +467,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -478,8 +478,8 @@
                         <TitledPane fx:id="pctagesDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (%)"
                                     animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="pctagesDispoMaxRsrcProfilTable"
-                                                         fixedCellSize="$fixedCellSize">
+                                <PlanificationTableView fx:id="pctagesDispoMaxRsrcProfilTable"
+                                                        fixedCellSize="$fixedCellSize">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourcePctagesDispoMaxRsrcProfilColumn" text="Ressource"
@@ -567,7 +567,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -578,9 +578,9 @@
                         <TitledPane fx:id="nbrsJoursDispoMaxRsrcProfilPane" text="Dispo maxi / rsrc / profil (j)"
                                     animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoMaxRsrcProfilTable"
-                                                         fixedCellSize="$fixedCellSize"
-                                                         editable="false">
+                                <PlanificationTableView fx:id="nbrsJoursDispoMaxRsrcProfilTable"
+                                                        fixedCellSize="$fixedCellSize"
+                                                        editable="false">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourceNbrsJoursDispoMaxRsrcProfilColumn" text="Ressource"
@@ -680,7 +680,7 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -691,8 +691,8 @@
                         <TitledPane fx:id="nbrsJoursDispoMaxProfilPane" text="Dispo maxi / profil (j)"
                                     animated="$arePanesAnimated">
                             <VBox>
-                                <TableViewAvecCalendrier fx:id="nbrsJoursDispoMaxProfilTable" fixedCellSize="25"
-                                                         editable="false">
+                                <PlanificationTableView fx:id="nbrsJoursDispoMaxProfilTable" fixedCellSize="25"
+                                                        editable="false">
                                     <!--styleClass="noHeader-table"-->
                                     <columns>
                                         <TableColumn fx:id="ressourceNbrsJoursDispoMaxProfilColumn" text="Ressource"
@@ -767,7 +767,7 @@
                                         <Tooltip
                                                 text="Nombre de jours de disponibilité dédiée à l'équipe (la CT du DAL). Calculé à partir du % dispo équipe."/>
                                     </tooltip>
-                                </TableViewAvecCalendrier>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>

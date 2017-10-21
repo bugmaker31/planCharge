@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
+import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
@@ -36,6 +37,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
@@ -214,11 +216,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     // Les menus :
 
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private ContextMenu tachesTableContextMenu;
-
     // Les items de la barre d'état :
 
     @FXML
@@ -344,46 +341,13 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         //noinspection OverlyComplexAnonymousInnerClass
         projetAppliColumn.setCellFactory(param -> new ProjetAppliCell<>(planChargeBean.getProjetsApplisBeans(), this::afficherProjetAppli, this::filtrerSurProjetAppli));
         //noinspection OverlyComplexAnonymousInnerClass
-        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                new StringConverter<StatutBean>() {
-
-                    @Null
-                    @Override
-                    public String toString(@Null StatutBean statutBean) {
-                        if (statutBean == null) {
-                            return null;
-                        }
-                        return statutBean.getCode();
-                    }
-
-                    @Null
-                    @Override
-                    public StatutBean fromString(@Null String codeStatut) {
-                        if (codeStatut == null) {
-                            return null;
-                        }
-                        return Collections.any(
-                                planChargeBean.getStatutsBeans(),
-                                statutBean -> (statutBean.getCode() != null) && statutBean.getCode().equals(codeStatut)
-                        );
-                    }
-                },
-                planChargeBean.getStatutsBeans()));
+        statutColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.STATUT_STRING_CONVERTER, planChargeBean.getStatutsBeans()));
         debutColumn.setCellFactory(DatePickerTableCells.forTableColumn());
         echeanceColumn.setCellFactory(param -> new EcheanceCell<>(PlanChargeIhm.PATRON_FORMAT_DATE, PlanChargeIhm.PROMPT_FORMAT_DATE, getTachesTable()));
         importanceColumn.setCellFactory(cell -> new ImportanceCell<>(planChargeBean.getImportancesBeans()));
         chargeColumn.setCellFactory(TextFieldTableCell.forTableColumn(Converters.CHARGE_STRING_CONVERTER)); // TODO FDA 2017/08 Mieux formater.
         ressourceColumn.setCellFactory(param -> new RessourceCell<>(planChargeBean.getRessourcesBeans(), this::afficherRessourceHumaine, this::filtrerSurRessource));
         profilColumn.setCellFactory(param -> new ProfilCell<>(planChargeBean.getProfilsBeans(), this::afficherProfil, this::filtrerSurProfil));
-/*
-        actionsColumn.setCellFactory(param -> {
-            ComboBoxTableCell<TB, ComboBox<?>> actionsComboBox = new ComboBoxTableCell<>();
-            actionsComboBox.getItems().setAll(
-                    new ComboBox<>(FXCollections.observableArrayList("action 1", "action 2"))
-            );
-            return actionsComboBox;
-        });
-*/
 
         // Paramétrage des ordres de tri :
         categorieColumn.setComparator(CodeCategorieTacheComparator.COMPARATEUR);
@@ -524,12 +488,21 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TB, MenuButton> cellData) {
-        MenuButton menuActions = new MenuButton("_Actions");
+        MenuButton menuActions = new MenuButton("Actions");
+        TB tacheBean = cellData.getValue();
         {
-            MenuItem menuItemSupprimer = new MenuItem("_Supprimer");
+            MenuItem menuItemSupprimer = new MenuItem("_Supprimer la tâche " + tacheBean.noTache());
+            menuItemSupprimer.setOnAction(event -> supprimerTache(tacheBean));
+            menuActions.getItems().add(menuItemSupprimer);
+        }
+        {
+            MenuItem menuItemSupprimer = new MenuItem("Voir la tâche "+tacheBean.noTache()+" dans _outil de ticketing");
             menuItemSupprimer.setOnAction(event -> {
-                TB tacheBean = cellData.getValue();
-                supprimerTache(tacheBean);
+                try {
+                    afficherTacheDansOutilTicketing(tacheBean);
+                } catch (ControllerException e) {
+                    LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + " dans l'outil de ticketing.", e);
+                }
             });
             menuActions.getItems().add(menuItemSupprimer);
         }
@@ -896,26 +869,55 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     @FXML
-    private void afficherTacheDansOutilTicketing(@SuppressWarnings("unused") ActionEvent mouseEvent) {
+    private void afficherTacheDansOutilTicketing(@SuppressWarnings("unused") ActionEvent mouseEvent) throws ControllerException {
+        LOGGER.debug("afficherTacheDansOutilTicketing...");
         afficherTacheDansOutilTicketing();
     }
 
-    void afficherTacheDansOutilTicketing() {
-        LOGGER.debug("afficherTacheDansOutilTicketing...");
+    void afficherTacheDansOutilTicketing() throws ControllerException {
+
+        TB tacheBean = TableViews.selectedItem(getTachesTable());
+        if (tacheBean == null) {
+            //noinspection HardcodedLineSeparator
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la tâche dans l'outil de ticketing",
+                    "Aucune tâche n'est actuellement sélectionnée."
+                            + "\nSélectionnez d'abord une ligne, puis re-cliquez.",
+                    400, 200
+            );
+            return;
+        }
+
+        afficherTacheDansOutilTicketing(tacheBean);
+    }
+
+    void afficherTacheDansOutilTicketing(@NotNull TB tacheBean) throws ControllerException {
+
+        String urlOutilTicketing;
+        try {
+            urlOutilTicketing = ihm.paramsIhm.getParametrage("outilTicketing.url");
+        } catch (KernelException e) {
+            throw new ControllerException("Impossible de retrouver l'URL de l'outil de ticketing.", e);
+        }
 
         // Cf. http://www.java2s.com/Tutorials/Java/JavaFX/1510__JavaFX_WebView.htm
         // Cf. https://docs.oracle.com/javase/8/javafx/embedded-browser-tutorial/overview.htm
         WebView browser = new WebView();
         WebEngine webEngine = browser.getEngine();
+        webEngine.load(urlOutilTicketing);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(browser);
-        webEngine.load("http://alim-prod-iws-1.zsg.agri/isilogwebsystem/homepage.aspx");
+
+        Stage outilTicketingStage = new Stage();
+        outilTicketingStage.setTitle(PlanChargeIhm.APP_NAME + " - " + "Outil de ticketing");
+        outilTicketingStage.setScene(new Scene(scrollPane));
+        outilTicketingStage.show();
 
         // TODO FDA 2017/07 Terminer de coder.
-
-        ihm.getPrimaryStage().setScene(new Scene(scrollPane));
     }
+
 
     @SuppressWarnings("unused")
     @FXML

@@ -35,6 +35,8 @@ public final class TableViews {
         super();
     }
 
+    // Selection:
+
     @SuppressWarnings("WeakerAccess")
     public static <S> int itemIndex(@NotNull TableView<? extends S> table, @NotNull S item) {
         return table.getItems().indexOf(item);
@@ -49,18 +51,20 @@ public final class TableViews {
         table.getSelectionModel().clearSelection();
     }
 
-    public static <S> void focusOnItem(@NotNull TableView<? extends S> table, @NotNull S item) {
+    public static <S> void focusOnItem(@NotNull TableView<S> table, @NotNull S item) {
 
         int itemIdx = itemIndex(table, item);
         assert itemIdx != -1;
 
+        TableColumn<S, ?> column = table.getColumns().get(0);
+
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
         table.requestFocus();
         table.getSelectionModel().clearAndSelect(itemIdx);
-        table.getFocusModel().focus(itemIdx);
+        table.getFocusModel().focus(itemIdx, column); // FIXME FDA 2017/10 Génère une erreur.
 
         // Il faut aussi scroller jusqu'à la ligne sélectionnée,
-        // dans le cas où la table contient plus d'item qu'elle ne peut afficher de ligne
+        // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
         // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
         table.scrollTo(itemIdx);
     }
