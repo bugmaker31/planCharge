@@ -41,13 +41,14 @@
                     <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
                     <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
                     <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
+                    <SeparatorMenuItem/>
                     <!--
                         TODO FDA 2017/07 Coder.
-                        <SeparatorMenuItem/>
                         <MenuItem text="Couper" onAction="#couper" accelerator="Shortcut+X"/>
                         <MenuItem text="Copier" onAction="#copier" accelerator="Shortcut+C"/>
                         <MenuItem text="Coller" onAction="#coller" accelerator="Shortcut+V"/>
                     -->
+                    <MenuItem text="Tout sélectionner" accelerator="Shortcut+A"/>
                     <!--
                         TODO FDA 2017/08 Remettre, si on arrive à factoriser le code, qui est mis actuellement dans chaque module.
                         <MenuItem text="Supprimer" onAction="#supprimerTache" /> <!-accelerator="DELETE" Trop dangereux ->

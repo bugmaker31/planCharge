@@ -3,19 +3,20 @@ package fr.gouv.agriculture.dal.ct.ihm.view;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import impl.org.controlsfx.table.ColumnFilter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import org.apache.commons.lang.math.NumberUtils;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableFilter.Builder;
 import org.slf4j.Logger;
@@ -25,7 +26,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public final class TableViews {
@@ -258,7 +258,7 @@ public final class TableViews {
 
         DoubleProperty headerRowHeightProperty = new SimpleDoubleProperty();
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Objects.equals(oldValue, newValue)) {
+            if (!java.util.Objects.equals(oldValue, newValue)) {
 
                 TableHeaderRow headerRow = headerRow(table);
                 // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
@@ -453,4 +453,30 @@ public final class TableViews {
         return unsortedSourceItems(sourceItems);
     }
 
+
+    // Math :
+
+    @Null
+    public static <TB extends TacheBean> Double sumSelected(@NotNull TableView<TB> table) {
+        Double sum = null;
+        for (TablePosition selectedCellPosition : table.getSelectionModel().getSelectedCells()) {
+            int selectedCellRowIndex = selectedCellPosition.getRow();
+            TableColumn selectedCellColumn = selectedCellPosition.getTableColumn();
+            ObservableValue<?> selectedCellObs = selectedCellColumn.getCellObservableValue(selectedCellRowIndex);
+            Object selectedCellValue = selectedCellObs.getValue();
+            if (selectedCellValue instanceof Number) {
+                if (sum == null) {
+                    sum = 0.0;
+                }
+                Number selectedNumericCellValue = (Number)selectedCellValue;
+                sum += selectedNumericCellValue.doubleValue();
+            }
+        }
+        return sum;
+    }
+
+    @NotNull
+    public static <TB extends TacheBean> Long countSelected(@NotNull TableView<TB> table) {
+        return (long) table.getSelectionModel().getSelectedCells().size();
+    }
 }

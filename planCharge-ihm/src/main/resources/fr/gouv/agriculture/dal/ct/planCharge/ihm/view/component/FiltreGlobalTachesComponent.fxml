@@ -9,9 +9,9 @@
          fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController"
          alignment="CENTER"
 >
-<!--
-    alignment="BASELINE_LEFT"
--->
+    <!--
+        alignment="BASELINE_LEFT"
+    -->
 
     <!--<HBox alignment="BASELINE_LEFT">-->
     <Label text="Filtre global : ">
@@ -20,11 +20,7 @@
             <Tooltip fx:id="filtreGlobalTootip" text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
         </tooltip>
     </Label>
-    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200">
-        <tooltip>
-            <fx:reference source="filtreGlobalTootip"/>
-        </tooltip>
-    </TextField>
+    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200" tooltip="$filtreGlobalTootip"/>
 
     <!--</HBox>-->
 </fx:root>
