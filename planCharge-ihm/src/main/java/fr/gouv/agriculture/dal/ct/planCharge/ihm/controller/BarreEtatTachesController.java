@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,12 +62,22 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
+    private HBox calculSommeBox;
+
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
     private RadioMenuItem calculerSommeRadioMenuItem;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
     private Label calculSommeLabel;
+
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private HBox calculNombreBox;
 
     @SuppressWarnings("NullableProblems")
     @FXML
@@ -189,7 +200,8 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     };
 
     private void activerCalculSomme() {
-        calculSommeLabel.setVisible(true);
+        calculSommeBox.setVisible(true);
+        calculSommeBox.setMaxWidth(Double.MAX_VALUE);
         if (!calculerSommeRadioMenuItem.isSelected()) {
             calculerSommeRadioMenuItem.setSelected(true);
         }
@@ -197,7 +209,8 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     }
 
     private void desactiverCalculSomme() {
-        calculSommeLabel.setVisible(false);
+        calculSommeBox.setVisible(false);
+        calculSommeBox.setMaxWidth(0);
         if (calculerSommeRadioMenuItem.isSelected()) {
             calculerSommeRadioMenuItem.setSelected(false);
         }
@@ -233,7 +246,8 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     };
 
     private void activerCalculNombre() {
-        calculNombreLabel.setVisible(true);
+        calculNombreBox.setVisible(true);
+        calculNombreBox.setMaxWidth(Double.MAX_VALUE);
         if (!calculerNombreRadioMenuItem.isSelected()) {
             calculerNombreRadioMenuItem.setSelected(true);
         }
@@ -241,7 +255,8 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     }
 
     private void desactiverCalculNombre() {
-        calculNombreLabel.setVisible(false);
+        calculNombreBox.setVisible(false);
+        calculNombreBox.setMaxWidth(0);
         if (calculerNombreRadioMenuItem.isSelected()) {
             calculerNombreRadioMenuItem.setSelected(false);
         }

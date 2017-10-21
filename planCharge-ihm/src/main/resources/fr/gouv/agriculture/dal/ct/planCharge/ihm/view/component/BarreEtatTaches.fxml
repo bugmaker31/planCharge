@@ -65,11 +65,11 @@
                 <RadioMenuItem fx:id="calculerNombreRadioMenuItem" text="Nombre" onAction="#inverserCalculNombre" selected="true"/>
             </items>
         </MenuButton>
-        <HBox styleClass="itemBarreEtat">
+        <HBox fx:id="calculSommeBox" styleClass="itemBarreEtat">
             <Label text="Somme : "/>
             <Label fx:id="calculSommeLabel" text="N/C"/>
         </HBox>
-        <HBox styleClass="itemBarreEtat">
+        <HBox fx:id="calculNombreBox" styleClass="itemBarreEtat">
             <Label text="Nombre : "/>
             <Label fx:id="calculNombreLabel" text="N/C"/>
         </HBox>
