@@ -154,6 +154,9 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("NullableProblems")
     @NotNull
     private Region revueWizardView;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private Region saisieEcheanceView;
 
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -211,6 +214,11 @@ public class PlanChargeIhm extends Application {
         return revueWizardView;
     }
 
+    @NotNull
+    public Region getSaisieEcheanceView() {
+        return saisieEcheanceView;
+    }
+
 
     /*
     La couche "Controller" :
@@ -248,6 +256,10 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("NullableProblems")
     @NotNull
     private RevueWizardController revueWizardController;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private SaisieEcheanceController saisieEcheanceController;
+
 
     @NotNull
     public ApplicationController getApplicationController() {
@@ -289,7 +301,12 @@ public class PlanChargeIhm extends Application {
         return revueWizardController;
     }
 
-    /*
+    @NotNull
+    public SaisieEcheanceController getSaisieEcheanceController() {
+        return saisieEcheanceController;
+    }
+
+/*
     @NotNull
     private final PlanChargeBean planChargeBean = PlanChargeBean.instance();
 */
@@ -524,6 +541,12 @@ public class PlanChargeIhm extends Application {
             loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/RevueWizardView.fxml"));
             revueWizardView = loader.load();
             revueWizardController = loader.getController();
+        }
+        {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/SaisieEcheanceView.fxml"));
+            saisieEcheanceView = loader.load();
+            saisieEcheanceController = loader.getController();
         }
     }
 

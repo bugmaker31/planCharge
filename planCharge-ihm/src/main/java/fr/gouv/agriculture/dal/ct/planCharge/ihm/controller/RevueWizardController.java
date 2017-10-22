@@ -13,10 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.util.Optional;
 
 // Cf. https://controlsfx.bitbucket.io/org/controlsfx/dialog/Wizard.html
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class RevueWizardController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RevueWizardController.class);

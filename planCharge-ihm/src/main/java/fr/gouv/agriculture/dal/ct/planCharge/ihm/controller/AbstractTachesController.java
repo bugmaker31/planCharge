@@ -37,6 +37,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.controlsfx.control.table.TableFilter;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
@@ -496,7 +498,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             menuActions.getItems().add(menuItemSupprimer);
         }
         {
-            MenuItem menuItemSupprimer = new MenuItem("Voir la tâche "+tacheBean.noTache()+" dans outil de ticketing");
+            MenuItem menuItemSupprimer = new MenuItem("Voir la tâche " + tacheBean.noTache() + " dans outil de ticketing");
             menuItemSupprimer.setOnAction(event -> {
                 try {
                     afficherTacheDansOutilTicketing(tacheBean);
@@ -535,6 +537,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     protected TB ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
+
         TB nouvTache = nouveauBean();
         getTachesBeans().add(nouvTache);
 

@@ -34,10 +34,10 @@ public class BarreEtatTachesComponent<TB extends TacheBean> extends HBox {
         controller = fxmlLoader.getController();
     }
 
-    public void initialize(@NotNull ObservableList<TB> tachesBeans, @NotNull TableView<TB> tachesTable, @NotNull Executeur fonctionAjouteTache) {
+    public void initialize(@NotNull ObservableList<TB> tachesBeans, @NotNull TableView<TB> tachesTable, @NotNull Executeur fonctionAjouterTache) {
         controller.setTachesBeans(tachesBeans);
         controller.setTachesTable(tachesTable);
-        controller.setFonctionAjouterTache(fonctionAjouteTache);
+        controller.setFonctionAjouterTache(fonctionAjouterTache);
         controller.prepare();
     }
 }

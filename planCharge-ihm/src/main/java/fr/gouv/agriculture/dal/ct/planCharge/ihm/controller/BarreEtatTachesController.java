@@ -14,11 +14,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +26,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Function;
 
@@ -127,6 +129,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     }
 
     public void prepare() {
+
         NumberFormat formatNbrTaches = new DecimalFormat("#,##0");
         NumberFormat formatCharge = new DecimalFormat("#,##0.###");
         tachesBeans.addListener((ListChangeListener<? super TacheBean>) change -> {
@@ -156,6 +159,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         }
     }
 
+
     @FXML
     private void ajouterTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         try {
@@ -165,10 +169,58 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         }
     }
 
+
     @FXML
     private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-//        TODO FDA 2017/10 Coder.
-        throw new NotImplementedException();
+        LOGGER.debug("reporterTaches...");
+        reporterTaches();
+    }
+
+    private void reporterTaches() throws ControllerException {
+
+        LocalDate nouvelleEcheance = saisirNouvelleEcheance();
+        if (nouvelleEcheance == null) {
+            ihm.afficherDialog(Alert.AlertType.INFORMATION,
+                    "Report annulé",
+                    "Le report des tâches a été annulé par l'utilisateur.",
+                    400, 100
+            );
+            return;
+        }
+
+        for (TB tacheBean : tachesTable.getItems()) {
+            reporterTache(tacheBean, nouvelleEcheance);
+        }
+        ihm.afficherNotificationInfo("Tâches reportées", tachesTable.getItems().size() + " tâches ont été reportées au " + nouvelleEcheance.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
+    }
+
+    private Stage saisieEcheanceStage = null;
+
+    @Null
+    private LocalDate saisirNouvelleEcheance() {
+        LocalDate nouvelleEcheance;
+
+        if (saisieEcheanceStage == null) {
+            saisieEcheanceStage = new Stage();
+            saisieEcheanceStage.setScene(new Scene(ihm.getSaisieEcheanceView()));
+            saisieEcheanceStage.initModality(Modality.APPLICATION_MODAL);
+            ihm.getSaisieEcheanceController().getAnnulerButton().setOnAction(event -> {
+                ihm.getSaisieEcheanceController().getEcheanceDatePicker().setValue(null);
+                saisieEcheanceStage.close();
+            });
+            ihm.getSaisieEcheanceController().getValiderButton().setOnAction(event -> {
+                saisieEcheanceStage.close();
+            });
+        }
+        saisieEcheanceStage.showAndWait();
+
+        nouvelleEcheance = ihm.getSaisieEcheanceController().getEcheanceDatePicker().getValue();
+
+        return nouvelleEcheance;
+    }
+
+    private void reporterTache(@NotNull TB tacheBean, @NotNull LocalDate nouvelleEcheance) throws ControllerException {
+        tacheBean.setEcheance(nouvelleEcheance);
     }
 
 

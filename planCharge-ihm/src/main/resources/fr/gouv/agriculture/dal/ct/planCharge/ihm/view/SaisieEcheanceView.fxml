@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--<?import org.controlsfx.dialog.Wizard?>-->
+<!--<?import org.controlsfx.dialog.Wizard.LinearFlow?>-->
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.SaisieEcheanceController"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            prefWidth="300" prefHeight="100"
+>
+    <VBox>
+        <HBox>
+            <Label text="Nouvelle échéance : "/>
+            <DatePicker fx:id="echeanceDatePicker" showWeekNumbers="true"/>
+        </HBox>
+        <ButtonBar>
+            <buttons>
+                <Button fx:id="annulerButton" text="Annuler" cancelButton="true" defaultButton="true"/>
+                <Button fx:id="validerButton" text="Valider"/>
+            </buttons>
+        </ButtonBar>
+    </VBox>
+</AnchorPane>
