@@ -521,9 +521,6 @@ public class ApplicationController extends AbstractController {
 
         RapportChargementAvecProgression rapport = new RapportChargementAvecProgression();
 
-//        PlanChargeBean[] planChargeBeanAvantChargement = new PlanChargeBean[1];
-        PlanChargeDTO[] planCharge = new PlanChargeDTO[1];
-
         Task<RapportChargementAvecProgression> chargerPlanCharge = new Task<RapportChargementAvecProgression>() {
 
             @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
@@ -533,9 +530,14 @@ public class ApplicationController extends AbstractController {
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
-//                planChargeBeanAvantChargement[0] = planChargeBean.copier();
+//                PlanChargeBean planChargeBeanAvantChargement = planChargeBean.copier();
 
-                planCharge[0] = planChargeService.charger(ficPlanCharge, rapport);
+                PlanChargeDTO planChargeDTO = planChargeService.charger(ficPlanCharge, rapport);
+
+                planChargeBean.fromDto(planChargeDTO);
+
+                planChargeBean.vientDEtreCharge();
+//                getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement));
 
                 return rapport;
             }
@@ -548,30 +550,6 @@ public class ApplicationController extends AbstractController {
 
                             RapportChargementAvecProgression rapportFinal =
                                     ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
-//                            assert planChargeBeanAvantChargement[0] != null;
-                            assert planCharge[0] != null;
-
-                            planChargeBean.fromDto(planCharge[0]);
-
-                            planChargeBean.vientDEtreCharge();
-//                            getSuiviActionsUtilisateur().historiser(new ChargementPlanCharge(planChargeBeanAvantChargement[0]));
-
-                            definirDateEtat(planChargeBean.getDateEtat());
-
-                            ihm.getTachesController().razFiltres();
-                            ihm.getChargesController().razFiltres();
-
-                            //noinspection HardcodedLineSeparator
-                            ihm.afficherNotificationInfo(
-                                    "Chargement terminé",
-                                    "Le chargement est terminé :"
-                                            + "\n- date d'état : " + planChargeBean.getDateEtat()
-                                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches"
-                            );
-
-                            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
-
-                            majBarreEtat();
 
                         } catch (ViolationsReglesGestionException e) {
                             ihm.afficherViolationsReglesGestion(
@@ -586,6 +564,23 @@ public class ApplicationController extends AbstractController {
                         calculer();
                     }
             );
+
+            definirDateEtat(planChargeBean.getDateEtat());
+
+            ihm.getTachesController().razFiltres();
+            ihm.getChargesController().razFiltres();
+
+            //noinspection HardcodedLineSeparator
+            ihm.afficherNotificationInfo(
+                    "Chargement terminé",
+                    "Le chargement est terminé :"
+                            + "\n- date d'état : " + planChargeBean.getDateEtat()
+                            + "\n- " + planChargeBean.getPlanificationsBeans().size() + " tâches"
+            );
+
+            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
+
+            majBarreEtat();
         } catch (IhmException e) {
             throw new ControllerException("Impossible de charger le plan de charge depuis le fichier '" + ficPlanCharge.getAbsolutePath() + "'.", e);
         }
@@ -1319,7 +1314,7 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void definirDateEtat(@SuppressWarnings("unused") @NotNull  ActionEvent event) throws Exception {
+    private void definirDateEtat(@SuppressWarnings("unused") @NotNull ActionEvent event) throws Exception {
         LOGGER.debug("definirDateEtat...");
         try {
             LocalDate dateEtatActuelle = planChargeBean.getDateEtat();
@@ -1383,8 +1378,8 @@ public class ApplicationController extends AbstractController {
         LocalDate dateEtat = planChargeBean.getDateEtat();
         if ((dateEtatPrecedentePourMajCalendriers == null) || (dateEtat == null) || !dateEtat.equals(dateEtatPrecedentePourMajCalendriers)) {
 */
-            definirNomsPeriodes();
-            definirValeursCalendriers();
+        definirNomsPeriodes();
+        definirValeursCalendriers();
 /*
         }
         if (dateEtat == null) {

@@ -117,7 +117,7 @@ public class PlanChargeIhm extends Application {
 
     public static final ParametresIhm paramsIhm = ParametresIhm.instance();
     //    private static Contexte contexte = Contexte.instance();
-    public static final  ParametresMetiers paramsMetier = ParametresMetiers.instance();
+    public static final ParametresMetiers paramsMetier = ParametresMetiers.instance();
 
     private static boolean estEnDeveloppement = false; // Par défaut.
 
@@ -996,12 +996,12 @@ public class PlanChargeIhm extends Application {
         progressDialog.getDialogPane().setPrefWidth(1000);
         progressDialog.getDialogPane().setPrefHeight(200);
         ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
+        progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
 
-        // Le Worker (task) doit être lancée en background pour que l'IHM continue de fonctionner (le resize du progressionDialog, l'affiche du PogressBar dans le ProgressDialog, etc.).
+        // Le Worker (task) doit être lancé en background pour que l'IHM continue de fonctionner (le resize du progressionDialog, l'affichage du PogressBar dans le ProgressDialog, etc.).
         Thread taskThread = new Thread(task, "progressionDialog");
         taskThread.start();
 
-        progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
         progressDialog.showAndWait(); // C'est le Worker (task) qui fermera ce impl.org.controlsfx.dialog, "on succeeded".
 
         R resultat;
