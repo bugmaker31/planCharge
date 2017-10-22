@@ -168,6 +168,15 @@
     /*-fx-border-color: white;*/
 }
 
+.toggle-button {
+}
+.toggle-button:disabled {
+    fx-opacity: 50%;
+}
+.toggle-button:selected {
+   fx-background-color: yellow;
+}
+
 /* Table ---------------------------------------------*/
 
 .table-view {
