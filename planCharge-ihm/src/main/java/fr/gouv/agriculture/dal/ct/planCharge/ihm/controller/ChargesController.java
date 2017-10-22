@@ -135,10 +135,16 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     private TextField nbrLignesTablePlanificationsField;
 */
 
+/*
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
     private Spinner<Integer> nbrLignesMaxTablePlanificationsSpinner;
+*/
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private Slider nbrLignesMaxTablePlanificationsSlider;
 
     // Les filtres (TabedPane "Filtres")) :
     // Ajouter ici les filtres spécifiques des charges : Charge planifiée, Charge  planifiée dans le mois, Planifiée dans le mois ?, Tâche doublon ?, Reste à planifier, N° sem échéance, Échéance tenue ?, Durée restante, Charge / semaine, Charge / T
@@ -989,10 +995,17 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.disableReagencingColumns(planificationsTable);
 
         TableViews.ensureDisplayingRows(planificationsTable, 30);
+/*
         nbrLignesMaxTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             Integer nbrlignes = Objects.value(newValue, 30);
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
+*/
+        nbrLignesMaxTablePlanificationsSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Integer nbrlignes = Objects.value(newValue.intValue(), 30);
+            TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
+        });
+
     }
 
     private void initTableNbrsJoursChargeRsrc() {

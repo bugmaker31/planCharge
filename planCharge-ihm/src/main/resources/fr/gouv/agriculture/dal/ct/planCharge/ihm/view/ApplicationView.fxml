@@ -88,22 +88,22 @@
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Assistant de _revue..." onAction="#afficherAssistantDeRevue" />
+                    <MenuItem text="Assistant de _revue..." onAction="#afficherAssistantDeRevue"/>
                 </Menu>
-                <Menu text="Autre" mnemonicParsing="false" >
+                <Menu text="Autre" mnemonicParsing="false">
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
-                    <MenuItem text="Aide..." mnemonicParsing="false" disable="true" />
+                    <MenuItem text="Aide..." mnemonicParsing="false" disable="true"/>
                     <Menu text="Thème">
                         <items>
-                            <MenuItem text="Thème standard (Moderna)" onAction="#basculerThemeStandard" />
-                            <MenuItem text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre" />
+                            <MenuItem text="Thème standard (Moderna)" onAction="#basculerThemeStandard"/>
+                            <MenuItem text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"/>
                         </items>
                     </Menu>
                 </Menu>
             </MenuBar>
             <Accordion fx:id="parametresAccordion">
                 <panes>
-                    <TitledPane fx:id="parametresTitledPane" animated="false" text="Paramètres">
+                    <TitledPane fx:id="parametresTitledPane" text="Paramètres métier" animated="false">
                         <HBox spacing="2" alignment="BASELINE_LEFT">
                             <fx:define>
                                 <Double fx:id="lundisButtonsPrefWidth" fx:value="150"/>

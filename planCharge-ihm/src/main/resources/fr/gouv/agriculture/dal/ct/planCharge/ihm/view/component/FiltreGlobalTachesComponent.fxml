@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
 <fx:root xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
          type="javafx.scene.layout.HBox"
          fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController"
@@ -20,7 +20,7 @@
             <Tooltip fx:id="filtreGlobalTootip" text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
         </tooltip>
     </Label>
-    <TextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200" tooltip="$filtreGlobalTootip"/>
+    <CustomTextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200" tooltip="$filtreGlobalTootip"/>
 
     <!--</HBox>-->
 </fx:root>
