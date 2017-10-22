@@ -203,6 +203,8 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
 
         if (saisieEcheanceStage == null) {
             saisieEcheanceStage = new Stage();
+            saisieEcheanceStage.setTitle(ihm.APP_NAME + " - " + "Nouvelle échéance ?");
+            saisieEcheanceStage.getIcons().setAll(ihm.getPrimaryStage().getIcons());
             saisieEcheanceStage.setScene(new Scene(ihm.getSaisieEcheanceView()));
             saisieEcheanceStage.initModality(Modality.APPLICATION_MODAL);
             ihm.getSaisieEcheanceController().getAnnulerButton().setOnAction(event -> {
