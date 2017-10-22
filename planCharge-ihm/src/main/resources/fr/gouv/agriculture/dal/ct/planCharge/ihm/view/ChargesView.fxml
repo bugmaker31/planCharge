@@ -20,7 +20,7 @@
             <panes>
                 <TitledPane text="Paramètres d'affichage : filtres, tris, zoom">
                     <!--suppress JavaFxUnresolvedFxIdReference -->
-                    <Accordion fx:id="filtresAccordion">
+                    <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane">
                         <panes>
                             <!--suppress JavaFxUnresolvedFxIdReference -->
                             <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
@@ -114,14 +114,11 @@
                                         <HBox alignment="CENTER">
                                             <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                                 <Label text="Surcharge : "/>
-                                                <SegmentedButton>
-                                                    <buttons>
-                                                        <ToggleButton fx:id="filtreSurchargeToutToggleButton" text="Tout" userData="TOUT" onAction="#filtrer"/>
-                                                        <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Ressource surchargée"
-                                                                      onAction="#filtrer"/>
-                                                        <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Profil surchargé" onAction="#filtrer"/>
-                                                    </buttons>
-                                                </SegmentedButton>
+                                                <HBox>
+                                                    <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Ressource surchargée"
+                                                                  onAction="#filtrer"/>
+                                                    <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Profil surchargé" onAction="#filtrer"/>
+                                                </HBox>
                                             </VBox>
                                             <!-- Utile ?
                                             <VBox alignment="CENTER" style="-fx-border-color: darkgray;">

@@ -13,8 +13,7 @@
 >
     <fx:define>
         <Double fx:id="panePrefWidth" fx:value="800"/>
-        <Double fx:id="panePrefHeight" fx:value="200"/>
-        <Double fx:id="paneMinHeight" fx:value="100"/>
+        <Double fx:id="panePrefHeight" fx:value="300"/>
     </fx:define>
 
     <!--
@@ -22,7 +21,7 @@
             <LinearFlow>
     -->
     <WizardPane fx:id="etapeDefinirDateEtatPane" headerText="Définir la nouvelle date d'état"
-                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
             <GridPane>
@@ -34,7 +33,7 @@
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajDisponibilitesPane" headerText="Mettre à jour les disponibilités"
-                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
             <GridPane>
@@ -60,11 +59,17 @@
                 <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"
                         GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
 
+                <CheckBox
+                        text="Prolonger (ou pas) les ressources sur les nouvelles périodes."
+                        GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"
+                        GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
             </GridPane>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajTachesPane" headerText="Mettre à jour les tâches"
-                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
             <GridPane>
@@ -73,11 +78,18 @@
                           GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Button text="Gérer les tâches" onAction="#afficherModuleTaches"
                         GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <CheckBox text="Prolonger les tâches échues."
+                          GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <Button text="Afficher tâches échues" onAction="#filtrerTachesEchues"/>
+                    <Button text="Reporter les tâches" onAction="#reporterTaches"/>
+                </HBox>
             </GridPane>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajPlanChargePane" headerText="Mettre à jour le plan de charge"
-                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
             <GridPane>
@@ -94,7 +106,7 @@
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeDiffuserPane" headerText="Diffuser aux personnes concernées"
-                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight" minHeight="$paneMinHeight"
+                prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
             <GridPane>

@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -163,5 +164,18 @@ public class RevueWizardController extends AbstractController {
         }
 
         noEtapeCourante++;
+    }
+
+    @FXML
+    private void filtrerTachesEchues(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleTaches();
+        ihm.getTachesController().activerTousFiltres();
+        ihm.getTachesController().getFiltrePeriodeEchueToggleButton().setSelected(true);
+        ihm.getTachesController().filtrer();
+    }
+
+    @FXML
+    private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getTachesController().reporterTaches();
     }
 }

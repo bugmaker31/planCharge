@@ -36,13 +36,16 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
@@ -300,6 +303,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         return filteredTachesBeans;
     }
 */
+
+    @NotNull
+    public ToggleButton getFiltrePeriodeEchueToggleButton() {
+        return filtrePeriodeEchueToggleButton;
+    }
 
 
     // Méthodes :
@@ -608,7 +616,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         filtrer();
     }
 
-    private void filtrer() {
+    void filtrer() {
         filteredTachesBeans.setPredicate(tache -> {
             try {
                 return estTacheAVoir(tache);
@@ -1045,6 +1053,57 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     private final void supprimerTache(@NotNull TB tacheBean) {
         getTachesBeans().remove(tacheBean);
         TableViews.clearSelection(getTachesTable()); // Contournement pour [issue#84:1 appui sur DELETE supprime 2 lignes]. Sinon, 2 lignes sont supprimées. Va savoir pourquoi...
+    }
+
+
+    void reporterTaches() throws ControllerException {
+
+        LocalDate nouvelleEcheance = saisirNouvelleEcheance();
+        if (nouvelleEcheance == null) {
+            ihm.afficherDialog(Alert.AlertType.INFORMATION,
+                    "Report annulé",
+                    "Le report des tâches a été annulé par l'utilisateur.",
+                    400, 100
+            );
+            return;
+        }
+
+        for (TB tacheBean : getTachesTable().getItems()) {
+            reporterTache(tacheBean, nouvelleEcheance);
+        }
+        getTachesTable().refresh(); // Pour recalculer les styles CSS.
+        ihm.afficherNotificationInfo("Tâches reportées", getTachesTable().getItems().size() + " tâches ont été reportées au " + nouvelleEcheance.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
+    }
+
+    private Stage saisieEcheanceStage = null;
+
+    @Null
+    private LocalDate saisirNouvelleEcheance() {
+        LocalDate nouvelleEcheance;
+
+        if (saisieEcheanceStage == null) {
+            saisieEcheanceStage = new Stage();
+            saisieEcheanceStage.setTitle(ihm.APP_NAME + " - " + "Nouvelle échéance ?");
+            saisieEcheanceStage.getIcons().setAll(ihm.getPrimaryStage().getIcons());
+            saisieEcheanceStage.setScene(new Scene(ihm.getSaisieEcheanceView()));
+            saisieEcheanceStage.initModality(Modality.APPLICATION_MODAL);
+            ihm.getSaisieEcheanceController().getAnnulerButton().setOnAction(event -> {
+                ihm.getSaisieEcheanceController().getEcheanceDatePicker().setValue(null);
+                saisieEcheanceStage.close();
+            });
+            ihm.getSaisieEcheanceController().getValiderButton().setOnAction(event -> {
+                saisieEcheanceStage.close();
+            });
+        }
+        saisieEcheanceStage.showAndWait();
+
+        nouvelleEcheance = ihm.getSaisieEcheanceController().getEcheanceDatePicker().getValue();
+
+        return nouvelleEcheance;
+    }
+
+    private void reporterTache(@NotNull TB tacheBean, @NotNull LocalDate nouvelleEcheance) throws ControllerException {
+        tacheBean.setEcheance(nouvelleEcheance);
     }
 
 }

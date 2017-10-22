@@ -199,10 +199,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    public ToggleButton filtreSurchargeToutToggleButton;
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    @FXML
     public ToggleButton filtreSurchargeRessourceToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -1533,7 +1529,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 filtreEcheanceTenueToggleButton,
                 filtreEcheanceNonTenueToggleButton,
                 //
-                filtreSurchargeToutToggleButton,
                 filtreSurchargeRessourceToggleButton,
                 filtreSurchargeProfilToggleButton
         ));
@@ -1600,9 +1595,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private boolean estTacheAvecFiltreSurchargeAVoir(@NotNull PlanificationTacheBean tache) throws ControllerException {
-        if (filtreSurchargeToutToggleButton.isSelected()) {
-            return true;
-        }
         if (filtreSurchargeRessourceToggleButton.isSelected()) {
             RessourceBean<?, ?> ressourceBean = tache.getRessource();
             if ((ressourceBean != null) && ressourceBean.estHumain()) {

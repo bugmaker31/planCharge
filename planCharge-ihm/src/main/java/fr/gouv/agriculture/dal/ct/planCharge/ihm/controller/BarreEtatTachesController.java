@@ -173,57 +173,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     @FXML
     private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         LOGGER.debug("reporterTaches...");
-        reporterTaches();
-    }
-
-    private void reporterTaches() throws ControllerException {
-
-        LocalDate nouvelleEcheance = saisirNouvelleEcheance();
-        if (nouvelleEcheance == null) {
-            ihm.afficherDialog(Alert.AlertType.INFORMATION,
-                    "Report annulé",
-                    "Le report des tâches a été annulé par l'utilisateur.",
-                    400, 100
-            );
-            return;
-        }
-
-        for (TB tacheBean : tachesTable.getItems()) {
-            reporterTache(tacheBean, nouvelleEcheance);
-        }
-        tachesTable.refresh(); // Pour recalculer les styles CSS.
-        ihm.afficherNotificationInfo("Tâches reportées", tachesTable.getItems().size() + " tâches ont été reportées au " + nouvelleEcheance.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
-    }
-
-    private Stage saisieEcheanceStage = null;
-
-    @Null
-    private LocalDate saisirNouvelleEcheance() {
-        LocalDate nouvelleEcheance;
-
-        if (saisieEcheanceStage == null) {
-            saisieEcheanceStage = new Stage();
-            saisieEcheanceStage.setTitle(ihm.APP_NAME + " - " + "Nouvelle échéance ?");
-            saisieEcheanceStage.getIcons().setAll(ihm.getPrimaryStage().getIcons());
-            saisieEcheanceStage.setScene(new Scene(ihm.getSaisieEcheanceView()));
-            saisieEcheanceStage.initModality(Modality.APPLICATION_MODAL);
-            ihm.getSaisieEcheanceController().getAnnulerButton().setOnAction(event -> {
-                ihm.getSaisieEcheanceController().getEcheanceDatePicker().setValue(null);
-                saisieEcheanceStage.close();
-            });
-            ihm.getSaisieEcheanceController().getValiderButton().setOnAction(event -> {
-                saisieEcheanceStage.close();
-            });
-        }
-        saisieEcheanceStage.showAndWait();
-
-        nouvelleEcheance = ihm.getSaisieEcheanceController().getEcheanceDatePicker().getValue();
-
-        return nouvelleEcheance;
-    }
-
-    private void reporterTache(@NotNull TB tacheBean, @NotNull LocalDate nouvelleEcheance) throws ControllerException {
-        tacheBean.setEcheance(nouvelleEcheance);
+        ihm.getTachesController().reporterTaches();
     }
 
 

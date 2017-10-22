@@ -16,7 +16,7 @@
             <panes>
                 <TitledPane text="Paramètres d'affichage : filtres, tris, zoom" >
                     <!--suppress JavaFxUnresolvedFxIdReference -->
-                    <Accordion fx:id="filtresAccordion">
+                    <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane">
                         <panes>
                             <!--suppress JavaFxUnresolvedFxIdReference -->
                             <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
