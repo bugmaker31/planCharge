@@ -13,14 +13,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -37,17 +36,13 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
@@ -575,7 +570,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // TODO FDA 2017/08 Décocher tous les autres filtres.
 
         for (ToggleButton filtreButton : filtresButtons()) {
-            filtreButton.setSelected(true);
+            if (filtreButton.getToggleGroup() != null) {
+                boolean estBoutonTout = estBoutonFiltreTout(filtreButton);
+                filtreButton.setSelected(estBoutonTout);
+            } else {
+                filtreButton.setSelected(true);
+            }
         }
 
         // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
@@ -727,6 +727,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         }
 
         filtrer();
+    }
+
+    private boolean estBoutonFiltreTout(@NotNull ToggleButton filtreButton) {
+        Object buttonUserData = filtreButton.getUserData();
+        return (buttonUserData instanceof String) && buttonUserData.equals("TOUT");
     }
 
     @FXML

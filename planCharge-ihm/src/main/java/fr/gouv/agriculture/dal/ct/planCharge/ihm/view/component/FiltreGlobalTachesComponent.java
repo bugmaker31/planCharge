@@ -22,12 +22,12 @@ public class FiltreGlobalTachesComponent extends HBox {
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private Accordion accordion;
+    private Accordion filtresAccordion;
 
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private TitledPane titledPane;
+    private TitledPane filtresTitledPane;
 
 
     public FiltreGlobalTachesComponent() {
@@ -47,21 +47,21 @@ public class FiltreGlobalTachesComponent extends HBox {
 
 
     @NotNull
-    public Accordion getAccordion() {
-        return accordion;
+    public Accordion getFiltresAccordion() {
+        return filtresAccordion;
     }
 
-    public void setAccordion(@NotNull Accordion accordion) {
-        this.accordion = accordion;
+    public void setFiltresAccordion(@NotNull Accordion filtresAccordion) {
+        this.filtresAccordion = filtresAccordion;
     }
 
     @NotNull
-    public TitledPane getTitledPane() {
-        return titledPane;
+    public TitledPane getFiltresTitledPane() {
+        return filtresTitledPane;
     }
 
-    public void setTitledPane(@NotNull TitledPane titledPane) {
-        this.titledPane = titledPane;
+    public void setFiltresTitledPane(@NotNull TitledPane filtresTitledPane) {
+        this.filtresTitledPane = filtresTitledPane;
     }
 
 
@@ -73,7 +73,7 @@ public class FiltreGlobalTachesComponent extends HBox {
 
 
     public void show() {
-        accordion.setExpandedPane(titledPane);
+        filtresAccordion.setExpandedPane(filtresTitledPane);
     }
 
     public void requestFocus() {

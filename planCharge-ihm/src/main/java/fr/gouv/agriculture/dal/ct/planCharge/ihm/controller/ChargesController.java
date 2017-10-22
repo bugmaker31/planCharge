@@ -165,6 +165,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
+    private ToggleButton filtrePlanifChargeToutToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
     private ToggleButton filtrePlanifInfChargeToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -177,7 +181,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
+    private ToggleButton filtreEcheanceTouteToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
     private ToggleButton filtreEcheanceTenueToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtreEcheanceNonTenueToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
@@ -1498,11 +1510,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         buttons.addAll(Arrays.asList(
                 filtrePlanifToutToggleButton,
                 filtrePlanifDemandeeDansSemestreToggleButton,
+                //
+                filtrePlanifChargeToutToggleButton,
                 filtrePlanifInfChargeToggleButton,
                 filtrePlanifSupChargeToggleButton,
                 filtrePlanifDansMoisToggleButton,
                 //
+                filtreEcheanceTouteToggleButton,
                 filtreEcheanceTenueToggleButton,
+                filtreEcheanceNonTenueToggleButton,
                 //
                 filtreSurchargeToutToggleButton,
                 filtreSurchargeRessourceToggleButton,

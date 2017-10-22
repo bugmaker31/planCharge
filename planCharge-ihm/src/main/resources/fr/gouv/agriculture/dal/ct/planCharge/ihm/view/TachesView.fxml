@@ -13,13 +13,13 @@
 >
     <top>
         <!--suppress JavaFxUnresolvedFxIdReference -->
-        <Accordion fx:id="filtresAccordion">
+        <Accordion fx:id="filtresTrisAccordion">
             <panes>
                 <!--suppress JavaFxUnresolvedFxIdReference -->
-                <TitledPane fx:id="filtresPane" animated="false" text="Filtres">
+                <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
                     <HBox spacing="2" alignment="CENTER_LEFT">
-                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" accordion="$filtresAccordion"
-                                                     titledPane="$filtresPane" alignment="CENTER"/>
+                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" filtresAccordion="$filtresTrisAccordion"
+                                                     filtresTitledPane="$filtresPane" alignment="CENTER"/>
                         <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                             <Label text="Catégorie : "/>
                             <ButtonBar>
@@ -52,9 +52,9 @@
                             <ButtonBar>
                                 <buttons>
                                     <!--TODO FDA 2017/09 Coder.-->
-                                    <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer"/>
+                                    <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer" disable="true"/>
                                     <!--TODO FDA 2017/09 Coder.-->
-                                    <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"/>
+                                    <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer" disable="true"/>
                                     <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
                                 </buttons>
                             </ButtonBar>
@@ -62,6 +62,8 @@
                         <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
                         <Button text="Rien" onAction="#activerTousFiltres"/>
                     </HBox>
+                </TitledPane>
+                <TitledPane text="Tris" animated="false">
                 </TitledPane>
             </panes>
         </Accordion>
