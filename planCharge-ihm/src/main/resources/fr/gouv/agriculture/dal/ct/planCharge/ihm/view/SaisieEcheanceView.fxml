@@ -11,7 +11,7 @@
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.SaisieEcheanceController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-            prefWidth="300" prefHeight="100"
+            prefWidth="300" prefHeight="70"
 >
     <VBox>
         <HBox>

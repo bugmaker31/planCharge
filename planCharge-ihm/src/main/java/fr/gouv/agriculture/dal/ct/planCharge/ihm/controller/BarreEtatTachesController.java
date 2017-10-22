@@ -191,6 +191,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         for (TB tacheBean : tachesTable.getItems()) {
             reporterTache(tacheBean, nouvelleEcheance);
         }
+        tachesTable.refresh(); // Pour recalculer les styles CSS.
         ihm.afficherNotificationInfo("Tâches reportées", tachesTable.getItems().size() + " tâches ont été reportées au " + nouvelleEcheance.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
     }
 
