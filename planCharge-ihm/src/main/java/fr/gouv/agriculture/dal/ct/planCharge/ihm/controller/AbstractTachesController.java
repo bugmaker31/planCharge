@@ -595,7 +595,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     void razFiltres() {
-        LOGGER.debug("razFiltres pour {}...", getClass().getSimpleName());
+        LOGGER.debug("RàZ des filtres pour {} : ", getClass().getSimpleName());
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
         // TODO FDA 2017/08 Décocher tous les autres filtres.
@@ -612,6 +612,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
 
         filtrer();
+
+        LOGGER.debug("Filtres RàZ pour {}.", getClass().getSimpleName());
     }
 
     List<ToggleButton> filtresButtons() {

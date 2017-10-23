@@ -407,9 +407,10 @@ public class ApplicationController extends AbstractController {
 
     @SuppressWarnings("WeakerAccess")
     public void majBarreEtat() {
-        LOGGER.debug("majBarreEtat...");
+        LOGGER.debug("MàJ de la barre d'état : ");
         sauvegardeRequiseCheckbox.setSelected(planChargeBean.aBesoinEtreSauvegarde());
         calculRequisCheckbox.setSelected(planChargeBean.aBesoinEtreCalcule());
+        LOGGER.debug("Barre d'état à jour.");
     }
 
 
@@ -1554,6 +1555,7 @@ public class ApplicationController extends AbstractController {
     }
 
     public void calculer() throws ControllerException {
+        LOGGER.debug("Calculs en cours...");
 
         // TODO FDA 2017/08 Afficher une barre de progression.
         ihm.getDisponibilitesController().calculerDisponibilites();
