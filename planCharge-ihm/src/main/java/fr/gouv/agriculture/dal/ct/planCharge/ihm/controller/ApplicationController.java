@@ -551,6 +551,8 @@ public class ApplicationController extends AbstractController {
                             RapportChargementAvecProgression rapportFinal =
                                     ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
 
+                            definirDateEtat(planChargeBean.getDateEtat());
+
                         } catch (ViolationsReglesGestionException e) {
                             ihm.afficherViolationsReglesGestion(
                                     "Impossible de charger le plan de charge.", e.getLocalizedMessage(),
@@ -564,8 +566,6 @@ public class ApplicationController extends AbstractController {
                         calculer();
                     }
             );
-
-            definirDateEtat(planChargeBean.getDateEtat());
 
             ihm.getTachesController().razFiltres();
             ihm.getChargesController().razFiltres();

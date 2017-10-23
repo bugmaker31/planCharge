@@ -172,6 +172,7 @@ public class RevueWizardController extends AbstractController {
         ihm.getTachesController().activerTousFiltres();
         ihm.getTachesController().getFiltrePeriodeEchueToggleButton().setSelected(true);
         ihm.getTachesController().filtrer();
+        ihm.afficherNotificationInfo("Tâches filtrées", "Seules les tâches échues sont désormais affichées.");
     }
 
     @FXML

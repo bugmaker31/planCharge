@@ -572,7 +572,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     void razFiltres() {
-        LOGGER.debug("razFiltres...");
+        LOGGER.debug("razFiltres pour {}...", getClass().getSimpleName());
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
         // TODO FDA 2017/08 Décocher tous les autres filtres.

@@ -691,7 +691,7 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Image FILTERABLE_INDICATOR_IMAGE = new Image("/images/decoration-filterable .png");
 
-    public static void afficherNotificationInfo(@NotNull String titre, @NotNull String message) {
+    public void afficherNotificationInfo(@NotNull String titre, @NotNull String message) {
         new Notification()
                 .title(titre)
                 .text(message)
@@ -699,7 +699,7 @@ public class PlanChargeIhm extends Application {
                 .showInformation();
     }
 
-    public static void afficherNotificationWarning(@NotNull String titre, @NotNull String message) {
+    public void afficherNotificationWarning(@NotNull String titre, @NotNull String message) {
         new Notification()
                 .title(titre)
                 .text(message)

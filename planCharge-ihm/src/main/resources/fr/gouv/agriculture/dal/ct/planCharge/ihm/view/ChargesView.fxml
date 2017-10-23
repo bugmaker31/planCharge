@@ -72,7 +72,7 @@
                                                 <Label text="Planification : "/>
                                                 <ButtonBar>
                                                     <buttons>
-                                                        <ToggleButton fx:id="filtrePlanifToutToggleButton" text="Tout" onAction="#filtrer" userData="TOUT"/>
+                                                        <!--<ToggleButton fx:id="filtrePlanifToutToggleButton" text="Tout" onAction="#filtrer" userData="TOUT"/>-->
                                                         <ToggleButton fx:id="filtrePlanifDemandeeDansSemestreToggleButton" text="Demandée dans le semestre"
                                                                       onAction="#filtrer"/>
                                                         <SegmentedButton>

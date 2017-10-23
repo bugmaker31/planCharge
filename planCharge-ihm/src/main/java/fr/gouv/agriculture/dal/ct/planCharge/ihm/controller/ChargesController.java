@@ -160,10 +160,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         @FXML
         private VBox planificationsTableVBox;
     */
+/*
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
     private ToggleButton filtrePlanifToutToggleButton;
+*/
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
@@ -1517,7 +1519,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         List<ToggleButton> buttons = new ArrayList<>(30);
         buttons.addAll(super.filtresButtons());
         buttons.addAll(Arrays.asList(
-                filtrePlanifToutToggleButton,
+//                filtrePlanifToutToggleButton,
                 filtrePlanifDemandeeDansSemestreToggleButton,
                 //
                 filtrePlanifChargeToutToggleButton,
@@ -1547,9 +1549,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     private boolean estTacheAvecFiltrePlanifAVoir(@NotNull PlanificationTacheBean tache) throws ControllerException {
+/*
         if (filtrePlanifToutToggleButton.isSelected()) {
             return true;
         }
+*/
         if (filtrePlanifDemandeeDansSemestreToggleButton.isSelected()) {
             if ((planChargeBean.getDateEtat() == null) || (tache.getDebut() == null)) {
                 return true;
