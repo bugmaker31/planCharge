@@ -340,7 +340,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("OverlyLongMethod")
     @Override
     protected void initialize() throws ControllerException {
-        LOGGER.debug("Initialisation...");
 //        super.initialize();
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
@@ -513,8 +512,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Gestion de la sélection :
         getTachesTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
         getTachesTable().getSelectionModel().setCellSelectionEnabled(true);
-
-        LOGGER.info("Initialisé.");
     }
 
     MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TB, MenuButton> cellData) {

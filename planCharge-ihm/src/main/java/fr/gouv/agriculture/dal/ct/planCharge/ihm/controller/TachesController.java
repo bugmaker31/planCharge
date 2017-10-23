@@ -121,8 +121,9 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
 
                 super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
-                tachesTable.setOnKeyReleased(event -> {
 /* Raccourci-clavier trop dangereux, on préfère obliger l'utilisateur à cliquer sur un menu.
+   De plus, écrase le "onKeyReleased" défini par la classe mère... Trouver mieux, avant de réactiver.
+                tachesTable.setOnKeyReleased(event -> {
                     if (event.getCode() == KeyCode.DELETE) {
                         if (!tachesTable.isFocused()) {
                             return;
@@ -132,8 +133,8 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
                         //noinspection UnnecessaryReturnStatement
                         return;
                     }
-*/
                 });
+*/
 
 
             });
