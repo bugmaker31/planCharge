@@ -9,7 +9,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
@@ -17,7 +16,6 @@ import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +106,6 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
     public String getTitre() {
         return "Tâches";
     }
-
 
     /**
      * Initializes the controller class. This method is automatically called
