@@ -23,6 +23,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -161,6 +162,26 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
+    private Accordion parametresAffichageAccordion;
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private TitledPane parametresAffichagePane;
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private Accordion filtresAccordion;
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private TitledPane filtresPane;
+
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
     private FiltreGlobalTachesComponent filtreGlobalComponent;
 
     @FXML
@@ -209,6 +230,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtrePeriodeContemporaineToggleButton;
+    @FXML
+    @NotNull
+    @SuppressWarnings("NullableProblems")
+    private ToggleButton filtrePeriodeAVenirDemandeeDansSemestreToggleButton;
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
@@ -518,8 +543,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // FIXME FDA 2017/08 Ne fonctionne que si l'utilisateur a focusé sur la table avant de taper Ctrl+F. Il faudrait ajouter le handler sur la Scene du "primary" Stage, mais ce dernier n'est pas encore initialisé (NPE).
         getTachesTable().setOnKeyReleased(event -> {
             if (event.isControlDown() && (event.getCode() == KeyCode.F)) {
-                filtreGlobalComponent.show();
-                filtreGlobalComponent.requestFocus();
+                parametresAffichageAccordion.setExpandedPane(parametresAffichagePane);
+                filtresAccordion.setExpandedPane(filtresPane);
+                Platform.runLater(() -> filtreGlobalComponent.getFiltreGlobalField().requestFocus());
                 event.consume(); // TODO FDA 2017/08 Confirmer.
                 return;
             }
@@ -605,6 +631,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 filtreStatutClosToggleButton,
                 //
                 filtrePeriodeAVenirToggleButton,
+                filtrePeriodeAVenirDemandeeDansSemestreToggleButton,
                 filtrePeriodeContemporaineToggleButton,
                 filtrePeriodeEchueToggleButton
                 // TODO FDA 2017/08 Cocher tous les autres filtres.
@@ -709,6 +736,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @SuppressWarnings("MethodWithMoreThanThreeNegations")
     private boolean estTacheAvecPeriodeAVoir(@NotNull TB tache) {
+        if (filtrePeriodeAVenirDemandeeDansSemestreToggleButton.isSelected()) {
+            if ((planChargeBean.getDateEtat() == null) || (tache.getDebut() == null)) {
+                return true;
+            }
+            if (tache.getDebut().isBefore(planChargeBean.getDateEtat().plusMonths(6L))) {
+                return true;
+            }
+        }
         //noinspection OverlyComplexBooleanExpression
         if ((tache.getEcheance() != null) && (planChargeBean.getDateEtat() != null)) {
             if (filtrePeriodeEchueToggleButton.isSelected() && tache.getEcheance().isBefore(planChargeBean.getDateEtat())) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.

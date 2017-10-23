@@ -169,10 +169,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private ToggleButton filtrePlanifDemandeeDansSemestreToggleButton;
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    @FXML
     private ToggleButton filtrePlanifChargeToutToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -992,7 +988,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 //        FIXME FDA 2017/10 Les colonnes sont toujours réagençables.
         TableViews.disableReagencingColumns(planificationsTable);
 
-        TableViews.ensureDisplayingRows(planificationsTable, 30);
+        TableViews.ensureDisplayingRows(planificationsTable, 25);
 /*
         nbrLignesMaxTablePlanificationsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             Integer nbrlignes = Objects.value(newValue, 30);
@@ -1000,7 +996,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         });
 */
         nbrLignesMaxTablePlanificationsSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Integer nbrlignes = Objects.value(newValue.intValue(), 30);
+            Integer nbrlignes = Objects.value(newValue.intValue(), 25);
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
 
@@ -1520,7 +1516,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         buttons.addAll(super.filtresButtons());
         buttons.addAll(Arrays.asList(
 //                filtrePlanifToutToggleButton,
-                filtrePlanifDemandeeDansSemestreToggleButton,
                 //
                 filtrePlanifChargeToutToggleButton,
                 filtrePlanifInfChargeToggleButton,
@@ -1554,14 +1549,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             return true;
         }
 */
-        if (filtrePlanifDemandeeDansSemestreToggleButton.isSelected()) {
-            if ((planChargeBean.getDateEtat() == null) || (tache.getDebut() == null)) {
-                return true;
-            }
-            if (tache.getDebut().isBefore(planChargeBean.getDateEtat().plusMonths(6L))) {
-                return true;
-            }
-        }
         if (filtrePlanifInfChargeToggleButton.isSelected()) {
             if (tache.getCharge() == null) {
                 return true;

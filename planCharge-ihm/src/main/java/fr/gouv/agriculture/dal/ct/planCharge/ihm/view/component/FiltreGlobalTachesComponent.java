@@ -3,10 +3,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -18,16 +21,6 @@ public class FiltreGlobalTachesComponent extends HBox {
     @NotNull
     @SuppressWarnings("NullableProblems")
     private FiltreGlobalTachesController controller;
-
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private Accordion filtresAccordion;
-
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
-    private TitledPane filtresTitledPane;
 
 
     public FiltreGlobalTachesComponent() {
@@ -46,38 +39,9 @@ public class FiltreGlobalTachesComponent extends HBox {
     }
 
 
-    @NotNull
-    public Accordion getFiltresAccordion() {
-        return filtresAccordion;
-    }
-
-    public void setFiltresAccordion(@NotNull Accordion filtresAccordion) {
-        this.filtresAccordion = filtresAccordion;
-    }
-
-    @NotNull
-    public TitledPane getFiltresTitledPane() {
-        return filtresTitledPane;
-    }
-
-    public void setFiltresTitledPane(@NotNull TitledPane filtresTitledPane) {
-        this.filtresTitledPane = filtresTitledPane;
-    }
-
-
     @SuppressWarnings("WeakerAccess")
     @NotNull
     public TextField getFiltreGlobalField() {
         return controller.getFiltreGlobalField();
     }
-
-
-    public void show() {
-        filtresAccordion.setExpandedPane(filtresTitledPane);
-    }
-
-    public void requestFocus() {
-        getFiltreGlobalField().requestFocus();
-    }
-
 }

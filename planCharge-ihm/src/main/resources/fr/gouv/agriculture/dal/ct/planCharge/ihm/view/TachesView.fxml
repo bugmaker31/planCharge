@@ -12,56 +12,64 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
-        <Accordion style="">
+        <Accordion fx:id="parametresAffichageAccordion">
             <panes>
-                <TitledPane text="Paramètres d'affichage : filtres, tris, zoom" >
-                    <!--suppress JavaFxUnresolvedFxIdReference -->
+                <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris">
                     <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane">
                         <panes>
-                            <!--suppress JavaFxUnresolvedFxIdReference -->
                             <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
                                 <HBox spacing="2" alignment="CENTER_LEFT">
-                                    <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" filtresAccordion="$filtresAccordion"
-                                                                 filtresTitledPane="$filtresPane" alignment="CENTER"/>
+                                    <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" alignment="CENTER"/>
+                                    <fx:define>
+                                        <Double fx:id="buttonSpace" fx:value="10"/>
+                                    </fx:define>
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                         <Label text="Catégorie : "/>
-                                        <ButtonBar>
-                                            <buttons>
-                                                <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
-                                            </buttons>
-                                        </ButtonBar>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpace">
+                                            <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
+                                        </HBox>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
                                     </VBox>
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                         <Label text="Statut : "/>
-                                        <ButtonBar>
-                                            <buttons>
-                                                <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="Récurrent" fx:id="filtreStatutRecurrentToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="Reporté" fx:id="filtreStatutReporteToggleButton" onAction="#filtrer"/>
-                                                <ToggleButton text="Clos" fx:id="filtreStatutClosToggleButton" onAction="#filtrer">
-                                                    <tooltip>
-                                                        <Tooltip text="Clos = Annulé ou Doublon ou Terminé"/>
-                                                    </tooltip>
-                                                </ToggleButton>
-                                            </buttons>
-                                        </ButtonBar>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpace">
+                                            <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Récurrent" fx:id="filtreStatutRecurrentToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Reporté" fx:id="filtreStatutReporteToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Clos" fx:id="filtreStatutClosToggleButton" onAction="#filtrer">
+                                                <tooltip>
+                                                    <Tooltip text="Clos = Annulé ou Doublon ou Terminé"/>
+                                                </tooltip>
+                                            </ToggleButton>
+                                        </HBox>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
                                     </VBox>
                                     <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                         <Label text="Période : "/>
-                                        <ButtonBar>
-                                            <buttons>
-                                                <!--TODO FDA 2017/09 Coder.-->
-                                                <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer" disable="true"/>
-                                                <!--TODO FDA 2017/09 Coder.-->
-                                                <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"
-                                                              disable="true"/>
-                                                <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
-                                            </buttons>
-                                        </ButtonBar>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpace">
+                                            <!--TODO FDA 2017/09 Coder.-->
+                                            <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer" disable="true"/>
+                                            <ToggleButton text="Demandée dans le semestre" fx:id="filtrePeriodeAVenirDemandeeDansSemestreToggleButton"
+                                                          onAction="#filtrer"/>
+                                            <!--TODO FDA 2017/09 Coder.-->
+                                            <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"
+                                                          disable="true"/>
+                                            <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
+                                        </HBox>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
                                     </VBox>
                                     <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
                                     <Button text="Rien" onAction="#activerTousFiltres"/>
