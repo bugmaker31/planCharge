@@ -403,6 +403,7 @@ public class PlanChargeIhm extends Application {
             //
             primaryStage.show();
 
+/*
             // Chargement des données utilisées dernièrement (if any) :
             LocalDate dateEtatPrec = dateEtatPrecedente();
             if (dateEtatPrec != null) {
@@ -412,6 +413,7 @@ public class PlanChargeIhm extends Application {
                     applicationController.charger(dateEtatPrec);
                 }
             }
+*/
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
 //                applicationController.afficherModuleJoursFeries();
@@ -424,7 +426,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
-//                applicationController.afficherAssistantRevue();
+                applicationController.afficherAssistantRevue();
             }
 
             LOGGER.info("Application démarrée.");

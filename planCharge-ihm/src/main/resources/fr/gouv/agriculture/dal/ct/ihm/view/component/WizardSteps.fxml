@@ -8,10 +8,12 @@
           AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
+    <!--TODO FDA 2017/10 Mettre les codes couleur dans la CSS.-->
+
     <FontAwesomeIconView fx:id="modeleEtapeCourante" glyphName="CIRCLE" size="48px" glyphStyle="-fx-fill: black"/>
     <!--GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"-->
 
-    <FontAwesomeIconView fx:id="modeleEtapeNonCourante" glyphName="CIRCLE_O" size="48px" glyphStyle="-fx-fill: black"/>
+    <FontAwesomeIconView fx:id="modeleEtapeNonCourante" glyphName="CIRCLE_THIN" size="48px" glyphStyle="-fx-fill: black"/>
     <!--GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="1"-->
 
     <Label fx:id="noEtapeCouranteLabel" style="-fx-text-fill: white"/>

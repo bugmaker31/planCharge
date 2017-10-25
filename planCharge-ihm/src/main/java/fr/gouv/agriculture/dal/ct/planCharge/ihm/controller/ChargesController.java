@@ -1727,7 +1727,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
 
     public void calculerCharges() throws ControllerException {
-        LOGGER.debug("Calcul des charges  : ");
+        LOGGER.debug("Calcul des charges : ");
         calculateurCharges.calculer();
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
         LOGGER.debug("Charges calculées.");

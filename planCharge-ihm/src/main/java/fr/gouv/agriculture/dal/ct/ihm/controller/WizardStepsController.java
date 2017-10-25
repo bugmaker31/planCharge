@@ -59,10 +59,9 @@ public class WizardStepsController extends AbstractController {
         return noEtapeCouranteLabel;
     }
 
+
     @Override
     protected void initialize() throws ControllerException {
         // Rien, pour l'instant.
     }
-
-
 }

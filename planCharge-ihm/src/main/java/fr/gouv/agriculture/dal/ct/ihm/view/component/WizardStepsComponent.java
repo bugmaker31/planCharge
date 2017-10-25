@@ -30,28 +30,9 @@ public class WizardStepsComponent extends GridPane {
 
     @FXML
     @NotNull
-    public Integer getNoEtape() {
-        return noEtape;
-    }
-
-    public void setNoEtape(@NotNull Integer noEtape) {
-        this.noEtape = noEtape;
-    }
-
-    @FXML
-    @NotNull
     @SuppressWarnings("NullableProblems")
     private Integer nbrEtapes;
 
-    @FXML
-    @NotNull
-    public Integer getNbrEtapes() {
-        return nbrEtapes;
-    }
-
-    public void setNbrEtapes(@NotNull Integer nbrEtapes) {
-        this.nbrEtapes = nbrEtapes;
-    }
 
     public WizardStepsComponent(@NamedArg("nbrEtapes") int nbrEtapes, @NamedArg("noEtape") int noEtape) {
         super();
@@ -89,8 +70,7 @@ public class WizardStepsComponent extends GridPane {
 
     @NotNull
     private FontAwesomeIconView cloneEtape(@NotNull FontAwesomeIconView modeleEtape) {
-        FontAwesomeIcon icon;
-        FontAwesomeIconView etape = new FontAwesomeIconView(icon, modeleEtape.getSize());
+        FontAwesomeIconView etape = new FontAwesomeIconView(modeleEtape.getIcon(), modeleEtape.getSize());
         return etape;
     }
 }

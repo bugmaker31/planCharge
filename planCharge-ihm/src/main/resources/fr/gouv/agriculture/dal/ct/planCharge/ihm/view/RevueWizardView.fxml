@@ -31,7 +31,7 @@
     >
         <content>
             <VBox>
-                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="1"/>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="1" alignment="CENTER"/>
                 <GridPane>
                     <CheckBox text="Indiquer la nouvelle date d'état (généralement la date d'état actuelle + 1 semaine)." wrapText="true"
                               GridPane.rowIndex="0" GridPane.columnIndex="0"/>
@@ -46,7 +46,7 @@
     >
         <content>
             <VBox>
-                <!--<WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="2"/>-->
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="2"/>
                 <GridPane>
                     <CheckBox text="Saisir les jours fériés." wrapText="true"
                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -83,74 +83,61 @@
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <GridPane>
-                <FontAwesomeIconView glyphName="CIRCLE-THIN" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"/>
-                <FontAwesomeIconView glyphName="CIRCLE-THIN" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="1"/>
-                <FontAwesomeIconView glyphName="CIRCLE" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="2"/>
-                <FontAwesomeIconView glyphName="CIRCLE-THIN" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="1"/>
-                <FontAwesomeIconView glyphName="CIRCLE-THIN" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="1"/>
-                <Label text="3" style="-fx-text-fill: white"
-                       GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"/>
+            <VBox>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="3"/>
+                <GridPane>
 
-                <CheckBox text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."
-                          wrapText="true"
-                          GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <Button text="Gérer les tâches" onAction="#afficherModuleTaches"
-                        GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <CheckBox text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."
+                              wrapText="true"
+                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <Button text="Gérer les tâches" onAction="#afficherModuleTaches"
+                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                <CheckBox text="Prolonger les tâches échues."
-                          GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <HBox GridPane.rowIndex="2" GridPane.columnIndex="1">
-                    <Button text="Afficher tâches échues" onAction="#filtrerTachesEchues"/>
-                    <Button text="Reporter les tâches" onAction="#reporterTaches"/>
-                </HBox>
-            </GridPane>
+                    <CheckBox text="Prolonger les tâches échues."
+                              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <HBox GridPane.rowIndex="2" GridPane.columnIndex="1">
+                        <Button text="Afficher tâches échues" onAction="#filtrerTachesEchues"/>
+                        <Button text="Reporter les tâches" onAction="#reporterTaches"/>
+                    </HBox>
+                </GridPane>
+            </VBox>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeMajPlanChargePane" headerText="Mettre à jour le plan de charge"
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <GridPane>
-                <FontAwesomeIconView glyphName="CIRCLE" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"/>
-                <Label text="4" style="-fx-text-fill: white"
-                       GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"/>
-
-                <CheckBox
-                        text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."
-                        wrapText="true"
-                        GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <CheckBox text="Eliminer toutes les surcharges (ressources et profils)."
-                          wrapText="true"
-                          GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"
-                        GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
-            </GridPane>
+            <VBox>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="4"/>
+                <GridPane>
+                    <CheckBox
+                            text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."
+                            wrapText="true"
+                            GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <CheckBox text="Eliminer toutes les surcharges (ressources et profils)."
+                              wrapText="true"
+                              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"
+                            GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
+                </GridPane>
+            </VBox>
         </content>
     </WizardPane>
     <WizardPane fx:id="etapeDiffuserPane" headerText="Diffuser aux personnes concernées"
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <GridPane>
-                <FontAwesomeIconView glyphName="CIRCLE" size="48px" glyphStyle="-fx-fill: black"
-                                     GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"/>
-                <Label text="5" style="-fx-text-fill: white"
-                       GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"/>
-
-                <CheckBox text="Envoyer le nouveau plan de charge aux CPIs, avec les changements et l'ordre de priorité global entre projet/appli."
-                          wrapText="true"
-                          GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <CheckBox text="Envoyer le nouveau plan de charge aux RTs, ainsi que l'ordre de priorité global entre projet/appli."
-                          wrapText="true"
-                          GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            </GridPane>
+            <VBox>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="5"/>
+                <GridPane>
+                    <CheckBox text="Envoyer le nouveau plan de charge aux CPIs, avec les changements et l'ordre de priorité global entre projet/appli."
+                              wrapText="true"
+                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <CheckBox text="Envoyer le nouveau plan de charge aux RTs, ainsi que l'ordre de priorité global entre projet/appli."
+                              wrapText="true"
+                              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                </GridPane>
+            </VBox>
         </content>
     </WizardPane>
     <!--
