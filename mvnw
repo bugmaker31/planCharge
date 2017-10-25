@@ -1,1 +1,1 @@
-mvn --errors -P env_exec.local, os_exec.unix $*
+mvn --errors -P env_exec.local,os_exec.unix $*
