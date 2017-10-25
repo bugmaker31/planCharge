@@ -17,8 +17,9 @@
         <Accordion fx:id="parametresAffichageAccordion">
             <panes>
                 <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris, zoom">
-                    <AnchorPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                        <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane" layoutX="5.0" layoutY="5.0" >
+                    <AnchorPane>
+                        <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"
+                                   AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
                             <panes>
                                 <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
                                     <HBox spacing="2" alignment="CENTER_LEFT">
