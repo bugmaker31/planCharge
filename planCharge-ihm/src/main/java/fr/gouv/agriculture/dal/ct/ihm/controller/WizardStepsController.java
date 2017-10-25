@@ -12,22 +12,6 @@ import javax.validation.constraints.NotNull;
  */
 public class WizardStepsController extends AbstractController {
 
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    private Integer nbrEtapes;
-
-    public void setNbrEtapes(@NotNull Integer nbrEtapes) {
-        this.nbrEtapes = nbrEtapes;
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    private Integer noEtape;
-
-    public void setNoEtape(@NotNull Integer noEtape) {
-        this.noEtape = noEtape;
-    }
-
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull

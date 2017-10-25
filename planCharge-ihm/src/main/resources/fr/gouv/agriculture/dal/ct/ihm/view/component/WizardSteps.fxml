@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
 <GridPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="fr.gouv.agriculture.dal.ct.ihm.controller.WizardStepsController"
           AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
-    <!--TODO FDA 2017/10 Mettre les codes couleur, lmes tailles des polices, etc. dans la CSS.-->
-
-    <FontAwesomeIconView fx:id="modeleLienEntreEtapesView" glyphName="LONG_ARROW_RIGHT" size="24px" glyphStyle="-fx-fill: black"/>
-    <FontAwesomeIconView fx:id="modeleEtapeCouranteView" glyphName="CIRCLE" size="24px" glyphStyle="-fx-fill: black"/>
-    <FontAwesomeIconView fx:id="modeleEtapeNonCouranteView" glyphName="CIRCLE_THIN" size="24px" glyphStyle="-fx-fill: black"/>
+    <!--TODO FDA 2017/10 Mettre les codes couleur, les tailles des polices, etc. dans la CSS.-->
+    <fx:define>
+        <String fx:id="ICON_SIZE" fx:value="48px"/>
+    </fx:define>
+    <FontAwesomeIconView fx:id="modeleLienEntreEtapesView" glyphName="LONG_ARROW_RIGHT" size="$ICON_SIZE" glyphStyle="-fx-fill: black"/>
+    <FontAwesomeIconView fx:id="modeleEtapeCouranteView" glyphName="CIRCLE" size="$ICON_SIZE" glyphStyle="-fx-fill: black"/>
+    <FontAwesomeIconView fx:id="modeleEtapeNonCouranteView" glyphName="CIRCLE_THIN" size="$ICON_SIZE" glyphStyle="-fx-fill: black"/>
     <Label fx:id="noEtapeCouranteLabel" style="-fx-text-fill: yellow; -fx-font-size: 24pt"/>
 </GridPane>

@@ -17,6 +17,10 @@ import java.io.IOException;
  */
 public class WizardStepsComponent extends GridPane {
 
+    private static final int NO_LIGNE_NO_ETAPE = 1;
+    private static final int NO_LIGNE_ICONE_ETAPE = 2;
+
+
     @FXML
     @NotNull
     private WizardStepsController controller;
@@ -53,40 +57,56 @@ public class WizardStepsComponent extends GridPane {
     }
 
     private void init() {
-        {
-            Label noEtapeCouranteLabel = controller.getNoEtapeCouranteLabel();
-            noEtapeCouranteLabel.setText(noEtape + " / " + nbrEtapes);
-            GridPane.setColumnIndex(noEtapeCouranteLabel, noEtape - 1);
-            GridPane.setRowIndex(noEtapeCouranteLabel, 0);
-        }
-        {
-            FontAwesomeIconView modeleEtapeCourante = controller.getModeleEtapeCouranteView();
-            FontAwesomeIconView modeleEtapeNonCourante = controller.getModeleEtapeNonCouranteView();
-            FontAwesomeIconView modeleLienEntreEtapes = controller.getModeleLienEntreEtapesView();
-            int idxColonne = 0;
-            for (int cptEtape = 1; cptEtape <= nbrEtapes; cptEtape++) {
-                if (cptEtape > 1) {
-                    FontAwesomeIconView lienEntreEtapesView = cloneIconView(modeleLienEntreEtapes);
-                    add(lienEntreEtapesView, idxColonne++, 0);
-                }
-                FontAwesomeIconView etape;
-                if (cptEtape == noEtape) {
-                    etape = cloneIconView(modeleEtapeCourante);
-                } else {
-                    etape = cloneIconView(modeleEtapeNonCourante);
-                }
-                add(etape, idxColonne++, 0);
+        // Récupération (puis suppression) des modèles des View :
+        Label noEtapeCouranteLabel = controller.getNoEtapeCouranteLabel();
+        FontAwesomeIconView modeleEtapeCourante = controller.getModeleEtapeCouranteView();
+        FontAwesomeIconView modeleEtapeNonCourante = controller.getModeleEtapeNonCouranteView();
+        FontAwesomeIconView modeleLienEntreEtapes = controller.getModeleLienEntreEtapesView();
+        getChildren().removeAll(noEtapeCouranteLabel, modeleEtapeCourante, modeleEtapeNonCourante, modeleLienEntreEtapes);
+
+        // Génération de 1 View par étape, plus 1 View pour chaque espace "inter-étape" :
+        int idxColonne = 0;
+        for (int cptEtape = 1; cptEtape <= nbrEtapes; cptEtape++) {
+
+            // View "inter-étape" :
+            if (cptEtape > 1) {
+                FontAwesomeIconView lienEntreEtapesView = cloneIconView(modeleLienEntreEtapes);
+                add(lienEntreEtapesView, idxColonne++, NO_LIGNE_ICONE_ETAPE - 1);
             }
-            modeleEtapeCourante.setVisible(false);
-            modeleEtapeNonCourante.setVisible(false);
-            modeleLienEntreEtapes.setVisible(false);
+
+            // Pour l'étape : le IconView + le Label) :
+            FontAwesomeIconView etape;
+            if (cptEtape == noEtape) {
+                etape = cloneIconView(modeleEtapeCourante);
+            } else {
+                etape = cloneIconView(modeleEtapeNonCourante);
+            }
+            add(etape, idxColonne, NO_LIGNE_ICONE_ETAPE - 1);
+            //
+            Label noEtapeLabel = cloneLabel(noEtapeCouranteLabel);
+            noEtapeLabel.setText(cptEtape + " / " + nbrEtapes);
+            add(noEtapeLabel, idxColonne, NO_LIGNE_NO_ETAPE - 1);
+            //
+            idxColonne++;
         }
     }
 
+    private static int cptLabel = 0;
+
     @NotNull
-    private FontAwesomeIconView cloneIconView(@NotNull FontAwesomeIconView modeleEtape) {
-        FontAwesomeIcon icon = FontAwesomeIcon.valueOf(modeleEtape.getGlyphName());
-        FontAwesomeIconView etape = new FontAwesomeIconView(icon, modeleEtape.getSize());
-        return etape;
+    private Label cloneLabel(@NotNull Label label) {
+        Label clone = new Label(label.getText(), label.getGraphic());
+        clone.setId(label.getId() + "_" + (++cptLabel));
+        return clone;
+    }
+
+    private static int cptIconView = 0;
+
+    @NotNull
+    private FontAwesomeIconView cloneIconView(@NotNull FontAwesomeIconView iconView) {
+        FontAwesomeIcon icon = FontAwesomeIcon.valueOf(iconView.getGlyphName());
+        FontAwesomeIconView clone = new FontAwesomeIconView(icon, iconView.getSize());
+        clone.setId(iconView.getId() + "_" + (++cptIconView));
+        return clone;
     }
 }
