@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<GridPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="fr.gouv.agriculture.dal.ct.ihm.controller.WizardStepsController"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+>
+    <FontAwesomeIconView fx:id="modeleEtapeCourante" glyphName="CIRCLE" size="48px" glyphStyle="-fx-fill: black"/>
+    <!--GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"-->
+
+    <FontAwesomeIconView fx:id="modeleEtapeNonCourante" glyphName="CIRCLE_O" size="48px" glyphStyle="-fx-fill: black"/>
+    <!--GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="1"-->
+
+    <Label fx:id="noEtapeCouranteLabel" style="-fx-text-fill: white"/>
+    <!--GridPane.rowIndex="$idxLigneEtape" GridPane.columnIndex="0"-->
+</GridPane>
