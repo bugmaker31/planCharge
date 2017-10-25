@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.ihm.controller;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import fr.gouv.agriculture.dal.ct.ihm.view.component.WizardStepsComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.AbstractController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -32,21 +31,21 @@ public class WizardStepsController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private FontAwesomeIconView modeleEtapeCourante;
+    private FontAwesomeIconView modeleEtapeCouranteView;
 
     @NotNull
-    public FontAwesomeIconView getModeleEtapeCourante() {
-        return modeleEtapeCourante;
+    public FontAwesomeIconView getModeleEtapeCouranteView() {
+        return modeleEtapeCouranteView;
     }
 
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private FontAwesomeIconView modeleEtapeNonCourante;
+    private FontAwesomeIconView modeleEtapeNonCouranteView;
 
     @NotNull
-    public FontAwesomeIconView getModeleEtapeNonCourante() {
-        return modeleEtapeNonCourante;
+    public FontAwesomeIconView getModeleEtapeNonCouranteView() {
+        return modeleEtapeNonCouranteView;
     }
 
     @FXML
@@ -57,6 +56,20 @@ public class WizardStepsController extends AbstractController {
     @NotNull
     public Label getNoEtapeCouranteLabel() {
         return noEtapeCouranteLabel;
+    }
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private FontAwesomeIconView modeleLienEntreEtapesView;
+
+    @NotNull
+    public FontAwesomeIconView getModeleLienEntreEtapesView() {
+        return modeleLienEntreEtapesView;
+    }
+
+    public void setModeleLienEntreEtapesView(@NotNull FontAwesomeIconView modeleLienEntreEtapesView) {
+        this.modeleLienEntreEtapesView = modeleLienEntreEtapesView;
     }
 
 

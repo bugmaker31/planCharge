@@ -1,6 +1,5 @@
 package fr.gouv.agriculture.dal.ct.ihm.view.component;
 
-import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import fr.gouv.agriculture.dal.ct.ihm.controller.WizardStepsController;
@@ -50,27 +49,44 @@ public class WizardStepsComponent extends GridPane {
         }
         controller = fxmlLoader.getController();
 
-        Label noEtapeCouranteLabel = controller.getNoEtapeCouranteLabel();
-        GridPane.setColumnIndex(noEtapeCouranteLabel, noEtape - 1);
+        init();
+    }
 
-        FontAwesomeIconView modeleEtapeCourante = controller.getModeleEtapeCourante();
-        FontAwesomeIconView modeleEtapeNonCourante = controller.getModeleEtapeNonCourante();
-        for (int cptEtape = 1; cptEtape <= nbrEtapes; cptEtape++) {
-            FontAwesomeIconView etape;
-            if (cptEtape == noEtape) {
-                etape = cloneEtape(modeleEtapeCourante);
-            } else {
-                etape = cloneEtape(modeleEtapeNonCourante);
-            }
-            add(etape, cptEtape - 1, 0);
+    private void init() {
+        {
+            Label noEtapeCouranteLabel = controller.getNoEtapeCouranteLabel();
+            noEtapeCouranteLabel.setText(noEtape + " / " + nbrEtapes);
+            GridPane.setColumnIndex(noEtapeCouranteLabel, noEtape - 1);
+            GridPane.setRowIndex(noEtapeCouranteLabel, 0);
         }
-        modeleEtapeCourante.setVisible(false);
-        modeleEtapeNonCourante.setVisible(false);
+        {
+            FontAwesomeIconView modeleEtapeCourante = controller.getModeleEtapeCouranteView();
+            FontAwesomeIconView modeleEtapeNonCourante = controller.getModeleEtapeNonCouranteView();
+            FontAwesomeIconView modeleLienEntreEtapes = controller.getModeleLienEntreEtapesView();
+            int idxColonne = 0;
+            for (int cptEtape = 1; cptEtape <= nbrEtapes; cptEtape++) {
+                if (cptEtape > 1) {
+                    FontAwesomeIconView lienEntreEtapesView = cloneIconView(modeleLienEntreEtapes);
+                    add(lienEntreEtapesView, idxColonne++, 0);
+                }
+                FontAwesomeIconView etape;
+                if (cptEtape == noEtape) {
+                    etape = cloneIconView(modeleEtapeCourante);
+                } else {
+                    etape = cloneIconView(modeleEtapeNonCourante);
+                }
+                add(etape, idxColonne++, 0);
+            }
+            modeleEtapeCourante.setVisible(false);
+            modeleEtapeNonCourante.setVisible(false);
+            modeleLienEntreEtapes.setVisible(false);
+        }
     }
 
     @NotNull
-    private FontAwesomeIconView cloneEtape(@NotNull FontAwesomeIconView modeleEtape) {
-        FontAwesomeIconView etape = new FontAwesomeIconView(modeleEtape.getIcon(), modeleEtape.getSize());
+    private FontAwesomeIconView cloneIconView(@NotNull FontAwesomeIconView modeleEtape) {
+        FontAwesomeIcon icon = FontAwesomeIcon.valueOf(modeleEtape.getGlyphName());
+        FontAwesomeIconView etape = new FontAwesomeIconView(icon, modeleEtape.getSize());
         return etape;
     }
 }

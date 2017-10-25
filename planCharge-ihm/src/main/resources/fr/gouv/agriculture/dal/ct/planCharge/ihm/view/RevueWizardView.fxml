@@ -46,7 +46,7 @@
     >
         <content>
             <VBox>
-                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="2"/>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="2" alignment="CENTER"/>
                 <GridPane>
                     <CheckBox text="Saisir les jours fériés." wrapText="true"
                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -84,7 +84,7 @@
     >
         <content>
             <VBox>
-                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="3"/>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="3" alignment="CENTER"/>
                 <GridPane>
 
                     <CheckBox text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."
@@ -108,7 +108,7 @@
     >
         <content>
             <VBox>
-                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="4"/>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="4" alignment="CENTER"/>
                 <GridPane>
                     <CheckBox
                             text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."
@@ -128,7 +128,7 @@
     >
         <content>
             <VBox>
-                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="5"/>
+                <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="5" alignment="CENTER"/>
                 <GridPane>
                     <CheckBox text="Envoyer le nouveau plan de charge aux CPIs, avec les changements et l'ordre de priorité global entre projet/appli."
                               wrapText="true"
