@@ -7,7 +7,7 @@ sudo: false
 addons:
   apt:
     packages:
-    - libreoffice
+#    - libreoffice
     
 before_install:
   - chmod +x mvnw
