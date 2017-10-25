@@ -91,22 +91,16 @@ public class WizardStepsComponent extends GridPane {
         }
     }
 
-    private static int cptLabel = 0;
-
     @NotNull
     private Label cloneLabel(@NotNull Label label) {
         Label clone = new Label(label.getText(), label.getGraphic());
-        clone.setId(label.getId() + "_" + (++cptLabel));
         return clone;
     }
-
-    private static int cptIconView = 0;
 
     @NotNull
     private FontAwesomeIconView cloneIconView(@NotNull FontAwesomeIconView iconView) {
         FontAwesomeIcon icon = FontAwesomeIcon.valueOf(iconView.getGlyphName());
         FontAwesomeIconView clone = new FontAwesomeIconView(icon, iconView.getSize());
-        clone.setId(iconView.getId() + "_" + (++cptIconView));
         return clone;
     }
 }
