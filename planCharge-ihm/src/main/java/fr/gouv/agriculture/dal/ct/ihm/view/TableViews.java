@@ -52,14 +52,23 @@ public final class TableViews {
         table.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Focus, and select, the given {@code item} of the given {@code table}.
+     *
+     * <p>Assertion: The {@code item} belongs to the {@code table}.</p>
+     *
+     * @param table
+     * @param item
+     * @param <S>
+     */
     public static <S> void focusOnItem(@NotNull TableView<S> table, @NotNull S item) {
 
         int itemIdx = itemIndex(table, item);
-        assert itemIdx != -1;
+        assert itemIdx != -1 : "The item does not belong to the table.";
 
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
         table.requestFocus();
-//        table.getFocusModel().focus(itemIdx);
+        table.getFocusModel().focus(itemIdx);
         table.getSelectionModel().clearAndSelect(itemIdx);
 
         // Il faut aussi scroller jusqu'à la ligne sélectionnée,
@@ -75,7 +84,7 @@ public final class TableViews {
 
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
         table.requestFocus();
-//        table.getFocusModel().focus(itemIdx, column); // FDA 2017/10 Rq : Génère une NPE (getScene == null) si on met des mnemoniques dans des MenuButtons de la TableView (!?).
+        table.getFocusModel().focus(itemIdx, column); // FDA 2017/10 Rq : Génère une NPE (getScene == null) si on met des mnemoniques dans des MenuButtons de la TableView (!?).
         table.getSelectionModel().clearAndSelect(itemIdx, column);
 /*
         {

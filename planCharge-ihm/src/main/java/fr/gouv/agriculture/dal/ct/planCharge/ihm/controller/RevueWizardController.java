@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
+import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import javafx.beans.value.ChangeListener;
@@ -131,6 +132,20 @@ public class RevueWizardController extends AbstractController {
     @FXML
     private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleCharges();
+    }
+
+    @FXML
+    private void saisirPrevisionsAbsence(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleDisponibilites();
+        ihm.getDisponibilitesController().getNbrsJoursAbsenceAccordion().setExpandedPane(ihm.getDisponibilitesController().getNbrsJoursAbsencePane());
+        if (ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().getItems().isEmpty()) {
+            ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().requestFocus();
+        } else {
+            TableViews.focusOnItem(
+                    ihm.getDisponibilitesController().getNbrsJoursAbsenceTable(),
+                    ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().getItems().get(0)
+            );
+        }
     }
 
     @FXML

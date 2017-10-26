@@ -123,6 +123,12 @@ public class DisponibilitesController extends AbstractController implements Modu
     @FXML
     @NotNull
     private Accordion nbrsJoursAbsenceAccordion;
+
+    @NotNull
+    public Accordion getNbrsJoursAbsenceAccordion() {
+        return nbrsJoursAbsenceAccordion;
+    }
+
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
@@ -133,6 +139,12 @@ public class DisponibilitesController extends AbstractController implements Modu
     @FXML
     @NotNull
     private TitledPane nbrsJoursAbsencePane;
+
+    @NotNull
+    public TitledPane getNbrsJoursAbsencePane() {
+        return nbrsJoursAbsencePane;
+    }
+
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
@@ -204,6 +216,12 @@ public class DisponibilitesController extends AbstractController implements Modu
     @FXML
     @NotNull
     private PlanificationTableView<NbrsJoursAbsenceBean, Float> nbrsJoursAbsenceTable;
+
+    @NotNull
+    public PlanificationTableView<NbrsJoursAbsenceBean, Float> getNbrsJoursAbsenceTable() {
+        return nbrsJoursAbsenceTable;
+    }
+
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull

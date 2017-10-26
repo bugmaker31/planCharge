@@ -66,7 +66,7 @@
                     <Label text="(Penser aux formations, aux journées département, provisionner des absences imprévues, etc.)"
                            wrapText="true"
                            GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"
+                    <Button text="Saisir les prévisions d'absence" onAction="#saisirPrevisionsAbsence"
                             GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
 
                     <CheckBox

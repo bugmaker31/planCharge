@@ -545,28 +545,24 @@ public class ApplicationController extends AbstractController {
         };
 
         try {
-            Calculateur.executerPuisCalculer(
-                    () -> {
-                        try {
+            Calculateur.executerSansCalculer(() -> {
+                try {
 
-                            RapportChargementAvecProgression rapportFinal =
-                                    ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
+                    RapportChargementAvecProgression rapportFinal =
+                            ihm.afficherProgression("Chargement du plan de charge...", chargerPlanCharge);
 
-                            definirDateEtat(planChargeBean.getDateEtat());
+                    definirDateEtat(planChargeBean.getDateEtat());
 
-                        } catch (ViolationsReglesGestionException e) {
-                            ihm.afficherViolationsReglesGestion(
-                                    "Impossible de charger le plan de charge.", e.getLocalizedMessage(),
-                                    e.getViolations()
-                            );
-                        }
-                    },
-                    () -> {
-//                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "chargerPlanCharge".
-                        //noinspection Convert2MethodRef
-                        calculer();
-                    }
-            );
+                } catch (ViolationsReglesGestionException e) {
+                    ihm.afficherViolationsReglesGestion(
+                            "Impossible de charger le plan de charge.", e.getLocalizedMessage(),
+                            e.getViolations()
+                    );
+                }
+            });
+
+//            rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "chargerPlanCharge".
+            calculer();
 
             ihm.getTachesController().razFiltres();
             ihm.getChargesController().razFiltres();
@@ -738,50 +734,46 @@ public class ApplicationController extends AbstractController {
         };
 
         try {
-            Calculateur.executerPuisCalculer(
-                    () -> {
-                        try {
-                            RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
-                            assert rapport != null;
+            Calculateur.executerSansCalculer(() -> {
+                try {
+                    RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
+                    assert rapport != null;
 
-                            planChargeBean.fromDto(planCharge[0]);
+                    planChargeBean.fromDto(planCharge[0]);
 
-                            definirDateEtat(planChargeBean.getDateEtat());
+                    definirDateEtat(planChargeBean.getDateEtat());
 
-                            planChargeBean.vientDEtreModifie();
+                    planChargeBean.vientDEtreModifie();
 //                            getSuiviActionsUtilisateur().historiser(new ImportTaches(planChargeBeanAvantChargement[0]));
 
-                            //noinspection HardcodedLineSeparator
-                            ihm.afficherNotificationInfo("Tâches mises à jour importées",
-                                    "Les tâches ont été mises à jour : "
-                                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                                            + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
-                                            + "\n- nombre de lignes importées : " + rapportFinal.getNbrTachesImportees()
-                                            + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
-                                            + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
-                                            + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
-                                            + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size()
-                            );
+                    //noinspection HardcodedLineSeparator
+                    ihm.afficherNotificationInfo("Tâches mises à jour importées",
+                            "Les tâches ont été mises à jour : "
+                                    + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                                    + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
+                                    + "\n- nombre de lignes importées : " + rapportFinal.getNbrTachesImportees()
+                                    + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
+                                    + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
+                                    + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
+                                    + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size()
+                    );
 
-                            afficherModuleTaches();
+                    afficherModuleTaches();
 
-                            majBarreEtat();
-                        } catch (ViolationsReglesGestionException e) {
-                            ihm.afficherViolationsReglesGestion(
-                                    "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
-                                    e.getViolations()
-                            );
-                        } catch (ControllerException | BeanException | SuiviActionsUtilisateurException e) {
-                            throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
-                        }
-                    },
-                    () -> {
-//                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
-                        //noinspection Convert2MethodRef
-                        calculer();
+                    majBarreEtat();
+                } catch (ViolationsReglesGestionException e) {
+                    ihm.afficherViolationsReglesGestion(
+                            "Impossible de sauver le plan de charge.", e.getLocalizedMessage(),
+                            e.getViolations()
+                    );
+                } catch (ControllerException | BeanException | SuiviActionsUtilisateurException e) {
+                    throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
+                }
+            });
 
-                    }
-            );
+//            rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
+            calculer();
+
         } catch (IhmException e) {
             throw new ControllerException("Impossible de mettre à jour les tâches depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }
@@ -866,50 +858,47 @@ public class ApplicationController extends AbstractController {
         };
 
         try {
-            Calculateur.executerPuisCalculer(
-                    () -> {
-                        try {
+            Calculateur.executerSansCalculer(() -> {
+                try {
 
-                            RapportImportPlanCharge rapportFinal =
-                                    ihm.afficherProgression("Import du plan de charge", importerPlanChargeDepuisCalc);
-                            assert rapportFinal != null;
-                            assert planCharge[0] != null;
+                    RapportImportPlanCharge rapportFinal =
+                            ihm.afficherProgression("Import du plan de charge", importerPlanChargeDepuisCalc);
+                    assert rapportFinal != null;
+                    assert planCharge[0] != null;
 
-                            planChargeBean.fromDto(planCharge[0]);
+                    planChargeBean.fromDto(planCharge[0]);
 
-                            planChargeBean.vientDEtreModifie();
+                    planChargeBean.vientDEtreModifie();
 //                            getSuiviActionsUtilisateur().historiser(new ImportPlanCharge(planChargeBeanAvantChargement[0]));
 
-                            definirDateEtat(planChargeBean.getDateEtat());
+                    definirDateEtat(planChargeBean.getDateEtat());
 
-                            ihm.getTachesController().razFiltres();
-                            ihm.getChargesController().razFiltres();
+                    ihm.getTachesController().razFiltres();
+                    ihm.getChargesController().razFiltres();
 
-                            //noinspection HardcodedLineSeparator,HardcodedFileSeparator
-                            ihm.afficherNotificationInfo("Données importées",
-                                    "Le plan de charge a été importé : "
-                                            + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
-                                            + "\n- date d'état : " + planChargeBean.getDateEtat()
-                                            + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size()
-                            );
+                    //noinspection HardcodedLineSeparator,HardcodedFileSeparator
+                    ihm.afficherNotificationInfo("Données importées",
+                            "Le plan de charge a été importé : "
+                                    + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
+                                    + "\n- date d'état : " + planChargeBean.getDateEtat()
+                                    + "\n- nombre de lignes/tâches importées :" + planChargeBean.getPlanificationsBeans().size()
+                    );
 
-                            afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
+                    afficherModuleCharges(); // Rq : Simule une action de l'utilisateur (l'action peut être "undone" (Ctrl+Z), etc.).
 
-                            majBarreEtat();
+                    majBarreEtat();
 
-                        } catch (ViolationsReglesGestionException e) {
-                            ihm.afficherViolationsReglesGestion(
-                                    "Impossible d'importer le plan de charge.", e.getLocalizedMessage(),
-                                    e.getViolations()
-                            );
-                        }
-                    },
-                    () -> {
-//                        rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
-                        //noinspection Convert2MethodRef
-                        calculer();
-                    }
-            );
+                } catch (ViolationsReglesGestionException e) {
+                    ihm.afficherViolationsReglesGestion(
+                            "Impossible d'importer le plan de charge.", e.getLocalizedMessage(),
+                            e.getViolations()
+                    );
+                }
+            });
+
+//            rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "importerPlanChargeDepuisCalc".
+            calculer();
+
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'importer le plan de charge depuis le fichier '" + ficCalc.getAbsolutePath() + "'.", e);
         }

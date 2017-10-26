@@ -48,6 +48,7 @@ public abstract class Calculateur {
         }
     }
 
+/*
     public static void executerPuisCalculer(@NotNull Executeur aExecuter, @NotNull Executeur aCalculer) throws IhmException {
 
         executerSansCalculer(aExecuter);
@@ -61,5 +62,5 @@ public abstract class Calculateur {
             activer();
         }
     }
-
+*/
 }
