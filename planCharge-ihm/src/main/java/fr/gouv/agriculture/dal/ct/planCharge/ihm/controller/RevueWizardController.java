@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
+import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -193,5 +194,17 @@ public class RevueWizardController extends AbstractController {
     @FXML
     private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getTachesController().reporterTaches();
+    }
+
+    @FXML
+    private void afficherTachesAyantRessourcesSurchargees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        //ihm.getTachesController().reporterTaches();
+        throw new NotImplementedException();
+    }
+
+    @FXML
+    private void afficherTachesAyantProfilsSurcharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        //ihm.getTachesController().reporterTaches();
+        throw new NotImplementedException();
     }
 }

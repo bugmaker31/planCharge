@@ -9,17 +9,21 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.lang.Integer?>
 <?import fr.gouv.agriculture.dal.ct.ihm.view.component.WizardStepsComponent?>
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RevueWizardController"
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
+    <stylesheets>
+        <URL value="@/css/dark.css"/>
+        <URL value="@/css/main.css"/>
+    </stylesheets>
     <fx:define>
         <Double fx:id="panePrefWidth" fx:value="800"/>
         <Double fx:id="panePrefHeight" fx:value="300"/>
 
         <Integer fx:id="NBR_ETAPES" fx:value="5"/>
-        <Integer fx:id="idxLigneEtape" fx:value="0"/>
     </fx:define>
 
     <!-- Impossible car LinearFlow est une classe interne de Wizard (pour l'instant).
@@ -30,9 +34,9 @@
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <VBox>
+            <VBox spacing="20">
                 <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="1" alignment="CENTER"/>
-                <GridPane>
+                <GridPane styleClass="wizard-step">
                     <CheckBox text="Indiquer la nouvelle date d'état (généralement la date d'état actuelle + 1 semaine)." wrapText="true"
                               GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <Button text="Modifier la date détat" onAction="#deplierAccordeonParametres"
@@ -45,35 +49,36 @@
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <VBox>
+            <VBox spacing="20">
                 <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="2" alignment="CENTER"/>
                 <GridPane>
+
                     <CheckBox text="Saisir les jours fériés." wrapText="true"
-                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                              GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <Button text="Gérer les jours fériés" onAction="#afficherModuleJoursFeries"
-                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <CheckBox text="Saisir les ressources humaines, et leurs périodes de mission." wrapText="true"
-                              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                     <Button text="Gérer les ressources humaines" onAction="#afficherModuleRessourcesHumaines"
-                            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <!--FIXME FDA 2017/10 Attribut "wrapText" sans effet.-->
                     <CheckBox
                             text="Saisir les prévisions d'absence des ressources humaines."
                             wrapText="true"
-                            GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                            GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                     <Label text="(Penser aux formations, aux journées département, provisionner des absences imprévues, etc.)"
                            wrapText="true"
-                           GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                           GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                     <Button text="Saisir les prévisions d'absence" onAction="#saisirPrevisionsAbsence"
-                            GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
+                            GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
 
                     <CheckBox
                             text="Prolonger (ou pas) les ressources sur les nouvelles périodes."
-                            GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                            GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                     <Button text="Gérer les disponibilités" onAction="#afficherModuleDisponibilites"
-                            GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                            GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                 </GridPane>
             </VBox>
@@ -83,19 +88,19 @@
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <VBox>
+            <VBox spacing="20">
                 <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="3" alignment="CENTER"/>
                 <GridPane>
 
-                    <CheckBox text="Depuis le fichier Calc de suivi des demandes, ou depuis IDAL, ou depuis Jira, ou manuellement."
+                    <CheckBox text="Mettre à jour les tâches en important le fichier Calc de suivi des demandes, ou depuis IDAL/Jira, voire manuellement."
                               wrapText="true"
-                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                              GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <Button text="Gérer les tâches" onAction="#afficherModuleTaches"
-                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <CheckBox text="Prolonger les tâches échues."
-                              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <HBox GridPane.rowIndex="2" GridPane.columnIndex="1">
+                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
                         <Button text="Afficher tâches échues" onAction="#filtrerTachesEchues"/>
                         <Button text="Reporter les tâches" onAction="#reporterTaches"/>
                     </HBox>
@@ -107,18 +112,25 @@
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <VBox>
+            <VBox spacing="20">
                 <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="4" alignment="CENTER"/>
                 <GridPane>
+
                     <CheckBox
                             text="Planifier la charge pour les nouvelles tâches, celles prolongées, libérer la charge des tâches annulées/terminées en avance, etc."
                             wrapText="true"
-                            GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                            GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"
+                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
                     <CheckBox text="Eliminer toutes les surcharges (ressources et profils)."
                               wrapText="true"
-                              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"
-                            GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
+                              GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <Button text="Afficher les ressources surchargées " onAction="#afficherTachesAyantRessourcesSurchargees"
+                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Button text="Afficher les profils surchargés " onAction="#afficherTachesAyantProfilsSurcharges"
+                            GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+
                 </GridPane>
             </VBox>
         </content>
@@ -127,10 +139,13 @@
                 prefWidth="$panePrefWidth" prefHeight="$panePrefHeight"
     >
         <content>
-            <VBox>
+            <VBox spacing="20">
                 <WizardStepsComponent nbrEtapes="$NBR_ETAPES" noEtape="5" alignment="CENTER"/>
                 <GridPane>
-                    <CheckBox text="Envoyer le nouveau plan de charge aux CPIs, avec les changements et l'ordre de priorité global entre projet/appli."
+                    <CheckBox text="Générer la liste des changements avec le dernier plan de charge."
+                              wrapText="true"
+                              GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <CheckBox text="Envoyer la liste des changements aux CPIs, avec les commentaires (et l'ordre de priorité global entre projet/appli)."
                               wrapText="true"
                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                     <CheckBox text="Envoyer le nouveau plan de charge aux RTs, ainsi que l'ordre de priorité global entre projet/appli."

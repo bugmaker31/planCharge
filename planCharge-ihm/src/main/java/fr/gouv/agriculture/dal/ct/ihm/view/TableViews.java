@@ -15,7 +15,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventType;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.WindowEvent;
 import org.apache.commons.lang.math.NumberUtils;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableFilter.Builder;
@@ -54,7 +57,7 @@ public final class TableViews {
 
     /**
      * Focus, and select, the given {@code item} of the given {@code table}.
-     *
+     * <p>
      * <p>Assertion: The {@code item} belongs to the {@code table}.</p>
      *
      * @param table
@@ -142,15 +145,19 @@ public final class TableViews {
     // Displaying :
 
     public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull List<? extends TableView<?>> tables) {
-        ObservableList<? extends TableColumn<?, ?>> masterColumns = masterTable.getColumns();
         for (TableView<?> table : tables) {
-            ObservableList<? extends TableColumn<?, ?>> columns = table.getColumns();
-            for (int columnIdx = 0; columnIdx < columns.size(); columnIdx++) {
-                TableColumn<?, ?> column = columns.get(columnIdx);
+            synchronizeColumnsWidth(masterTable, table);
+        }
+    }
 
-                TableColumn<?, ?> masterColumn = masterColumns.get(columnIdx);
-                synchronizeColumnsWidth(masterColumn, column);
-            }
+    public static void synchronizeColumnsWidth(@NotNull TableView<?> masterTable, @NotNull TableView<?> table) {
+        ObservableList<? extends TableColumn<?, ?>> masterColumns = masterTable.getColumns();
+        ObservableList<? extends TableColumn<?, ?>> columns = table.getColumns();
+        for (int columnIdx = 0; columnIdx < columns.size(); columnIdx++) {
+            TableColumn<?, ?> column = columns.get(columnIdx);
+
+            TableColumn<?, ?> masterColumn = masterColumns.get(columnIdx);
+            synchronizeColumnsWidth(masterColumn, column);
         }
     }
 
@@ -477,7 +484,7 @@ public final class TableViews {
                 if (sum == null) {
                     sum = 0.0;
                 }
-                Number selectedNumericCellValue = (Number)selectedCellValue;
+                Number selectedNumericCellValue = (Number) selectedCellValue;
                 sum += selectedNumericCellValue.doubleValue();
             }
         }

@@ -18,13 +18,6 @@ Généralités :
 }
 */
 
-/* Cf. https://stackoverflow.com/questions/27118872/how-to-hide-tableview-column-header-in-javafx-8 */
-.noHeader-table .column-header-background {
-    -fx-min-height: 0;
-    -fx-pref-height: 0;
-    -fx-max-height: 0;
-}
-
 /* Cf. http://fxexperience.com/2011/11/alternate-row-highlighting-in-empty-tableview-and-listview-rows */
 .table-row-cell:empty {
     -fx-background-color: white;

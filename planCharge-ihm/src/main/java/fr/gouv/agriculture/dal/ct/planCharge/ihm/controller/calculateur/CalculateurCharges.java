@@ -6,10 +6,7 @@ import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParProfilBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessourceBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoRsrcBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
@@ -267,6 +264,36 @@ public class CalculateurCharges extends Calculateur {
         for (RessourceBean<?, ?> ressourceBean : planChargeBean.getRessourcesBeans()) {
             calculerNbrsJoursDispoCTRestanteParRessource(ressourceBean, noSemaine);
         }
+        calculerTotalNbrsJoursDispoCTRestanteParRessource(noSemaine);
+    }
+
+    private void calculerTotalNbrsJoursDispoCTRestanteParRessource(int noSemaine) throws ControllerException {
+
+        LocalDate dateEtat;
+        try {
+            dateEtat = planChargeBean.dateEtat();
+        } catch (BeanException e) {
+            throw new ControllerException("Impossible de calculer les totaux des nombres de jours de dispo. CT restante.", e);
+        }
+        LocalDate debutPeriode = dateEtat.plusDays(((long) noSemaine - 1L) * 7L);// TODO FDA 2017/09 [issue#26:PeriodeHebdo/Trim]
+
+        Double chargeTotalePeriode = 0.0;
+        for (RessourceBean<?, ?> ressourceBean : planChargeBean.getRessourcesBeans()) {
+            NbrsJoursParRessourceBean nbrJoursChargePourLaRessourceBean = Collections.any(
+                    getChargesController().getNbrsJoursDispoCTRestanteRsrcBeans(),
+                    nbrsJoursDispoBean -> nbrsJoursDispoBean.getRessourceBean().equals(ressourceBean),
+                    new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la table des nombres de jours de disponibilité restant pour la CT par ressource.")
+            );
+            Float chargePeriode = nbrJoursChargePourLaRessourceBean.get(debutPeriode).getValue();
+
+            chargeTotalePeriode += chargePeriode;
+        }
+
+        TotauxNbrsJoursBean totauxNbrsJoursBean = getChargesController().getTotauxNbrsJoursDispoCTRestanteRsrcBeans().get(0);
+        if (!totauxNbrsJoursBean.containsKey(debutPeriode)) {
+            totauxNbrsJoursBean.put(debutPeriode, new SimpleFloatProperty());
+        }
+        totauxNbrsJoursBean.get(debutPeriode).setValue(chargeTotalePeriode);
     }
 
     private void calculerNbrsJoursDispoCTRestanteParRessource(@NotNull RessourceBean<?, ?> ressourceBean, int noSemaine) throws ControllerException {
@@ -275,7 +302,7 @@ public class CalculateurCharges extends Calculateur {
         try {
             dateEtat = planChargeBean.dateEtat();
         } catch (BeanException e) {
-            throw new ControllerException("Impossible de calculer les nombres de jours de dispo. Ct restante pour la ressource '" + ressourceBean.getCode() + "'.", e);
+            throw new ControllerException("Impossible de calculer les nombres de jours de dispo. CT restante pour la ressource '" + ressourceBean.getCode() + "'.", e);
         }
         LocalDate debutPeriode = dateEtat.plusDays(((long) noSemaine - 1L) * 7L);// TODO FDA 2017/09 [issue#26:PeriodeHebdo/Trim]
 

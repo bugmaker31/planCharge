@@ -184,7 +184,7 @@
             </HBox>
             <!--
                         <HBox styleClass="itemBarreEtat">
-                            <Label fx:id="nbrTachesField" minWidth="30" style="-fx-alignment: baseline-right;"/>
+                            <Label fx:id="nbrTachesField" minWidth="25" style="-fx-alignment: baseline-right;"/>
                             <Label text=" tâches"/>
                         </HBox>
             -->

@@ -39,10 +39,11 @@
     -fx-effect: innershadow( three-pass-box , derive(-icon-color,-70%) , 0.1em, 0.0 , 0.07em, 0.07em );
     -fx-text-fill: linear-gradient(to bottom, derive(-icon-color,20%) 10%, derive(-icon-color,-40%) 80%);
 }
-.icon:hover{
+.icon:hover {
     -fx-effect: dropshadow( three-pass-box , derive(-icon-color,0%) , 0.01em, 0.0 , 0, 0);
 }
 
+/*
 .glyph-icon{
     -fx-text-fill: -icon-color;
     -fx-fill: -icon-color;
@@ -50,6 +51,7 @@
 .glyph-icon:hover{
     -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.2), 4, 0, 0, 0);
 }
+*/
 
 
 /* Labels ---------------------------------------------*/
@@ -139,7 +141,7 @@
 
 /* Buttons ---------------------------------------------*/
 
-.button {
+.button, .button:default {
     /*-fx-background-color: transparent;*/
     /*-fx-padding: 5 22 5 22;*/
     /*-fx-border-color: #e2e2e2;*/
@@ -156,18 +158,12 @@
     /*-fx-text-fill: #d8d8d8;*/
     /*-fx-background-insets: 0 0 0 0, 0, 1, 2;*/
 }
-/*
-.button:default {
-    -fx-background-color: -fx-focus-color;
-    -fx-text-fill: #ffffff;
-}
-*/
 .button:pressed, .button:default:pressed {
     fx-background-color: derive(-fx-base, 10%);
     -fx-text-fill: white;
     /*-fx-border-color: darkred;*/
 }
-.button:focused {
+.button:focused, .button:default:focused {
 /*
     -fx-border-color: white, white;
     -fx-border-width: 1, 1;
@@ -277,7 +273,6 @@
 
 /* TextInput ---------------------------------------------*/
 
-
 /* Fix derived prompt color for text fields */
 .text-input {
     -fx-prompt-text-fill: derive(-fx-control-inner-background, +50%);
@@ -292,4 +287,12 @@
     -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";
 */
+}
+
+
+/* Wizard ---------------------------------------------*/
+
+.wizard-step {
+    -fx-border-color: #2e8b57;
+    -fx-border-width: 1px;
 }

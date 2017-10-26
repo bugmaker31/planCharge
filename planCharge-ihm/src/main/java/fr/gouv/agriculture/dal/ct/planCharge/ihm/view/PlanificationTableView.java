@@ -1,5 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
+import fr.gouv.agriculture.dal.ct.ihm.view.HeaderHidableTableView;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithoutLogger"})
-public class PlanificationTableView<S, T> extends TableView<S> {
+public class PlanificationTableView<S, T> extends HeaderHidableTableView<S> {
 
     @NotNull
     private List<TableColumn<S, T>> calendrierColumns;

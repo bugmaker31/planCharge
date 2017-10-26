@@ -3,6 +3,7 @@
 <?language javascript?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
+<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -196,6 +197,9 @@
             <Double fx:id="fixedCellSize" fx:value="25"/>
             <Boolean fx:id="arePanesAnimated" fx:value="true"/>
         </fx:define>
+        <fx:define>
+            <ChargesController fx:id="TOTAUX" fx:constant="TABLE_TOTAUX"/>
+        </fx:define>
         <ScrollPane fitToWidth="true">
             <VBox>
                 <Accordion expandedPane="$planChargePane">
@@ -214,7 +218,7 @@
                                     -->
                                     <!--suppress JavaFxRedundantPropertyValue -->
                                     <Slider fx:id="nbrLignesMaxTablePlanificationsSlider" orientation="HORIZONTAL"
-                                            min="5" max="50" value="25" blockIncrement="5" snapToTicks="true"
+                                            min="5" max="50" value="25" blockIncrement="5"
                                             showTickMarks="true" showTickLabels="true"
                                             minWidth="100" prefWidth="500"
                                     />
@@ -574,6 +578,62 @@
                                         </ContextMenu>
                                     </contextMenu>
                                 </PlanificationTableView>
+                                <PlanificationTableView fx:id="totauxNbrsJoursDispoCTRestanteRsrcTable"
+                                                        fixedCellSize="$fixedCellSize"
+                                                        headerHidden="true"
+                                                        userData="$TOTAUX">
+                                    <columns>
+                                        <TableColumn fx:id="espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn" sortable="false"/>
+                                        <TableColumn fx:id="semaine1TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
+                                </PlanificationTableView>
                             </VBox>
                         </TitledPane>
                     </panes>
@@ -661,6 +721,62 @@
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
+                                </PlanificationTableView>
+                                <PlanificationTableView fx:id="totauxNbrsJoursDispoCTMaxRestanteProfilTable"
+                                                        fixedCellSize="$fixedCellSize"
+                                                        headerHidden="true"
+                                                        userData="$TOTAUX">
+                                    <columns>
+                                        <TableColumn fx:id="espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn" sortable="false"/>
+                                        <TableColumn fx:id="semaine1TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+1"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine2TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+2"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine3TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+3"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine4TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+4"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine5TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+5"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine6TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+6"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine7TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+7"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine8TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+8"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine9TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+9"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine10TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+10"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine11TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+11"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                        <TableColumn fx:id="semaine12TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+12"
+                                                     prefWidth="$semaineColumnPrefWidth"
+                                                     styleClass="periodeChargee-column, nonModifiable"
+                                                     sortable="false"/>
+                                    </columns>
                                 </PlanificationTableView>
                             </VBox>
                         </TitledPane>
