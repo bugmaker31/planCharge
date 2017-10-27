@@ -197,9 +197,6 @@
             <Double fx:id="fixedCellSize" fx:value="25"/>
             <Boolean fx:id="arePanesAnimated" fx:value="true"/>
         </fx:define>
-        <fx:define>
-            <ChargesController fx:id="TOTAUX" fx:constant="TABLE_TOTAUX"/>
-        </fx:define>
         <ScrollPane fitToWidth="true">
             <VBox>
                 <Accordion expandedPane="$planChargePane">
@@ -580,8 +577,7 @@
                                 </PlanificationTableView>
                                 <PlanificationTableView fx:id="totauxNbrsJoursDispoCTRestanteRsrcTable"
                                                         fixedCellSize="$fixedCellSize"
-                                                        headerHidden="true"
-                                                        userData="$TOTAUX">
+                                                        headerHidden="true" aggregate="true">
                                     <columns>
                                         <TableColumn fx:id="espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn" sortable="false"/>
                                         <TableColumn fx:id="semaine1TotauxNbrsJoursDispoCTRestanteRsrcColumn" text="S+1"
@@ -724,8 +720,7 @@
                                 </PlanificationTableView>
                                 <PlanificationTableView fx:id="totauxNbrsJoursDispoCTMaxRestanteProfilTable"
                                                         fixedCellSize="$fixedCellSize"
-                                                        headerHidden="true"
-                                                        userData="$TOTAUX">
+                                                        headerHidden="true" aggregate="true">
                                     <columns>
                                         <TableColumn fx:id="espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn" sortable="false"/>
                                         <TableColumn fx:id="semaine1TotauxNbrsJoursDispoCTMaxRestanteProfilColumn" text="S+1"

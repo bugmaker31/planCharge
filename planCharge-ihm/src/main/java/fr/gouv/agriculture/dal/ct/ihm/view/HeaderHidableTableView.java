@@ -6,14 +6,14 @@ import javafx.scene.layout.Pane;
 public class HeaderHidableTableView<S> extends TableView<S> {
 
 
-    private boolean isHeaderHidden = false;
+    private boolean headerHidden = false;
 
     public boolean isHeaderHidden() {
-        return isHeaderHidden;
+        return headerHidden;
     }
 
     public void setHeaderHidden(boolean headerHidden) {
-        isHeaderHidden = headerHidden;
+        this.headerHidden = headerHidden;
     }
 
     public void hideHeader() {
@@ -29,7 +29,7 @@ public class HeaderHidableTableView<S> extends TableView<S> {
     public void resize(double width, double height) {
         super.resize(width, height);
 
-        if (isHeaderHidden) {
+        if (headerHidden) {
             Pane headerRow = (Pane) lookup("TableHeaderRow");
             headerRow.setMinHeight(0);
             headerRow.setPrefHeight(0);

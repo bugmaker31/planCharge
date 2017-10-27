@@ -60,7 +60,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 
 
     public PlanificationChargeCell(int noPeriode) {
-        super(Converters.CHARGE_STRING_CONVERTER); // TODO FDA 2017/04 Mieux formater les charges ?
+        super(Converters.CHARGE_STRING_CONVERTER);
         this.noPeriode = noPeriode;
 
         if (ihm.estEnDeveloppement()) {
@@ -107,6 +107,11 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
                 LOGGER.error("Impossible de masquer le tooltip.", e);
             }
         });
+    }
+
+    @NotNull
+    public PlanificationTableView<PlanificationTacheBean, Double> getPlanificationTableView() {
+        return (PlanificationTableView<PlanificationTacheBean, Double>) getTableView();
     }
 
     @Override

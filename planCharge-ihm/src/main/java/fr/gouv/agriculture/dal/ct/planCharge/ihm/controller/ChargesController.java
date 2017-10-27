@@ -56,8 +56,6 @@ import java.util.*;
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields", "OverlyComplexClass", "AnonymousInnerClass"})
 public class ChargesController extends AbstractTachesController<PlanificationTacheBean> implements Module {
 
-    public static final String TABLE_TOTAUX = "TOTAUX";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
 
     private static ChargesController instance;
@@ -714,6 +712,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     public ObservableList<NbrsJoursParProfilBean> getNbrsJoursDispoCTMaxRestanteProfilBeans() {
         return nbrsJoursDispoCTMaxRestanteProfilBeans;
     }
+
+    @NotNull
+    public ObservableList<TotauxNbrsJoursBean> getTotauxNbrsJoursDispoCTMaxRestanteProfilBeans() {
+        return totauxNbrsJoursDispoCTMaxRestanteProfilBeans;
+    }
+
 
     // Module
 
@@ -1377,7 +1381,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         for (TableColumn<TotauxNbrsJoursBean, Float> column : totauxNbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
-            column.setCellFactory(owningColumn -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le total de nombre de jours de dispo. CT restante par ressource est calculé.")));
+            column.setCellFactory(owningColumn ->
+                    new ChargePlanifieeCell<>(
+                            Converters.SOMME_FRACTION_JOURS_STRING_CONVERTER,
+                            () -> ihm.afficherInterdictionEditer("Le total de nombre de jours de dispo. CT restante par ressource est calculé.")
+                    )
+            );
         }
 
         // Paramétrage des ordres de tri :
@@ -1474,7 +1483,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         for (TableColumn<TotauxNbrsJoursBean, Float> column : totauxNbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
-            column.setCellFactory(owningColumn -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le total de nombre de jours de dispo. CT restante par ressource est calculé.")));
+            column.setCellFactory((TableColumn<TotauxNbrsJoursBean, Float> owningColumn) ->
+                    new ChargePlanifieeCell<>(
+                            Converters.SOMME_FRACTION_JOURS_STRING_CONVERTER,
+                            () -> ihm.afficherInterdictionEditer("Le total de nombre de jours de dispo. max. CT restante par profil est calculé.")
+                    )
+            );
         }
 
         // Paramétrage des ordres de tri :
@@ -1569,7 +1583,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             if (java.util.Objects.equals(table, planificationsTable) || java.util.Objects.equals(table, nbrsJoursChargeRsrcTable)) {
                 continue;
             }
-            if (java.util.Objects.equals(table.getUserData(), TABLE_TOTAUX)) {
+            if (table.isAggregate()) {
                 continue;
             }
             TableViews.synchronizeColumnsWidth(nbrsJoursChargeRsrcTable, table);

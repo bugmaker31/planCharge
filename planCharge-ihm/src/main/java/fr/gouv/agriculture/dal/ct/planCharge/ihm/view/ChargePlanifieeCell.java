@@ -4,7 +4,9 @@ import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import javafx.css.PseudoClass;
+import javafx.util.StringConverter;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @SuppressWarnings("ClassWithoutLogger")
@@ -13,7 +15,11 @@ public class ChargePlanifieeCell<S> extends EditableAwareTextFieldTableCell<S, F
     private static final PseudoClass SURCHARGE = ChargesController.SURCHARGE;
 
     public ChargePlanifieeCell(@Null Runnable cantEditErrorDisplayer) {
-        super(Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+        this(Converters.FRACTION_JOURS_STRING_CONVERTER, cantEditErrorDisplayer);
+    }
+
+    public ChargePlanifieeCell(@NotNull StringConverter<Float> floatStringConverter, @Null  Runnable cantEditErrorDisplayer) {
+        super(floatStringConverter, cantEditErrorDisplayer);
     }
 
     @Override
