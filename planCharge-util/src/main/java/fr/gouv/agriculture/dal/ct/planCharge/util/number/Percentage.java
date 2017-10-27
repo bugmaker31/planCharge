@@ -54,6 +54,9 @@ public class Percentage extends Number {
      */
     @NotNull
     public static Percentage parse(@NotNull String string) {
+        if (string.isEmpty()) {
+            return new Percentage(0.0f);
+        }
         float v = Float.parseFloat(string);
         return new Percentage(v);
     }
