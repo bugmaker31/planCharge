@@ -414,17 +414,21 @@ public class PlanChargeIhm extends Application {
             }
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
+                // Référentiels :
 //                applicationController.afficherModuleJoursFeries();
 //                applicationController.afficherModuleRessourcesHumaines();
 //                applicationController.afficherModuleProjetsApplis();
+                // Imports :
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.52.ods"));
                 //noinspection HardcodedFileSeparator
 //                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s42_t3.43.ods"));
+                // Affichage des modules/écrans :
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
-//                applicationController.afficherAssistantRevue();
+                // Autres :
+                applicationController.afficherAssistantRevue();
             }
 
             LOGGER.info("Application démarrée.");

@@ -3,7 +3,6 @@
 <?language javascript?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent?>
-<?import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -144,8 +143,8 @@
                                                 -->
                                             </HBox>
                                         </VBox>
-                                        <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
-                                        <Button text="Rien" onAction="#activerTousFiltres"/>
+                                        <Button text="Toutes" onAction="#filtrerRien" styleClass="erase-button"/>
+                                        <Button text="Aucune" onAction="#filtrerTout"/>
                                     </HBox>
                                 </TitledPane>
                                 <TitledPane text="Tris" animated="false">

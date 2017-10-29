@@ -3,7 +3,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -185,7 +184,7 @@ public class RevueWizardController extends AbstractController {
     @FXML
     private void filtrerTachesEchues(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleTaches();
-        ihm.getTachesController().activerTousFiltres();
+        ihm.getTachesController().filtrerTout();
         ihm.getTachesController().getFiltrePeriodeEchueToggleButton().setSelected(true);
         ihm.getTachesController().filtrer();
         ihm.afficherNotificationInfo("Tâches filtrées", "Seules les tâches échues sont désormais affichées.");
@@ -193,18 +192,20 @@ public class RevueWizardController extends AbstractController {
 
     @FXML
     private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleTaches();
         ihm.getTachesController().reporterTaches();
     }
 
     @FXML
     private void afficherTachesAyantRessourcesSurchargees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        //ihm.getTachesController().reporterTaches();
-        throw new NotImplementedException();
+        ihm.getApplicationController().activerModuleCharges();
+        ihm.getChargesController().filtrerSurRessourceSurchargees();
     }
 
     @FXML
     private void afficherTachesAyantProfilsSurcharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        //ihm.getTachesController().reporterTaches();
-        throw new NotImplementedException();
+        ihm.getApplicationController().activerModuleCharges();
+        ihm.getApplicationController().activerModuleCharges();
+        ihm.getChargesController().filtrerSurProfilsSurcharges();
     }
 }

@@ -30,7 +30,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
@@ -2038,6 +2037,18 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         assert profilBean != null;
 
         filtrerSurProfil(profilBean);
+    }
+
+    void filtrerSurRessourceSurchargees() {
+        activerTousFiltres();
+        filtreSurchargeRessourceToggleButton.setSelected(true);
+        filtrer();
+    }
+
+    void filtrerSurProfilsSurcharges() {
+        activerTousFiltres();
+        filtreSurchargeProfilToggleButton.setSelected(true);
+        filtrer();
     }
 
 

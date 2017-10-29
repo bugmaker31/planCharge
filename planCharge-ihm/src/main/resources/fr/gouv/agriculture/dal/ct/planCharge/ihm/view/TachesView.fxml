@@ -73,8 +73,8 @@
                                             <!--</buttons>-->
                                             <!--</ButtonBar>-->
                                         </VBox>
-                                        <Button text="Tout" onAction="#razFiltres" styleClass="erase-button"/>
-                                        <Button text="Rien" onAction="#activerTousFiltres"/>
+                                        <Button text="Tout" onAction="#filtrerRien" styleClass="erase-button"/>
+                                        <Button text="Rien" onAction="#filtrerTout"/>
                                     </HBox>
                                 </TitledPane>
                                 <TitledPane text="Tris" animated="false">

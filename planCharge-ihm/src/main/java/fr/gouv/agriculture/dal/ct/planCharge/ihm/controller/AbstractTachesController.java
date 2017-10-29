@@ -590,15 +590,20 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
 
     @FXML
-    private void razFiltres(@SuppressWarnings("unused") ActionEvent event) {
-        razFiltres();
+    private void filtrerRien(@SuppressWarnings("unused") ActionEvent event) {
+        filtrerRien();
     }
 
-    void razFiltres() {
+    void filtrerRien() {
         LOGGER.debug("RàZ des filtres pour {} : ", getClass().getSimpleName());
+        desactiverTousFiltres();
+        filtrer();
+        LOGGER.debug("Filtres RàZ pour {}.", getClass().getSimpleName());
+    }
+
+    void desactiverTousFiltres() {
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
-        // TODO FDA 2017/08 Décocher tous les autres filtres.
 
         for (ToggleButton filtreButton : filtresButtons()) {
             if (filtreButton.getToggleGroup() != null) {
@@ -609,11 +614,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         }
 
-        // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
-
-        filtrer();
-
-        LOGGER.debug("Filtres RàZ pour {}.", getClass().getSimpleName());
+        // TODO FDA 2017/08 RAZ les filtres / colonne aussi (TableFilter).
     }
 
     List<ToggleButton> filtresButtons() {
@@ -754,21 +755,22 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
 
     @FXML
-    private void activerTousFiltres(@SuppressWarnings("unused") ActionEvent event) {
+    private void filtrerTout(@SuppressWarnings("unused") ActionEvent event) {
+        filtrerTout();
+    }
+
+    void filtrerTout() {
+        LOGGER.debug("filtrerTout...");
         activerTousFiltres();
+        filtrer();
     }
 
     void activerTousFiltres() {
-        LOGGER.debug("activerTousFiltres...");
-
         filtreGlobalComponent.getFiltreGlobalField().setText("");
-        // TODO FDA 2017/08 RAZ les filtres / colonne aussi.
 
         for (ToggleButton filtreButton : filtresButtons()) {
             filtreButton.setSelected(false);
         }
-
-        filtrer();
     }
 
     private boolean estBoutonFiltreTout(@NotNull ToggleButton filtreButton) {

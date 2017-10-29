@@ -564,8 +564,8 @@ public class ApplicationController extends AbstractController {
 //            rapport.setAvancement("Calcul..."); Sans effet, le Dialog qui affiche l'avancement ayant été fermé avec la fin de la Task "chargerPlanCharge".
             calculer();
 
-            ihm.getTachesController().razFiltres();
-            ihm.getChargesController().razFiltres();
+            ihm.getTachesController().filtrerRien();
+            ihm.getChargesController().filtrerRien();
 
             //noinspection HardcodedLineSeparator
             ihm.afficherNotificationInfo(
@@ -873,8 +873,8 @@ public class ApplicationController extends AbstractController {
 
                     definirDateEtat(planChargeBean.getDateEtat());
 
-                    ihm.getTachesController().razFiltres();
-                    ihm.getChargesController().razFiltres();
+                    ihm.getTachesController().filtrerRien();
+                    ihm.getChargesController().filtrerRien();
 
                     //noinspection HardcodedLineSeparator,HardcodedFileSeparator
                     ihm.afficherNotificationInfo("Données importées",
