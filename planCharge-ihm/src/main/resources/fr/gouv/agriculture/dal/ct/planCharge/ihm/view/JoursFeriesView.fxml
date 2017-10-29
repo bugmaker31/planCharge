@@ -4,28 +4,33 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.JoursFeriesController"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <center>
-        <TableView fx:id="joursFeriesTable" editable="true" BorderPane.alignment="CENTER">
-            <columns>
-                <TableColumn fx:id="dateColumn" text="Date" prefWidth="100" />
-                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200" />
-            </columns>
-            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-            <sortOrder>
-                <fx:reference source="dateColumn"/>
-            </sortOrder>
-        </TableView>
+        <HBox>
+            <TableView fx:id="joursFeriesTable" editable="true" HBox.hgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
+                </columns>
+                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                <sortOrder>
+                    <fx:reference source="dateColumn"/>
+                </sortOrder>
+            </TableView>
+        </HBox>
     </center>
     <bottom>
-        <AnchorPane>
-            <ButtonBar>
+        <HBox styleClass="barreEtat">
+            <!--
+            <ButtonBar >
                 <buttons>
-                    <Button text="_Ajouter un jour férié" onAction="#ajouterJourFerie"/>
+            -->
+            <Button text="_Ajouter un jour férié" onAction="#ajouterJourFerie" styleClass="itemBarreEtat"/>
+            <!--
                 </buttons>
             </ButtonBar>
-        </AnchorPane>
+            -->
+        </HBox>
     </bottom>
 </BorderPane>
