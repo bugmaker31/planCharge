@@ -52,10 +52,6 @@ public class WizardStepsController extends AbstractController {
         return modeleLienEntreEtapesView;
     }
 
-    public void setModeleLienEntreEtapesView(@NotNull FontAwesomeIconView modeleLienEntreEtapesView) {
-        this.modeleLienEntreEtapesView = modeleLienEntreEtapesView;
-    }
-
 
     @Override
     protected void initialize() throws ControllerException {

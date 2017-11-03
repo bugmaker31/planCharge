@@ -6,8 +6,12 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.WizardStepsController;
 import javafx.beans.NamedArg;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -68,25 +72,22 @@ public class WizardStepsComponent extends GridPane {
         int idxColonne = 0;
         for (int cptEtape = 1; cptEtape <= nbrEtapes; cptEtape++) {
 
-            // View "inter-étape" :
+            // Pour l'espace "inter-étape" :
             if (cptEtape > 1) {
                 FontAwesomeIconView lienEntreEtapesView = cloneIconView(modeleLienEntreEtapes);
                 add(lienEntreEtapesView, idxColonne++, NO_LIGNE_ICONE_ETAPE - 1);
             }
 
-            // Pour l'étape : le IconView + le Label) :
-            FontAwesomeIconView etape;
-            if (cptEtape == noEtape) {
-                etape = cloneIconView(modeleEtapeCourante);
-            } else {
-                etape = cloneIconView(modeleEtapeNonCourante);
-            }
+            // Pour 1 étape, 1 IconView et 1 Label :
+            FontAwesomeIconView etape = cloneIconView((cptEtape == noEtape) ? modeleEtapeCourante : modeleEtapeNonCourante);
             add(etape, idxColonne, NO_LIGNE_ICONE_ETAPE - 1);
+            GridPane.setHalignment(etape, HPos.CENTER);
             //
             Label noEtapeLabel = cloneLabel(noEtapeCouranteLabel);
             noEtapeLabel.setText(cptEtape + " / " + nbrEtapes);
             add(noEtapeLabel, idxColonne, NO_LIGNE_NO_ETAPE - 1);
-            //
+            GridPane.setHalignment(noEtapeLabel, HPos.CENTER);
+
             idxColonne++;
         }
     }
