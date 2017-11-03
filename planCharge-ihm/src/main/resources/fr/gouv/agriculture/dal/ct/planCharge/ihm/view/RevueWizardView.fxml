@@ -2,13 +2,12 @@
 
 <!--<?import org.controlsfx.dialog.Wizard?>-->
 <!--<?import org.controlsfx.dialog.Wizard.LinearFlow?>-->
+<?import fr.gouv.agriculture.dal.ct.ihm.view.component.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.dialog.*?>
 <?import java.lang.Double?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.lang.Integer?>
-<?import fr.gouv.agriculture.dal.ct.ihm.view.component.WizardStepsComponent?>
 <?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RevueWizardController"
@@ -98,17 +97,17 @@
                 <GridPane>
 
                     <CheckBox fx:id="majTachesCheckBox"
-                              text="Mettre à jour les tâches (import suivi des demandes, IDAL, Jira, ou manuellement)."
+                              text="Mettre à jour les tâches (import Calc &quot;Suivi des demandes&quot;, en attendant IDAL/Jira)."
                               wrapText="true"
                               GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <Button text="Importer les tâches" onAction="#importerTaches"
                             GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                    <CheckBox text="Reporter les tâches échues."
+                    <CheckBox text="Prolonger/reporter les tâches échues."
                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                     <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
                         <Button text="Afficher tâches échues" onAction="#filtrerTachesEchues"/>
-                        <Button text="Reporter les tâches" onAction="#reporterTaches"/>
+                        <Button text="Modifier les échances" onAction="#modifierEcheances"/>
                     </HBox>
                 </GridPane>
             </VBox>
@@ -130,29 +129,22 @@
                             GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <CheckBox
-                            text="Planifier (ou pas) les tâches non terminées à temps."
+                            text="Planifier (ou pas) les tâches prolongées/reportées."
                             wrapText="true"
                             GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <Button text="Gérer le plan de charge" onAction="#filtrerTachesEchues"
+                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"
                             GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                    <CheckBox
-                            text="Prolonger (ou pas) les tâches non terminées à temps, libérer la charge des tâches annulées/terminées en avance, etc."
-                            wrapText="true"
-                            GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <Button text="Gérer le plan de charge" onAction="#afficherModuleCharges"
-                            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                    <CheckBox text="Eliminer toutes les surcharges de ressources."
+                    <CheckBox text="Eliminer les surcharges de ressources."
                               wrapText="true"
                               GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <Button text="Afficher les ressources surchargées " onAction="#filtrerTachesAyantRessourcesSurchargees"
+                    <Button text="Filtrer sur les ressources surchargées " onAction="#filtrerTachesAyantRessourcesSurchargees"
                             GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                    <CheckBox text="Eliminer toutes les surcharges de profils."
+                    <CheckBox text="Eliminer les surcharges de profils."
                               wrapText="true"
                               GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <Button text="Afficher les profils surchargés " onAction="#filtrerTachesAyantProfilsSurcharges"
+                    <Button text="Filtrer sur les profils surchargés " onAction="#filtrerTachesAyantProfilsSurcharges"
                             GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                 </GridPane>

@@ -11,7 +11,7 @@
     <!--<buttons>-->
     <HBox styleClass="itemBarreEtat">
         <Button text="A_jouter une tâche" onAction="#ajouterTache"/>
-        <Button text="Re_porter les tâches..." onAction="#reporterTaches"/>
+        <Button text="Modifier les _échéances..." onAction="#modifierEcheances"/>
     </HBox>
     <!--</buttons>-->
     <!--</ButtonBar>-->

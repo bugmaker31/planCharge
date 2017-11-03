@@ -1092,13 +1092,13 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
 
-    void reporterTaches() throws ControllerException {
+    void modifierEcheances() throws ControllerException {
 
         LocalDate nouvelleEcheance = saisirNouvelleEcheance();
         if (nouvelleEcheance == null) {
             ihm.afficherDialog(Alert.AlertType.INFORMATION,
-                    "Report annulé",
-                    "Le report des tâches a été annulé par l'utilisateur.",
+                    "Modification annulée",
+                    "La modification des échéances des tâches a été annulée par l'utilisateur.",
                     400, 100
             );
             return;
@@ -1108,7 +1108,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             reporterTache(tacheBean, nouvelleEcheance);
         }
         getTachesTable().refresh(); // Pour recalculer les styles CSS.
-        ihm.afficherNotificationInfo("Tâches reportées", getTachesTable().getItems().size() + " tâches ont été reportées au " + nouvelleEcheance.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
+        ihm.afficherNotificationInfo("Echéances modifiées", getTachesTable().getItems().size() + " tâches ont maintenant une échéance au " + nouvelleEcheance.format(DateTimeFormatter.ISO_LOCAL_DATE) + ".");
     }
 
     private Stage saisieEcheanceStage = null;

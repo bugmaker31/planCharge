@@ -8,17 +8,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBeans;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
-import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +22,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Function;
 
@@ -171,9 +165,9 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
 
 
     @FXML
-    private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        LOGGER.debug("reporterTaches...");
-        ihm.getTachesController().reporterTaches();
+    private void modifierEcheances(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        LOGGER.debug("modifierEcheances...");
+        ihm.getTachesController().modifierEcheances();
     }
 
 

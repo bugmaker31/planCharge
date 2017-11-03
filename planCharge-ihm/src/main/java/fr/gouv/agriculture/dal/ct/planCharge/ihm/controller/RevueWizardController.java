@@ -4,7 +4,6 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.Objects;
-import java.util.Optional;
 
 // Cf. https://controlsfx.bitbucket.io/org/controlsfx/dialog/Wizard.html
 @SuppressWarnings("ClassHasNoToStringMethod")
@@ -210,9 +207,9 @@ public class RevueWizardController extends AbstractController {
     }
 
     @FXML
-    private void reporterTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void modifierEcheances(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleTaches();
-        ihm.getTachesController().reporterTaches();
+        ihm.getTachesController().modifierEcheances();
     }
 
     @FXML
