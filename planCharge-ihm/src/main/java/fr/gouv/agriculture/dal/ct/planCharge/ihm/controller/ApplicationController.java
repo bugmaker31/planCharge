@@ -677,7 +677,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    private void importerTachesDepuisCalc() throws ControllerException {
+    void importerTachesDepuisCalc() throws ControllerException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LibreOffice) qui contient les tâches ('suivi des demandes'') : ");

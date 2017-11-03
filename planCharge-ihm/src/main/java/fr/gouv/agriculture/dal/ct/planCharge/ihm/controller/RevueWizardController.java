@@ -4,9 +4,11 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Wizard;
@@ -15,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.Objects;
 import java.util.Optional;
 
 // Cf. https://controlsfx.bitbucket.io/org/controlsfx/dialog/Wizard.html
@@ -24,12 +28,10 @@ public class RevueWizardController extends AbstractController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RevueWizardController.class);
 
 
-    @SuppressWarnings("NullableProblems")
-    @NotNull
+    @Null
     private Stage wizardStage;
 
-    @SuppressWarnings("NullableProblems")
-    @NotNull
+    @Null
     private Wizard wizard;
 
     @FXML
@@ -54,11 +56,26 @@ public class RevueWizardController extends AbstractController {
     private WizardPane etapeDiffuserPane;
 
 
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    private Integer noEtapeCourante;
-
     private WizardPane[] etapes;
+
+    @FXML
+    private CheckBox majDateEtatCheckBox;
+
+    @FXML
+    private CheckBox majJoursFeriesCheckBox;
+
+    @FXML
+    private CheckBox majRessourcesHumainesCheckBox;
+
+    @FXML
+    private CheckBox majPrevisionsAbsencesCheckBox;
+
+    @FXML
+    private CheckBox majDisponibilitesCheckBox;
+
+    @FXML
+    private CheckBox majTachesCheckBox;
+
 
     public RevueWizardController() {
         super();
@@ -78,21 +95,27 @@ public class RevueWizardController extends AbstractController {
 
     void show() {
 
-//        if (wizardStage == null) {
-        wizardStage = new Stage();
-        wizardStage.setTitle(PlanChargeIhm.APP_NAME + " - Assistant de revue");
-        wizardStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
-//        }
+        if ((wizardStage != null) && wizardStage.isShowing()) {
+            LOGGER.debug("Assistant de revue déjà affiché, rien à faire.");
+            return;
+        }
 
-//        if (wizard == null) {
-        wizard = new Wizard(wizardStage.getOwner());
-        wizard.setFlow(new Wizard.LinearFlow(etapes));
-        wizard.resultProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.debug("Assistant de revue terminé (résultat = {}).", wizard.getResult().getButtonData());
-            wizardStage.hide();
-            LOGGER.debug("Assistant de revue masqué.");
-        });
-//        }
+        if (wizardStage == null) {
+            wizardStage = new Stage();
+            wizardStage.setTitle(PlanChargeIhm.APP_NAME + " - Assistant de revue");
+            wizardStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
+
+            wizard = new Wizard(wizardStage.getOwner());
+            wizard.setFlow(new Wizard.LinearFlow(etapes));
+            wizard.resultProperty().addListener((observable, oldValue, newValue) -> {
+                LOGGER.debug("Assistant de revue terminé (résultat = {}).", wizard.getResult().getButtonData());
+                wizardStage.hide();
+                wizardStage = null;
+                LOGGER.debug("Assistant de revue masqué.");
+            });
+
+            wizardStage.setScene(wizard.getScene());
+        }
 
 /*
         wizard.showAndWait().ifPresent(result -> {
@@ -102,40 +125,37 @@ public class RevueWizardController extends AbstractController {
         });
 */
 //        wizard.show();
-        wizardStage.setScene(wizard.getScene());
-        noEtapeCourante = 1;
         wizardStage.show();
 
         LOGGER.debug("Assistant de revue affiché.");
     }
 
+    private void passerEtapeSuivante() throws ControllerException {
+        assert wizard != null;
+        wizard.goToNextStep();
+    }
+
+
     @FXML
-    private void afficherModuleJoursFeries(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void majJoursFeries(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleJoursFeries();
+        majJoursFeriesCheckBox.setSelected(true); // TODO FDA 2017/10 Améliorer : ne cocher que lorsque/si les jours fériés ont été màj.
     }
 
     @FXML
-    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void majRessourcesHumaines(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleRessourcesHumaines();
+        majRessourcesHumainesCheckBox.setSelected(true); // TODO FDA 2017/10 Améliorer : ne cocher que lorsque/si les RH ont été màj.
     }
 
     @FXML
-    private void afficherModuleDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void majPrevisionsAbsence(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleDisponibilites();
+        majPrevisionsAbsencesCheckBox.setSelected(true); // TODO FDA 2017/10 Améliorer : ne cocher que lorsque/si les prévisions d'absence ont été màj.
     }
 
     @FXML
-    private void afficherModuleTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().afficherModuleTaches();
-    }
-
-    @FXML
-    private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().afficherModuleCharges();
-    }
-
-    @FXML
-    private void saisirPrevisionsAbsence(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void majDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleDisponibilites();
         ihm.getDisponibilitesController().getNbrsJoursAbsenceAccordion().setExpandedPane(ihm.getDisponibilitesController().getNbrsJoursAbsencePane());
         if (ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().getItems().isEmpty()) {
@@ -146,16 +166,22 @@ public class RevueWizardController extends AbstractController {
                     ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().getItems().get(0)
             );
         }
+        majDisponibilitesCheckBox.setSelected(true); // TODO FDA 2017/10 Améliorer : ne cocher que lorsque/si les disponibilités ont été màj.
     }
 
     @FXML
-    private void deplierAccordeonParametres(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void majDateEtat(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().deplierAccordeonParametres();
         ihm.getPrimaryStage().requestFocus();
         {
             ChangeListener changeListener = (observable, oldValue, newValue) -> {
                 try {
+
+                    majDateEtatCheckBox.setSelected(true);
+
+                    // Une seule action à cette étape, ou dernière action de cette étape, donc on passe à la suivante automatiquement.
                     passerEtapeSuivante();
+
                 } catch (ControllerException e) {
                     LOGGER.error("Impossibile de déplier l'accordéaon des paramètres suite à une modification de la date d'état.", e);
                 }
@@ -168,18 +194,11 @@ public class RevueWizardController extends AbstractController {
         ihm.getApplicationController().getDateEtatPicker().show();
     }
 
-    private void passerEtapeSuivante() throws ControllerException {
-
-        WizardPane etapeCourante = etapes[noEtapeCourante - 1];
-
-        // FIXME FDA 2017/08 Sans effet : ne passe pas à l'étape suivanrte.
-        Optional<WizardPane> etapeSuivante = wizard.getFlow().advance(etapeCourante);
-        if (!etapeSuivante.isPresent()) {
-            throw new ControllerException("Impossible de passer à l'étape suivante.");
-        }
-
-        noEtapeCourante++;
+    @FXML
+    private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().afficherModuleCharges();
     }
+
 
     @FXML
     private void filtrerTachesEchues(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
@@ -197,15 +216,27 @@ public class RevueWizardController extends AbstractController {
     }
 
     @FXML
-    private void afficherTachesAyantRessourcesSurchargees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void filtrerTachesAyantRessourcesSurchargees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().activerModuleCharges();
         ihm.getChargesController().filtrerSurRessourceSurchargees();
     }
 
     @FXML
-    private void afficherTachesAyantProfilsSurcharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void filtrerTachesAyantProfilsSurcharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().activerModuleCharges();
         ihm.getApplicationController().activerModuleCharges();
         ihm.getChargesController().filtrerSurProfilsSurcharges();
+    }
+
+    @FXML
+    private void filtrerTachesNouvelles(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().activerModuleCharges();
+//        TODO FDA 2017/10 Comment identifier les nouvelles tâches ?
+        throw new NotImplementedException();
+    }
+
+    public void importerTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ihm.getApplicationController().importerTachesDepuisCalc();
+        majTachesCheckBox.setSelected(true);
     }
 }

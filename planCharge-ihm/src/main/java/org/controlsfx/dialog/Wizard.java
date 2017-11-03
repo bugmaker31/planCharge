@@ -1,4 +1,5 @@
-// Forkée juste pour pouvoir décommenter la methode "show", et ajouter méthode "getScene" pour pouvoir afficher l'assiatant dans une fenêtre non modale.
+// Forkée pour ajouter méthode "getScene", afin de pouvoir afficher l'assistant dans une fenêtre non modale.
+// Et aussi pour ajouter les méthodes "goToPreviousStep" et "goToNextStep".
 
 /**
  * Copyright (c) 2014, 2015 ControlsFX
@@ -136,17 +137,14 @@ public class Wizard {
 
     private final ButtonType BUTTON_PREVIOUS = new ButtonType(localize(asKey("wizard.previous.button")), ButtonData.BACK_PREVIOUS); //$NON-NLS-1$
     private final EventHandler<ActionEvent> BUTTON_PREVIOUS_ACTION_HANDLER = actionEvent -> {
+        goToPreviousStep();
         actionEvent.consume();
-        currentPage = Optional.ofNullable(pageHistory.isEmpty() ? null : pageHistory.pop());
-        updatePage(dialog, false);
     };
 
     private final ButtonType BUTTON_NEXT = new ButtonType(localize(asKey("wizard.next.button")), ButtonData.NEXT_FORWARD); //$NON-NLS-1$
     private final EventHandler<ActionEvent> BUTTON_NEXT_ACTION_HANDLER = actionEvent -> {
+        goToNextStep();
         actionEvent.consume();
-        currentPage.ifPresent(page -> pageHistory.push(page));
-        currentPage = getFlow().advance(currentPage.orElse(null));
-        updatePage(dialog, true);
     };
 
     private final StringProperty titleProperty = new SimpleStringProperty();
@@ -212,9 +210,11 @@ public class Wizard {
      * poll the {@link #resultProperty() result property}, or else add a listener
      * to the result property to be informed of when it is set.
      */
+/*
     public final void show() {
         dialog.show();
     }
+*/
 
     /**
      * Shows the wizard and waits for the user response (in other words, brings
@@ -251,6 +251,18 @@ public class Wizard {
         return settings;
     }
 
+
+    public void goToPreviousStep() {
+        currentPage = Optional.ofNullable(pageHistory.isEmpty() ? null : pageHistory.pop());
+        updatePage(dialog, false);
+    }
+
+
+    public void goToNextStep() {
+        currentPage.ifPresent(page -> pageHistory.push(page));
+        currentPage = getFlow().advance(currentPage.orElse(null));
+        updatePage(dialog, true);
+    }
 
     /**************************************************************************
      *
