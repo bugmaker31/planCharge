@@ -78,24 +78,35 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
     @NotNull
     @Override
     public PlanCharge toEntity() throws DTOException {
-        assert getDateEtat() != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
-        return new PlanCharge(getDateEtat(), getReferentiels().toEntity(), getDisponibilites().toEntity(), getPlanifications().toEntity());
+        return to(this);
     }
+
+    @NotNull
+    public static PlanCharge to(@NotNull PlanChargeDTO planChargeDTO) throws DTOException {
+        assert planChargeDTO.getDateEtat() != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
+        return new PlanCharge(
+                planChargeDTO.getDateEtat(),
+                planChargeDTO.getReferentiels().toEntity(),
+                planChargeDTO.getDisponibilites().toEntity(),
+                planChargeDTO.getPlanifications().toEntity()
+        );
+    }
+
 
     @NotNull
     @Override
     public PlanChargeDTO fromEntity(@NotNull PlanCharge entity) throws DTOException {
+        return from(entity);
+    }
+
+    @NotNull
+    public static PlanChargeDTO from(@NotNull PlanCharge entity) throws DTOException {
         return new PlanChargeDTO(
                 entity.getDateEtat(),
                 ReferentielsDTO.from(entity.getReferentiels()),
                 DisponibilitesDTO.from(entity.getDisponibilites()),
                 PlanificationsDTO.from(entity.getPlanifications())
         );
-    }
-
-    @NotNull
-    public static PlanChargeDTO from(@NotNull PlanCharge planCharge) throws DTOException {
-        return new PlanChargeDTO().fromEntity(planCharge);
     }
 
 

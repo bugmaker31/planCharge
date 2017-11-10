@@ -108,10 +108,15 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     @NotNull
     @Override
     public Planifications toEntity() throws DTOException {
+        return to(this);
+    }
+
+    @NotNull
+    public static Planifications to(@NotNull PlanificationsDTO planificationsDTO) throws DTOException {
         Map<Tache, Map<LocalDate, Double>> planif = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-        for (TacheDTO tacheDTO : plan.keySet()) {
+        for (TacheDTO tacheDTO : planificationsDTO.keySet()) {
             Tache tache = tacheDTO.toEntity();
-            Map<LocalDate, Double> calendrierTache = plan.get(tacheDTO);
+            Map<LocalDate, Double> calendrierTache = planificationsDTO.get(tacheDTO);
             planif.put(tache, calendrierTache);
         }
         return new Planifications(planif);
@@ -119,7 +124,12 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
 
     @NotNull
     @Override
-    public PlanificationsDTO fromEntity(@NotNull Planifications planifications) throws DTOException {
+    public PlanificationsDTO fromEntity(@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") @NotNull Planifications planifications) throws DTOException {
+        return from(planifications);
+    }
+
+    @NotNull
+    public static PlanificationsDTO from(@NotNull Planifications planifications) throws DTOException {
         Map<TacheDTO, Map<LocalDate, Double>> planifDTOsMap = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
         for (Tache tache : planifications.taches()) {
             TacheDTO tacheDTO = TacheDTO.from(tache);
@@ -132,11 +142,6 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
         }
         PlanificationsDTO planificationsDTO = new PlanificationsDTO(planifDTOsMap);
         return planificationsDTO;
-    }
-
-    @NotNull
-    public static PlanificationsDTO from(@NotNull Planifications planifications) throws DTOException {
-        return new PlanificationsDTO().fromEntity(planifications);
     }
 
 

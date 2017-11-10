@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.xml;
 
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProfilDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppliDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
@@ -54,6 +55,10 @@ public class TacheXmlWrapper {
     @NotNull
     private String codeProfil;
 
+    @Null
+    private TypeChangement typeChangement;
+
+
     //    @Autowired
     @NotNull
     private ProjetAppliDao projetAppliDao = ProjetAppliDao.instance();
@@ -92,6 +97,9 @@ public class TacheXmlWrapper {
         charge = tache.getCharge();
         codeRessource = tache.getRessource().getCode();
         codeProfil = tache.getProfil().getCode();
+
+        typeChangement = tache.getTypeChangement();
+
         return this;
     }
 
@@ -140,8 +148,9 @@ public class TacheXmlWrapper {
         return debut;
     }
 
-    public void setDebut(Date debut) {
-        this.debut = debut;
+    @XmlElement(required = true)
+    public Date getEcheance() {
+        return echeance;
     }
 
     @XmlElement(required = true)
@@ -162,6 +171,11 @@ public class TacheXmlWrapper {
     @XmlElement(required = true)
     public String getCodeProfil() {
         return codeProfil;
+    }
+
+    @XmlElement(required = false)
+    public TypeChangement getTypeChangement() {
+        return typeChangement;
     }
 
     public void setIdTache(Integer idTache) {
@@ -196,9 +210,8 @@ public class TacheXmlWrapper {
         this.codeStatut = codeStatut;
     }
 
-    @XmlElement(required = true)
-    public Date getEcheance() {
-        return echeance;
+    public void setDebut(Date debut) {
+        this.debut = debut;
     }
 
     public void setEcheance(Date echeance) {
@@ -221,6 +234,11 @@ public class TacheXmlWrapper {
         this.codeProfil = codeProfil;
     }
 
+    public void setTypeChangement(TypeChangement typeChangement) {
+        this.typeChangement = typeChangement;
+    }
+
+
     @NotNull
     public Tache extract() throws DaoException {
         Tache tache;
@@ -240,6 +258,7 @@ public class TacheXmlWrapper {
                     ressourceDao.load(codeRessource),
                     profilDao.load(codeProfil)
             );
+            tache.setTypeChangement(typeChangement);
         } catch (Exception e) {
             throw new DaoException("Impossible d'extraire la tâche n°" + idTache + " depuis le XML.", e);
         }

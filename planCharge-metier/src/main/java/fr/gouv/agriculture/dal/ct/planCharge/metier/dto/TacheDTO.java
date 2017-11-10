@@ -219,6 +219,11 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     @NotNull
     @Override
     public TacheDTO fromEntity(@NotNull Tache entity) throws DTOException {
+        return from(entity);
+    }
+
+    @NotNull
+    public static TacheDTO from(@NotNull Tache entity) throws DTOException {
         TacheDTO tacheDTO = new TacheDTO(
                 entity.getId(),
                 CategorieTacheDTO.from(entity.getCategorie()),
@@ -233,13 +238,8 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
                 RessourceDTO.from(entity.getRessource()),
                 ProfilDTO.from(entity.getProfil())
         );
-        tacheDTO.setTypeChangement(getTypeChangement());
+        tacheDTO.setTypeChangement(entity.getTypeChangement());
         return tacheDTO;
-    }
-
-    @NotNull
-    public static TacheDTO from(@NotNull Tache tacheImportee) throws DTOException {
-        return new TacheDTO().fromEntity(tacheImportee);
     }
 
 
