@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
@@ -51,6 +52,9 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     private RessourceDTO<? extends Ressource, ? extends RessourceDTO> ressource;
     @Null
     private ProfilDTO profil;
+
+    @Null
+    private TypeChangement typeChangement;
 
 
     private TacheDTO() {
@@ -143,6 +147,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         return importance;
     }
 
+    @Null
     public Double getCharge() {
         return charge;
     }
@@ -155,6 +160,16 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     @Null
     public ProfilDTO getProfil() {
         return profil;
+    }
+
+
+    @Null
+    public TypeChangement getTypeChangement() {
+        return typeChangement;
+    }
+
+    public void setTypeChangement(@Null TypeChangement typeChangement) {
+        this.typeChangement = typeChangement;
     }
 
 
@@ -183,7 +198,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     @NotNull
     @Override
     public Tache toEntity() throws DTOException {
-        return new Tache(id,
+        Tache tache = new Tache(id,
                 categorie.toEntity(),
                 ((sousCategorie == null) ? null : sousCategorie.toEntity()),
                 noTicketIdal,
@@ -197,12 +212,14 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
                 ressource.toEntity(),
                 profil.toEntity()
         );
+        tache.setTypeChangement(getTypeChangement());
+        return tache;
     }
 
     @NotNull
     @Override
     public TacheDTO fromEntity(@NotNull Tache entity) throws DTOException {
-        return new TacheDTO(
+        TacheDTO tacheDTO = new TacheDTO(
                 entity.getId(),
                 CategorieTacheDTO.from(entity.getCategorie()),
                 (entity.getSousCategorie() == null) ? null : SousCategorieTacheDTO.from(entity.getSousCategorie()),
@@ -216,6 +233,8 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
                 RessourceDTO.from(entity.getRessource()),
                 ProfilDTO.from(entity.getProfil())
         );
+        tacheDTO.setTypeChangement(getTypeChangement());
+        return tacheDTO;
     }
 
     @NotNull

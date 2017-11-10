@@ -25,15 +25,16 @@
                                     <HBox spacing="2" alignment="CENTER_LEFT">
                                         <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" alignment="CENTER"/>
                                         <fx:define>
-                                            <Double fx:id="buttonSpace" fx:value="10"/>
+                                            <Double fx:id="buttonSpacing" fx:value="10"/>
                                         </fx:define>
                                         <VBox alignment="CENTER">
+                                            <!--TODO FDA 2017/11 Centraliser les styles dans une CSS.-->
                                             <HBox alignment="CENTER">
                                                 <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                                     <Label text="Catégorie : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
-                                                    <HBox spacing="$buttonSpace">
+                                                    <HBox spacing="$buttonSpacing">
                                                         <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
                                                         <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
                                                         <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
@@ -45,7 +46,7 @@
                                                     <Label text="Statut : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
-                                                    <HBox spacing="$buttonSpace">
+                                                    <HBox spacing="$buttonSpacing">
                                                         <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
                                                         <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
                                                         <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
@@ -60,7 +61,7 @@
                                                     <Label text="Période : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
-                                                    <HBox spacing="$buttonSpace">
+                                                    <HBox spacing="$buttonSpacing">
                                                         <!--TODO FDA 2017/09 Coder.-->
                                                         <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer"
                                                                       disable="true"/>
@@ -75,13 +76,30 @@
                                                     <!--</buttons>-->
                                                     <!--</ButtonBar>-->
                                                 </VBox>
+                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                                    <Label text="Révision : "/>
+                                                    <!--<ButtonBar>-->
+                                                    <!--<buttons>-->
+                                                    <HBox spacing="$buttonSpacing">
+                                                        <ToggleButton fx:id="filtreRevisionTypeChangementAjoutToggleButton" text="Ajout"
+                                                                      onAction="#filtrer"/>
+                                                        <ToggleButton fx:id="filtreRevisionTypeChangementModificationToggleButton" text="Modification"
+                                                                      onAction="#filtrer"/>
+                                                        <!-- TODO FDA 2017/11 Coder.
+                                                            <ToggleButton fx:id="filtreRevisionTypeChangementSuppressionToggleButton" text="Suppression"
+                                                                          onAction="#filtrer"/>
+                                                        -->
+                                                    </HBox>
+                                                    <!--</buttons>-->
+                                                    <!--</ButtonBar>-->
+                                                </VBox>
                                             </HBox>
                                             <HBox alignment="CENTER">
                                                 <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                                     <Label text="Planification : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
-                                                    <HBox spacing="$buttonSpace">
+                                                    <HBox spacing="$buttonSpacing">
                                                         <!--<ToggleButton fx:id="filtrePlanifToutToggleButton" text="Tout" onAction="#filtrer" userData="TOUT"/>-->
                                                         <SegmentedButton>
                                                             <buttons>
@@ -123,14 +141,15 @@
                                             <HBox alignment="CENTER">
                                                 <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                                     <Label text="Surcharge : "/>
-                                                    <HBox spacing="$buttonSpace">
+                                                    <HBox spacing="$buttonSpacing">
                                                         <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Ressource surchargée"
                                                                       onAction="#filtrer"/>
                                                         <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Profil surchargé" onAction="#filtrer"/>
                                                     </HBox>
                                                 </VBox>
-                                                <!-- Utile ?
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                            </HBox>
+                                            <!-- Utile ?
+                                                <HBox alignment="CENTER" style="-fx-border-color: darkgray;">
                                                     <Label text="Incohérence : "/>
                                                     <SegmentedButton>
                                                         <buttons>
@@ -139,9 +158,8 @@
                                                             <ToggleButton text="Cohérente" onAction="#filtrer" disable="true"/>
                                                         </buttons>
                                                     </SegmentedButton>
-                                                </VBox>
-                                                -->
-                                            </HBox>
+                                                </HBox>
+                                            -->
                                         </VBox>
                                         <Button text="Toutes" onAction="#filtrerRien" styleClass="erase-button"/>
                                         <Button text="Aucune" onAction="#filtrerTout"/>

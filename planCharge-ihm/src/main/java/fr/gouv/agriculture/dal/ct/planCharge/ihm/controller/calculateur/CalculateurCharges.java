@@ -141,7 +141,7 @@ public class CalculateurCharges extends Calculateur {
             throw new ControllerException("Impossible de calculer la provision pour la tâche " + planificationTacheBean.getId() + " et la semaine n° " + noSemaine + ".", e);
         }
 
-        planificationTacheBean.setChargePlanifiee(debutPeriode/*, finPeriode*/, provision);
+        planificationTacheBean.majChargePlanifiee(debutPeriode/*, finPeriode*/, provision);
     }
 
     // Nbrs de jours de charge / ressource :

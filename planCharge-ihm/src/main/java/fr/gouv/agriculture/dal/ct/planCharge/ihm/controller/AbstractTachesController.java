@@ -16,11 +16,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.BarreEtatTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component.FiltreGlobalTachesComponent;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.application.Platform;
@@ -238,6 +240,16 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtrePeriodeEchueToggleButton;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtreRevisionTypeChangementAjoutToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtreRevisionTypeChangementModificationToggleButton;
+
 
     // Les menus :
 
@@ -633,8 +645,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 filtrePeriodeAVenirToggleButton,
                 filtrePeriodeAVenirDemandeeDansSemestreToggleButton,
                 filtrePeriodeContemporaineToggleButton,
-                filtrePeriodeEchueToggleButton
-                // TODO FDA 2017/08 Cocher tous les autres filtres.
+                filtrePeriodeEchueToggleButton,
+                //
+                filtreRevisionTypeChangementAjoutToggleButton,
+                filtreRevisionTypeChangementModificationToggleButton
+                //
+                // Ajouter les futurs filtres ici.
         );
     }
 
@@ -675,6 +691,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             return true;
         }
         if (estTacheAvecPeriodeAVoir(tache)) {
+            return true;
+        }
+        if (estTacheAvecTypeChangementAVoir(tache)) {
             return true;
         }
         if (estTacheAvecAutreFiltreAVoir(tache)) {
@@ -723,7 +742,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         if (filtreStatutReporteToggleButton.isSelected() && tache.matcheStatut(StatutDTO.REPORTE.getCode())) {
             return true;
         }
-        //noinspection ConstantConditions,OverlyComplexBooleanExpression
+        //noinspection ConstantConditions
         if (filtreStatutClosToggleButton.isSelected() && (
                 tache.matcheStatut(StatutDTO.ANNULE.getCode())
                         || tache.matcheStatut(StatutDTO.DOUBLON.getCode())
@@ -744,9 +763,22 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 return true;
             }
         }
-        //noinspection OverlyComplexBooleanExpression
         if ((tache.getEcheance() != null) && (planChargeBean.getDateEtat() != null)) {
             if (filtrePeriodeEchueToggleButton.isSelected() && tache.getEcheance().isBefore(planChargeBean.getDateEtat())) { // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean estTacheAvecTypeChangementAVoir(@NotNull TB tache) {
+        if (filtreRevisionTypeChangementAjoutToggleButton.isSelected()) {
+            if (tache.getTypeChangement() == TypeChangement.AJOUT) {
+                return true;
+            }
+        }
+        if (filtreRevisionTypeChangementModificationToggleButton.isSelected()) {
+            if (tache.getTypeChangement() == TypeChangement.MODIFICATION) {
                 return true;
             }
         }
@@ -858,6 +890,13 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     void filtrerSurProfil(@NotNull ProfilBean profilBean) {
         TableViews.applyFilter(profilColumn, getTableFilter(), profilBean);
+    }
+
+
+    void filtrerSurTachesAjoutees() {
+        desactiverTousFiltres();
+        filtreRevisionTypeChangementAjoutToggleButton.setSelected(true);
+        filtrer();
     }
 
 

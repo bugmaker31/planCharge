@@ -41,7 +41,7 @@ public class PlanificationTacheBean extends TacheBean {
     private DoubleProperty chargePlanifieeTotale = new SimpleDoubleProperty();
 
 
-    public PlanificationTacheBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) throws BeanException {
+    public PlanificationTacheBean(@NotNull TacheBean tacheBean, @NotNull Map<LocalDate, DoubleProperty> calendrier) /*throws BeanException */ {
         super(tacheBean);
         this.calendrier = calendrier;
 
@@ -57,7 +57,7 @@ public class PlanificationTacheBean extends TacheBean {
         majChargePlanifieeTotale();
     }
 
-    public PlanificationTacheBean(@NotNull TacheBean tacheBean) throws BeanException {
+    public PlanificationTacheBean(@NotNull TacheBean tacheBean) /*throws BeanException*/ {
         this(tacheBean, new TreeMap<>()); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
     }
 
@@ -147,15 +147,28 @@ public class PlanificationTacheBean extends TacheBean {
 
 
     /**
-     * Définit la charge planifiée pour la péridoe donnée.
+     * Met à jour la charge planifiée pour la période donnée.
      * <p>Rq : Cette méthode appelle {@link #majChargePlanifieeTotale()}. Donc inutile d'appeler {@link #majChargePlanifieeTotale()}.</p>
      *
      * @param debutPeriode début de la période considérée
-     * @param charge       charge planifiée
+     * @param charge       nouvelle charge planifiée sur la période donnée
      */
-    public void setChargePlanifiee(@NotNull LocalDate debutPeriode, @Null Double charge) {
+    public void majChargePlanifiee(@NotNull LocalDate debutPeriode, @Null Double charge) {
+        majChargePlanifiee(debutPeriode, charge, true);
+    }
 
-/*
+
+    /**
+     * Met à jour la charge planifiée pour la période donnée.
+     * <p>Cette méthode appelle {@link #majChargePlanifieeTotale()} si {@code doMajChargePlanifieeTotale} est [@code true.</p>
+     *
+     * @param debutPeriode               début de la période considérée
+     * @param charge                     nouvelle charge planifiée sur la période donnée
+     * @param doMajChargePlanifieeTotale stipule si on doit màj la charge planifiée totale aussi (appel de la méthode {@link #majChargePlanifieeTotale()}.
+     */
+    public void majChargePlanifiee(@NotNull LocalDate debutPeriode, @Null Double charge, boolean doMajChargePlanifieeTotale) {
+
+    /*
         if (charge == null) {
             calendrier.remove(debutPeriode);
         } else {
@@ -178,10 +191,13 @@ public class PlanificationTacheBean extends TacheBean {
             chargePlanifieeProperty.setValue(charge);
             LOGGER.debug("Planification tâche {} ++ période {} : charge (j) {} -> {}.", noTache(), debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE), ancienneCharge, charge);
 
-            if (!(
-                    (fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(ancienneCharge, 0.0) == 0.0)
-                            && (fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(charge, 0.0) == 0.0)
-            )) { // Mathématiquement parlant, 'null' vaut zéro, donc pas besoin de recalculer.
+            if (doMajChargePlanifieeTotale
+                    &&
+                    !(
+                            // Rq : Mathématiquement parlant, 'null' égale zéro, donc pas besoin de recalculer.
+                            (fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(ancienneCharge, 0.0) == 0.0)
+                                    && (fr.gouv.agriculture.dal.ct.planCharge.util.Objects.value(charge, 0.0) == 0.0)
+                    )) {
                 majChargePlanifieeTotale();
             }
         }
@@ -219,14 +235,18 @@ public class PlanificationTacheBean extends TacheBean {
 
     @NotNull
     public PlanificationTacheBean copier(@NotNull PlanificationTacheBean original) throws CopieException {
+/*
         try {
-            return new PlanificationTacheBean(
-                    original.copier(),
-                    new TreeMap<>(original.calendrier) // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.calendrier
-            );
+*/
+        return new PlanificationTacheBean(
+                original.copier(),
+                new TreeMap<>(original.calendrier) // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.calendrier
+        );
+/*
         } catch (BeanException e) {
             throw new CopieException("Impossible de copier.", e);
         }
+*/
     }
 
 

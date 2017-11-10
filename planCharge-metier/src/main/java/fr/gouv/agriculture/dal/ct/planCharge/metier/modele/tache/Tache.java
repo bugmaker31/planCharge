@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache;
 
 import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
 
 import javax.validation.constraints.NotNull;
@@ -40,6 +41,9 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
     private Ressource<?> ressource;
     @NotNull
     private Profil profil;
+
+    @Null
+    private TypeChangement typeChangement;
 
     /**
      * Instancie une nouvelle tâche.
@@ -172,6 +176,16 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
     @NotNull
     public Profil getProfil() {
         return profil;
+    }
+
+
+    @Null
+    public TypeChangement getTypeChangement() {
+        return typeChangement;
+    }
+
+    public void setTypeChangement(@Null TypeChangement typeChangement) {
+        this.typeChangement = typeChangement;
     }
 
 

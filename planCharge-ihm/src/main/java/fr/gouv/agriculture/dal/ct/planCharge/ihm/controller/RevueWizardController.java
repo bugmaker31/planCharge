@@ -3,7 +3,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -221,15 +220,13 @@ public class RevueWizardController extends AbstractController {
     @FXML
     private void filtrerTachesAyantProfilsSurcharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().activerModuleCharges();
-        ihm.getApplicationController().activerModuleCharges();
         ihm.getChargesController().filtrerSurProfilsSurcharges();
     }
 
     @FXML
-    private void filtrerTachesNouvelles(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+    private void filtrerTachesAjoutees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().activerModuleCharges();
-//        TODO FDA 2017/10 Comment identifier les nouvelles tâches ?
-        throw new NotImplementedException();
+        ihm.getChargesController().filtrerSurTachesAjoutees();
     }
 
     public void importerTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {

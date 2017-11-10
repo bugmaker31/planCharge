@@ -24,17 +24,12 @@ public class ProjetAppliDTO extends AbstractDTO<ProjetAppli, String, ProjetAppli
     private String trigrammeCPI;
 
 
-
-    private ProjetAppliDTO() {
-        super();
-    }
-
     public ProjetAppliDTO(@NotNull String code) {
         this(code, null, null);
     }
 
     public ProjetAppliDTO(@NotNull String code, @Null String nom, @Null String trigrammeCPI) {
-        this();
+        super();
         this.code = code;
         this.nom = nom;
         this.trigrammeCPI = trigrammeCPI;
@@ -75,12 +70,12 @@ public class ProjetAppliDTO extends AbstractDTO<ProjetAppli, String, ProjetAppli
     @NotNull
     @Override
     public ProjetAppliDTO fromEntity(@NotNull ProjetAppli entity) {
-        return new ProjetAppliDTO(entity.getCode(), entity.getNom(), entity.getTrigrammeCPI());
+        return from(entity);
     }
 
     @NotNull
     static public ProjetAppliDTO from(@NotNull ProjetAppli entity) {
-        return new ProjetAppliDTO().fromEntity(entity);
+        return new ProjetAppliDTO(entity.getCode(), entity.getNom(), entity.getTrigrammeCPI());
     }
 
 

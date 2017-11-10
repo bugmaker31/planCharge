@@ -727,7 +727,7 @@ public class ApplicationController extends AbstractController {
 
                 planCharge[0] = planChargeBean.toDto();
 
-                planChargeService.majTachesDepuisCalc(planCharge[0], ficCalc, rapport);
+                RapportImportTaches rapportImportTaches = planChargeService.majTachesDepuisCalc(planCharge[0], ficCalc, rapport);
 
                 return rapport;
             }
@@ -747,7 +747,8 @@ public class ApplicationController extends AbstractController {
 //                            getSuiviActionsUtilisateur().historiser(new ImportTaches(planChargeBeanAvantChargement[0]));
 
                     //noinspection HardcodedLineSeparator
-                    ihm.afficherNotificationInfo("Tâches mises à jour importées",
+                    ihm.afficherDialog(Alert.AlertType.INFORMATION,
+                            "Tâches mises à jour importées",
                             "Les tâches ont été mises à jour : "
                                     + "\n- depuis le fichier : " + ficCalc.getAbsolutePath()
                                     + "\n- nombre de tâches initial : " + rapportFinal.getNbrTachesPlanifiees()
@@ -755,7 +756,8 @@ public class ApplicationController extends AbstractController {
                                     + "\n- nombre de tâches mises à jour : " + rapportFinal.getNbrTachesMisesAJour()
                                     + "\n- nombre de tâches ajoutées : " + rapportFinal.getNbrTachesAjoutees()
                                     + "\n- nombre de tâches supprimées : " + rapportFinal.getNbrTachesSupprimees()
-                                    + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size()
+                                    + "\n- nombre de tâches au final : " + planChargeBean.getPlanificationsBeans().size(),
+                            800, 300
                     );
 
                     afficherModuleTaches();

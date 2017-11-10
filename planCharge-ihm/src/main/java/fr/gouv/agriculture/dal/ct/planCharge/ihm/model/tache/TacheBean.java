@@ -6,9 +6,8 @@ import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
@@ -38,8 +37,10 @@ import java.util.regex.PatternSyntaxException;
 @SuppressWarnings("ClassWithTooManyMethods")
 public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copiable<TacheBean>, ITache<TacheBean> {
 
+    @SuppressWarnings("WeakerAccess")
     @NotNull
     public static final String FORMAT_DATE = PlanChargeIhm.PATRON_FORMAT_DATE;
+    @SuppressWarnings("WeakerAccess")
     @NotNull
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
@@ -75,6 +76,9 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private ObjectProperty<ProfilBean> profil = new SimpleObjectProperty<>();
 
+    @Null
+    private TypeChangement typeChangement;
+
     //    @Autowired
     @NotNull
     private TacheService tacheService = TacheService.instance();
@@ -82,6 +86,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliBean projetAppli, @Null StatutBean statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceBean importance, @Null Double charge, @Null RessourceBean ressource, @Null ProfilBean profil) {
+        super();
         this.id.set(id);
         this.codeCategorie.setValue(codeCategorie);
         this.codeSousCategorie.setValue(codeSousCategorie);
@@ -97,7 +102,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         this.profil.setValue(profil);
     }
 
-    public TacheBean(@NotNull TacheBean tacheBean) {
+    protected TacheBean(@NotNull TacheBean tacheBean) {
         this(
                 tacheBean.getId(),
                 tacheBean.getCodeCategorie(),
@@ -113,9 +118,11 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 tacheBean.getRessource(),
                 tacheBean.getProfil()
         );
+        typeChangement = tacheBean.getTypeChangement();
     }
 
-    public TacheBean(@NotNull TacheDTO tacheDTO) {
+    protected TacheBean(@NotNull TacheDTO tacheDTO) {
+        //noinspection RedundantTypeArguments
         this(
                 tacheDTO.getId(),
                 Objects.value(tacheDTO.getCategorie(), CategorieTacheDTO::getCode),
@@ -123,7 +130,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 tacheDTO.getNoTicketIdal(),
                 tacheDTO.getDescription(),
                 Objects.value(tacheDTO.getProjetAppli(), ProjetAppliBean::from),
-                Objects.value(tacheDTO.getStatut(), StatutBean::from),
+                Objects.<StatutDTO, StatutBean>value(tacheDTO.getStatut(), StatutBean::safeFrom),
                 tacheDTO.getDebut(),
                 tacheDTO.getEcheance(),
                 Objects.value(tacheDTO.getImportance(), ImportanceBean::from),
@@ -131,6 +138,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 Objects.value(tacheDTO.getRessource(), RessourceBean::from),
                 Objects.value(tacheDTO.getProfil(), ProfilBean::from)
         );
+        typeChangement = tacheDTO.getTypeChangement();
     }
 
 /*
@@ -292,6 +300,12 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
+    @Null
+    public TypeChangement getTypeChangement() {
+        return typeChangement;
+    }
+
+
     public void setDebut(@NotNull LocalDate debut) {
         this.debut.set(debut);
     }
@@ -299,6 +313,12 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     public void setEcheance(@NotNull LocalDate echeance) {
         this.echeance.set(echeance);
     }
+
+
+    public void setTypeChangement(@Null TypeChangement typeChangement) {
+        this.typeChangement = typeChangement;
+    }
+
 
     @Null
     public StringBinding noTacheProperty() {
@@ -333,18 +353,18 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @NotNull
     @Override
-    public TacheDTO toDto() {
+    public TacheDTO toDto() /*throws BeanException*/ {
 /*
         try {
 */
-            return new TacheDTO(
+            TacheDTO tacheDTO = new TacheDTO(
                     getId(),
                     (getCodeCategorie() == null) ? null : CategorieTacheDTO.valeurOuNull(getCodeCategorie()),
                     (getCodeSousCategorie() == null) ? null : SousCategorieTacheDTO.valeurOuNull(getCodeSousCategorie()),
                     getNoTicketIdal(),
                     getDescription(),
                     (getProjetAppli() == null) ? null : ProjetAppliBean.to(getProjetAppli()),
-                    (getStatut() == null) ? null : StatutBean.to(getStatut()),
+                    (getStatut() == null) ? null : StatutBean.safeTo(getStatut()),
                     getDebut(),
                     getEcheance(),
                     (getImportance() == null) ? null : ImportanceBean.to(getImportance()),
@@ -352,8 +372,12 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                     (getRessource() == null) ? null : RessourceBean.to(getRessource()),
                     (getProfil() == null) ? null : ProfilBean.to(getProfil())
             );
+
+            tacheDTO.setTypeChangement(getTypeChangement());
+
+            return tacheDTO;
 /*
-        } catch (DTOException e) {
+        } catch (DTOException | BeanException e) {
             throw new BeanException("Impossible de transformer la tâche de Bean en DTO.", e);
         }
 */
@@ -362,7 +386,13 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     @Override
     public TacheBean fromDto(@NotNull TacheDTO dto) {
-        return new TacheBean(dto);
+        return from(dto);
+    }
+
+    public static TacheBean from(@NotNull TacheDTO dto) {
+        TacheBean tacheBean = new TacheBean(dto);
+        tacheBean.setTypeChangement(dto.getTypeChangement());
+        return tacheBean;
     }
 
 
@@ -492,9 +522,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         if (getStatut() == null) {
             return false;
         }
-        if (getStatut().getCode() == null) {
-            return false;
-        }
         if (getStatut().getCode().contains(otherValue)) {
             return true; // matches
         }
@@ -565,6 +592,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
+/*
     public TacheDTO extract() throws BeanException {
         TacheDTO tache;
         try {
@@ -588,6 +616,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         }
         return tache;
     }
+*/
 
 
     @Override

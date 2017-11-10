@@ -20,6 +20,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
@@ -201,12 +202,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    public ToggleButton filtreSurchargeRessourceToggleButton;
+    private ToggleButton filtreSurchargeRessourceToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    public ToggleButton filtreSurchargeProfilToggleButton;
-
+    private ToggleButton filtreSurchargeProfilToggleButton;
 
     // Les TableView :
 
@@ -1703,7 +1703,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 "(pas de ticket IDAL)",
                 null,
                 null,
-                StatutBean.from(StatutDTO.NOUVEAU),
+                StatutBean.NOUVEAU,
                 null,
                 null,
                 null,
@@ -1711,6 +1711,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 null,
                 null
         );
+        tacheBean.setTypeChangement(TypeChangement.AJOUT);
 
         // TODO FDA 2017/09 Bloc à supprimer, sans doute.
         Map<LocalDate, DoubleProperty> calendrier = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
@@ -1722,11 +1723,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             }
         }
 
+/*
         try {
+*/
             return new PlanificationTacheBean(tacheBean, calendrier);
+/*
         } catch (BeanException e) {
             throw new ControllerException("Impossible d'instancier un nouvelle tâche du plan de charge.", e);
         }
+*/
     }
 
 

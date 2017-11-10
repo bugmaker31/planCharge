@@ -48,7 +48,7 @@ public class CalendrierChargeCellCallback implements Callback<TableColumn.CellDa
         LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
         try {
             if (!planificationTacheBean.aChargePlanifiee(debutPeriode, finPeriode)) {
-                planificationTacheBean.setChargePlanifiee(debutPeriode, 0.0);
+                planificationTacheBean.majChargePlanifiee(debutPeriode, 0.0);
             }
             DoubleProperty chargePeriodeProperty = planificationTacheBean.chargePlanifieeProperty(debutPeriode);
             assert chargePeriodeProperty != null;

@@ -16,5 +16,6 @@
     <FontAwesomeIconView fx:id="modeleLienEntreEtapesView" glyphName="LONG_ARROW_RIGHT" size="$ICON_SIZE" glyphStyle="-fx-fill: black"/>
     <FontAwesomeIconView fx:id="modeleEtapeCouranteView" glyphName="CIRCLE" size="$ICON_SIZE" glyphStyle="-fx-fill: black"/>
     <FontAwesomeIconView fx:id="modeleEtapeNonCouranteView" glyphName="CIRCLE_THIN" size="$ICON_SIZE" glyphStyle="-fx-fill: black"/>
+    <!--FIXME FDA 2017/11 "-fx-text-fill: yellow" sans effet.-->
     <Label fx:id="noEtapeCouranteLabel" style="-fx-text-fill: yellow; -fx-font-size: 24pt"/>
 </GridPane>

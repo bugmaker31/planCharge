@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.service;
 
 import fr.gouv.agriculture.dal.ct.metier.dao.DaoException;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
@@ -136,7 +137,7 @@ public class ReferentielsService {
     public List<StatutDTO> statuts() throws ServiceException {
         try {
             List<Statut> statuts = statutDao.list();
-            return statuts.stream().map(StatutDTO::from).collect(Collectors.toList());
+            return statuts.stream().map(StatutDTO::safeFrom).collect(Collectors.toList());
         } catch (DaoException e) {
             throw new ServiceException("Impossible de retrouver les statuts.", e);
         }
@@ -147,7 +148,7 @@ public class ReferentielsService {
         try {
             Statut statut = statutDao.load(codeStatut);
             return StatutDTO.from(statut);
-        } catch (DaoException e) {
+        } catch (DaoException | DTOException e) {
             //noinspection HardcodedFileSeparator
             throw new ServiceException("Impossible de retrouver le statut '" + codeStatut + "'.", e);
         }

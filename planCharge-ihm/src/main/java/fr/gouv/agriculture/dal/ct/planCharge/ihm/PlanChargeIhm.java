@@ -875,7 +875,9 @@ public class PlanChargeIhm extends Application {
             return;
         }
         if (!nodesDecorations.containsKey(field) || (nodesDecorations.get(field) == null)) {
-            LOGGER.error("Le noeud '" + field.getId() + "' a bien une pop-up pour afficher l'erreur de saisie, mais n'a pas de décoration pour symboliser l'erreur de saisie.");
+            // Ne devrait pas arriver, mais arrive parfois qd même (traitements en // de JavaFX ?).
+            // Aucun impact car la décoration a déjà été enlevée (par qui ?), donc juste un warning (pas une erreur).
+            LOGGER.warn("Le noeud '{}' a bien une pop-up pour afficher l'erreur de saisie, mais n'a pas de décoration pour symboliser l'erreur de saisie.", field.getId());
             return;
         }
         for (Decoration decoration : nodesDecorations.get(field)) {
@@ -1034,7 +1036,7 @@ public class PlanChargeIhm extends Application {
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
 //        return LocalDate.of(2017, 8, 21);
-        return LocalDate.of(2017, 10, 30);
+        return LocalDate.of(2017, 10, 23);
     }
 
     public void definirTitre(String titre) {

@@ -2,6 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
 import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
+import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Referentiels;
@@ -35,10 +36,6 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
     private List<RessourceHumaineDTO> ressourcesHumaines;
 
 
-    private ReferentielsDTO() {
-        super();
-    }
-
     public ReferentielsDTO(@NotNull List<JourFerieDTO> joursFeries, @NotNull List<ImportanceDTO> importances, @NotNull List<ProfilDTO> profils, @NotNull List<ProjetAppliDTO> projetsApplis, @NotNull List<StatutDTO> statuts, @NotNull List<RessourceHumaineDTO> ressourcesHumaines) {
         this.joursFeries = joursFeries;
         this.importances = importances;
@@ -49,8 +46,21 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
     }
 
     @NotNull
-    public static ReferentielsDTO from(Referentiels referentiels) {
-        return new ReferentielsDTO().fromEntity(referentiels);
+    public static ReferentielsDTO from(@NotNull Referentiels entity) {
+        return new ReferentielsDTO(
+                entity.getJoursFeries().stream().map(JourFerieDTO::from).collect(Collectors.toList()),
+                entity.getImportances().stream().map(ImportanceDTO::from).collect(Collectors.toList()),
+                entity.getProfils().stream().map(ProfilDTO::from).collect(Collectors.toList()),
+                entity.getProjetsApplis().stream().map(ProjetAppliDTO::from).collect(Collectors.toList()),
+                entity.getStatuts().stream().map(entity1 -> {
+                    try {
+                        return StatutDTO.from(entity1);
+                    } catch (DTOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList()),
+                entity.getRessourcesHumaines().stream().map(RessourceHumaineDTO::from).collect(Collectors.toList())
+        );
     }
 
     @NotNull
@@ -83,7 +93,7 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
         return ressourcesHumaines;
     }
 
-    @Null
+    @NotNull
     @Override
     public Serializable getIdentity() {
         return null; // TODO FDA 2017/07 Trouver mieux comme code.
@@ -96,20 +106,13 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
 
     @NotNull
     @Override
-    public ReferentielsDTO fromEntity(@NotNull Referentiels entity) {
-        return new ReferentielsDTO(
-                entity.getJoursFeries().stream().map(JourFerieDTO::from).collect(Collectors.toList()),
-                entity.getImportances().stream().map(ImportanceDTO::from).collect(Collectors.toList()),
-                entity.getProfils().stream().map(ProfilDTO::from).collect(Collectors.toList()),
-                entity.getProjetsApplis().stream().map(ProjetAppliDTO::from).collect(Collectors.toList()),
-                entity.getStatuts().stream().map(StatutDTO::from).collect(Collectors.toList()),
-                entity.getRessourcesHumaines().stream().map(RessourceHumaineDTO::from).collect(Collectors.toList())
-        );
+    public ReferentielsDTO fromEntity(@NotNull Referentiels entity) throws DTOException {
+        return from(entity);
     }
 
     @NotNull
     @Override
-    public Referentiels toEntity() {
+    public Referentiels toEntity() throws DTOException {
         /* Rq : La transformation des List en Set enlève les éventuels doublons. */
 /*
         assert joursFeries != null; // TODO FDA 2017/07 Préciser la RG qui n'est pas respectée.
@@ -124,9 +127,16 @@ public class ReferentielsDTO extends AbstractDTO<Referentiels, Serializable, Ref
                 importances.stream().map(ImportanceDTO::toEntity).collect(Collectors.toSet()),
                 profils.stream().map(ProfilDTO::toEntity).collect(Collectors.toSet()),
                 projetsApplis.stream().map(ProjetAppliDTO::toEntity).collect(Collectors.toSet()),
-                statuts.stream().map(StatutDTO::toEntity).collect(Collectors.toSet()),
+                statuts.stream().map(statutDTO -> {
+                    try {
+                        return statutDTO.toEntity();
+                    } catch (DTOException e) {
+                        // TODO FDA 2017/11 Trouver mieux que thrower une RuntimeException.
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toSet()),
                 ressourcesHumaines.stream().map(RessourceHumaineDTO::toEntity).collect(Collectors.toSet())
-                );
+        );
     }
 
     @SuppressWarnings("MethodWithMultipleLoops")

@@ -125,7 +125,7 @@
                             text="Planifier (ou pas) les nouvelles tâches."
                             wrapText="true"
                             GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <Button text="Afficher les nouvelles tâches" onAction="#filtrerTachesNouvelles"
+                    <Button text="Filtrer sur les tâches ajoutées" onAction="#filtrerTachesAjoutees"
                             GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <CheckBox
@@ -138,13 +138,13 @@
                     <CheckBox text="Eliminer les surcharges de ressources."
                               wrapText="true"
                               GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <Button text="Filtrer sur les ressources surchargées " onAction="#filtrerTachesAyantRessourcesSurchargees"
+                    <Button text="Filtrer sur les ressources surchargées" onAction="#filtrerTachesAyantRessourcesSurchargees"
                             GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <CheckBox text="Eliminer les surcharges de profils."
                               wrapText="true"
                               GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <Button text="Filtrer sur les profils surchargés " onAction="#filtrerTachesAyantProfilsSurcharges"
+                    <Button text="Filtrer sur les profils surchargés" onAction="#filtrerTachesAyantProfilsSurcharges"
                             GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                 </GridPane>

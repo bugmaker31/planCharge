@@ -27,8 +27,8 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean> 
 
     private ImportanceBean(@Null Integer ordre, @Null String code) {
         this();
-        this.ordre.set(ordre);
-        this.code.set(code);
+        this.ordre.setValue(ordre);
+        this.code.setValue(code);
     }
 
     @SuppressWarnings("StaticMethodNamingConvention")
@@ -75,18 +75,18 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean> 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if ((o == null) || (getClass() != o.getClass())) return false;
+        if ((o == null) || (!java.util.Objects.equals(getClass(), o.getClass()))) return false;
 
         ImportanceBean that = (ImportanceBean) o;
 
-        if (getOrdre() != that.getOrdre()) return false;
-        return getCode().equals(that.getCode());
+        if (!java.util.Objects.equals(getOrdre(), that.getOrdre())) return false;
+        return java.util.Objects.equals(getCode(), that.getCode());
     }
 
     @Override
     public int hashCode() {
-        int result = new Integer(getOrdre()).hashCode();
-        result = (31 * result) + getCode().hashCode();
+        int result = ordre.hashCode();
+        result = (31 * result) + code.hashCode();
         return result;
     }
 

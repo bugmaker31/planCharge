@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.AbstractService;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.charge.PlanChargeDaoException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.tache.TacheDao;
@@ -118,7 +119,7 @@ public class ChargeService extends AbstractService {
 
 
     @NotNull
-    public RapportImportTaches majTachesDepuisCalc(@NotNull PlanChargeDTO planCharge, @NotNull File ficCalcTaches, @NotNull final RapportImportTaches rapport) throws ServiceException {
+    public RapportImportTaches majTachesDepuisCalc(@NotNull PlanChargeDTO planCharge, @NotNull File ficCalcTaches, @NotNull RapportImportTaches rapport) throws ServiceException {
         try {
 
             Set<Tache> tachesImportees = tacheDao.importerDepuisCalc(ficCalcTaches, rapport);
@@ -135,13 +136,16 @@ public class ChargeService extends AbstractService {
                 assert planCharge.getPlanifications() != null;
                 if (!planCharge.getPlanifications().taches().contains(tacheImporteeDTO)) {
 
+                    tacheImporteeDTO.setTypeChangement(TypeChangement.AJOUT);
+
                     // Ajout des tâches qui ont été créées depuis :
                     assert planCharge.getDateEtat() != null;
                     planCharge.getPlanifications().ajouter(tacheImporteeDTO, planCharge.getDateEtat());
                     rapport.incrNbrTachesAjoutees();
                     LOGGER.debug("Tâche {} ajoutée.", tacheImportee);
                 } else {
-                    assert planCharge.getPlanifications().taches().contains(tacheImporteeDTO);
+
+                    tacheImporteeDTO.setTypeChangement(TypeChangement.MODIFICATION);
 
                     // Mise à jour des tâches qui existaient déjà avant, en gardant la planification actuelle :
                     TacheDTO tacheActuelleDTO = planCharge.getPlanifications().tache(tacheImportee.getId());
@@ -160,7 +164,7 @@ public class ChargeService extends AbstractService {
                 }
             }
             // Suppression des tâches qui n'existent plus (terminée/annulée/etc.) :
-            Set<TacheDTO> tachesActuellesASupprimer = new HashSet<>();
+            Set<TacheDTO> tachesActuellesASupprimer = new HashSet<>(50);
             assert planCharge.getPlanifications() != null;
             for (TacheDTO tacheActuelle : planCharge.getPlanifications().taches()) {
                 if (!tachesImportees.contains(tacheActuelle.toEntity())) {

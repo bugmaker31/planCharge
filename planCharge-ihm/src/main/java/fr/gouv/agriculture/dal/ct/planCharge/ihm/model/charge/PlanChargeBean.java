@@ -7,8 +7,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAb
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
@@ -274,10 +274,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     public PlanChargeBean fromDto(@NotNull PlanChargeDTO planCharge) throws BeanException {
         setDateEtat(planCharge.getDateEtat());
 
-        /*
-        NB : Il faut faire un "clear" avant de faire un "setAll" sinon les Listener s'appellent en boucle et au final certaines List se retrouvent vides.
-        TODO FDA 2017/09 Confirmer.
-        */
+//        TODO FDA 2017/11 Optimiser : utiliser des "'parallelStream" au lieu de "stream".
 
         // Référentiels :
 //        joursFeriesBeans.clear();
@@ -286,34 +283,28 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                         .map(JourFerieBean::from)
                         .collect(Collectors.toList())
         );
-//        importancesBeans.clear();
         importancesBeans.setAll(
                 planCharge.getReferentiels().getImportances().stream()
                         .map(ImportanceBean::from)
                         .collect(Collectors.toList())
         );
-//        profilsBeans.clear();
         profilsBeans.setAll(
                 planCharge.getReferentiels().getProfils().stream()
                         .map(ProfilBean::from)
                         .collect(Collectors.toList())
         );
-//        projetsApplisBeans.clear();
         projetsApplisBeans.setAll(
                 planCharge.getReferentiels().getProjetsApplis().stream()
                         .map(ProjetAppliBean::from)
                         .collect(Collectors.toList())
         );
-//        statutsBeans.clear();
         statutsBeans.setAll(
                 planCharge.getReferentiels().getStatuts().stream()
-                        .map(StatutBean::from)
+                        .map(StatutBean::safeFrom)
                         .collect(Collectors.toList())
         );
         // Ressources :
         {
-            // NB : Il faut faire un "clear" avant de faire les "setAll"/"addAll"/..., sinon (les Listeners de ressourcesBeans et ressourcesHumainesBeans s'appellent en boucle et au final) la List se retrouve vide.
-//            ressourcesBeans.clear();
             // Rq : On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             List<RessourceBean<?, ?>> ressourceBeanList = new ArrayList<>(
                     planCharge.getReferentiels().getRessourcesHumaines().stream()
@@ -329,29 +320,27 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         }
         // Disponibilités :
         { // Nbrs de jours d'absence / rsrc :
-            List<NbrsJoursAbsenceBean> nbrsJoursAbsenceBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            List<NbrsJoursAbsenceBean> nbrsJoursAbsenceBeanList = new ArrayList<>(20); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             Map<RessourceHumaineDTO, Map<LocalDate, Float>> absencesDTO = planCharge.getDisponibilites().getNbrsJoursAbsence();
             for (RessourceHumaineDTO ressourceHumaineDTO : absencesDTO.keySet()) {
                 Map<LocalDate, FloatProperty> calendrierAbsences = absencesDTO.get(ressourceHumaineDTO).keySet().stream()
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new SimpleFloatProperty(absencesDTO.get(ressourceHumaineDTO).get(localDate)))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
                 nbrsJoursAbsenceBeanList.add(new NbrsJoursAbsenceBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
-//            nbrsJoursAbsenceBeans.clear();
             nbrsJoursAbsenceBeans.setAll(nbrsJoursAbsenceBeanList);
         }
         { // Pctages de dispo pour la CT / rsrc :
-            List<PctagesDispoRsrcBean> pctagesDispoCTBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            List<PctagesDispoRsrcBean> pctagesDispoCTBeanList = new ArrayList<>(100); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             Map<RessourceHumaineDTO, Map<LocalDate, Percentage>> pctagesDispoCT = planCharge.getDisponibilites().getPctagesDispoCT();
             for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoCT.keySet()) {
                 Map<LocalDate, PercentageProperty> calendrierAbsences = pctagesDispoCT.get(ressourceHumaineDTO).keySet().stream()
                         .collect(Collectors.toMap(locaDate -> locaDate, localDate -> new PercentageProperty(pctagesDispoCT.get(ressourceHumaineDTO).get(localDate).floatValue()))); // Rq : Collectors.toMap "dé-trie" car instancie une HashMap.
                 pctagesDispoCTBeanList.add(new PctagesDispoRsrcBean(RessourceHumaineBean.from(ressourceHumaineDTO), calendrierAbsences));
             }
-//            pctagesDispoCTBeans.clear();
             pctagesDispoCTBeans.setAll(pctagesDispoCTBeanList);
         }
         { // Pctages de dispo max / rsrc / profil :
-            List<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeanList = new ArrayList<>(); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
+            List<PctagesDispoRsrcProfilBean> pctagesDispoMaxRsrcProfilBeanList = new ArrayList<>(100); // On utilise une List intermédiaire pour optimiser et ne pas ajouter les élts à la ObservableList un par un.
             Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Percentage>>> pctagesDispoMaxRsrcProfil = planCharge.getDisponibilites().getPctagesDispoMaxRsrcProfil();
             for (RessourceHumaineDTO ressourceHumaineDTO : pctagesDispoMaxRsrcProfil.keySet()) {
                 for (ProfilDTO profilDTO : pctagesDispoMaxRsrcProfil.get(ressourceHumaineDTO).keySet()) {
@@ -360,7 +349,6 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                     pctagesDispoMaxRsrcProfilBeanList.add(new PctagesDispoRsrcProfilBean(RessourceHumaineBean.from(ressourceHumaineDTO), ProfilBean.from(profilDTO), calendrierAbsences));
                 }
             }
-//            pctagesDispoMaxRsrcProfilBeans.clear();
             pctagesDispoMaxRsrcProfilBeans.setAll(pctagesDispoMaxRsrcProfilBeanList); // TODO FDA 2017/08 Améliorer la perf, prend pratiquement 1 minute ! Sans doute car contient des Property (gestion de leurs Listeners)
         }
         // Tâches + Charge :
@@ -383,7 +371,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         List<ImportanceDTO> importances = importancesBeans.stream().map(ImportanceBean::to).collect(Collectors.toList());
         List<ProfilDTO> profils = profilsBeans.stream().map(ProfilBean::to).collect(Collectors.toList());
         List<ProjetAppliDTO> projetsApplis = projetsApplisBeans.stream().map(ProjetAppliBean::to).collect(Collectors.toList());
-        List<StatutDTO> statuts = statutsBeans.stream().map(StatutBean::to).collect(Collectors.toList());
+        List<StatutDTO> statuts = statutsBeans.stream().map(StatutBean::safeTo).collect(Collectors.toList());
         List<RessourceHumaineDTO> ressourcesHumaines = ressourcesHumainesBeans.stream().map(RessourceHumaineBean::to).collect(Collectors.toList());
         return new ReferentielsDTO(joursFeries, importances, profils, projetsApplis, statuts, ressourcesHumaines);
     }
@@ -444,7 +432,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
     public PlanificationsDTO toPlanificationDTOs() throws BeanException {
         PlanificationsDTO planifications = new PlanificationsDTO();
         for (PlanificationTacheBean planificationBean : planificationsBeans) {
-            TacheDTO tache = planificationBean.getTacheBean().extract();
+            TacheDTO tache = planificationBean.getTacheBean().toDto();
 
             Map<LocalDate, Double> calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
             Set<LocalDate> debutsPeriodesPlanifiees = planificationBean.getDebutsPeriodesPlanifiees();
@@ -462,34 +450,57 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
     public void fromPlanificationDTOs(@NotNull PlanificationsDTO planificationsDTO) throws BeanException {
 
+        /*
+        Il ne faut pas "clearer" la liste des #planificationsBeans car des listeners sont enregistrés sur les éléments (beans) de #planificationsBeans.
+        Il faut appeler la méthode PlanificationTacheBean#majChargePlanifiee pour màj les charges planifiées.
+         */
+
         // On "oublie" la planification actuelle :
-        for (PlanificationTacheBean planifBean : planificationsBeans) {
-            for (LocalDate debutPeriodePlanifiee : planifBean.getDebutsPeriodesPlanifiees()) {
-                planifBean.setChargePlanifiee(debutPeriodePlanifiee, null);
-            }
-        }
+        LOGGER.debug("Effacement de la planification actuelle : ");
+        planificationsBeans.stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
+                .forEach(planifBean -> {
+//                    LOGGER.debug(" - Tâche dont on doit effacer la planification : {}.", planifBean.noTache());
+                    planifBean.getDebutsPeriodesPlanifiees().stream()  // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
+                            .forEach(debutPeriodePlanifiee -> {
+                                planifBean.majChargePlanifiee(debutPeriodePlanifiee, null, false);
+                                LOGGER.debug("   - Période {} de la tâche {} : effacée", debutPeriodePlanifiee.format(DateTimeFormatter.ISO_LOCAL_DATE), planifBean.noTache());
+                            });
+                    planifBean.majChargePlanifieeTotale();
+                });
 
         // On récupère la "nouvelle" planification :
+        LOGGER.debug("Récupération de la nouvelle planification : ");
         List<PlanificationTacheBean> planificationsBeanstoAdd = new ArrayList<>(50);
-        for (Map.Entry<TacheDTO, Map<LocalDate, Double>> planifDTOEntry : planificationsDTO.entrySet()) {
-            TacheDTO tacheDTO = planifDTOEntry.getKey();
-            PlanificationTacheBean planifBean = Collections.any(
-                    planificationsBeans,
-                    planificationBean -> planificationBean.getTacheBean().getId() == tacheDTO.getId()
-                    //new BeanException("Impossible de retrouver la tâche " + tache.noTache() + ".")
-            );
-            if (planifBean == null) {
-                planifBean = new PlanificationTacheBean(tacheDTO);
-                planificationsBeanstoAdd.add(planifBean);
-            }
-            for (LocalDate debutPeriode : planifDTOEntry.getValue().keySet()) {
-                double chargePlanifiee = planifDTOEntry.getValue().get(debutPeriode);
-                if (chargePlanifiee == 0.0) {
-                    continue;
-                }
-                planifBean.setChargePlanifiee(debutPeriode, chargePlanifiee);
-            }
-        }
+        planificationsDTO.entrySet().stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
+                .forEach(planifDTOEntry -> {
+                    TacheDTO tacheDTO = planifDTOEntry.getKey();
+//                    LOGGER.debug(" - Tâche {} : ", tacheDTO.noTache());
+                    PlanificationTacheBean planifBean = Collections.any(
+                            planificationsBeans,
+                            planificationBean -> planificationBean.getTacheBean().getId() == tacheDTO.getId()
+                            //new BeanException("Impossible de retrouver la tâche " + tache.noTache() + ".")
+                    );
+                    if (planifBean == null) {
+                        LOGGER.debug("   Tâche {} nouvelle => ajout.", tacheDTO.noTache());
+                        planifBean = new PlanificationTacheBean(TacheBean.from(tacheDTO));
+                        planificationsBeanstoAdd.add(planifBean);
+                    } else {
+                        planifBean.setTypeChangement(tacheDTO.getTypeChangement());
+                    }
+                    PlanificationTacheBean finalPlanifBean = planifBean;
+                    planifDTOEntry.getValue().keySet().stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
+                            .forEach(debutPeriodePlanifiee -> {
+//                                LOGGER.debug("   - Période {} : ", debutPeriodePlanifiee.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                                double chargePlanifiee = planifDTOEntry.getValue().get(debutPeriodePlanifiee);
+                                if (chargePlanifiee == 0.0) {
+                                    // Rien.
+                                } else {
+                                    finalPlanifBean.majChargePlanifiee(debutPeriodePlanifiee, chargePlanifiee, false);
+                                }
+                                LOGGER.debug("     - Charge planifiée pour la tâche {} sur la période {} : {}", tacheDTO.noTache(), debutPeriodePlanifiee.format(DateTimeFormatter.ISO_LOCAL_DATE), chargePlanifiee);
+                            });
+                    finalPlanifBean.majChargePlanifieeTotale();
+                });
         if (!planificationsBeanstoAdd.isEmpty()) {
             planificationsBeans.addAll(planificationsBeanstoAdd);
         }
