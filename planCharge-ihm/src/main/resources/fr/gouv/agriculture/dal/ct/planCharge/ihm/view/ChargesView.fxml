@@ -22,15 +22,14 @@
                                    AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
                             <panes>
                                 <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
-                                    <HBox spacing="2" alignment="CENTER_LEFT">
-                                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" alignment="CENTER"/>
+                                    <HBox styleClass="paramFiltre-box">
+                                        <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" styleClass="paramFiltre-box"/>
                                         <fx:define>
                                             <Double fx:id="buttonSpacing" fx:value="10"/>
                                         </fx:define>
-                                        <VBox alignment="CENTER">
-                                            <!--TODO FDA 2017/11 Centraliser les styles dans une CSS.-->
-                                            <HBox alignment="CENTER">
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                        <VBox styleClass="paramFiltre-box">
+                                            <HBox styleClass="paramFiltre-box">
+                                                <VBox styleClass="paramFiltre-box">
                                                     <Label text="Catégorie : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
@@ -42,7 +41,7 @@
                                                     <!--</buttons>-->
                                                     <!--</ButtonBar>-->
                                                 </VBox>
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                                <VBox styleClass="paramFiltre-box">
                                                     <Label text="Statut : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
@@ -57,7 +56,7 @@
                                                     <!--</buttons>-->
                                                     <!--</ButtonBar>-->
                                                 </VBox>
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                                <VBox styleClass="paramFiltre-box">
                                                     <Label text="Période : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
@@ -76,7 +75,7 @@
                                                     <!--</buttons>-->
                                                     <!--</ButtonBar>-->
                                                 </VBox>
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                                <VBox styleClass="paramFiltre-box">
                                                     <Label text="Révision : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
@@ -94,8 +93,8 @@
                                                     <!--</ButtonBar>-->
                                                 </VBox>
                                             </HBox>
-                                            <HBox alignment="CENTER">
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                            <HBox styleClass="paramFiltre-box">
+                                                <VBox styleClass="paramFiltre-box">
                                                     <Label text="Planification : "/>
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
@@ -137,9 +136,7 @@
                                                     <!--</buttons>-->
                                                     <!--</ButtonBar>-->
                                                 </VBox>
-                                            </HBox>
-                                            <HBox alignment="CENTER">
-                                                <VBox alignment="CENTER" style="-fx-border-color: darkgray;">
+                                                <VBox styleClass="paramFiltre-box">
                                                     <Label text="Surcharge : "/>
                                                     <HBox spacing="$buttonSpacing">
                                                         <ToggleButton fx:id="filtreSurchargeRessourceToggleButton" text="Ressource surchargée"
@@ -147,22 +144,24 @@
                                                         <ToggleButton fx:id="filtreSurchargeProfilToggleButton" text="Profil surchargé" onAction="#filtrer"/>
                                                     </HBox>
                                                 </VBox>
+                                                <!-- Utile ?
+                                                    <HBox>
+                                                        <Label text="Incohérence : "/>
+                                                        <SegmentedButton>
+                                                            <buttons>
+                                                                <ToggleButton text="Tout" onAction="#filtrer" userData="TOUT" disable="true"/>
+                                                                <ToggleButton text="Incohérente" onAction="#filtrer" disable="true"/>
+                                                                <ToggleButton text="Cohérente" onAction="#filtrer" disable="true"/>
+                                                            </buttons>
+                                                        </SegmentedButton>
+                                                    </HBox>
+                                                -->
                                             </HBox>
-                                            <!-- Utile ?
-                                                <HBox alignment="CENTER" style="-fx-border-color: darkgray;">
-                                                    <Label text="Incohérence : "/>
-                                                    <SegmentedButton>
-                                                        <buttons>
-                                                            <ToggleButton text="Tout" onAction="#filtrer" userData="TOUT" disable="true"/>
-                                                            <ToggleButton text="Incohérente" onAction="#filtrer" disable="true"/>
-                                                            <ToggleButton text="Cohérente" onAction="#filtrer" disable="true"/>
-                                                        </buttons>
-                                                    </SegmentedButton>
-                                                </HBox>
-                                            -->
                                         </VBox>
-                                        <Button text="Toutes" onAction="#filtrerRien" styleClass="erase-button"/>
-                                        <Button text="Aucune" onAction="#filtrerTout"/>
+                                        <VBox styleClass="paramFiltre-box">
+                                            <Button text="Toutes" onAction="#filtrerRien" styleClass="erase-button"/>
+                                            <Button text="Aucune" onAction="#filtrerTout"/>
+                                        </VBox>
                                     </HBox>
                                 </TitledPane>
                                 <TitledPane text="Tris" animated="false">
@@ -170,17 +169,35 @@
                                     <Label text="TODO" disable="true"/>
                                 </TitledPane>
                                 <TitledPane text="Affichage" animated="false">
-                                    <VBox alignment="CENTER">
-                                        <Label text="Calendrier : "/>
-                                        <SegmentedButton>
-                                            <buttons>
-                                                <!--TODO FDA 2017/09 Coder-->
-                                                <ToggleButton text="Semaine" selected="true" disable="true"/>
-                                                <!--TODO FDA 2017/09 Coder-->
-                                                <ToggleButton text="Trimestre" disable="true"/>
-                                            </buttons>
-                                        </SegmentedButton>
-                                    </VBox>
+                                    <HBox styleClass="paramAffichage-box">
+                                        <VBox styleClass="paramAffichage-box">
+                                            <Label text="Calendrier : "/>
+                                            <SegmentedButton>
+                                                <buttons>
+                                                    <!--TODO FDA 2017/09 Coder-->
+                                                    <ToggleButton text="Semaine" selected="true" disable="true"/>
+                                                    <!--TODO FDA 2017/09 Coder-->
+                                                    <ToggleButton text="Trimestre" disable="true"/>
+                                                </buttons>
+                                            </SegmentedButton>
+                                        </VBox>
+                                        <HBox styleClass="paramAffichage-box">
+                                            <Label text="Nombre de lignes max. : "/>
+                                            <!--
+                                            <Spinner fx:id="nbrLignesMaxTablePlanificationsSpinner" prefWidth="70" editable="true">
+                                                <valueFactory>
+                                                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="500" initialValue="25" amountToStepBy="5"/>
+                                                </valueFactory>
+                                            </Spinner>
+                                            -->
+                                            <!--suppress JavaFxRedundantPropertyValue -->
+                                            <Slider fx:id="nbrLignesMaxTablePlanificationsSlider" orientation="HORIZONTAL"
+                                                    min="5" max="50" value="25" blockIncrement="5"
+                                                    showTickMarks="true" showTickLabels="true"
+                                                    minWidth="100" prefWidth="500"
+                                            />
+                                        </HBox>
+                                    </HBox>
                                 </TitledPane>
                             </panes>
                         </Accordion>
@@ -220,117 +237,99 @@
                     <panes>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <TitledPane fx:id="planChargePane" text="Plan de charge" animated="$arePanesAnimated">
-                            <VBox>
-                                <HBox alignment="CENTER_LEFT">
-                                    <Label text="Nombre de lignes max. : "/>
-                                    <!--
-                                    <Spinner fx:id="nbrLignesMaxTablePlanificationsSpinner" prefWidth="70" editable="true">
-                                        <valueFactory>
-                                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="500" initialValue="25" amountToStepBy="5"/>
-                                        </valueFactory>
-                                    </Spinner>
-                                    -->
-                                    <!--suppress JavaFxRedundantPropertyValue -->
-                                    <Slider fx:id="nbrLignesMaxTablePlanificationsSlider" orientation="HORIZONTAL"
-                                            min="5" max="50" value="25" blockIncrement="5"
-                                            showTickMarks="true" showTickLabels="true"
-                                            minWidth="100" prefWidth="500"
-                                    />
-                                </HBox>
-                                <PlanificationTableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
-                                                        fixedCellSize="$fixedCellSize"
-                                >
-                                    <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
-                                    <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
-                                    -->
-                                    <columns>
-                                        <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
+                            <PlanificationTableView fx:id="planificationsTable" editable="true" tableMenuButtonVisible="true"
+                                                    fixedCellSize="$fixedCellSize"
+                            >
+                                <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
+                                <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
+                                -->
+                                <columns>
+                                    <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
 
-                                            <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
+                                        <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
 
-                                            <columns>
-                                                <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
-                                                <TableColumn text="Catégories">
-                                                    <columns>
-                                                        <TableColumn fx:id="categorieColumn" text="Catégorie"
-                                                                     prefWidth="$categorieColumnPrefWidth" visible="false"/>
-                                                        <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
-                                                        <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
-                                                                     prefWidth="$sousCategorieColumnPrefWidth" visible="false" style="-fx-wrap-text: true"/>
-                                                    </columns>
-                                                </TableColumn>
-                                                <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
-                                                             editable="false" styleClass="nonModifiable"/>
-                                                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
-                                                             prefWidth="$noTicketIdalColumnPrefWidth"/>
-                                                <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
-                                                             text="Description" styleClass="description-column"/>
-                                                <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
-                                                             text="Projet/Appli"
-                                                             styleClass="projetAppli-column"/>
-                                                <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"
-                                                             visible="false"/>
-                                                <TableColumn text="Période souhaitée">
-                                                    <columns>
-                                                        <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début" visible="false"/>
-                                                        <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
-                                                                     text="Echéance" styleClass="echeance-column"/>
-                                                    </columns>
-                                                </TableColumn>
-                                                <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"
-                                                             styleClass="importance-column"/>
-                                                <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
-                                                             styleClass="charge-column"/>
-                                                <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"
-                                                             styleClass="ressource-column"/>
-                                                <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
-                                                             styleClass="profil-column"/>
-                                            </columns>
-                                        </TableColumn>
-                                        <TableColumn text="Planification">
-                                            <columns>
-                                                <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine4Column" prefWidth="$semaineColumnPrefWidth" text="S+4"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine5Column" prefWidth="$semaineColumnPrefWidth" text="S+5"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine6Column" prefWidth="$semaineColumnPrefWidth" text="S+6"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine7Column" prefWidth="$semaineColumnPrefWidth" text="S+7"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine8Column" prefWidth="$semaineColumnPrefWidth" text="S+8"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine9Column" prefWidth="$semaineColumnPrefWidth" text="S+9"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine10Column" prefWidth="$semaineColumnPrefWidth" text="S+10"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine11Column" prefWidth="$semaineColumnPrefWidth" text="S+11"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
-                                                <TableColumn fx:id="semaine12Column" prefWidth="$semaineColumnPrefWidth" text="S+12"
-                                                             styleClass="periodeChargee-column" sortable="false"/>
+                                        <columns>
+                                            <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
+                                            <TableColumn text="Catégories">
+                                                <columns>
+                                                    <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                                                 prefWidth="$categorieColumnPrefWidth" visible="false"/>
+                                                    <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
+                                                    <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                                                 prefWidth="$sousCategorieColumnPrefWidth" visible="false" style="-fx-wrap-text: true"/>
+                                                </columns>
+                                            </TableColumn>
+                                            <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
+                                                         editable="false" styleClass="nonModifiable"/>
+                                            <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                                         prefWidth="$noTicketIdalColumnPrefWidth"/>
+                                            <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
+                                                         text="Description" styleClass="description-column"/>
+                                            <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                                         text="Projet/Appli"
+                                                         styleClass="projetAppli-column"/>
+                                            <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"
+                                                         visible="false"/>
+                                            <TableColumn text="Période souhaitée">
+                                                <columns>
+                                                    <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début" visible="false"/>
+                                                    <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                                                 text="Echéance" styleClass="echeance-column"/>
+                                                </columns>
+                                            </TableColumn>
+                                            <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"
+                                                         styleClass="importance-column"/>
+                                            <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                                         styleClass="charge-column"/>
+                                            <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"
+                                                         styleClass="ressource-column"/>
+                                            <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
+                                                         styleClass="profil-column"/>
+                                        </columns>
+                                    </TableColumn>
+                                    <TableColumn text="Planification">
+                                        <columns>
+                                            <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine4Column" prefWidth="$semaineColumnPrefWidth" text="S+4"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine5Column" prefWidth="$semaineColumnPrefWidth" text="S+5"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine6Column" prefWidth="$semaineColumnPrefWidth" text="S+6"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine7Column" prefWidth="$semaineColumnPrefWidth" text="S+7"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine8Column" prefWidth="$semaineColumnPrefWidth" text="S+8"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine9Column" prefWidth="$semaineColumnPrefWidth" text="S+9"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine10Column" prefWidth="$semaineColumnPrefWidth" text="S+10"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine11Column" prefWidth="$semaineColumnPrefWidth" text="S+11"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
+                                            <TableColumn fx:id="semaine12Column" prefWidth="$semaineColumnPrefWidth" text="S+12"
+                                                         styleClass="periodeChargee-column" sortable="false"/>
 
-                                                <TableColumn fx:id="chargePlanifieeTotaleColumn" text="Charge planifiée" prefWidth="60"
-                                                             editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
-                                            </columns>
-                                        </TableColumn>
-                                        <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
-                                                     editable="false"/>
-                                    </columns>
-                                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                                    <sortOrder>
-                                        <fx:reference source="categorieColumn"/>
-                                        <fx:reference source="sousCategorieColumn"/>
-                                        <fx:reference source="projetAppliColumn"/>
-                                        <fx:reference source="echeanceColumn"/>
-                                        <fx:reference source="noTicketIdalColumn"/>
-                                    </sortOrder>
-                                </PlanificationTableView>
-                            </VBox>
+                                            <TableColumn fx:id="chargePlanifieeTotaleColumn" text="Charge planifiée" prefWidth="60"
+                                                         editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
+                                        </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
+                                                 editable="false"/>
+                                </columns>
+                                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                                <sortOrder>
+                                    <fx:reference source="categorieColumn"/>
+                                    <fx:reference source="sousCategorieColumn"/>
+                                    <fx:reference source="projetAppliColumn"/>
+                                    <fx:reference source="echeanceColumn"/>
+                                    <fx:reference source="noTicketIdalColumn"/>
+                                </sortOrder>
+                            </PlanificationTableView>
                         </TitledPane>
                     </panes>
                 </Accordion>

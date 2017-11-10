@@ -100,6 +100,23 @@ Validation de la saisie depuis l'IHM :
 
 
 /*
+Tables :
+*/
+
+.paramFiltre-box {
+    -fx-alignment: CENTER;
+    -fx-border-color: darkgray;
+    -fx-padding: 3 3 3 3;
+}
+
+paramAffichage-box {
+    -fx-alignment: CENTER;
+    -fx-border-color: darkgray;
+    -fx-padding: 3 3 3 3;
+}
+
+
+/*
 Dispo :
 */
 

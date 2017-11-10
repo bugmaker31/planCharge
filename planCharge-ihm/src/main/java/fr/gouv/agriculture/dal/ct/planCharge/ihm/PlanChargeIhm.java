@@ -1036,7 +1036,7 @@ public class PlanChargeIhm extends Application {
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
 //        return LocalDate.of(2017, 8, 21);
-        return LocalDate.of(2017, 10, 23);
+        return LocalDate.of(2017, 10, 30);
     }
 
     public void definirTitre(String titre) {
