@@ -22,7 +22,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.PlanificationsDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
@@ -2045,13 +2044,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     void filtrerSurRessourceSurchargees() {
-        activerTousFiltres();
+        deselectionnerTousFiltres();
         filtreSurchargeRessourceToggleButton.setSelected(true);
         filtrer();
     }
 
     void filtrerSurProfilsSurcharges() {
-        activerTousFiltres();
+        deselectionnerTousFiltres();
         filtreSurchargeProfilToggleButton.setSelected(true);
         filtrer();
     }

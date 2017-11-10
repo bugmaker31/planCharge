@@ -22,7 +22,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import fr.gouv.agriculture.dal.ct.planCharge.util.NotImplementedException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.application.Platform;
@@ -608,12 +607,12 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     void filtrerRien() {
         LOGGER.debug("RàZ des filtres pour {} : ", getClass().getSimpleName());
-        desactiverTousFiltres();
+        selectionnerTousFiltres();
         filtrer();
         LOGGER.debug("Filtres RàZ pour {}.", getClass().getSimpleName());
     }
 
-    void desactiverTousFiltres() {
+    private void selectionnerTousFiltres() {
 
         filtreGlobalComponent.getFiltreGlobalField().setText("");
 
@@ -793,11 +792,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     void filtrerTout() {
         LOGGER.debug("filtrerTout...");
-        activerTousFiltres();
+        deselectionnerTousFiltres();
         filtrer();
     }
 
-    void activerTousFiltres() {
+    void deselectionnerTousFiltres() {
         filtreGlobalComponent.getFiltreGlobalField().setText("");
 
         for (ToggleButton filtreButton : filtresButtons()) {
@@ -894,7 +893,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
 
     void filtrerSurTachesAjoutees() {
-        desactiverTousFiltres();
+        deselectionnerTousFiltres();
         filtreRevisionTypeChangementAjoutToggleButton.setSelected(true);
         filtrer();
     }
