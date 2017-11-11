@@ -773,6 +773,7 @@ public class PlanChargeIhm extends Application {
 
     public static void afficherPopup(@NotNull Control field, @NotNull String titre, @NotNull String message) throws IhmException {
         PopupWindow popup = createPopup(field, titre, message);
+        popups.put(field, (PopupControl) popup);
         ((PopOver) popup).show(field);
     }
 
@@ -805,8 +806,6 @@ public class PlanChargeIhm extends Application {
         popup.setContentNode(label);
 
         popup.getStyleClass().add("popup");
-
-        popups.put(field, popup);
         return popup;
     }
 
@@ -1036,7 +1035,7 @@ public class PlanChargeIhm extends Application {
     private LocalDate dateEtatPrecedente() {
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
 //        return LocalDate.of(2017, 8, 21);
-        return LocalDate.of(2017, 10, 30);
+        return LocalDate.of(2017, 11, 13);
     }
 
     public void definirTitre(String titre) {

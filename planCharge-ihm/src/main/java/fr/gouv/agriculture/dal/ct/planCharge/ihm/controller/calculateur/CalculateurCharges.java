@@ -279,12 +279,12 @@ public class CalculateurCharges extends Calculateur {
 
         Double chargeTotalePeriode = 0.0;
         for (RessourceBean<?, ?> ressourceBean : planChargeBean.getRessourcesBeans()) {
-            NbrsJoursParRessourceBean nbrJoursChargePourLaRessourceBean = Collections.any(
+            NbrsJoursParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
                     getChargesController().getNbrsJoursDispoCTRestanteRsrcBeans(),
                     nbrsJoursDispoBean -> nbrsJoursDispoBean.getRessourceBean().equals(ressourceBean),
                     new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la table des nombres de jours de disponibilité restant pour la CT par ressource.")
             );
-            Float chargePeriode = nbrJoursChargePourLaRessourceBean.get(debutPeriode).getValue();
+            Float chargePeriode = nbrJoursDispoRestantePourLaRessourceBean.get(debutPeriode).getValue();
 
             chargeTotalePeriode += chargePeriode;
         }

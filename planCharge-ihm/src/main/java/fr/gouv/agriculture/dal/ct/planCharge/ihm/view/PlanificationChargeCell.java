@@ -1,6 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
+import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
@@ -63,47 +64,62 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
         super(Converters.CHARGE_STRING_CONVERTER);
         this.noPeriode = noPeriode;
 
-        if (ihm.estEnDeveloppement()) {
-//            definirTooltip();
-        }
+        definirTooltip();
     }
 
     private void definirTooltip() {
-        addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            StringBuilder message = new StringBuilder("");
-            message.append("cell at col ").append(getId()).append(", line " + getIndex());
-            message.append("\n");
+        setOnMouseEntered(event -> {
             PlanificationTacheBean planifBean = planificationTacheBean();
-            if (planifBean != null) {
-                message.append(planifBean.getTacheBean().noTache())
-                        .append(" : ")
-                        .append(planifBean.getCharge())
-                        .append(" vs ")
-                        .append(planifBean.getChargePlanifieeTotale());
+            if (planifBean == null) {
+                return;
             }
-            message.append("\n");
-            if (planChargeBean.getDateEtat() != null) {
-                LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noPeriode - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                message.append(debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE));
-                if (planifBean != null) {
-                    DoubleProperty chargePlanifieeProperty = planifBean.chargePlanifieePropertyOuNull(debutPeriode);
-                    message.append(" : ")
-                            .append(Objects.value(chargePlanifieeProperty, DoubleExpression::getValue, 0.0))
-                            .append(" ")
-                            .append("(").append(Objects.value(chargePlanifieeProperty, Objects::idInstance, "N/C")).append(")");
-                }
+            if ((planifBean.getRessource() == null) || (planifBean.getRessource().getCode() == null)) {
+                return;
             }
+            if (planChargeBean.getDateEtat() == null) {
+                return;
+            }
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noPeriode - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+//            LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+/*
+            DoubleProperty chargePlanifieeProperty = planifBean.chargePlanifieePropertyOuNull(debutPeriode);
+            if (chargePlanifieeProperty == null) {
+                return;
+            }
+*/
+            NbrsJoursParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
+                    chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
+                    nbrsJoursDispoBean -> nbrsJoursDispoBean.getRessourceBean().equals(planifBean.getRessource())
+            );
+            if (nbrJoursDispoRestantePourLaRessourceBean == null) {
+                return;
+            }
+            if (!nbrJoursDispoRestantePourLaRessourceBean.containsKey(debutPeriode)) {
+                return;
+            }
+            FloatProperty nbrJoursDispoRestanteProperty = nbrJoursDispoRestantePourLaRessourceBean.get(debutPeriode);
+            if (nbrJoursDispoRestanteProperty == null) {
+                return;
+            }
+            float capaciteRestante = nbrJoursDispoRestanteProperty.get();
+            String capaciteRestanteFormattee = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(capaciteRestante);
+
+            StringBuilder message = new StringBuilder("");
+            message.append("Capacité restante");
+            message.append(" de ").append(planifBean.getRessource().getCode());
+            message.append(" sur [").append(debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE)).append("..["); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            message.append(" = ").append(capaciteRestanteFormattee).append("j");
             try {
-                ihm.afficherPopup(this, "Période n°" + noPeriode, message.toString());
+                ihm.afficherPopup(this, "Capacité restante", message.toString());
             } catch (IhmException e) {
                 LOGGER.error("Impossible d'afficher le tooltip.", e);
             }
         });
-        addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+        setOnMouseExited(event -> {
             try {
                 ihm.masquerPopup(this);
             } catch (IhmException e) {
+                // Pas super-impactant pour l'utilisateur (la pop-up est bien masquée), donc un simple message d'erreur suffit, pas besoin d'aller jusqu'à thrower une exception.
                 LOGGER.error("Impossible de masquer le tooltip.", e);
             }
         });

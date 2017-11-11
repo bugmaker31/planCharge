@@ -29,7 +29,7 @@ public class Converters {
     public static final StatutBeanConverter STATUT_STRING_CONVERTER = new StatutBeanConverter();
 
 
-    private static class FractionJoursStringConverter extends StringConverter<Float> {
+    public static class FractionJoursStringConverter extends StringConverter<Float> {
 
         @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
         private /*static*/ final Logger LOGGER = getLogger(FractionJoursStringConverter.class);
@@ -75,7 +75,7 @@ public class Converters {
         }
     }
 
-    private static class SommeFractionJoursStringConverter extends StringConverter<Float> {
+    public static class SommeFractionJoursStringConverter extends StringConverter<Float> {
 
         @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
         private /*static*/ final Logger LOGGER = getLogger(SommeFractionJoursStringConverter.class);
@@ -113,7 +113,7 @@ public class Converters {
         }
     }
 
-    private static class ChargeStringConverter extends StringConverter<Double> {
+    public static class ChargeStringConverter extends StringConverter<Double> {
 
         @SuppressWarnings("InstanceVariableNamingConvention")
         private /*static*/ final Logger LOGGER = getLogger(ChargeStringConverter.class);
@@ -159,7 +159,7 @@ public class Converters {
         }
     }
 
-    private static class SommeChargeStringConverter extends StringConverter<Double> {
+    public static class SommeChargeStringConverter extends StringConverter<Double> {
 
         @SuppressWarnings("InstanceVariableNamingConvention")
         private /*static*/ final Logger LOGGER = getLogger(SommeChargeStringConverter.class);
@@ -197,7 +197,7 @@ public class Converters {
         }
     }
 
-    private static class NbrsJoursStringConverter extends StringConverter<Integer> {
+    public static class NbrsJoursStringConverter extends StringConverter<Integer> {
 
         @SuppressWarnings("InstanceVariableNamingConvention")
         private /*static*/ final Logger LOGGER = getLogger(NbrsJoursStringConverter.class);
