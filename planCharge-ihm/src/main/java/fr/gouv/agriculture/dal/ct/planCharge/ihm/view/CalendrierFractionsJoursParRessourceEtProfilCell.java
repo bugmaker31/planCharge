@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.Null;
 
-public class CalendrierFractionsJoursParRessourceEtProfilCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceEtProfilBean<R, AbstractDTO, T, FloatProperty>> extends AbstractCalendrierParRessourceCell<R, T, Float> {
+public class CalendrierFractionsJoursParRessourceEtProfilCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceEtProfilBean<R, AbstractDTO, T, FloatProperty>>
+        extends AbstractCalendrierParRessourceCell<R, T, Float> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierFractionsJoursParRessourceEtProfilCell.class);
 

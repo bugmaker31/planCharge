@@ -10,6 +10,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import javafx.application.Platform;
+import javafx.beans.property.Property;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean<?, ?>, S extends AbstractCalendrierParRessourceBean<R, ?, S, ?>, T extends Number>
         extends EditableAwareTextFieldTableCell<S, T> {
@@ -60,54 +62,103 @@ public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean
     //    TODO FDA 2017/09 Définir le menu contextuel dans le FXML.
     private void definirMenuContextuel() {
         Platform.runLater(() -> { // Sinon getTableView() == null.
-            if (getTableView().getContextMenu() == null || getTableView().getContextMenu().getItems().isEmpty()) { // NB : Le menu contextuel peut partiellement etre défini dans le FXML, donc il ne faut pas l'écraser.
+
+            // NB : Le menu contextuel peut partiellement etre défini dans le FXML, donc il ne faut pas l'écraser.
+            if ((getTableView().getContextMenu() == null) || getTableView().getContextMenu().getItems().isEmpty()) {
                 setContextMenu(new ContextMenu());
             } else {
-                ContextMenu tableContextMenu = new ContextMenu(getTableView().getContextMenu().getItems().toArray(new MenuItem[0]));
-                tableContextMenu.getItems().add(new SeparatorMenuItem());
-                setContextMenu(tableContextMenu);
+                ContextMenu tableContextMenu = getTableView().getContextMenu();
+
+                ContextMenu contextMenu = new ContextMenu(tableContextMenu.getItems().toArray(new MenuItem[0]));
+                contextMenu.getItems().add(new SeparatorMenuItem());
+                setContextMenu(contextMenu);
             }
 
-            MenuItem prolongerADroiteMenuItem = new MenuItem("Prolonger sur la droite");
-            prolongerADroiteMenuItem.setOnAction((ActionEvent event) -> {
-                //noinspection unchecked
-                TableRow<S> tableRow = getTableRow();
-                if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
-                    return;
-                }
-                S item = tableRow.getItem();
-                if (item == null) {
-                    return;
-                }
-                T valeur = getItem();
-                if (valeur == null) {
-                    return;
-                }
-                if (planChargeBean.getDateEtat() == null) {
-                    LOGGER.warn("Date d'état non définie !?");
-                    return;
-                }
-                try {
-                    Calculateur.executerSansCalculer(() -> {
-                                for (int cptSemaine = noSemaine + 1; cptSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; cptSemaine++) {
-                                    LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) cptSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-                                    //noinspection unchecked
-                                    item.get(debutPeriode).setValue(valeur);
-                                }
-                            }
-                    );
-                } catch (IhmException e) {
+            {
+                MenuItem prolongerADroiteMenuItem = new MenuItem("Prolonger sur la droite");
+                prolongerADroiteMenuItem.setOnAction((ActionEvent event) -> {
+                    //noinspection unchecked
+                    TableRow<S> tableRow = getTableRow();
+                    if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+                        return;
+                    }
+                    S item = tableRow.getItem();
+                    if (item == null) {
+                        return;
+                    }
+                    T valeur = getItem();
+                    if (valeur == null) {
+                        return;
+                    }
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return;
+                    }
+                    try {
+                        Calculateur.executerSansCalculer(() -> prolonger(item, valeur, planChargeBean.getDateEtat()));
+                    } catch (IhmException e) {
 //                TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
-                    LOGGER.error("Impossible de prolonger la valeur sur la droite.", e);
-                }
+                        LOGGER.error("Impossible de prolonger la valeur sur la droite.", e);
+                    }
 
-            });
+                });
+                getContextMenu().getItems().add(prolongerADroiteMenuItem);
+            }
 
-            getContextMenu().getItems().addAll(
-                    prolongerADroiteMenuItem
-            );
+            {
+                MenuItem prolongerTousProfilsADroiteMenuItem = new MenuItem("Prolonger sur la droite pour la ressource");
+                prolongerTousProfilsADroiteMenuItem.setOnAction((ActionEvent event) -> {
+                    //noinspection unchecked
+                    TableRow<S> tableRow = getTableRow();
+                    if (tableRow == null) { // Un clic sur le TableHeaderRow fait retourner null à getTableRow().
+                        return;
+                    }
+                    S item = tableRow.getItem();
+                    if (item == null) {
+                        return;
+                    }
+                    T valeur = getItem();
+                    if (valeur == null) {
+                        return;
+                    }
+                    if (planChargeBean.getDateEtat() == null) {
+                        LOGGER.warn("Date d'état non définie !?");
+                        return;
+                    }
+                    item.ressourceBeanProperty().addListener((observable, oldValue, newValue) -> prolongerTousProfilsADroiteMenuItem.setDisable(newValue == null));
+                    if (item.getRessourceBean() != null) {
+                        try {
+                            Calculateur.executerSansCalculer(() -> prolongerPourRessource(item.getRessourceBean(), planChargeBean.getDateEtat()));
+                        } catch (IhmException e) {
+//                TODO FDA 2017/09 Trouver mieux que juste loguer une erreur.
+                            LOGGER.error("Impossible de prolonger la valeur sur la droite.", e);
+                        }
+                    }
+                });
+                getContextMenu().getItems().add(prolongerTousProfilsADroiteMenuItem);
+            }
         });
     }
+
+    private void prolonger(@NotNull S item, @NotNull T valeur, @NotNull LocalDate dateEtat) {
+        for (int cptSemaine = noSemaine + 1; cptSemaine <= PlanChargeIhm.NBR_SEMAINES_PLANIFIEES; cptSemaine++) {
+            LocalDate debutPeriode = dateEtat.plusDays(((long) cptSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            //noinspection unchecked
+            item.get(debutPeriode).setValue(valeur);
+        }
+    }
+
+    private void prolongerPourRessource(@NotNull R ressourceBean, @NotNull LocalDate dateEtat) {
+        LocalDate debutPeriode = dateEtat.plusDays(((long) noSemaine - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+        for (S item : getTableView().getItems()) {
+            if (!Objects.equals(item.getRessourceBean(), ressourceBean)) {
+                continue;
+            }
+            T valeur = (T) item.get(debutPeriode).getValue();
+            prolonger(item, valeur, dateEtat);
+        }
+    }
+
 
     @Override
     public void updateItem(@Null T item, boolean empty) {

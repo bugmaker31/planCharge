@@ -10,7 +10,8 @@ import javafx.util.converter.IntegerStringConverter;
 
 import javax.validation.constraints.Null;
 
-public class CalendrierNbrsDemisJoursParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, FloatProperty>> extends AbstractCalendrierParRessourceCell<R, T, Float> {
+public class CalendrierNbrsDemisJoursParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, FloatProperty>>
+        extends AbstractCalendrierParRessourceCell<R, T, Float> {
 
     private static final StringConverter<Integer> CONVERTER =  new IntegerStringConverter();
 

@@ -7,6 +7,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
@@ -57,7 +58,7 @@ public abstract class AbstractCalendrierParRessourceBean<R extends RessourceBean
     // Getters/Setters:
 
 
-    @NotNull
+    @Null
     public R getRessourceBean() {
         return ressourceBean.getValue();
     }

@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierBean;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;

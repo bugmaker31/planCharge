@@ -19,7 +19,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
-public class CalendrierPctagesParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, PercentageProperty>> extends AbstractCalendrierParRessourceCell<R, T, Percentage> {
+public class CalendrierPctagesParRessourceCell<R extends RessourceBean<?, ?>, T extends AbstractCalendrierParRessourceBean<R, AbstractDTO, T, PercentageProperty>>
+        extends AbstractCalendrierParRessourceCell<R, T, Percentage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalendrierPctagesParRessourceCell.class);
 

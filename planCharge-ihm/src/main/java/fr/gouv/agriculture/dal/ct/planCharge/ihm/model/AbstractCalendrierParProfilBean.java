@@ -10,7 +10,8 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class AbstractCalendrierParProfilBean<D extends AbstractDTO, B extends AbstractCalendrierParProfilBean<D, B, T>, T extends Property> extends AbstractCalendrierBean<D, B, T> {
+public abstract class AbstractCalendrierParProfilBean<D extends AbstractDTO, B extends AbstractCalendrierParProfilBean<D, B, P>, P extends Property>
+        extends AbstractCalendrierBean<D, B, P> {
 
 
     // Fields :
@@ -21,7 +22,7 @@ public abstract class AbstractCalendrierParProfilBean<D extends AbstractDTO, B e
 
     // Constructors:
 
-    public AbstractCalendrierParProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, T> calendrier) {
+    public AbstractCalendrierParProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, P> calendrier) {
         super(calendrier);
         this.profilBean.setValue(profilBean);
     }
@@ -40,7 +41,7 @@ public abstract class AbstractCalendrierParProfilBean<D extends AbstractDTO, B e
 //        if (!super.equals(o)) return false;
 
         //noinspection unchecked
-        AbstractCalendrierParProfilBean<D, B, T> that = (AbstractCalendrierParProfilBean<D, B, T>) o;
+        AbstractCalendrierParProfilBean<D, B, P> that = (AbstractCalendrierParProfilBean<D, B, P>) o;
 
         return getProfilBean().equals(that.getProfilBean());
     }

@@ -101,8 +101,7 @@
                         </TitledPane>
                     </panes>
                 </Accordion>
-                <Accordion
-                        fx:id="nbrsJoursAbsenceAccordion" expandedPane="$nbrsJoursAbsencePane">
+                <Accordion fx:id="nbrsJoursAbsenceAccordion" expandedPane="$nbrsJoursAbsencePane">
                     <panes>
                         <TitledPane fx:id="nbrsJoursAbsencePane"
                                     text="Absence (vacances, formation, etc.) / rsrc (j)" animated="$arePanesAnimated">

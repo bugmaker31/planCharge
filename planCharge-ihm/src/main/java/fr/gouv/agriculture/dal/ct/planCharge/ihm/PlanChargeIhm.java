@@ -1033,9 +1033,13 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("ConstantConditions")
     @Null
     private LocalDate dateEtatPrecedente() {
+
+        if (estEnDeveloppement) {
+            return LocalDate.of(2017, 11, 13);
+        }
+
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
-//        return LocalDate.of(2017, 8, 21);
-        return LocalDate.of(2017, 11, 13);
+        return null;
     }
 
     public void definirTitre(String titre) {
