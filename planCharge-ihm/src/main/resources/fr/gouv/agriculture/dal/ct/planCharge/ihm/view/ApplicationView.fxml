@@ -23,7 +23,7 @@
                     <MenuItem onAction="#nouveau" text="_Nouveau"/>
                     <MenuItem onAction="#charger" text="_Charger..."/>
                     <Menu text="_Importer">
-                        <MenuItem onAction="#importerTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
+                        <MenuItem onAction="#majTachesDepuisCalc" text="Importer les _tâches depuis Calc..."/>
                         <MenuItem onAction="#importerPlanChargeDepuisCalc"
                                   text="Importer un plan de _charge depuis Calc..."/>
                     </Menu>

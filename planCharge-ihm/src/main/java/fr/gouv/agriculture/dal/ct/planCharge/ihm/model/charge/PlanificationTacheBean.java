@@ -48,21 +48,8 @@ public class PlanificationTacheBean extends TacheBean {
         majChargePlanifieeTotale();
     }
 
-    public PlanificationTacheBean(@NotNull TacheDTO tache, @NotNull Map<LocalDate, Double> calendrierDTO) {
-        super(tache);
-
-        calendrier = new TreeMap<>(); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-        calendrierDTO.forEach((debutPeriode, charge) -> calendrier.put(debutPeriode, new SimpleDoubleProperty(charge)));
-
-        majChargePlanifieeTotale();
-    }
-
     public PlanificationTacheBean(@NotNull TacheBean tacheBean) /*throws BeanException*/ {
         this(tacheBean, new TreeMap<>()); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
-    }
-
-    public PlanificationTacheBean(@NotNull TacheDTO tache) {
-        this(tache, new TreeMap<>()); // TreeMap juste pour faciliter le débogage en triant les entrées sur la key.
     }
 
 /*

@@ -84,22 +84,8 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     private TacheService tacheService = TacheService.instance();
 
 
-    @SuppressWarnings("ConstructorWithTooManyParameters")
-    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliBean projetAppli, @Null StatutBean statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceBean importance, @Null Double charge, @Null RessourceBean ressource, @Null ProfilBean profil) {
+    private TacheBean() {
         super();
-        this.id.set(id);
-        this.codeCategorie.setValue(codeCategorie);
-        this.codeSousCategorie.setValue(codeSousCategorie);
-        this.noTicketIdal.setValue(noTicketIdal);
-        this.description.setValue(description);
-        this.projetAppli.setValue(projetAppli);
-        this.statut.setValue(statut);
-        this.debut.setValue(debut);
-        this.echeance.setValue(echeance);
-        this.importance.setValue(importance);
-        this.charge.setValue(charge);
-        this.ressource.setValue(ressource);
-        this.profil.setValue(profil);
     }
 
     protected TacheBean(@NotNull TacheBean tacheBean) {
@@ -121,54 +107,23 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         typeChangement = tacheBean.getTypeChangement();
     }
 
-    protected TacheBean(@NotNull TacheDTO tacheDTO) {
-        //noinspection RedundantTypeArguments
-        this(
-                tacheDTO.getId(),
-                Objects.value(tacheDTO.getCategorie(), CategorieTacheDTO::getCode),
-                Objects.value(tacheDTO.getSousCategorie(), SousCategorieTacheDTO::getCode),
-                tacheDTO.getNoTicketIdal(),
-                tacheDTO.getDescription(),
-                Objects.value(tacheDTO.getProjetAppli(), ProjetAppliBean::from),
-                Objects.<StatutDTO, StatutBean>value(tacheDTO.getStatut(), StatutBean::safeFrom),
-                tacheDTO.getDebut(),
-                tacheDTO.getEcheance(),
-                Objects.value(tacheDTO.getImportance(), ImportanceBean::from),
-                tacheDTO.getCharge(),
-                Objects.value(tacheDTO.getRessource(), RessourceBean::from),
-                Objects.value(tacheDTO.getProfil(), ProfilBean::from)
-        );
-        typeChangement = tacheDTO.getTypeChangement();
-    }
-
-/*
-    public TacheBean(int id, CategorieTache categorie, SousCategorieTache sousCategorie, String noTicketIdal, String description, ProjetAppli projetAppli, LocalDate debut, LocalDate echeance, Importance importance, double charge, Ressource ressource, Profil profil) {
+    @SuppressWarnings("ConstructorWithTooManyParameters")
+    public TacheBean(int id, @Null String codeCategorie, @Null String codeSousCategorie, @Null String noTicketIdal, @Null String description, @Null ProjetAppliBean projetAppli, @Null StatutBean statut, @Null LocalDate debut, @Null LocalDate echeance, @Null ImportanceBean importance, @Null Double charge, @Null RessourceBean ressource, @Null ProfilBean profil) {
+        this();
         this.id.set(id);
-        if (categorie != null) {
-            this.codeCategorie.set(categorie.getCode());
-        }
-        if (sousCategorie != null) {
-            this.codeSousCategorie.set(sousCategorie.getCode());
-        }
-        this.noTicketIdal.set(noTicketIdal);
-        this.description.set(description);
-        if (projetAppli != null) {
-            this.projetAppli.set(projetAppli.getCode());
-        }
-        this.debut.set(debut);
-        this.echeance.set(echeance);
-        if (importance != null) {
-            this.importance.set(importance.getCode());
-        }
-        this.charge.set(charge);
-        if (ressource != null) {
-            this.ressource.set(ressource.getCode());
-        }
-        if (profil != null) {
-            this.profil.set(profil.getCode());
-        }
+        this.codeCategorie.setValue(codeCategorie);
+        this.codeSousCategorie.setValue(codeSousCategorie);
+        this.noTicketIdal.setValue(noTicketIdal);
+        this.description.setValue(description);
+        this.projetAppli.setValue(projetAppli);
+        this.statut.setValue(statut);
+        this.debut.setValue(debut);
+        this.echeance.setValue(echeance);
+        this.importance.setValue(importance);
+        this.charge.setValue(charge);
+        this.ressource.setValue(ressource);
+        this.profil.setValue(profil);
     }
-*/
 
     public int getId() {
         return id.get();
@@ -385,12 +340,26 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @NotNull
     @Override
-    public TacheBean fromDto(@NotNull TacheDTO dto) {
-        return from(dto);
+    public TacheBean fromDto(@NotNull TacheDTO tacheDTO) {
+        this.id.set(tacheDTO.getId());
+        this.codeCategorie.setValue(Objects.value(tacheDTO.getCategorie(), CategorieTacheDTO::getCode));
+        this.codeSousCategorie.setValue(Objects.value(tacheDTO.getSousCategorie(), SousCategorieTacheDTO::getCode));
+        this.noTicketIdal.setValue(tacheDTO.getNoTicketIdal());
+        this.description.setValue(tacheDTO.getDescription());
+        this.projetAppli.setValue(Objects.value(tacheDTO.getProjetAppli(), ProjetAppliBean::from));
+        this.statut.setValue(Objects.value(tacheDTO.getStatut(), StatutBean::safeFrom));
+        this.debut.setValue(tacheDTO.getDebut());
+        this.echeance.setValue(tacheDTO.getEcheance());
+        this.importance.setValue(Objects.value(tacheDTO.getImportance(), ImportanceBean::from));
+        this.charge.setValue(tacheDTO.getCharge());
+        this.ressource.setValue(Objects.value(tacheDTO.getRessource(), RessourceBean::from));
+        this.profil.setValue(Objects.value(tacheDTO.getProfil(), ProfilBean::from));
+        return this; // NB : Il ne faut pas instancier un autre Bean car on perdrait les Listeners enregistrés dessus.
     }
 
     public static TacheBean from(@NotNull TacheDTO dto) {
-        TacheBean tacheBean = new TacheBean(dto);
+        TacheBean tacheBean = new TacheBean();
+        tacheBean.fromDto(dto);
         tacheBean.setTypeChangement(dto.getTypeChangement());
         return tacheBean;
     }
@@ -639,7 +608,9 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     @Override
     public TacheBean copier() throws CopieException {
-        return new TacheBean(this);
+        TacheBean copie = new TacheBean();
+        copie.copier(this);
+        return copie;
     }
 
     public void copier(@NotNull TacheBean original) throws CopieException {

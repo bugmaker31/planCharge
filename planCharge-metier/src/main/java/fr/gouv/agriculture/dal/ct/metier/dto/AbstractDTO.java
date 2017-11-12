@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.Controlable;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -72,6 +73,6 @@ public abstract class AbstractDTO<E extends AbstractEntity, I extends Serializab
 
     @Override
     public String toString() {
-        return String.valueOf(getIdentity());
+        return Objects.value(getIdentity(), String::valueOf, "N/C");
     }
 }

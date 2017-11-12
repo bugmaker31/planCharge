@@ -69,17 +69,6 @@ public class ChargeService extends AbstractService {
 
 
     @NotNull
-    public PlanCharge charger(@NotNull LocalDate dateEtat, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
-        try {
-            return planChargeDao.charger(dateEtat, rapport);
-        } catch (DaoException e) {
-            throw new ServiceException(
-                    "Impossible de charger le plan de charge en date du " + dateEtat.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + ".",
-                    e);
-        }
-    }
-
-    @NotNull
     public PlanChargeDTO charger(@NotNull File ficPlanCharge, @NotNull RapportChargementPlanCharge rapport) throws ServiceException {
         try {
             PlanCharge planCharge = planChargeDao.charger(ficPlanCharge, rapport);
@@ -101,7 +90,6 @@ public class ChargeService extends AbstractService {
     }
 
     public void sauver(@NotNull PlanChargeDTO planChargeDTO, @NotNull RapportSauvegarde rapport) throws ServiceException, ViolationsReglesGestionException {
-        LocalDate dateEtat = planChargeDTO.getDateEtat();
         try {
 
             // RG_Gal_ControlerRegles Contrôler les règles https://github.com/bugmaker31/planCharge/wiki/R%C3%A8gles-de-gestion-%3A-Globales#rg_gal_controlerregles-contr%C3%B4ler-les-r%C3%A8gles

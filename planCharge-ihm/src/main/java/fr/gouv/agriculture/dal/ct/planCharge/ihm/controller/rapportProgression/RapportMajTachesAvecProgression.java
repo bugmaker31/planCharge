@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Created by frederic.danna on 20/06/2017.
  */
-public class RapportImportTachesAvecProgression extends RapportServiceAvecProgression implements RapportImportTaches {
+public class RapportMajTachesAvecProgression extends RapportServiceAvecProgression implements RapportImportTaches {
 
     private IntegerProperty nbrTachePlanifiees = new SimpleIntegerProperty();
     private IntegerProperty nbrTachesImportees = new SimpleIntegerProperty();

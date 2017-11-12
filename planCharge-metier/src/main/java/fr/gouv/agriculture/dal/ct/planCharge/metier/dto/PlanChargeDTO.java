@@ -9,10 +9,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.PlanCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanDateEtatObligatoire;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanPlanificationsObligatoires;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanReferentielsObligatoires;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -143,7 +145,9 @@ public class PlanChargeDTO extends AbstractDTO<PlanCharge, LocalDate, PlanCharge
     // Pour faciliter le débogage uniquement.
     @Override
     public String toString() {
-        return getDateEtat() + " " + getPlanifications().taches().size();
+        return Objects.value(getDateEtat(), dateEtat -> dateEtat.format(DateTimeFormatter.ISO_LOCAL_DATE), "N/C")
+                + " " + Objects.value(getPlanifications(), planifications -> planifications.taches().size(), "N/C")
+                ;
     }
 
 }

@@ -27,6 +27,8 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by frederic.danna on 11/05/2017.
  *
@@ -42,7 +44,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
     private static final PseudoClass SURCHARGE = ChargesController.SURCHARGE;
 
     @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlanificationChargeCell.class);
+    private static final Logger LOGGER = getLogger(PlanificationChargeCell.class);
 
     //    @Autowired
     @NotNull
@@ -69,6 +71,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 
     private void definirTooltip() {
         setOnMouseEntered(event -> {
+            LOGGER.debug("mouseEntered...");
             PlanificationTacheBean planifBean = planificationTacheBean();
             if (planifBean == null) {
                 return;
@@ -89,7 +92,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 */
             NbrsJoursParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
                     chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
-                    nbrsJoursDispoBean -> nbrsJoursDispoBean.getRessourceBean().equals(planifBean.getRessource())
+                    nbrsJoursDispoBean -> java.util.Objects.equals(nbrsJoursDispoBean.getRessourceBean(), planifBean.getRessource())
             );
             if (nbrJoursDispoRestantePourLaRessourceBean == null) {
                 return;
@@ -105,7 +108,8 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             String capaciteRestanteFormattee = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(capaciteRestante);
 
             StringBuilder message = new StringBuilder("");
-            message.append("Capacité restante");
+            assert planifBean.getRessource() != null;
+            message.append("Dispo. restante");
             message.append(" de ").append(planifBean.getRessource().getCode());
             message.append(" sur [").append(debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE)).append("..["); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
             message.append(" = ").append(capaciteRestanteFormattee).append("j");
@@ -116,6 +120,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             }
         });
         setOnMouseExited(event -> {
+            LOGGER.debug("mouseExited...");
             try {
                 ihm.masquerPopup(this);
             } catch (IhmException e) {

@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDisp
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
@@ -455,7 +456,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         Il faut appeler la méthode PlanificationTacheBean#majChargePlanifiee pour màj les charges planifiées.
          */
 
-        // On "oublie" la planification actuelle :
+        // On "oublie" la planification actuelle de tâches :
         LOGGER.debug("Effacement de la planification actuelle : ");
         planificationsBeans.stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
                 .forEach(planifBean -> {
@@ -468,9 +469,9 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                     planifBean.majChargePlanifieeTotale();
                 });
 
-        // On récupère la "nouvelle" planification :
+        // On récupère la "nouvelle" planification des tâches, en même temps que les données sur les tâches elles-mêmes :
         LOGGER.debug("Récupération de la nouvelle planification : ");
-        List<PlanificationTacheBean> planificationsBeanstoAdd = new ArrayList<>(50);
+        Set<PlanificationTacheBean> planificationsBeanstoAdd = new HashSet<>(50);
         planificationsDTO.entrySet().stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
                 .forEach(planifDTOEntry -> {
                     TacheDTO tacheDTO = planifDTOEntry.getKey();
@@ -482,10 +483,11 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                     );
                     if (planifBean == null) {
                         LOGGER.debug("   Tâche {} nouvelle => ajout.", tacheDTO.noTache());
-                        planifBean = new PlanificationTacheBean(TacheBean.from(tacheDTO));
+                        TacheBean tacheBean = TacheBean.from(tacheDTO);
+                        planifBean = new PlanificationTacheBean(tacheBean);
                         planificationsBeanstoAdd.add(planifBean);
                     } else {
-                        planifBean.setTypeChangement(tacheDTO.getTypeChangement());
+                        planifBean.fromDto(tacheDTO);
                     }
                     PlanificationTacheBean finalPlanifBean = planifBean;
                     planifDTOEntry.getValue().keySet().stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
@@ -503,6 +505,17 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 });
         if (!planificationsBeanstoAdd.isEmpty()) {
             planificationsBeans.addAll(planificationsBeanstoAdd);
+        }
+
+        // On supprime les tâches qui ont été terminées/annulées :
+        Set<PlanificationTacheBean> planificationsBeanstoRemove = new HashSet<>(50);
+        planificationsBeans.forEach(planifBean -> {
+            if (!planificationsDTO.taches().contains(planifBean.toDto())) {
+                planificationsBeanstoRemove.add(planifBean);
+            }
+        });
+        if (!planificationsBeanstoRemove.isEmpty()) {
+            planificationsBeans.removeAll(planificationsBeanstoRemove);
         }
     }
 

@@ -230,7 +230,7 @@ public class RevueWizardController extends AbstractController {
     }
 
     public void importerTaches(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().importerTachesDepuisCalc();
+        ihm.getApplicationController().majTachesDepuisCalc();
         majTachesCheckBox.setSelected(true);
     }
 }

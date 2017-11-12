@@ -387,9 +387,7 @@ public class PlanChargeIhm extends Application {
 
             primaryStage.setTitle(APP_NAME);
             //
-            primaryStage.setScene(new Scene(applicationView));
-            //
-            primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/planCharge-logo.png")));
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
             //
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
             Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
@@ -401,8 +399,11 @@ public class PlanChargeIhm extends Application {
 //            primaryStage.setFullScreen(true);
             primaryStage.setMaximized(true);
             //
+            primaryStage.setScene(new Scene(applicationView));
+            //
             primaryStage.show();
 
+/*
             // Chargement des données utilisées dernièrement (if any) :
             LocalDate dateEtatPrec = dateEtatPrecedente();
             if (dateEtatPrec != null) {
@@ -412,6 +413,7 @@ public class PlanChargeIhm extends Application {
                     applicationController.charger(dateEtatPrec);
                 }
             }
+*/
             // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
             if (estEnDeveloppement) {
                 // Référentiels :
@@ -420,9 +422,9 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleProjetsApplis();
                 // Imports :
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.52.ods"));
+//                applicationController.majTachesDepuisCalc(new File("./donnees/DAL-CT_14_PIL_Suivi des demandes_T4.56.ods"));
                 //noinspection HardcodedFileSeparator
-//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s42_t3.43.ods"));
+//                applicationController.importerPlanChargeDepuisCalc(new File("./donnees/DAL-CT_11_PIL_Plan de charge_2017s42_t3.44.ods"));
                 // Affichage des modules/écrans :
 //                applicationController.afficherModuleDisponibilites();
 //                applicationController.afficherModuleTaches();
@@ -1035,6 +1037,7 @@ public class PlanChargeIhm extends Application {
     private LocalDate dateEtatPrecedente() {
 
         if (estEnDeveloppement) {
+//            return LocalDate.of(2017, 10, 23);
             return LocalDate.of(2017, 11, 13);
         }
 

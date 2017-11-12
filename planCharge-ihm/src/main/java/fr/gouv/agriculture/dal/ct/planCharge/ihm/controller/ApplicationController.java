@@ -14,7 +14,7 @@ import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportChargementAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportPlanChargeAvecProgression;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportImportTachesAvecProgression;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportMajTachesAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.rapportProgression.RapportSauvegardeAvecProgression;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
@@ -662,10 +662,10 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void importerTachesDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
+    private void majTachesDepuisCalc(@SuppressWarnings("unused") ActionEvent event) {
         LOGGER.debug("> Fichier > Importer > Taches depuis Calc");
         try {
-            importerTachesDepuisCalc();
+            majTachesDepuisCalc();
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'importer les tâches.", e);
             ihm.afficherDialog(
@@ -677,7 +677,7 @@ public class ApplicationController extends AbstractController {
         }
     }
 
-    void importerTachesDepuisCalc() throws ControllerException {
+    void majTachesDepuisCalc() throws ControllerException {
         File ficCalc;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Indiquez le fichier Calc (LibreOffice) qui contient les tâches ('suivi des demandes'') : ");
@@ -704,39 +704,39 @@ public class ApplicationController extends AbstractController {
             return;
         }
 
-        importerTachesDepuisCalc(ficCalc);
+        majTachesDepuisCalc(ficCalc);
     }
 
-    public void importerTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
+    public void majTachesDepuisCalc(@NotNull File ficCalc) throws ControllerException {
 
-        RapportImportTachesAvecProgression rapport = new RapportImportTachesAvecProgression();
+        RapportMajTachesAvecProgression rapport = new RapportMajTachesAvecProgression();
 
         PlanChargeDTO[] planCharge = new PlanChargeDTO[1];
 
-        Task<RapportImportTachesAvecProgression> importerTachesDepuisCalc = new Task<RapportImportTachesAvecProgression>() {
+        Task<RapportImportTaches> majTachesDepuisCalc = new Task<RapportImportTaches>() {
 
             @Override
-            protected RapportImportTachesAvecProgression call() throws Exception {
+            protected RapportImportTaches call() throws Exception {
 
                 rapport.setProgressionMax(1);
 
                 rapport.avancementProperty().addListener((observable, oldValue, newValue) -> updateMessage(newValue));
                 rapport.progressionCouranteProperty().addListener((observable, oldValue, newValue) -> updateProgress(newValue.longValue(), rapport.getProgressionMax()));
 
-//                planChargeBeanAvantChargement[0] = planChargeBean.copier();
+//                planChargeBeanAvantMaj[0] = planChargeBean.copier();
 
                 planCharge[0] = planChargeBean.toDto();
 
-                RapportImportTaches rapportImportTaches = planChargeService.majTachesDepuisCalc(planCharge[0], ficCalc, rapport);
+                RapportImportTaches rapportMajTaches = planChargeService.majTachesDepuisCalc(planCharge[0], ficCalc, rapport);
 
-                return rapport;
+                return rapportMajTaches;
             }
         };
 
         try {
             Calculateur.executerSansCalculer(() -> {
                 try {
-                    RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", importerTachesDepuisCalc);
+                    RapportImportTaches rapportFinal = ihm.afficherProgression("Import des tâches", majTachesDepuisCalc);
                     assert rapport != null;
 
                     planChargeBean.fromDto(planCharge[0]);
