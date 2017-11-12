@@ -88,8 +88,8 @@
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Assistant de _revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Shift+R"/>
-                    <MenuItem text="Tracer les révisions..." onAction="#afficherFenetreTracageRevision"/>
+                    <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Shift+A"/>
+                    <MenuItem text="Tracer les _révisions..." onAction="#afficherFenetreTracageRevision" accelerator="Shortcut+Shift+R"/>
                 </Menu>
                 <Menu text="Autre" mnemonicParsing="false">
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>

@@ -1166,6 +1166,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
 
+//        planificationsTable.getFocusModel().focusedItemProperty().addListener((observable, oldValue, newValue) -> {
+        planificationsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            ihm.getTracageRevisionController().afficher(newValue);
+        });
     }
 
     private void initTableNbrsJoursChargeRsrc() {

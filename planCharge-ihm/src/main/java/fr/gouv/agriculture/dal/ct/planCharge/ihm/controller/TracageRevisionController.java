@@ -1,34 +1,20 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
-import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
-import fr.gouv.agriculture.dal.ct.ihm.module.Module;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
-import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
-import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.controlsfx.dialog.Wizard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.time.LocalDate;
-import java.util.Arrays;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -58,6 +44,36 @@ public class TracageRevisionController extends AbstractController {
 
 
     // Couche "vue" :
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TextField noTacheField;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TextField noTicketIdalTacheField;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TextField projetAppliTacheField;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TextField descriptionTacheField;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TextField typeChangementField;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private TextArea commentaireField;
 
 
     /**
@@ -100,5 +116,13 @@ public class TracageRevisionController extends AbstractController {
         stage.show();
 
         LOGGER.debug("Fenêtre de traçage des révisions affichée.");
+    }
+
+
+    public void afficher(@NotNull PlanificationTacheBean planifBean) {
+        noTacheField.setText(planifBean.noTache());
+        noTicketIdalTacheField.setText(Objects.value(planifBean.getNoTicketIdal(), ""));
+        projetAppliTacheField.setText(Objects.value(planifBean.getProjetAppli(), ProjetAppliBean::getCode, ""));
+        descriptionTacheField.setText(Objects.value(planifBean.getDescription(), ""));
     }
 }

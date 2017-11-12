@@ -445,6 +445,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleCharges();
                 // Autres :
                 applicationController.afficherAssistantRevue();
+                applicationController.afficherFenetreTracageRevision();
             }
 
             LOGGER.info("Application démarrée.");

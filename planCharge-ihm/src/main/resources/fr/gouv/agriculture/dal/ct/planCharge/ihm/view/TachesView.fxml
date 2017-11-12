@@ -109,7 +109,7 @@
         </Accordion>
     </top>
     <center>
-        <!--TODO FDA 2017/08 Factoriser pour ne plus avoir à dupliquer dans ChargesView.fxml.-->
+        <!--TODO FDA 2017/08 Factoriser pour ne plus avoir à dupliquer dans ChargesView.fxml et dans TracageRevisionView.fxml.-->
         <fx:define>
             <Double fx:id="categorieColumnPrefWidth" fx:value="60"/>
             <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
