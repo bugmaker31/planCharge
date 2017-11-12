@@ -3,10 +3,36 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
             layoutX="5.0" layoutY="5.0"
             HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
 >
+    <GridPane>
 
+        <Label text="Changement : "
+               GridPane.rowIndex="0" GridPane.columnIndex="0"
+        />
+        <TextField fx:id="typeChangementField"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"
+        />
+
+        <Label text="Validé par : "
+               GridPane.rowIndex="1" GridPane.columnIndex="0"
+        />
+        <TextField fx:id="validateurField"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1"
+        />
+
+        <Label text="Commentaire : "
+               GridPane.rowIndex="2" GridPane.columnIndex="0"
+        />
+        <TextField fx:id="commentaireField"
+                   GridPane.rowIndex="2" GridPane.columnIndex="1"
+        />
+
+    </GridPane>
 </AnchorPane>

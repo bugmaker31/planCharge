@@ -13,6 +13,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -93,6 +94,7 @@ public class TracageRevisionController extends AbstractController {
             stage = new Stage();
             stage.setTitle(PlanChargeIhm.APP_NAME + " - Traçage des révisions");
             stage.getIcons().addAll(ihm.getPrimaryStage().getIcons());
+            stage.setScene(new Scene(ihm.getTracageRevisionView()));
         }
 
         stage.show();

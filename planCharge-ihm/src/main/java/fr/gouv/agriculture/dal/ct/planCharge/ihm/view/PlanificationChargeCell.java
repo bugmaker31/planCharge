@@ -12,11 +12,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTache
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import javafx.application.Platform;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.css.PseudoClass;
+import javafx.event.EventType;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import org.slf4j.Logger;
@@ -71,7 +74,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 
     private void definirTooltip() {
         setOnMouseEntered(event -> {
-            LOGGER.debug("mouseEntered...");
+            LOGGER.debug("mouseEntered sur {}...", toString());
             PlanificationTacheBean planifBean = planificationTacheBean();
             if (planifBean == null) {
                 return;
@@ -84,12 +87,6 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             }
             LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noPeriode - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 //            LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-/*
-            DoubleProperty chargePlanifieeProperty = planifBean.chargePlanifieePropertyOuNull(debutPeriode);
-            if (chargePlanifieeProperty == null) {
-                return;
-            }
-*/
             NbrsJoursParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
                     chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
                     nbrsJoursDispoBean -> java.util.Objects.equals(nbrsJoursDispoBean.getRessourceBean(), planifBean.getRessource())
@@ -115,18 +112,24 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             message.append(" = ").append(capaciteRestanteFormattee).append("j");
             try {
                 ihm.afficherPopup(this, "Capacité restante", message.toString());
+                LOGGER.debug("Tooltip affiché pour cellule {}.", toString());
             } catch (IhmException e) {
                 LOGGER.error("Impossible d'afficher le tooltip.", e);
             }
+
+            event.consume(); // Utile ?
         });
         setOnMouseExited(event -> {
-            LOGGER.debug("mouseExited...");
+            LOGGER.debug("mouseExited sur {}...", toString());
             try {
                 ihm.masquerPopup(this);
+                LOGGER.debug("Tooltip affiché pour cellule {}.", toString());
             } catch (IhmException e) {
                 // Pas super-impactant pour l'utilisateur (la pop-up est bien masquée), donc un simple message d'erreur suffit, pas besoin d'aller jusqu'à thrower une exception.
                 LOGGER.error("Impossible de masquer le tooltip.", e);
             }
+
+            event.consume(); // Utile ?
         });
     }
 
@@ -301,5 +304,13 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             planifBean.majChargePlanifieeTotale();
             getTableView().refresh(); // Pour que les styles CSS soient re-appliqués (notamment celui de la colonne "Charge".
         }
+    }
+
+    @Override
+    public String toString() {
+        PlanificationTacheBean planifTacheBean = planificationTacheBean();
+        return "Période n°" + noPeriode
+                + " / " + Objects.value(planifTacheBean, planifBean -> planifBean.getId(), "N/C")
+                + " : " + Objects.value(getItem(), "-") + "j";
     }
 }

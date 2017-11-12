@@ -218,6 +218,11 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
+    public Region getTracageRevisionView() {
+        return tracageRevisionView;
+    }
+
+    @NotNull
     public Region getSaisieEcheanceView() {
         return saisieEcheanceView;
     }
