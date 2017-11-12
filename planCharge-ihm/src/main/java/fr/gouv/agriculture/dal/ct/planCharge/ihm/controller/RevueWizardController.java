@@ -99,7 +99,7 @@ public class RevueWizardController extends AbstractController {
         if (wizardStage == null) {
             wizardStage = new Stage();
             wizardStage.setTitle(PlanChargeIhm.APP_NAME + " - Assistant de revue");
-            wizardStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
+            wizardStage.getIcons().addAll(ihm.getPrimaryStage().getIcons());
 
             wizard = new Wizard(wizardStage.getOwner());
             wizard.setFlow(new Wizard.LinearFlow(etapes));

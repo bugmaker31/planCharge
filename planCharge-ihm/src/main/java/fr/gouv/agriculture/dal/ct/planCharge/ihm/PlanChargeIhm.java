@@ -156,6 +156,9 @@ public class PlanChargeIhm extends Application {
     private Region revueWizardView;
     @SuppressWarnings("NullableProblems")
     @NotNull
+    private Region tracageRevisionView;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
     private Region saisieEcheanceView;
 
     @SuppressWarnings("NullableProblems")
@@ -258,6 +261,9 @@ public class PlanChargeIhm extends Application {
     private RevueWizardController revueWizardController;
     @SuppressWarnings("NullableProblems")
     @NotNull
+    private TracageRevisionController tracageRevisionController;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
     private SaisieEcheanceController saisieEcheanceController;
 
 
@@ -299,6 +305,11 @@ public class PlanChargeIhm extends Application {
     @NotNull
     public RevueWizardController getRevueWizardController() {
         return revueWizardController;
+    }
+
+    @NotNull
+    public TracageRevisionController getTracageRevisionController() {
+        return tracageRevisionController;
     }
 
     @NotNull
@@ -545,6 +556,12 @@ public class PlanChargeIhm extends Application {
             loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/RevueWizardView.fxml"));
             revueWizardView = loader.load();
             revueWizardController = loader.getController();
+        }
+        {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/TracageRevisionView.fxml"));
+            tracageRevisionView = loader.load();
+            tracageRevisionController = loader.getController();
         }
         {
             FXMLLoader loader = new FXMLLoader();

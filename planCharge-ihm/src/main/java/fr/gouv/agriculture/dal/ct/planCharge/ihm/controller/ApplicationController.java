@@ -1306,6 +1306,18 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
+    private void afficherFenetreTracageRevision(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        afficherFenetreTracageRevision();
+    }
+
+    public void afficherFenetreTracageRevision() {
+        LOGGER.debug("> [...] > Fenêtre \"Révision\"");
+
+        ihm.getTracageRevisionController().show();
+    }
+
+
+    @FXML
     private void definirDateEtat(@SuppressWarnings("unused") @NotNull ActionEvent event) throws Exception {
         LOGGER.debug("definirDateEtat...");
         try {

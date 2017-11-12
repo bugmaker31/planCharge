@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
+            layoutX="5.0" layoutY="5.0"
+            HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+>
+
+</AnchorPane>
