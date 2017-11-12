@@ -281,6 +281,7 @@ public final class TableViews {
                     headerRowHeightProperty.setValue(table.getFixedCellSize()); // Approximation.
                     LOGGER.debug("Table '{}' without header (CSS not applied yet?), height approximated to {}.", table.getId(), headerRowHeightProperty.get());
                 } else {
+                    headerRowHeightProperty.unbind();
                     headerRowHeightProperty.bind(headerRow.heightProperty());
                     LOGGER.debug("Table '{}' header height is {}.", table.getId(), headerRowHeightProperty.get());
                 }
@@ -310,7 +311,9 @@ public final class TableViews {
         table.prefHeightProperty().bind(tableHeightBinding);
         table.maxHeightProperty().bind(tableHeightBinding);
 
-        LOGGER.debug("Table '{}' height is ensured.", table.getId());
+        table.refresh(); // Sinon le redimensionnement n'est pas pris en compte, du point de vue de l'utilisateur.
+
+        LOGGER.debug("Table '{}' height is ensured to {} pixels.", table.getId(), tableHeightBinding.get());
     }
 
 /*

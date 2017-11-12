@@ -31,7 +31,7 @@
     <!--<logger name="fr.gouv.agriculture.dal.ct.ihm.util" level="INFO"/>-->
     <!--<logger name="fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists" level="INFO"/>-->
     <!--<logger name="fr.gouv.agriculture.dal.ct.ihm.view" level="INFO"/>-->
-    <!--<logger name="fr.gouv.agriculture.dal.ct.ihm.view.TableViews" level="INFO"/>-->
+    <!--<logger name="fr.gouv.agriculture.dal.ct.ihm.view.TableViews" level="DEBUG"/>-->
 
     <logger name="fr.gouv.agriculture.dal.ct.planCharge" level="DEBUG"/>
     <!--<logger name="fr.gouv.agriculture.dal.ct.planCharge.metier" level="DEBUG"/>-->
