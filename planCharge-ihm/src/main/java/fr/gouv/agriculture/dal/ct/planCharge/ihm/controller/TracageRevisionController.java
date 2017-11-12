@@ -5,7 +5,13 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.ResponsablePriorisation;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -38,6 +44,9 @@ public class TracageRevisionController extends AbstractController {
 
     // Couche "métier" :
 
+    @Null
+    private PlanificationTacheBean planificationTacheAfficheeBean;
+
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
@@ -58,7 +67,7 @@ public class TracageRevisionController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TextField projetAppliTacheField;
+    private TextField codeProjetAppliTacheField;
 
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -68,7 +77,12 @@ public class TracageRevisionController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TextField typeChangementField;
+    private ComboBox<StatutRevision> statutRevisionField;
+
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private ComboBox<ResponsablePriorisation> validateurField;
 
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -95,7 +109,11 @@ public class TracageRevisionController extends AbstractController {
      */
     @FXML
     protected void initialize() throws ControllerException {
-        // Rien, pour l'instant.
+
+        statutRevisionField.getItems().setAll(StatutRevision.values());
+        statutRevisionField.setConverter(Converters.STATUT_REVISION_STRING_CONVERTER);
+
+        validateurField.getItems().setAll(ResponsablePriorisation.values());
     }
 
 
@@ -120,9 +138,11 @@ public class TracageRevisionController extends AbstractController {
 
 
     public void afficher(@NotNull PlanificationTacheBean planifBean) {
-        noTacheField.setText(planifBean.noTache());
-        noTicketIdalTacheField.setText(Objects.value(planifBean.getNoTicketIdal(), ""));
-        projetAppliTacheField.setText(Objects.value(planifBean.getProjetAppli(), ProjetAppliBean::getCode, ""));
-        descriptionTacheField.setText(Objects.value(planifBean.getDescription(), ""));
+        planificationTacheAfficheeBean = planifBean;
+
+        noTacheField.textProperty().bind(planifBean.noTacheProperty());
+        noTicketIdalTacheField.textProperty().bind(planifBean.noTicketIdalProperty());
+        codeProjetAppliTacheField.textProperty().bind(planifBean.projetAppliProperty().getValue().codeProperty());
+        descriptionTacheField.textProperty().bind(planifBean.descriptionProperty());
     }
 }
