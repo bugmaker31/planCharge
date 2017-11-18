@@ -75,21 +75,16 @@ public class ImportanceBean extends AbstractBean<ImportanceDTO, ImportanceBean> 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if ((o == null) || (!java.util.Objects.equals(getClass(), o.getClass()))) return false;
+        if (!(o instanceof ImportanceBean)) return false;
 
         ImportanceBean that = (ImportanceBean) o;
-
-        if (!java.util.Objects.equals(getOrdre(), that.getOrdre())) return false;
-        return java.util.Objects.equals(getCode(), that.getCode());
+        return java.util.Objects.equals(getOrdre(), that.getOrdre());
     }
 
     @Override
     public int hashCode() {
-        int result = ordre.hashCode();
-        result = (31 * result) + code.hashCode();
-        return result;
+        return (getOrdre() == null) ? 0 : getOrdre().hashCode();
     }
-
 
     // Juste pour faciliter le débogage.
     @Override
