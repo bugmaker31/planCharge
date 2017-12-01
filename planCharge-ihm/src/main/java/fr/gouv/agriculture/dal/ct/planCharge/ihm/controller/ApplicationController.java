@@ -1306,11 +1306,11 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void afficherFenetreTracageRevision(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+    private void afficherFenetreTracageRevision(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         afficherFenetreTracageRevision();
     }
 
-    public void afficherFenetreTracageRevision() {
+    public void afficherFenetreTracageRevision() throws ControllerException {
         LOGGER.debug("> [...] > Fenêtre \"Révision\"");
 
         ihm.getTracageRevisionController().show();

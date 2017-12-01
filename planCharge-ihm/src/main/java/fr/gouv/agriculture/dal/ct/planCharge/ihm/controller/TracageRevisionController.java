@@ -119,12 +119,7 @@ public class TracageRevisionController extends AbstractController {
     }
 
 
-    void show() {
-
-        if ((stage != null) && stage.isShowing()) {
-            LOGGER.debug("Fenêtre déjà affichée, rien à faire.");
-            return;
-        }
+    void show() throws ControllerException {
 
         if (stage == null) {
             stage = new Stage();
@@ -133,7 +128,12 @@ public class TracageRevisionController extends AbstractController {
             stage.setScene(new Scene(ihm.getTracageRevisionView()));
         }
 
-        stage.show();
+        if (!stage.isShowing()) {
+            stage.show();
+        }
+        if (!stage.isFocused()) {
+            stage.requestFocus();
+        }
 
         LOGGER.debug("Fenêtre de traçage des révisions affichée.");
     }

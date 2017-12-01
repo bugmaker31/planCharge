@@ -520,7 +520,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Barre d'état :
         barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
 
-        // Gestion de la sélection :
+        // Gestion de la sélection des cellules de la table des tâches :
         getTachesTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
         getTachesTable().getSelectionModel().setCellSelectionEnabled(true);
     }
@@ -534,15 +534,26 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             menuActions.getItems().add(menuItemSupprimer);
         }
         {
-            MenuItem menuItemSupprimer = new MenuItem("Voir la tâche " + tacheBean.noTache() + " dans outil de ticketing");
-            menuItemSupprimer.setOnAction(event -> {
+            MenuItem menuItemVoirTache = new MenuItem("Voir la tâche " + tacheBean.noTache() + " dans outil de ticketing");
+            menuItemVoirTache.setOnAction(event -> {
                 try {
                     afficherTacheDansOutilTicketing(tacheBean);
                 } catch (ControllerException e) {
                     LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + " dans l'outil de ticketing.", e);
                 }
             });
-            menuActions.getItems().add(menuItemSupprimer);
+            menuActions.getItems().add(menuItemVoirTache);
+        }
+        {
+            MenuItem menuItemReviser = new MenuItem("Réviser la tâche " + tacheBean.noTache());
+            menuItemReviser.setOnAction(event -> {
+                try {
+                    ihm.getApplicationController().afficherFenetreTracageRevision();
+                } catch (ControllerException e) {
+                    LOGGER.error("Impossible d'afficher la fenêtre de révision pour la tâche " + tacheBean.noTache(), e);
+                }
+            });
+            menuActions.getItems().add(menuItemReviser);
         }
         return menuActions;
     }
