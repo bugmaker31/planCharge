@@ -1,8 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.StatutRevision;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 
@@ -29,6 +28,7 @@ public class Converters {
     public static final ProjetAppliBeanConverter PROJET_APPLI_STRING_CONVERTER = new ProjetAppliBeanConverter();
     public static final StatutBeanConverter STATUT_STRING_CONVERTER = new StatutBeanConverter();
     public static final StringConverter<StatutRevision> STATUT_REVISION_STRING_CONVERTER = new StatutRevisionConverter();
+    public static final StringConverter<ValidateurRevision> VALIDATEUR_REVISION_STRING_CONVERTER = new ValidateurRevisionConverter();
 
 
     public static class FractionJoursStringConverter extends StringConverter<Float> {

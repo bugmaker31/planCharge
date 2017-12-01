@@ -74,7 +74,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 
     private void definirTooltip() {
         setOnMouseEntered(event -> {
-            LOGGER.debug("mouseEntered sur {}...", toString());
+//            LOGGER.trace("mouseEntered sur {}...", toString());
             PlanificationTacheBean planifBean = planificationTacheBean();
             if (planifBean == null) {
                 return;
@@ -120,10 +120,10 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             event.consume(); // Utile ?
         });
         setOnMouseExited(event -> {
-            LOGGER.debug("mouseExited sur {}...", toString());
+//            LOGGER.trace("mouseExited sur {}...", toString());
             try {
                 ihm.masquerPopup(this);
-                LOGGER.debug("Tooltip affiché pour cellule {}.", toString());
+                LOGGER.debug("Tooltip masqué pour cellule {}.", toString());
             } catch (IhmException e) {
                 // Pas super-impactant pour l'utilisateur (la pop-up est bien masquée), donc un simple message d'erreur suffit, pas besoin d'aller jusqu'à thrower une exception.
                 LOGGER.error("Impossible de masquer le tooltip.", e);

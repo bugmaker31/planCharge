@@ -4,6 +4,8 @@ import fr.gouv.agriculture.dal.ct.metier.modele.AbstractEntity;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -204,6 +206,57 @@ public class Tache extends AbstractEntity<Integer, Tache> implements ITache<Tach
         return statut.equals(Statut.PROVISION);
     }
 
+
+    /*
+     Revisable :
+     */
+
+    @Null
+    private StatutRevision statutRevision;
+
+    @Override
+    @Null
+    public StatutRevision getStatutRevision() {
+        return statutRevision;
+    }
+
+    public void setStatutRevision(@Null StatutRevision statutRevision) {
+        this.statutRevision = statutRevision;
+    }
+
+
+    @Null
+    private ValidateurRevision validateurRevision;
+
+    @Override
+    @Null
+    public ValidateurRevision getValidateurRevision() {
+        return validateurRevision;
+    }
+
+    public void setValidateurRevision(@Null ValidateurRevision validateurRevision) {
+        this.validateurRevision = validateurRevision;
+    }
+
+
+    @Null
+    private String commentaireRevision;
+
+    @Override
+    @Null
+    public String getCommentaireRevision() {
+        return commentaireRevision;
+    }
+
+    @Override
+    public void setCommentaireRevision(@Null String commentaireRevision) {
+        this.commentaireRevision = commentaireRevision;
+    }
+
+
+    /*
+     Comparable
+     */
 
     @Override
     public int compareTo(@Null Tache o) {

@@ -5,12 +5,11 @@
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.StatutRevisionConverter?>
 <VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
+      AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
 >
-
-    <Label text="" style="-fx-font-size: 150%;"
-           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" alignment="CENTER"
+    <Label text="Tâche" style="-fx-font-size: 150%;"
+           alignment="CENTER"
     />
-
     <GridPane style="-fx-border-width: 1">
 
         <Label text="Tâche : "
@@ -38,8 +37,14 @@
                 <TextField fx:id="descriptionTacheField" editable="false" focusTraversable="false" prefWidth="700"/>
             </VBox>
         </HBox>
+    </GridPane>
 
-        <Label text="Statut de la révision : "
+    <Label text="Révision" style="-fx-font-size: 150%;"
+           alignment="CENTER"
+    />
+    <GridPane style="-fx-border-width: 1">
+
+        <Label text="Statut : "
                GridPane.rowIndex="1" GridPane.columnIndex="0"
         />
         <ComboBox fx:id="statutRevisionField"
@@ -53,8 +58,8 @@
         <Label text="Validé par : "
                GridPane.rowIndex="2" GridPane.columnIndex="0"
         />
-        <ComboBox fx:id="validateurField"
-                  prefWidth="60"
+        <ComboBox fx:id="validateurRevisionField"
+                  prefWidth="80"
                   GridPane.rowIndex="2" GridPane.columnIndex="1"
         />
 
@@ -62,8 +67,8 @@
                GridPane.rowIndex="3" GridPane.columnIndex="0"
                GridPane.valignment="TOP"
         />
-        <TextArea fx:id="commentaireField"
-                  prefRowCount="1" prefColumnCount="80"
+        <TextArea fx:id="commentaireRevisionField"
+                  prefRowCount="1" prefColumnCount="50"
                   GridPane.rowIndex="3" GridPane.columnIndex="1"
         />
 

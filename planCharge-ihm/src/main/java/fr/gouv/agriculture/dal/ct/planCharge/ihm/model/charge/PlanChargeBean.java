@@ -8,7 +8,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDisp
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoRsrcProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;

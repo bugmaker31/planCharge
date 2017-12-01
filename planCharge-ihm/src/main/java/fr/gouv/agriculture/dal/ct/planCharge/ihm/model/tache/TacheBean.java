@@ -3,12 +3,13 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
-import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.TacheService;
@@ -298,6 +299,68 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return tacheDTO.estProvision();
     }
 
+
+    // Revisable (ITache)
+
+    @NotNull
+    private ObjectProperty<StatutRevision> statutRevision = new SimpleObjectProperty<>();
+
+    @Null
+    public StatutRevision getStatutRevision() {
+        return statutRevision.get();
+    }
+
+    @NotNull
+    public ObjectProperty<StatutRevision> statutRevisionProperty() {
+        return statutRevision;
+    }
+
+    @Override
+    public void setStatutRevision(@Null StatutRevision statutRevision) {
+        this.statutRevision.set(statutRevision);
+    }
+
+    @NotNull
+    private ObjectProperty<ValidateurRevision> validateurRevision = new SimpleObjectProperty<>();
+
+    @Null
+    @Override
+    public ValidateurRevision getValidateurRevision() {
+        return validateurRevision.get();
+    }
+
+    @NotNull
+    public ObjectProperty<ValidateurRevision> validateurRevisionProperty() {
+        return validateurRevision;
+    }
+
+    @Override
+    public void setValidateurRevision(@Null ValidateurRevision validateurRevision) {
+        this.validateurRevision.set(validateurRevision);
+    }
+
+    @NotNull
+    private StringProperty commentaireRevision = new SimpleStringProperty();
+
+    @Null
+    @Override
+    public String getCommentaireRevision() {
+        return commentaireRevision.get();
+    }
+
+    @NotNull
+    public StringProperty commentaireRevisionProperty() {
+        return commentaireRevision;
+    }
+
+    @Override
+    public void setCommentaireRevision(@Null String commentaireRevision) {
+        this.commentaireRevision.set(commentaireRevision);
+    }
+
+
+    // Comparable
+
     @Override
     public int compareTo(@Null TacheBean o) {
         TacheDTO tacheDTO = toDto();
@@ -306,31 +369,38 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
 
+    // AbstractBean :
+
     @NotNull
     @Override
     public TacheDTO toDto() /*throws BeanException*/ {
 /*
         try {
 */
-            TacheDTO tacheDTO = new TacheDTO(
-                    getId(),
-                    (getCodeCategorie() == null) ? null : CategorieTacheDTO.valeurOuNull(getCodeCategorie()),
-                    (getCodeSousCategorie() == null) ? null : SousCategorieTacheDTO.valeurOuNull(getCodeSousCategorie()),
-                    getNoTicketIdal(),
-                    getDescription(),
-                    (getProjetAppli() == null) ? null : ProjetAppliBean.to(getProjetAppli()),
-                    (getStatut() == null) ? null : StatutBean.safeTo(getStatut()),
-                    getDebut(),
-                    getEcheance(),
-                    (getImportance() == null) ? null : ImportanceBean.to(getImportance()),
-                    getCharge(),
-                    (getRessource() == null) ? null : RessourceBean.to(getRessource()),
-                    (getProfil() == null) ? null : ProfilBean.to(getProfil())
-            );
+        TacheDTO tacheDTO = new TacheDTO(
+                getId(),
+                (getCodeCategorie() == null) ? null : CategorieTacheDTO.valeurOuNull(getCodeCategorie()),
+                (getCodeSousCategorie() == null) ? null : SousCategorieTacheDTO.valeurOuNull(getCodeSousCategorie()),
+                getNoTicketIdal(),
+                getDescription(),
+                (getProjetAppli() == null) ? null : ProjetAppliBean.to(getProjetAppli()),
+                (getStatut() == null) ? null : StatutBean.safeTo(getStatut()),
+                getDebut(),
+                getEcheance(),
+                (getImportance() == null) ? null : ImportanceBean.to(getImportance()),
+                getCharge(),
+                (getRessource() == null) ? null : RessourceBean.to(getRessource()),
+                (getProfil() == null) ? null : ProfilBean.to(getProfil())
+        );
 
-            tacheDTO.setTypeChangement(getTypeChangement());
+        tacheDTO.setTypeChangement(getTypeChangement());
 
-            return tacheDTO;
+        // Revisable :
+        tacheDTO.setStatutRevision(getStatutRevision());
+        tacheDTO.setValidateurRevision(getValidateurRevision());
+        tacheDTO.setCommentaireRevision(getCommentaireRevision());
+
+        return tacheDTO;
 /*
         } catch (DTOException | BeanException e) {
             throw new BeanException("Impossible de transformer la tâche de Bean en DTO.", e);
@@ -354,13 +424,21 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         this.charge.setValue(tacheDTO.getCharge());
         this.ressource.setValue(Objects.value(tacheDTO.getRessource(), RessourceBean::from));
         this.profil.setValue(Objects.value(tacheDTO.getProfil(), ProfilBean::from));
+
+        this.setTypeChangement(tacheDTO.getTypeChangement());
+
+        // Revisable :
+        this.setStatutRevision(tacheDTO.getStatutRevision());
+        this.setValidateurRevision(tacheDTO.getValidateurRevision());
+        this.setCommentaireRevision(tacheDTO.getCommentaireRevision());
+
+
         return this; // NB : Il ne faut pas instancier un autre Bean car on perdrait les Listeners enregistrés dessus.
     }
 
     public static TacheBean from(@NotNull TacheDTO dto) {
         TacheBean tacheBean = new TacheBean();
         tacheBean.fromDto(dto);
-        tacheBean.setTypeChangement(dto.getTypeChangement());
         return tacheBean;
     }
 

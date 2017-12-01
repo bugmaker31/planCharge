@@ -1,11 +1,22 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.constante;
 
-public enum ResponsablePriorisation {
-    EAU,
+public interface ResponsablePriorisation {
 
-    XPO,
+    enum ResponsablesPriorisation implements ResponsablePriorisation {
 
-    SCR,
-    NBR,
-    TSA
+        // Titulaire :
+        EAU,
+        // Adjoint du titulaire :
+        XPO,
+        // Remplaçants :
+        SCR,
+        NBR,
+        TSA;
+
+        public String getTrigramme() {
+            return name();
+        }
+    }
+
+    String getTrigramme();
 }

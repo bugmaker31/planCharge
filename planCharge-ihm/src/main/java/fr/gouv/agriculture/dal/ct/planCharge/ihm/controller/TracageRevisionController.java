@@ -4,14 +4,11 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.ResponsablePriorisation;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.StatutRevision;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -44,12 +41,16 @@ public class TracageRevisionController extends AbstractController {
 
     // Couche "métier" :
 
+/*
     @Null
     private PlanificationTacheBean planificationTacheAfficheeBean;
+*/
 
+/*
     //    @Autowired
     @NotNull
     private PlanChargeBean planChargeBean = PlanChargeBean.instance();
+*/
 
 
     // Couche "vue" :
@@ -82,12 +83,12 @@ public class TracageRevisionController extends AbstractController {
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private ComboBox<ResponsablePriorisation> validateurField;
+    private ComboBox<ValidateurRevision> validateurRevisionField;
 
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TextArea commentaireField;
+    private TextArea commentaireRevisionField;
 
 
     /**
@@ -113,7 +114,8 @@ public class TracageRevisionController extends AbstractController {
         statutRevisionField.getItems().setAll(StatutRevision.values());
         statutRevisionField.setConverter(Converters.STATUT_REVISION_STRING_CONVERTER);
 
-        validateurField.getItems().setAll(ResponsablePriorisation.values());
+        validateurRevisionField.getItems().setAll(ValidateurRevision.values());
+        validateurRevisionField.setConverter(Converters.VALIDATEUR_REVISION_STRING_CONVERTER);
     }
 
 
@@ -137,12 +139,42 @@ public class TracageRevisionController extends AbstractController {
     }
 
 
-    public void afficher(@NotNull PlanificationTacheBean planifBean) {
-        planificationTacheAfficheeBean = planifBean;
+    @Null
+    private ChangeListener<StatutRevision> statutRevisionListener = null;
+    @Null
+    private ChangeListener<ValidateurRevision> validateurRevisionListener = null;
+    @Null
+    private ChangeListener<String> commentaireRevisionListener = null;
 
-        noTacheField.textProperty().bind(planifBean.noTacheProperty());
-        noTicketIdalTacheField.textProperty().bind(planifBean.noTicketIdalProperty());
-        codeProjetAppliTacheField.textProperty().bind(planifBean.projetAppliProperty().getValue().codeProperty());
-        descriptionTacheField.textProperty().bind(planifBean.descriptionProperty());
+    public void afficher(@NotNull PlanificationTacheBean planifBean) {
+        PlanificationTacheBean planificationTacheAfficheeBean = planifBean;
+
+        // ITache :
+        noTacheField.setText(planifBean.noTache());
+        noTicketIdalTacheField.setText(planifBean.getNoTicketIdal());
+        codeProjetAppliTacheField.setText(planifBean.projetAppliProperty().getValue().getCode());
+        descriptionTacheField.setText(planifBean.getDescription());
+
+        // Revisable :
+        if (statutRevisionListener != null) {
+            statutRevisionField.getSelectionModel().selectedItemProperty().removeListener(statutRevisionListener);
+        }
+        statutRevisionField.getSelectionModel().select(planifBean.getStatutRevision());
+        statutRevisionListener = ((observable, oldValue, newValue) -> planificationTacheAfficheeBean.setStatutRevision(newValue));
+        statutRevisionField.getSelectionModel().selectedItemProperty().addListener(statutRevisionListener);
+        //
+        if (validateurRevisionListener != null) {
+            validateurRevisionField.getSelectionModel().selectedItemProperty().removeListener(validateurRevisionListener);
+        }
+        validateurRevisionField.getSelectionModel().select(planifBean.getValidateurRevision());
+        validateurRevisionListener = (observable, oldValue, newValue) -> planificationTacheAfficheeBean.setValidateurRevision(newValue);
+        validateurRevisionField.getSelectionModel().selectedItemProperty().addListener(validateurRevisionListener);
+        //
+        if (commentaireRevisionListener != null) {
+            commentaireRevisionField.textProperty().removeListener(commentaireRevisionListener);
+        }
+        commentaireRevisionField.setText(planifBean.getCommentaireRevision());
+        commentaireRevisionListener = (observable, oldValue, newValue) -> planificationTacheAfficheeBean.setCommentaireRevision(newValue);
+        commentaireRevisionField.textProperty().addListener(commentaireRevisionListener);
     }
 }

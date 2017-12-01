@@ -6,8 +6,11 @@ import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,7 +215,14 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
                 ressource.toEntity(),
                 profil.toEntity()
         );
+
         tache.setTypeChangement(getTypeChangement());
+
+        // Revisable :
+        tache.setStatutRevision(getStatutRevision());
+        tache.setValidateurRevision(getValidateurRevision());
+        tache.setCommentaireRevision(getCommentaireRevision());
+
         return tache;
     }
 
@@ -224,6 +234,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
 
     @NotNull
     public static TacheDTO from(@NotNull Tache entity) throws DTOException {
+
         TacheDTO tacheDTO = new TacheDTO(
                 entity.getId(),
                 CategorieTacheDTO.from(entity.getCategorie()),
@@ -238,7 +249,14 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
                 RessourceDTO.from(entity.getRessource()),
                 ProfilDTO.from(entity.getProfil())
         );
+
         tacheDTO.setTypeChangement(entity.getTypeChangement());
+
+        // Revisable :
+        tacheDTO.setStatutRevision(entity.getStatutRevision());
+        tacheDTO.setValidateurRevision(entity.getValidateurRevision());
+        tacheDTO.setCommentaireRevision(entity.getCommentaireRevision());
+
         return tacheDTO;
     }
 
@@ -269,6 +287,51 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     }
 
 
+    // Revisable
+
+    @Null
+    private StatutRevision statutRevision;
+
+    @Override
+    @Null
+    public StatutRevision getStatutRevision() {
+        return statutRevision;
+    }
+
+    public void setStatutRevision(@Null StatutRevision statutRevision) {
+        this.statutRevision = statutRevision;
+    }
+
+
+    @Null
+    private ValidateurRevision validateurRevision;
+
+    @Override
+    @Null
+    public ValidateurRevision getValidateurRevision() {
+        return validateurRevision;
+    }
+
+    public void setValidateurRevision(@Null ValidateurRevision validateurRevision) {
+        this.validateurRevision = validateurRevision;
+    }
+
+
+    @Null
+    private String commentaireRevision;
+
+    @Override
+    @Null
+    public String getCommentaireRevision() {
+        return commentaireRevision;
+    }
+
+    @Override
+    public void setCommentaireRevision(@Null String commentaireRevision) {
+        this.commentaireRevision = commentaireRevision;
+    }
+
+
     // Pour les débug, uniquement.
     @Override
     @NotNull
@@ -276,9 +339,9 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         //noinspection HardcodedFileSeparator
         return /*(categorie.getCode() + (sousCategorie == null ? "" : ("::" + sousCategorie.getCode())))
                 + " " +*/ noTache()
-                + " " + ((noTicketIdal.isEmpty() ? "N/A" : noTicketIdal))
+                + " " + Objects.value(noTicketIdal, "N/A")
                 + " " + ("[" + projetAppli + "]")
-                + " " + ("{" + statut.getIdentity() + "}")
+                + " " + ("{" + Objects.value(statut, StatutDTO::getIdentity, "N/A") + "}")
                 + " " + ("<< " + description + " >> ")
                 ;
     }
