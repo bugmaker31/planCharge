@@ -147,7 +147,6 @@ public class TracageRevisionController extends AbstractController {
     private ChangeListener<String> commentaireRevisionListener = null;
 
     public void afficher(@NotNull PlanificationTacheBean planifBean) {
-        PlanificationTacheBean planificationTacheAfficheeBean = planifBean;
 
         // ITache :
         noTacheField.setText(planifBean.noTache());
@@ -160,21 +159,21 @@ public class TracageRevisionController extends AbstractController {
             statutRevisionField.getSelectionModel().selectedItemProperty().removeListener(statutRevisionListener);
         }
         statutRevisionField.getSelectionModel().select(planifBean.getStatutRevision());
-        statutRevisionListener = ((observable, oldValue, newValue) -> planificationTacheAfficheeBean.setStatutRevision(newValue));
+        statutRevisionListener = ((observable, oldValue, newValue) -> planifBean.setStatutRevision(newValue));
         statutRevisionField.getSelectionModel().selectedItemProperty().addListener(statutRevisionListener);
         //
         if (validateurRevisionListener != null) {
             validateurRevisionField.getSelectionModel().selectedItemProperty().removeListener(validateurRevisionListener);
         }
         validateurRevisionField.getSelectionModel().select(planifBean.getValidateurRevision());
-        validateurRevisionListener = (observable, oldValue, newValue) -> planificationTacheAfficheeBean.setValidateurRevision(newValue);
+        validateurRevisionListener = (observable, oldValue, newValue) -> planifBean.setValidateurRevision(newValue);
         validateurRevisionField.getSelectionModel().selectedItemProperty().addListener(validateurRevisionListener);
         //
         if (commentaireRevisionListener != null) {
             commentaireRevisionField.textProperty().removeListener(commentaireRevisionListener);
         }
         commentaireRevisionField.setText(planifBean.getCommentaireRevision());
-        commentaireRevisionListener = (observable, oldValue, newValue) -> planificationTacheAfficheeBean.setCommentaireRevision(newValue);
+        commentaireRevisionListener = (observable, oldValue, newValue) -> planifBean.setCommentaireRevision(newValue);
         commentaireRevisionField.textProperty().addListener(commentaireRevisionListener);
     }
 }
