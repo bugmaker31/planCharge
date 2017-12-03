@@ -7,10 +7,14 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.ProjetAppli
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.RessourceDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.StatutDao;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.referentiels.importance.ImportanceDao;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dao.revisable.xml.RevisionWrapper;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.CategorieTache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.SousCategorieTache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -58,6 +62,9 @@ public class TacheXmlWrapper {
     @Null
     private TypeChangement typeChangement;
 
+    @Null
+    private RevisionWrapper revision;
+
 
     //    @Autowired
     @NotNull
@@ -80,27 +87,6 @@ public class TacheXmlWrapper {
      */
     public TacheXmlWrapper() {
         super();
-    }
-
-    public TacheXmlWrapper init(Tache tache) {
-        idTache = tache.getId();
-        codeCategorie = tache.getCategorie().getCode();
-        codeSousCategorie = ((tache.getSousCategorie() == null) ? null : tache.getSousCategorie().getCode());
-        noTache = tache.noTache();
-        noTicketIdal = tache.getNoTicketIdal();
-        description = tache.getDescription();
-        codeProjetAppli = tache.getProjetAppli().getCode();
-        codeStatut = tache.getStatut().getCode();
-        debut = Dates.asDate(tache.getDebut());
-        echeance = Dates.asDate(tache.getEcheance());
-        codeImportance = tache.getImportance().getCodeInterne();
-        charge = tache.getCharge();
-        codeRessource = tache.getRessource().getCode();
-        codeProfil = tache.getProfil().getCode();
-
-        typeChangement = tache.getTypeChangement();
-
-        return this;
     }
 
     @XmlAttribute(required = true)
@@ -178,6 +164,11 @@ public class TacheXmlWrapper {
         return typeChangement;
     }
 
+    @XmlElement(required = false)
+    public RevisionWrapper getRevision() {
+        return revision;
+    }
+
     public void setIdTache(Integer idTache) {
         this.idTache = idTache;
     }
@@ -238,6 +229,49 @@ public class TacheXmlWrapper {
         this.typeChangement = typeChangement;
     }
 
+    public void setRevision(RevisionWrapper revision) {
+        this.revision = revision;
+    }
+
+
+    // XmlWrapper :
+
+    @NotNull
+    public TacheXmlWrapper init(@NotNull Tache tache) {
+        idTache = tache.getId();
+        codeCategorie = tache.getCategorie().getCode();
+        codeSousCategorie = ((tache.getSousCategorie() == null) ? null : tache.getSousCategorie().getCode());
+        noTache = tache.noTache();
+        noTicketIdal = tache.getNoTicketIdal();
+        description = tache.getDescription();
+        codeProjetAppli = tache.getProjetAppli().getCode();
+        codeStatut = tache.getStatut().getCode();
+        debut = Dates.asDate(tache.getDebut());
+        echeance = Dates.asDate(tache.getEcheance());
+        codeImportance = tache.getImportance().getCodeInterne();
+        charge = tache.getCharge();
+        codeRessource = tache.getRessource().getCode();
+        codeProfil = tache.getProfil().getCode();
+
+        typeChangement = tache.getTypeChangement();
+
+        // Revisable
+        //noinspection IfMayBeConditional
+        if ((tache.getStatutRevision() == null) &&
+                (tache.getValidateurRevision() == null) &&
+                (tache.getCommentaireRevision() == null)
+                ) {
+            revision = null;
+        } else {
+            revision = new RevisionWrapper(
+                    tache.getStatutRevision(),
+                    tache.getValidateurRevision(),
+                    tache.getCommentaireRevision()
+            );
+        }
+
+        return this;
+    }
 
     @NotNull
     public Tache extract() throws DaoException {
@@ -258,7 +292,13 @@ public class TacheXmlWrapper {
                     ressourceDao.load(codeRessource),
                     profilDao.load(codeProfil)
             );
+
             tache.setTypeChangement(typeChangement);
+
+            // Revisable
+            tache.setStatutRevision(Objects.value(revision, r -> Objects.value(r.getCodeStatutRevision(), StatutRevision::valueOfCode)));
+            tache.setValidateurRevision(Objects.value(revision, r -> Objects.value(r.getTrigrammeValidateurRevision(), ValidateurRevision::valueOfTrigramme)));
+            tache.setCommentaireRevision(Objects.value(revision, RevisionWrapper::getCommentaireRevision));
         } catch (Exception e) {
             throw new DaoException("Impossible d'extraire la tâche n°" + idTache + " depuis le XML.", e);
         }

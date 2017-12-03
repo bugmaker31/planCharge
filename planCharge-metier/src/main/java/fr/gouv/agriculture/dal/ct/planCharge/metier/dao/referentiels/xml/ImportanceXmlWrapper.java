@@ -14,7 +14,7 @@ public class ImportanceXmlWrapper {
     private String id;
     private String codeInterne;
     private String code;
-    private Integer ordre;
+    private Integer noOrdre;
 
     /**
      * Constructeur vide (appelé notamment par JAXB).
@@ -46,8 +46,8 @@ public class ImportanceXmlWrapper {
 
     @XmlElement(required = true)
     @NotNull
-    public Integer getOrdre() {
-        return ordre;
+    public Integer getNoOrdre() {
+        return noOrdre;
     }
 
 
@@ -63,21 +63,22 @@ public class ImportanceXmlWrapper {
         this.code = code;
     }
 
-    public void setOrdre(Integer ordre) {
-        this.ordre = ordre;
+    public void setNoOrdre(Integer noOrdre) {
+        this.noOrdre = noOrdre;
     }
 
+    // XmlWrapper :
 
     public ImportanceXmlWrapper init(@NotNull Importance importance) {
         this.id = importance.getIdentity();
         this.codeInterne = importance.getCodeInterne();
-        this.ordre = importance.getOrdre();
+        this.noOrdre = importance.getNoOrdre();
         this.code = importance.getCode();
         return this;
     }
 
     @NotNull
     public Importance extract() {
-        return new Importance(ordre, code);
+        return new Importance(noOrdre, code);
     }
 }

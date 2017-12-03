@@ -105,7 +105,7 @@ public class ImportanceDTO extends AbstractDTO<Importance, String, ImportanceDTO
     @Null
     @Override
     public String getIdentity() {
-//        return getOrdre() + "";
+//        return getNoOrdre() + "";
         return codeInterne;
     }
 
@@ -120,7 +120,7 @@ public class ImportanceDTO extends AbstractDTO<Importance, String, ImportanceDTO
     @NotNull
     @Override
     public ImportanceDTO fromEntity(@NotNull Importance entity) {
-        return new ImportanceDTO(entity.getOrdre(), entity.getCode());
+        return new ImportanceDTO(entity.getNoOrdre(), entity.getCode());
     }
 
     @SuppressWarnings("MissortedModifiers")

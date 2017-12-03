@@ -25,7 +25,7 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
             if (i1 != null && i2 == null) {
                 return 1;
             }
-            return i2.getOrdre().compareTo(i1.getOrdre());
+            return i2.getNoOrdre().compareTo(i1.getNoOrdre());
         }
 
     }
@@ -39,15 +39,15 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
 
     @NotNull
     private final String codeInterne;
-    private int ordre;
+    private int noOrdre;
     @NotNull
     private final String code;
 
 
-    public Importance(@NotNull int ordre, @NotNull String code) {
+    public Importance(@NotNull int noOrdre, @NotNull String code) {
         super();
-        this.codeInterne = ordre + "-" + code;
-        this.ordre = ordre;
+        codeInterne = noOrdre + "-" + code;
+        this.noOrdre = noOrdre;
         this.code = code;
     }
 
@@ -65,7 +65,7 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
         }
 
         try {
-            ordre = Integer.parseInt(codeInterne.replaceFirst("-.+$", ""));
+            noOrdre = Integer.parseInt(codeInterne.replaceFirst("-.+$", ""));
         } catch (NumberFormatException e) {
             throw new ModeleException("Code interne invalide, pas au format 'NN-AAA...' : '" + codeInterne + "'.", e);
         }
@@ -78,8 +78,8 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
     }
 
     @NotNull
-    public Integer getOrdre() {
-        return ordre;
+    public Integer getNoOrdre() {
+        return noOrdre;
     }
 
     @NotNull
@@ -92,7 +92,7 @@ public class Importance extends AbstractEntity<String, Importance> implements Co
     @NotNull
     @Override
     public String getIdentity() {
-//        return getOrdre() + "";
+//        return getNoOrdre() + "";
         return codeInterne;
     }
 

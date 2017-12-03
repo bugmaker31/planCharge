@@ -2,6 +2,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision;
 
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.ResponsablePriorisation;
 
+import javax.validation.constraints.NotNull;
+
 public enum ValidateurRevision implements ResponsablePriorisation {
 
     // Titulaire :
@@ -15,5 +17,10 @@ public enum ValidateurRevision implements ResponsablePriorisation {
 
     public String getTrigramme() {
         return name();
+    }
+
+
+    public static ValidateurRevision valueOfTrigramme(@NotNull String trigramme) {
+        return valueOf(trigramme);
     }
 }

@@ -161,10 +161,10 @@
                     <CheckBox text="Générer la liste des changements avec le dernier plan de charge."
                               wrapText="true"
                               GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <CheckBox text="Envoyer la liste des changements aux CPIs, avec les commentaires (et l'ordre de priorité global entre projet/appli)."
+                    <CheckBox text="Envoyer la liste des changements aux CPIs, avec les commentaires (et l'noOrdre de priorité global entre projet/appli)."
                               wrapText="true"
                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <CheckBox text="Envoyer le nouveau plan de charge aux RTs, ainsi que l'ordre de priorité global entre projet/appli."
+                    <CheckBox text="Envoyer le nouveau plan de charge aux RTs, ainsi que l'noOrdre de priorité global entre projet/appli."
                               wrapText="true"
                               GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                 </GridPane>
