@@ -2,6 +2,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.Map;
+import java.util.HashMap;
 
 public enum StatutRevision {
 
@@ -13,6 +15,14 @@ public enum StatutRevision {
 
     TACHE_TERMINEE("TERMINEE", 900, "Terminée"),
     TACHE_ANNULEE("ANNULEE", 910, "Annulée");
+
+    private static final Map<String, StatutRevision> VALUES = new HashMap<>(10);
+
+    static {
+        for (StatutRevision statutRevision : values()) {
+            VALUES.put(statutRevision.getCode(), statutRevision);
+        }
+    }
 
 
     @NotNull
@@ -48,12 +58,7 @@ public enum StatutRevision {
 
     @Null
     public static StatutRevision valueOfCode(@NotNull String code) {
-        for (StatutRevision statutRevision : values()) {
-            if (statutRevision.getCode().equals(code)) {
-                return statutRevision;
-            }
-        }
-        return null;
+        return VALUES.get(code);
     }
 
 

@@ -106,6 +106,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 tacheBean.getProfil()
         );
         typeChangement = tacheBean.getTypeChangement();
+        // Revisable :
+        statutRevision = tacheBean.statutRevisionProperty();
+        validateurRevision = tacheBean.validateurRevisionProperty();
+        commentaireRevision = tacheBean.commentaireRevisionProperty();
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")

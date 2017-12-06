@@ -41,7 +41,7 @@ public class RevisionWrapper {
         return codeStatutRevision;
     }
 
-    public void setNoOrdreStatutRevision(@Null String codeStatutRevision) {
+    public void setCodeStatutRevision(@Null String codeStatutRevision) {
         this.codeStatutRevision = codeStatutRevision;
     }
 
