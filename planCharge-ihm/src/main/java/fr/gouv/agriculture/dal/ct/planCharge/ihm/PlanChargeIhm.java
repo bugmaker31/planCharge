@@ -392,6 +392,10 @@ public class PlanChargeIhm extends Application {
         LOGGER.info("Application initialisée.");
     }
 
+    public int noEcranParDefaut() {
+        return (Screen.getScreens().size() >= 2) ? 1 : 0; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+    }
+
     @SuppressWarnings("ProhibitedExceptionDeclared")
     @Override
     public void start(@SuppressWarnings({"ParameterHidesMemberVariable", "NullableProblems"}) @NotNull Stage primaryStage) throws Exception {
@@ -406,11 +410,13 @@ public class PlanChargeIhm extends Application {
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
             //
             // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
-            Screen ecranParDefaut = Screen.getScreens().get((Screen.getScreens().size() >= 2) ? 1 : 0); // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+/*
+            Screen ecranParDefaut = Screen.getScreens().get(noEcranParDefaut());
             double screenWidth = ecranParDefaut.getBounds().getWidth();
             double screenHeight = ecranParDefaut.getBounds().getHeight();
             primaryStage.setWidth(screenWidth);
             primaryStage.setHeight(screenHeight);
+*/
             primaryStage.setResizable(true);
 //            primaryStage.setFullScreen(true);
             primaryStage.setMaximized(true);
