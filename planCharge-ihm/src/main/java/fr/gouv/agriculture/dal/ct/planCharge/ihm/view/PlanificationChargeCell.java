@@ -125,10 +125,11 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             try {
                 ihm.masquerPopup(this);
                 LOGGER.debug("Tooltip masqué pour cellule {}.", toString());
-            } catch (IhmException e) {
+            } catch (IhmException ignored) {
                 // Pas impactant du tout pour l'utilisateur (la pop-up est bien masquée), ni pour la stabilité de l'application,
                 // donc un simple "warn" suffit, pas besoin d'aller jusqu'à thrower une exception, ni même une "error".
-                LOGGER.warn("Impossible de masquer le tooltip.", e);
+                //LOGGER.warn("Impossible de masquer le tooltip.", ignored);
+                LOGGER.warn("Impossible de masquer le tooltip.");
             }
 
             event.consume(); // Utile ?

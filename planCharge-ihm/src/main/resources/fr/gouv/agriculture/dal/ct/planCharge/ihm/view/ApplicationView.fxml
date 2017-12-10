@@ -34,7 +34,7 @@
                     <SeparatorMenuItem/>
                     <MenuItem text="_Quitter" onAction="#quitter" accelerator="Shortcut+Q"/>
                 </Menu>
-                <Menu fx:id="menuEditer" text="Editer" mnemonicParsing="false">
+                <Menu fx:id="menuEditer" text="_Editer" >
                     <MenuItem fx:id="menuAnnuler" text="Annuler" onAction="#annuler" accelerator="Shortcut+Z"/>
                     <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à"/> <!-- Sera populé par l'application.-->
                     <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
@@ -87,9 +87,10 @@
                               accelerator="Shortcut+Shift+D"/>
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Shift+A"/>
-                    <MenuItem text="Tracer les _révisions..." onAction="#afficherFenetreTracageRevision" accelerator="Shortcut+Shift+R"/>
+                    <Menu text="_Révision">
+                        <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Shift+A"/>
+                        <MenuItem text="_Traçage les révisions..." onAction="#afficherFenetreTracageRevision" accelerator="Shortcut+Shift+R"/>
+                    </Menu>
                 </Menu>
                 <Menu text="Autre" mnemonicParsing="false">
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
