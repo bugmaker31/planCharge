@@ -1,16 +1,15 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite;
 
-import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import javafx.beans.property.FloatProperty;
+import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class NbrsJoursDispoRsrcBean extends AbstractCalendrierParRessourceBean<RessourceHumaineBean, AbstractDTO, NbrsJoursDispoRsrcBean, FloatProperty> {
+public class PctagesDispoParRessourceBean extends AbstractCalendrierParRessourceBean<RessourceHumaineBean, AbstractDTO, PctagesDispoParRessourceBean, PercentageProperty> {
 
 
     // Fields :
@@ -18,11 +17,11 @@ public class NbrsJoursDispoRsrcBean extends AbstractCalendrierParRessourceBean<R
 
     // Constructors :
 
-    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
+    public PctagesDispoParRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull Map<LocalDate, PercentageProperty> calendrier) /*throws BeanException*/ {
         super(ressourceHumaineBean, calendrier);
     }
 
-    public NbrsJoursDispoRsrcBean(@NotNull RessourceHumaineBean ressourceHumaineBean) {
+    public PctagesDispoParRessourceBean(@NotNull RessourceHumaineBean ressourceHumaineBean) /*throws BeanException*/ {
         super(ressourceHumaineBean);
     }
 

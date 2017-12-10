@@ -9,18 +9,18 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class NbrsJoursDispoProfilBean extends AbstractCalendrierParProfilBean<AbstractDTO, NbrsJoursDispoProfilBean, FloatProperty> {
+public class NbrsJoursDispoParProfilBean extends AbstractCalendrierParProfilBean<AbstractDTO, NbrsJoursDispoParProfilBean, FloatProperty> {
 
     // Fields :
 
 
     // Constructors :
 
-    public NbrsJoursDispoProfilBean(@NotNull ProfilBean profilBean) {
+    public NbrsJoursDispoParProfilBean(@NotNull ProfilBean profilBean) {
         super(profilBean);
     }
 
-    public NbrsJoursDispoProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
+    public NbrsJoursDispoParProfilBean(@NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) {
         super(profilBean, calendrier);
     }
 

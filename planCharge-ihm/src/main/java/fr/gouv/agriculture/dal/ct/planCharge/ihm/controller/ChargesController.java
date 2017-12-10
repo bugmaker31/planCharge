@@ -98,27 +98,27 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     @NotNull
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
-    private final ObservableList<NbrsJoursParRessourceBean> nbrsJoursChargeRsrcBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursChargeParRessourceBean> nbrsJoursChargeRsrcBeans = FXCollections.observableArrayList();
 
     @NotNull
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
-    private final ObservableList<NbrsJoursParProfilBean> nbrsJoursChargeProfilBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursChargeParProfilBean> nbrsJoursChargeProfilBeans = FXCollections.observableArrayList();
 
     @NotNull
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
-    private final ObservableList<NbrsJoursParRessourceBean> nbrsJoursDispoCTRestanteRsrcBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursChargeParRessourceBean> nbrsJoursDispoCTRestanteRsrcBeans = FXCollections.observableArrayList();
 
     @NotNull
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
-    private final ObservableList<TotauxNbrsJoursBean> totauxNbrsJoursDispoCTRestanteRsrcBeans = FXCollections.observableArrayList();
+    private final ObservableList<TotauxNbrsJoursChargeBean> totauxNbrsJoursDispoCTRestanteRsrcBeans = FXCollections.observableArrayList();
 
     @NotNull
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
-    private final ObservableList<NbrsJoursParProfilBean> nbrsJoursDispoCTMaxRestanteProfilBeans = FXCollections.observableArrayList();
+    private final ObservableList<NbrsJoursChargeParProfilBean> nbrsJoursDispoCTMaxRestanteProfilBeans = FXCollections.observableArrayList();
 
     @NotNull
     // 'final' pour éviter que quiconque resette cette liste et ne détruise les listeners enregistrés dessus.
-    private final ObservableList<TotauxNbrsJoursBean> totauxNbrsJoursDispoCTMaxRestanteProfilBeans = FXCollections.observableArrayList();
+    private final ObservableList<TotauxNbrsJoursChargeBean> totauxNbrsJoursDispoCTMaxRestanteProfilBeans = FXCollections.observableArrayList();
 
     /*
      La couche "View" :
@@ -274,377 +274,377 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private PlanificationTableView<NbrsJoursParRessourceBean, Float> nbrsJoursChargeRsrcTable;
+    private PlanificationTableView<NbrsJoursChargeParRessourceBean, Float> nbrsJoursChargeRsrcTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, ?> espaceNbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, ?> espaceNbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, String> ressourceNbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, String> ressourceNbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, String> profilNbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, String> profilNbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine1NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine1NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine2NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine2NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine3NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine3NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine4NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine4NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine5NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine5NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine6NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine6NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine7NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine7NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine8NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine8NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine9NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine9NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine10NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine10NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine11NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine11NbrsJoursChargeRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine12NbrsJoursChargeRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine12NbrsJoursChargeRsrcColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private PlanificationTableView<NbrsJoursParProfilBean, Float> nbrsJoursChargeProfilTable;
+    private PlanificationTableView<NbrsJoursChargeParProfilBean, Float> nbrsJoursChargeProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, ?> espaceNbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, ?> espaceNbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, String> ressourceNbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, String> ressourceNbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, String> profilNbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, String> profilNbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine1NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine1NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine2NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine2NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine3NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine3NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine4NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine4NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine5NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine5NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine6NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine6NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine7NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine7NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine8NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine8NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine9NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine9NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine10NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine10NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine11NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine11NbrsJoursChargeProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine12NbrsJoursChargeProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine12NbrsJoursChargeProfilColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private PlanificationTableView<NbrsJoursParRessourceBean, Float> nbrsJoursDispoCTRestanteRsrcTable;
+    private PlanificationTableView<NbrsJoursChargeParRessourceBean, Float> nbrsJoursDispoCTRestanteRsrcTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, ?> espaceNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, ?> espaceNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, String> ressourceNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, String> ressourceNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, String> profilNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, String> profilNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine1NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine1NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine2NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine2NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine3NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine3NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine4NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine4NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine5NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine5NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine6NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine6NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine7NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine7NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine8NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine8NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine9NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine9NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine10NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine10NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine11NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine11NbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParRessourceBean, Float> semaine12NbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<NbrsJoursChargeParRessourceBean, Float> semaine12NbrsJoursDispoCTRestanteRsrcColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private PlanificationTableView<TotauxNbrsJoursBean, Float> totauxNbrsJoursDispoCTRestanteRsrcTable;
+    private PlanificationTableView<TotauxNbrsJoursChargeBean, Float> totauxNbrsJoursDispoCTRestanteRsrcTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, ?> espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, ?> espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine1TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine1TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine2TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine2TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine3TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine3TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine4TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine4TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine5TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine5TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine6TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine6TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine7TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine7TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine8TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine8TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine9TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine9TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine10TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine10TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine11TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine11TotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine12TotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine12TotauxNbrsJoursDispoCTRestanteRsrcColumn;
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private PlanificationTableView<NbrsJoursParProfilBean, Float> nbrsJoursDispoCTMaxRestanteProfilTable;
+    private PlanificationTableView<NbrsJoursChargeParProfilBean, Float> nbrsJoursDispoCTMaxRestanteProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, ?> espaceNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, ?> espaceNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, String> ressourceNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, String> ressourceNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, String> profilNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, String> profilNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine1NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine1NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine2NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine2NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine3NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine3NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine4NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine4NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine5NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine5NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine6NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine6NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine7NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine7NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine8NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine8NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine9NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine9NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine10NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine10NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine11NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine11NbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<NbrsJoursParProfilBean, Float> semaine12NbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<NbrsJoursChargeParProfilBean, Float> semaine12NbrsJoursDispoCTMaxRestanteProfilColumn;
 
 
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
-    private PlanificationTableView<TotauxNbrsJoursBean, Float> totauxNbrsJoursDispoCTMaxRestanteProfilTable;
+    private PlanificationTableView<TotauxNbrsJoursChargeBean, Float> totauxNbrsJoursDispoCTMaxRestanteProfilTable;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, ?> espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, ?> espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine1TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine1TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine2TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine2TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine3TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine3TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine4TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine4TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine5TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine5TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine6TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine6TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine7TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine7TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine8TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine8TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine9TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine9TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine10TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine10TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine11TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine11TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursBean, Float> semaine12TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, Float> semaine12TotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
 
     /*
     La couche "Controller" :
@@ -687,32 +687,32 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     }
 
     @NotNull
-    public ObservableList<NbrsJoursParRessourceBean> getNbrsJoursChargeRsrcBeans() {
+    public ObservableList<NbrsJoursChargeParRessourceBean> getNbrsJoursChargeRsrcBeans() {
         return nbrsJoursChargeRsrcBeans;
     }
 
     @NotNull
-    public ObservableList<NbrsJoursParProfilBean> getNbrsJoursChargeProfilBeans() {
+    public ObservableList<NbrsJoursChargeParProfilBean> getNbrsJoursChargeProfilBeans() {
         return nbrsJoursChargeProfilBeans;
     }
 
     @NotNull
-    public ObservableList<NbrsJoursParRessourceBean> getNbrsJoursDispoCTRestanteRsrcBeans() {
+    public ObservableList<NbrsJoursChargeParRessourceBean> getNbrsJoursDispoCTRestanteRsrcBeans() {
         return nbrsJoursDispoCTRestanteRsrcBeans;
     }
 
     @NotNull
-    public ObservableList<TotauxNbrsJoursBean> getTotauxNbrsJoursDispoCTRestanteRsrcBeans() {
+    public ObservableList<TotauxNbrsJoursChargeBean> getTotauxNbrsJoursDispoCTRestanteRsrcBeans() {
         return totauxNbrsJoursDispoCTRestanteRsrcBeans;
     }
 
     @NotNull
-    public ObservableList<NbrsJoursParProfilBean> getNbrsJoursDispoCTMaxRestanteProfilBeans() {
+    public ObservableList<NbrsJoursChargeParProfilBean> getNbrsJoursDispoCTMaxRestanteProfilBeans() {
         return nbrsJoursDispoCTMaxRestanteProfilBeans;
     }
 
     @NotNull
-    public ObservableList<TotauxNbrsJoursBean> getTotauxNbrsJoursDispoCTMaxRestanteProfilBeans() {
+    public ObservableList<TotauxNbrsJoursChargeBean> getTotauxNbrsJoursDispoCTMaxRestanteProfilBeans() {
         return totauxNbrsJoursDispoCTMaxRestanteProfilBeans;
     }
 
@@ -818,7 +818,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ObservableLists.Binding binding = new ObservableLists.Binding("ressourcesBeans", "nbrsJoursChargeRsrcBeans");
         binding.ensureContains(
                 planChargeBean.getRessourcesBeans(),
-                ressourceBean -> new NbrsJoursParRessourceBean(ressourceBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                ressourceBean -> new NbrsJoursChargeParRessourceBean(ressourceBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
                 nbrsJoursChargeRsrcBeans
         );
     }
@@ -827,7 +827,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ObservableLists.Binding binding = new ObservableLists.Binding("profilsBeans", "nbrsJoursChargeProfilBeans");
         binding.ensureContains(
                 planChargeBean.getProfilsBeans(),
-                profilBean -> new NbrsJoursParProfilBean(profilBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                profilBean -> new NbrsJoursChargeParProfilBean(profilBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
                 nbrsJoursChargeProfilBeans
         );
     }
@@ -836,18 +836,18 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ObservableLists.Binding binding = new ObservableLists.Binding("ressourcesBeans", "nbrsJoursDispoCTRestanteRsrcBeans");
         binding.ensureContains(
                 planChargeBean.getRessourcesBeans(),
-                ressourceHumaineBean -> new NbrsJoursParRessourceBean(ressourceHumaineBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                ressourceHumaineBean -> new NbrsJoursChargeParRessourceBean(ressourceHumaineBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
                 nbrsJoursDispoCTRestanteRsrcBeans
         );
     }
 
     private void initBeansTotauxNbrsJoursDispoCTRestanteRsrc() {
 
-        TotauxNbrsJoursBean totauxNbrsJoursBean = new TotauxNbrsJoursBean();
+        TotauxNbrsJoursChargeBean totauxNbrsJoursBean = new TotauxNbrsJoursChargeBean();
         totauxNbrsJoursDispoCTRestanteRsrcBeans.add(totauxNbrsJoursBean);
 
 /* Sans effet. Implémenté dans CalculateurCharges#calculerTotalNbrsJoursDispoCTRestanteParRessource.
-        nbrsJoursDispoCTRestanteRsrcBeans.addListener((ListChangeListener<? super NbrsJoursParRessourceBean>) c -> {
+        nbrsJoursDispoCTRestanteRsrcBeans.addListener((ListChangeListener<? super NbrsJoursChargeParRessourceBean>) c -> {
             while (c.next()) {
                 // Rien, juste pour consommer les changements.
             }
@@ -872,13 +872,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ObservableLists.Binding binding = new ObservableLists.Binding("profilsBeans", "nbrsJoursDispoCTMaxRestanteProfilBeans");
         binding.ensureContains(
                 planChargeBean.getProfilsBeans(),
-                profilBean -> new NbrsJoursParProfilBean(profilBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
+                profilBean -> new NbrsJoursChargeParProfilBean(profilBean, new TreeMap<>()), // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
                 nbrsJoursDispoCTMaxRestanteProfilBeans
         );
     }
 
     private void initBeansTotauxNbrsJoursDispoCTMaxRestanteProfil() {
-        TotauxNbrsJoursBean totauxNbrsJoursBean = new TotauxNbrsJoursBean();
+        TotauxNbrsJoursChargeBean totauxNbrsJoursBean = new TotauxNbrsJoursChargeBean();
         totauxNbrsJoursDispoCTMaxRestanteProfilBeans.add(totauxNbrsJoursBean);
     }
 
@@ -1198,7 +1198,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         profilNbrsJoursChargeRsrcColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursChargeParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
                 column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
@@ -1208,7 +1208,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursChargeRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursChargeRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursChargeParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
                 column.setCellFactory(owningColumn -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par ressource est calculé.")));
             }
         }
@@ -1250,7 +1250,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         profilNbrsJoursChargeProfilColumn.setCellValueFactory(cell -> cell.getValue().getProfilBean().codeProperty());
         {
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursChargeParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
@@ -1260,7 +1260,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(ressourceNbrsJoursChargeProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursChargeProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
-            for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursChargeParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
                 column.setCellFactory(owningColumn -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par profil est calculé.")));
             }
         }
@@ -1303,7 +1303,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         profilNbrsJoursDispoCTRestanteRsrcColumn.setCellValueFactory(cell -> new SimpleStringProperty("N/A"));
         {
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursChargeParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
                 column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
@@ -1312,7 +1312,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(ressourceNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTRestanteRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
-        for (TableColumn<NbrsJoursParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
+        for (TableColumn<NbrsJoursChargeParRessourceBean, Float> column : nbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
             column.setCellFactory(owningColumn -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. CT restante par ressource est calculé.")));
         }
 
@@ -1333,12 +1333,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         definirMenuContextuelColonneRessource(nbrsJoursDispoCTRestanteRsrcTable, ressourceNbrsJoursDispoCTRestanteRsrcColumn);
     }
 
-    private void definirMenuContextuelColonneRessource(@NotNull PlanificationTableView<NbrsJoursParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursParRessourceBean, String> ressourceColumn) {
+    private void definirMenuContextuelColonneRessource(@NotNull PlanificationTableView<NbrsJoursChargeParRessourceBean, Float> table, @NotNull TableColumn<NbrsJoursChargeParRessourceBean, String> ressourceColumn) {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Filtrer les tâches sur la ressource");
         menuItem.setOnAction(event -> {
 
-            NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(table);
+            NbrsJoursChargeParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(table);
             if (nbrsJoursParRessourceBean == null) {
                 ihm.afficherDialog(
                         Alert.AlertType.WARNING,
@@ -1378,14 +1378,14 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         {
             int cptColonne = 0;
-            for (TableColumn<TotauxNbrsJoursBean, Float> column : totauxNbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
+            for (TableColumn<TotauxNbrsJoursChargeBean, Float> column : totauxNbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
                 cptColonne++;
                 column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        for (TableColumn<TotauxNbrsJoursBean, Float> column : totauxNbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
+        for (TableColumn<TotauxNbrsJoursChargeBean, Float> column : totauxNbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
             column.setCellFactory(owningColumn ->
                     new ChargePlanifieeCell<>(
                             Converters.SOMME_FRACTION_JOURS_STRING_CONVERTER,
@@ -1432,7 +1432,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         profilNbrsJoursDispoCTMaxRestanteProfilColumn.setCellValueFactory(cell -> cell.getValue().getProfilBean().codeProperty());
         {
             int cptColonne = 0;
-            for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
+            for (TableColumn<NbrsJoursChargeParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
@@ -1441,7 +1441,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
         ihm.interdireEdition(ressourceNbrsJoursDispoCTMaxRestanteProfilColumn, "Cette colonne reprend les ressources humaines (ajouter une ressource humaine pour ajouter une ligne dans cette table).");
         ihm.interdireEdition(profilNbrsJoursDispoCTMaxRestanteProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
-        for (TableColumn<NbrsJoursParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
+        for (TableColumn<NbrsJoursChargeParProfilBean, Float> column : nbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
             column.setCellFactory(owningColumn -> new ChargePlanifieeCell<>(() -> ihm.afficherInterdictionEditer("Le nombre de jours de dispo. max. CT restante par profil est calculé.")));
         }
 
@@ -1480,15 +1480,15 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         {
             int cptColonne = 0;
-            for (TableColumn<TotauxNbrsJoursBean, Float> column : totauxNbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
+            for (TableColumn<TotauxNbrsJoursChargeBean, Float> column : totauxNbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
                 cptColonne++;
                 column.setCellValueFactory(new CalendrierFractionsJoursCellCallback<>(cptColonne));
             }
         }
 
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") :
-        for (TableColumn<TotauxNbrsJoursBean, Float> column : totauxNbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
-            column.setCellFactory((TableColumn<TotauxNbrsJoursBean, Float> owningColumn) ->
+        for (TableColumn<TotauxNbrsJoursChargeBean, Float> column : totauxNbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
+            column.setCellFactory((TableColumn<TotauxNbrsJoursChargeBean, Float> owningColumn) ->
                     new ChargePlanifieeCell<>(
                             Converters.SOMME_FRACTION_JOURS_STRING_CONVERTER,
                             () -> ihm.afficherInterdictionEditer("Le total de nombre de jours de dispo. max. CT restante par profil est calculé.")
@@ -1517,7 +1517,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
             return false;
         }
-        NbrsJoursParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
+        NbrsJoursChargeParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
                 nbrsJoursDispoCTRestanteRsrcBeans,
                 nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getRessourceBean().equals(planifBean.getTacheBean().getRessource())
         );
@@ -1538,7 +1538,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         if (planifBean.getTacheBean().getProfil() == null) {
             return false;
         }
-        NbrsJoursParProfilBean nbrsJoursDispoRestanteBean = Collections.any(
+        NbrsJoursChargeParProfilBean nbrsJoursDispoRestanteBean = Collections.any(
                 nbrsJoursDispoCTMaxRestanteProfilBeans,
                 nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getProfilBean().equals(planifBean.getTacheBean().getProfil())
         );
@@ -1917,7 +1917,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         if (filtreSurchargeRessourceToggleButton.isSelected()) {
             RessourceBean<?, ?> ressourceBean = tache.getRessource();
             if ((ressourceBean != null) && ressourceBean.estHumain()) {
-                NbrsJoursParRessourceBean nbrsJoursParRessourceBean = Collections.any(
+                NbrsJoursChargeParRessourceBean nbrsJoursParRessourceBean = Collections.any(
                         nbrsJoursDispoCTRestanteRsrcBeans,
                         nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean),
                         new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la liste des nombres de jours de disponibilité CT restante par ressource.")
@@ -1935,7 +1935,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         if (filtreSurchargeProfilToggleButton.isSelected()) {
             ProfilBean profilBean = tache.getProfil();
             if (profilBean != null) {
-                NbrsJoursParProfilBean nbrsJoursParProfilBean = Collections.any(
+                NbrsJoursChargeParProfilBean nbrsJoursParProfilBean = Collections.any(
                         nbrsJoursDispoCTMaxRestanteProfilBeans,
                         nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean),
                         new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la liste des nombres de jours de disponibilité CT max restante par profil.")
@@ -1961,7 +1961,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void filtrerSurRessourceTableNbrsJoursDispoCTRestanteRsrc() {
 
-        NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(nbrsJoursDispoCTRestanteRsrcTable);
+        NbrsJoursChargeParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(nbrsJoursDispoCTRestanteRsrcTable);
         if (nbrsJoursParRessourceBean == null) {
             ihm.afficherDialog(
                     Alert.AlertType.WARNING,
@@ -1985,7 +1985,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void filtrerSurProfilTableNbrsJoursChargeProfil() {
 
-        NbrsJoursParProfilBean nbrsJoursParProfilBean = TableViews.selectedItem(nbrsJoursChargeProfilTable);
+        NbrsJoursChargeParProfilBean nbrsJoursParProfilBean = TableViews.selectedItem(nbrsJoursChargeProfilTable);
         if (nbrsJoursParProfilBean == null) {
             ihm.afficherDialog(
                     Alert.AlertType.WARNING,
@@ -2009,7 +2009,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void filtrerSurRessourceTableNbrsJoursChargeRsrc() {
 
-        NbrsJoursParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(nbrsJoursChargeRsrcTable);
+        NbrsJoursChargeParRessourceBean nbrsJoursParRessourceBean = TableViews.selectedItem(nbrsJoursChargeRsrcTable);
         if (nbrsJoursParRessourceBean == null) {
             ihm.afficherDialog(
                     Alert.AlertType.WARNING,
@@ -2033,7 +2033,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
     private void filtrerSurProfilTableNbrsJoursDispoCTMaxRestanteProfil() {
 
-        NbrsJoursParProfilBean nbrsJoursParProfilBean = TableViews.selectedItem(nbrsJoursDispoCTMaxRestanteProfilTable);
+        NbrsJoursChargeParProfilBean nbrsJoursParProfilBean = TableViews.selectedItem(nbrsJoursDispoCTMaxRestanteProfilTable);
         if (nbrsJoursParProfilBean == null) {
             ihm.afficherDialog(
                     Alert.AlertType.WARNING,

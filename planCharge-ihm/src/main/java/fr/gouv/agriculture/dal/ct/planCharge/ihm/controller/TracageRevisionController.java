@@ -4,9 +4,11 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -151,7 +153,7 @@ public class TracageRevisionController extends AbstractController {
         // ITache :
         noTacheField.setText(planifBean.noTache());
         noTicketIdalTacheField.setText(planifBean.getNoTicketIdal());
-        codeProjetAppliTacheField.setText(planifBean.projetAppliProperty().getValue().getCode());
+        codeProjetAppliTacheField.setText(Objects.value(planifBean.projetAppliProperty().getValue(), ProjetAppliBean::getCode));
         descriptionTacheField.setText(planifBean.getDescription());
 
         // Revisable :

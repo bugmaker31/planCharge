@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class TotauxNbrsJoursBean extends AbstractCalendrierBean<AbstractDTO, TotauxNbrsJoursBean, FloatProperty> {
+public class TotauxNbrsJoursChargeBean extends AbstractCalendrierBean<AbstractDTO, TotauxNbrsJoursChargeBean, FloatProperty> {
 
 
     // Fields :
@@ -18,11 +18,11 @@ public class TotauxNbrsJoursBean extends AbstractCalendrierBean<AbstractDTO, Tot
     // Constructors :
 
 
-    public TotauxNbrsJoursBean() /*throws BeanException */{
+    public TotauxNbrsJoursChargeBean() /*throws BeanException */{
         super(new TreeMap<>()); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
     }
 
-    public TotauxNbrsJoursBean(@NotNull Map<LocalDate, FloatProperty> calendrier) /*throws BeanException */{
+    public TotauxNbrsJoursChargeBean(@NotNull Map<LocalDate, FloatProperty> calendrier) /*throws BeanException */{
         super(calendrier);
     }
 

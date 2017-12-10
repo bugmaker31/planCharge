@@ -23,6 +23,7 @@ public class Converters {
     public static final NbrsJoursStringConverter NBRS_JOURS_STRING_CONVERTER = new NbrsJoursStringConverter();
     public static final ChargeStringConverter CHARGE_STRING_CONVERTER = new ChargeStringConverter();
     public static final SommeChargeStringConverter SOMME_CHARGE_STRING_CONVERTER = new SommeChargeStringConverter();
+    //
     public static final RessourceBeanConverter RESSOURCE_BEAN_CONVERTER = new RessourceBeanConverter();
     public static final ProfilBeanConverter PROFIL_BEAN_CONVERTER = new ProfilBeanConverter();
     public static final ProjetAppliBeanConverter PROJET_APPLI_STRING_CONVERTER = new ProjetAppliBeanConverter();

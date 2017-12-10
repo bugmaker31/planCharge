@@ -1,34 +1,28 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
-import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParProfilBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursParRessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursChargeParRessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursChargeParProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoParRessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.application.Platform;
-import javafx.beans.binding.DoubleExpression;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.css.PseudoClass;
-import javafx.event.EventType;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseEvent;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -52,6 +46,10 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
     //    @Autowired
     @NotNull
     private final PlanChargeIhm ihm = PlanChargeIhm.instance();
+
+    //    @Autowired
+    @NotNull
+    private final DisponibilitesController disponibilitesController = DisponibilitesController.instance();
 
     //    @Autowired
     @NotNull
@@ -87,29 +85,32 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             }
             LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noPeriode - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 //            LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-            NbrsJoursParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
-                    chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
-                    nbrsJoursDispoBean -> java.util.Objects.equals(nbrsJoursDispoBean.getRessourceBean(), planifBean.getRessource())
-            );
-            if (nbrJoursDispoRestantePourLaRessourceBean == null) {
+            //
+            Float nbrJoursDispo = nbrJoursDispo(planifBean.getRessource(), debutPeriode);
+            if (nbrJoursDispo  == null) {
                 return;
             }
-            if (!nbrJoursDispoRestantePourLaRessourceBean.containsKey(debutPeriode)) {
+            String nbrJoursDispoFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursDispo);
+            //
+            Float nbrJoursCharge = nbrJoursCharge(planifBean.getRessource(), debutPeriode);
+            if (nbrJoursCharge  == null) {
                 return;
             }
-            FloatProperty nbrJoursDispoRestanteProperty = nbrJoursDispoRestantePourLaRessourceBean.get(debutPeriode);
-            if (nbrJoursDispoRestanteProperty == null) {
+            String nbrJoursChargeFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursCharge);
+            //
+            Float nbrJoursDispoCTRestante = nbrJoursDispoCTRestante(planifBean.getRessource(), debutPeriode);
+            if (nbrJoursDispoCTRestante  == null) {
                 return;
             }
-            float capaciteRestante = nbrJoursDispoRestanteProperty.get();
-            String capaciteRestanteFormattee = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(capaciteRestante);
+            String nbrJoursDispoCTRestanteFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursDispoCTRestante);
 
             StringBuilder message = new StringBuilder("");
             assert planifBean.getRessource() != null;
             message.append("Dispo. restante");
-            message.append(" de ").append(planifBean.getRessource().getCode());
-            message.append(" sur [").append(debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE)).append("..["); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
-            message.append(" = ").append(capaciteRestanteFormattee).append("j");
+//            message.append(" de ").append(planifBean.getRessource().getCode());
+//            message.append(" sur [").append(debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE)).append("..["); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            message.append(" = ").append(nbrJoursDispoFormate).append(" - ").append(nbrJoursChargeFormate);
+            message.append(" = ").append(nbrJoursDispoCTRestanteFormate).append(" j");
             try {
                 ihm.afficherPopup(this, "Capacité restante", message.toString());
                 LOGGER.debug("Tooltip affiché pour cellule {}.", toString());
@@ -125,8 +126,9 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
                 ihm.masquerPopup(this);
                 LOGGER.debug("Tooltip masqué pour cellule {}.", toString());
             } catch (IhmException e) {
-                // Pas super-impactant pour l'utilisateur (la pop-up est bien masquée), donc un simple message d'erreur suffit, pas besoin d'aller jusqu'à thrower une exception.
-                LOGGER.error("Impossible de masquer le tooltip.", e);
+                // Pas impactant du tout pour l'utilisateur (la pop-up est bien masquée), ni pour la stabilité de l'application,
+                // donc un simple "warn" suffit, pas besoin d'aller jusqu'à thrower une exception, ni même une "error".
+                LOGGER.warn("Impossible de masquer le tooltip.", e);
             }
 
             event.consume(); // Utile ?
@@ -235,29 +237,83 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
     }
 
 
+    @Null
+    private Float nbrJoursDispo(@NotNull RessourceBean<?, ?> ressource, @NotNull LocalDate debutPeriode) {
+        NbrsJoursDispoParRessourceBean nbrsJoursDispoPourRessourceBean = Collections.any(
+                disponibilitesController.getNbrsJoursDispoCTBeans(),
+                nbrsJoursDispoBean -> java.util.Objects.equals(nbrsJoursDispoBean.getRessourceBean(), ressource)
+        );
+        if (nbrsJoursDispoPourRessourceBean == null) {
+            return null;
+        }
+        if (!nbrsJoursDispoPourRessourceBean.containsKey(debutPeriode)) {
+            return null;
+        }
+        FloatProperty nbrJoursDispoPourRessourceProperty = nbrsJoursDispoPourRessourceBean.get(debutPeriode);
+        if (nbrJoursDispoPourRessourceProperty == null) {
+            return null;
+        }
+        float nbrJoursDispoPourRessource = nbrJoursDispoPourRessourceProperty.get();
+        return nbrJoursDispoPourRessource;
+    }
+
+    @Null
+    private Float nbrJoursCharge(@NotNull RessourceBean<?, ?> ressource, @NotNull LocalDate debutPeriode) {
+        NbrsJoursChargeParRessourceBean nbrsJoursChargePourRessourceBean = Collections.any(
+                chargesController.getNbrsJoursChargeRsrcBeans(),
+                nbrJoursChargeBean -> java.util.Objects.equals(nbrJoursChargeBean.getRessourceBean(), ressource)
+        );
+        if (nbrsJoursChargePourRessourceBean == null) {
+            return null;
+        }
+        if (!nbrsJoursChargePourRessourceBean.containsKey(debutPeriode)) {
+            return null;
+        }
+        FloatProperty nbrJoursChargePourRessourceProperty = nbrsJoursChargePourRessourceBean.get(debutPeriode);
+        if (nbrJoursChargePourRessourceProperty == null) {
+            return null;
+        }
+        float nbrJoursChargePourRessource = nbrJoursChargePourRessourceProperty.get();
+        return nbrJoursChargePourRessource;
+    }
+
+    @Null
+    private Float nbrJoursDispoCTRestante(@NotNull RessourceBean<?, ?> ressource, @NotNull LocalDate debutPeriode) {
+        NbrsJoursChargeParRessourceBean nbrJoursDispoRestantePourRessourceBean = Collections.any(
+                chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
+                nbrsJoursDispoBean -> java.util.Objects.equals(nbrsJoursDispoBean.getRessourceBean(), ressource)
+        );
+        if (nbrJoursDispoRestantePourRessourceBean == null) {
+            return null;
+        }
+        if (!nbrJoursDispoRestantePourRessourceBean.containsKey(debutPeriode)) {
+            return null;
+        }
+        FloatProperty nbrJoursDispoRestantePourRessourceProperty = nbrJoursDispoRestantePourRessourceBean.get(debutPeriode);
+        if (nbrJoursDispoRestantePourRessourceProperty == null) {
+            return null;
+        }
+        float nbrJoursDispoCTRestantePourRessource = nbrJoursDispoRestantePourRessourceProperty.get();
+        return nbrJoursDispoCTRestantePourRessource;
+    }
+
+
     private boolean estRessourceSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean, @NotNull LocalDate debutPeriode) {
         if ((planifBean.getTacheBean().getRessource() == null) || !planifBean.getTacheBean().getRessource().estHumain()) {
             return false;
         }
-        NbrsJoursParRessourceBean nbrsJoursDispoRestanteBean = Collections.any(
-                chargesController.getNbrsJoursDispoCTRestanteRsrcBeans(),
-                nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getRessourceBean().equals(planifBean.getTacheBean().getRessource())
-        );
-        if (nbrsJoursDispoRestanteBean == null) {
+        Float nbrJoursDispoCTRestante = nbrJoursDispoCTRestante(planifBean.getTacheBean().getRessource(), debutPeriode);
+        if (nbrJoursDispoCTRestante == null) {
             return false;
         }
-        FloatProperty nbrJoursDispoRestanteSurPeriodeProperty = nbrsJoursDispoRestanteBean.get(debutPeriode);
-        if (nbrJoursDispoRestanteSurPeriodeProperty == null) {
-            return false;
-        }
-        return nbrJoursDispoRestanteSurPeriodeProperty.get() < 0.0f; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
+        return nbrJoursDispoCTRestante < 0.0f; // TODO FDA 2017/09 Mettre cette RG dans la couche métier.
     }
 
     private boolean estProfilSurchargeeSurPeriode(@NotNull PlanificationTacheBean planifBean, @NotNull LocalDate debutPeriode) {
         if (planifBean.getTacheBean().getProfil() == null) {
             return false;
         }
-        NbrsJoursParProfilBean nbrsJoursDispoRestanteBean = Collections.any(
+        NbrsJoursChargeParProfilBean nbrsJoursDispoRestanteBean = Collections.any(
                 chargesController.getNbrsJoursDispoCTMaxRestanteProfilBeans(),
                 nbrsJoursParRessourceBean -> nbrsJoursParRessourceBean.getProfilBean().equals(planifBean.getTacheBean().getProfil())
         );

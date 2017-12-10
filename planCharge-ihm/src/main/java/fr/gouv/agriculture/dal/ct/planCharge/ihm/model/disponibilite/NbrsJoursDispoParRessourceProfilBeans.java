@@ -12,14 +12,14 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
-public final class NbrsJoursDispoRsrcProfilBeans {
+public final class NbrsJoursDispoParRessourceProfilBeans {
 
     // Fields :
 
 
     // Constructors :
 
-    private NbrsJoursDispoRsrcProfilBeans() {
+    private NbrsJoursDispoParRessourceProfilBeans() {
         super();
     }
 
@@ -29,9 +29,9 @@ public final class NbrsJoursDispoRsrcProfilBeans {
     // Implementation of AbstractBean :
 
     @NotNull
-    public static Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> toDTO(@NotNull ObservableList<NbrsJoursDispoRsrcProfilBean> nbrsJoursDispoMaxRsrcProfilBeans) throws BeanException {
+    public static Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> toDTO(@NotNull ObservableList<NbrsJoursDispoParRessourceProfilBean> nbrsJoursDispoMaxRsrcProfilBeans) throws BeanException {
         Map<RessourceHumaineDTO, Map<ProfilDTO, Map<LocalDate, Float>>> nbrsJoursDispoMaxRsrcProfilDTOs = new TreeMap<>(); // TreeMap au lieu de HashMap pour trier, juste afin de faciliter le débogage.
-        for (NbrsJoursDispoRsrcProfilBean nbrsJoursDispoMaxRsrcProfilBean : nbrsJoursDispoMaxRsrcProfilBeans) {
+        for (NbrsJoursDispoParRessourceProfilBean nbrsJoursDispoMaxRsrcProfilBean : nbrsJoursDispoMaxRsrcProfilBeans) {
 
             RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMaxRsrcProfilBean.getRessourceBean();
             if (ressourceHumaineBean.getCode() == null) {

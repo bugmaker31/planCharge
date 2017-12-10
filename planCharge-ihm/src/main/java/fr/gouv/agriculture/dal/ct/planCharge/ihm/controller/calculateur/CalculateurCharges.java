@@ -7,8 +7,8 @@ import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.*;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoProfilBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoRsrcBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoParProfilBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
@@ -185,7 +185,7 @@ public class CalculateurCharges extends Calculateur {
             chargePlanifieePourLaRessource += chargePlanifiee;
         }
 
-        NbrsJoursParRessourceBean nbrJoursChargePourLaRessourceBean = Collections.any(
+        NbrsJoursChargeParRessourceBean nbrJoursChargePourLaRessourceBean = Collections.any(
                 getChargesController().getNbrsJoursChargeRsrcBeans(),
                 nbrsJoursChargeBean -> nbrsJoursChargeBean.getRessourceBean().equals(ressourceBean),
                 new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la table des nombres de jours de charge par ressource.")
@@ -237,13 +237,13 @@ public class CalculateurCharges extends Calculateur {
             chargePlanifieePourLaProfil += chargePlanifiee;
         }
 
-        NbrsJoursParProfilBean nbrJoursChargePourLeProfilBean = Collections.any(
+        NbrsJoursChargeParProfilBean nbrJoursChargePourLeProfilBean = Collections.any(
                 getChargesController().getNbrsJoursChargeProfilBeans(),
                 nbrsJoursChargeBean -> nbrsJoursChargeBean.getProfilBean().equals(profilBean)
 //                new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la table des nombres de jours de charge par profil.")
         );
         if (nbrJoursChargePourLeProfilBean == null) {
-            nbrJoursChargePourLeProfilBean = new NbrsJoursParProfilBean(profilBean);
+            nbrJoursChargePourLeProfilBean = new NbrsJoursChargeParProfilBean(profilBean);
             getChargesController().getNbrsJoursChargeProfilBeans().add(nbrJoursChargePourLeProfilBean);
         }
         if (!nbrJoursChargePourLeProfilBean.containsKey(debutPeriode)) {
@@ -279,7 +279,7 @@ public class CalculateurCharges extends Calculateur {
 
         Double chargeTotalePeriode = 0.0;
         for (RessourceBean<?, ?> ressourceBean : planChargeBean.getRessourcesBeans()) {
-            NbrsJoursParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
+            NbrsJoursChargeParRessourceBean nbrJoursDispoRestantePourLaRessourceBean = Collections.any(
                     getChargesController().getNbrsJoursDispoCTRestanteRsrcBeans(),
                     nbrsJoursDispoBean -> nbrsJoursDispoBean.getRessourceBean().equals(ressourceBean),
                     new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la table des nombres de jours de disponibilité restant pour la CT par ressource.")
@@ -289,7 +289,7 @@ public class CalculateurCharges extends Calculateur {
             chargeTotalePeriode += chargePeriode;
         }
 
-        TotauxNbrsJoursBean totauxNbrsJoursBean = getChargesController().getTotauxNbrsJoursDispoCTRestanteRsrcBeans().get(0);
+        TotauxNbrsJoursChargeBean totauxNbrsJoursBean = getChargesController().getTotauxNbrsJoursDispoCTRestanteRsrcBeans().get(0);
         if (!totauxNbrsJoursBean.containsKey(debutPeriode)) {
             totauxNbrsJoursBean.put(debutPeriode, new SimpleFloatProperty());
         }
@@ -317,13 +317,13 @@ public class CalculateurCharges extends Calculateur {
             nbrsJoursDispo = 0.0f; // TODO FDA 2017/09 Mettre cette valeur dans un Service.
         } else {
             RessourceHumaineBean ressourceHumaineBean = (RessourceHumaineBean) ressourceBean;
-            NbrsJoursDispoRsrcBean nbrsJoursDispoRsrcBean = Collections.any(
+            NbrsJoursDispoParRessourceBean nbrsJoursDispoRsrcBean = Collections.any(
                     getDisponibilitesController().getNbrsJoursDispoCTBeans(),
                     nbrsJoursBean -> nbrsJoursBean.getRessourceBean().equals(ressourceBean)
 //                    new ControllerException("impossible de retrouver la disponibilité de la ressource " + ressourceBean.getCode() + " pour la semaine " + noSemaine + ".")
             );
             if (nbrsJoursDispoRsrcBean==null)  {
-                nbrsJoursDispoRsrcBean = new NbrsJoursDispoRsrcBean(ressourceHumaineBean);
+                nbrsJoursDispoRsrcBean = new NbrsJoursDispoParRessourceBean(ressourceHumaineBean);
             }
             if (!nbrsJoursDispoRsrcBean.containsKey(debutPeriode)) {
                 nbrsJoursDispoRsrcBean.put(debutPeriode, new SimpleFloatProperty(0.0f)); // TODO FDA 2017/09 Mettre cette valeur dans un Service.
@@ -332,7 +332,7 @@ public class CalculateurCharges extends Calculateur {
         }
 
         float nbrJoursCharge;
-        NbrsJoursParRessourceBean nbrsJoursChargeRsrcBean = Collections.any(
+        NbrsJoursChargeParRessourceBean nbrsJoursChargeRsrcBean = Collections.any(
                 getChargesController().getNbrsJoursChargeRsrcBeans(),
                 nbrsJoursChargeBean -> nbrsJoursChargeBean.getRessourceBean().equals(ressourceBean),
                 new ControllerException("impossible de retrouver la charge totale de la ressource " + ressourceBean.getCode() + " pour la semaine " + noSemaine + ".")
@@ -341,7 +341,7 @@ public class CalculateurCharges extends Calculateur {
 
         float nbrJoursDispoCTRestante = nbrsJoursDispo - nbrJoursCharge; // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
 
-        NbrsJoursParRessourceBean nbrJoursChargePourLaRessourceBean = Collections.any(
+        NbrsJoursChargeParRessourceBean nbrJoursChargePourLaRessourceBean = Collections.any(
                 getChargesController().getNbrsJoursDispoCTRestanteRsrcBeans(),
                 nbrsJoursDispoBean -> nbrsJoursDispoBean.getRessourceBean().equals(ressourceBean),
                 new ControllerException("Impossible de retrouver la ressource '" + ressourceBean.getCode() + "' dans la table des nombres de jours de disponibilité restant pour la CT par ressource.")
@@ -379,7 +379,7 @@ public class CalculateurCharges extends Calculateur {
 
         Double chargeTotalePeriode = 0.0;
         for (ProfilBean profilBean : planChargeBean.getProfilsBeans()) {
-            NbrsJoursParProfilBean nbrJoursChargePourLeProfilBean = Collections.any(
+            NbrsJoursChargeParProfilBean nbrJoursChargePourLeProfilBean = Collections.any(
                     getChargesController().getNbrsJoursDispoCTMaxRestanteProfilBeans(),
                     nbrsJoursDispoBean -> nbrsJoursDispoBean.getProfilBean().equals(profilBean),
                     new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la table des nombres de jours de disponibilité max. restant pour la CT par profil.")
@@ -389,7 +389,7 @@ public class CalculateurCharges extends Calculateur {
             chargeTotalePeriode += chargePeriode;
         }
 
-        TotauxNbrsJoursBean totauxNbrsJoursBean = getChargesController().getTotauxNbrsJoursDispoCTMaxRestanteProfilBeans().get(0);
+        TotauxNbrsJoursChargeBean totauxNbrsJoursBean = getChargesController().getTotauxNbrsJoursDispoCTMaxRestanteProfilBeans().get(0);
         if (!totauxNbrsJoursBean.containsKey(debutPeriode)) {
             totauxNbrsJoursBean.put(debutPeriode, new SimpleFloatProperty());
         }
@@ -408,13 +408,13 @@ public class CalculateurCharges extends Calculateur {
         LocalDate debutPeriode = dateEtat.plusDays(((long) noSemaine - 1L) * 7L);// TODO FDA 2017/09 [issue#26:PeriodeHebdo/Trim]
 
         float nbrsJoursDispo;
-        NbrsJoursDispoProfilBean nbrsJoursDispoRsrcBean = Collections.any(
+        NbrsJoursDispoParProfilBean nbrsJoursDispoRsrcBean = Collections.any(
                 getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans(),
                 nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
 //                new ControllerException("impossible de retrouver la disponibilité du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
         );
         if (nbrsJoursDispoRsrcBean == null) {
-            nbrsJoursDispoRsrcBean = new NbrsJoursDispoProfilBean(profilBean);
+            nbrsJoursDispoRsrcBean = new NbrsJoursDispoParProfilBean(profilBean);
             getDisponibilitesController().getNbrsJoursDispoMaxProfilBeans().add(nbrsJoursDispoRsrcBean);
         }
         if (!nbrsJoursDispoRsrcBean.containsKey(debutPeriode)) {
@@ -424,13 +424,13 @@ public class CalculateurCharges extends Calculateur {
 
         float nbrJoursCharge;
         {
-            NbrsJoursParProfilBean nbrJoursChargeBean = Collections.any(
+            NbrsJoursChargeParProfilBean nbrJoursChargeBean = Collections.any(
                     getChargesController().getNbrsJoursChargeProfilBeans(),
                     nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
 //                    new ControllerException("Impossible de retrouver la charge totale du profil " + profilBean.getCode() + " pour la semaine " + noSemaine + ".")
             );
             if (nbrJoursChargeBean ==null) {
-                nbrJoursChargeBean = new NbrsJoursParProfilBean(profilBean);
+                nbrJoursChargeBean = new NbrsJoursChargeParProfilBean(profilBean);
                 getChargesController().getNbrsJoursChargeProfilBeans().add(nbrJoursChargeBean);
             }
             if (!nbrJoursChargeBean.containsKey(debutPeriode)) {
@@ -442,13 +442,13 @@ public class CalculateurCharges extends Calculateur {
         float nbrJoursDispoCTRestante = nbrsJoursDispo - nbrJoursCharge; // TODO FDA 2017/09 Coder cette RG dans un DTO/Entity/Service.
 
         {
-            NbrsJoursParProfilBean nbrJoursChargeBean = Collections.any(
+            NbrsJoursChargeParProfilBean nbrJoursChargeBean = Collections.any(
                     getChargesController().getNbrsJoursDispoCTMaxRestanteProfilBeans(),
                     nbrsJoursBean -> nbrsJoursBean.getProfilBean().equals(profilBean)
 //                    new ControllerException("Impossible de retrouver le profil '" + profilBean.getCode() + "' dans la table des nombres de jours de disponibilité CT max. restant pour la CT par profil.")
             );
             if (nbrJoursChargeBean == null) {
-                nbrJoursChargeBean = new NbrsJoursParProfilBean(profilBean);
+                nbrJoursChargeBean = new NbrsJoursChargeParProfilBean(profilBean);
                 getChargesController().getNbrsJoursDispoCTMaxRestanteProfilBeans().add(nbrJoursChargeBean);
             }
             if (!nbrJoursChargeBean.containsKey(debutPeriode)) {

@@ -5,24 +5,24 @@ import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceEtProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
-import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
+import javafx.beans.property.FloatProperty;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class PctagesDispoRsrcProfilBean extends AbstractCalendrierParRessourceEtProfilBean<RessourceHumaineBean, AbstractDTO, PctagesDispoRsrcProfilBean, PercentageProperty> {
+public class NbrsJoursDispoParRessourceProfilBean extends AbstractCalendrierParRessourceEtProfilBean<RessourceHumaineBean, AbstractDTO, NbrsJoursDispoParRessourceProfilBean, FloatProperty> {
 
     // Fields :
 
 
     // Constructors :
 
-    public PctagesDispoRsrcProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, PercentageProperty> calendrier) throws BeanException {
+    public NbrsJoursDispoParRessourceProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean, @NotNull Map<LocalDate, FloatProperty> calendrier) throws BeanException {
         super(ressourceHumaineBean, profilBean, calendrier);
     }
 
-    public PctagesDispoRsrcProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean) throws BeanException {
+    public NbrsJoursDispoParRessourceProfilBean(@NotNull RessourceHumaineBean ressourceHumaineBean, @NotNull ProfilBean profilBean) throws BeanException {
         super(ressourceHumaineBean, profilBean);
     }
 
