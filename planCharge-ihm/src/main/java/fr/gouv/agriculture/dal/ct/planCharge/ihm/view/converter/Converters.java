@@ -9,6 +9,7 @@ import javax.validation.constraints.Null;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,8 +42,7 @@ public class Converters {
         private /*static*/ final DecimalFormat FORMATEUR = new DecimalFormat("#.###");
 
         /*static*/ {
-            DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance();
-            formatSymbols.setDecimalSeparator(',');
+            DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance(Locale.FRENCH); // TODO FDA 2017/12 A stocker dans les préférences utilisateur, plutôt.
             FORMATEUR.setDecimalFormatSymbols(formatSymbols);
         }
 
