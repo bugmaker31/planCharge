@@ -87,19 +87,19 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 //            LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
             //
             Float nbrJoursDispo = nbrJoursDispo(planifBean.getRessource(), debutPeriode);
-            if (nbrJoursDispo  == null) {
+            if (nbrJoursDispo == null) {
                 return;
             }
             String nbrJoursDispoFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursDispo);
             //
             Float nbrJoursCharge = nbrJoursCharge(planifBean.getRessource(), debutPeriode);
-            if (nbrJoursCharge  == null) {
+            if (nbrJoursCharge == null) {
                 return;
             }
             String nbrJoursChargeFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursCharge);
             //
             Float nbrJoursDispoCTRestante = nbrJoursDispoCTRestante(planifBean.getRessource(), debutPeriode);
-            if (nbrJoursDispoCTRestante  == null) {
+            if (nbrJoursDispoCTRestante == null) {
                 return;
             }
             String nbrJoursDispoCTRestanteFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursDispoCTRestante);
@@ -115,7 +115,7 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
                 ihm.afficherPopup(this, "Capacité restante", message.toString());
                 LOGGER.debug("Tooltip affiché pour cellule {}.", toString());
             } catch (IhmException e) {
-                LOGGER.error("Impossible d'afficher le tooltip.", e);
+                LOGGER.error("Impossible d'afficher le tooltip de la cellule " + toString() + ".", e);
             }
 
             event.consume(); // Utile ?
@@ -128,17 +128,12 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             } catch (IhmException ignored) {
                 // Pas impactant du tout pour l'utilisateur (la pop-up est bien masquée), ni pour la stabilité de l'application,
                 // donc un simple "warn" suffit, pas besoin d'aller jusqu'à thrower une exception, ni même une "error".
-                //LOGGER.warn("Impossible de masquer le tooltip.", ignored);
-                LOGGER.warn("Impossible de masquer le tooltip.");
+                //LOGGER.warn("Impossible de masquer le tooltip de la cellule " + toString() + ".", ignored);
+                LOGGER.warn("Impossible de masquer le tooltip de la cellule {}.", toString());
             }
 
             event.consume(); // Utile ?
         });
-    }
-
-    @NotNull
-    public PlanificationTableView<PlanificationTacheBean, Double> getPlanificationTableView() {
-        return (PlanificationTableView<PlanificationTacheBean, Double>) getTableView();
     }
 
     @Override
