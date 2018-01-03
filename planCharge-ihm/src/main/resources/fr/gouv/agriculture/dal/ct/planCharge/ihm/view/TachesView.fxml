@@ -11,102 +11,98 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
-        <Accordion fx:id="parametresAffichageAccordion">
-            <panes>
-                <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris">
-                    <AnchorPane>
-                        <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"
-                                   AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
-                            <panes>
-                                <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
-                                    <HBox styleClass="paramFiltre-box">
-                                        <HBox styleClass="paramFiltre-box">
-                                            <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" styleClass="paramFiltre-box"/>
-                                            <fx:define>
-                                                <Double fx:id="buttonSpacing" fx:value="10"/>
-                                            </fx:define>
-                                            <VBox styleClass="paramFiltre-box">
-                                                <Label text="Catégorie : "/>
-                                                <!--<ButtonBar>-->
-                                                <!--<buttons>-->
-                                                <HBox spacing="$buttonSpacing">
-                                                    <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
-                                                </HBox>
-                                                <!--</buttons>-->
-                                                <!--</ButtonBar>-->
-                                            </VBox>
-                                            <VBox styleClass="paramFiltre-box">
-                                                <Label text="Statut : "/>
-                                                <!--<ButtonBar>-->
-                                                <!--<buttons>-->
-                                                <HBox spacing="$buttonSpacing">
-                                                    <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="Récurrent" fx:id="filtreStatutRecurrentToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="Reporté" fx:id="filtreStatutReporteToggleButton" onAction="#filtrer"/>
-                                                    <ToggleButton text="Clos" fx:id="filtreStatutClosToggleButton" onAction="#filtrer">
-                                                        <tooltip>
-                                                            <Tooltip text="Clos = Annulé ou Doublon ou Terminé"/>
-                                                        </tooltip>
-                                                    </ToggleButton>
-                                                </HBox>
-                                                <!--</buttons>-->
-                                                <!--</ButtonBar>-->
-                                            </VBox>
-                                            <VBox styleClass="paramFiltre-box">
-                                                <Label text="Période : "/>
-                                                <!--<ButtonBar>-->
-                                                <!--<buttons>-->
-                                                <HBox spacing="$buttonSpacing">
-                                                    <!--TODO FDA 2017/09 Coder.-->
-                                                    <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer" disable="true"/>
-                                                    <ToggleButton text="Demandée dans le semestre" fx:id="filtrePeriodeAVenirDemandeeDansSemestreToggleButton"
-                                                                  onAction="#filtrer"/>
-                                                    <!--TODO FDA 2017/09 Coder.-->
-                                                    <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"
-                                                                  disable="true"/>
-                                                    <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
-                                                </HBox>
-                                                <!--</buttons>-->
-                                                <!--</ButtonBar>-->
-                                            </VBox>
-                                            <VBox styleClass="paramFiltre-box">
-                                                <Label text="Révision : "/>
-                                                <!--<ButtonBar>-->
-                                                <!--<buttons>-->
-                                                <HBox spacing="$buttonSpacing">
-                                                    <ToggleButton fx:id="filtreRevisionTypeChangementAjoutToggleButton" text="Ajout"
-                                                                  onAction="#filtrer"/>
-                                                    <ToggleButton fx:id="filtreRevisionTypeChangementModificationToggleButton" text="Modification"
-                                                                  onAction="#filtrer"/>
-                                                    <!-- TODO FDA 2017/11 Coder.
-                                                        <ToggleButton fx:id="filtreRevisionTypeChangementSuppressionToggleButton" text="Suppression"
-                                                                      onAction="#filtrer"/>
-                                                    -->
-                                                </HBox>
-                                                <!--</buttons>-->
-                                                <!--</ButtonBar>-->
-                                            </VBox>
+        <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris" expanded="false">
+            <AnchorPane>
+                <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"
+                           AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
+                    <panes>
+                        <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
+                            <HBox styleClass="paramFiltre-box">
+                                <HBox styleClass="paramFiltre-box">
+                                    <FiltreGlobalTachesComponent fx:id="filtreGlobalComponent" styleClass="paramFiltre-box"/>
+                                    <fx:define>
+                                        <Double fx:id="buttonSpacing" fx:value="10"/>
+                                    </fx:define>
+                                    <VBox styleClass="paramFiltre-box">
+                                        <Label text="Catégorie : "/>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpacing">
+                                            <ToggleButton text="Projet" fx:id="filtreCategorieProjetToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Service" fx:id="filtreCategorieServiceToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Organisation" fx:id="filtreCategorieOrganisationToggleButton" onAction="#filtrer"/>
                                         </HBox>
-                                        <VBox styleClass="paramFiltre-box">
-                                            <Button text="Toutes" onAction="#filtrerRien" styleClass="erase-button"/>
-                                            <Button text="Aucune" onAction="#filtrerTout"/>
-                                        </VBox>
-                                    </HBox>
-                                </TitledPane>
-                                <TitledPane text="Tris" animated="false">
-                                    <!--TODO FDA 2017/10 Coder.-->
-                                    <Label text="TODO" disable="true"/>
-                                </TitledPane>
-                            </panes>
-                        </Accordion>
-                    </AnchorPane>
-                </TitledPane>
-            </panes>
-        </Accordion>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
+                                    </VBox>
+                                    <VBox styleClass="paramFiltre-box">
+                                        <Label text="Statut : "/>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpacing">
+                                            <ToggleButton text="Nouveau" fx:id="filtreStatutNouveauToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="En cours" fx:id="filtreStatutEnCoursToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="En attente" fx:id="filtreStatutEnAttenteToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Récurrent" fx:id="filtreStatutRecurrentToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Reporté" fx:id="filtreStatutReporteToggleButton" onAction="#filtrer"/>
+                                            <ToggleButton text="Clos" fx:id="filtreStatutClosToggleButton" onAction="#filtrer">
+                                                <tooltip>
+                                                    <Tooltip text="Clos = Annulé ou Doublon ou Terminé"/>
+                                                </tooltip>
+                                            </ToggleButton>
+                                        </HBox>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
+                                    </VBox>
+                                    <VBox styleClass="paramFiltre-box">
+                                        <Label text="Période : "/>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpacing">
+                                            <!--TODO FDA 2017/09 Coder.-->
+                                            <ToggleButton text="A venir" fx:id="filtrePeriodeAVenirToggleButton" onAction="#filtrer" disable="true"/>
+                                            <ToggleButton text="Demandée dans le semestre" fx:id="filtrePeriodeAVenirDemandeeDansSemestreToggleButton"
+                                                          onAction="#filtrer"/>
+                                            <!--TODO FDA 2017/09 Coder.-->
+                                            <ToggleButton text="Contemporaine" fx:id="filtrePeriodeContemporaineToggleButton" onAction="#filtrer"
+                                                          disable="true"/>
+                                            <ToggleButton text="Echue" fx:id="filtrePeriodeEchueToggleButton" onAction="#filtrer"/>
+                                        </HBox>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
+                                    </VBox>
+                                    <VBox styleClass="paramFiltre-box">
+                                        <Label text="Révision : "/>
+                                        <!--<ButtonBar>-->
+                                        <!--<buttons>-->
+                                        <HBox spacing="$buttonSpacing">
+                                            <ToggleButton fx:id="filtreRevisionTypeChangementAjoutToggleButton" text="Ajout"
+                                                          onAction="#filtrer"/>
+                                            <ToggleButton fx:id="filtreRevisionTypeChangementModificationToggleButton" text="Modification"
+                                                          onAction="#filtrer"/>
+                                            <!-- TODO FDA 2017/11 Coder.
+                                                <ToggleButton fx:id="filtreRevisionTypeChangementSuppressionToggleButton" text="Suppression"
+                                                              onAction="#filtrer"/>
+                                            -->
+                                        </HBox>
+                                        <!--</buttons>-->
+                                        <!--</ButtonBar>-->
+                                    </VBox>
+                                </HBox>
+                                <VBox styleClass="paramFiltre-box">
+                                    <Button text="Toutes" onAction="#filtrerRien" styleClass="erase-button"/>
+                                    <Button text="Aucune" onAction="#filtrerTout"/>
+                                </VBox>
+                            </HBox>
+                        </TitledPane>
+                        <TitledPane text="Tris" animated="false">
+                            <!--TODO FDA 2017/10 Coder.-->
+                            <Label text="TODO" disable="true"/>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </AnchorPane>
+        </TitledPane>
     </top>
     <center>
         <!--TODO FDA 2017/08 Factoriser pour ne plus avoir à dupliquer dans ChargesView.fxml et dans TracageRevisionView.fxml.-->
@@ -127,69 +123,72 @@
             <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
         <VBox>
-            <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
-                <columnResizePolicy>
-                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
-                </columnResizePolicy>
-                <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
-                <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
-                -->
-                <columns>
+            <TitledPane text="Tâches" collapsible="false" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+                    <columnResizePolicy>
+                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                    <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
+                    <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
+                    -->
+                    <columns>
 
-                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
+                        <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
 
-                    <TableColumn text="Catégories">
-                        <columns>
-                            <TableColumn fx:id="categorieColumn" text="Catégorie"
-                                         prefWidth="$categorieColumnPrefWidth"/>
-                            <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
-                                         prefWidth="$sousCategorieColumnPrefWidth"/>
-                        </columns>
-                    </TableColumn>
-                    <TableColumn text="identifiants">
-                        <columns>
-                            <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
-                                         prefWidth="$noTacheColumnPrefWidth"/>
-                            <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
-                                         prefWidth="$noTicketIdalColumnPrefWidth"/>
-                        </columns>
-                    </TableColumn>
-                    <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
-                                 text="Description"
-                                 styleClass="description-column"/>
-                    <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
-                                 text="Projet/Appli"
-                                 styleClass="projetAppli-column"/>
-                    <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"/>
-                    <TableColumn text="Période souhaitée">
-                        <columns>
-                            <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
-                            <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
-                                         text="Echéance" styleClass="echeance-column"/>
-                        </columns>
-                    </TableColumn>
-                    <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance" styleClass="importance-column"/>
-                    <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
-                                 styleClass="charge-column"/>
-                    <TableColumn text="Ressource">
-                        <columns>
-                            <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Trigramme"
-                                         styleClass="ressource-column"/>
-                            <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
-                                         styleClass="profil-column"/>
-                        </columns>
-                    </TableColumn>
-                    <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column" editable="false"/>
-                </columns>
-                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                <sortOrder>
-                    <fx:reference source="categorieColumn"/>
-                    <fx:reference source="sousCategorieColumn"/>
-                    <fx:reference source="projetAppliColumn"/>
-                    <fx:reference source="echeanceColumn"/>
-                    <fx:reference source="noTacheColumn"/>
-                </sortOrder>
-            </TableView>
+                        <TableColumn text="Catégories">
+                            <columns>
+                                <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                             prefWidth="$categorieColumnPrefWidth"/>
+                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                             prefWidth="$sousCategorieColumnPrefWidth"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn text="identifiants">
+                            <columns>
+                                <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
+                                             prefWidth="$noTacheColumnPrefWidth"/>
+                                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                             prefWidth="$noTicketIdalColumnPrefWidth"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
+                                     text="Description"
+                                     styleClass="description-column"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                     text="Projet/Appli"
+                                     styleClass="projetAppli-column"/>
+                        <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"/>
+                        <TableColumn text="Période souhaitée">
+                            <columns>
+                                <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                             text="Echéance" styleClass="echeance-column"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance" styleClass="importance-column"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                     styleClass="charge-column"/>
+                        <TableColumn text="Ressource">
+                            <columns>
+                                <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Trigramme"
+                                             styleClass="ressource-column"/>
+                                <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
+                                             styleClass="profil-column"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
+                                     editable="false"/>
+                    </columns>
+                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                    <sortOrder>
+                        <fx:reference source="categorieColumn"/>
+                        <fx:reference source="sousCategorieColumn"/>
+                        <fx:reference source="projetAppliColumn"/>
+                        <fx:reference source="echeanceColumn"/>
+                        <fx:reference source="noTacheColumn"/>
+                    </sortOrder>
+                </TableView>
+            </TitledPane>
         </VBox>
     </center>
     <bottom>

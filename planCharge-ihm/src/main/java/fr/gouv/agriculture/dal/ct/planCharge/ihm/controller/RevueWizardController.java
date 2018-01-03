@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 // Cf. https://controlsfx.bitbucket.io/org/controlsfx/dialog/Wizard.html
-@SuppressWarnings("ClassHasNoToStringMethod")
+@SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields"})
 public class RevueWizardController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RevueWizardController.class);
@@ -152,7 +152,7 @@ public class RevueWizardController extends AbstractController {
     @FXML
     private void majDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
         ihm.getApplicationController().afficherModuleDisponibilites();
-        ihm.getDisponibilitesController().getNbrsJoursAbsenceAccordion().setExpandedPane(ihm.getDisponibilitesController().getNbrsJoursAbsencePane());
+        ihm.getDisponibilitesController().getNbrsJoursAbsencePane().setExpanded(true);
         if (ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().getItems().isEmpty()) {
             ihm.getDisponibilitesController().getNbrsJoursAbsenceTable().requestFocus();
         } else {
@@ -166,13 +166,15 @@ public class RevueWizardController extends AbstractController {
 
     @FXML
     private void majDateEtat(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().deplierAccordeonParametres();
+        ihm.getApplicationController().deplierParametresPane();
         ihm.getPrimaryStage().requestFocus();
         {
             ChangeListener changeListener = (observable, oldValue, newValue) -> {
                 try {
 
                     majDateEtatCheckBox.setSelected(true);
+
+                    ihm.getApplicationController().replierParametresPane();
 
                     // Une seule action à cette étape, ou dernière action de cette étape, donc on passe à la suivante automatiquement.
                     passerEtapeSuivante();

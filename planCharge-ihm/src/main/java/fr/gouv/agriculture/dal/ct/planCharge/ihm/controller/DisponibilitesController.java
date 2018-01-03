@@ -118,23 +118,7 @@ public class DisponibilitesController extends AbstractController implements Modu
      La couche "View" :
       */
 
-    // Les accordéons :
-    @SuppressWarnings("NullableProblems")
-    @FXML
-    @NotNull
-    private Accordion nbrsJoursAbsenceAccordion;
-
-    @NotNull
-    public Accordion getNbrsJoursAbsenceAccordion() {
-        return nbrsJoursAbsenceAccordion;
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @FXML
-    @NotNull
-    private Accordion pctagesDispoCTAccordion;
-
-    // Les TabbedPane :
+    // Les TitledPane :
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
@@ -1559,7 +1543,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         try {
             RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoMinAgriSelectedBean.getRessourceBean();
             NbrsJoursAbsenceBean nbrsJoursAbsenceBean = Collections.any(nbrsJoursAbsenceBeans, (NbrsJoursAbsenceBean bean) -> bean.getRessourceBean().equals(ressourceHumaineBean), new IhmException("Impossible de retrouver la ressource '" + ressourceHumaineBean.getTrigramme() + "' dans la table des nombres de jours d'absence."));
-            nbrsJoursAbsenceAccordion.setExpandedPane(nbrsJoursAbsencePane);
+            nbrsJoursAbsencePane.setExpanded(true);
             TableViews.focusOnItem(nbrsJoursAbsenceTable, nbrsJoursAbsenceBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher les nombres de jours d'absence pour la ressource.", e);
@@ -1590,7 +1574,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         try {
             RessourceHumaineBean ressourceHumaineBean = nbrsJoursDispoCTBean.getRessourceBean();
             PctagesDispoParRessourceBean pctagesDispoCTBean = Collections.any(pctagesDispoCTBeans, (PctagesDispoParRessourceBean bean) -> bean.getRessourceBean().equals(ressourceHumaineBean), new IhmException("Impossible de retrouver la ressource '" + ressourceHumaineBean.getTrigramme() + "' dans la table des pourcentages de disponibilité pour l'équipe (la CT)."));
-            nbrsJoursAbsenceAccordion.setExpandedPane(pctagesDispoCTPane);
+            pctagesDispoCTPane.setExpanded(true);
             TableViews.focusOnItem(pctagesDispoCTTable, pctagesDispoCTBean);
         } catch (IhmException e) {
             LOGGER.error("Impossible d'afficher les pourcentages de disponiblité pour l'équipe (la CT) de la ressource.", e);

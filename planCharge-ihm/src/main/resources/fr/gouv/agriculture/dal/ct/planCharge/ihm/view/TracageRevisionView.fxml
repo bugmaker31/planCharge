@@ -5,72 +5,68 @@
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.StatutRevisionConverter?>
 <VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
-      AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
 >
-    <Label text="Tâche" style="-fx-font-size: 150%;"
-           alignment="CENTER"
-    />
-    <GridPane style="-fx-border-width: 1">
+    <TitledPane text="Tâche" collapsible="false">
+        <GridPane style="-fx-border-width: 1">
 
-        <Label text="Tâche : "
-               GridPane.rowIndex="0" GridPane.columnIndex="0"
-               GridPane.valignment="CENTER"
-        />
-        <HBox
-                GridPane.rowIndex="0" GridPane.columnIndex="1"
-        >
-            <VBox GridPane.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="N°"/>
-                <TextField fx:id="noTacheField" editable="false" focusTraversable="false" prefWidth="55"/>
-            </VBox>
-            <VBox GridPane.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="IDAL"/>
-                <TextField fx:id="noTicketIdalTacheField" editable="false" focusTraversable="false" prefWidth="90"/>
-            </VBox>
-            <VBox GridPane.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="Projet/Appli"/>
-                <TextField fx:id="codeProjetAppliTacheField" editable="false" focusTraversable="false" prefWidth="100"
-                />
-            </VBox>
-            <VBox> <!--GridPane.hgrow="ALWAYS" alignment="CENTER"-->
-                <Label text="Description"/>
-                <TextField fx:id="descriptionTacheField" editable="false" focusTraversable="false" prefWidth="700"/>
-            </VBox>
-        </HBox>
-    </GridPane>
+            <Label text="Tâche : "
+                   GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   GridPane.valignment="CENTER"
+            />
+            <HBox
+                    GridPane.rowIndex="0" GridPane.columnIndex="1"
+            >
+                <VBox GridPane.hgrow="ALWAYS" alignment="CENTER">
+                    <Label text="N°"/>
+                    <TextField fx:id="noTacheField" editable="false" focusTraversable="false" prefWidth="55"/>
+                </VBox>
+                <VBox GridPane.hgrow="ALWAYS" alignment="CENTER">
+                    <Label text="IDAL"/>
+                    <TextField fx:id="noTicketIdalTacheField" editable="false" focusTraversable="false" prefWidth="90"/>
+                </VBox>
+                <VBox GridPane.hgrow="ALWAYS" alignment="CENTER">
+                    <Label text="Projet/Appli"/>
+                    <TextField fx:id="codeProjetAppliTacheField" editable="false" focusTraversable="false" prefWidth="100"
+                    />
+                </VBox>
+                <VBox> <!--GridPane.hgrow="ALWAYS" alignment="CENTER"-->
+                    <Label text="Description"/>
+                    <TextField fx:id="descriptionTacheField" editable="false" focusTraversable="false" prefWidth="700"/>
+                </VBox>
+            </HBox>
 
-    <Label text="Révision" style="-fx-font-size: 150%;"
-           alignment="CENTER"
-    />
-    <GridPane style="-fx-border-width: 1">
+        </GridPane>
+    </TitledPane>
+    <TitledPane text="Révision" collapsible="false">
+        <GridPane style="-fx-border-width: 1">
 
-        <Label text="Statut : "
-               GridPane.rowIndex="1" GridPane.columnIndex="0"
-        />
-        <ComboBox fx:id="statutRevisionField"
-                  prefWidth="100"
-                  GridPane.rowIndex="1" GridPane.columnIndex="1">
-            <converter>
-                <StatutRevisionConverter/>
-            </converter>
-        </ComboBox>
+            <Label text="Statut : "
+                   GridPane.rowIndex="1" GridPane.columnIndex="0"
+            />
+            <ComboBox fx:id="statutRevisionField"
+                      prefWidth="100"
+                      GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <converter>
+                    <StatutRevisionConverter/>
+                </converter>
+            </ComboBox>
 
-        <Label text="Validé par : "
-               GridPane.rowIndex="2" GridPane.columnIndex="0"
-        />
-        <ComboBox fx:id="validateurRevisionField"
-                  prefWidth="80"
-                  GridPane.rowIndex="2" GridPane.columnIndex="1"
-        />
+            <Label text="Validé par : "
+                   GridPane.rowIndex="2" GridPane.columnIndex="0"
+            />
+            <ComboBox fx:id="validateurRevisionField"
+                      prefWidth="80"
+                      GridPane.rowIndex="2" GridPane.columnIndex="1"
+            />
 
-        <Label text="Commentaire : "
-               GridPane.rowIndex="3" GridPane.columnIndex="0"
-               GridPane.valignment="TOP"
-        />
-        <TextArea fx:id="commentaireRevisionField"
-                  prefRowCount="1" prefColumnCount="50"
-                  GridPane.rowIndex="3" GridPane.columnIndex="1"
-        />
-
-    </GridPane>
+            <Label text="Commentaire : "
+                   GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   GridPane.valignment="TOP"
+            />
+            <TextArea fx:id="commentaireRevisionField"
+                      prefRowCount="1" prefColumnCount="50"
+                      GridPane.rowIndex="3" GridPane.columnIndex="1"
+            />
+        </GridPane>
+    </TitledPane>
 </VBox>

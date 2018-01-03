@@ -142,16 +142,10 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private Pane contentPane;
 
-
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private Accordion parametresAccordion;
-
-    @FXML
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    private TitledPane parametresTitledPane;
+    private TitledPane parametresPane;
 
 
     @FXML
@@ -1288,8 +1282,12 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    public void deplierAccordeonParametres() {
-        parametresAccordion.setExpandedPane(parametresTitledPane);
+    public void deplierParametresPane() {
+        parametresPane.setExpanded(true);
+    }
+
+    public void replierParametresPane() {
+        parametresPane.setExpanded(false);
     }
 
 
