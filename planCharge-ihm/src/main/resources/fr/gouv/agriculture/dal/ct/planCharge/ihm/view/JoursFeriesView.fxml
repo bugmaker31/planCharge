@@ -7,18 +7,16 @@
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <center>
-        <HBox>
-            <TableView fx:id="joursFeriesTable" editable="true" HBox.hgrow="NEVER">
-                <columns>
-                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
-                </columns>
-                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                <sortOrder>
-                    <fx:reference source="dateColumn"/>
-                </sortOrder>
-            </TableView>
-        </HBox>
+        <TableView fx:id="joursFeriesTable" editable="true">
+            <columns>
+                <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
+            </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+            <sortOrder>
+                <fx:reference source="dateColumn"/>
+            </sortOrder>
+        </TableView>
     </center>
     <bottom>
         <HBox styleClass="barreEtat">

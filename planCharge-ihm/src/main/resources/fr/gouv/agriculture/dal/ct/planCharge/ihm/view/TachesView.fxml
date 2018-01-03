@@ -122,74 +122,72 @@
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
             <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
-        <VBox>
-            <TitledPane text="Tâches" collapsible="false" VBox.vgrow="ALWAYS">
-                <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
-                    <columnResizePolicy>
-                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                    <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
-                    <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
-                    -->
-                    <columns>
+        <TitledPane text="Tâches" collapsible="false">
+            <TableView fx:id="tachesTable" editable="true" tableMenuButtonVisible="true">
+                <columnResizePolicy>
+                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <!-- Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
+                <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
+                -->
+                <columns>
 
-                        <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
+                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
 
-                        <TableColumn text="Catégories">
-                            <columns>
-                                <TableColumn fx:id="categorieColumn" text="Catégorie"
-                                             prefWidth="$categorieColumnPrefWidth"/>
-                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
-                                             prefWidth="$sousCategorieColumnPrefWidth"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn text="identifiants">
-                            <columns>
-                                <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
-                                             prefWidth="$noTacheColumnPrefWidth"/>
-                                <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
-                                             prefWidth="$noTicketIdalColumnPrefWidth"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
-                                     text="Description"
-                                     styleClass="description-column"/>
-                        <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
-                                     text="Projet/Appli"
-                                     styleClass="projetAppli-column"/>
-                        <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"/>
-                        <TableColumn text="Période souhaitée">
-                            <columns>
-                                <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
-                                <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
-                                             text="Echéance" styleClass="echeance-column"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance" styleClass="importance-column"/>
-                        <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
-                                     styleClass="charge-column"/>
-                        <TableColumn text="Ressource">
-                            <columns>
-                                <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Trigramme"
-                                             styleClass="ressource-column"/>
-                                <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
-                                             styleClass="profil-column"/>
-                            </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
-                                     editable="false"/>
-                    </columns>
-                    <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                    <sortOrder>
-                        <fx:reference source="categorieColumn"/>
-                        <fx:reference source="sousCategorieColumn"/>
-                        <fx:reference source="projetAppliColumn"/>
-                        <fx:reference source="echeanceColumn"/>
-                        <fx:reference source="noTacheColumn"/>
-                    </sortOrder>
-                </TableView>
-            </TitledPane>
-        </VBox>
+                    <TableColumn text="Catégories">
+                        <columns>
+                            <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                         prefWidth="$categorieColumnPrefWidth"/>
+                            <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                         prefWidth="$sousCategorieColumnPrefWidth"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn text="identifiants">
+                        <columns>
+                            <TableColumn fx:id="noTacheColumn" text="N°" editable="false" styleClass="nonModifiable"
+                                         prefWidth="$noTacheColumnPrefWidth"/>
+                            <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                         prefWidth="$noTicketIdalColumnPrefWidth"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
+                                 text="Description"
+                                 styleClass="description-column"/>
+                    <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                 text="Projet/Appli"
+                                 styleClass="projetAppli-column"/>
+                    <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"/>
+                    <TableColumn text="Période souhaitée">
+                        <columns>
+                            <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début"/>
+                            <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                         text="Echéance" styleClass="echeance-column"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance" styleClass="importance-column"/>
+                    <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                 styleClass="charge-column"/>
+                    <TableColumn text="Ressource">
+                        <columns>
+                            <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Trigramme"
+                                         styleClass="ressource-column"/>
+                            <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
+                                         styleClass="profil-column"/>
+                        </columns>
+                    </TableColumn>
+                    <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"
+                                 editable="false"/>
+                </columns>
+                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+                <sortOrder>
+                    <fx:reference source="categorieColumn"/>
+                    <fx:reference source="sousCategorieColumn"/>
+                    <fx:reference source="projetAppliColumn"/>
+                    <fx:reference source="echeanceColumn"/>
+                    <fx:reference source="noTacheColumn"/>
+                </sortOrder>
+            </TableView>
+        </TitledPane>
     </center>
     <bottom>
         <BarreEtatTachesComponent fx:id="barreEtatComponent"/>

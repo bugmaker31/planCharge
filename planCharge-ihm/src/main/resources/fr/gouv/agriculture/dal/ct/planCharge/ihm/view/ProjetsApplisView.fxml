@@ -7,19 +7,17 @@
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <center>
-        <HBox>
-            <TableView fx:id="projetsApplisTable" editable="true" HBox.hgrow="NEVER">
-                <columns>
-                    <TableColumn fx:id="codeColumn" text="Code" prefWidth="100"/>
-                    <TableColumn fx:id="nomColumn" text="Nom" prefWidth="500"/>
-                    <TableColumn fx:id="trigrammeCPIColumn" text="CPI" prefWidth="60"/>
-                </columns>
-                <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
-                <sortOrder>
-                    <fx:reference source="codeColumn"/>
-                </sortOrder>
-            </TableView>
-        </HBox>
+        <TableView fx:id="projetsApplisTable" editable="true">
+            <columns>
+                <TableColumn fx:id="codeColumn" text="Code" prefWidth="100"/>
+                <TableColumn fx:id="nomColumn" text="Nom" prefWidth="500"/>
+                <TableColumn fx:id="trigrammeCPIColumn" text="CPI" prefWidth="60"/>
+            </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+            <sortOrder>
+                <fx:reference source="codeColumn"/>
+            </sortOrder>
+        </TableView>
     </center>
     <bottom>
         <HBox styleClass="barreEtat">
