@@ -301,10 +301,27 @@ public final class TableViews {
                 maxRowsCountBinding
         );
 
-        DoubleBinding tableHeightBinding = headerRowHeightProperty
-                .add(rowCountBinding.multiply(table.getFixedCellSize()))
-                .add(table.getFixedCellSize()) // For horizontal scrollbar. TODO FDA 2017/10 N'ajouter la hauteur de l'ascenceur horizontal que s'il est affiché. Et ajouter exactement sa hauteur, plutôt qu'une approximation (la hauteur d'1 ligne).
-                .add(10); // TODO FDA 2017/10 Comprendre pourquoi il faut ajouter une dizaine de pixels.
+        // Spaces of table :
+        // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows/46758165?noredirect=1#comment83112633_46758165
+        DoubleProperty tableInsetTopProperty = new SimpleDoubleProperty();
+        DoubleProperty tableInsetBottomProperty = new SimpleDoubleProperty();
+        table.insetsProperty().addListener((observable, oldValue, newValue) -> {
+            if (!java.util.Objects.equals(oldValue, newValue)) {
+
+                tableInsetTopProperty.setValue(table.insetsProperty().get().getTop());
+                LOGGER.debug("Table '{}' top inset is {}.", table.getId(), tableInsetTopProperty.get());
+
+                tableInsetBottomProperty.setValue(table.insetsProperty().get().getBottom());
+                LOGGER.debug("Table '{}' top inset is {}.", table.getId(), tableInsetBottomProperty.get());
+            }
+        });
+
+        DoubleBinding tableHeightBinding =
+                tableInsetTopProperty
+                        .add(headerRowHeightProperty)
+                        .add(rowCountBinding.multiply(table.getFixedCellSize()))
+//                        .add(table.getFixedCellSize()) // For horizontal scrollbar. TODO FDA 2017/10 N'ajouter la hauteur de l'ascenceur horizontal que s'il est affiché. Et ajouter exactement sa hauteur, plutôt qu'une approximation (la hauteur d'1 ligne).
+                        .add(tableInsetBottomProperty);
         tableHeightBinding.addListener((observable, oldValue, newValue) -> LOGGER.debug("Table '{}' new height is {}.", table.getId(), tableHeightBinding.get()));
 
         table.minHeightProperty().bind(tableHeightBinding);
