@@ -100,6 +100,27 @@ public class PlanChargeIhm extends Application {
         launch(args);
     }
 
+    @NotNull
+    public List<String> styleSheets() {
+        List<String> styleSheetUrls = new ArrayList<>(2);
+        {
+            String themeStyleSheetUrl = getClass().getResource("/css/dark_theme.css").toExternalForm();
+            if (themeStyleSheetUrl == null) {
+                //noinspection HardcodedFileSeparator
+                throw new NullPointerException("CSS not found: '/css/dark_theme.css'.");
+            }
+            styleSheetUrls.add(themeStyleSheetUrl);
+        }
+        {
+            String appStyleSheetUrl = getClass().getResource("/css/planCharge.css").toExternalForm();
+            if (appStyleSheetUrl == null) {
+                //noinspection HardcodedFileSeparator
+                throw new NullPointerException("CSS not found: '/css/planCharge.css'.");
+            }
+            styleSheetUrls.add(appStyleSheetUrl);
+        }
+        return styleSheetUrls;
+    }
 
     @NotNull
     public static ValidationSupport validationSupport() {
@@ -997,6 +1018,14 @@ public class PlanChargeIhm extends Application {
             LOGGER.warn("Impossible de reprendre les icônes de l'application, application non entièrement initialisée (en cours de démarrage ?).");
         } else {
             alertStage.getIcons().addAll(primaryStage.getIcons());
+        }
+
+        // Set CSS:
+        // Cf. https://stackoverflow.com/questions/28417140/styling-default-javafx-dialogs
+        {
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.getStylesheets().addAll(
+            );
         }
 
         return alert.showAndWait();

@@ -241,7 +241,6 @@ public class Wizard {
         return dialog.getResult();
     }
 
-
     /**
      * The settings map is the place where all data from pages is kept once the
      * user moves on from the page, assuming there is a {@link ValueExtractor}
@@ -257,12 +256,18 @@ public class Wizard {
         updatePage(dialog, false);
     }
 
-
     public void goToNextStep() {
         currentPage.ifPresent(page -> pageHistory.push(page));
         currentPage = getFlow().advance(currentPage.orElse(null));
         updatePage(dialog, true);
     }
+
+
+    @NotNull
+    public ObservableList<String> getStylesheets()  {
+        return getDialog().getDialogPane().getStylesheets();
+    }
+
 
     /**************************************************************************
      *

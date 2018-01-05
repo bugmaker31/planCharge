@@ -4,28 +4,33 @@
 <!--<?import org.controlsfx.dialog.Wizard.LinearFlow?>-->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane layoutX="5.0" layoutY="5.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.SaisieEcheanceController">
-    <VBox alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" VBox.vgrow="ALWAYS">
-        <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
-            <Label text="Nouvelle échéance : " prefWidth="120" />
-            <DatePicker fx:id="echeanceDatePicker" showWeekNumbers="true" />
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.SaisieEcheanceController"
+            layoutX="5.0" layoutY="5.0"
+            HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+>
+    <stylesheets>
+        <URL value="@/css/dark_theme.css"/>
+        <URL value="@/css/planCharge.css"/>
+    </stylesheets>
+    <VBox alignment="CENTER"
+          AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"
+    >
+        <HBox alignment="CENTER">
+            <Label text="Nouvelle échéance : " prefWidth="120"/>
+            <DatePicker fx:id="echeanceDatePicker" showWeekNumbers="true"/>
         </HBox>
         <ButtonBar>
             <buttons>
-                <Button fx:id="annulerButton" cancelButton="true" defaultButton="true" text="Annuler" ButtonBar.buttonData="CANCEL_CLOSE" />
-                <Button fx:id="validerButton" text="Valider" ButtonBar.buttonData="APPLY" />
+                <Button fx:id="annulerButton" cancelButton="true" defaultButton="true" text="Annuler" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                <Button fx:id="validerButton" text="Valider" ButtonBar.buttonData="APPLY"/>
             </buttons>
         </ButtonBar>
-      <padding>
-         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-      </padding>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
     </VBox>
 </AnchorPane>

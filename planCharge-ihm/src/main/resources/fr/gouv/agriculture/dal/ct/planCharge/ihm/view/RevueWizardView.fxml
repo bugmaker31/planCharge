@@ -15,8 +15,8 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <stylesheets>
-        <URL value="@/css/dark.css"/>
-        <URL value="@/css/main.css"/>
+        <URL value="@/css/dark_theme.css"/>
+        <URL value="@/css/planCharge.css"/>
     </stylesheets>
     <fx:define>
         <Double fx:id="panePrefWidth" fx:value="800"/>

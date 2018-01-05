@@ -3,9 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.StatutRevisionConverter?>
+<?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
 >
+    <stylesheets>
+        <URL value="@/css/dark_theme.css"/>
+        <URL value="@/css/planCharge.css"/>
+    </stylesheets>
     <TitledPane text="Tâche" collapsible="false">
         <GridPane style="-fx-border-width: 1">
 

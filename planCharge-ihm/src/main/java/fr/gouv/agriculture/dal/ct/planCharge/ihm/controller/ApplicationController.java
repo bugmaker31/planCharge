@@ -1575,7 +1575,7 @@ public class ApplicationController extends AbstractController {
 
 
     @SuppressWarnings("HardcodedFileSeparator")
-    private static final String THEME_SOMBRE_RSRC = ApplicationController.class.getResource("/css/dark.css").toExternalForm();
+    private static final String THEME_SOMBRE_RSRC = ApplicationController.class.getResource("/css/dark_theme.css").toExternalForm();
 
     public void basculerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();

@@ -259,6 +259,20 @@
 }
 
 
+/* Dialog ---------------------------------------------*/
+
+.dialog-pane {
+    -fx-background-color: transparent, derive(-fx-base,20%);
+}
+
+
+/* ComboBox ---------------------------------------------*/
+
+.combo-box {
+    -fx-background-color: transparent, derive(-fx-base,20%);
+}
+
+
 /* SplitPane ---------------------------------------------*/
 
 .split-pane {
@@ -291,6 +305,10 @@
 
 
 /* Wizard ---------------------------------------------*/
+
+.wizard-pane {
+    -fx-background-color: transparent, derive(-fx-base,20%);
+}
 
 .wizard-step {
     -fx-border-color: #2e8b57;
