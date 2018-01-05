@@ -753,6 +753,7 @@ public class PlanChargeIhm extends Application {
 
     public void afficherNotificationInfo(@NotNull String titre, @NotNull String message) {
         new Notification()
+                .darkStyle() /*TODO FDA 2018/01 Trouver comment utiliser dark-theme.css*/
                 .title(titre)
                 .text(message)
                 .hideAfter(new Duration(5000)) // 5 secondes. TODO FDA 2017/08 Permettre à l'utilisateur de changer ce paramètre (à mémoriser dans ses préférences ?)
@@ -761,6 +762,7 @@ public class PlanChargeIhm extends Application {
 
     public void afficherNotificationWarning(@NotNull String titre, @NotNull String message) {
         new Notification()
+                .darkStyle() /*TODO FDA 2018/01 Trouver comment utiliser dark-theme.css*/
                 .title(titre)
                 .text(message)
                 .hideAfter(Duration.INDEFINITE) // TODO FDA 2017/08 Permettre à l'utilisateur de changer ce paramètre (à mémoriser dans ses préférences ?)
