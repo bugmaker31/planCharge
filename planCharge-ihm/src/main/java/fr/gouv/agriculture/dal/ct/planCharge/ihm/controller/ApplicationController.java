@@ -136,15 +136,26 @@ public class ApplicationController extends AbstractController {
         @NotNull
         private Menu menuCharges;
     */
+
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
     private RadioMenuItem themeStandardRadioMenuItem;
+
+    @NotNull
+    public RadioMenuItem getThemeStandardRadioMenuItem() {
+        return themeStandardRadioMenuItem;
+    }
+
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
     private RadioMenuItem themeSombreRadioMenuItem;
 
+    @NotNull
+    public RadioMenuItem getThemeSombreRadioMenuItem() {
+        return themeSombreRadioMenuItem;
+    }
 
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -312,9 +323,6 @@ public class ApplicationController extends AbstractController {
             });
         }
 */
-
-        themeStandardRadioMenuItem.setSelected(ihm.getTheme() == PlanChargeIhm.Theme.STANDARD);
-        themeSombreRadioMenuItem.setSelected(ihm.getTheme() == PlanChargeIhm.Theme.SOMBRE);
 
         getSuiviActionsUtilisateur().initialiser(
                 menuAnnuler, sousMenuAnnuler,
@@ -1588,12 +1596,10 @@ public class ApplicationController extends AbstractController {
 
     public void basculerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ihm.themeProperty().setValue(PlanChargeIhm.Theme.STANDARD);
-        themeStandardRadioMenuItem.setSelected(true);
     }
 
     public void basculerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ihm.themeProperty().setValue(PlanChargeIhm.Theme.SOMBRE);
-        themeSombreRadioMenuItem.setSelected(true);
     }
 
 }

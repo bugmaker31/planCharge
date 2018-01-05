@@ -96,13 +96,12 @@
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
                     <MenuItem text="Aide..." mnemonicParsing="false" disable="true"/>
                     <Menu text="Thème">
+                        <fx:define>
+                            <ToggleGroup fx:id="themeToggleGroup"/>
+                        </fx:define>
                         <items>
-                            <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#basculerThemeStandard">
-                                <toggleGroup>
-                                    <!--suppress JavaFxUnresolvedFxIdReference -->
-                                    <ToggleGroup fx:id="themeToggleGroup"/>
-                                </toggleGroup>
-                            </RadioMenuItem>
+                            <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#basculerThemeStandard"
+                                           toggleGroup="$themeToggleGroup"/>
                             <RadioMenuItem fx:id="themeSombreRadioMenuItem" text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"
                                            toggleGroup="$themeToggleGroup"/>
                         </items>

@@ -1241,6 +1241,7 @@ public class PlanChargeIhm extends Application {
 
     {
         theme.addListener((observable, oldValue, newValue) -> {
+
             ObservableList<String> appStyleSheets = getApplicationView().getStylesheets();
             for (Theme theme : Theme.values()) {
                 appStyleSheets.remove(theme.getUrl().toExternalForm());
@@ -1249,6 +1250,10 @@ public class PlanChargeIhm extends Application {
                 return;
             }
             appStyleSheets.add(newValue.getUrl().toExternalForm());
+
+            getApplicationController().getThemeStandardRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.STANDARD);
+            getApplicationController().getThemeSombreRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.SOMBRE);
+
             LOGGER.debug("Thème = {}", newValue.getName());
         });
     }
