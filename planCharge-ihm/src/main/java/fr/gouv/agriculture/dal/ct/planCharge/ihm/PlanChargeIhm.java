@@ -14,7 +14,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
@@ -55,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -98,33 +102,6 @@ public class PlanChargeIhm extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-
-    public static final String THEME_SOMBRE_URL = ApplicationController.class.getResource("/css/dark_theme.css").toExternalForm();
-
-    static {
-        if (THEME_SOMBRE_URL == null) {
-            //noinspection HardcodedFileSeparator
-            throw new NullPointerException("CSS not found.");
-        }
-    }
-
-    public static final String CSS_URL = ApplicationController.class.getResource("/css/planCharge.css").toExternalForm();
-
-    static {
-        if (CSS_URL == null) {
-            //noinspection HardcodedFileSeparator
-            throw new NullPointerException("CSS not found.");
-        }
-    }
-
-    @NotNull
-    public List<String> styleSheets() {
-        List<String> styleSheetUrls = new ArrayList<>(2);
-        styleSheetUrls.add(THEME_SOMBRE_URL);
-        styleSheetUrls.add(CSS_URL);
-        return styleSheetUrls;
     }
 
 
@@ -449,6 +426,8 @@ public class PlanChargeIhm extends Application {
             primaryStage.setMaximized(true);
             //
             primaryStage.setScene(new Scene(applicationView));
+            //
+            theme.setValue(Theme.SOMBRE); // TODO FDA 2018/01 Récupérer le thème dans les préférences de l'utilisateur.
             //
             primaryStage.show();
 
@@ -1185,4 +1164,102 @@ public class PlanChargeIhm extends Application {
 // * @return
 // */
 
+
+    // StyleSheets (CSS):
+
+    public static final URL APP_CSS_URL = ApplicationController.class.getResource("/css/planCharge.css");
+
+    static {
+        if (APP_CSS_URL == null) {
+            //noinspection HardcodedFileSeparator
+            throw new NullPointerException("CSS not found for application.");
+        }
+    }
+
+    public static final URL THEME_STANDARD_CSS_URL = ApplicationController.class.getResource("/com/sun/javafx/scene/control/skin/modena/modena.css");
+
+    static {
+        if (THEME_STANDARD_CSS_URL == null) {
+            //noinspection HardcodedFileSeparator
+            throw new NullPointerException("CSS not found for standard theme.");
+        }
+    }
+
+    public static final URL THEME_SOMBRE_CSS_URL = ApplicationController.class.getResource("/css/dark_theme.css");
+
+    static {
+        if (THEME_SOMBRE_CSS_URL == null) {
+            //noinspection HardcodedFileSeparator
+            throw new NullPointerException("CSS not found for dark theme.");
+        }
+    }
+
+    @NotNull
+    public List<String> styleSheets() {
+        List<String> styleSheetUrls = new ArrayList<>(2);
+
+        if (getTheme() == Theme.SOMBRE) {
+            styleSheetUrls.add(Theme.SOMBRE.getUrl().toExternalForm());
+        }
+
+        styleSheetUrls.add(APP_CSS_URL.toExternalForm());
+
+        return styleSheetUrls;
+    }
+
+
+    // Themes :
+
+    @SuppressWarnings("PublicInnerClass")
+    public enum Theme {
+
+        STANDARD(THEME_STANDARD_CSS_URL),
+        SOMBRE(THEME_SOMBRE_CSS_URL);
+
+        @NotNull
+        private final URL url;
+
+        Theme(@NotNull URL styleSheetUrl) {
+            url = styleSheetUrl;
+            if (url == null) {
+                throw new NullPointerException("CSS not found: '" + styleSheetUrl.toString() + "'.");
+            }
+        }
+
+        public String getName() {
+            return name();
+        }
+
+        @NotNull
+        public URL getUrl() {
+            return url;
+        }
+    }
+
+    @NotNull
+    private Property<Theme> theme = new SimpleObjectProperty<>();
+
+    {
+        theme.addListener((observable, oldValue, newValue) -> {
+            ObservableList<String> appStyleSheets = getApplicationView().getStylesheets();
+            for (Theme theme : Theme.values()) {
+                appStyleSheets.remove(theme.getUrl().toExternalForm());
+            }
+            if (newValue == null) {
+                return;
+            }
+            appStyleSheets.add(newValue.getUrl().toExternalForm());
+            LOGGER.debug("Thème = {}", newValue.getName());
+        });
+    }
+
+    @Null
+    public Theme getTheme() {
+        return theme.getValue();
+    }
+
+    @NotNull
+    public Property<Theme> themeProperty() {
+        return theme;
+    }
 }

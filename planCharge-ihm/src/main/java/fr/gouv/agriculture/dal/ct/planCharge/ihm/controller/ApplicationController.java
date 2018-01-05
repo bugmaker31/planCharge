@@ -125,17 +125,26 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private Menu sousMenuRepeter;
 
-/*
+    /*
+        @FXML
+        @NotNull
+        private Menu menuDisponibilites;
+        @FXML
+        @NotNull
+        private Menu menuTaches;
+        @FXML
+        @NotNull
+        private Menu menuCharges;
+    */
     @FXML
     @NotNull
-    private Menu menuDisponibilites;
+    @SuppressWarnings("NullableProblems")
+    private RadioMenuItem themeStandardRadioMenuItem;
     @FXML
     @NotNull
-    private Menu menuTaches;
-    @FXML
-    @NotNull
-    private Menu menuCharges;
-*/
+    @SuppressWarnings("NullableProblems")
+    private RadioMenuItem themeSombreRadioMenuItem;
+
 
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -303,6 +312,9 @@ public class ApplicationController extends AbstractController {
             });
         }
 */
+
+        themeStandardRadioMenuItem.setSelected(ihm.getTheme() == PlanChargeIhm.Theme.STANDARD);
+        themeSombreRadioMenuItem.setSelected(ihm.getTheme() == PlanChargeIhm.Theme.SOMBRE);
 
         getSuiviActionsUtilisateur().initialiser(
                 menuAnnuler, sousMenuAnnuler,
@@ -1575,18 +1587,13 @@ public class ApplicationController extends AbstractController {
 
 
     public void basculerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();
-        if (stylesheets.contains(PlanChargeIhm.THEME_SOMBRE_URL)) {
-            stylesheets.remove(PlanChargeIhm.THEME_SOMBRE_URL);
-        }
+        ihm.themeProperty().setValue(PlanChargeIhm.Theme.STANDARD);
+        themeStandardRadioMenuItem.setSelected(true);
     }
 
     public void basculerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();
-        if (!stylesheets.contains(PlanChargeIhm.THEME_SOMBRE_URL)) {
-            stylesheets.add(PlanChargeIhm.THEME_SOMBRE_URL);
-        }
+        ihm.themeProperty().setValue(PlanChargeIhm.Theme.SOMBRE);
+        themeSombreRadioMenuItem.setSelected(true);
     }
-
 
 }

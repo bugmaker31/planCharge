@@ -13,7 +13,7 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <stylesheets>
-        <URL value="@/css/dark_theme.css"/>
+        <!--<URL value="@/css/dark_theme.css"/>-->
         <URL value="@/css/planCharge.css"/>
     </stylesheets>
     <top>
@@ -97,8 +97,14 @@
                     <MenuItem text="Aide..." mnemonicParsing="false" disable="true"/>
                     <Menu text="Thème">
                         <items>
-                            <MenuItem text="Thème standard (Moderna)" onAction="#basculerThemeStandard"/>
-                            <MenuItem text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"/>
+                            <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#basculerThemeStandard">
+                                <toggleGroup>
+                                    <!--suppress JavaFxUnresolvedFxIdReference -->
+                                    <ToggleGroup fx:id="themeToggleGroup"/>
+                                </toggleGroup>
+                            </RadioMenuItem>
+                            <RadioMenuItem fx:id="themeSombreRadioMenuItem" text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"
+                                           toggleGroup="$themeToggleGroup"/>
                         </items>
                     </Menu>
                 </Menu>
