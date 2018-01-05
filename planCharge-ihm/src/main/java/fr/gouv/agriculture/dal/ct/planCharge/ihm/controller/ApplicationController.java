@@ -1574,20 +1574,17 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    @SuppressWarnings("HardcodedFileSeparator")
-    private static final String THEME_SOMBRE_RSRC = ApplicationController.class.getResource("/css/dark_theme.css").toExternalForm();
-
     public void basculerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();
-        if (stylesheets.contains(THEME_SOMBRE_RSRC)) {
-            stylesheets.remove(THEME_SOMBRE_RSRC);
+        if (stylesheets.contains(PlanChargeIhm.THEME_SOMBRE_URL)) {
+            stylesheets.remove(PlanChargeIhm.THEME_SOMBRE_URL);
         }
     }
 
     public void basculerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ObservableList<String> stylesheets = ihm.getApplicationView().getStylesheets();
-        if (!stylesheets.contains(THEME_SOMBRE_RSRC)) {
-            stylesheets.add(THEME_SOMBRE_RSRC);
+        if (!stylesheets.contains(PlanChargeIhm.THEME_SOMBRE_URL)) {
+            stylesheets.add(PlanChargeIhm.THEME_SOMBRE_URL);
         }
     }
 

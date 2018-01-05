@@ -100,27 +100,33 @@ public class PlanChargeIhm extends Application {
         launch(args);
     }
 
+
+    public static final String THEME_SOMBRE_URL = ApplicationController.class.getResource("/css/dark_theme.css").toExternalForm();
+
+    static {
+        if (THEME_SOMBRE_URL == null) {
+            //noinspection HardcodedFileSeparator
+            throw new NullPointerException("CSS not found.");
+        }
+    }
+
+    public static final String CSS_URL = ApplicationController.class.getResource("/css/planCharge.css").toExternalForm();
+
+    static {
+        if (CSS_URL == null) {
+            //noinspection HardcodedFileSeparator
+            throw new NullPointerException("CSS not found.");
+        }
+    }
+
     @NotNull
     public List<String> styleSheets() {
         List<String> styleSheetUrls = new ArrayList<>(2);
-        {
-            String themeStyleSheetUrl = getClass().getResource("/css/dark_theme.css").toExternalForm();
-            if (themeStyleSheetUrl == null) {
-                //noinspection HardcodedFileSeparator
-                throw new NullPointerException("CSS not found: '/css/dark_theme.css'.");
-            }
-            styleSheetUrls.add(themeStyleSheetUrl);
-        }
-        {
-            String appStyleSheetUrl = getClass().getResource("/css/planCharge.css").toExternalForm();
-            if (appStyleSheetUrl == null) {
-                //noinspection HardcodedFileSeparator
-                throw new NullPointerException("CSS not found: '/css/planCharge.css'.");
-            }
-            styleSheetUrls.add(appStyleSheetUrl);
-        }
+        styleSheetUrls.add(THEME_SOMBRE_URL);
+        styleSheetUrls.add(CSS_URL);
         return styleSheetUrls;
     }
+
 
     @NotNull
     public static ValidationSupport validationSupport() {
@@ -1024,8 +1030,7 @@ public class PlanChargeIhm extends Application {
         // Cf. https://stackoverflow.com/questions/28417140/styling-default-javafx-dialogs
         {
             DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.getStylesheets().addAll(
-            );
+            dialogPane.getStylesheets().addAll(styleSheets());
         }
 
         return alert.showAndWait();
@@ -1059,6 +1064,12 @@ public class PlanChargeIhm extends Application {
         progressDialog.getDialogPane().setPrefWidth(1000);
         progressDialog.getDialogPane().setPrefHeight(200);
         ((Stage) progressDialog.getDialogPane().getScene().getWindow()).getIcons().setAll(primaryStage.getIcons());
+        // Set CSS:
+        // Cf. https://stackoverflow.com/questions/28417140/styling-default-javafx-dialogs
+        {
+            DialogPane dialogPane = progressDialog.getDialogPane();
+            dialogPane.getStylesheets().addAll(styleSheets());
+        }
         progressDialog.initModality(Modality.APPLICATION_MODAL); // Cf. https://stackoverflow.com/questions/29625170/display-popup-with-progressbar-in-javafx
 
         // Le Worker (task) doit être lancé en background pour que l'IHM continue de fonctionner (le resize du progressionDialog, l'affichage du PogressBar dans le ProgressDialog, etc.).

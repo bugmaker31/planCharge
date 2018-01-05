@@ -159,7 +159,7 @@
     /*-fx-background-insets: 0 0 0 0, 0, 1, 2;*/
 }
 .button:pressed, .button:default:pressed {
-    fx-background-color: derive(-fx-base, 10%);
+    -fx-background-color: derive(-fx-base, 10%);
     -fx-text-fill: white;
     /*-fx-border-color: darkred;*/
 }
@@ -172,7 +172,7 @@
     -fx-border-insets: 1 1 1 1, 0;
 */
     /*-fx-text-fill: white;*/
-    fx-background-color: derive(-fx-base, 10%);
+    -fx-background-color: derive(-fx-base, 10%);
 }
 .button:disabled, .button:default:disabled {
     -fx-opacity: 50%;
@@ -195,6 +195,7 @@
 .toggle-button:selected {
     -fx-text-fill: yellow;
 }
+
 
 /* Table ---------------------------------------------*/
 
@@ -310,7 +311,9 @@
     -fx-background-color: transparent, derive(-fx-base,20%);
 }
 
+/*
 .wizard-step {
-    -fx-border-color: #2e8b57;
+    -fx-border-color: WHITE;
     -fx-border-width: 1px;
 }
+*/
