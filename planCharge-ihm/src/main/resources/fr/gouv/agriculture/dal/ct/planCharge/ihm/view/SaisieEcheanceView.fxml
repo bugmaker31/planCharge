@@ -11,7 +11,7 @@
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.SaisieEcheanceController"
 >
     <stylesheets>
-        <URL value="@/css/dark_theme.css"/>
+        <!--<URL value="@/css/dark_theme.css"/>-->
         <URL value="@/css/planCharge.css"/>
     </stylesheets>
     <VBox alignment="CENTER"

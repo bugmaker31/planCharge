@@ -1601,5 +1601,4 @@ public class ApplicationController extends AbstractController {
     public void basculerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ihm.themeProperty().setValue(PlanChargeIhm.Theme.SOMBRE);
     }
-
 }

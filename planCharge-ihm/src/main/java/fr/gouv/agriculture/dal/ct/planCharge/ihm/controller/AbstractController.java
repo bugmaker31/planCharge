@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,17 +19,10 @@ public abstract class AbstractController implements Initializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
-     /*
-     La couche "View" :
-      */
 
     //    @Autowired
     @NotNull
     protected final PlanChargeIhm ihm = PlanChargeIhm.instance();
-
-    //    @Autowired
-    @NotNull
-    private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
 
 
     @Override
@@ -52,6 +46,10 @@ public abstract class AbstractController implements Initializable {
 
 
     // Suivi des actions de l'utilisateur :
+
+    //    @Autowired
+    @NotNull
+    private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
 
     @NotNull
     SuiviActionsUtilisateur getSuiviActionsUtilisateur() {

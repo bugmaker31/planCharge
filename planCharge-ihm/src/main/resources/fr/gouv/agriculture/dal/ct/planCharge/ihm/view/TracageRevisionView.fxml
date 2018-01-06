@@ -8,7 +8,7 @@
       fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
 >
     <stylesheets>
-        <URL value="@/css/dark_theme.css"/>
+        <!--<URL value="@/css/dark_theme.css"/>-->
         <URL value="@/css/planCharge.css"/>
     </stylesheets>
     <TitledPane text="Tâche" collapsible="false">

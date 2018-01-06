@@ -1242,20 +1242,27 @@ public class PlanChargeIhm extends Application {
     {
         theme.addListener((observable, oldValue, newValue) -> {
 
-            ObservableList<String> appStyleSheets = getApplicationView().getStylesheets();
-            for (Theme theme : Theme.values()) {
-                appStyleSheets.remove(theme.getUrl().toExternalForm());
-            }
-            if (newValue == null) {
-                return;
-            }
-            appStyleSheets.add(newValue.getUrl().toExternalForm());
+            basculerTheme(applicationView, newValue);
+            basculerTheme(revueWizardView, newValue);
+            basculerTheme(saisieEcheanceView, newValue);
+            basculerTheme(tracageRevisionView, newValue);
 
             getApplicationController().getThemeStandardRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.STANDARD);
             getApplicationController().getThemeSombreRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.SOMBRE);
 
             LOGGER.debug("Thème = {}", newValue.getName());
         });
+    }
+
+    private void basculerTheme(@NotNull Region view, @Null Theme newValue) {
+        ObservableList<String> styleSheets = view.getStylesheets();
+        for (PlanChargeIhm.Theme unTheme : PlanChargeIhm.Theme.values()) {
+            styleSheets.remove(unTheme.getUrl().toExternalForm());
+        }
+        if (newValue == null) {
+            return;
+        }
+        styleSheets.add(newValue.getUrl().toExternalForm());
     }
 
     @Null

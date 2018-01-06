@@ -99,12 +99,10 @@
                         <fx:define>
                             <ToggleGroup fx:id="themeToggleGroup"/>
                         </fx:define>
-                        <items>
-                            <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#basculerThemeStandard"
-                                           toggleGroup="$themeToggleGroup"/>
-                            <RadioMenuItem fx:id="themeSombreRadioMenuItem" text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"
-                                           toggleGroup="$themeToggleGroup"/>
-                        </items>
+                        <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#basculerThemeStandard"
+                                       toggleGroup="$themeToggleGroup"/>
+                        <RadioMenuItem fx:id="themeSombreRadioMenuItem" text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"
+                                       toggleGroup="$themeToggleGroup"/>
                     </Menu>
                 </Menu>
             </MenuBar>
