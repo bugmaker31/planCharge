@@ -45,20 +45,20 @@ Barre d'état :
 
 /*Cf. http://www.java2s.com/Code/Java/JavaFX/UsingCSStostyletheborder.htm*/
 .barreEtat {
-    -fx-border-color: darkgray;
+    -fx-border-color: derive(-fx-base, 50%);
     -fx-border-width: 1pt 1pt 1pt 1pt;
     -fx-border-style: solid;
     /*-fx-border-insets: 0pt;*/
 
     /*-fx-spacing: 1pt;*/
-    -fx-padding: 0pt 1pt 0pt 1pt;
+    -fx-padding: 1pt 1pt 1pt 1pt;
 
     -fx-alignment: CENTER_LEFT;
 }
 
-.itemBarreEtat {
-    -fx-border-color: lightgray;
-    -fx-border-width:  0pt 1pt 0pt 0pt;
+.barreEtat-item {
+    -fx-border-color: derive(-fx-base, 75%);
+    -fx-border-width:  1pt 1pt 1pt 1pt;
     -fx-border-style: solid;
     /*-fx-border-insets: 0pt;*/
 

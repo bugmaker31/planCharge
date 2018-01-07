@@ -24,7 +24,7 @@
             <ButtonBar >
                 <buttons>
             -->
-            <Button text="_Ajouter un jour férié" onAction="#ajouterJourFerie" styleClass="itemBarreEtat"/>
+            <Button text="_Ajouter un jour férié" onAction="#ajouterJourFerie" styleClass="barreEtat-item"/>
             <!--
                 </buttons>
             </ButtonBar>

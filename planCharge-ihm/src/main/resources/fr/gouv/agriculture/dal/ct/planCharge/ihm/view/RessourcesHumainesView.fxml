@@ -28,7 +28,7 @@
             <ButtonBar>
                 <buttons>
             -->
-            <Button text="_Ajouter une ressource humaine" onAction="#ajouterRessourceHumaine" styleClass="itemBarreEtat"/>
+            <Button text="_Ajouter une ressource humaine" onAction="#ajouterRessourceHumaine" styleClass="barreEtat-item"/>
             <!--
                 </buttons>
             </ButtonBar>

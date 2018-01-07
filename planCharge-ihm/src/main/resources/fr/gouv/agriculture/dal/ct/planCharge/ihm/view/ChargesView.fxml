@@ -328,7 +328,7 @@
                         </sortOrder>
                     </PlanificationTableView>
                 </TitledPane>
-                <TitledPane text="Total des charges par ressource (j)" animated="$arePanesAnimated">
+                <TitledPane text="Total des charges par ressource (j)" animated="$arePanesAnimated" expanded="false">
                     <VBox>
                         <PlanificationTableView fx:id="nbrsJoursChargeRsrcTable" editable="true"
                                                 fixedCellSize="$fixedCellSize">
@@ -409,7 +409,7 @@
                         </PlanificationTableView>
                     </VBox>
                 </TitledPane>
-                <TitledPane text="Total des charges par profil (j)" animated="$arePanesAnimated">
+                <TitledPane text="Total des charges par profil (j)" animated="$arePanesAnimated" expanded="false">
                     <VBox>
                         <PlanificationTableView fx:id="nbrsJoursChargeProfilTable" editable="true"
                                                 fixedCellSize="$fixedCellSize">

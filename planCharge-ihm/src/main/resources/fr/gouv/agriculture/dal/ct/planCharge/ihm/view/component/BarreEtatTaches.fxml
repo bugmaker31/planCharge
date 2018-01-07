@@ -9,14 +9,14 @@
 >
     <!--<ButtonBar>-->
     <!--<buttons>-->
-    <HBox styleClass="itemBarreEtat">
+    <HBox styleClass="barreEtat-item">
         <Button text="A_jouter une tâche" onAction="#ajouterTache"/>
         <Button text="Modifier les _échéances..." onAction="#modifierEcheances"/>
     </HBox>
     <!--</buttons>-->
     <!--</ButtonBar>-->
-    <HBox styleClass="itemBarreEtat">
-        <HBox styleClass="itemBarreEtat">
+    <HBox styleClass="barreEtat-item">
+        <HBox styleClass="barreEtat-item">
             <Label text="Nombre de tâches à traiter : ">
                 <tooltip>
                     <!--suppress JavaFxUnresolvedFxIdReference -->
@@ -26,7 +26,7 @@
             </Label>
             <Label fx:id="nbrTachesATraiterLabel" tooltip="$nbrTachesATraiterTooltip"/>
         </HBox>
-        <HBox styleClass="itemBarreEtat">
+        <HBox styleClass="barreEtat-item">
             <Label text="Total RAF : " tooltip="$totalResteAFaireTooltip">
                 <tooltip>
                     <!--suppress JavaFxUnresolvedFxIdReference -->
@@ -37,7 +37,7 @@
             <Label fx:id="totalResteAFaireLabel" tooltip="$totalResteAFaireTooltip"/>
             <Label text=" jours"/>
         </HBox>
-        <HBox styleClass="itemBarreEtat">
+        <HBox styleClass="barreEtat-item">
             <Label text="Nombre de tâches affichées : ">
                 <tooltip>
                     <!--suppress JavaFxUnresolvedFxIdReference -->
@@ -48,7 +48,7 @@
             <Label fx:id="nbrTachesAfficheesLabel" tooltip="$nbrTachesAfficheesTooltip"/>
         </HBox>
     </HBox>
-    <HBox styleClass="itemBarreEtat">
+    <HBox styleClass="barreEtat-item">
         <MenuButton text="Calculs : ">
             <items>
                 <!--
@@ -65,12 +65,12 @@
                 <RadioMenuItem fx:id="calculerNombreRadioMenuItem" text="Nombre" onAction="#inverserCalculNombre" selected="true"/>
             </items>
         </MenuButton>
-        <HBox fx:id="calculSommeBox" styleClass="itemBarreEtat">
-            <Label text="Somme : "/>
+        <HBox fx:id="calculSommeBox" styleClass="barreEtat-item">
+            <Label text="&#931;="/>
             <Label fx:id="calculSommeLabel" text="N/C"/>
         </HBox>
-        <HBox fx:id="calculNombreBox" styleClass="itemBarreEtat">
-            <Label text="Nombre : "/>
+        <HBox fx:id="calculNombreBox" styleClass="barreEtat-item">
+            <Label text="#="/>
             <Label fx:id="calculNombreLabel" text="N/C"/>
         </HBox>
     </HBox>

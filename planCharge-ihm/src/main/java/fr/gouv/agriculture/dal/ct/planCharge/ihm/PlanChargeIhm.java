@@ -1246,6 +1246,7 @@ public class PlanChargeIhm extends Application {
             basculerTheme(revueWizardView, newValue);
             basculerTheme(saisieEcheanceView, newValue);
             basculerTheme(tracageRevisionView, newValue);
+//            TODO FDA 2018/01 Basculer aussi les views standards qui seraient éventuellement affichées (Dialog, Wizard, etc.).
 
             getApplicationController().getThemeStandardRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.STANDARD);
             getApplicationController().getThemeSombreRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.SOMBRE);

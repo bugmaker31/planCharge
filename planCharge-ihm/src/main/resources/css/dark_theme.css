@@ -30,7 +30,6 @@
     -icon-color: yellow;
 }
 
-
 /* Icons ---------------------------------------------*/
 
 .icon {
@@ -102,7 +101,7 @@
 }
 
 .context-menu {
-    -fx-background-color: derive(#1d1d1d,50%);
+    -fx-background-color: derive(-fx-base,50%)
 }
 
 
@@ -151,21 +150,23 @@
 /* Buttons ---------------------------------------------*/
 
 .button, .button:default {
-    /*-fx-background-color: transparent;*/
-    /*-fx-padding: 5 22 5 22;*/
-    /*-fx-border-color: #e2e2e2;*/
-    -fx-border-color: derive(-fx-base, 100%);
-    /*-fx-border-width: 2;*/
-    /*-fx-background-radius: 10;*/
-    /*-fx-background-color: #1d1d1d;*/
-    -fx-background-color: derive(-fx-base, 50%);
-/*
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 11pt;
-*/
-    -fx-text-fill: yellow;
-    /*-fx-text-fill: #d8d8d8;*/
-    /*-fx-background-insets: 0 0 0 0, 0, 1, 2;*/
+     /*-fx-background-color: transparent;*/
+     /*-fx-padding: 5 22 5 22;*/
+     /*-fx-border-color: #e2e2e2;*/
+     -fx-border-color: derive(-fx-base, 100%);
+     /*-fx-border-width: 2;*/
+     /*-fx-background-radius: 10;*/
+     -fx-background-color: derive(-fx-base, 50%);
+ /*
+     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+     -fx-font-size: 11pt;
+ */
+     -fx-text-fill: yellow;
+     /*-fx-text-fill: #d8d8d8;*/
+     /*-fx-background-insets: 0 0 0 0, 0, 1, 2;*/
+ }
+.button:default {
+    -fx-text-fill: WHITE;
 }
 .button:pressed, .button:default:pressed {
     -fx-background-color: derive(-fx-base, 10%);
