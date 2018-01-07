@@ -108,7 +108,7 @@ public class RevueWizardController extends AbstractController {
                 wizardStage = null;
                 LOGGER.debug("Assistant de revue masqué.");
             });
-            wizard.getStylesheets().addAll(ihm.styleSheets()); /*TODO FDA 2018/01 Comprendre pourquoi on a besoin de charger les CSS par programme alors qu'elles sont déjà dans le FXML.*/
+            ihm.appliquerTheme(wizard.getStylesheets());
 
             wizardStage.setScene(wizard.getScene());
         }

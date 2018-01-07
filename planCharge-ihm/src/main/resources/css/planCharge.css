@@ -269,7 +269,7 @@ Charge / Plan de charge :
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
 }
 .periodeChargee-column: avantPeriodeDemandee {
-    -fx-background-color: RGB(52,101,143, 0.2); /*rgba(221, 221, 221, 0.3);*/ /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/
+    -fx-background-color: RGB(52,101,143, 0.2); /*rgba(221, 221, 221, 0.3);*/ /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/ /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     /*-fx-text-fill: white;*/
 
     -fx-background-image: url("/images/tropTot.png");
@@ -287,7 +287,7 @@ Charge / Plan de charge :
     /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
 .periodeChargee-column: surcharge {
-    -fx-text-fill: red;
+    -fx-text-fill: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
 }
 
 .chargePlanifiee-column {
@@ -297,9 +297,9 @@ Charge / Plan de charge :
     -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
 .chargePlanifiee-column:incoherence {
-    -fx-background-color: darkred;
-    -fx-text-fill: white;
-    -fx-border-color: red;
+    -fx-background-color: darkred;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-text-fill: white;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     -fx-border-width: 2pt;
     /*-fx-text-fill: white;*/
     /*-fx-opacity: 100%;*/

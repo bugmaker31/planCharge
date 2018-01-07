@@ -1,5 +1,7 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
+import com.sun.javafx.scene.control.skin.TableColumnHeader;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
@@ -1732,7 +1734,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 /*
         try {
 */
-            return new PlanificationTacheBean(tacheBean, calendrier);
+        return new PlanificationTacheBean(tacheBean, calendrier);
 /*
         } catch (BeanException e) {
             throw new ControllerException("Impossible d'instancier un nouvelle tâche du plan de charge.", e);
@@ -2066,8 +2068,42 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     public void calculerCharges() throws ControllerException {
         LOGGER.debug("Calcul des charges : ");
         calculateurCharges.calculer();
+        symboliserSurchargesParPeriode();
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
         LOGGER.debug("Charges calculées.");
+    }
+
+    private void symboliserSurchargesParPeriode() {
+
+        if (planChargeBean.getDateEtat() == null) {
+            return;
+        }
+
+        TableHeaderRow headerRow = TableViews.headerRow(planificationsTable);
+        if (headerRow == null) {
+            return;
+        }
+
+        assert totauxNbrsJoursDispoCTRestanteRsrcBeans.size() == 1;
+        TotauxNbrsJoursChargeBean totauxNbrJoursChargePeriodeBean = totauxNbrsJoursDispoCTRestanteRsrcBeans.get(0);
+
+        for (int cptPeriode = 1; cptPeriode <= ihm.NBR_SEMAINES_PLANIFIEES; cptPeriode++) {
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((cptPeriode - 1L) * 7L); // [issue#26:PeriodeHebdo/Trim]
+            FloatProperty chargePeriodeProperty = totauxNbrJoursChargePeriodeBean.get(debutPeriode);
+
+            boolean estPeriodeSurchargee;
+            if (chargePeriodeProperty == null) {
+                estPeriodeSurchargee = false;
+            } else {
+                Float chargePeriode = chargePeriodeProperty.getValue();
+                estPeriodeSurchargee = (chargePeriode < 0.0f);
+            }
+
+            TableColumn<PlanificationTacheBean, Double> periodeColumn = planificationsTable.getCalendrierColumns().get(cptPeriode - 1);
+            TableColumnHeader periodeColumnHeader = headerRow.getColumnHeaderFor(periodeColumn);
+            periodeColumnHeader.pseudoClassStateChanged(SURCHARGE, estPeriodeSurchargee); // FIXME FDA 2018/01 Sans effet.
+            LOGGER.debug("Période n°{} ({}) : surcharge ? = {}", cptPeriode, debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE), estPeriodeSurchargee);
+        }
     }
 
     @FXML

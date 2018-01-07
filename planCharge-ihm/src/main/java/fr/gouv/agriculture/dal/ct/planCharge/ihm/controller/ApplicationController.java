@@ -1594,11 +1594,11 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    public void basculerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        ihm.themeProperty().setValue(PlanChargeIhm.Theme.STANDARD);
+    public void appliquerThemeStandard(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        ihm.appliquerTheme(PlanChargeIhm.Theme.STANDARD);
     }
 
-    public void basculerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        ihm.themeProperty().setValue(PlanChargeIhm.Theme.SOMBRE);
+    public void appliquerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
+        ihm.appliquerTheme(PlanChargeIhm.Theme.SOMBRE);
     }
 }

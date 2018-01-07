@@ -230,6 +230,7 @@ public class Wizard {
         return dialog.getDialogPane().getScene();
     }
 
+
     /**
      * @return {@link Dialog#resultProperty()} of the {@link Dialog} representing this {@link Wizard}.
      */

@@ -99,9 +99,9 @@
                         <fx:define>
                             <ToggleGroup fx:id="themeToggleGroup"/>
                         </fx:define>
-                        <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#basculerThemeStandard"
+                        <RadioMenuItem fx:id="themeStandardRadioMenuItem" text="Thème standard (Moderna)" onAction="#appliquerThemeStandard"
                                        toggleGroup="$themeToggleGroup"/>
-                        <RadioMenuItem fx:id="themeSombreRadioMenuItem" text="Thème sombre (Moderna black)" onAction="#basculerThemeSombre"
+                        <RadioMenuItem fx:id="themeSombreRadioMenuItem" text="Thème sombre (Moderna black)" onAction="#appliquerThemeSombre"
                                        toggleGroup="$themeToggleGroup"/>
                     </Menu>
                 </Menu>

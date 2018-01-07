@@ -14,8 +14,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -66,6 +64,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm.Theme.SOMBRE;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class PlanChargeIhm extends Application {
@@ -427,7 +427,7 @@ public class PlanChargeIhm extends Application {
             //
             primaryStage.setScene(new Scene(applicationView));
             //
-            theme.setValue(Theme.SOMBRE); // TODO FDA 2018/01 Récupérer le thème dans les préférences de l'utilisateur.
+            appliquerTheme(SOMBRE); // TODO FDA 2018/01 Récupérer le thème dans les préférences de l'utilisateur.
             //
             primaryStage.show();
 
@@ -457,7 +457,7 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleCharges();
                 // Autres :
                 applicationController.afficherAssistantRevue();
-                applicationController.afficherFenetreTracageRevision();
+//                applicationController.afficherFenetreTracageRevision();
             }
 
             LOGGER.info("Application démarrée.");
@@ -1198,10 +1198,12 @@ public class PlanChargeIhm extends Application {
     public List<String> styleSheets() {
         List<String> styleSheetUrls = new ArrayList<>(2);
 
-        if (getTheme() == Theme.SOMBRE) {
-            styleSheetUrls.add(Theme.SOMBRE.getUrl().toExternalForm());
+        // CSS du thème courant :
+        if (theme != null) {
+            styleSheetUrls.add(theme.getUrl().toExternalForm());
         }
 
+        // CSS de l'application :
         styleSheetUrls.add(APP_CSS_URL.toExternalForm());
 
         return styleSheetUrls;
@@ -1226,6 +1228,7 @@ public class PlanChargeIhm extends Application {
             }
         }
 
+        @NotNull
         public String getName() {
             return name();
         }
@@ -1236,43 +1239,36 @@ public class PlanChargeIhm extends Application {
         }
     }
 
-    @NotNull
-    private Property<Theme> theme = new SimpleObjectProperty<>();
-
-    {
-        theme.addListener((observable, oldValue, newValue) -> {
-
-            basculerTheme(applicationView, newValue);
-            basculerTheme(revueWizardView, newValue);
-            basculerTheme(saisieEcheanceView, newValue);
-            basculerTheme(tracageRevisionView, newValue);
-//            TODO FDA 2018/01 Basculer aussi les views standards qui seraient éventuellement affichées (Dialog, Wizard, etc.).
-
-            getApplicationController().getThemeStandardRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.STANDARD);
-            getApplicationController().getThemeSombreRadioMenuItem().setSelected(newValue == PlanChargeIhm.Theme.SOMBRE);
-
-            LOGGER.debug("Thème = {}", newValue.getName());
-        });
-    }
-
-    private void basculerTheme(@NotNull Region view, @Null Theme newValue) {
-        ObservableList<String> styleSheets = view.getStylesheets();
-        for (PlanChargeIhm.Theme unTheme : PlanChargeIhm.Theme.values()) {
-            styleSheets.remove(unTheme.getUrl().toExternalForm());
-        }
-        if (newValue == null) {
-            return;
-        }
-        styleSheets.add(newValue.getUrl().toExternalForm());
-    }
+    @Null
+    private Theme theme = null;
 
     @Null
     public Theme getTheme() {
-        return theme.getValue();
-    }
-
-    @NotNull
-    public Property<Theme> themeProperty() {
         return theme;
     }
+
+    public void appliquerTheme(@Null Theme nouveauTheme) {
+        theme = nouveauTheme;
+
+        appliquerTheme(applicationView);
+        appliquerTheme(revueWizardView);
+        appliquerTheme(saisieEcheanceView);
+        appliquerTheme(tracageRevisionView);
+//            TODO FDA 2018/01 Basculer aussi les views standards qui seraient éventuellement affichées (Dialog, Wizard, etc.).
+
+        getApplicationController().getThemeStandardRadioMenuItem().setSelected(nouveauTheme == PlanChargeIhm.Theme.STANDARD);
+        getApplicationController().getThemeSombreRadioMenuItem().setSelected(nouveauTheme == SOMBRE);
+
+        LOGGER.debug("Thème = {}", ((nouveauTheme == null) ? "AUCUN" : nouveauTheme.getName()));
+    }
+
+    private void appliquerTheme(@NotNull Region view) {
+        ObservableList<String> styleSheets = view.getStylesheets();
+        appliquerTheme(styleSheets);
+    }
+
+    public void appliquerTheme(@NotNull ObservableList<String> styleSheets) {
+        styleSheets.setAll(styleSheets());
+    }
+
 }

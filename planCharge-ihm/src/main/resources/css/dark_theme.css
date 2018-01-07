@@ -81,9 +81,16 @@
 
 /* List Cells ---------------------------------------------*/
 
+.list-cell{
+    -fx-background-color: -fx-base;
+}
+
 .list-cell:empty{
     -fx-background-color: -fx-base;
-    -fx-border-color: -fx-base;
+}
+
+.cell:empty{
+    -fx-background-color: -fx-base;
 }
 
 
