@@ -143,18 +143,16 @@
         <HBox styleClass="barreEtat">
             <!--<ProgressBar fx:id="statutProgressBar" prefWidth="50" visible="false"/>-->
             <!--<ProgressIndicator fx:id="statutProgressIndicator" prefWidth="25" visible="true"/>-->
-            <!--<HBox alignment="CENTER_LEFT"> &lt;!&ndash;Box cadrée à gauche&ndash;&gt; &lt;!&ndash;FIXME FDA 2017/08 Sans effet.&ndash;&gt;-->
             <HBox styleClass="barreEtat-item" HBox.hgrow="NEVER">
-                <!--
-                Non utilisé au final car n'est pas dynamique : qd la valeur de "planChargeBean.aBesoinEtreSauvegarde" change, le contenu de la région "If" n'est pas changée. Et qd on utilise un BooleanPropery au lieu d'un Boolean, JavaFX lance l'exception "Unable to coerce planChargeBean.aBesoinEtreSauvegardeProperty to class javafx.beans.property.BooleanProperty.".
-                                <If condition="planChargeBean.aBesoinEtreSauvegarde">
-                                    <thenContent>
-                                        <Label text="Modfié !"/>
-                                    </thenContent>
-                                    <elseContent>
-                                        <Label text="NON Modfié !"/>
-                                    </elseContent>
-                                </If>
+                <!-- Non utilisé au final car n'est pas dynamique : qd la valeur de "planChargeBean.aBesoinEtreSauvegarde" change, le contenu de la région "If" n'est pas changée. Et qd on utilise un BooleanPropery au lieu d'un Boolean, JavaFX lance l'exception "Unable to coerce planChargeBean.aBesoinEtreSauvegardeProperty to class javafx.beans.property.BooleanProperty.".
+                <If condition="planChargeBean.aBesoinEtreSauvegarde">
+                    <thenContent>
+                        <Label text="Modfié !"/>
+                    </thenContent>
+                    <elseContent>
+                        <Label text="NON Modfié !"/>
+                    </elseContent>
+                </If>
                 -->
                 <CheckBox fx:id="sauvegardeRequiseCheckbox" disable="true">
                     <tooltip>
@@ -183,15 +181,7 @@
                     </tooltip>
                 </Label>
             </HBox>
-            <!--
-                        <HBox styleClass="barreEtat-item">
-                            <Label fx:id="nbrTachesField" minWidth="25" style="-fx-alignment: baseline-right;"/>
-                            <Label text=" tâches"/>
-                        </HBox>
-            -->
-            <!--</HBox>-->
-            <Region prefWidth="500" HBox.hgrow="ALWAYS"/> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->
-            <!--<HBox alignment="CENTER_RIGHT">&lt;!&ndash;Box cadrée à droite&ndash;&gt; &lt;!&ndash;FIXME FDA 2017/08 Sans effet.&ndash;&gt;-->
+            <Region HBox.hgrow="ALWAYS"/> <!--Cf. https://stackoverflow.com/questions/29707882/javafx-hbox-alignment-->
             <HBox styleClass="barreEtat-item" HBox.hgrow="NEVER">
                 <Gauge fx:id="memoryGauge" title="RAM" skinType="INDICATOR" prefHeight="25" minHeight="25"
                        prefWidth="25" minWidth="25">
@@ -201,7 +191,6 @@
                     </tooltip>
                 </Gauge>
             </HBox>
-            <!--</HBox>-->
         </HBox>
         <!--
                     <HBox fx:id="progressionRegion" styleClass="barreEtat" visible="false">
