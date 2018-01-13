@@ -273,6 +273,9 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> chargePlanifieeTotaleColumn;
 
+    @Null
+    private List<TableColumn<PlanificationTacheBean, ?>> ordreTriParDefautPlanificationTable;
+
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
@@ -742,6 +745,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
                 super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
 
+                memoriserOrdreTriParDefautPlanificationTable();
+
                 initBeans();
                 initTables();
 
@@ -749,6 +754,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
         }
+    }
+
+    private void memoriserOrdreTriParDefautPlanificationTable() {
+        ordreTriParDefautPlanificationTable = new ArrayList<>(planificationsTable.getSortOrder());
     }
 
 /* Le menu contextuel est défini dans le fichier FXML.
@@ -2088,7 +2097,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TotauxNbrsJoursChargeBean totauxNbrJoursChargePeriodeBean = totauxNbrsJoursDispoCTRestanteRsrcBeans.get(0);
 
         for (int cptPeriode = 1; cptPeriode <= ihm.NBR_SEMAINES_PLANIFIEES; cptPeriode++) {
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays((cptPeriode - 1L) * 7L); // [issue#26:PeriodeHebdo/Trim]
+            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) cptPeriode - 1L) * 7L); // [issue#26:PeriodeHebdo/Trim]
             FloatProperty chargePeriodeProperty = totauxNbrJoursChargePeriodeBean.get(debutPeriode);
 
             boolean estPeriodeSurchargee;
@@ -2101,7 +2110,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
             TableColumn<PlanificationTacheBean, Double> periodeColumn = planificationsTable.getCalendrierColumns().get(cptPeriode - 1);
             TableColumnHeader periodeColumnHeader = headerRow.getColumnHeaderFor(periodeColumn);
-            periodeColumnHeader.pseudoClassStateChanged(SURCHARGE, estPeriodeSurchargee); // FIXME FDA 2018/01 Sans effet.
+            periodeColumnHeader.pseudoClassStateChanged(SURCHARGE, estPeriodeSurchargee);
             LOGGER.debug("Période n°{} ({}) : surcharge ? = {}", cptPeriode, debutPeriode.format(DateTimeFormatter.ISO_LOCAL_DATE), estPeriodeSurchargee);
         }
     }
@@ -2128,5 +2137,10 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         calculateurCharges.calculerProvision(tacheBean);
         tables().forEach(TableView::refresh); // Notamment pour que les cellules qui étaient vides et qui ont une valeur suite au calcul (les provisions, typiquement) soient affichées.
         LOGGER.debug("Tâche {} provisionnée.", tacheBean.noTache());
+    }
+
+    @FXML
+    private void reinitOrdreTriPlanificationTable(@NotNull ActionEvent actionEvent) {
+        planificationsTable.getSortOrder().setAll(ordreTriParDefautPlanificationTable);
     }
 }

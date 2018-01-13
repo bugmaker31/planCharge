@@ -167,6 +167,7 @@
                                 <TitledPane text="Tris" animated="false">
                                     <!--TODO FDA 2017/10 Coder.-->
                                     <Label text="TODO" disable="true"/>
+                                    <Button text="Réinitialiser l'ordre de tri par défaut" onAction="#reinitOrdreTriPlanificationTable"/>
                                 </TitledPane>
                                 <TitledPane text="Affichage" animated="false">
                                     <HBox styleClass="paramAffichage-box">
@@ -287,32 +288,32 @@
                             <TableColumn text="Planification">
                                 <columns>
                                     <TableColumn fx:id="semaine1Column" prefWidth="$semaineColumnPrefWidth" text="S+1"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine2Column" prefWidth="$semaineColumnPrefWidth" text="S+2"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine3Column" prefWidth="$semaineColumnPrefWidth" text="S+3"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine4Column" prefWidth="$semaineColumnPrefWidth" text="S+4"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine5Column" prefWidth="$semaineColumnPrefWidth" text="S+5"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine6Column" prefWidth="$semaineColumnPrefWidth" text="S+6"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine7Column" prefWidth="$semaineColumnPrefWidth" text="S+7"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine8Column" prefWidth="$semaineColumnPrefWidth" text="S+8"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine9Column" prefWidth="$semaineColumnPrefWidth" text="S+9"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine10Column" prefWidth="$semaineColumnPrefWidth" text="S+10"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine11Column" prefWidth="$semaineColumnPrefWidth" text="S+11"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
                                     <TableColumn fx:id="semaine12Column" prefWidth="$semaineColumnPrefWidth" text="S+12"
-                                                 styleClass="periodeChargee-column" sortable="false"/>
+                                                 styleClass="periodeChargee-column" sortable="true"/>
 
                                     <TableColumn fx:id="chargePlanifieeTotaleColumn" text="Charge planifiée" prefWidth="60"
-                                                 editable="false" styleClass="nonModifiable, chargePlanifiee-column"/>
+                                                 editable="false" styleClass="nonModifiable, chargePlanifieeTotale-column"/>
                                 </columns>
                             </TableColumn>
                             <TableColumn fx:id="menuActionsColumn" prefWidth="$actionsColumnPrefWidth" text="Actions" styleClass="actions-column"

@@ -3,40 +3,30 @@
 Généralités :
 */
 
+.text:surcharge { /* FIXME FDA 2017/08 Sans effet. */
+    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+}
+
 /*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
 .nonModifiable {
     -fx-font-style: italic;
 }
 
-/* Cf. https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message */
-/*
-.popup {
-    -fx-background-color: cornsilk;
-    -fx-padding: 10;
-    -fx-border-color: black;
-    -fx-border-width: 3;
-}
-*/
-
-/* Cf. http://fxexperience.com/2011/11/alternate-row-highlighting-in-empty-tableview-and-listview-rows */
-.table-row-cell:empty {
-    -fx-background-color: white;
-}
-.table-row-cell:empty .table-cell {
-    -fx-border-width: 0px;
-}
-
-/* Cf. https://stackoverflow.com/questions/21707178/javafx-how-to-set-selected-row-text-color-in-not-focused-tableview */
-/*
-.table-row-cell:selected {
-   -fx-background-color: steelblue;
-   -fx-text-background-color: red;
-}
-*/
-
-/* Cf. http://fxexperience.com/2011/11/alternate-row-highlighting-in-empty-tableview-and-listview-rows */
-.list-cell:empty {
-    -fx-background-color: white;
+.erase-button {
+    -fx-graphic: url("/images/btnClear.png");
+    /*
+    -fx-background-image: url("/images/btnClear.png");
+    !*-fx-background-size: 30px;*!
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:left;
+    !*-fx-background-position: 90%;*!
+    !*
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 3,2,1;
+    -fx-padding: 3 30 3 30;
+    *!
+    */
 }
 
 /*
@@ -153,6 +143,9 @@ Dispo :
 Tâches :
 */
 
+.tache-column {
+}
+
 .description-column : {
     -fx-alignment: baseline-left;
 }
@@ -240,26 +233,6 @@ Tâches :
 Charge / Plan de charge :
 */
 
-.erase-button {
-    -fx-graphic: url("/images/btnClear.png");
-    /*
-    -fx-background-image: url("/images/btnClear.png");
-    !*-fx-background-size: 30px;*!
-    -fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position:left;
-    !*-fx-background-position: 90%;*!
-    !*
-    -fx-background-insets: 0,1,2;
-    -fx-background-radius: 3,2,1;
-    -fx-padding: 3 30 3 30;
-    *!
-    */
-}
-
-.tache-column {
-}
-
 .periodeChargee-column {
     -fx-font-size: 80%;
     -fx-alignment: baseline-center;
@@ -268,35 +241,36 @@ Charge / Plan de charge :
     -fx-wrap-text: true;
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
 }
-.periodeChargee-column: avantPeriodeDemandee {
+.periodeChargee-column: surcharge {/* FIXME FDA 2017/08 Sans effet. Sans doute parce que cette property est boundée. Mais à quoi/par qui ? */
+    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+}
+
+.planificationCharge-cell: avantPeriodeDemandee {
     -fx-background-color: RGB(52,101,143, 0.2); /*rgba(221, 221, 221, 0.3);*/ /*rgba(224, 255, 255, 0.25) lightcyan #e0ffff*/ /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     /*-fx-text-fill: white;*/
 
     -fx-background-image: url("/images/tropTot.png");
     /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
-.periodeChargee-column: pendantPeriodeDemandee {
+.planificationCharge-cell: pendantPeriodeDemandee {
     /*-fx-background-color: #778899;*/
     /*-fx-text-fill: white;*/
 }
-.periodeChargee-column: apresPeriodeDemandee {
+.planificationCharge-cell: apresPeriodeDemandee {
     -fx-background-color: RGB(35,100,156, 0.2); /*rgba(192, 192, 192, 0.3);*/ /*rgba(173, 216, 230, 0.25) lightblue #add8e6*/
     /*-fx-text-fill: white;*/
 
     -fx-background-image: url("/images/tropTard.png");
     /*-fx-opacity: 50%;*/ /* Pour pouvoir continuer de différencier les lignes paires de celles impaires. */
 }
-.periodeChargee-column: surcharge {
-    -fx-text-fill: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
-}
 
-.chargePlanifiee-column {
+.chargePlanifieeTotale-column {
     -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
-.chargePlanifiee-column .label {
+.chargePlanifieeTotale-column .label {
     -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
-.chargePlanifiee-column:incoherence {
+.chargePlanifieeTotale-column: incoherence {
     -fx-background-color: darkred;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     -fx-text-fill: white;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/

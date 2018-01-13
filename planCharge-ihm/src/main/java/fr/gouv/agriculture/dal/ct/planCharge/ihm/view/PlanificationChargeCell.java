@@ -67,6 +67,8 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
         super(Converters.CHARGE_STRING_CONVERTER);
         this.noPeriode = noPeriode;
 
+        getStyleClass().add("planificationCharge-cell");
+
         definirTooltip();
     }
 

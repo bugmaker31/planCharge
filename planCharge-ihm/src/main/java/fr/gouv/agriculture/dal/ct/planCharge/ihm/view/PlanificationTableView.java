@@ -25,6 +25,8 @@ public class PlanificationTableView<S, T> extends HeaderHidableTableView<S> {
 
         // Une table avec un calendrier ne doit pas voir ses colonnes retaillées.
         setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+        getStyleClass().add("planification-table-view");
     }
 
 
