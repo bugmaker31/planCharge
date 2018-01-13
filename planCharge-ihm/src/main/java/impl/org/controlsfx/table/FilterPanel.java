@@ -6,7 +6,9 @@ Surchargé pour :
 - unbinder la widthProperty de la colonne filtrée avant d'essayer de setter une nouvelle valeur
  */
 
-package impl.org.controlsfx.table; /**
+package impl.org.controlsfx.table;
+
+/**
  * Copyright (c) 2015, 2016, ControlsFX
  * All rights reserved.
  * <p>
