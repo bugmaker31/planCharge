@@ -1,7 +1,7 @@
 /*
 Surchargé pour :
 - remplacer les textes des boutons qui sont en majuscule ("APPLY", etc.)
-- mieux agender ces boutons
+- mieux agencer ces boutons
 - ajouter un bouton pour inverser la sélection (merci Libreoffice)
 - unbinder la widthProperty de la colonne filtrée avant d'essayer de setter une nouvelle valeur
  */
