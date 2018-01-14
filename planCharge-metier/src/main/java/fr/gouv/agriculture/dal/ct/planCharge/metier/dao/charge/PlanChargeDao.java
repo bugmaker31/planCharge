@@ -171,7 +171,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.");
         }
 
-        serialiserPlanCharge(fichierPlanif, planCharge, rapport);
+        persisterPlanCharge(fichierPlanif, planCharge, rapport);
     }
 
     @NotNull
@@ -260,10 +260,10 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
      * Saves the current data to the specified file.
      *
      * @param ficCalc fichier OOCalc
-     * @param rapport rapport de sérialisation
+     * @param rapport rapport de sauvegarde
      */
     // Cf. http://code.makery.ch/library/javafx-8-tutorial/fr/part5/
-    private void serialiserPlanCharge(@NotNull File ficCalc, @NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
+    private void persisterPlanCharge(@NotNull File ficCalc, @NotNull PlanCharge planCharge, @NotNull RapportSauvegarde rapport) throws PlanChargeDaoException {
         //noinspection OverlyBroadCatchBlock
         try {
             JAXBContext context = JAXBContext.newInstance(PlanChargeXmlWrapper.class);
@@ -278,7 +278,7 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
             marshaller.marshal(wrapper, ficCalc);
 
         } catch (Exception e) {
-            throw new PlanChargeDaoException("Impossible de sérialiser le plan de charge dans le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
+            throw new PlanChargeDaoException("Impossible de persister le plan de charge dans le fichier XML '" + ficCalc.getAbsolutePath() + "'.", e);
         }
     }
 
