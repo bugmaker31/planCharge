@@ -891,10 +891,14 @@ public class PlanChargeIhm extends Application {
             StyleClassDecoration styleDecoration = new StyleClassDecoration("erreurSaisie");
             Decorator.addDecoration(field, graphicDecoration);
             Decorator.addDecoration(field, styleDecoration);
-            assert !nodesDecorations.containsKey(field);
-            nodesDecorations.put(field, new HashSet<>(2));
-            nodesDecorations.get(field).add(graphicDecoration);
-            nodesDecorations.get(field).add(styleDecoration);
+            if (nodesDecorations.containsKey(field)) {
+                LOGGER.error("Impossible d'afficher l'erreur de saisie pour le champ '" + field.getId() + "' car ce champ a déjà une décoration.");
+                return;
+            }
+            Set<Decoration> nodeDecorations = new HashSet<>(2);
+            nodeDecorations.add(graphicDecoration);
+            nodeDecorations.add(styleDecoration);
+            nodesDecorations.put(field, nodeDecorations);
             try {
                 activerPopup(field, titre, message);
             } catch (IhmException e) {
