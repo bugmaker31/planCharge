@@ -2,14 +2,12 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -26,13 +24,13 @@ import javax.validation.constraints.Null;
  *
  * @author frederic.danna
  */
-public class TracageRevisionController extends AbstractController {
+public class TracerRevisionController extends AbstractController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TracageRevisionController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TracerRevisionController.class);
 
-    private static TracageRevisionController instance;
+    private static TracerRevisionController instance;
 
-    public static TracageRevisionController instance() {
+    public static TracerRevisionController instance() {
         return instance;
     }
 
@@ -97,7 +95,7 @@ public class TracageRevisionController extends AbstractController {
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public TracageRevisionController() throws ControllerException {
+    public TracerRevisionController() throws ControllerException {
         super();
         if (instance != null) {
             throw new ControllerException("Instanciation à plus d'1 exemplaire.");

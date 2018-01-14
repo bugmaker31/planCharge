@@ -548,7 +548,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             MenuItem menuItemReviser = new MenuItem("Réviser la tâche " + tacheBean.noTache());
             menuItemReviser.setOnAction(event -> {
                 try {
-                    ihm.getApplicationController().afficherFenetreTracageRevision();
+                    ihm.getApplicationController().afficherFenetreTracerRevision();
                 } catch (ControllerException e) {
                     LOGGER.error("Impossible d'afficher la fenêtre de révision pour la tâche " + tacheBean.noTache(), e);
                 }

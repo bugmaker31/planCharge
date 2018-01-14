@@ -89,7 +89,8 @@
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
                     <Menu text="_Révision">
                         <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Shift+A"/>
-                        <MenuItem text="_Traçage les révisions..." onAction="#afficherFenetreTracageRevision" accelerator="Shortcut+Shift+R"/>
+                        <MenuItem text="_Tracer les révisions..." onAction="#afficherFenetreTracerRevision" accelerator="Shortcut+Shift+R"/>
+                        <MenuItem text="_Voir les révisions..." onAction="#afficherFenetreListerRevisions" accelerator="Shortcut+Shift+V"/>
                     </Menu>
                 </Menu>
                 <Menu text="Autre" mnemonicParsing="false">

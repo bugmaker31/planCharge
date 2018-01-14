@@ -1182,7 +1182,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             if (newValue == null) {
                 return;
             }
-            ihm.getTracageRevisionController().afficher(newValue);
+            ihm.getTracerRevisionController().afficher(newValue);
         });
     }
 

@@ -652,7 +652,7 @@ public class ApplicationController extends AbstractController {
                     "Le plan de charge"
                             + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
                             + " a été sauvegardé"
-                            +"\n(dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')"
+                            + "\n(dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')"
                             + "."
             );
 
@@ -1325,14 +1325,26 @@ public class ApplicationController extends AbstractController {
 
 
     @FXML
-    private void afficherFenetreTracageRevision(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        afficherFenetreTracageRevision();
+    private void afficherFenetreTracerRevision(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherFenetreTracerRevision();
     }
 
-    public void afficherFenetreTracageRevision() throws ControllerException {
-        LOGGER.debug("> [...] > Fenêtre \"Révision\"");
+    public void afficherFenetreTracerRevision() throws ControllerException {
+        LOGGER.debug("> [...] > Fenêtre \"Tracer la révision\"");
 
-        ihm.getTracageRevisionController().show();
+        ihm.getTracerRevisionController().show();
+    }
+
+    @FXML
+    private void afficherFenetreListerRevisions(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherFenetreListerRevisions();
+    }
+
+    @FXML
+    public void afficherFenetreListerRevisions() throws ControllerException {
+        LOGGER.debug("> [...] > Fenêtre \"Lister les révisions\"");
+
+        ihm.getListerRevisionsController().show();
     }
 
 
@@ -1602,4 +1614,5 @@ public class ApplicationController extends AbstractController {
     public void appliquerThemeSombre(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         ihm.appliquerTheme(PlanChargeIhm.Theme.SOMBRE);
     }
+
 }

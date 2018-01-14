@@ -5,7 +5,7 @@
 <?import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.StatutRevisionConverter?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracageRevisionController"
+      fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TracerRevisionController"
 >
     <stylesheets>
         <!--<URL value="@/css/dark_theme.css"/>-->

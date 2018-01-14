@@ -163,6 +163,9 @@ public class PlanChargeIhm extends Application {
     private Region tracageRevisionView;
     @SuppressWarnings("NullableProblems")
     @NotNull
+    private Region listerRevisionsView;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
     private Region saisieEcheanceView;
 
     @SuppressWarnings("NullableProblems")
@@ -227,6 +230,11 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
+    public Region getListerRevisionsView() {
+        return listerRevisionsView;
+    }
+
+    @NotNull
     public Region getSaisieEcheanceView() {
         return saisieEcheanceView;
     }
@@ -270,7 +278,10 @@ public class PlanChargeIhm extends Application {
     private RevueWizardController revueWizardController;
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TracageRevisionController tracageRevisionController;
+    private TracerRevisionController tracerRevisionController;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    private ListerRevisionsController listerRevisionsController;
     @SuppressWarnings("NullableProblems")
     @NotNull
     private SaisieEcheanceController saisieEcheanceController;
@@ -317,8 +328,13 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
-    public TracageRevisionController getTracageRevisionController() {
-        return tracageRevisionController;
+    public TracerRevisionController getTracerRevisionController() {
+        return tracerRevisionController;
+    }
+
+    @NotNull
+    public ListerRevisionsController getListerRevisionsController() {
+        return listerRevisionsController;
     }
 
     @NotNull
@@ -456,8 +472,9 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
                 // Autres :
-                applicationController.afficherAssistantRevue();
-//                applicationController.afficherFenetreTracageRevision();
+//                applicationController.afficherAssistantRevue();
+//                applicationController.afficherFenetreTracerRevision();
+                applicationController.afficherFenetreListerRevisions();
             }
 
             LOGGER.info("Application démarrée.");
@@ -577,9 +594,15 @@ public class PlanChargeIhm extends Application {
         }
         {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/TracageRevisionView.fxml"));
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/TracerRevisionView.fxml"));
             tracageRevisionView = loader.load();
-            tracageRevisionController = loader.getController();
+            tracerRevisionController = loader.getController();
+        }
+        {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ListerRevisionsView.fxml"));
+            listerRevisionsView = loader.load();
+            listerRevisionsController = loader.getController();
         }
         {
             FXMLLoader loader = new FXMLLoader();
@@ -1258,6 +1281,7 @@ public class PlanChargeIhm extends Application {
         appliquerTheme(revueWizardView);
         appliquerTheme(saisieEcheanceView);
         appliquerTheme(tracageRevisionView);
+        appliquerTheme(listerRevisionsView);
 //            TODO FDA 2018/01 Basculer aussi les views standards qui seraient éventuellement affichées (Dialog, Wizard, etc.).
 
         getApplicationController().getThemeStandardRadioMenuItem().setSelected(nouveauTheme == PlanChargeIhm.Theme.STANDARD);
