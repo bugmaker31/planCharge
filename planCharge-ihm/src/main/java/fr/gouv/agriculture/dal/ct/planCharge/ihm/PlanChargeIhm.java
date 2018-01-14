@@ -440,7 +440,7 @@ public class PlanChargeIhm extends Application {
                     applicationController.charger(dateEtatPrec);
                 }
             }
-            // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer.
+            // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer (le paramètre "estEnDeveloppement" est défini dans le profil Maven).
             if (estEnDeveloppement) {
                 // Référentiels :
 //                applicationController.afficherModuleJoursFeries();
