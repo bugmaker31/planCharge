@@ -29,6 +29,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.service.RapportSauvegarde;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -152,26 +156,52 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
         LocalDate dateEtat = planCharge.getDateEtat();
 
         File fichierPlanif = fichierPlanCharge(dateEtat);
-        if (fichierPlanif.exists()) {
-            // TODO FDA 2017/04 Demander confirmation à l'utilisateur, avant. (Donc dans la couche View, avant d'appeler la couche métier.)
-            boolean isFileDeleted = fichierPlanif.delete();
+
+        /*
+         On passe par un fichier temporaire pour éviter de perdre le fichier actuel,
+         au cas où l'enregistrement soit interrompu en cours
+         et ne corrompe le fichier actuel.
+         */
+
+        // Création du fichier temporaire :
+        File fichierPlanifTemp = new File(fichierPlanif.getAbsolutePath() + ".tmp");
+        if (fichierPlanifTemp.exists()) {
+            boolean isFileDeleted = fichierPlanifTemp.delete();
             if (!isFileDeleted) {
-                throw new PlanChargeDaoException("Impossible de suprimer le fichier '" + fichierPlanif.getAbsolutePath() + "'.");
+                throw new PlanChargeDaoException("Impossible de suprimer le fichier '" + fichierPlanifTemp.getAbsolutePath() + "'.");
             }
         }
-
-        //noinspection BooleanVariableAlwaysNegated
-        boolean isNewFileCreated;
+        //noinspection BooleanVariableAlwaysNegated,UnusedAssignment
+        boolean isNewFileCreated = false;
         try {
-            isNewFileCreated = fichierPlanif.createNewFile();
+            isNewFileCreated = fichierPlanifTemp.createNewFile();
         } catch (IOException e) {
-            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanifTemp.getAbsolutePath() + "'.", e);
         }
         if (!isNewFileCreated) {
-            throw new PlanChargeDaoException("Impossible de créer le fichier '" + fichierPlanif.getAbsolutePath() + "'.");
+            throw new PlanChargeDaoException("Impossible de (re)créer le fichier '" + fichierPlanifTemp.getAbsolutePath() + "'.");
         }
 
-        persisterPlanCharge(fichierPlanif, planCharge, rapport);
+        // Enregistrement dans le fichier temporaire :
+        persisterPlanCharge(fichierPlanifTemp, planCharge, rapport);
+
+        // Archivage du fichier actuel (obsolète) :
+        try {
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+            File fichierPlanifSauv = new File(fichierPlanif.getCanonicalFile().getParentFile(), fichierPlanif.getName() + ".backup_" + timestamp);
+            // Cf. https://stackoverflow.com/questions/14651567/java-file-renameto-does-rename-file-but-returns-false-why
+            FileUtils.moveFile(fichierPlanif, fichierPlanifSauv);
+        } catch (IOException e) {
+            throw new PlanChargeDaoException("Impossible de faire une copie de sauvegarde du fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+        }
+
+        // Le fichier temporaire devient l'officiel :
+        try {
+            // Cf. https://stackoverflow.com/questions/14651567/java-file-renameto-does-rename-file-but-returns-false-why
+            FileUtils.moveFile(fichierPlanifTemp, fichierPlanif);
+        } catch (IOException e) {
+            throw new PlanChargeDaoException("Impossible de renommer le fichier '" + fichierPlanifTemp.getAbsolutePath() + "' en '" + fichierPlanif.getAbsolutePath() + "'.", e);
+        }
     }
 
     @NotNull
