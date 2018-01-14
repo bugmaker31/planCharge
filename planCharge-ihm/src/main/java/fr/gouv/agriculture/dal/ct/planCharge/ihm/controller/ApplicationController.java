@@ -647,11 +647,12 @@ public class ApplicationController extends AbstractController {
 
             //noinspection unused
             File ficPlanCharge = planChargeService.fichierPersistancePlanCharge(planChargeBean.getDateEtat());
+            //noinspection HardcodedLineSeparator
             ihm.afficherNotificationInfo("Sauvegarde effectuée.",
                     "Le plan de charge"
                             + " en date du " + planChargeBean.getDateEtat().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
                             + " a été sauvegardé"
-//                            +" (dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')"
+                            +"\n(dans le fichier '" + ficPlanCharge.getAbsolutePath() + "')"
                             + "."
             );
 
