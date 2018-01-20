@@ -1336,16 +1336,38 @@ public class ApplicationController extends AbstractController {
     }
 
     @FXML
-    private void afficherFenetreListerRevisions(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        afficherFenetreListerRevisions();
+    private void afficherModuleRevisions(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherModuleRevisions();
     }
 
     @FXML
-    public void afficherFenetreListerRevisions() throws ControllerException {
-        LOGGER.debug("> [...] > Fenêtre \"Lister les révisions\"");
+    public void afficherModuleRevisions() throws ControllerException {
+        LOGGER.debug("> [...] > Fenêtre \"Révisions\"");
 
-        ihm.getListerRevisionsController().show();
+//        ihm.getRevisionsController().show();
+
+        //noinspection ObjectEquality,EqualityOperatorComparesObjects
+        if (moduleCourant == ihm.getRevisionsController()) {
+            LOGGER.debug("Déjà le module affiché, rien à faire.");
+            return;
+        }
+
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
+        activerModuleRevisions();
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleRevisions(modulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
     }
+
+    public void activerModuleRevisions() throws ControllerException {
+        moduleCourant = ihm.getRevisionsController();
+        contentPane.getChildren().setAll(ihm.getRevisionsView());
+//        ihm.getRevisionsController().fireActivation();
+        majTitre();
+    }
+
 
 
     @FXML

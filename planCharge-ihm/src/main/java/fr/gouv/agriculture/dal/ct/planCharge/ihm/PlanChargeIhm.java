@@ -163,7 +163,7 @@ public class PlanChargeIhm extends Application {
     private Region tracageRevisionView;
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private Region listerRevisionsView;
+    private Region revisionsView;
     @SuppressWarnings("NullableProblems")
     @NotNull
     private Region saisieEcheanceView;
@@ -230,8 +230,8 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
-    public Region getListerRevisionsView() {
-        return listerRevisionsView;
+    public Region getRevisionsView() {
+        return revisionsView;
     }
 
     @NotNull
@@ -281,7 +281,7 @@ public class PlanChargeIhm extends Application {
     private TracerRevisionController tracerRevisionController;
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private ListerRevisionsController listerRevisionsController;
+    private RevisionsController revisionsController;
     @SuppressWarnings("NullableProblems")
     @NotNull
     private SaisieEcheanceController saisieEcheanceController;
@@ -333,8 +333,8 @@ public class PlanChargeIhm extends Application {
     }
 
     @NotNull
-    public ListerRevisionsController getListerRevisionsController() {
-        return listerRevisionsController;
+    public RevisionsController getRevisionsController() {
+        return revisionsController;
     }
 
     @NotNull
@@ -474,7 +474,7 @@ public class PlanChargeIhm extends Application {
                 // Autres :
 //                applicationController.afficherAssistantRevue();
 //                applicationController.afficherFenetreTracerRevision();
-                applicationController.afficherFenetreListerRevisions();
+                applicationController.afficherModuleRevisions();
             }
 
             LOGGER.info("Application démarrée.");
@@ -600,9 +600,9 @@ public class PlanChargeIhm extends Application {
         }
         {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/ListerRevisionsView.fxml"));
-            listerRevisionsView = loader.load();
-            listerRevisionsController = loader.getController();
+            loader.setLocation(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/RevisionsView.fxml"));
+            revisionsView = loader.load();
+            revisionsController = loader.getController();
         }
         {
             FXMLLoader loader = new FXMLLoader();
@@ -1281,7 +1281,7 @@ public class PlanChargeIhm extends Application {
         appliquerTheme(revueWizardView);
         appliquerTheme(saisieEcheanceView);
         appliquerTheme(tracageRevisionView);
-        appliquerTheme(listerRevisionsView);
+        appliquerTheme(revisionsView);
 //            TODO FDA 2018/01 Basculer aussi les views standards qui seraient éventuellement affichées (Dialog, Wizard, etc.).
 
         getApplicationController().getThemeStandardRadioMenuItem().setSelected(nouveauTheme == PlanChargeIhm.Theme.STANDARD);

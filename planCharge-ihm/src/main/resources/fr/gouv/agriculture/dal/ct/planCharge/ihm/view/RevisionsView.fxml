@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.RevisionsController"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+>
+    <stylesheets>
+        <!--<URL value="@/css/dark_theme.css"/>-->
+        <URL value="@/css/planCharge.css"/>
+    </stylesheets>
+
+    <fx:define>
+        <Double fx:id="categorieColumnPrefWidth" fx:value="60"/>
+        <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
+        <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
+        <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
+        <Double fx:id="descriptionColumnPrefWidth" fx:value="700"/>
+        <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
+        <Double fx:id="statutColumnPrefWidth" fx:value="100"/>
+        <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
+        <Double fx:id="echeanceColumnPrefWidth" fx:value="80"/>
+        <Double fx:id="importanceColumnPrefWidth" fx:value="75"/>
+        <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
+        <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
+        <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+        <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
+
+        <Double fx:id="statuRevisionColumnPrefWidth" fx:value="100"/>
+        <Double fx:id="validateurRevisionColumnPrefWidth" fx:value="100"/>
+        <Double fx:id="commentaireRevisionColumnPrefWidth" fx:value="100"/>
+    </fx:define>
+
+    <center>
+        <!--<TitledPane text="Révisions" collapsible="false">-->
+        <TableView fx:id="tachesTable" tableMenuButtonVisible="true">
+            <columns>
+
+                <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
+
+                <TableColumn text="Tâche" styleClass="tache-column">
+
+                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
+
+                    <columns>
+                        <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
+                        <TableColumn text="Catégories">
+                            <columns>
+                                <TableColumn fx:id="categorieColumn" text="Catégorie"
+                                             prefWidth="$categorieColumnPrefWidth" visible="false"/>
+                                <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
+                                <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
+                                             prefWidth="$sousCategorieColumnPrefWidth" visible="false" style="-fx-wrap-text: true"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
+                                     editable="false" styleClass="nonModifiable"/>
+                        <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                     prefWidth="$noTicketIdalColumnPrefWidth"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
+                                     text="Description" styleClass="description-column"/>
+                        <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
+                                     text="Projet/Appli"
+                                     styleClass="projetAppli-column"/>
+                        <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut" visible="false"/>
+                        <TableColumn text="Période souhaitée">
+                            <columns>
+                                <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début" visible="false"/>
+                                <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
+                                             text="Echéance" styleClass="echeance-column" visible="false"/>
+                            </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"
+                                     styleClass="importance-column" visible="false"/>
+                        <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                     styleClass="charge-column" visible="false"/>
+                        <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"
+                                     styleClass="ressource-column" visible="false"/>
+                        <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
+                                     styleClass="profil-column" visible="false"/>
+                    </columns>
+                </TableColumn>
+                <TableColumn text="Révision">
+                    <columns>
+                        <TableColumn text="Statut" editable="false" styleClass="nonModifiable" prefWidth="$statuRevisionColumnPrefWidth"/>
+                        <TableColumn text="Validé par" editable="false" styleClass="nonModifiable" prefWidth="$validateurRevisionColumnPrefWidth"/>
+                        <TableColumn text="Commentaire" editable="false" styleClass="nonModifiable" prefWidth="$commentaireRevisionColumnPrefWidth"/>
+                    </columns>
+                </TableColumn>
+            </columns>
+            <!--Rq : Le tag "sortOrder" doit arriver après les tags "TableColumn" qu'il référence, sinon erreur du load du FXML !-->
+            <sortOrder>
+                <fx:reference source="projetAppliColumn"/>
+                <fx:reference source="echeanceColumn"/>
+                <fx:reference source="noTacheColumn"/>
+            </sortOrder>
+        </TableView>
+    </center>
+</BorderPane>
