@@ -1674,6 +1674,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return menuActions;
     }
 
+
     @NotNull
     protected PlanificationTacheBean ajouterTache() throws ControllerException {
         LOGGER.debug("ajouterTache...");
@@ -1704,7 +1705,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 idTacheSuivant(),
                 null,
                 null,
-                "(pas de ticket IDAL)",
+                "(pas de ticket)",
                 null,
                 null,
                 StatutBean.NOUVEAU,

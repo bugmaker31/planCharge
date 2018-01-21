@@ -198,6 +198,11 @@
         </AnchorPane>
     </center>
     <bottom>
-        <BarreEtatTachesComponent fx:id="barreEtatComponent"/>
+        <BarreEtatTachesComponent fx:id="barreEtatComponent">
+            <buttons>
+                <Button text="Ajouter tâche" onAction="#ajouterTache"/>
+                <Button text="Modifier les _échéances..." onAction="#modifierEcheances"/>
+            </buttons>
+        </BarreEtatTachesComponent>
     </bottom>
 </BorderPane>

@@ -28,9 +28,15 @@ import java.util.function.Function;
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithoutConstructor"})
 public class BarreEtatTachesController<TB extends TacheBean> extends AbstractController {
 
+    public static final NumberFormat FORMAT_NBR_TACHES = new DecimalFormat("#,##0");
+    public static final NumberFormat FORMAT_CHARGE = new DecimalFormat("#,##0.###");
+
+
     // Fields:
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BarreEtatTachesController.class);
+
+    private ObservableList<Button> actions;
 
     // Métier
 
@@ -39,6 +45,12 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     private final TacheService tacheService = TacheService.instance();
 
     // View
+
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private HBox boutonsHBox;
+
 
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -95,9 +107,11 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
 
     // Autre
 
+/*
     @SuppressWarnings({"NullableProblems", "FieldHasSetterButNoGetter"})
     @NotNull
     private Executeur fonctionAjouterTache;
+*/
 
 
     // Getters/Setters:
@@ -110,8 +124,18 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         this.tachesTable = tachesTable;
     }
 
+/*
     public void setFonctionAjouterTache(@NotNull Executeur fonctionAjouterTache) {
         this.fonctionAjouterTache = fonctionAjouterTache;
+    }
+*/
+
+    public void setActions(ObservableList<Button> actions) {
+        this.actions = actions;
+    }
+
+    public ObservableList<Button> getActions() {
+        return actions;
     }
 
 
@@ -124,8 +148,8 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
 
     public void prepare() {
 
-        NumberFormat formatNbrTaches = new DecimalFormat("#,##0");
-        NumberFormat formatCharge = new DecimalFormat("#,##0.###");
+        boutonsHBox.getChildren().setAll(actions);
+
         tachesBeans.addListener((ListChangeListener<? super TacheBean>) change -> {
 
             //noinspection unchecked
@@ -133,16 +157,16 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
             List<TacheDTO> tacheATraiterDTOs = tacheService.tachesATraiter(tacheDTOs);
 
             long nbrTachesAAfficher = (long) tacheATraiterDTOs.size();
-            nbrTachesATraiterLabel.setText(formatNbrTaches.format(nbrTachesAAfficher));
+            nbrTachesATraiterLabel.setText(FORMAT_NBR_TACHES.format(nbrTachesAAfficher));
 
             Double totalRAF = tacheATraiterDTOs.parallelStream()
                     .mapToDouble(tacheBean -> Objects.value(tacheBean.getCharge(), 0.0))
                     .sum();
-            totalResteAFaireLabel.setText(formatCharge.format(totalRAF));
+            totalResteAFaireLabel.setText(FORMAT_CHARGE.format(totalRAF));
         });
         tachesTable.getItems().addListener((ListChangeListener<? super TacheBean>) change -> {
             long nbrTachesAffichees = (long) tachesTable.getItems().size();
-            nbrTachesAfficheesLabel.setText(formatNbrTaches.format(nbrTachesAffichees));
+            nbrTachesAfficheesLabel.setText(FORMAT_NBR_TACHES.format(nbrTachesAffichees));
         });
 
         if (calculerSommeRadioMenuItem.isSelected()) {
@@ -150,16 +174,6 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         }
         if (calculerNombreRadioMenuItem.isSelected()) {
             activerCalculNombre();
-        }
-    }
-
-
-    @FXML
-    private void ajouterTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        try {
-            fonctionAjouterTache.executer();
-        } catch (IhmException e) {
-            throw new ControllerException("Impossible d'ajouter une tâche.", e);
         }
     }
 
@@ -263,4 +277,5 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
         calculNombreLabel.setText("N/C");
         tachesTable.getSelectionModel().getSelectedCells().removeListener(calculNombreChangeListener);
     }
+
 }

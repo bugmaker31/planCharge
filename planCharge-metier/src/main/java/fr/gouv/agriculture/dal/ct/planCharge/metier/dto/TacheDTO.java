@@ -197,7 +197,7 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
         return Tache.noTache(id);
     }
 
-
+//FIXME FDA 2018/01 Résoudre les warnings "May provoque NPE".
     @NotNull
     @Override
     public Tache toEntity() throws DTOException {

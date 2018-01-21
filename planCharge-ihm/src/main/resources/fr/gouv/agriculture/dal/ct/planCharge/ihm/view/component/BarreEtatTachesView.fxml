@@ -9,9 +9,7 @@
 >
     <!--<ButtonBar>-->
     <!--<buttons>-->
-    <HBox styleClass="barreEtat-item">
-        <Button text="A_jouter une tâche" onAction="#ajouterTache"/>
-        <Button text="Modifier les _échéances..." onAction="#modifierEcheances"/>
+    <HBox fx:id="boutonsHBox" styleClass="barreEtat-item">
     </HBox>
     <!--</buttons>-->
     <!--</ButtonBar>-->

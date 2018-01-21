@@ -342,7 +342,7 @@
                             <fx:reference source="sousCategorieColumn"/>
                             <fx:reference source="projetAppliColumn"/>
                             <fx:reference source="echeanceColumn"/>
-                            <fx:reference source="noTicketIdalColumn"/>
+                            <fx:reference source="noTacheColumn"/>
                         </sortOrder>
                     </PlanificationTableView>
                 </TitledPane>
@@ -786,6 +786,11 @@
         </ScrollPane>
     </center>
     <bottom>
-        <BarreEtatTachesComponent fx:id="barreEtatComponent"/>
+        <BarreEtatTachesComponent fx:id="barreEtatComponent">
+            <buttons>
+                <Button text="Ajouter tâche" onAction="#ajouterTache"/>
+                <!--<Button text="Modifier les _échéances..." onAction="#modifierEcheances"/>-->
+            </buttons>
+        </BarreEtatTachesComponent>
     </bottom>
 </BorderPane>

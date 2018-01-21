@@ -530,7 +530,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         definirRaccourcisClavier();
 
         // Barre d'état :
-        barreEtatComponent.initialize(getTachesBeans(), getTachesTable(), this::ajouterTache);
+        barreEtatComponent.initialize(getTachesBeans(), getTachesTable());
 
         // Gestion de la sélection des cellules de la table des tâches :
         getTachesTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
@@ -614,9 +614,14 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         });
     }
 
+
+    @FXML
+    private void ajouterTache(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        ajouterTache();
+    }
+
     @NotNull
     protected TB ajouterTache() throws ControllerException {
-        LOGGER.debug("ajouterTache...");
 
         TB nouvTache = nouveauBean();
         getTachesBeans().add(nouvTache);
@@ -1178,6 +1183,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         TableViews.clearSelection(getTachesTable()); // Contournement pour [issue#84:1 appui sur DELETE supprime 2 lignes]. Sinon, 2 lignes sont supprimées. Va savoir pourquoi...
     }
 
+    @FXML
+    private void modifierEcheances(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        LOGGER.debug("modifierEcheances...");
+        modifierEcheances();
+    }
 
     void modifierEcheances() throws ControllerException {
 
