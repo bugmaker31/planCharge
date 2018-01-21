@@ -242,6 +242,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     private ToggleButton filtrePeriodeEchueToggleButton;
 
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtreRevisionTypeChangementInchangeToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
@@ -684,6 +689,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 filtrePeriodeContemporaineToggleButton,
                 filtrePeriodeEchueToggleButton,
                 //
+                filtreRevisionTypeChangementInchangeToggleButton,
                 filtreRevisionTypeChangementAjoutToggleButton,
                 filtreRevisionTypeChangementModificationToggleButton
                 //
@@ -809,6 +815,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     private boolean estTacheAvecTypeChangementAVoir(@NotNull TB tache) {
+        if (filtreRevisionTypeChangementInchangeToggleButton.isSelected()) {
+            if (tache.getTypeChangement() == null) {
+                return true;
+            }
+        }
         if (filtreRevisionTypeChangementAjoutToggleButton.isSelected()) {
             if (tache.getTypeChangement() == TypeChangement.AJOUT) {
                 return true;

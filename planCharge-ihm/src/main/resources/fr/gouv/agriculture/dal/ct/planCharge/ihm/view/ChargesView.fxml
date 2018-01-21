@@ -80,6 +80,8 @@
                                                     <!--<ButtonBar>-->
                                                     <!--<buttons>-->
                                                     <HBox spacing="$buttonSpacing">
+                                                        <ToggleButton fx:id="filtreRevisionTypeChangementInchangeToggleButton" text="Inchangé"
+                                                                      onAction="#filtrer"/>
                                                         <ToggleButton fx:id="filtreRevisionTypeChangementAjoutToggleButton" text="Ajout"
                                                                       onAction="#filtrer"/>
                                                         <ToggleButton fx:id="filtreRevisionTypeChangementModificationToggleButton" text="Modification"
