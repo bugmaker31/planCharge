@@ -10,6 +10,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
@@ -1190,5 +1191,22 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     private void reporterTache(@NotNull TB tacheBean, @NotNull LocalDate nouvelleEcheance) throws ControllerException {
         tacheBean.setEcheance(nouvelleEcheance);
     }
+
+
+    void afficherTache(@NotNull TB tacheBean) {
+        try {
+            ihm.getApplicationController().afficherModuleTaches();
+            TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean, ihm.getTachesController().getNoTacheColumn());
+        } catch (ControllerException e) {
+            LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la tâche" + tacheBean.noTache(),
+                    Exceptions.causes(e),
+                    400, 200
+            );
+        }
+    }
+
 
 }

@@ -22,7 +22,7 @@ public class BarreEtatTachesComponent<TB extends TacheBean> extends HBox {
         super();
 
         // Cf. http://docs.oracle.com/javase/8/javafx/fxml-tutorial/custom_control.htm#BABDAAHE
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/component/BarreEtatTaches.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/component/BarreEtatTachesView.fxml"));
         //noinspection ThisEscapedInObjectConstruction
         fxmlLoader.setRoot(this);
 //        fxmlLoader.setController(this);

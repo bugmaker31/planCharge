@@ -3,13 +3,8 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -27,7 +22,7 @@ public class FiltreGlobalTachesComponent extends HBox {
         super();
 
         // Cf. http://docs.oracle.com/javase/8/javafx/fxml-tutorial/custom_control.htm#BABDAAHE
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/component/FiltreGlobalTachesComponent.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fr/gouv/agriculture/dal/ct/planCharge/ihm/view/component/FiltreGlobalTachesView.fxml"));
         fxmlLoader.setRoot(this);
 //        fxmlLoader.setController(this);
         try {

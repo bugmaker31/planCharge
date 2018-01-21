@@ -57,6 +57,19 @@ import java.util.*;
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithTooManyFields", "OverlyComplexClass", "AnonymousInnerClass"})
 public class ChargesController extends AbstractTachesController<PlanificationTacheBean> implements Module {
 
+    public static final PseudoClass CHARGE_NON_PLANIFIEE = PseudoClass.getPseudoClass("chargeNonPlanifiee");
+    public static final PseudoClass INCOHERENCE = PseudoClass.getPseudoClass("incoherence");
+    public static final PseudoClass SURCHARGE = PseudoClass.getPseudoClass("surcharge");
+    public static final PseudoClass ECHEANCE_NON_TENUE = PseudoClass.getPseudoClass("echeanceNonTenue");
+
+    public static final DecimalFormat FORMAT_CHARGE = new DecimalFormat("0", DecimalFormatSymbols.getInstance());
+
+    static {
+        FORMAT_CHARGE.setMinimumFractionDigits(0); // Les divisions de nbrs entiers (charges / jour) par 8 (heures) tombent parfois juste (pas de décimale).
+        FORMAT_CHARGE.setMaximumFractionDigits(3); // Les divisions de nbrs entiers (charges / jour) par 8 (heures) se terminent par ".125", "0.25", ".325", ".5", ".625", ".75" ou ".825".
+    }
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ChargesController.class);
 
     private static ChargesController instance;
@@ -64,20 +77,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     public static ChargesController instance() {
         return instance;
     }
-
-
-    public static final DecimalFormat FORMAT_CHARGE = new DecimalFormat("0", DecimalFormatSymbols.getInstance());
-
-    static {
-        FORMAT_CHARGE.setMinimumFractionDigits(0); // Les divisions de nbrs entiers par 8 tombent parfois juste (pas de décimale).
-        FORMAT_CHARGE.setMaximumFractionDigits(3); // Les divisions de nbrs entiers par 8 se terminent par ".125", "0.25", ".325", ".5", ".625", ".75" ou ".825".
-    }
-
-
-    public static final PseudoClass CHARGE_NON_PLANIFIEE = PseudoClass.getPseudoClass("chargeNonPlanifiee");
-    public static final PseudoClass INCOHERENCE = PseudoClass.getPseudoClass("incoherence");
-    public static final PseudoClass SURCHARGE = PseudoClass.getPseudoClass("surcharge");
-    public static final PseudoClass ECHEANCE_NON_TENUE = PseudoClass.getPseudoClass("echeanceNonTenue");
 
 
     /*
@@ -743,7 +742,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         try {
             Calculateur.executerSansCalculer(() -> {
 
-                super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
+                super.initialize();
 
                 memoriserOrdreTriParDefautPlanificationTable();
 
@@ -1831,21 +1830,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             return;
         }
         afficherTache(tacheBean);
-    }
-
-    private void afficherTache(@NotNull PlanificationTacheBean tacheBean) {
-        try {
-            ihm.getApplicationController().afficherModuleTaches();
-            TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean, ihm.getTachesController().getNoTacheColumn());
-        } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);
-            ihm.afficherDialog(
-                    Alert.AlertType.ERROR,
-                    "Impossible d'afficher la tâche" + tacheBean.noTache(),
-                    Exceptions.causes(e),
-                    400, 200
-            );
-        }
     }
 
 

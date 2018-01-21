@@ -223,6 +223,7 @@
             <Double fx:id="chargeColumnPrefWidth" fx:value="60"/>
             <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+
             <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
         <fx:define>

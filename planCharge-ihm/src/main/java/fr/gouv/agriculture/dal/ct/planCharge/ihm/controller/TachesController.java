@@ -116,7 +116,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         try {
             Calculateur.executerSansCalculer(() -> {
 
-                super.initialize(); // TODO FDA 2017/05 Très redondant (le + gros est déjà initialisé par le ModuleTacheController) => améliorer le code.
+                super.initialize();
 
 /* Raccourci-clavier trop dangereux, on préfère obliger l'utilisateur à cliquer sur un menu.
    De plus, écrase le "onKeyReleased" défini par la classe mère... Trouver mieux, avant de réactiver.
@@ -215,6 +215,7 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
 
     @Override
     protected boolean estTacheAvecAutreFiltreAVoir(@NotNull TacheBean tache) {
+        // C'est ici qu'il faut coder, si on décide d'ajouter des filtres spécifiques de la révision de la tâche. Cf. ChargesController.
         return false;
     }
 
