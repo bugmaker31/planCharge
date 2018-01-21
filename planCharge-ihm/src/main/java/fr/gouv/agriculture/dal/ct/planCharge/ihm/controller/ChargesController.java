@@ -8,7 +8,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
-import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.NotEditableTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
@@ -214,10 +214,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     @FXML
     private PlanificationTableView<PlanificationTacheBean, Double> planificationsTable;
+/*
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, ?> tacheColumn;
+*/
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -271,9 +273,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @SuppressWarnings("NullableProblems")
     @NotNull
     private TableColumn<PlanificationTacheBean, Double> chargePlanifieeTotaleColumn;
-
-    @Null
-    private List<TableColumn<PlanificationTacheBean, ?>> ordreTriParDefautPlanificationTable;
 
     @SuppressWarnings("NullableProblems")
     @FXML
@@ -744,8 +743,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
 
                 super.initialize();
 
-                memoriserOrdreTriParDefautPlanificationTable();
-
                 initBeans();
                 initTables();
 
@@ -755,9 +752,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         }
     }
 
-    private void memoriserOrdreTriParDefautPlanificationTable() {
-        ordreTriParDefautPlanificationTable = new ArrayList<>(planificationsTable.getSortOrder());
-    }
 
 /* Le menu contextuel est défini dans le fichier FXML.
     void definirMenuContextuel() {
@@ -938,6 +932,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        //
         for (int cptColonne = 1; cptColonne <= planificationsTable.getCalendrierColumns().size(); cptColonne++) {
             TableColumn<PlanificationTacheBean, Double> colonne = planificationsTable.getCalendrierColumns().get(cptColonne - 1);
             CalendrierChargeCellCallback calendrierChargeCellCallback = new CalendrierChargeCellCallback(cptColonne);
@@ -1127,7 +1122,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             colonne.setCellFactory(param -> new PlanificationChargeCell(finalCptColonne));
         }
         //noinspection OverlyComplexAnonymousInnerClass
-        chargePlanifieeTotaleColumn.setCellFactory(column -> new EditableAwareTextFieldTableCell<PlanificationTacheBean, Double>(Converters.CHARGE_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Cette colonne n'est pas saisissable, elle est calculée.")) {
+        chargePlanifieeTotaleColumn.setCellFactory(column -> new NotEditableTextFieldTableCell<PlanificationTacheBean, Double>(Converters.CHARGE_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Cette colonne n'est pas saisissable, elle est calculée.")) {
 
             @Override
             public void updateItem(@Null Double item, boolean empty) {
@@ -1176,13 +1171,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             TableViews.ensureDisplayingRows(planificationsTable, nbrlignes);
         });
 
-//        planificationsTable.getFocusModel().focusedItemProperty().addListener((observable, oldValue, newValue) -> {
-        planificationsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                return;
-            }
-            ihm.getTracerRevisionController().afficher(newValue);
-        });
     }
 
     private void initTableNbrsJoursChargeRsrc() {
@@ -1219,7 +1207,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(profilNbrsJoursChargeRsrcColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
             for (TableColumn<NbrsJoursChargeParRessourceBean, Float> column : nbrsJoursChargeRsrcTable.getCalendrierColumns()) {
-                column.setCellFactory(owningColumn -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par ressource est calculé.")));
+                column.setCellFactory(owningColumn -> new NotEditableTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par ressource est calculé.")));
             }
         }
 
@@ -1271,7 +1259,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ihm.interdireEdition(profilNbrsJoursChargeProfilColumn, "Cette colonne reprend les profils (ajouter un profil pour ajouter une ligne dans cette table).");
         {
             for (TableColumn<NbrsJoursChargeParProfilBean, Float> column : nbrsJoursChargeProfilTable.getCalendrierColumns()) {
-                column.setCellFactory(owningColumn -> new EditableAwareTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par profil est calculé.")));
+                column.setCellFactory(owningColumn -> new NotEditableTextFieldTableCell<>(Converters.FRACTION_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours de charge par profil est calculé.")));
             }
         }
 
@@ -2115,7 +2103,6 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         provisionnerTache(focusedItem);
     }
 
-
     private void provisionnerTache(@NotNull PlanificationTacheBean tacheBean) throws ControllerException {
         LOGGER.debug("Provisionning de la tâche {} : ", tacheBean.noTache());
         calculateurCharges.calculerProvision(tacheBean);
@@ -2123,8 +2110,4 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         LOGGER.debug("Tâche {} provisionnée.", tacheBean.noTache());
     }
 
-    @FXML
-    private void reinitOrdreTriPlanificationTable(@NotNull ActionEvent actionEvent) {
-        planificationsTable.getSortOrder().setAll(ordreTriParDefautPlanificationTable);
-    }
 }

@@ -10,12 +10,18 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.StatutRevisionConverter;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 import org.slf4j.Logger;
@@ -58,6 +64,20 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     @FXML
     private TableView<TacheBean> tachesTable;
 
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TableColumn<TacheBean, StatutRevision> statutRevisionColumn;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TableColumn<TacheBean, ValidateurRevision> validateurRevisionColumn;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private TableColumn<TacheBean, String> commentaireRevisionColumn;
+
+
     // Couche "métier" :
 
     // TODO FDA 2017/05 Résoudre le warning de compilation (unchecked assignement).
@@ -89,10 +109,37 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     @FXML
     protected void initialize() throws ControllerException {
         try {
-            Calculateur.executerSansCalculer(super::initialize);
+            Calculateur.executerSansCalculer(() -> {
+
+                super.initialize();
+
+                initBeans();
+                initTables();
+
+                // Ajouter ici du code spécifique à l'initialisation de ce Controller. Cf. TachesController et ChargesController.
+            });
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
         }
+    }
+
+    private void initBeans() {
+    }
+
+    private void initTables() {
+
+        // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        //
+        statutRevisionColumn.setCellValueFactory(param -> param.getValue().statutRevisionProperty());
+        validateurRevisionColumn.setCellValueFactory(param -> param.getValue().validateurRevisionProperty());
+        commentaireRevisionColumn.setCellValueFactory(param -> param.getValue().commentaireRevisionProperty());
+
+        // Paramétrage de la saisie des valeurs des colonnes (mode "édition") et
+        // du formatage qui symbolise les incohérences/surcharges/etc. (Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/) :
+        //
+        statutRevisionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.STATUT_REVISION_STRING_CONVERTER, StatutRevision.values()));
+        validateurRevisionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.VALIDATEUR_REVISION_STRING_CONVERTER, ValidateurRevision.values()));
+        commentaireRevisionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
     @NotNull

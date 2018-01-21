@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -132,13 +133,14 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
                     }
                 });
 */
-
+                // Ajouter ici du code spécifique à l'initialisation de ce Controller. Cf. ChargesController et RevisionsController.
 
             });
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
         }
     }
+
 
 /* Le menu contextuel est défini dans le fichier FXML.
     void definirMenuContextuel() {

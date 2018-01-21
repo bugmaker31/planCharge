@@ -23,7 +23,7 @@ public class UpperCaseTextFieldTableCell<S> extends TextFieldTableCell<S, String
     };
 
     public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
-        return EditableAwareTextFieldTableCell.forTableColumn(UPPERCASE_STRING_CONVERTER);
+        return NotEditableTextFieldTableCell.forTableColumn(UPPERCASE_STRING_CONVERTER);
     }
 
     public UpperCaseTextFieldTableCell() {

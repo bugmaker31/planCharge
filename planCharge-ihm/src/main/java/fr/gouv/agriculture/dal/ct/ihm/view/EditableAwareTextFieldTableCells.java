@@ -12,13 +12,13 @@ public class EditableAwareTextFieldTableCells {
     public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forRequiredTableColumn() {
         return (TableColumn<S, String> list) -> {
             //noinspection unchecked
-            TableCell<S, String> textFieldCell = EditableAwareTextFieldTableCell.<S>forTableColumn().call(list);
+            TableCell<S, String> textFieldCell = NotEditableTextFieldTableCell.<S>forTableColumn().call(list);
 //            PlanChargeIhm.decorateMandatoryColumns(textFieldCell);
             return textFieldCell;
         };
     }
 
     public static  <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
-        return EditableAwareTextFieldTableCell.forTableColumn();
+        return NotEditableTextFieldTableCell.forTableColumn();
     }
 }

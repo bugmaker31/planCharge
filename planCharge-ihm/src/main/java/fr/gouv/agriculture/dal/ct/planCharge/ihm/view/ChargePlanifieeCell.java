@@ -1,6 +1,6 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
-import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.NotEditableTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import javafx.css.PseudoClass;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @SuppressWarnings("ClassWithoutLogger")
-public class ChargePlanifieeCell<S> extends EditableAwareTextFieldTableCell<S, Float> {
+public class ChargePlanifieeCell<S> extends NotEditableTextFieldTableCell<S, Float> {
 
     private static final PseudoClass SURCHARGE = ChargesController.SURCHARGE;
 

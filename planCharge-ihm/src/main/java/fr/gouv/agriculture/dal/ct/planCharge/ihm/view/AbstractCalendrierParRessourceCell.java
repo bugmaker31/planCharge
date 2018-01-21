@@ -2,7 +2,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
-import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.NotEditableTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.AbstractCalendrierParRessourceBean;
@@ -10,7 +10,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import javafx.application.Platform;
-import javafx.beans.property.Property;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -26,7 +25,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public abstract class AbstractCalendrierParRessourceCell<R extends RessourceBean<?, ?>, S extends AbstractCalendrierParRessourceBean<R, ?, S, ?>, T extends Number>
-        extends EditableAwareTextFieldTableCell<S, T> {
+        extends NotEditableTextFieldTableCell<S, T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCalendrierParRessourceCell.class);
 

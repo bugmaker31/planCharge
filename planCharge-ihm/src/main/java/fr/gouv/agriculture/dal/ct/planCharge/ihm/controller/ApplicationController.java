@@ -1072,7 +1072,7 @@ public class ApplicationController extends AbstractController {
         ihm.afficherDialog(
                 Alert.AlertType.INFORMATION,
                 "A propos de l'application \"" + PlanChargeIhm.APP_NAME + "\"",
-                "Fonctionnalité : Gestion du plan de charge d'une équipe d'un centre de service."
+                "Fonctionnalité : Gestion du plan de charge d'une équipe (d'un centre de service)."
                         + "\n" + "Version : " + (versionApp == null ? "N/C" : versionApp)
                         + "\nAuteur : Frédéric Danna",
                 500, 200

@@ -6,7 +6,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
-import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.ihm.view.NotEditableTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurDisponibilites;
@@ -1112,7 +1112,7 @@ public class DisponibilitesController extends AbstractController implements Modu
         ihm.interdireEdition(profilNbrsJoursOuvresColumn, "Cette colonne ne contient pas de données (juste pour aligner avec les lignes suivantes).");
         for (int cptColonne = 1; cptColonne <= nbrsJoursOuvresTable.getCalendrierColumns().size(); cptColonne++) {
             TableColumn<NbrsJoursOuvresBean, Integer> colonne = nbrsJoursOuvresTable.getCalendrierColumns().get(cptColonne - 1);
-            colonne.setCellFactory(column -> new EditableAwareTextFieldTableCell<>(Converters.NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.")));
+            colonne.setCellFactory(column -> new NotEditableTextFieldTableCell<>(Converters.NBRS_JOURS_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Le nombre de jours ouvrés est calculé à partir du référentiel des jours fériés.")));
         }
 
         // Paramétrage des ordres de tri :

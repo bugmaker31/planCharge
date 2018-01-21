@@ -49,6 +49,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
@@ -250,6 +251,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     private ToggleButton filtreRevisionTypeChangementModificationToggleButton;
 
+    @Null
+    private List<TableColumn<TB, ?>> ordreTriParDefautTachesTable;
+
 
     // Les menus :
 
@@ -395,6 +399,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         importanceColumn.setComparator(ImportanceComparator.COMPARATEUR);
         //
         TableViews.ensureSorting(getTachesTable(), filteredTachesBeans);
+        //
+        memoriserOrdreTriParDefautTachesTable();
 
         // Ajout des filtres "globaux" (à la TableView, pas sur chaque TableColumn) :
         //
@@ -524,7 +530,27 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Gestion de la sélection des cellules de la table des tâches :
         getTachesTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
         getTachesTable().getSelectionModel().setCellSelectionEnabled(true);
+
+        // La tâche sélectionnée soit être affichée dans la fenêtre qui sert à tracer les révisions :
+        //getTachesTable().getFocusModel().focusedItemProperty().addListener((observable, oldValue, newValue) -> {
+        getTachesTable().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            ihm.getTracerRevisionController().afficher(newValue);
+        });
     }
+
+    private void memoriserOrdreTriParDefautTachesTable() {
+        ordreTriParDefautTachesTable = new ArrayList<>(getTachesTable().getSortOrder());
+    }
+
+    @FXML
+    private void reinitOrdreTriTachesTable(@NotNull ActionEvent actionEvent) {
+        LOGGER.debug("reinitOrdreTriTachesTable");
+        getTachesTable().getSortOrder().setAll(ordreTriParDefautTachesTable);
+    }
+
 
     MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TB, MenuButton> cellData) {
         MenuButton menuActions = new MenuButton("_Actions");

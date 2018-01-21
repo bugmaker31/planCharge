@@ -8,19 +8,21 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class EditableAwareTextFieldTableCell<S, T> extends TextFieldTableCell<S, T> {
+public class NotEditableTextFieldTableCell<S, T> extends TextFieldTableCell<S, T> {
 
+/*
     @NotNull
     private final PlanChargeIhm ihm = PlanChargeIhm.instance();
+*/
 
-    @Null
+    @NotNull
     private final Runnable cantEditErrorDisplayer;
 
-    public EditableAwareTextFieldTableCell(@NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
+    public NotEditableTextFieldTableCell(@NotNull StringConverter<T> stringConverter, @NotNull Runnable cantEditErrorDisplayer) {
         super(stringConverter);
         this.cantEditErrorDisplayer = cantEditErrorDisplayer;
 
-        setEditable(true);
+//        setEditable(true);
     }
 
     @Override
@@ -31,12 +33,15 @@ public class EditableAwareTextFieldTableCell<S, T> extends TextFieldTableCell<S,
             return;
         }
 */
+/*
         if (cantEditErrorDisplayer != null) {
             cantEditErrorDisplayer.run();
             return;
         }
 
         super.startEdit();
+*/
+        cantEditErrorDisplayer.run();
     }
 
 //    protected abstract void displayNotEditableError();

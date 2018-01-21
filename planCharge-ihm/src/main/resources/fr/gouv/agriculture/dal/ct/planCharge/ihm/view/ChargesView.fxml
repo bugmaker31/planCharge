@@ -165,9 +165,7 @@
                                     </HBox>
                                 </TitledPane>
                                 <TitledPane text="Tris" animated="false">
-                                    <!--TODO FDA 2017/10 Coder.-->
-                                    <Label text="TODO" disable="true"/>
-                                    <Button text="Réinitialiser l'ordre de tri par défaut" onAction="#reinitOrdreTriPlanificationTable"/>
+                                    <Button text="Réinitialiser l'ordre de tri par défaut" onAction="#reinitOrdreTriTachesTable"/>
                                 </TitledPane>
                                 <TitledPane text="Affichage" animated="false">
                                     <HBox styleClass="paramAffichage-box">
@@ -243,47 +241,63 @@
                         <selectionModel><SelectionMode fx:constant="MULTIPLE"/></selectionModel>
                         -->
                         <columns>
-                            <TableColumn fx:id="tacheColumn" text="Tâche" styleClass="tache-column">
+                            <TableColumn text="Tâche" styleClass="tache-column">
 
                                 <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
 
                                 <columns>
+                                    <!--TODO FDA 2017/07 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
+
                                     <!--Rq : Ne pas mettre "visible="false" sur cette colonne, sinon le menu permettant à l'utilisateur de sélectionner les colonne visibles/masquées ("+") ne permet plus d'afficher les 2 sous-colonnes.-->
                                     <TableColumn text="Catégories">
                                         <columns>
                                             <TableColumn fx:id="categorieColumn" text="Catégorie"
-                                                         prefWidth="$categorieColumnPrefWidth" visible="false"/>
+                                                         prefWidth="$categorieColumnPrefWidth"
+                                                         visible="false"
+                                            />
                                             <!--TODO FDA 2017/05 Trouver pourquoi le libellé de l'entête de la colonne ne revient pas à la ligne, malgré le "wrap-text=true".-->
                                             <TableColumn fx:id="sousCategorieColumn" text="Sous-catégorie"
-                                                         prefWidth="$sousCategorieColumnPrefWidth" visible="false" style="-fx-wrap-text: true"/>
+                                                         prefWidth="$sousCategorieColumnPrefWidth"
+                                                         visible="false"
+                                            />
                                         </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="noTacheColumn" text="N°" prefWidth="$noTacheColumnPrefWidth"
-                                                 editable="false" styleClass="nonModifiable"/>
-                                    <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
-                                                 prefWidth="$noTicketIdalColumnPrefWidth"/>
-                                    <TableColumn fx:id="descriptionColumn" prefWidth="$descriptionColumnPrefWidth"
-                                                 text="Description" styleClass="description-column"/>
-                                    <TableColumn fx:id="projetAppliColumn" prefWidth="$projetAppliColumnPrefWidth"
-                                                 text="Projet/Appli"
-                                                 styleClass="projetAppli-column"/>
-                                    <TableColumn fx:id="statutColumn" prefWidth="$statutColumnPrefWidth" text="Statut"
-                                                 visible="false"/>
+                                    <TableColumn text="Identifiants">
+                                        <columns>
+                                            <TableColumn fx:id="noTacheColumn" text="N°"
+                                                         editable="false" styleClass="nonModifiable"
+                                                         prefWidth="$noTacheColumnPrefWidth"
+                                            />
+                                            <TableColumn fx:id="noTicketIdalColumn" text="N° IDAL"
+                                                         prefWidth="$noTicketIdalColumnPrefWidth"/>
+                                        </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="descriptionColumn" text="Description"
+                                                 prefWidth="$descriptionColumnPrefWidth" styleClass="description-column"
+                                    />
+                                    <TableColumn fx:id="projetAppliColumn" text="Projet/Appli"
+                                                 prefWidth="$projetAppliColumnPrefWidth" styleClass="projetAppli-column"
+                                    />
+                                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="$statutColumnPrefWidth"
+                                    />
                                     <TableColumn text="Période souhaitée">
                                         <columns>
-                                            <TableColumn fx:id="debutColumn" prefWidth="$debutColumnPrefWidth" text="Début" visible="false"/>
-                                            <TableColumn fx:id="echeanceColumn" prefWidth="$echeanceColumnPrefWidth"
-                                                         text="Echéance" styleClass="echeance-column"/>
+                                            <TableColumn fx:id="debutColumn" text="Début" prefWidth="$debutColumnPrefWidth"/>
+                                            <TableColumn fx:id="echeanceColumn" text="Echéance" prefWidth="$echeanceColumnPrefWidth"
+                                                         styleClass="echeance-column"/>
                                         </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="importanceColumn" prefWidth="$importanceColumnPrefWidth" text="Importance"
-                                                 styleClass="importance-column"/>
-                                    <TableColumn fx:id="chargeColumn" prefWidth="$chargeColumnPrefWidth" text="Charge"
+                                    <TableColumn fx:id="importanceColumn" text="Importance" prefWidth="$importanceColumnPrefWidth" styleClass="importance-column"/>
+                                    <TableColumn fx:id="chargeColumn" text="Charge" prefWidth="$chargeColumnPrefWidth"
                                                  styleClass="charge-column"/>
-                                    <TableColumn fx:id="ressourceColumn" prefWidth="$ressourceColumnPrefWidth" text="Rsrc"
-                                                 styleClass="ressource-column"/>
-                                    <TableColumn fx:id="profilColumn" prefWidth="$profilColumnPrefWidth" text="Profil"
-                                                 styleClass="profil-column"/>
+                                    <TableColumn text="Ressource">
+                                        <columns>
+                                            <TableColumn fx:id="ressourceColumn" text="Trigramme" prefWidth="$ressourceColumnPrefWidth"
+                                                         styleClass="ressource-column"/>
+                                            <TableColumn fx:id="profilColumn" text="Profil" prefWidth="$profilColumnPrefWidth"
+                                                         styleClass="profil-column"/>
+                                        </columns>
+                                    </TableColumn>
                                 </columns>
                             </TableColumn>
                             <TableColumn text="Planification">

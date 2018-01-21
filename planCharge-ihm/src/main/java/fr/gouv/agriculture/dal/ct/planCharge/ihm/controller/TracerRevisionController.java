@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
@@ -146,34 +147,34 @@ public class TracerRevisionController extends AbstractController {
     @Null
     private ChangeListener<String> commentaireRevisionListener = null;
 
-    public void afficher(@NotNull PlanificationTacheBean planifBean) {
+    public <TB extends TacheBean> void afficher(@NotNull TB tacheBean) {
 
         // ITache :
-        noTacheField.setText(planifBean.noTache());
-        noTicketIdalTacheField.setText(planifBean.getNoTicketIdal());
-        codeProjetAppliTacheField.setText(Objects.value(planifBean.projetAppliProperty().getValue(), ProjetAppliBean::getCode));
-        descriptionTacheField.setText(planifBean.getDescription());
+        noTacheField.setText(tacheBean.noTache());
+        noTicketIdalTacheField.setText(tacheBean.getNoTicketIdal());
+        codeProjetAppliTacheField.setText(Objects.value(tacheBean.projetAppliProperty().getValue(), ProjetAppliBean::getCode));
+        descriptionTacheField.setText(tacheBean.getDescription());
 
         // Revisable :
         if (statutRevisionListener != null) {
             statutRevisionField.getSelectionModel().selectedItemProperty().removeListener(statutRevisionListener);
         }
-        statutRevisionField.getSelectionModel().select(planifBean.getStatutRevision());
-        statutRevisionListener = ((observable, oldValue, newValue) -> planifBean.setStatutRevision(newValue));
+        statutRevisionField.getSelectionModel().select(tacheBean.getStatutRevision());
+        statutRevisionListener = ((observable, oldValue, newValue) -> tacheBean.setStatutRevision(newValue));
         statutRevisionField.getSelectionModel().selectedItemProperty().addListener(statutRevisionListener);
         //
         if (validateurRevisionListener != null) {
             validateurRevisionField.getSelectionModel().selectedItemProperty().removeListener(validateurRevisionListener);
         }
-        validateurRevisionField.getSelectionModel().select(planifBean.getValidateurRevision());
-        validateurRevisionListener = (observable, oldValue, newValue) -> planifBean.setValidateurRevision(newValue);
+        validateurRevisionField.getSelectionModel().select(tacheBean.getValidateurRevision());
+        validateurRevisionListener = (observable, oldValue, newValue) -> tacheBean.setValidateurRevision(newValue);
         validateurRevisionField.getSelectionModel().selectedItemProperty().addListener(validateurRevisionListener);
         //
         if (commentaireRevisionListener != null) {
             commentaireRevisionField.textProperty().removeListener(commentaireRevisionListener);
         }
-        commentaireRevisionField.setText(planifBean.getCommentaireRevision());
-        commentaireRevisionListener = (observable, oldValue, newValue) -> planifBean.setCommentaireRevision(newValue);
+        commentaireRevisionField.setText(tacheBean.getCommentaireRevision());
+        commentaireRevisionListener = (observable, oldValue, newValue) -> tacheBean.setCommentaireRevision(newValue);
         commentaireRevisionField.textProperty().addListener(commentaireRevisionListener);
     }
 }

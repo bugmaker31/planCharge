@@ -726,7 +726,7 @@ public class PlanChargeIhm extends Application {
     @SuppressWarnings("WeakerAccess")
     public static void symboliserChampsObligatoires(@NotNull Control... fields) throws IhmException {
         for (Control field : fields) {
-            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les EditableAwareTextFieldTableCell, la 2nde fait l'inverse).
+            // TODO FDA 2017/07 Comprendre pourquoi il faut les 2 lignes ci-dessous à la fois (la 1ère affiche bien le symbole rouge dans le coin haut gauche des entêtes des TableColumn mais pas dans les NotEditableTextFieldTableCell, la 2nde fait l'inverse).
             Decorator.addDecoration(field, new GraphicDecoration(new ImageView(REQUIRED_INDICATOR_IMAGE), Pos.TOP_LEFT, REQUIRED_INDICATOR_IMAGE.getWidth() / 2, REQUIRED_INDICATOR_IMAGE.getHeight() / 2));
             validationSupport().registerValidator(field, true, Validator.createEmptyValidator("Requis"));
         }
