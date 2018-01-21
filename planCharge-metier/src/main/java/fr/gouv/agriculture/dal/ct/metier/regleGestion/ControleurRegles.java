@@ -25,7 +25,7 @@ public class ControleurRegles {
     private static Set<BeanDefinition> reglesGestionBDs = null;
 
     public static List<ViolationRegleGestion> violations(@NotNull PlanChargeDTO planChargeDTO) throws MetierException {
-        List<ViolationRegleGestion> violationsRegles = new ArrayList<>();
+        List<ViolationRegleGestion> violationsRegles;
 
         // TODO FDA 2017/07 Optimiser pour ne plus avoir  : passer un Observable plutôt ?
         initReglesGestion(planChargeDTO);
@@ -46,10 +46,10 @@ public class ControleurRegles {
 //        List<RegleGestion> reglesGestion = new ArrayList<>();
         try {
             Set<BeanDefinition> reglesGestionBDs = getReglesGestionBDs();
-            LOGGER.debug(reglesGestionBDs.size() + " règles de gestion trouvées.");
+            LOGGER.debug("{} règles de gestion trouvées.", reglesGestionBDs.size());
 
             for (BeanDefinition regleGestionBD : reglesGestionBDs) {
-                LOGGER.debug("- Règle de gestion : '" + regleGestionBD.getBeanClassName() + "'");
+                LOGGER.debug("- Règle de gestion : '{}'", regleGestionBD.getBeanClassName());
                 Class<? extends RegleGestion> classeRegleGestion =
                         (Class<? extends RegleGestion>) Class.forName(regleGestionBD.getBeanClassName());
 
@@ -74,10 +74,10 @@ public class ControleurRegles {
         if (reglesGestionBDs == null) {
             ClassPathScanningCandidateComponentProvider regleGestionCPSCPP = new ClassPathScanningCandidateComponentProvider(false);
             // On considère toutes les classes qui héritent de RegleGestion :
-            regleGestionCPSCPP.addIncludeFilter(new InheritageFilter(RegleGestion.class));
+            regleGestionCPSCPP.addIncludeFilter(new InheritageFilter<>(RegleGestion.class));
             Package pack = RegleGestionPackage.class.getPackage();
             reglesGestionBDs = regleGestionCPSCPP.findCandidateComponents(pack.getName());
-            LOGGER.debug(reglesGestionBDs.size() + " règles de gestion trouvées.");
+            LOGGER.debug("{} règles de gestion trouvées.", reglesGestionBDs.size());
         }
         return reglesGestionBDs;
     }

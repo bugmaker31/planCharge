@@ -1,15 +1,21 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.modele.ModeleException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Ressource;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.ITache;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanDateEtatObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanPlanificationsObligatoires;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanReferentielsObligatoires;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.tache.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +23,10 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by frederic.danna on 11/03/2017.
@@ -264,9 +272,19 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
     @NotNull
     @Override
     public List<RegleGestion<TacheDTO>> getReglesGestion() {
-        return Collections.emptyList(); // TODO FDA 2017/07 Coder les règles de gestion.
+        return Arrays.asList(
+                RGTacheCategorieObligatoire.INSTANCE,
+                RGTacheNoTicketIdalObligatoire.INSTANCE,
+                RGTacheDescriptionObligatoire.INSTANCE,
+                RGTacheProjetAppliObligatoire.INSTANCE,
+                RGTacheStatutObligatoire.INSTANCE,
+                RGTacheEcheanceObligatoire.INSTANCE,
+                RGTacheImportanceObligatoire.INSTANCE,
+                RGTacheChargeObligatoire.INSTANCE,
+                RGTacheRessourceObligatoire.INSTANCE,
+                RGTacheProfilObligatoire.INSTANCE
+        );
     }
-
 
     // ITache
 
@@ -276,14 +294,10 @@ public class TacheDTO extends AbstractDTO<Tache, Integer, TacheDTO> implements I
 
     @Override
     public int compareTo(@Null TacheDTO o) {
-        try {
-            Tache tache = toEntity();
-            Tache autreTache = ((o == null) ? null : o.toEntity());
-            return tache.compareTo(autreTache);
-        } catch (DTOException e) {
-            LOGGER.error("Impossible de comparer les 2 taches (DTO)s.", e);
-            return 0;
+        if (o == null) {
+            return 1; // Les IDs indéfinis sont triés en tête de liste.
         }
+        return Integer.compare(getId(), o.getId());
     }
 
 

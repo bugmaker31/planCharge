@@ -1,11 +1,16 @@
 package fr.gouv.agriculture.dal.ct.planCharge.metier.dto;
 
+import fr.gouv.agriculture.dal.ct.metier.MetierException;
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
 import fr.gouv.agriculture.dal.ct.metier.dto.DTOException;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.RegleGestion;
+import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.TacheSansPlanificationException;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.tache.Tache;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanDateEtatObligatoire;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanPlanificationsObligatoires;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.regleGestion.charge.RGChargePlanReferentielsObligatoires;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -16,7 +21,7 @@ import java.util.function.BiConsumer;
 
 /**
  * Inspiré de {@link Map}.
- *
+ * <p>
  * Created by frederic.danna on 20/03/2017.
  */
 public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable, PlanificationsDTO> {
@@ -149,6 +154,19 @@ public class PlanificationsDTO extends AbstractDTO<Planifications, Serializable,
     @Override
     protected List<RegleGestion<PlanificationsDTO>> getReglesGestion() {
         return Collections.emptyList(); // TODO FDA 2017/07 Coder les RGs.
+    }
+
+    @NotNull
+    @Override
+    public List<ViolationRegleGestion> controlerReglesGestion() throws MetierException {
+        List<ViolationRegleGestion> violations = super.controlerReglesGestion();
+        for (Map.Entry<TacheDTO, Map<LocalDate, Double>> tachePlanifieeEntry : plan.entrySet()) {
+            TacheDTO tache = tachePlanifieeEntry.getKey();
+            Map<LocalDate, Double> planifTache = tachePlanifieeEntry.getValue();
+            List<ViolationRegleGestion> violationsRegleGestionTache = tache.controlerReglesGestion();
+            violations.addAll(violationsRegleGestionTache);
+        }
+        return violations;
     }
 
 

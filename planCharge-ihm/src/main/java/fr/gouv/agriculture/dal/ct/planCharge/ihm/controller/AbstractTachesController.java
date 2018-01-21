@@ -10,7 +10,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
@@ -246,15 +245,15 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private ToggleButton filtreRevisionTypeChangementInchangeToggleButton;
+    private ToggleButton filtreChangementInchangeToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private ToggleButton filtreRevisionTypeChangementAjoutToggleButton;
+    private ToggleButton filtreChangementAjoutToggleButton;
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private ToggleButton filtreRevisionTypeChangementModificationToggleButton;
+    private ToggleButton filtreChangementModificationToggleButton;
 
     @Null
     private List<TableColumn<TB, ?>> ordreTriParDefautTachesTable;
@@ -694,9 +693,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 filtrePeriodeContemporaineToggleButton,
                 filtrePeriodeEchueToggleButton,
                 //
-                filtreRevisionTypeChangementInchangeToggleButton,
-                filtreRevisionTypeChangementAjoutToggleButton,
-                filtreRevisionTypeChangementModificationToggleButton
+                filtreChangementInchangeToggleButton,
+                filtreChangementAjoutToggleButton,
+                filtreChangementModificationToggleButton
                 //
                 // Ajouter les futurs filtres ici.
         );
@@ -820,17 +819,17 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     }
 
     private boolean estTacheAvecTypeChangementAVoir(@NotNull TB tache) {
-        if (filtreRevisionTypeChangementInchangeToggleButton.isSelected()) {
+        if (filtreChangementInchangeToggleButton.isSelected()) {
             if (tache.getTypeChangement() == null) {
                 return true;
             }
         }
-        if (filtreRevisionTypeChangementAjoutToggleButton.isSelected()) {
+        if (filtreChangementAjoutToggleButton.isSelected()) {
             if (tache.getTypeChangement() == TypeChangement.AJOUT) {
                 return true;
             }
         }
-        if (filtreRevisionTypeChangementModificationToggleButton.isSelected()) {
+        if (filtreChangementModificationToggleButton.isSelected()) {
             if (tache.getTypeChangement() == TypeChangement.MODIFICATION) {
                 return true;
             }
@@ -948,7 +947,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     void filtrerSurTachesAjoutees() {
         deselectionnerTousFiltres();
-        filtreRevisionTypeChangementAjoutToggleButton.setSelected(true);
+        filtreChangementAjoutToggleButton.setSelected(true);
         filtrer();
     }
 

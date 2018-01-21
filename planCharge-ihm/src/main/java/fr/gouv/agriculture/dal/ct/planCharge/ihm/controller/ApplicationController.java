@@ -569,7 +569,7 @@ public class ApplicationController extends AbstractController {
 
                 } catch (ViolationsReglesGestionException e) {
                     ihm.afficherViolationsReglesGestion(
-                            "Impossible de charger le plan de charge.", e.getLocalizedMessage(),
+                            "Impossible de charger le plan de charge", e.getLocalizedMessage(),
                             e.getViolations()
                     );
                 }

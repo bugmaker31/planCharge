@@ -102,15 +102,15 @@
                                         <!--</ButtonBar>-->
                                     </VBox>
                                     <VBox styleClass="paramFiltre-box">
-                                        <Label text="Révision : "/>
+                                        <Label text="Changement : "/>
                                         <!--<ButtonBar>-->
                                         <!--<buttons>-->
                                         <HBox spacing="$buttonSpacing">
-                                            <ToggleButton fx:id="filtreRevisionTypeChangementInchangeToggleButton" text="Inchangé"
+                                            <ToggleButton fx:id="filtreChangementInchangeToggleButton" text="Inchangé"
                                                           onAction="#filtrer"/>
-                                            <ToggleButton fx:id="filtreRevisionTypeChangementAjoutToggleButton" text="Ajout"
+                                            <ToggleButton fx:id="filtreChangementAjoutToggleButton" text="Ajout"
                                                           onAction="#filtrer"/>
-                                            <ToggleButton fx:id="filtreRevisionTypeChangementModificationToggleButton" text="Modification"
+                                            <ToggleButton fx:id="filtreChangementModificationToggleButton" text="Modification"
                                                           onAction="#filtrer"/>
                                             <!-- TODO FDA 2017/11 Coder.
                                                 <ToggleButton fx:id="filtreRevisionTypeChangementSuppressionToggleButton" text="Suppression"

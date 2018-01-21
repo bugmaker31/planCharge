@@ -656,33 +656,42 @@ public class PlanChargeIhm extends Application {
 
     // Notifiactions des violations des Règles de Gestion ---------------------------------------
 
-    private Set<Notification> notificationsViolationsReglesGestion = new HashSet<>(10);
+    private final Set<Notification> notificationsViolationsReglesGestion = new HashSet<>(10);
 
     public void afficherViolationsReglesGestion(@NotNull String titre, @NotNull String message, @SuppressWarnings("rawtypes") @NotNull List<ViolationRegleGestion> violations) {
 //        Platform.runLater(() -> {
 
+        // On efface les éventuelles notifications de violation de RG qui pourraient être encore affichées :
         masquerNotificationsViolationsReglesGestion();
 
+        // On affiche les dernières violations en date :
+        StringBuilder stringBuilder = new StringBuilder("");
         //noinspection rawtypes
         for (ViolationRegleGestion violation : violations) {
-            //noinspection HardcodedLineSeparator,unchecked
-            Notification notifErreur = new Notification()
-                    .title(titre)
-                    .text(
-                            violation.getRegle().getLibelle() + " (" + violation.getRegle().getCode() + ")"
-                                    + "\n" + violation.getRegle().getFormateurMessage().apply(violation.getEntity())
-                    )
-                    .hideAfter(Duration.INDEFINITE); // Voir #masquerNotificationsViolationsReglesGestion().
-            notifErreur.showError();
-            notificationsViolationsReglesGestion.add(notifErreur);
+            //noinspection HardcodedLineSeparator,unchecked,MagicCharacter
+            stringBuilder
+                    .append('\n')
+                    .append("- ")
+                    .append(violation.getRegle().getLibelle())
+//                    .append(" (" + violation.getRegle().getCode() + ")")
+                    .append(" : ").append(violation.getRegle().getFormateurMessage().apply(violation.getEntity()));
         }
-//    });
+        //noinspection MagicNumber,StringBufferToStringInConcatenation
+        Notification notifErreur = new Notification()
+                .title(titre)
+                .text(message + " : " + stringBuilder.toString())
+                // Comme "masquerNotificationsViolationsReglesGestion" ne fonctionne pas, on efface les notifs au bout d'un certain temps (1 minute).
+                //.hideAfter(Duration.INDEFINITE)
+                .hideAfter(Duration.minutes(1.0));
+        notifErreur.showError();
+        notificationsViolationsReglesGestion.add(notifErreur);
+//        });
     }
 
     @SuppressWarnings({"WeakerAccess"})
     public void masquerNotificationsViolationsReglesGestion() {
         for (Notification notification : notificationsViolationsReglesGestion) {
-            notification.hide();
+            notification.hide(); // FIXME FDA 2018/01 Sans effet. voir méthode "Notification#hide()".
         }
     }
 
