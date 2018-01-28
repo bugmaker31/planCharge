@@ -557,6 +557,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         freeMarkerConfig.setWrapUncheckedExceptions(true);
     }
 
+//    TODO FDA 2018/01 Reprendre l'ordre de tri de l'IHM.
     @NotNull
     public String toHTML() throws BeanException {
         try {

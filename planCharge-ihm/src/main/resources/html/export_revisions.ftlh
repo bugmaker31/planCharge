@@ -18,14 +18,16 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>334</td>
-        <td>(pas de ticket)</td>
-        <td>MAJ le DAAT V3</td>
-        <td>DEDAL</td>
-        <td>Reportée/Prolongée</td>
-        <td></td>
-        <td>Date fin : 09/11/2017 -> 16/11/17</td>
-    </tr>
+    <#list planificationsBeans as planifBean>
+        <tr>
+            <td>${planifBean.noTache()!""}</td>
+            <td>${planifBean.noTicketIdal!""}</td>
+            <td>${planifBean.description!""}</td>
+            <td><#if planifBean.projetAppli??>${planifBean.projetAppli.code!""}<#else>N/C</#if></td>
+            <td><#if planifBean.statutRevision??>${planifBean.statutRevision.code!""}<#else></#if></td>
+            <td><#if planifBean.validateurRevision??>${planifBean.validateurRevision.trigramme!""}<#else></#if></td>
+            <td>${planifBean.commentaireRevision!""}</td>
+        </tr>
+    </#list>
     </tbody>
 </table>
