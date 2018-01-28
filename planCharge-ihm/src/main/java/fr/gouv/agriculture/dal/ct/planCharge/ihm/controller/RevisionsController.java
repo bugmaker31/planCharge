@@ -3,34 +3,31 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
+import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
-import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.StatutRevisionConverter;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Stage;
-import org.controlsfx.control.table.TableFilter;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -170,6 +167,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     MenuButton menuActions(@NotNull TableColumn.CellDataFeatures<TacheBean, MenuButton> cellData) {
         MenuButton menuActions = super.menuActions(cellData);
         TacheBean tacheBean = cellData.getValue();
+        assert tacheBean != null;
         {
             MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> {
@@ -208,4 +206,22 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
         LOGGER.debug("Fenêtre de listage des révisions affichée.");
     }
 */
+
+    @FXML
+    private void copierRevisions(@SuppressWarnings("unused") ActionEvent actionEvent) throws ControllerException {
+        LOGGER.debug("Copie des révisions...");
+
+        String html;
+        try {
+            html = planChargeBean.toHTML();
+        } catch (BeanException e) {
+            throw new ControllerException("Impossible de copier les révisions (au format HTML).", e);
+        }
+
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        clipboard.clear();
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putHtml(html);
+        clipboard.setContent(clipboardContent);
+    }
 }

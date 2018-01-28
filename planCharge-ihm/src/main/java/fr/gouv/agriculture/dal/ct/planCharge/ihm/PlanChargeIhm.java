@@ -728,6 +728,7 @@ public class PlanChargeIhm extends Application {
     }
 
     public void afficherInterdictionEditer(@NotNull String message) {
+        //noinspection ResultOfMethodCallIgnored
         afficherDialog(AlertType.WARNING, "Données non modifiables", message, 400, 200);
     }
 

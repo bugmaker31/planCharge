@@ -933,7 +933,6 @@ public class ApplicationController extends AbstractController {
             ihm.stop();
         } catch (Exception e) {
             LOGGER.error("Impossible de stopper l'application.", e);
-            //noinspection HardcodedLineSeparator
             ihm.afficherDialog(
                     Alert.AlertType.ERROR,
                     "Impossible de stopper l'application",
@@ -1163,7 +1162,6 @@ public class ApplicationController extends AbstractController {
         } catch (ControllerException e) {
             //noinspection HardcodedFileSeparator
             LOGGER.error("Impossible d'afficher le module des projets/applis.", e);
-            //noinspection HardcodedFileSeparator
             ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des projets/applis", Exceptions.causes(e));
         }
     }

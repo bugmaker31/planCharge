@@ -10,10 +10,15 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -37,10 +43,13 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
 
     // Statics :
 
+    @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanChargeBean.class);
 
+    @NotNull
     private static final PlanChargeBean INSTANCE = new PlanChargeBean();
 
+    @NotNull
     public static PlanChargeBean instance() {
         return INSTANCE;
     }
@@ -471,7 +480,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         // On récupère la "nouvelle" planification des tâches, en même temps que les données sur les tâches elles-mêmes :
         LOGGER.debug("Récupération de la nouvelle planification : ");
         Set<PlanificationTacheBean> planificationsBeanstoAdd = new HashSet<>(50);
-        planificationsDTO.entrySet().stream() // Paralléliser ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
+        planificationsDTO.entrySet().stream() // NB : Paralléliser (parallelStrem) ne marche pas, notamment à cause des Listener qui sont enregistrés par les ColumnFilter (e.g. ColumnFilter#filterValues).
                 .forEach(planifDTOEntry -> {
                     TacheDTO tacheDTO = planifDTOEntry.getKey();
 //                    LOGGER.debug(" - Tâche {} : ", tacheDTO.noTache());
@@ -534,4 +543,37 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 + " (" + (estModifie() ? "" : "non ") + "modifié)";
     }
 
+
+    private static final Configuration freeMarkerConfig;
+
+    static {
+        // Cf. freemarker.apache.org
+        freeMarkerConfig = new Configuration(Configuration.VERSION_2_3_27);
+        // Cf. https://stackoverflow.com/questions/3019424/setting-freemarker-template-from-classpath
+        freeMarkerConfig.setClassForTemplateLoading(PlanChargeBean.class, "/html");
+        freeMarkerConfig.setDefaultEncoding("UTF-8");
+        freeMarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        freeMarkerConfig.setLogTemplateExceptions(false);
+        freeMarkerConfig.setWrapUncheckedExceptions(true);
+    }
+
+    @NotNull
+    public String toHTML() throws BeanException {
+        try {
+
+            Template template = freeMarkerConfig.getTemplate("export_revisions.ftlh");
+            Writer htmlWriter = new StringWriter();
+            template.process(this, htmlWriter);
+            return htmlWriter.toString();
+
+        } catch (IOException | TemplateException e) {
+            throw new BeanException("Impossible de générer le HTML.", e);
+        }
+    }
+
+    @SuppressWarnings("unused") // Utilisée dans "export_revisions.ftlh".
+    @NotNull
+    public String getDateEtatFormatee() {
+        return Objects.value(dateEtat, date -> date.format(DateTimeFormatter.ISO_LOCAL_DATE), "N/C");
+    }
 }

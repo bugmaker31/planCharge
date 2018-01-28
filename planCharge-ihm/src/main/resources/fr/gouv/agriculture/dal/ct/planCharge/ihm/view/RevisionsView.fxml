@@ -232,7 +232,7 @@
         <BarreEtatTachesComponent fx:id="barreEtatComponent">
             <buttons>
                 <Button text="Ajouter tâche" onAction="#ajouterTache"/>
-                <!--<Button text="Modifier les _échéances..." onAction="#modifierEcheances"/>-->
+                <Button text="Copier" onAction="#copierRevisions"/>
             </buttons>
         </BarreEtatTachesComponent>
     </bottom>
