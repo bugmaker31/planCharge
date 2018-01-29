@@ -1144,7 +1144,8 @@ public class PlanChargeIhm extends Application {
 
         if (estEnDeveloppement) {
 //            return LocalDate.of(2017, 10, 23);
-            return LocalDate.of(2017, 10, 30);
+//            return LocalDate.of(2017, 10, 30);
+            return LocalDate.of(2018, 1, 22);
         }
 
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
