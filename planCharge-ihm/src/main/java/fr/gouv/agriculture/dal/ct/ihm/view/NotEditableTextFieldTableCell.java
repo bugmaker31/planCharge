@@ -15,10 +15,10 @@ public class NotEditableTextFieldTableCell<S, T> extends TextFieldTableCell<S, T
     private final PlanChargeIhm ihm = PlanChargeIhm.instance();
 */
 
-    @NotNull
+    @Null
     private final Runnable cantEditErrorDisplayer;
 
-    public NotEditableTextFieldTableCell(@NotNull StringConverter<T> stringConverter, @NotNull Runnable cantEditErrorDisplayer) {
+    public NotEditableTextFieldTableCell(@NotNull StringConverter<T> stringConverter, @Null Runnable cantEditErrorDisplayer) {
         super(stringConverter);
         this.cantEditErrorDisplayer = cantEditErrorDisplayer;
 
@@ -33,15 +33,12 @@ public class NotEditableTextFieldTableCell<S, T> extends TextFieldTableCell<S, T
             return;
         }
 */
-/*
         if (cantEditErrorDisplayer != null) {
             cantEditErrorDisplayer.run();
             return;
         }
 
         super.startEdit();
-*/
-        cantEditErrorDisplayer.run();
     }
 
 //    protected abstract void displayNotEditableError();

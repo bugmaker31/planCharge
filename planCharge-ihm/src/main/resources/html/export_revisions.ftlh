@@ -1,4 +1,4 @@
-<h1>Changements dans le plan de charge</h1>
+<h1>Changements</h1>
 
 <!--TODO FDA 2018/01 Préciser la date de dernière révision. -->
 Cette partie liste les changements apportés au plan de charge de la CT entre la dernière révision et le ${dateEtatFormatee}.
