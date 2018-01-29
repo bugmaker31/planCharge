@@ -186,13 +186,15 @@ public final class PlanChargeDao implements DataAcessObject<PlanCharge, LocalDat
         persisterPlanCharge(fichierPlanifTemp, planCharge, rapport);
 
         // Archivage du fichier actuel (obsolète) :
-        try {
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-            File fichierPlanifSauv = new File(fichierPlanif.getCanonicalFile().getParentFile(), fichierPlanif.getName() + ".backup_" + timestamp);
-            // Cf. https://stackoverflow.com/questions/14651567/java-file-renameto-does-rename-file-but-returns-false-why
-            FileUtils.moveFile(fichierPlanif, fichierPlanifSauv);
-        } catch (IOException e) {
-            throw new PlanChargeDaoException("Impossible de faire une copie de sauvegarde du fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+        if (fichierPlanif.exists()) {
+            try {
+                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+                File fichierPlanifSauv = new File(fichierPlanif.getCanonicalFile().getParentFile(), fichierPlanif.getName() + ".backup_" + timestamp);
+                // Cf. https://stackoverflow.com/questions/14651567/java-file-renameto-does-rename-file-but-returns-false-why
+                FileUtils.moveFile(fichierPlanif, fichierPlanifSauv);
+            } catch (IOException e) {
+                throw new PlanChargeDaoException("Impossible de faire une copie de sauvegarde du fichier '" + fichierPlanif.getAbsolutePath() + "'.", e);
+            }
         }
 
         // Le fichier temporaire devient l'officiel :

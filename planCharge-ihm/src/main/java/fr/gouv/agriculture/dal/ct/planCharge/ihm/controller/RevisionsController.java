@@ -62,7 +62,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
-    private TableView<TacheBean> tachesTable;
+    private TableView<TacheBean> revisionsTachesTable;
 
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -124,6 +124,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     }
 
     private void initBeans() {
+        // Rien... pour l'instant.
     }
 
     private void initTables() {
@@ -145,7 +146,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     @NotNull
     @Override
     TableView<TacheBean> getTachesTable() {
-        return tachesTable;
+        return revisionsTachesTable;
     }
 
     @NotNull
@@ -214,7 +215,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     private void copierRevisions(@SuppressWarnings("unused") ActionEvent actionEvent) throws ControllerException {
         LOGGER.debug("Copie des révisions...");
 
-        ExportRevisions exportRevision = new ExportRevisions(planChargeBean.getDateEtat(), tachesTable.getItems());
+        ExportRevisions exportRevision = new ExportRevisions(planChargeBean.getDateEtat(), revisionsTachesTable.getItems());
 
         String revisionsEnHtml = exporterRevisionsEnHtml(exportRevision);
 
