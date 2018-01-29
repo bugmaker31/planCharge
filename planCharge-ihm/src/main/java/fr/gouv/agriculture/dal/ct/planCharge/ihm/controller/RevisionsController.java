@@ -3,13 +3,16 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
-import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.revision.ExportRevisions;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,13 +24,13 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -211,17 +214,29 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     private void copierRevisions(@SuppressWarnings("unused") ActionEvent actionEvent) throws ControllerException {
         LOGGER.debug("Copie des révisions...");
 
-        String html;
-        try {
-            html = planChargeBean.toHTML();
-        } catch (BeanException e) {
-            throw new ControllerException("Impossible de copier les révisions (au format HTML).", e);
-        }
+        ExportRevisions exportRevision = new ExportRevisions(planChargeBean.getDateEtat(), tachesTable.getItems());
+
+        String revisionsEnHtml = exporterRevisionsEnHtml(exportRevision);
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         clipboard.clear();
         ClipboardContent clipboardContent = new ClipboardContent();
-        clipboardContent.putHtml(html);
+        clipboardContent.putHtml(revisionsEnHtml);
         clipboard.setContent(clipboardContent);
     }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    private String exporterRevisionsEnHtml(@NotNull ExportRevisions tacheTable) throws ControllerException {
+        try {
+
+            Template template = PlanChargeIhm.getFreeMarkerConfig().getTemplate("export_revisions.ftlh");
+            Writer htmlWriter = new StringWriter();
+            template.process(tacheTable, htmlWriter);
+            return htmlWriter.toString();
+
+        } catch (IOException | TemplateException e) {
+            throw new ControllerException("Impossible de générer le HTML des révisions.", e);
+        }
+    }
+
 }

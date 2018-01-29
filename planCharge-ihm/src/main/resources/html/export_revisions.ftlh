@@ -1,32 +1,38 @@
+<h1>Changements dans le plan de charge</h1>
+
 <!--TODO FDA 2018/01 Préciser la date de dernière révision. -->
-<h1>Changements dans le plan de charge entre la dernière révision et le ${dateEtatFormatee}</h1>
+Cette partie liste les changements apportés au plan de charge de la CT entre la dernière révision et le ${dateEtatFormatee}.
 
 <table border="1">
     <thead>
     <tr>
-        <th colspan="4">&nbsp;</th>
+        <th colspan="4">Tâche</th>
         <th colspan="3">Changement / dernière planification</th>
     </tr>
     <tr>
+        <!--Tâche :-->
         <th>N° tâche</th>
         <th>N° IDAL</th>
         <th>Tâche</th>
         <th>Projet / Appli</th>
+        <!--Révision :-->
         <th>Statut</th>
         <th>Validé ?</th>
         <th>Commentaire</th>
     </tr>
     </thead>
     <tbody>
-    <#list planificationsBeans as planifBean>
+    <#list tachesBeans as tacheBean>
         <tr>
-            <td>${planifBean.noTache()!""}</td>
-            <td>${planifBean.noTicketIdal!""}</td>
-            <td>${planifBean.description!""}</td>
-            <td><#if planifBean.projetAppli??>${planifBean.projetAppli.code!""}<#else>N/C</#if></td>
-            <td><#if planifBean.statutRevision??>${planifBean.statutRevision.code!""}<#else></#if></td>
-            <td><#if planifBean.validateurRevision??>${planifBean.validateurRevision.trigramme!""}<#else></#if></td>
-            <td>${planifBean.commentaireRevision!""}</td>
+            <!--Tâche :-->
+            <td>${tacheBean.noTache()!""}</td>
+            <td>${tacheBean.noTicketIdal!""}</td>
+            <td>${tacheBean.description!""}</td>
+            <td><#if tacheBean.projetAppli??>${tacheBean.projetAppli.code!""}<#else></#if></td>
+            <!--Révision :-->
+            <td><#if tacheBean.statutRevision??>${tacheBean.statutRevision.libelle!""}<#else></#if></td>
+            <td><#if tacheBean.validateurRevision??>${tacheBean.validateurRevision.trigramme!""}<#else></#if></td>
+            <td>${tacheBean.commentaireRevision!""}</td>
         </tr>
     </#list>
     </tbody>

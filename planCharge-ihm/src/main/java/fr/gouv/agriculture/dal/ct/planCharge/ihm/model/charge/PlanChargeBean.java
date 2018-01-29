@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.ihm.util.ObservableLists;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursAbsenceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.PctagesDispoParRessourceProfilBean;
@@ -15,10 +16,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.Copiable;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.Percentage;
 import fr.gouv.agriculture.dal.ct.planCharge.util.number.PercentageProperty;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -527,6 +523,7 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
         }
     }
 
+
     @NotNull
     @Override
     public PlanChargeBean copier() throws CopieException {
@@ -543,38 +540,4 @@ public final class PlanChargeBean extends AbstractBean<PlanChargeDTO, PlanCharge
                 + " (" + (estModifie() ? "" : "non ") + "modifié)";
     }
 
-
-    private static final Configuration freeMarkerConfig;
-
-    static {
-        // Cf. freemarker.apache.org
-        freeMarkerConfig = new Configuration(Configuration.VERSION_2_3_27);
-        // Cf. https://stackoverflow.com/questions/3019424/setting-freemarker-template-from-classpath
-        freeMarkerConfig.setClassForTemplateLoading(PlanChargeBean.class, "/html");
-        freeMarkerConfig.setDefaultEncoding("UTF-8");
-        freeMarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        freeMarkerConfig.setLogTemplateExceptions(false);
-        freeMarkerConfig.setWrapUncheckedExceptions(true);
-    }
-
-//    TODO FDA 2018/01 Reprendre l'ordre de tri de l'IHM.
-    @NotNull
-    public String toHTML() throws BeanException {
-        try {
-
-            Template template = freeMarkerConfig.getTemplate("export_revisions.ftlh");
-            Writer htmlWriter = new StringWriter();
-            template.process(this, htmlWriter);
-            return htmlWriter.toString();
-
-        } catch (IOException | TemplateException e) {
-            throw new BeanException("Impossible de générer le HTML.", e);
-        }
-    }
-
-    @SuppressWarnings("unused") // Utilisée dans "export_revisions.ftlh".
-    @NotNull
-    public String getDateEtatFormatee() {
-        return Objects.value(dateEtat, date -> date.format(DateTimeFormatter.ISO_LOCAL_DATE), "N/C");
-    }
 }

@@ -10,8 +10,11 @@ import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationRegleGestion;
 import fr.gouv.agriculture.dal.ct.metier.regleGestion.ViolationsReglesGestionException;
 import fr.gouv.agriculture.dal.ct.metier.service.RapportService;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.*;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.charge.Planifications;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ChargeService;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateExceptionHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -99,6 +102,12 @@ public class PlanChargeIhm extends Application {
 
     private static PlanChargeIhm instance;
 
+
+    private static final Configuration freeMarkerConfig = new Configuration(Configuration.VERSION_2_3_27);
+
+    public static Configuration getFreeMarkerConfig() {
+        return freeMarkerConfig;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -409,7 +418,19 @@ public class PlanChargeIhm extends Application {
         ValueExtractor.addObservableValueExtractor(control -> control instanceof TextFieldTableCell, control -> ((TextFieldTableCell) control).textProperty());
         ValueExtractor.addObservableValueExtractor(control -> control instanceof DatePickerTableCell, control -> ((DatePickerTableCell) control).textProperty());
 
+        initFreeMarker();
+
         LOGGER.info("Application initialisée.");
+    }
+
+    private void initFreeMarker() {
+        // Cf. freemarker.apache.org
+        // Cf. https://stackoverflow.com/questions/3019424/setting-freemarker-template-from-classpath
+        freeMarkerConfig.setClassForTemplateLoading(PlanChargeBean.class, "/html");
+        freeMarkerConfig.setDefaultEncoding("UTF-8");
+        freeMarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        freeMarkerConfig.setLogTemplateExceptions(false);
+        freeMarkerConfig.setWrapUncheckedExceptions(true);
     }
 
     public int noEcranParDefaut() {
