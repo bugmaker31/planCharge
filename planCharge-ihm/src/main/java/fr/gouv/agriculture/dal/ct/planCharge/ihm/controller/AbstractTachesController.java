@@ -412,6 +412,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             LOGGER.debug("Changement pour le filtre 'filtreGlobal' : {}...", newValue);
             filtrer();
         });
+        filtreGlobalComponent.getSensibleCasseCheckBox().selectedProperty().addListener((observable, oldValue, newValue) -> {
+            LOGGER.debug("Changement pour l'option de filtre 'filtreGlobal' : {}...", newValue);
+            filtrer();
+        });
 
         // Ajout des filtres "par colonne" (sur des TableColumn, pas sur la TableView) :
         //
@@ -718,16 +722,17 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 //        getTachesTable().refresh(); // Notamment pour réappliquer les styles CSS.
     }
 
+    @SuppressWarnings("MethodWithMultipleReturnPoints")
     private boolean estTacheAVoir(@NotNull TB tache) throws ControllerException {
 
-        if (Strings.epure(filtreGlobalComponent.getFiltreGlobalField().getText()) != null) {
+        if (!filtreGlobalComponent.getFiltreGlobalField().getText().isEmpty()) {
             // Si un filtre global est positionné, c'est un filtre exhaustif, il ne s'additionne pas avec les autres filtres.
 /*
             if (tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText())) {
                 return true;
             }
 */
-            return tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText());
+            return tache.matcheGlobal(filtreGlobalComponent.getFiltreGlobalField().getText(), filtreGlobalComponent.getSensibleCasseCheckBox().isSelected());
         }
 
         // Filtres cumulatifs :

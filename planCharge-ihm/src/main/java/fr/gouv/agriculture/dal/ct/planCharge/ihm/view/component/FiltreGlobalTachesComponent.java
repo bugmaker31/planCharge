@@ -3,14 +3,15 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view.component;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class FiltreGlobalTachesComponent extends HBox {
+public class FiltreGlobalTachesComponent extends VBox {
 
     @FXML
     @NotNull
@@ -39,4 +40,11 @@ public class FiltreGlobalTachesComponent extends HBox {
     public TextField getFiltreGlobalField() {
         return controller.getFiltreGlobalField();
     }
+
+    @SuppressWarnings("WeakerAccess")
+    @NotNull
+    public CheckBox getSensibleCasseCheckBox() {
+        return controller.getSensibleCasseCheckBox();
+    }
+
 }

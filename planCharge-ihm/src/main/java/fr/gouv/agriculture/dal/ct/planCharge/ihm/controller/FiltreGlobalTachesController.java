@@ -3,6 +3,7 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
@@ -16,7 +17,7 @@ import java.lang.reflect.Method;
 public class FiltreGlobalTachesController extends AbstractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FiltreGlobalTachesController.class);
-    
+
     @SuppressWarnings("NullableProblems")
     @FXML
     @NotNull
@@ -27,6 +28,14 @@ public class FiltreGlobalTachesController extends AbstractController {
     public TextField getFiltreGlobalField() {
         return filtreGlobalField;
     }
+
+    @FXML
+    private CheckBox sensibleCasseCheckBox;
+
+    public CheckBox getSensibleCasseCheckBox() {
+        return sensibleCasseCheckBox;
+    }
+
 
     @Override
     protected void initialize() throws ControllerException {

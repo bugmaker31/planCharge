@@ -442,12 +442,13 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     public static TacheBean from(@NotNull TacheDTO dto) {
         TacheBean tacheBean = new TacheBean();
+        //noinspection ResultOfMethodCallIgnored
         tacheBean.fromDto(dto);
         return tacheBean;
     }
 
 
-    public boolean matcheGlobal(@Null String filtreGlobal) {
+    public boolean matcheGlobal(@Null String filtreGlobal, boolean estSensibleALaCasse) {
 
         // If filter text is empty, display all data.
         if ((filtreGlobal == null) || filtreGlobal.isEmpty()) {
@@ -464,38 +465,36 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         if (matcheNoTache(filtreGlobal)) {
             return true; // Filter matches
         }
-        if (!noTicketIdalProperty().isEmpty().get() && matcheNoTicketIdal(filtreGlobal)) {
+        if (matcheNoTicketIdal(filtreGlobal)) {
             return true; // Filter matches
         }
-        if (!descriptionProperty().isEmpty().get()) {
-            try {
-                if (Strings.estExpressionReguliere(filtreGlobal) && matcheDescription(filtreGlobal)) {
-                    return true; // Filter matches
-                }
-            } catch (IhmException e) {
-                LOGGER.error("Impossible de filtrer sur la description '" + filtreGlobal + "' pour la tâche n° " + getId() + ".", e);
+        try {
+            if (matcheDescription(filtreGlobal, estSensibleALaCasse)) {
+                return true; // Filter matches
             }
+        } catch (IhmException e) {
+            LOGGER.error("Impossible de filtrer sur la description '" + filtreGlobal + "' pour la tâche n° " + getId() + ".", e);
         }
-        if (!debutProperty().isNull().get() && matcheDebut(filtreGlobal)) {
+        if (matcheDebut(filtreGlobal)) {
             return true; // Filter matches
         }
-        if (!echeanceProperty().isNull().get() && matcheEcheance(filtreGlobal)) {
+        if (matcheEcheance(filtreGlobal)) {
             return true; // Filter matches
         }
-        if (!projetAppliProperty().isNull().get() && matcheProjetAppli(filtreGlobal)) {
+        if (matcheProjetAppli(filtreGlobal)) {
             return true; // Filter matches
         }
-        if (!importanceProperty().isNull().get() && matcheImportance(filtreGlobal)) {
+        if (matcheImportance(filtreGlobal)) {
             return true; // Filter matches
         }
-        if (!ressourceProperty().isNull().get() && matcheRessource(filtreGlobal)) {
+        if (matcheRessource(filtreGlobal)) {
             return true; // Filter matches
         }
         //noinspection RedundantIfStatement
-        if (!profilProperty().isNull().get() && matcheProfil(filtreGlobal)) {
+        if (matcheProfil(filtreGlobal)) {
             return true; // Filter matches
         }
-        return false; // Does not match.
+        return false; // No filter matches at all.
     }
 
     public boolean matcheNoTache(@NotNull String otherValue) {
@@ -538,22 +537,27 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return false; // does not match.
     }
 
-    public boolean matcheDescription(@NotNull String otherValue) throws BeanException {
+    public boolean matcheDescription(@NotNull String otherValue, boolean estSensibleALaCasse) throws BeanException {
         if (getDescription() == null) {
             return false;
         }
-        Pattern patron;
+        if (!Strings.estExpressionReguliere(otherValue)) {
+            //noinspection StringToUpperCaseOrToLowerCaseWithoutLocale
+            return estSensibleALaCasse ? getDescription().contains(otherValue) : getDescription().toUpperCase().contains(otherValue.toUpperCase());
+        }
         try {
-            patron = Pattern.compile(otherValue);
+
+            int flags = 0;
+            if (!estSensibleALaCasse) {
+                flags += Pattern.CASE_INSENSITIVE;
+            }
+
+            Pattern patron = Pattern.compile(otherValue, flags);
+            Matcher matcher = patron.matcher(getDescription());
+            return matcher.find();
         } catch (PatternSyntaxException e) {
             throw new BeanException("Impossible de filtrer les descriptions des tâches à partir d'une expression régulière incorrecte : '" + otherValue + "'.", e);
         }
-        Matcher matcher = patron.matcher(getDescription());
-        if (matcher.find()) {
-            return true; // matches
-        }
-
-        return false; // does not match.
     }
 
     public boolean matcheProjetAppli(@NotNull String otherValue) {

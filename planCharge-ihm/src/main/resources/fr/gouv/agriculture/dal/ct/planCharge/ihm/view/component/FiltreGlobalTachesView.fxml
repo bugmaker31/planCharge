@@ -4,18 +4,23 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.CheckBox?>
 <fx:root xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
-         type="javafx.scene.layout.HBox"
+         type="javafx.scene.layout.VBox"
          fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.FiltreGlobalTachesController"
 >
-    <!--<HBox alignment="BASELINE_LEFT">-->
-    <Label text="Filtre global : ">
-        <tooltip>
-            <!--suppress JavaFxUnresolvedFxIdReference -->
-            <Tooltip fx:id="filtreGlobalTootip" text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
-        </tooltip>
-    </Label>
-    <CustomTextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200" tooltip="$filtreGlobalTootip"/>
-
-    <!--</HBox>-->
+    <HBox alignment="CENTER">
+        <Label text="Filtre global : ">
+            <tooltip>
+                <!--suppress JavaFxUnresolvedFxIdReference -->
+                <Tooltip fx:id="filtreGlobalTootip" text="Filtre les tâches sur n'importe quelle colonne. Expression régulière acceptée."/>
+            </tooltip>
+        </Label>
+        <CustomTextField fx:id="filtreGlobalField" promptText="filtre sur tout" prefWidth="200" tooltip="$filtreGlobalTootip"/>
+    </HBox>
+    <HBox alignment="CENTER">
+        <!--<CheckBox fx:id="expressionReguliereCheckBox" text="Expr. rég."/>-->
+        <CheckBox fx:id="sensibleCasseCheckBox" text="Sens. à la casse"/>
+    </HBox>
 </fx:root>

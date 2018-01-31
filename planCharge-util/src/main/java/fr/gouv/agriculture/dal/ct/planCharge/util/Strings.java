@@ -17,11 +17,11 @@ public final class Strings {
         super();
     }
 
-    public static boolean estExpressionReguliere(@NotNull String string) {
+    public static boolean estExpressionReguliere(@NotNull String str) {
         //noinspection UnusedCatchParameter
         try {
             //noinspection ResultOfMethodCallIgnored
-            Pattern.compile(string);
+            Pattern.compile(str);
             return true;
         } catch (PatternSyntaxException e) {
             return false;
@@ -35,6 +35,7 @@ public final class Strings {
         }
         String epuredString = s.trim();
         if (epuredString.isEmpty()) {
+            //noinspection AssignmentToNull
             epuredString = null;
         }
         return epuredString;
