@@ -33,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import org.slf4j.Logger;
@@ -117,6 +118,11 @@ public class DisponibilitesController extends AbstractController implements Modu
     /*
      La couche "View" :
       */
+
+    @Override
+    public Node getView() {
+        return ihm.getDisponibilitesView();
+    }
 
     // Les TitledPane :
     @SuppressWarnings("NullableProblems")

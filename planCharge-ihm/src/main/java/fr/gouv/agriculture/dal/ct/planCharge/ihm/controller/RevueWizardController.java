@@ -215,19 +215,19 @@ public class RevueWizardController extends AbstractController {
 
     @FXML
     private void filtrerTachesAyantRessourcesSurchargees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().activerModuleCharges();
+        ihm.getApplicationController().activerModule(ihm.getChargesController());
         ihm.getChargesController().filtrerSurRessourceSurchargees();
     }
 
     @FXML
     private void filtrerTachesAyantProfilsSurcharges(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().activerModuleCharges();
+        ihm.getApplicationController().activerModule(ihm.getChargesController());
         ihm.getChargesController().filtrerSurProfilsSurcharges();
     }
 
     @FXML
     private void filtrerTachesAjoutees(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        ihm.getApplicationController().activerModuleCharges();
+        ihm.getApplicationController().activerModule(ihm.getChargesController());
         ihm.getChargesController().filtrerSurTachesAjoutees();
     }
 

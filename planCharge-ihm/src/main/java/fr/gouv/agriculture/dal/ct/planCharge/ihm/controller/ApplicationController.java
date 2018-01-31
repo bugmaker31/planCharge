@@ -1083,221 +1083,101 @@ public class ApplicationController extends AbstractController {
     Modules :
      */
 
+    private void afficherModule(@NotNull Module module) throws ControllerException {
+
+        if (Objects.equals(moduleCourant, module)) {
+            LOGGER.debug("Déjà le module {} affiché, rien à faire.", module.getTitre());
+            return;
+        }
+
+        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
+        activerModule(module);
+        try {
+            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
+        } catch (SuiviActionsUtilisateurException e) {
+            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
+        }
+    }
+
+    public void activerModule(@NotNull Module module) throws ControllerException {
+        moduleCourant = module;
+        contentPane.getChildren().setAll(module.getView());
+//        module.getController().fireActivation();
+        majTitre();
+    }
+
 
     @FXML
-    private void afficherModuleJoursFeries(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        try {
-            afficherModuleJoursFeries();
-        } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher le module des jours fériés.", e);
-            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des jours fériés", Exceptions.causes(e));
-        }
+    private void afficherModuleJoursFeries(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherModuleJoursFeries();
     }
 
     public void afficherModuleJoursFeries() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Jours fériés\"");
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getJoursFeriesController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleJoursFeries();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
-    }
-
-    public void activerModuleJoursFeries() throws ControllerException {
-        moduleCourant = ihm.getJoursFeriesController();
-        contentPane.getChildren().setAll(ihm.getJoursFeriesView());
-//        ihm.getJoursFeriesController().fireActivation();
-        majTitre();
+        afficherModule(ihm.getJoursFeriesController());
     }
 
     @FXML
-    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        try {
-            afficherModuleRessourcesHumaines();
-        } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher le module des ressources humaines.", e);
-            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des ressources humaines", Exceptions.causes(e));
-        }
+    private void afficherModuleRessourcesHumaines(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherModuleRessourcesHumaines();
     }
 
     public void afficherModuleRessourcesHumaines() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Ressources humaines\"");
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getRessourcesHumainesController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleRessourcesHumaines();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
+        afficherModule(ihm.getRessourcesHumainesController());
     }
-
-    public void activerModuleRessourcesHumaines() throws ControllerException {
-        moduleCourant = ihm.getRessourcesHumainesController();
-        contentPane.getChildren().setAll(ihm.getRessourcesHumainesView());
-//        ihm.getRessourcesHumainesController().fireActivation();
-        majTitre();
-    }
-
 
     @FXML
-    private void afficherModuleProjetsApplis(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
-        try {
-            afficherModuleProjetsApplis();
-        } catch (ControllerException e) {
-            //noinspection HardcodedFileSeparator
-            LOGGER.error("Impossible d'afficher le module des projets/applis.", e);
-            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des projets/applis", Exceptions.causes(e));
-        }
+    private void afficherModuleProjetsApplis(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherModuleProjetsApplis();
     }
 
     public void afficherModuleProjetsApplis() throws ControllerException {
         //noinspection HardcodedFileSeparator
         LOGGER.debug("> [...] > Module \"Projets / Applis\"");
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getProjetsApplisController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleProjetsApplis();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
+        afficherModule(ihm.getProjetsApplisController());
     }
-
-    public void activerModuleProjetsApplis() throws ControllerException {
-        moduleCourant = ihm.getProjetsApplisController();
-        contentPane.getChildren().setAll(ihm.getProjetsApplisView());
-//        ihm.getProjetsApplisController().fireActivation();
-        majTitre();
-    }
-
 
     @FXML
-    private void afficherModuleDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent event) {
-        try {
-            afficherModuleDisponibilites();
-        } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher le module des disponibilités.", e);
-            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des disponibilités", Exceptions.causes(e));
-        }
+    private void afficherModuleDisponibilites(@SuppressWarnings("unused") @NotNull ActionEvent event) throws ControllerException {
+        afficherModuleDisponibilites();
     }
 
     public void afficherModuleDisponibilites() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Disponibilités\"");
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getDisponibilitesController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleDisponibilites();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleDisponibilites(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
-    }
-
-    public void activerModuleDisponibilites() throws ControllerException {
-        moduleCourant = ihm.getDisponibilitesController();
-        contentPane.getChildren().setAll(ihm.getDisponibilitesView());
-//        ihm.getDisponibilitesController().fireActivation();
-        majTitre();
+        afficherModule(ihm.getDisponibilitesController());
     }
 
     @FXML
-    private void afficherModuleTaches(@SuppressWarnings("unused") @NotNull ActionEvent event) {
-        try {
-            afficherModuleTaches();
-        } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher le module des tâches.", e);
-            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des tâches", Exceptions.causes(e));
-        }
+    private void afficherModuleTaches(@SuppressWarnings("unused") @NotNull ActionEvent event) throws ControllerException {
+        afficherModuleTaches();
     }
 
     public void afficherModuleTaches() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Tâches\"");
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getTachesController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleTaches();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleTaches(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
-    }
-
-    public void activerModuleTaches() throws ControllerException {
-        moduleCourant = ihm.getTachesController();
-//        ihm.getTachesController().definirMenuContextuel();
-        contentPane.getChildren().setAll(ihm.getTachesView());
-//        ihm.getTachesController().fireActivation();
-        majTitre();
+        afficherModule(ihm.getTachesController());
     }
 
     @FXML
-    private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent event) {
-        try {
-            afficherModuleCharges();
-        } catch (ControllerException e) {
-            LOGGER.error("Impossible d'afficher le module des charges.", e);
-            ihm.afficherDialog(Alert.AlertType.ERROR, "Impossible d'afficher le module des charges", Exceptions.causes(e));
-        }
+    private void afficherModuleCharges(@SuppressWarnings("unused") @NotNull ActionEvent event) throws ControllerException {
+        afficherModuleCharges();
     }
 
     public void afficherModuleCharges() throws ControllerException {
         LOGGER.debug("> [...] > Module \"Charges\"");
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getChargesController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleCharges();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleCharges(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
+        afficherModule(ihm.getChargesController());
     }
 
-    public void activerModuleCharges() throws ControllerException {
-        moduleCourant = ihm.getChargesController();
-//        ihm.getChargesController().definirMenuContextuel();
-        contentPane.getChildren().setAll(ihm.getChargesView());
-//        ihm.getChargesController().fireActivation();
-        majTitre();
+    @FXML
+    private void afficherModuleRevisions(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
+        afficherModuleRevisions();
+    }
+
+    @FXML
+    public void afficherModuleRevisions() throws ControllerException {
+        LOGGER.debug("> [...] > Fenêtre \"Révisions\"");
+//        ihm.getRevisionsController().show();
+        afficherModule(ihm.getRevisionsController());
     }
 
 
@@ -1332,40 +1212,6 @@ public class ApplicationController extends AbstractController {
 
         ihm.getTracerRevisionController().show();
     }
-
-    @FXML
-    private void afficherModuleRevisions(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) throws ControllerException {
-        afficherModuleRevisions();
-    }
-
-    @FXML
-    public void afficherModuleRevisions() throws ControllerException {
-        LOGGER.debug("> [...] > Fenêtre \"Révisions\"");
-
-//        ihm.getRevisionsController().show();
-
-        //noinspection ObjectEquality,EqualityOperatorComparesObjects
-        if (moduleCourant == ihm.getRevisionsController()) {
-            LOGGER.debug("Déjà le module affiché, rien à faire.");
-            return;
-        }
-
-        Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
-        activerModuleRevisions();
-        try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleRevisions(modulePrecedent));
-        } catch (SuiviActionsUtilisateurException e) {
-            throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
-        }
-    }
-
-    public void activerModuleRevisions() throws ControllerException {
-        moduleCourant = ihm.getRevisionsController();
-        contentPane.getChildren().setAll(ihm.getRevisionsView());
-//        ihm.getRevisionsController().fireActivation();
-        majTitre();
-    }
-
 
 
     @FXML

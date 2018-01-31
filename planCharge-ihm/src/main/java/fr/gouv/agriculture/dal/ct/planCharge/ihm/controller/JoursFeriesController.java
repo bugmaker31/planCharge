@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
@@ -55,6 +56,12 @@ public class JoursFeriesController extends AbstractController implements Module 
 
 
     // Couche "vue" :
+
+
+    @Override
+    public Node getView() {
+        return ihm.getJoursFeriesView();
+    }
 
     @FXML
     private TableView<JourFerieBean> joursFeriesTable;

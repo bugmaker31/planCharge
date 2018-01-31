@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.Objects;
 
 /**
  * Created by frederic.danna on 17/05/2017.
@@ -60,7 +61,7 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
                 LOGGER.warn("Impossible d'annuler l'affichage du tout premier module (quel autre module afficher ?).");
                 return;
             }
-            activerModule(modulePrecedent);
+            ihm.getApplicationController().activerModule(modulePrecedent);
         } catch (ControllerException e) {
             throw new AnnulationActionException("Impossible d'annuler l'action '" + getTexte() + "'.", e);
         }
@@ -69,38 +70,10 @@ public abstract class AffichageModule extends ActionUtilisateurBase implements A
     @Override
     public void retablir() throws RetablissementActionException {
         try {
-            activerModule(getModule());
+            ihm.getApplicationController().activerModule(getModule());
         } catch (ControllerException e) {
             throw new RetablissementActionException("Impossible de rétablir l'action '" + getTexte() + "'.", e);
         }
     }
 
-    private void activerModule(@NotNull Module module) throws ControllerException {
-        //noinspection ObjectEquality
-        if (module == ihm.getJoursFeriesController()) {
-            applicationController.activerModuleJoursFeries();
-            return;
-        }
-        //noinspection ObjectEquality
-        if (module == ihm.getRessourcesHumainesController()) {
-            applicationController.activerModuleRessourcesHumaines();
-            return;
-        }
-        //noinspection ObjectEquality
-        if (module == ihm.getDisponibilitesController()) {
-            applicationController.activerModuleDisponibilites();
-            return;
-        }
-        //noinspection ObjectEquality
-        if (module == ihm.getTachesController()) {
-            applicationController.activerModuleTaches();
-            return;
-        }
-        //noinspection ObjectEquality
-        if (module == ihm.getChargesController()) {
-            applicationController.activerModuleCharges();
-            return;
-        }
-        throw new ControllerException("Module non géré : '" + module.getTitre() + "'.");
-    }
 }

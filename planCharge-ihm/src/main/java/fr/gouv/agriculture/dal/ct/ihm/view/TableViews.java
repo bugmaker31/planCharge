@@ -85,16 +85,15 @@ public final class TableViews {
 
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
         table.requestFocus();
-        table.getFocusModel().focus(itemIdx, column); // FDA 2017/10 Rq : Génère une NPE (getScene == null) si on met des mnemoniques dans des MenuButtons de la TableView (!?).
-        table.getSelectionModel().clearAndSelect(itemIdx, column);
-/*
+        table.getFocusModel().focus(itemIdx, column); // FDA 2017/10 Rq : Génère une NPE (getScene == null) si on met des mnémoniques dans des MenuButtons de la TableView (!?).
+        table.getSelectionModel().clearAndSelect(itemIdx, column); // FIXME FDA 2018/01 Ne sélectionne pas la cellule.
+        /* Ne marche pas mieux que "table.getSelectionModel().clearAndSelect(itemIdx, column)". */
         {
             boolean wasCellSelectionPrevioulyEnabled = table.getSelectionModel().isCellSelectionEnabled();
-            table.getSelectionModel().setCellSelectionEnabled(true);
+            table.getSelectionModel().setCellSelectionEnabled(false);
             table.getSelectionModel().clearAndSelect(itemIdx);
             table.getSelectionModel().setCellSelectionEnabled(wasCellSelectionPrevioulyEnabled);
         }
-*/
 
         // Il faut aussi scroller jusqu'à la ligne sélectionnée,
         // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
@@ -493,9 +492,12 @@ public final class TableViews {
     @Null
     public static <TB extends TacheBean> Double sumSelected(@NotNull TableView<TB> table) {
         Double sum = null;
-        for (TablePosition selectedCellPosition : table.getSelectionModel().getSelectedCells()) {
+        for (TablePosition<?, ?> selectedCellPosition : table.getSelectionModel().getSelectedCells()) {
             int selectedCellRowIndex = selectedCellPosition.getRow();
-            TableColumn selectedCellColumn = selectedCellPosition.getTableColumn();
+            TableColumn<?, ?> selectedCellColumn = selectedCellPosition.getTableColumn();
+            if (selectedCellColumn == null) {
+                continue; // TODO FDA 2018/01 FDA Comprendre comment ce cas peut arriver.
+            }
             ObservableValue<?> selectedCellObs = selectedCellColumn.getCellObservableValue(selectedCellRowIndex);
             Object selectedCellValue = selectedCellObs.getValue();
             if (selectedCellValue instanceof Number) {

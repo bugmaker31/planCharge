@@ -11,6 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliB
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
@@ -55,11 +56,17 @@ public class ProjetsApplisController extends AbstractController implements Modul
 
     // Couche "vue" :
 
+
+    @Override
+    public Node getView() {
+        return ihm.getProjetsApplisView();
+    }
+
     /*
-        //    @Autowired
-        @NotNull
-        private PlanChargeIhm ihm = PlanChargeIhm.instance();
-    */
+            //    @Autowired
+            @NotNull
+            private PlanChargeIhm ihm = PlanChargeIhm.instance();
+        */
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull

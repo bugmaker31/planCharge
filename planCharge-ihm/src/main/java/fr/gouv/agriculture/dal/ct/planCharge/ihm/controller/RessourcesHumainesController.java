@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
@@ -58,11 +59,17 @@ public class RessourcesHumainesController extends AbstractController implements 
 
     // Couche "vue" :
 
-/*
-    //    @Autowired
-    @NotNull
-    private PlanChargeIhm ihm = PlanChargeIhm.instance();
-*/
+
+    @Override
+    public Node getView() {
+        return ihm.getRessourcesHumainesView();
+    }
+
+    /*
+        //    @Autowired
+        @NotNull
+        private PlanChargeIhm ihm = PlanChargeIhm.instance();
+    */
     @FXML
     @NotNull
     private TableView<RessourceHumaineBean> ressourcesHumainesTable;

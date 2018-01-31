@@ -16,6 +16,7 @@ import freemarker.template.TemplateException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -49,6 +50,12 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
 
 
     // Couche "vue" :
+
+    @Override
+    public Node getView() {
+        return ihm.getRevisionsView();
+    }
+
 
     // Les beans :
 

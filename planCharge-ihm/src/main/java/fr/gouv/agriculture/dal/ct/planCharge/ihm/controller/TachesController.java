@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,11 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
     /*
      La couche "View" :
       */
+
+    @Override
+    public Node getView() {
+        return ihm.getTachesView();
+    }
 
     @SuppressWarnings("NullableProblems")
     @NotNull

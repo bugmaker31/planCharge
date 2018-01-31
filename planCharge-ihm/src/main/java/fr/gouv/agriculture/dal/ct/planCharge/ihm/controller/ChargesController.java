@@ -36,6 +36,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
@@ -124,6 +125,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     /*
      La couche "View" :
       */
+
+    @Override
+    public Node getView() {
+        return ihm.getChargesView();
+    }
 
 /*
     //    @Autowired
