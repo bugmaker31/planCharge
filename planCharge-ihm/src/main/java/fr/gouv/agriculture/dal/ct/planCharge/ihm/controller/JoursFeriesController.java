@@ -6,6 +6,8 @@ import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCell;
 import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleJoursFeries;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.JourFerieBean;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
@@ -61,6 +63,12 @@ public class JoursFeriesController extends AbstractController implements Module 
     @Override
     public Node getView() {
         return ihm.getJoursFeriesView();
+    }
+
+    @NotNull
+    @Override
+    public ActionUtilisateur actionUtilisateurAffichageModule(@Null Module modulePrecedent) {
+        return new AffichageModuleJoursFeries(modulePrecedent);
     }
 
     @FXML

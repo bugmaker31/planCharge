@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * Created by frederic.danna on 17/05/2017.
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 public class AffichageModuleDisponibilites extends AffichageModule {
 
-    public AffichageModuleDisponibilites(Module modulePrecedent) {
+    public AffichageModuleDisponibilites(@Null Module modulePrecedent) {
         super(modulePrecedent);
     }
 

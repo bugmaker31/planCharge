@@ -7,6 +7,8 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleRessourcesHumaines;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceHumaineBean;
 import javafx.collections.ObservableList;
@@ -65,11 +67,17 @@ public class RessourcesHumainesController extends AbstractController implements 
         return ihm.getRessourcesHumainesView();
     }
 
+    @NotNull
+    @Override
+    public ActionUtilisateur actionUtilisateurAffichageModule(@Null Module modulePrecedent) {
+        return new AffichageModuleRessourcesHumaines(modulePrecedent);
+    }
+
     /*
-        //    @Autowired
-        @NotNull
-        private PlanChargeIhm ihm = PlanChargeIhm.instance();
-    */
+            //    @Autowired
+            @NotNull
+            private PlanChargeIhm ihm = PlanChargeIhm.instance();
+        */
     @FXML
     @NotNull
     private TableView<RessourceHumaineBean> ressourcesHumainesTable;

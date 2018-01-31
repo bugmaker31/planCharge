@@ -6,6 +6,8 @@ import fr.gouv.agriculture.dal.ct.ihm.module.Module;
 import fr.gouv.agriculture.dal.ct.ihm.view.EditableAwareTextFieldTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.ihm.view.UpperCaseTextFieldTableCell;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleProjetsApplis;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import javafx.collections.ObservableList;
@@ -62,11 +64,17 @@ public class ProjetsApplisController extends AbstractController implements Modul
         return ihm.getProjetsApplisView();
     }
 
+    @NotNull
+    @Override
+    public ActionUtilisateur actionUtilisateurAffichageModule(@Null Module modulePrecedent) {
+        return new AffichageModuleProjetsApplis(modulePrecedent);
+    }
+
     /*
-            //    @Autowired
-            @NotNull
-            private PlanChargeIhm ihm = PlanChargeIhm.instance();
-        */
+                //    @Autowired
+                @NotNull
+                private PlanChargeIhm ihm = PlanChargeIhm.instance();
+            */
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull

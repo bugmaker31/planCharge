@@ -7,19 +7,20 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 /**
- * Created by frederic.danna on 20/01/2018.
+ * Created by frederic.danna on 17/05/2017.
  *
  * @author frederic.danna
  */
-public class AffichageModuleRevisions extends AffichageModule {
+public class AffichageModuleRessourcesHumaines extends AffichageModule {
 
-    public AffichageModuleRevisions(@Null Module modulePrecedent) {
-        super(modulePrecedent);
+    public AffichageModuleRessourcesHumaines(@Null Module nomModulePrecedent) {
+        super(nomModulePrecedent);
     }
 
     @NotNull
     @Override
     Module getModule() {
-        return PlanChargeIhm.instance().getRevisionsController();
+        return PlanChargeIhm.instance().getRessourcesHumainesController();
     }
+
 }

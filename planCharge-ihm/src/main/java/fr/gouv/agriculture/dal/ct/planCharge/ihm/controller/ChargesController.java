@@ -13,6 +13,8 @@ import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.metier.service.ServiceException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.*;
@@ -131,7 +133,13 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         return ihm.getChargesView();
     }
 
-/*
+    @NotNull
+    @Override
+    public ActionUtilisateur actionUtilisateurAffichageModule(@Null Module modulePrecedent) {
+        return new AffichageModuleCharges(modulePrecedent);
+    }
+
+    /*
     //    @Autowired
     @NotNull
     private PlanChargeIhm ihm = PlanChargeIhm.instance();

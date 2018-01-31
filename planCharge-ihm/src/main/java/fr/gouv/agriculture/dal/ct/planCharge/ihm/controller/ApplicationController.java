@@ -1093,7 +1093,7 @@ public class ApplicationController extends AbstractController {
         Module modulePrecedent = moduleCourant; // Rq : La méthode 'activerModule...' va modifier la valeur de 'moduleCourant', donc il faut le mémoriser avant.
         activerModule(module);
         try {
-            getSuiviActionsUtilisateur().historiser(new AffichageModuleJoursFeries(modulePrecedent));
+            getSuiviActionsUtilisateur().historiser(module.actionUtilisateurAffichageModule(modulePrecedent));
         } catch (SuiviActionsUtilisateurException e) {
             throw new ControllerException("Impossible d'historiser l'action de l'utilisateur.", e);
         }
@@ -1181,15 +1181,6 @@ public class ApplicationController extends AbstractController {
     }
 
 
-    public void deplierParametresPane() {
-        parametresPane.setExpanded(true);
-    }
-
-    public void replierParametresPane() {
-        parametresPane.setExpanded(false);
-    }
-
-
     @FXML
     private void afficherAssistantDeRevue(@SuppressWarnings("unused") @NotNull ActionEvent actionEvent) {
         afficherAssistantRevue();
@@ -1211,6 +1202,15 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("> [...] > Fenêtre \"Tracer la révision\"");
 
         ihm.getTracerRevisionController().show();
+    }
+
+
+    public void deplierParametresPane() {
+        parametresPane.setExpanded(true);
+    }
+
+    public void replierParametresPane() {
+        parametresPane.setExpanded(false);
     }
 
 
