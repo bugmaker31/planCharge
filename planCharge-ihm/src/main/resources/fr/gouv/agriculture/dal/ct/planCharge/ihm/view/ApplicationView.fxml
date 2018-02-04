@@ -159,7 +159,7 @@
                     <tooltip>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <Tooltip fx:id="sauvegardeRequiseCheckboxTooltip"
-                                 text="Si coché, il faut sauvegarder avant de quitter pour ne pas perdre de travail."/>
+                                 text="Si coché, des modifications ont été apportées depuis la sauvegarde/le chargement (ces modif. seraient perdues si vous quittez sans sauver) ; si non coché, inutile de sauvegarder."/>
                     </tooltip>
                 </CheckBox>
                 <Label text="Modifié ?">
@@ -173,7 +173,7 @@
                     <tooltip>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <Tooltip fx:id="calculRequisCheckboxTooltip"
-                                 text="Si coché, il faudra re-calculer (menu 'Edition' > 'Calculer', ou 'F5', ou clic ici). Sinon, les calculs sont à jour, pas besoin de re-calculer"/>
+                                 text="Si coché, il faudra re-calculer (menu 'Edition' > 'Calculer', ou 'F5', ou clic ici) ; si non coché, les calculs sont à jour, pas besoin de re-calculer"/>
                     </tooltip>
                 </CheckBox>
                 <Label text="Calcul requis ?" onMouseClicked="#calculer">
