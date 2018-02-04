@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.Executeur;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.StatutBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBeans;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
@@ -28,8 +29,8 @@ import java.util.function.Function;
 @SuppressWarnings({"ClassHasNoToStringMethod", "ClassWithoutConstructor"})
 public class BarreEtatTachesController<TB extends TacheBean> extends AbstractController {
 
-    public static final NumberFormat FORMAT_NBR_TACHES = new DecimalFormat("#,##0");
-    public static final NumberFormat FORMAT_CHARGE = new DecimalFormat("#,##0.###");
+    public static final NumberFormat FORMAT_NBR_TACHES = new DecimalFormat("#0");
+    public static final NumberFormat FORMAT_CHARGE = new DecimalFormat("0.#");
 
 
     // Fields:
@@ -51,6 +52,11 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     @NotNull
     private HBox boutonsHBox;
 
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private Label nbrTachesTotalLabel;
 
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -105,6 +111,11 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
     @NotNull
     private TableView<TB> tachesTable;
 
+    @SuppressWarnings("NullableProblems")
+    @FXML
+    @NotNull
+    private Tooltip nbrTachesATraiterTooltip;
+
     // Autre
 
 /*
@@ -143,7 +154,7 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
 
     @Override
     protected void initialize() throws ControllerException {
-        // Rien... pour l'instant.
+        nbrTachesATraiterTooltip.setText(nbrTachesATraiterTooltip.getText().replaceFirst("\\Q${CODE_STATUT_REPORTE}", StatutBean.REPORTE.getCode()));
     }
 
     public void prepare() {
@@ -155,6 +166,9 @@ public class BarreEtatTachesController<TB extends TacheBean> extends AbstractCon
             //noinspection unchecked
             List<TacheDTO> tacheDTOs = TacheBeans.<TacheDTO>toDTO((List<TacheBean>) tachesBeans);
             List<TacheDTO> tacheATraiterDTOs = tacheService.tachesATraiter(tacheDTOs);
+
+            long nbrTachesTotal = (long) tacheDTOs.size();
+            nbrTachesTotalLabel.setText(FORMAT_NBR_TACHES.format(nbrTachesTotal));
 
             long nbrTachesAAfficher = (long) tacheATraiterDTOs.size();
             nbrTachesATraiterLabel.setText(FORMAT_NBR_TACHES.format(nbrTachesAAfficher));
