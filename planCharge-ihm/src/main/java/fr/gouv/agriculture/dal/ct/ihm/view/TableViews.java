@@ -81,6 +81,10 @@ public final class TableViews {
     public static <S, T> void focusOnItem(@NotNull TableView<S> table, @NotNull S item, @NotNull TableColumn<S, T> column) {
 
         int itemIdx = itemIndex(table, item);
+        if (itemIdx < 0) {
+            LOGGER.warn("Item {} not found in table {}.", item, table.getId());
+            return;
+        }
         assert itemIdx != -1;
 
         // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/

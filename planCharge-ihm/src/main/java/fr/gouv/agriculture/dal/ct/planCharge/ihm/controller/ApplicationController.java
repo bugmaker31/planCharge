@@ -934,16 +934,7 @@ public class ApplicationController extends AbstractController {
             return;
         }
 
-        try {
-            ihm.stop();
-        } catch (Exception e) {
-            LOGGER.error("Impossible de stopper l'application.", e);
-            ihm.afficherDialog(
-                    Alert.AlertType.ERROR,
-                    "Impossible de stopper l'application",
-                    "Erreur interne : \n" + Exceptions.causes(e)
-            );
-        }
+        Platform.exit();
     }
 
     @FXML
@@ -1268,7 +1259,7 @@ public class ApplicationController extends AbstractController {
                 noSemaineEtatLabel.setText("N/C");
             } else {
                 WeekFields weekFields = WeekFields.of(Locale.getDefault());
-                int noSemaineEtat =dateEtat.get(weekFields.weekOfWeekBasedYear());
+                int noSemaineEtat = dateEtat.get(weekFields.weekOfWeekBasedYear());
                 noSemaineEtatLabel.setText(noSemaineEtat + "");
             }
 

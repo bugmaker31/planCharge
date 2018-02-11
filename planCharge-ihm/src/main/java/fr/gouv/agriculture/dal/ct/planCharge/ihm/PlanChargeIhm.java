@@ -442,6 +442,7 @@ public class PlanChargeIhm extends Application {
             LOGGER.debug("Application en cours de démarrage...");
 
             this.primaryStage = primaryStage;
+            this.primaryStage.setOnCloseRequest(event -> Platform.exit());
 
             primaryStage.setTitle(APP_NAME);
             //
@@ -509,7 +510,6 @@ public class PlanChargeIhm extends Application {
         LOGGER.info("Application en cours d'arrêt...");
         super.stop();
         LOGGER.info("Application arrêtée.");
-        Platform.exit();
     }
 
 
