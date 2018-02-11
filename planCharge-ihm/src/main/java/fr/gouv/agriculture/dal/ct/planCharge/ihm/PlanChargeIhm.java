@@ -24,6 +24,7 @@ import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -433,10 +434,6 @@ public class PlanChargeIhm extends Application {
         freeMarkerConfig.setWrapUncheckedExceptions(true);
     }
 
-    public int noEcranParDefaut() {
-        return (Screen.getScreens().size() >= 2) ? 1 : 0; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
-    }
-
     @SuppressWarnings("ProhibitedExceptionDeclared")
     @Override
     public void start(@SuppressWarnings({"ParameterHidesMemberVariable", "NullableProblems"}) @NotNull Stage primaryStage) throws Exception {
@@ -493,9 +490,9 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
                 // Autres :
-//                applicationController.afficherAssistantRevue();
+                applicationController.afficherAssistantRevue();
 //                applicationController.afficherFenetreTracerRevision();
-                applicationController.afficherModuleRevisions();
+//                applicationController.afficherModuleRevisions();
             }
 
             LOGGER.info("Application démarrée.");
@@ -1143,9 +1140,9 @@ public class PlanChargeIhm extends Application {
     private LocalDate dateEtatPrecedente() {
 
         if (estEnDeveloppement) {
-//            return LocalDate.of(2017, 10, 23);
-//            return LocalDate.of(2017, 10, 30);
-            return LocalDate.of(2018, 1, 22);
+//            return null;
+//            return LocalDate.of(2018, 1, 22);
+            return LocalDate.of(2018, 2, 5);
         }
 
         // TODO FDA 2017/04 Récupérer la dernière date d'état dans les préférences de l'utilisateur.
@@ -1266,6 +1263,25 @@ public class PlanChargeIhm extends Application {
         styleSheetUrls.add(APP_CSS_URL.toExternalForm());
 
         return styleSheetUrls;
+    }
+
+
+    // Ecran (Screen) :
+
+    public int noEcranParDefaut() {
+        return (Screen.getScreens().size() >= 2) ? 1 : 0; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+    }
+
+
+    @SuppressWarnings({"MethodMayBeStatic", "NonBooleanMethodNameMayNotStartWithQuestion"})
+    public void positionnerSurEcran(@NotNull Stage stage, int noEcran) {
+        // Cf. https://stackoverflow.com/questions/34936617/choose-which-monitor-does-a-javafx-window-open-in
+        Screen screen = Screen.getScreens().get(noEcran);
+        Rectangle2D screenBounds = screen.getVisualBounds();
+        //noinspection MagicNumber
+        stage.setX(screenBounds.getMinX() + (screenBounds.getWidth() / 2.0));
+        //noinspection MagicNumber
+        stage.setY(screenBounds.getMinY() + (screenBounds.getHeight() / 2.0));
     }
 
 

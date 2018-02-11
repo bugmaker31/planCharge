@@ -110,16 +110,21 @@
             <TitledPane fx:id="parametresPane" text="Paramètres métier" animated="false" expanded="false">
                 <HBox spacing="2" alignment="BASELINE_LEFT">
                     <fx:define>
-                        <Double fx:id="lundisButtonsPrefWidth" fx:value="150"/>
+                        <Double fx:id="semaineButtonsPrefWidth" fx:value="150"/>
                     </fx:define>
                     <Label text="Date d'état : "/>
-                    <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Lundi précédent &#8920;"
-                            prefWidth="$lundisButtonsPrefWidth"/>
-                    <Label text="Lundi"/>
-                    <DatePicker fx:id="dateEtatPicker" onAction="#definirDateEtat" prefWidth="100"
-                                showWeekNumbers="true"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
-                    <Button onAction="#positionnerDateEtatAuLundiSuivant" text="&#8921; Lundi suivant"
-                            prefWidth="$lundisButtonsPrefWidth"/>
+                    <Button onAction="#positionnerDateEtatAuLundiPrecedent" text="Semaine précédente &#8920;"
+                            prefWidth="$semaineButtonsPrefWidth"/>
+                    <VBox>
+                        <HBox>
+                            <Label text="Semaine n°"/>
+                            <Label fx:id="noSemaineEtatLabel"/>
+                        </HBox>
+                        <DatePicker fx:id="noSemaineEtatPicker" onAction="#definirDateEtat" prefWidth="100"
+                                    showWeekNumbers="true"/> <!--TODO FDA 2017/04 Ne permettre de sélectionner que des lundis (?)-->
+                    </VBox>
+                    <Button onAction="#positionnerDateEtatAuLundiSuivant" text="&#8921; Semaine suivante"
+                            prefWidth="$semaineButtonsPrefWidth"/>
                 </HBox>
             </TitledPane>
         </VBox>

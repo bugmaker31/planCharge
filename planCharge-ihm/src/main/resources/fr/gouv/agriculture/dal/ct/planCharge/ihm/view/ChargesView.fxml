@@ -19,7 +19,7 @@
                 <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris, zoom">
                     <AnchorPane>
                         <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"
-                                   AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
+                                   AnchorPane.topAnchor="5" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5">
                             <panes>
                                 <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
                                     <HBox styleClass="paramFiltre-box">
@@ -86,10 +86,8 @@
                                                                       onAction="#filtrer"/>
                                                         <ToggleButton fx:id="filtreChangementModificationToggleButton" text="Modification"
                                                                       onAction="#filtrer"/>
-                                                        <!-- TODO FDA 2017/11 Coder.
-                                                            <ToggleButton fx:id="filtreRevisionTypeChangementSuppressionToggleButton" text="Suppression"
-                                                                          onAction="#filtrer"/>
-                                                        -->
+                                                        <ToggleButton fx:id="filtreChangementSuppressionToggleButton" text="Suppression"
+                                                                      onAction="#filtrer"/>
                                                     </HBox>
                                                     <!--</buttons>-->
                                                     <!--</ButtonBar>-->
@@ -221,8 +219,8 @@
             <Double fx:id="echeanceColumnPrefWidth" fx:value="80"/>
             <Double fx:id="importanceColumnPrefWidth" fx:value="80"/>
             <Double fx:id="chargeColumnPrefWidth" fx:value="60"/>
-            <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
 
             <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
@@ -284,22 +282,19 @@
                                     />
                                     <TableColumn text="Période souhaitée">
                                         <columns>
-                                            <TableColumn fx:id="debutColumn" text="Début" prefWidth="$debutColumnPrefWidth"/>
+                                            <TableColumn fx:id="debutColumn" text="Début" prefWidth="$debutColumnPrefWidth" visible="false"/>
                                             <TableColumn fx:id="echeanceColumn" text="Echéance" prefWidth="$echeanceColumnPrefWidth"
                                                          styleClass="echeance-column"/>
                                         </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="importanceColumn" text="Importance" prefWidth="$importanceColumnPrefWidth" styleClass="importance-column"/>
+                                    <TableColumn fx:id="importanceColumn" text="Importance" prefWidth="$importanceColumnPrefWidth"
+                                                 styleClass="importance-column"/>
                                     <TableColumn fx:id="chargeColumn" text="Charge" prefWidth="$chargeColumnPrefWidth"
                                                  styleClass="charge-column"/>
-                                    <TableColumn text="Ressource">
-                                        <columns>
-                                            <TableColumn fx:id="ressourceColumn" text="Trigramme" prefWidth="$ressourceColumnPrefWidth"
-                                                         styleClass="ressource-column"/>
-                                            <TableColumn fx:id="profilColumn" text="Profil" prefWidth="$profilColumnPrefWidth"
-                                                         styleClass="profil-column"/>
-                                        </columns>
-                                    </TableColumn>
+                                    <TableColumn fx:id="profilColumn" text="Profil" prefWidth="$profilColumnPrefWidth"
+                                                 styleClass="profil-column"/>
+                                    <TableColumn fx:id="ressourceColumn" text="RH" prefWidth="$ressourceColumnPrefWidth"
+                                                 styleClass="ressource-column"/>
                                 </columns>
                             </TableColumn>
                             <TableColumn text="Planification">

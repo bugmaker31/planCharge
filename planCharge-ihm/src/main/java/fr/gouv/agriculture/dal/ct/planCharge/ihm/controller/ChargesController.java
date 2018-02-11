@@ -1681,7 +1681,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         {
             MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> {
-                afficherTache(tacheBean);
+                ihm.getTachesController().afficherTache(tacheBean);
             });
             menuActions.getItems().add(menuItemSupprimer);
         }
@@ -1832,7 +1832,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             );
             return;
         }
-        afficherTache(tacheBean);
+        ihm.getTachesController().afficherTache(tacheBean);
     }
 
 

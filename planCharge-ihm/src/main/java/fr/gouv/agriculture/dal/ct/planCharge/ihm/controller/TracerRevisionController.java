@@ -149,6 +149,10 @@ public class TracerRevisionController extends AbstractController {
 
     public <TB extends TacheBean> void afficher(@NotNull TB tacheBean) {
 
+        if (noTacheField.getText().equals(tacheBean.noTache())) {
+            return;
+        }
+
         // ITache :
         noTacheField.setText(tacheBean.noTache());
         noTicketIdalTacheField.setText(tacheBean.getNoTicketIdal());

@@ -10,6 +10,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.*;
@@ -22,7 +23,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import fr.gouv.agriculture.dal.ct.planCharge.util.Strings;
 import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -254,6 +254,10 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @NotNull
     @FXML
     private ToggleButton filtreChangementModificationToggleButton;
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
+    private ToggleButton filtreChangementSuppressionToggleButton;
 
     @Null
     private List<TableColumn<TB, ?>> ordreTriParDefautTachesTable;
@@ -539,13 +543,21 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         getTachesTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Cf. https://stackoverflow.com/questions/27667965/set-selectionmodel-for-tableview-in-fxml
         getTachesTable().getSelectionModel().setCellSelectionEnabled(true);
 
-        // La tâche sélectionnée soit être affichée dans la fenêtre qui sert à tracer les révisions :
-        //getTachesTable().getFocusModel().focusedItemProperty().addListener((observable, oldValue, newValue) -> {
+        /*
+         La tâche sélectionnée doit être affichée :
+         - dans la fenêtre qui sert à tracer les révisions
+         - dans les autres fenêtres qui gèrent des tâches (liste des tâches, plan de charge, liste des révisions).
+         */
         getTachesTable().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 return;
             }
+
             ihm.getTracerRevisionController().afficher(newValue);
+
+            ihm.getTachesController().afficherTache(newValue);
+            ihm.getChargesController().afficherTache((PlanificationTacheBean) newValue);
+            ihm.getRevisionsController().afficherTache(newValue);
         });
     }
 
@@ -699,7 +711,8 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 //
                 filtreChangementInchangeToggleButton,
                 filtreChangementAjoutToggleButton,
-                filtreChangementModificationToggleButton
+                filtreChangementModificationToggleButton,
+                filtreChangementSuppressionToggleButton
                 //
                 // Ajouter les futurs filtres ici.
         );
@@ -836,6 +849,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         }
         if (filtreChangementModificationToggleButton.isSelected()) {
             if (tache.getTypeChangement() == TypeChangement.MODIFICATION) {
+                return true;
+            }
+        }
+        if (filtreChangementSuppressionToggleButton.isSelected()) {
+            if (tache.getTypeChangement() == TypeChangement.SUPPRESSION) {
                 return true;
             }
         }
@@ -1245,9 +1263,17 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
 
     void afficherTache(@NotNull TB tacheBean) {
+        TB tacheCourante = TableViews.selectedItem(getTachesTable());
+        if ((tacheCourante != null) && tacheCourante.equals(tacheBean)) {
+            return;
+        }
+
+/*
         try {
             ihm.getApplicationController().afficherModuleTaches();
-            TableViews.focusOnItem(ihm.getTachesController().getTachesTable(), tacheBean, ihm.getTachesController().getNoTacheColumn());
+*/
+            TableViews.focusOnItem(getTachesTable(), tacheBean, getNoTacheColumn());
+/*
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);
             ihm.afficherDialog(
@@ -1257,6 +1283,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                     400, 200
             );
         }
+*/
     }
 
 

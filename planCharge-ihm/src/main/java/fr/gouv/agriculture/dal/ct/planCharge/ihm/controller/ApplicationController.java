@@ -52,6 +52,7 @@ import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.*;
 
 /**
@@ -167,11 +168,15 @@ public class ApplicationController extends AbstractController {
     @NotNull
     private TitledPane parametresPane;
 
+    @FXML
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    public Label noSemaineEtatLabel;
 
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private DatePicker dateEtatPicker;
+    private DatePicker noSemaineEtatPicker;
 
 
     // La barre d'état :
@@ -213,8 +218,8 @@ public class ApplicationController extends AbstractController {
     }
 
     @NotNull
-    public DatePicker getDateEtatPicker() {
-        return dateEtatPicker;
+    public DatePicker getNoSemaineEtatPicker() {
+        return noSemaineEtatPicker;
     }
 
 
@@ -1176,8 +1181,8 @@ public class ApplicationController extends AbstractController {
     @FXML
     public void afficherModuleRevisions() throws ControllerException {
         LOGGER.debug("> [...] > Fenêtre \"Révisions\"");
-//        ihm.getRevisionsController().show();
-        afficherModule(ihm.getRevisionsController());
+//        afficherModule(ihm.getRevisionsController());
+        ihm.getRevisionsController().show();
     }
 
 
@@ -1219,7 +1224,7 @@ public class ApplicationController extends AbstractController {
         LOGGER.debug("definirDateEtat...");
         try {
             LocalDate dateEtatActuelle = planChargeBean.getDateEtat();
-            LocalDate dateEtatNouvelle = dateEtatPicker.getValue();
+            LocalDate dateEtatNouvelle = noSemaineEtatPicker.getValue();
 
             if (Objects.equals(dateEtatActuelle, dateEtatNouvelle)) {
                 return;
@@ -1252,12 +1257,20 @@ public class ApplicationController extends AbstractController {
             planChargeBean.setDateEtat(dateEtat);
             majEstRequise = true;
         }
-        if (!Objects.equals(dateEtat, dateEtatPicker.getValue())) {
-            dateEtatPicker.setValue(dateEtat);
+        if (!Objects.equals(dateEtat, noSemaineEtatPicker.getValue())) {
+            noSemaineEtatPicker.setValue(dateEtat);
             majEstRequise = true;
         }
 
         if (majEstRequise) {
+
+            if (dateEtat == null) {
+                noSemaineEtatLabel.setText("N/C");
+            } else {
+                WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                int noSemaineEtat =dateEtat.get(weekFields.weekOfWeekBasedYear());
+                noSemaineEtatLabel.setText(noSemaineEtat + "");
+            }
 
             majCalendriers();
             majTitre();

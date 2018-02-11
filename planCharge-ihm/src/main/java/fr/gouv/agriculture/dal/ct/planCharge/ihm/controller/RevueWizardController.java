@@ -6,7 +6,9 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.CheckBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
@@ -111,6 +113,9 @@ public class RevueWizardController extends AbstractController {
             ihm.appliquerTheme(wizard.getStylesheets());
 
             wizardStage.setScene(wizard.getScene());
+
+            int noEcran = Screen.getScreens().size() - ihm.noEcranParDefaut();
+            ihm.positionnerSurEcran(wizardStage, noEcran);
         }
 
 /*
@@ -184,12 +189,12 @@ public class RevueWizardController extends AbstractController {
                     LOGGER.error("Impossibile de déplier l'accordéaon des paramètres suite à une modification de la date d'état.", e);
                 }
             };
-            ihm.getApplicationController().getDateEtatPicker().valueProperty().addListener(changeListener);
-            ihm.getApplicationController().getDateEtatPicker().valueProperty().addListener((observable, oldValue, newValue) -> {
-                ihm.getApplicationController().getDateEtatPicker().valueProperty().removeListener(changeListener);
+            ihm.getApplicationController().getNoSemaineEtatPicker().valueProperty().addListener(changeListener);
+            ihm.getApplicationController().getNoSemaineEtatPicker().valueProperty().addListener((observable, oldValue, newValue) -> {
+                ihm.getApplicationController().getNoSemaineEtatPicker().valueProperty().removeListener(changeListener);
             });
         }
-        ihm.getApplicationController().getDateEtatPicker().show();
+        ihm.getApplicationController().getNoSemaineEtatPicker().show();
     }
 
     @FXML

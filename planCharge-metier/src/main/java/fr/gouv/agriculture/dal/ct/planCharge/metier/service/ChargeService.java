@@ -162,9 +162,10 @@ public class ChargeService extends AbstractService {
                 }
             }
             tachesActuellesASupprimer.forEach(tacheActuelle -> {
-                planCharge.getPlanifications().remove(tacheActuelle);
+                //planCharge.getPlanifications().remove(tacheActuelle);
+                tacheActuelle.setTypeChangement(TypeChangement.SUPPRESSION);
                 rapport.incrNbrTachesSupprimees();
-                LOGGER.debug("Tâche {} supprimée.", tacheActuelle);
+                LOGGER.debug("Tâche {} supprimée (logiquement).", tacheActuelle);
             });
 
         } catch (DTOException | TacheDaoException | TacheSansPlanificationException e) {

@@ -19,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -27,6 +28,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,7 +193,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
         {
             MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> {
-                afficherTache(tacheBean);
+                ihm.getTachesController().afficherTache(tacheBean);
             });
             menuActions.getItems().add(menuItemSupprimer);
         }
@@ -205,7 +208,10 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
         return "Révisions";
     }
 
-/*
+
+    @Null
+    private Stage stage;
+
     void show() throws ControllerException {
 
         if (stage == null) {
@@ -213,6 +219,11 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
             stage.setTitle(PlanChargeIhm.APP_NAME + " - Liste des révisions");
             stage.getIcons().addAll(ihm.getPrimaryStage().getIcons());
             stage.setScene(new Scene(ihm.getRevisionsView()));
+
+            stage.setMaximized(true);
+
+            int noEcran = Screen.getScreens().size() - ihm.noEcranParDefaut();
+            ihm.positionnerSurEcran(stage, noEcran);
         }
 
         if (!stage.isShowing()) {
@@ -224,7 +235,6 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
 
         LOGGER.debug("Fenêtre de listage des révisions affichée.");
     }
-*/
 
     @FXML
     private void copierRevisions(@SuppressWarnings("unused") ActionEvent actionEvent) throws ControllerException {

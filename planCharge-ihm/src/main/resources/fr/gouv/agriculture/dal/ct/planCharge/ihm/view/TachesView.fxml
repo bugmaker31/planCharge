@@ -5,17 +5,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<?import org.controlsfx.control.SegmentedButton?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.TachesController"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
         <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris" expanded="false">
             <AnchorPane>
                 <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"
-                           AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
+                           AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="5">
                     <panes>
                         <TitledPane fx:id="filtresPane" text="Filtres" animated="false">
                             <HBox styleClass="paramFiltre-box">
@@ -83,10 +81,8 @@
                                                           onAction="#filtrer"/>
                                             <ToggleButton fx:id="filtreChangementModificationToggleButton" text="Modification"
                                                           onAction="#filtrer"/>
-                                            <!-- TODO FDA 2017/11 Coder.
-                                                <ToggleButton fx:id="filtreChangementSuppressionToggleButton" text="Suppression"
-                                                              onAction="#filtrer"/>
-                                            -->
+                                            <ToggleButton fx:id="filtreChangementSuppressionToggleButton" text="Suppression"
+                                                          onAction="#filtrer"/>
                                         </HBox>
                                         <!--</buttons>-->
                                         <!--</ButtonBar>-->
@@ -113,15 +109,15 @@
             <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
             <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
             <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
-            <Double fx:id="descriptionColumnPrefWidth" fx:value="650"/>
+            <Double fx:id="descriptionColumnPrefWidth" fx:value="600"/>
             <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
             <Double fx:id="statutColumnPrefWidth" fx:value="80"/>
             <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
             <Double fx:id="echeanceColumnPrefWidth" fx:value="80"/>
             <Double fx:id="importanceColumnPrefWidth" fx:value="75"/>
-            <Double fx:id="chargeColumnPrefWidth" fx:value="50"/>
-            <Double fx:id="ressourceColumnPrefWidth" fx:value="40"/>
+            <Double fx:id="chargeColumnPrefWidth" fx:value="60"/>
             <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
+            <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
 
             <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
         </fx:define>
@@ -173,14 +169,10 @@
                         <TableColumn fx:id="importanceColumn" text="Importance" prefWidth="$importanceColumnPrefWidth" styleClass="importance-column"/>
                         <TableColumn fx:id="chargeColumn" text="Charge" prefWidth="$chargeColumnPrefWidth"
                                      styleClass="charge-column"/>
-                        <TableColumn text="Ressource">
-                            <columns>
-                                <TableColumn fx:id="ressourceColumn" text="Trigramme" prefWidth="$ressourceColumnPrefWidth"
-                                             styleClass="ressource-column"/>
-                                <TableColumn fx:id="profilColumn" text="Profil" prefWidth="$profilColumnPrefWidth"
-                                             styleClass="profil-column"/>
-                            </columns>
-                        </TableColumn>
+                        <TableColumn fx:id="profilColumn" text="Profil" prefWidth="$profilColumnPrefWidth"
+                                     styleClass="profil-column"/>
+                        <TableColumn fx:id="ressourceColumn" text="RH" prefWidth="$ressourceColumnPrefWidth"
+                                     styleClass="ressource-column"/>
 
                         <TableColumn fx:id="menuActionsColumn" text="Actions" prefWidth="$actionsColumnPrefWidth" styleClass="actions-column"
                                      editable="false"/>
