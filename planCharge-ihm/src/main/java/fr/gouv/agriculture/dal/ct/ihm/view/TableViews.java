@@ -5,6 +5,7 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import impl.org.controlsfx.table.ColumnFilter;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -64,47 +65,51 @@ public final class TableViews {
      */
     public static <S> void focusOnItem(@NotNull TableView<S> table, @NotNull S item) {
 
-        int itemIdx = itemIndex(table, item);
-        assert itemIdx != -1 : "The item does not belong to the table.";
+        // Cf. https://stackoverflow.com/questions/20413419/javafx-2-how-to-focus-a-table-row-programmatically/20433947
 
-        // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
-        table.requestFocus();
-        table.getFocusModel().focus(itemIdx);
-        table.getSelectionModel().clearAndSelect(itemIdx);
+        //noinspection OverlyLongLambda
+        Platform.runLater(() -> {
+            int itemIdx = itemIndex(table, item);
+            if (itemIdx < 0) {
+                LOGGER.warn("Item {} not found in table {}.", item, table.getId());
+                return;
+            }
+            assert itemIdx != -1;
 
-        // Il faut aussi scroller jusqu'à la ligne sélectionnée,
-        // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
-        // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
-        table.scrollTo(itemIdx);
+            table.requestFocus();
+            table.getSelectionModel().clearAndSelect(itemIdx);
+            table.getFocusModel().focus(itemIdx);
+
+            // Il faut aussi scroller jusqu'à la ligne sélectionnée,
+            // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
+            // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
+            table.scrollTo(itemIdx);
+        });
     }
 
     public static <S, T> void focusOnItem(@NotNull TableView<S> table, @NotNull S item, @NotNull TableColumn<S, T> column) {
 
-        int itemIdx = itemIndex(table, item);
-        if (itemIdx < 0) {
-            LOGGER.warn("Item {} not found in table {}.", item, table.getId());
-            return;
-        }
-        assert itemIdx != -1;
+        // Cf. https://stackoverflow.com/questions/20413419/javafx-2-how-to-focus-a-table-row-programmatically/20433947
 
-        // Cf. https://examples.javacodegeeks.com/desktop-java/javafx/tableview/javafx-tableview-example/
-        table.requestFocus();
-        table.getFocusModel().focus(itemIdx, column); // FDA 2017/10 Rq : Génère une NPE (getScene == null) si on met des mnémoniques dans des MenuButtons de la TableView (!?).
-        table.getSelectionModel().clearAndSelect(itemIdx, column); // FIXME FDA 2018/01 Ne sélectionne pas la cellule.
-        /* Ne marche pas mieux que "table.getSelectionModel().clearAndSelect(itemIdx, column)". */
-        {
-            boolean wasCellSelectionPrevioulyEnabled = table.getSelectionModel().isCellSelectionEnabled();
-            table.getSelectionModel().setCellSelectionEnabled(false);
-            table.getSelectionModel().clearAndSelect(itemIdx);
-            table.getSelectionModel().setCellSelectionEnabled(wasCellSelectionPrevioulyEnabled);
-        }
+        //noinspection OverlyLongLambda
+        Platform.runLater(() -> {
+            int itemIdx = itemIndex(table, item);
+            if (itemIdx < 0) {
+                LOGGER.warn("Item {} not found in table {}.", item, table.getId());
+                return;
+            }
+            assert itemIdx != -1;
 
-        // Il faut aussi scroller jusqu'à la ligne sélectionnée,
-        // dans le cas où la table contient plus d'items qu'elle ne peut afficher de lignes
-        // et que la ligne sélectionnée ne fasse pas partie des lignes visibles :
-        table.scrollTo(itemIdx);
-        // Idem pour les colonnes :
-        table.scrollToColumn(column);
+            focusOnItem(table, item);
+
+            // Il faut sélectionner la colonne, en plus de la ligne :
+            table.getSelectionModel().clearAndSelect(itemIdx, column);
+
+            // Et il faut aussi scroller jusqu'à la colonne sélectionnée,
+            // dans le cas où la table contient plus de colonnes qu'elle ne peut en afficher
+            // et que la colonne sélectionnée ne fasse pas partie des colonnes visibles :
+            table.scrollToColumn(column);
+        });
     }
 
 
