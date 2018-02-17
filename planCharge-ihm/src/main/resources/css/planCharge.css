@@ -4,7 +4,8 @@ Généralités :
 */
 
 .text:surcharge { /* FIXME FDA 2017/08 Sans effet. */
-    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-width: 1pt;
 }
 
 /*TODO FDA 2017/05 Trouver comment définir le style au niveau de tous les éléments "readonly".*/
@@ -161,9 +162,8 @@ Tâches :
 .echeance-column: {
 }
 .echeance-column:echue {
-    -fx-background-color: #FF0066; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
-    -fx-opacity: 75%;
-    -fx-text-fill: white;
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-width: 1pt;
 }
 .echeance-column:echeanceNonTenue {
     -fx-text-fill: DARKSALMON;
@@ -215,17 +215,18 @@ Tâches :
     -fx-alignment: baseline-right;
 }
 .charge-column:chargeNonPlanifiee {
-    -fx-background-color: #EA4335; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
-    -fx-opacity: 75%;
-    /*-fx-text-fill: white;*/
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-width: 1pt;
 }
 
 .ressource-column:surcharge {
-    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-width: 1pt;
 }
 
 .profil-column:surcharge {
-    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-width: 1pt;
 }
 
 
@@ -242,7 +243,8 @@ Charge / Plan de charge :
     -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
 }
 .periodeChargee-column: surcharge {/* FIXME FDA 2017/08 Sans effet. Sans doute parce que cette property est boundée. Mais à quoi/par qui ? */
-    -fx-text-fill: red; /*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
+    -fx-border-width: 1pt;
 }
 
 .planificationCharge-cell: avantPeriodeDemandee {
@@ -271,10 +273,6 @@ Charge / Plan de charge :
     -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
 .chargePlanifieeTotale-column: incoherence {
-    -fx-background-color: darkred;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
-    -fx-text-fill: white;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
     -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
-    -fx-border-width: 2pt;
-    /*-fx-text-fill: white;*/
-    /*-fx-opacity: 100%;*/
+    -fx-border-width: 1pt;
 }
