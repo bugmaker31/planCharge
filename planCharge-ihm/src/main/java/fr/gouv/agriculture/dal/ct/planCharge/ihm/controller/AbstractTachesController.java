@@ -48,10 +48,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
@@ -548,17 +545,30 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
          - dans la fenêtre qui sert à tracer les révisions
          - dans les autres fenêtres qui gèrent des tâches (liste des tâches, plan de charge, liste des révisions).
          */
+        //noinspection OverlyLongLambda
         getTachesTable().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 return;
             }
 
-            ihm.getTracerRevisionController().afficher(newValue);
+            if (!Objects.equals(this, ihm.getTracerRevisionController()) && ihm.getTracerRevisionController().isShowing()) {
+                ihm.getTracerRevisionController().afficher(newValue);
+            }
 
-            ihm.getTachesController().afficherTache(newValue);
-            ihm.getChargesController().afficherTache((PlanificationTacheBean) newValue);
-            ihm.getRevisionsController().afficherTache(newValue);
+            if (!Objects.equals(this, ihm.getTachesController()) && ihm.getTachesController().isShowing()) {
+                ihm.getTachesController().afficherTache(newValue);
+            }
+            if (!Objects.equals(this, ihm.getChargesController()) && ihm.getChargesController().isShowing()) {
+                ihm.getChargesController().afficherTache((PlanificationTacheBean) newValue);
+            }
+            if (!Objects.equals(this, ihm.getRevisionsController()) && ihm.getRevisionsController().isShowing()) {
+                ihm.getRevisionsController().afficherTache(newValue);
+            }
         });
+    }
+
+    public boolean isShowing() {
+        return Objects.equals(ihm.getApplicationController().getModuleCourant(), this);
     }
 
     private void memoriserOrdreTriParDefautTachesTable() {
@@ -1272,7 +1282,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         try {
             ihm.getApplicationController().afficherModuleTaches();
 */
-            TableViews.focusOnItem(getTachesTable(), tacheBean, getNoTacheColumn());
+        TableViews.focusOnItem(getTachesTable(), tacheBean, getNoTacheColumn());
 /*
         } catch (ControllerException e) {
             LOGGER.error("Impossible d'afficher la tâche " + tacheBean.noTache() + ".", e);

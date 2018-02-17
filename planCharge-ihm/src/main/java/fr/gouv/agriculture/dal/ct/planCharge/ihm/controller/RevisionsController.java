@@ -194,6 +194,11 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
             MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> {
                 ihm.getTachesController().afficherTache(tacheBean);
+                try {
+                    ihm.getApplicationController().afficherModuleTaches();
+                } catch (ControllerException e) {
+                    LOGGER.error("Impossible d'afficher le module des Tâches.", e);
+                }
             });
             menuActions.getItems().add(menuItemSupprimer);
         }
@@ -234,6 +239,10 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
         }
 
         LOGGER.debug("Fenêtre de listage des révisions affichée.");
+    }
+
+    public boolean isShowing() {
+        return (stage != null) && stage.isShowing();
     }
 
     @FXML

@@ -144,6 +144,10 @@ public class TracerRevisionController extends AbstractController {
         LOGGER.debug("Fenêtre de traçage des révisions affichée.");
     }
 
+    public boolean isShowing() {
+        return (stage != null) && stage.isShowing();
+    }
+
 
     @Null
     private ChangeListener<StatutRevision> statutRevisionListener = null;
@@ -186,4 +190,5 @@ public class TracerRevisionController extends AbstractController {
         commentaireRevisionListener = (observable, oldValue, newValue) -> tacheBean.setCommentaireRevision(newValue);
         commentaireRevisionField.textProperty().addListener(commentaireRevisionListener);
     }
+
 }

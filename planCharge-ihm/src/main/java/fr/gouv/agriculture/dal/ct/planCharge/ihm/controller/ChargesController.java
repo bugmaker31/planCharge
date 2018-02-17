@@ -1682,6 +1682,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
             MenuItem menuItemSupprimer = new MenuItem("Voir le détail de la tâche " + tacheBean.noTache());
             menuItemSupprimer.setOnAction(event -> {
                 ihm.getTachesController().afficherTache(tacheBean);
+                try {
+                    ihm.getApplicationController().afficherModuleTaches();
+                } catch (ControllerException e) {
+                    LOGGER.error("Impossible d'afficher le module des Tâches.", e);
+                }
             });
             menuActions.getItems().add(menuItemSupprimer);
         }

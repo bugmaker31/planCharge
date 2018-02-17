@@ -137,6 +137,11 @@ public class RevueWizardController extends AbstractController {
         LOGGER.debug("Assistant de revue affiché.");
     }
 
+    public boolean isShowing() {
+        return (wizardStage != null) && wizardStage.isShowing();
+    }
+
+
     private void passerEtapeSuivante() throws ControllerException {
         assert wizard != null;
         wizard.goToNextStep();
