@@ -220,10 +220,10 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
             stage.getIcons().addAll(ihm.getPrimaryStage().getIcons());
             stage.setScene(new Scene(ihm.getRevisionsView()));
 
-            stage.setMaximized(true);
-
-            int noEcran = Screen.getScreens().size() - ihm.noEcranParDefaut();
+            int noEcran = ihm.noEcranSecondaire();
             ihm.positionnerSurEcran(stage, noEcran);
+
+            stage.setMaximized(true);
         }
 
         if (!stage.isShowing()) {

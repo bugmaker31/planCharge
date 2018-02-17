@@ -2,7 +2,6 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller;
 
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProjetAppliBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
@@ -13,6 +12,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,6 +127,11 @@ public class TracerRevisionController extends AbstractController {
             stage.setTitle(PlanChargeIhm.APP_NAME + " - Traçage des révisions");
             stage.getIcons().addAll(ihm.getPrimaryStage().getIcons());
             stage.setScene(new Scene(ihm.getTracageRevisionView()));
+
+            int noEcran = ihm.noEcranSecondaire();
+            ihm.positionnerSurEcran(stage, noEcran);
+
+//            stage.setMaximized(true);
         }
 
         if (!stage.isShowing()) {

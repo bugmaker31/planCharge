@@ -6,7 +6,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -114,8 +113,10 @@ public class RevueWizardController extends AbstractController {
 
             wizardStage.setScene(wizard.getScene());
 
-            int noEcran = Screen.getScreens().size() - ihm.noEcranParDefaut();
+            int noEcran = ihm.noEcranSecondaire();
             ihm.positionnerSurEcran(wizardStage, noEcran);
+
+//            wizardStage.setMaximized(true);
         }
 
 /*
@@ -126,7 +127,12 @@ public class RevueWizardController extends AbstractController {
         });
 */
 //        wizard.show();
-        wizardStage.show();
+        if (!wizardStage.isShowing()) {
+            wizardStage.show();
+        }
+        if (!wizardStage.isFocused()) {
+            wizardStage.requestFocus();
+        }
 
         LOGGER.debug("Assistant de revue affiché.");
     }

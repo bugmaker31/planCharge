@@ -442,27 +442,22 @@ public class PlanChargeIhm extends Application {
             LOGGER.debug("Application en cours de démarrage...");
 
             this.primaryStage = primaryStage;
-            this.primaryStage.setOnCloseRequest(event -> Platform.exit());
 
+            primaryStage.setOnCloseRequest(event -> Platform.exit());
+            //
             primaryStage.setTitle(APP_NAME);
             //
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/planCharge-logo.png")));
-            //
-            // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
-/*
-            Screen ecranParDefaut = Screen.getScreens().get(noEcranParDefaut());
-            double screenWidth = ecranParDefaut.getBounds().getWidth();
-            double screenHeight = ecranParDefaut.getBounds().getHeight();
-            primaryStage.setWidth(screenWidth);
-            primaryStage.setHeight(screenHeight);
-*/
-            primaryStage.setResizable(true);
-//            primaryStage.setFullScreen(true);
-            primaryStage.setMaximized(true);
-            //
             primaryStage.setScene(new Scene(applicationView));
             //
             appliquerTheme(SOMBRE); // TODO FDA 2018/01 Récupérer le thème dans les préférences de l'utilisateur.
+            //
+//            positionnerSurEcran(primaryStage, noEcranPrincipal());
+            //
+            // Cf. https://stackoverflow.com/questions/40320199/how-to-automatically-resize-windows-in-javafx-for-different-resolutions
+            primaryStage.setResizable(true);
+//            primaryStage.setFullScreen(true);
+            primaryStage.setMaximized(true);
             //
             primaryStage.show();
 
@@ -1268,20 +1263,28 @@ public class PlanChargeIhm extends Application {
 
     // Ecran (Screen) :
 
-    public int noEcranParDefaut() {
-        return (Screen.getScreens().size() >= 2) ? 1 : 0; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+    @SuppressWarnings("MethodMayBeStatic")
+    public int noEcranPrincipal() {
+        return 1; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    public int noEcranSecondaire() {
+        return (Screen.getScreens().size() >= 2) ? 2 : 1; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.; // TODO FDA 2017/07 A stocker dans les préférences de l'utilisateur.
     }
 
 
     @SuppressWarnings({"MethodMayBeStatic", "NonBooleanMethodNameMayNotStartWithQuestion"})
     public void positionnerSurEcran(@NotNull Stage stage, int noEcran) {
-        // Cf. https://stackoverflow.com/questions/34936617/choose-which-monitor-does-a-javafx-window-open-in
-        Screen screen = Screen.getScreens().get(noEcran);
-        Rectangle2D screenBounds = screen.getVisualBounds();
-        //noinspection MagicNumber
-        stage.setX(screenBounds.getMinX() + (screenBounds.getWidth() / 2.0));
-        //noinspection MagicNumber
-        stage.setY(screenBounds.getMinY() + (screenBounds.getHeight() / 2.0));
+        Platform.runLater(() -> {
+            // Cf. https://stackoverflow.com/questions/34936617/choose-which-monitor-does-a-javafx-window-open-in
+            Screen screen = Screen.getScreens().get(noEcran - 1);
+            Rectangle2D screenBounds = screen.getVisualBounds();
+            //noinspection MagicNumber
+            stage.setX(screenBounds.getMinX()/* + (stage.getWidth() / 2.0)*/);
+            //noinspection MagicNumber
+            stage.setY(screenBounds.getMinY()/* + (stage.getHeight() / 2.0)*/);
+        });
     }
 
 
@@ -1312,6 +1315,7 @@ public class PlanChargeIhm extends Application {
         public URL getUrl() {
             return url;
         }
+
     }
 
     @Null
