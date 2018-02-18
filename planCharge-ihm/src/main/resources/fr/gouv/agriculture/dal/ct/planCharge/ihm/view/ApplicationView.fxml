@@ -39,7 +39,7 @@
                     <Menu fx:id="sousMenuAnnuler" text="Annuler jusqu'à"/> <!-- Sera populé par l'application.-->
                     <MenuItem fx:id="menuRetablir" text="Rétablir" onAction="#retablir" accelerator="Shortcut+Y"/>
                     <Menu fx:id="sousMenuRetablir" text="Rétablir jusqu'à"/> <!-- Sera populé par l'application.-->
-                    <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Shift+Y"/>
+                    <MenuItem fx:id="menuRepeter" text="Répéter" onAction="#repeter" accelerator="Shortcut+Alt+Y"/>
                     <Menu fx:id="sousMenuRepeter" text="Répéter jusqu'à"/> <!-- Sera populé par l'application.-->
                     <SeparatorMenuItem/>
                     <!--
@@ -84,14 +84,14 @@
                 </Menu>
                 <Menu text="_Gestion">
                     <MenuItem text="_Disponibilités" onAction="#afficherModuleDisponibilites"
-                              accelerator="Shortcut+Shift+D"/>
-                    <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Shift+T"/>
-                    <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Shift+C"/>
+                              accelerator="Shortcut+Alt+D"/>
+                    <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Alt+T"/>
+                    <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Alt+C"/>
                 </Menu>
                 <Menu text="_Révision">
-                    <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Shift+A"/>
-                    <!--<MenuItem text="_Tracer les révisions..." onAction="#afficherFenetreTracerRevision" accelerator="Shortcut+Shift+R"/>-->
-                    <MenuItem text="_Révisions" onAction="#afficherModuleRevisions" accelerator="Shortcut+Shift+V"/>
+                    <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Alt+A"/>
+                    <!--<MenuItem text="_Tracer les révisions..." onAction="#afficherFenetreTracerRevision" accelerator="Shortcut+Alt+R"/>-->
+                    <MenuItem text="_Révisions" onAction="#afficherModuleRevisions" accelerator="Shortcut+Alt+V"/>
                 </Menu>
                 <Menu text="Autre" mnemonicParsing="false">
                     <MenuItem text="A propos..." mnemonicParsing="false" onAction="#aPropos"/>
