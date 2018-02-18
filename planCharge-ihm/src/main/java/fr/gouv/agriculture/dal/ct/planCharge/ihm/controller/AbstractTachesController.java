@@ -161,11 +161,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
     @FXML
     @NotNull
     @SuppressWarnings("NullableProblems")
-    private Accordion parametresAffichageAccordion;
-
-    @FXML
-    @NotNull
-    @SuppressWarnings("NullableProblems")
     private TitledPane parametresAffichagePane;
 
     @FXML
@@ -619,9 +614,15 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // FIXME FDA 2017/08 Ne fonctionne que si l'utilisateur a focusé sur la table avant de taper Ctrl+F. Il faudrait ajouter le handler sur la Scene du "primary" Stage, mais ce dernier n'est pas encore initialisé (NPE).
         getTachesTable().setOnKeyReleased(event -> {
             if (event.isControlDown() && (event.getCode() == KeyCode.F)) {
-                parametresAffichageAccordion.setExpandedPane(parametresAffichagePane);
+
+                parametresAffichagePane.setExpanded(true);
                 filtresAccordion.setExpandedPane(filtresPane);
-                Platform.runLater(() -> filtreGlobalComponent.getFiltreGlobalField().requestFocus());
+
+                // FIXME FDA 2018/02 Sans effet : le focus n'est pas positionné sur le textfield du filtre global.
+//                Platform.runLater(() -> {
+                filtreGlobalComponent.getFiltreGlobalField().requestFocus();
+//                });
+
                 event.consume(); // TODO FDA 2017/08 Confirmer.
                 return;
             }

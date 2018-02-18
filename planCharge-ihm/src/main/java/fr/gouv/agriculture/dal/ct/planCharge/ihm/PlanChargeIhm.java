@@ -470,7 +470,7 @@ public class PlanChargeIhm extends Application {
                     applicationController.charger(dateEtatPrec);
                 }
             }
-            // TODO FDA 2017/04 Juste pour accélérer les tests du développeur. A supprimer avant de livrer (le paramètre "estEnDeveloppement" est défini dans le profil Maven).
+            // NB : Juste pour accélérer les tests du développeur. A supprimer avant de livrer (le paramètre "estEnDeveloppement" est défini dans le profil Maven).
             if (estEnDeveloppement) {
                 // Référentiels :
 //                applicationController.afficherModuleJoursFeries();
@@ -486,9 +486,9 @@ public class PlanChargeIhm extends Application {
 //                applicationController.afficherModuleTaches();
 //                applicationController.afficherModuleCharges();
                 // Autres :
-                applicationController.afficherAssistantRevue();
+//                applicationController.afficherAssistantRevue();
 //                applicationController.afficherFenetreTracerRevision();
-//                applicationController.afficherModuleRevisions();
+                applicationController.afficherModuleRevisions();
             }
 
             LOGGER.info("Application démarrée.");

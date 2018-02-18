@@ -11,10 +11,12 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.revision.ExportRevisions;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -85,6 +87,11 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
     @SuppressWarnings("NullableProblems")
     @NotNull
     @FXML
+    private TableColumn<TacheBean, TypeChangement> typeChangementColumn;
+
+    @SuppressWarnings("NullableProblems")
+    @NotNull
+    @FXML
     private TableColumn<TacheBean, StatutRevision> statutRevisionColumn;
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -149,6 +156,7 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
         //
+        typeChangementColumn.setCellValueFactory(param -> param.getValue().typeChangementProperty());
         statutRevisionColumn.setCellValueFactory(param -> param.getValue().statutRevisionProperty());
         validateurRevisionColumn.setCellValueFactory(param -> param.getValue().validateurRevisionProperty());
         commentaireRevisionColumn.setCellValueFactory(param -> param.getValue().commentaireRevisionProperty());

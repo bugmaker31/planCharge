@@ -88,7 +88,7 @@
         </MenuButton>
         <HBox styleClass="barreEtat-item">
             <HBox fx:id="calculSommeBox" styleClass="barreEtat-item">
-                <Label text="&#931;=">
+                <Label text="&#931;:">
                     <tooltip>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <Tooltip fx:id="sommeTooltip"
@@ -98,7 +98,7 @@
                 <Label fx:id="calculSommeLabel" text="N/C" tooltip="$sommeTooltip"/>
             </HBox>
             <HBox fx:id="calculNombreBox" styleClass="barreEtat-item">
-                <Label text="#=">
+                <Label text="#:">
                     <tooltip>
                         <!--suppress JavaFxUnresolvedFxIdReference -->
                         <Tooltip fx:id="nombreTooltip"

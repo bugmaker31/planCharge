@@ -20,7 +20,7 @@
         <Double fx:id="sousCategorieColumnPrefWidth" fx:value="100"/>
         <Double fx:id="noTacheColumnPrefWidth" fx:value="55"/>
         <Double fx:id="noTicketIdalColumnPrefWidth" fx:value="80"/>
-        <Double fx:id="descriptionColumnPrefWidth" fx:value="700"/>
+        <Double fx:id="descriptionColumnPrefWidth" fx:value="500"/>
         <Double fx:id="projetAppliColumnPrefWidth" fx:value="100"/>
         <Double fx:id="statutColumnPrefWidth" fx:value="100"/>
         <Double fx:id="debutColumnPrefWidth" fx:value="80"/>
@@ -30,14 +30,17 @@
         <Double fx:id="profilColumnPrefWidth" fx:value="60"/>
         <Double fx:id="ressourceColumnPrefWidth" fx:value="45"/>
 
+        <Double fx:id="typeChangementColumnPrefWidth" fx:value="100"/>
+
         <Double fx:id="statuRevisionColumnPrefWidth" fx:value="100"/>
-        <Double fx:id="validateurRevisionColumnPrefWidth" fx:value="100"/>
-        <Double fx:id="commentaireRevisionColumnPrefWidth" fx:value="500"/>
+        <Double fx:id="validateurRevisionColumnPrefWidth" fx:value="80"/>
+        <Double fx:id="commentaireRevisionColumnPrefWidth" fx:value="400"/>
 
         <Double fx:id="actionsColumnPrefWidth" fx:value="100"/>
     </fx:define>
 
     <top>
+        <!--TODO FDA 2018/02 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
         <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris" expanded="false">
             <AnchorPane>
                 <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"
@@ -205,6 +208,7 @@
                                 />
                             </columns>
                         </TableColumn>
+                        <TableColumn fx:id="typeChangementColumn" text="Changement" prefWidth="$typeChangementColumnPrefWidth"/>
                         <TableColumn text="Révision">
                             <columns>
                                 <TableColumn fx:id="statutRevisionColumn" text="Statut" prefWidth="$statuRevisionColumnPrefWidth"/>

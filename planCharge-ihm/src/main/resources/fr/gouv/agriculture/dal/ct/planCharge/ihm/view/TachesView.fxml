@@ -10,6 +10,7 @@
             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 >
     <top>
+        <!--TODO FDA 2018/02 Factoriser les colonnes communes à ChargesView et à TachesView (fx:include ? CustomComponent ?).-->
         <TitledPane fx:id="parametresAffichagePane" text="Paramètres d'affichage : filtres, tris" expanded="false">
             <AnchorPane>
                 <Accordion fx:id="filtresAccordion" expandedPane="$filtresPane"

@@ -77,8 +77,8 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     private ObjectProperty<ProfilBean> profil = new SimpleObjectProperty<>();
 
-    @Null
-    private TypeChangement typeChangement;
+    @NotNull
+    private ObjectProperty<TypeChangement> typeChangement = new SimpleObjectProperty<>();
 
     //    @Autowired
     @NotNull
@@ -105,7 +105,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
                 tacheBean.getRessource(),
                 tacheBean.getProfil()
         );
-        typeChangement = tacheBean.getTypeChangement();
+        typeChangement = tacheBean.typeChangementProperty();
         // Revisable :
         statutRevision = tacheBean.statutRevisionProperty();
         validateurRevision = tacheBean.validateurRevisionProperty();
@@ -259,13 +259,6 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return profil;
     }
 
-
-    @Null
-    public TypeChangement getTypeChangement() {
-        return typeChangement;
-    }
-
-
     public void setDebut(@NotNull LocalDate debut) {
         this.debut.set(debut);
     }
@@ -274,9 +267,18 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         this.echeance.set(echeance);
     }
 
+    @Null
+    public TypeChangement getTypeChangement() {
+        return typeChangement.get();
+    }
+
+    @NotNull
+    public ObjectProperty<TypeChangement> typeChangementProperty() {
+        return typeChangement;
+    }
 
     public void setTypeChangement(@Null TypeChangement typeChangement) {
-        this.typeChangement = typeChangement;
+        this.typeChangement.set(typeChangement);
     }
 
 

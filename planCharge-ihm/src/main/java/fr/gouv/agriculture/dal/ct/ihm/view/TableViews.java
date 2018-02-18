@@ -10,7 +10,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -71,7 +73,7 @@ public final class TableViews {
         Platform.runLater(() -> {
             int itemIdx = itemIndex(table, item);
             if (itemIdx < 0) {
-                LOGGER.warn("Item {} not found in table {}.", item, table.getId());
+                LOGGER.warn("Item {} not found in table '{}'. Hidden/filtered?", item, table.getId());
                 return;
             }
             assert itemIdx != -1;
@@ -95,7 +97,7 @@ public final class TableViews {
         Platform.runLater(() -> {
             int itemIdx = itemIndex(table, item);
             if (itemIdx < 0) {
-                LOGGER.warn("Item {} not found in table {}.", item, table.getId());
+                LOGGER.warn("Item {} not found in table '{}'. Hidden/filtered?", item, table.getId());
                 return;
             }
             assert itemIdx != -1;
@@ -279,11 +281,12 @@ public final class TableViews {
         // Cf. https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows
 
         DoubleProperty headerRowHeightProperty = new SimpleDoubleProperty();
+        //noinspection OverlyLongLambda
         table.skinProperty().addListener((observable, oldValue, newValue) -> {
             if (!java.util.Objects.equals(oldValue, newValue)) {
 
                 TableHeaderRow headerRow = headerRow(table);
-                // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet).
+                // Le TableHeaderRow n'est pas défini tant que la CSS n'a pas été évaluée (pas tout compris, copié/collé d'Internet : https://stackoverflow.com/questions/26298337/tableview-adjust-number-of-visible-rows).
                 if (headerRow == null) {
                     assert table.getFixedCellSize() > 0.0 : "TableView '" + table.getId() + "' is not 'fixedCellSize'."; // TODO FDA 2017/08 Trouver un meilleur code pour ce contrôle.
                     headerRowHeightProperty.setValue(table.getFixedCellSize()); // Approximation.
