@@ -215,21 +215,6 @@ public class TachesController extends AbstractTachesController<TacheBean> implem
         afficherPlanification(tacheBean);
     }
 
-    private void afficherPlanification(@NotNull TacheBean tacheBean) {
-        try {
-            ihm.getApplicationController().afficherModuleCharges();
-            TableViews.focusOnItem(ihm.getChargesController().getTachesTable(), (PlanificationTacheBean) tacheBean, ihm.getChargesController().getNoTacheColumn());
-        } catch (IhmException e) {
-            LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
-            ihm.afficherDialog(
-                    Alert.AlertType.ERROR,
-                    "Impossible d'afficher la planification pour la tâche" + tacheBean.getId() + ".",
-                    Exceptions.causes(e)
-            );
-        }
-    }
-
-
     @Override
     protected boolean estTacheAvecAutreFiltreAVoir(@NotNull TacheBean tache) {
         // C'est ici qu'il faut coder, si on décide d'ajouter des filtres spécifiques de la révision de la tâche. Cf. ChargesController.

@@ -114,7 +114,7 @@ Dispo :
 
 .periodeDispo-column {
     -fx-font-size: 80%;
-    -fx-alignment: baseline-center;
+    -fx-alignment: BASELINE_CENTER;
     -fx-wrap-text: true;/* FIXME FDA 2017/08 Sans effet. */
 }
 .periodeDispo-column .label {
@@ -148,11 +148,11 @@ Tâches :
 }
 
 .description-column : {
-    -fx-alignment: baseline-left;
+    -fx-alignment: BASELINE_LEFT;
 }
 
 .projetAppli-column : {
-    -fx-alignment: baseline-center;
+    -fx-alignment: BASELINE_CENTER;
 }
 /* [issue#57:Cadrer des colonnes des tâches et du plan de charge]
 .projetAppli-column .text : {
@@ -212,7 +212,7 @@ Tâches :
 }
 
 .charge-column {
-    -fx-alignment: baseline-right;
+    -fx-alignment: BASELINE_RIGHT;
 }
 .charge-column:chargeNonPlanifiee {
     -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/
@@ -236,11 +236,11 @@ Charge / Plan de charge :
 
 .periodeChargee-column {
     -fx-font-size: 80%;
-    -fx-alignment: baseline-center;
+    -fx-alignment: BASELINE_CENTER;
 }
 .periodeChargee-column .label .text {
     -fx-wrap-text: true;
-    -fx-alignment: baseline-center; /* FIXME FDA 2017/08 Sans effet. */
+    -fx-alignment: BASELINE_CENTER; /* FIXME FDA 2017/08 Sans effet. */
 }
 .periodeChargee-column: surcharge {/* FIXME FDA 2017/08 Sans effet. Sans doute parce que cette property est boundée. Mais à quoi/par qui ? */
     -fx-border-color: red;/*TODO FDA 2017/09 Adapter en fonction de la CSS du thème (choisi par l'utilisateur).*/

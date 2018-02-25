@@ -237,6 +237,11 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
             });
             menuActions.getItems().add(menuItemSupprimer);
         }
+        {
+            MenuItem menuItemSupprimer = new MenuItem("Voir la planification de la charge de la tâche " + tacheBean.noTache());
+            menuItemSupprimer.setOnAction(event -> afficherPlanification(tacheBean));
+            menuActions.getItems().add(menuItemSupprimer);
+        }
         return menuActions;
     }
 

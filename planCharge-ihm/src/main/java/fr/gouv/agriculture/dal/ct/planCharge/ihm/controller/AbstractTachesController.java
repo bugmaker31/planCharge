@@ -1212,8 +1212,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
     @SuppressWarnings("FinalPrivateMethod")
     private final void supprimerTache(@NotNull TB tacheBean) {
+/*
         getTachesBeans().remove(tacheBean);
         TableViews.clearSelection(getTachesTable()); // Contournement pour [issue#84:1 appui sur DELETE supprime 2 lignes]. Sinon, 2 lignes sont supprimées. Va savoir pourquoi...
+*/
+        tacheBean.setTypeChangement(TypeChangement.SUPPRESSION);
     }
 
     @FXML
@@ -1296,6 +1299,22 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         }
 */
     }
+
+    void afficherPlanification(@NotNull TacheBean tacheBean) {
+        try {
+            ihm.getApplicationController().afficherModuleCharges();
+            TableViews.focusOnItem(ihm.getChargesController().getTachesTable(), (PlanificationTacheBean) tacheBean, ihm.getChargesController().getNoTacheColumn());
+        } catch (IhmException e) {
+            LOGGER.error("Impossible d'afficher la planification pour la tâche " + tacheBean.getId() + ".", e);
+            ihm.afficherDialog(
+                    Alert.AlertType.ERROR,
+                    "Impossible d'afficher la planification pour la tâche" + tacheBean.getId() + ".",
+                    Exceptions.causes(e)
+            );
+        }
+    }
+
+
 
 
 }

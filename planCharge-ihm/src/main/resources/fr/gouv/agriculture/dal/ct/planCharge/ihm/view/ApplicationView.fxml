@@ -58,17 +58,6 @@
                         <SeparatorMenuItem/>
                         <MenuItem text="Rechercher" onAction="#rechercher" accelerator="Shortcut+F"/>
                     -->
-                    <SeparatorMenuItem/>
-                    <MenuItem text="Calculer" onAction="#calculer">
-                        <accelerator>
-                            <KeyCodeCombination code="F5" alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
-                        </accelerator>
-                    </MenuItem>
-                    <MenuItem text="Valider" disable="true"> <!--TODO FDA 2017/08 Coder... ou associer à "Calculer" ?-->
-                        <accelerator>
-                            <KeyCodeCombination code="F10" alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
-                        </accelerator>
-                    </MenuItem>
                 </Menu>
                 <Menu text="_Suivi" disable="true"/>
                 <Menu text="_Référentiels">
@@ -87,6 +76,17 @@
                               accelerator="Shortcut+Alt+D"/>
                     <MenuItem text="_Tâches" onAction="#afficherModuleTaches" accelerator="Shortcut+Alt+T"/>
                     <MenuItem text="_Charges" onAction="#afficherModuleCharges" accelerator="Shortcut+Alt+C"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Calculer" onAction="#calculer">
+                        <accelerator>
+                            <KeyCodeCombination code="F5" alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+                        </accelerator>
+                    </MenuItem>
+                    <MenuItem text="Valider" disable="true"> <!--TODO FDA 2017/08 Coder... ou associer à "Calculer" ?-->
+                        <accelerator>
+                            <KeyCodeCombination code="F10" alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+                        </accelerator>
+                    </MenuItem>
                 </Menu>
                 <Menu text="_Révision">
                     <MenuItem text="_Assistant de revue..." onAction="#afficherAssistantDeRevue" accelerator="Shortcut+Alt+A"/>
