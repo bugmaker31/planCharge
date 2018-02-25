@@ -186,7 +186,7 @@ public class RessourceHumaineBean extends RessourceBean<RessourceHumaineBean, Re
     @Override
     public String toString() {
         //noinspection HardcodedFileSeparator
-        return "RH"
+        return "RsrcHum"
                 + " " + Objects.value(getTrigramme(), "N/C")
                 + " " + Objects.value(getNom(), "N/C")
                 + " " + Objects.value(getPrenom(), "N/C");

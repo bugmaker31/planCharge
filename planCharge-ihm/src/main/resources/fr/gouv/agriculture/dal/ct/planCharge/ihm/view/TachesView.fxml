@@ -172,7 +172,7 @@
                                      styleClass="charge-column"/>
                         <TableColumn fx:id="profilColumn" text="Profil" prefWidth="$profilColumnPrefWidth"
                                      styleClass="profil-column"/>
-                        <TableColumn fx:id="ressourceColumn" text="RH" prefWidth="$ressourceColumnPrefWidth"
+                        <TableColumn fx:id="ressourceColumn" text="Rsrc" prefWidth="$ressourceColumnPrefWidth"
                                      styleClass="ressource-column"/>
 
                         <TableColumn fx:id="menuActionsColumn" text="Actions" prefWidth="$actionsColumnPrefWidth" styleClass="actions-column"

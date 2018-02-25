@@ -228,12 +228,12 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @NotNull
     @FXML
     private PlanificationTableView<PlanificationTacheBean, Double> planificationsTable;
-/*
-    @FXML
-    @SuppressWarnings("NullableProblems")
-    @NotNull
-    private TableColumn<PlanificationTacheBean, ?> tacheColumn;
-*/
+    /*
+        @FXML
+        @SuppressWarnings("NullableProblems")
+        @NotNull
+        private TableColumn<PlanificationTacheBean, ?> tacheColumn;
+    */
     // Les colonnes spécifiques du calendrier des tâches :
     @FXML
     @SuppressWarnings("NullableProblems")
@@ -490,7 +490,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursChargeBean, ?> espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, String> espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -613,7 +613,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
-    private TableColumn<TotauxNbrsJoursChargeBean, ?> espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
+    private TableColumn<TotauxNbrsJoursChargeBean, String> espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn;
     @FXML
     @SuppressWarnings("NullableProblems")
     @NotNull
@@ -1388,6 +1388,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        espaceTotauxNbrsJoursDispoCTRestanteRsrcColumn.setCellValueFactory(cell -> new SimpleStringProperty("Totaux"));
         {
             int cptColonne = 0;
             for (TableColumn<TotauxNbrsJoursChargeBean, Float> column : totauxNbrsJoursDispoCTRestanteRsrcTable.getCalendrierColumns()) {
@@ -1490,6 +1491,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         ));
 
         // Paramétrage de l'affichage des valeurs des colonnes (mode "consultation") :
+        espaceTotauxNbrsJoursDispoCTMaxRestanteProfilColumn.setCellValueFactory(cell -> new SimpleStringProperty("Totaux"));
         {
             int cptColonne = 0;
             for (TableColumn<TotauxNbrsJoursChargeBean, Float> column : totauxNbrsJoursDispoCTMaxRestanteProfilTable.getCalendrierColumns()) {
