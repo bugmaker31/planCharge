@@ -4,6 +4,7 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.ControllerException;
 import fr.gouv.agriculture.dal.ct.ihm.controller.calculateur.Calculateur;
 import fr.gouv.agriculture.dal.ct.ihm.module.Module;
+import fr.gouv.agriculture.dal.ct.ihm.view.NotEditableTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleTaches;
@@ -14,6 +15,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import javafx.beans.property.SimpleObjectProperty;
@@ -32,6 +34,8 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +44,10 @@ import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -164,6 +172,25 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
         // Paramétrage de la saisie des valeurs des colonnes (mode "édition") et
         // du formatage qui symbolise les incohérences/surcharges/etc. (Cf. http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/) :
         //
+        typeChangementColumn.setCellFactory(owningColumn -> new NotEditableTextFieldTableCell<>(new StringConverter<TypeChangement>() {
+
+            @Override
+            public String toString(TypeChangement typeChangement) {
+                return Objects.value(typeChangement, TypeChangement::name, "");
+            }
+
+            @SuppressWarnings("MethodWithMultipleReturnPoints")
+            @Null
+            @Override
+            public TypeChangement fromString(String tc) {
+                //noinspection UnusedCatchParameter
+                try {
+                    return TypeChangement.valueOf(tc);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            }
+        }, () -> ihm.afficherInterdictionEditer("Le type de changement est défini par programme.")));
         statutRevisionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.STATUT_REVISION_STRING_CONVERTER, StatutRevision.values()));
         validateurRevisionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(Converters.VALIDATEUR_REVISION_STRING_CONVERTER, ValidateurRevision.values()));
         commentaireRevisionColumn.setCellFactory(TextFieldTableCell.forTableColumn());

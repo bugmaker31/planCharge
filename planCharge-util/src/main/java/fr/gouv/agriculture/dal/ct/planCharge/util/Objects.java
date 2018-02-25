@@ -26,7 +26,7 @@ public class Objects {
 
     public static String idInstance(@Null Object object) {
         //noinspection StringConcatenation
-        return (object == null) ? "null" : (object.getClass().getSimpleName() + "@" + object.hashCode());
+        return value(object, o -> o.getClass().getSimpleName() + "@" + o.hashCode(), "null");
     }
 
     public static <T> void exec(@Null T instance, @NotNull Consumer<T> function) {
