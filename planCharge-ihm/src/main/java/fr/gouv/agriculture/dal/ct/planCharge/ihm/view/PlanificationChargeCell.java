@@ -92,19 +92,19 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             if (nbrJoursDispo == null) {
                 return;
             }
-            String nbrJoursDispoFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursDispo);
+            String nbrJoursDispoFormate = Converters.FRACTION_JOURS_TOOLTIP_STRING_CONVERTER.toString(nbrJoursDispo);
             //
             Float nbrJoursCharge = nbrJoursCharge(planifBean.getRessource(), debutPeriode);
             if (nbrJoursCharge == null) {
                 return;
             }
-            String nbrJoursChargeFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursCharge);
+            String nbrJoursChargeFormate = Converters.FRACTION_JOURS_TOOLTIP_STRING_CONVERTER.toString(nbrJoursCharge);
             //
             Float nbrJoursDispoCTRestante = nbrJoursDispoCTRestante(planifBean.getRessource(), debutPeriode);
             if (nbrJoursDispoCTRestante == null) {
                 return;
             }
-            String nbrJoursDispoCTRestanteFormate = Converters.FRACTION_JOURS_STRING_CONVERTER.toString(nbrJoursDispoCTRestante);
+            String nbrJoursDispoCTRestanteFormate = Converters.FRACTION_JOURS_TOOLTIP_STRING_CONVERTER.toString(nbrJoursDispoCTRestante);
 
             StringBuilder message = new StringBuilder("");
             assert planifBean.getRessource() != null;

@@ -20,6 +20,7 @@ public class Converters {
     private static final Pattern DECIMAL_SYMBOL = Pattern.compile("\\.");
 
     public static final FractionJoursStringConverter FRACTION_JOURS_STRING_CONVERTER = new FractionJoursStringConverter();
+    public static final FractionJoursTooltipStringConverter FRACTION_JOURS_TOOLTIP_STRING_CONVERTER = new FractionJoursTooltipStringConverter();
     public static final SommeFractionJoursStringConverter SOMME_FRACTION_JOURS_STRING_CONVERTER = new SommeFractionJoursStringConverter();
     public static final NbrsJoursStringConverter NBRS_JOURS_STRING_CONVERTER = new NbrsJoursStringConverter();
     public static final ChargeStringConverter CHARGE_STRING_CONVERTER = new ChargeStringConverter();
@@ -66,6 +67,45 @@ public class Converters {
             }
             if (s.equals("-")) {
                 return 0.0f;
+            }
+            try {
+                Matcher matcher = DECIMAL_SYMBOL.matcher(s);
+                String str = matcher.replaceAll(FORMATEUR.getDecimalFormatSymbols().getDecimalSeparator() + "");
+                return FORMATEUR.parse(str).floatValue();
+            } catch (ParseException e) {
+                LOGGER.error("Impossible de décoder une valeur décimale dans la chaîne '" + s + "'.", e); // TODO FDA 2017/08 Trouver mieux que de loguer une erreur.
+                return null;
+            }
+        }
+    }
+
+    public static class FractionJoursTooltipStringConverter extends StringConverter<Float> {
+
+        @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
+        private /*static*/ final Logger LOGGER = getLogger(FractionJoursTooltipStringConverter.class);
+
+        @SuppressWarnings({"InstanceVariableNamingConvention", "NonConstantFieldWithUpperCaseName"})
+        private /*static*/ final DecimalFormat FORMATEUR = new DecimalFormat("0.###");
+
+        /*static*/ {
+            DecimalFormatSymbols formatSymbols = DecimalFormatSymbols.getInstance(Locale.FRENCH); // TODO FDA 2017/12 A stocker dans les préférences utilisateur, plutôt.
+            FORMATEUR.setDecimalFormatSymbols(formatSymbols);
+        }
+
+        @Null
+        @Override
+        public String toString(Float f) {
+            if (f == null) {
+                return null;
+            }
+            return FORMATEUR.format(f);
+        }
+
+        @Null
+        @Override
+        public Float fromString(String s) {
+            if (s == null) {
+                return null;
             }
             try {
                 Matcher matcher = DECIMAL_SYMBOL.matcher(s);
