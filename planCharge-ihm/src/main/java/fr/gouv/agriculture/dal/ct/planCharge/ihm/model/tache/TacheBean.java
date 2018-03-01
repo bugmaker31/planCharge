@@ -5,12 +5,11 @@ import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationCommentaireRevision;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.CategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
+import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.TacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.referentiels.Importance;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.StatutRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRevision;
@@ -188,6 +187,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public StringProperty descriptionProperty() {
         return description;
+    }
+
+    public void setDescription(@NotNull String description) {
+        this.description.set(description);
     }
 
     @Null

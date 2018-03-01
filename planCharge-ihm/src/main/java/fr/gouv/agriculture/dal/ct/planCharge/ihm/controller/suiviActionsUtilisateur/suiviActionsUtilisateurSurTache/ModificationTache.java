@@ -19,7 +19,7 @@ import java.util.function.Function;
  *
  * @author frederic.danna
  */
-public abstract class ModificationTache<TB extends TacheBean, T> extends ModificationPlanification {
+public final class ModificationTache<TB extends TacheBean, T> extends ModificationPlanification {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModificationTache.class);
 
@@ -31,6 +31,8 @@ public abstract class ModificationTache<TB extends TacheBean, T> extends Modific
     private T valeurAvant;
     @Null
     private T valeurApres;
+    @Null
+    private final String libelleAction;
 
     @NotNull
     public TB getTacheBean() {
@@ -48,20 +50,15 @@ public abstract class ModificationTache<TB extends TacheBean, T> extends Modific
     }
 
 
-    ModificationTache(@NotNull TB tacheBean, @NotNull BiConsumer<TB, T> fctRestauration, @Null T valeurAvant, @Null T valeurApres) {
+    public ModificationTache(@NotNull TB tacheBean, @NotNull BiConsumer<TB, T> fctRestauration, @Null T valeurAvant, @Null T valeurApres, @NotNull String libelleAction) {
         super();
         this.tacheBean = tacheBean;
         this.fctRestauration = fctRestauration;
         this.valeurAvant = valeurAvant;
         this.valeurApres = valeurApres;
+        this.libelleAction = libelleAction;
     }
 
-
-    @NotNull
-    @Override
-    public String getTexte() {
-        return "modification de la tâche n° " + tacheBean.noTache();
-    }
 
     @Override
     public void annuler() throws AnnulationActionException {

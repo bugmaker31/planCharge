@@ -6,10 +6,9 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationNoTicketIdal;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
@@ -24,6 +23,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
+import fr.gouv.agriculture.dal.ct.planCharge.util.function.TriFunction;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -49,9 +49,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-
-import fr.gouv.agriculture.dal.ct.planCharge.util.function.TriFunction;
 
 /**
  * Created by frederic.danna on 01/05/2017.
@@ -420,69 +417,23 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Gestion des undo/redo :
         //
-        noTicketIdalColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
+        noTicketIdalColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, String>(
                 TacheBean::setNoTicketIdal,
-                ModificationNoTicketIdal::new
+                (TB tb, String valeurAvant, String valeurApres) -> new ModificationTache<TB, String>(tb, TB::setNoTicketIdal, valeurAvant, valeurApres,"n° de ticket IDAL")
         ));
-        /*
-        TODO FDA 2017/07 D'abord bien tester le undo/redo/repeat de la modif du n° de ticket IDAL (ci-dessus), puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
-        descriptionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
-                tacheBean.descriptionProperty().set(nouvelleValeur);
-            }
-        });
-        projetAppliColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
-                tacheBean.projetAppliProperty().set(nouvelleValeur);
-            }
-        });
-        debutColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) throws IhmException {
-                try {
-                    tacheBean.debutProperty().set(LocalDate.parse(nouvelleValeur, TacheBean.DATE_FORMATTER));
-                } catch (DateTimeParseException e) {
-                    throw new IhmException("Impossible de parser la date de début de la tâche.", e);
-                }
-            }
-        });
-        echeanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) throws IhmException {
-                try {
-                    tacheBean.echeanceProperty().set(LocalDate.parse(nouvelleValeur));
-                } catch (DateTimeParseException e) {
-                    throw new IhmException("Impossible de parser la date d'échéance de la tâche.", e);
-                }
-            }
-        });
-        importanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
-                tacheBean.importanceProperty().set(nouvelleValeur);
-            }
-        });
-        chargeColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<Double>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull Double nouvelleValeur, @Null TB tacheBeanAvant) {
-                tacheBean.chargeProperty().set(nouvelleValeur);
-            }
-        });
-        ressourceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
-                tacheBean.ressourceProperty().set(nouvelleValeur);
-            }
-        });
-        profilColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
-            @Override
-            void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
-                tacheBean.profilProperty().set(nouvelleValeur);
-            }
-        });
-        */
+        descriptionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, String>(
+                TacheBean::setDescription,
+                (TB tb, String valeurAvant, String valeurApres) -> new ModificationTache<TB, String>(tb, TB::setDescription, valeurAvant, valeurApres,"description")
+        ));
+/*
+        projetAppliColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+        debutColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+        echeanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+        importanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+        chargeColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+        ressourceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+        profilColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
+*/
 
         definirRaccourcisClavier();
 
