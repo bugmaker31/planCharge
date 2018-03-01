@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * @author frederic.danna
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class AjoutTache<TB extends TacheBean> extends ModificationPlanification<PlanChargeBean, TB> implements ActionAnnulable, ActionRetablissable {
+public class AjoutTache<TB extends TacheBean> extends ModificationPlanification {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AjoutTache.class);
 

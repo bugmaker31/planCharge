@@ -6,6 +6,7 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
@@ -420,9 +421,9 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         // Gestion des undo/redo :
         //
         noTicketIdalColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
-                (TB tb, String apres) -> tb.setNoTicketIdal(apres),
-                (TB tb, String avant, String apres) -> new ModificationNoTicketIdal<TB>(tb, avant, apres))
-        );
+                TacheBean::setNoTicketIdal,
+                ModificationNoTicketIdal::new
+        ));
         /*
         TODO FDA 2017/07 D'abord bien tester le undo/redo/repeat de la modif du n° de ticket IDAL (ci-dessus), puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
         descriptionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
@@ -525,11 +526,11 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
         @NotNull
         private BiConsumer<TB, T> fctModifieur;
         @NotNull
-        private TriFunction<TB, T, T, ModificationTache<TB, T>> fctActionModification;
+        private TriFunction<TB, T, T, ModificationPlanification> fctActionModification;
 
         SuiviActionUtilisateurTableCommitHandler(
                 @NotNull BiConsumer<TB, T> fctModifieur,
-                @NotNull TriFunction<TB, T, T, ModificationTache<TB, T>> fctActionModification
+                @NotNull TriFunction<TB, T, T, ModificationPlanification> fctActionModification
         ) {
             super();
             this.fctModifieur = fctModifieur;
@@ -551,7 +552,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             fctModifieur.accept(tacheBean, valeurApres);
 
             // Historisation de la modification de la valeur (par l'utiisateur) :
-            ModificationTache<TB, T> actionModif = fctActionModification.apply(tacheBean, valeurAvant, valeurApres);
+            ModificationPlanification actionModif = fctActionModification.apply(tacheBean, valeurAvant, valeurApres);
             try {
                 getSuiviActionsUtilisateur().historiser(actionModif);
             } catch (SuiviActionsUtilisateurException e) {

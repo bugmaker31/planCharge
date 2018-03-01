@@ -11,7 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
  *
  * @author frederic.danna
  */
-public class ImportTaches<T> extends ModificationEnMassePlanCharge<PlanChargeBean, T> implements ActionAnnulable, ActionRetablissable {
+public class ImportTaches extends ModificationEnMassePlanCharge implements ActionAnnulable, ActionRetablissable {
 
     @Override
     public void annuler() {

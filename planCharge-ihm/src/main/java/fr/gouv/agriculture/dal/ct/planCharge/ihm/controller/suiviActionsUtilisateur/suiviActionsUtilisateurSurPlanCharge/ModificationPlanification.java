@@ -5,5 +5,5 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisa
  *
  * @author frederic.danna
  */
-public abstract class ModificationPlanification<D, T> extends ModificationUnitairePlanCharge<D, T> {
+public abstract class ModificationPlanification extends ModificationUnitairePlanCharge {
 }

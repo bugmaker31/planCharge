@@ -19,7 +19,7 @@ import java.util.function.Function;
  *
  * @author frederic.danna
  */
-public abstract class ModificationTache<TB extends TacheBean, T> extends ModificationPlanification<TB, T> {
+public abstract class ModificationTache<TB extends TacheBean, T> extends ModificationPlanification {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModificationTache.class);
 

@@ -11,7 +11,7 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisat
  *
  * @author frederic.danna
  */
-public class SuppressionTache<TB extends TacheBean> extends ModificationPlanification<PlanChargeBean, TB> {
+public class SuppressionTache extends ModificationPlanification {
 
     @Override
     public void annuler() {

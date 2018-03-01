@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
-public class ChargementPlanCharge<T> extends ModificationEnMassePlanCharge<PlanChargeBean, T> implements ActionAnnulable {
+public class ChargementPlanCharge extends ModificationEnMassePlanCharge implements ActionAnnulable {
 
     private PlanChargeBean planChargeBeanPrecedent;
 

@@ -16,7 +16,7 @@ import java.time.LocalDate;
  *
  * @author frederic.danna
  */
-public class ModificationDateEtat extends ModificationUnitairePlanCharge<PlanChargeBean, LocalDate> {
+public class ModificationDateEtat extends ModificationUnitairePlanCharge {
 
     @Null
     private LocalDate dateEtatPrecedente;
