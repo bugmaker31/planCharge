@@ -1,5 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
@@ -9,70 +10,85 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Created by frederic.danna on 17/05/2017.
  *
  * @author frederic.danna
  */
-public abstract class ModificationTache<TB extends TacheBean> extends ModificationPlanification {
+public abstract class ModificationTache<TB extends TacheBean, T> extends ModificationPlanification<TB, T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModificationTache.class);
 
-
     @NotNull
-    private TB tacheBean;
+    private TB tacheBean; /*TODO FDA 2018/02 Ne mémoriser que les infos nécessaires, pour économiser la mémoire.*/
     @NotNull
-    private TB tacheBeanAvant;
+    private BiConsumer<TB, T> fctRestauration;
     @Null
-    private TB sauvegardeTacheBean;
+    private T valeurAvant;
+    @Null
+    private T valeurApres;
 
     @NotNull
-    TB getTacheBean() {
+    public TB getTacheBean() {
         return tacheBean;
     }
-    @NotNull
-    TB getTacheBeanAvant() {
-        return tacheBeanAvant;
+
+    @Null
+    T getValeurAvant() {
+        return valeurAvant;
+    }
+
+    @Null
+    T getValeurApres() {
+        return valeurApres;
     }
 
 
-    ModificationTache(@NotNull TB tacheBeanAvant, @NotNull TB tacheBean) {
+    ModificationTache(@NotNull TB tacheBean, @NotNull BiConsumer<TB, T> fctRestauration, @Null T valeurAvant, @Null T valeurApres) {
         super();
         this.tacheBean = tacheBean;
-        this.tacheBeanAvant = tacheBeanAvant;
-        this.sauvegardeTacheBean = null;
+        this.fctRestauration = fctRestauration;
+        this.valeurAvant = valeurAvant;
+        this.valeurApres = valeurApres;
     }
 
 
     @NotNull
     @Override
     public String getTexte() {
-        return "modification de la tâche n° " + tacheBeanAvant.noTache();
+        return "modification de la tâche n° " + tacheBean.noTache();
     }
-
 
     @Override
     public void annuler() throws AnnulationActionException {
+/*
         try {
-            // TODO FDA 2017/05 Trouver mieux que "caster".
-            sauvegardeTacheBean = (TB) tacheBean.copier();
-            tacheBean.copier(tacheBeanAvant);
-            LOGGER.debug("Action annulée : {}", getTexte());
+*/
+        fctRestauration.accept(tacheBean, valeurAvant);
+        LOGGER.debug("Action annulée : {}", getTexte());
+/*
         } catch (CopieException e) {
             throw new AnnulationActionException("Impossible d'annuler l'action.", e);
         }
+*/
     }
 
     @Override
     public void retablir() throws RetablissementActionException {
+/*
         try {
-            // TODO FDA 2017/05 Trouver mieux que "caster".
-            tacheBean.copier((TB) sauvegardeTacheBean);
+*/
+            fctRestauration.accept(tacheBean, valeurApres);
             LOGGER.debug("Action rétablie : {}", getTexte());
+/*
         } catch (CopieException e) {
             throw new RetablissementActionException("Impossible de rétablir l'action.", e);
         }
+*/
     }
 
 }

@@ -19,19 +19,19 @@
     </tr>
     </thead>
     <tbody>
-    <#list tachesBeans as tacheBean>
+    <#list tachesBeans as valeurApres>
         <tr>
             <!--Tâche :-->
-            <td>${tacheBean.noTache()!""}</td>
-            <td>${tacheBean.noTicketIdal!""}</td>
-            <td>${tacheBean.description!""}</td>
-            <td><#if tacheBean.projetAppli??>${tacheBean.projetAppli.code!""}<#else></#if></td>
+            <td>${valeurApres.noTache()!""}</td>
+            <td>${valeurApres.noTicketIdal!""}</td>
+            <td>${valeurApres.description!""}</td>
+            <td><#if valeurApres.projetAppli??>${valeurApres.projetAppli.code!""}<#else></#if></td>
             <!--Changement :-->
-            <td><#if tacheBean.typeChangement??>${tacheBean.typeChangement.name()!""}<#else></#if></td>
+            <td><#if valeurApres.typeChangement??>${valeurApres.typeChangement.name()!""}<#else></#if></td>
             <!--Révision :-->
-            <td><#if tacheBean.statutRevision??>${tacheBean.statutRevision.libelle!""}<#else></#if></td>
-            <td><#if tacheBean.validateurRevision??>${tacheBean.validateurRevision.trigramme!""}<#else></#if></td>
-            <td>${tacheBean.commentaireRevision!""}</td>
+            <td><#if valeurApres.statutRevision??>${valeurApres.statutRevision.libelle!""}<#else></#if></td>
+            <td><#if valeurApres.validateurRevision??>${valeurApres.validateurRevision.trigramme!""}<#else></#if></td>
+            <td>${valeurApres.commentaireRevision!""}</td>
         </tr>
     </#list>
     </tbody>

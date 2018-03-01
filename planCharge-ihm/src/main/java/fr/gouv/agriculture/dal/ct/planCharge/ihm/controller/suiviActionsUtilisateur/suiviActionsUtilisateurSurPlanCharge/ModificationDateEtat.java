@@ -1,9 +1,10 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
  *
  * @author frederic.danna
  */
-public class ModificationDateEtat extends ModificationUnitairePlanCharge implements ActionAnnulable, ActionRetablissable {
+public class ModificationDateEtat extends ModificationUnitairePlanCharge<PlanChargeBean, LocalDate> {
 
     @Null
     private LocalDate dateEtatPrecedente;

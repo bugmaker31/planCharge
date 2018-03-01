@@ -303,12 +303,12 @@ public class SuiviActionsUtilisateur {
     }
 
 
-    public void historiser(ActionUtilisateur item) throws SuiviActionsUtilisateurException {
+    public void historiser(@NotNull ActionUtilisateur item) throws SuiviActionsUtilisateurException {
         LOGGER.debug("historiser '{}' : {}", item.toString(), item.getTexte());
 
         /*
         Dès que l'utilisateur fait une action, les éventuelles actions Annulable's deviennent obsolètes.
-        Il faut donc les supprimer ("oublier").
+        Il faut donc les supprimer (les "oublier").
          */
         oublierActionsAnnuléesNonRetablies();
 

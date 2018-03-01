@@ -4,6 +4,10 @@ import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.model.AbstractBean;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateur;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationCommentaireRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationNoTicketIdal;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.*;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.constante.TypeChangement;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.*;
@@ -47,6 +51,9 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(TacheBean.class);
+
+    @NotNull
+    private static final SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
 
 
     @SuppressWarnings("InstanceVariableNamingConvention")
@@ -167,6 +174,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public StringProperty noTicketIdalProperty() {
         return noTicketIdal;
+    }
+
+    public void setNoTicketIdal(@NotNull String noTicketIdal) {
+        this.noTicketIdal.set(noTicketIdal);
     }
 
     @Null

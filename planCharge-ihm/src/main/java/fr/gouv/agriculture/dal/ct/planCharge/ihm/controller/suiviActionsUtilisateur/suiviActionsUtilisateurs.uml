@@ -4,30 +4,30 @@
   <OriginalElement />
   <nodes>
     <node x="331.8551587301587" y="356.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable</node>
-    <node x="374.9717643467642" y="527.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationUnitairePlanCharge</node>
-    <node x="1053.0357142857142" y="791.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache</node>
-    <node x="1187.688492063492" y="367.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SauvegardePlanCharge</node>
+    <node x="374.9717643467642" y="527.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationUnitairePlanCharge</node>
+    <node x="1053.0357142857142" y="791.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache</node>
+    <node x="1187.688492063492" y="367.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.SauvegardePlanCharge</node>
     <node x="1816.145299145299" y="211.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.ActionRepetable</node>
     <node x="1056.438492063492" y="0.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur</node>
-    <node x="671.1594932844932" y="647.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportPlanCharge</node>
+    <node x="671.1594932844932" y="647.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportPlanCharge</node>
     <node x="1215.6051587301586" y="647.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleDisponibilites</node>
-    <node x="94.65949328449324" y="835.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache</node>
+    <node x="94.65949328449324" y="835.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationTache</node>
     <node x="1446.6051587301586" y="636.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleCharges</node>
     <node x="1662.6051587301586" y="647.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleTaches</node>
-    <node x="509.7301587301586" y="367.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanCharge</node>
+    <node x="509.7301587301586" y="367.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanCharge</node>
     <node x="1136.688492063492" y="167.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateurBase</node>
-    <node x="455.15949328449324" y="636.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ChargementPlanCharge</node>
+    <node x="455.15949328449324" y="636.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ChargementPlanCharge</node>
     <node x="790.2718253968253" y="356.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable</node>
-    <node x="876.2718253968253" y="527.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationEnMassePlanCharge</node>
-    <node x="1031.6051587301586" y="647.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportTaches</node>
-    <node x="253.15949328449324" y="669.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanification</node>
+    <node x="876.2718253968253" y="527.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationEnMassePlanCharge</node>
+    <node x="1031.6051587301586" y="647.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportTaches</node>
+    <node x="253.15949328449324" y="669.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification</node>
     <node x="1449.0357142857142" y="527.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModule</node>
-    <node x="37.15949328449324" y="636.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationDateEtat</node>
-    <node x="262.65949328449324" y="813.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuppressionTache</node>
+    <node x="37.15949328449324" y="636.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationDateEtat</node>
+    <node x="262.65949328449324" y="813.0">fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.SuppressionTache</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationDateEtat" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationDateEtat" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
       <point x="-65.33333333333326" y="-47.5" />
       <point x="69.82615995115998" y="616.0" />
       <point x="43.25" y="616.0" />
@@ -35,13 +35,13 @@
       <point x="362.4980158730159" y="457.0" />
       <point x="-40.857142857142776" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportTaches" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationEnMassePlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportTaches" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationEnMassePlanCharge">
       <point x="-54.33333333333326" y="-36.5" />
       <point x="1058.7718253968253" y="616.0" />
       <point x="1062.1051587301586" y="616.0" />
       <point x="74.33333333333326" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationEnMassePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationEnMassePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanCharge">
       <point x="0.0" y="-14.5" />
       <point x="987.7718253968253" y="477.0" />
       <point x="642.4801587301586" y="477.0" />
@@ -53,7 +53,7 @@
       <point x="1150.938492063492" y="147.0" />
       <point x="-31.5" y="58.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationUnitairePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationUnitairePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
       <point x="-72.66666666666669" y="-14.5" />
       <point x="411.3050976800975" y="477.0" />
       <point x="423.7837301587301" y="477.0" />
@@ -67,13 +67,13 @@
       <point x="1363.3551587301588" y="331.0" />
       <point x="90.66666666666674" y="69.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateurBase">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateurBase">
       <point x="0.0" y="-14.5" />
       <point x="598.2301587301586" y="331.0" />
       <point x="1182.0218253968253" y="331.0" />
       <point x="-90.66666666666674" y="69.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ChargementPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ChargementPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
       <point x="0.0" y="-47.5" />
       <point x="553.1594932844932" y="596.0" />
       <point x="745.4801587301586" y="596.0" />
@@ -81,19 +81,19 @@
       <point x="844.2003968253968" y="507.0" />
       <point x="-21.571428571428555" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationDateEtat" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationUnitairePlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationDateEtat" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationUnitairePlanCharge">
       <point x="65.33333333333331" y="-47.5" />
       <point x="200.4928266178265" y="606.0" />
       <point x="429.4717643467642" y="606.0" />
       <point x="-54.5" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationUnitairePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationUnitairePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanCharge">
       <point x="0.0" y="-14.5" />
       <point x="483.9717643467642" y="477.0" />
       <point x="553.9801587301586" y="477.0" />
       <point x="-44.25" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
       <point x="-54.33333333333337" y="-36.5" />
       <point x="698.3261599511599" y="576.0" />
       <point x="160.18605006104985" y="576.0" />
@@ -101,7 +101,7 @@
       <point x="403.3551587301587" y="477.0" />
       <point x="0.0" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
       <point x="27.0" y="-58.5" />
       <point x="1188.0357142857142" y="771.0" />
       <point x="1205.1051587301586" y="771.0" />
@@ -121,7 +121,7 @@
       <point x="1472.3690476190475" y="616.0" />
       <point x="-46.66666666666674" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationEnMassePlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationEnMassePlanCharge">
       <point x="54.33333333333337" y="-36.5" />
       <point x="806.9928266178266" y="616.0" />
       <point x="987.7718253968253" y="616.0" />
@@ -133,7 +133,7 @@
       <point x="1565.702380952381" y="616.0" />
       <point x="46.66666666666674" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanification">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification">
       <point x="0.0" y="-14.5" />
       <point x="168.65949328449324" y="771.0" />
       <point x="283.4928266178265" y="771.0" />
@@ -151,17 +151,17 @@
       <point x="1519.0357142857142" y="616.0" />
       <point x="0.0" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuppressionTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanification">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.SuppressionTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification">
       <point x="0.0" y="-36.5" />
       <point x="0.0" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ChargementPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationEnMassePlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ChargementPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationEnMassePlanCharge">
       <point x="65.33333333333337" y="-47.5" />
       <point x="618.4928266178266" y="606.0" />
       <point x="913.4384920634919" y="606.0" />
       <point x="-74.33333333333337" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportTaches" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportTaches" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
       <point x="54.33333333333326" y="-36.5" />
       <point x="1167.4384920634918" y="616.0" />
       <point x="1145.7718253968253" y="616.0" />
@@ -169,7 +169,7 @@
       <point x="887.3432539682539" y="457.0" />
       <point x="21.571428571428555" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ChargementPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ChargementPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
       <point x="-65.33333333333331" y="-47.5" />
       <point x="487.8261599511599" y="586.0" />
       <point x="149.18605006104985" y="586.0" />
@@ -177,25 +177,25 @@
       <point x="382.92658730158723" y="467.0" />
       <point x="-20.428571428571445" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportPlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
       <point x="0.0" y="-36.5" />
       <point x="752.6594932844932" y="596.0" />
       <point x="865.7718253968253" y="596.0" />
       <point x="0.0" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationUnitairePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationUnitairePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
       <point x="72.66666666666663" y="-14.5" />
       <point x="556.6384310134308" y="497.0" />
       <point x="822.6289682539682" y="497.0" />
       <point x="-43.14285714285711" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanification" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationUnitairePlanCharge">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationUnitairePlanCharge">
       <point x="0.0" y="-14.5" />
       <point x="344.15949328449324" y="616.0" />
       <point x="538.4717643467642" y="616.0" />
       <point x="54.5" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
       <point x="-81.0" y="-58.5" />
       <point x="1080.0357142857142" y="761.0" />
       <point x="0.0" y="761.0" />
@@ -209,7 +209,7 @@
       <point x="1276.938492063492" y="137.0" />
       <point x="94.5" y="58.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SauvegardePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateurBase">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.SauvegardePlanCharge" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateurBase">
       <point x="0.0" y="-14.5" />
       <point x="0.0" y="69.5" />
     </edge>
@@ -219,7 +219,7 @@
       <point x="464.64087301587296" y="437.0" />
       <point x="61.28571428571428" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationDateEtat" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationDateEtat" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable">
       <point x="0.0" y="-47.5" />
       <point x="135.15949328449324" y="596.0" />
       <point x="329.4717643467642" y="596.0" />
@@ -227,7 +227,7 @@
       <point x="801.0575396825395" y="487.0" />
       <point x="-64.71428571428578" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ImportTaches" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ImportTaches" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable">
       <point x="0.0" y="-36.5" />
       <point x="1113.1051587301586" y="616.0" />
       <point x="1134.7718253968253" y="616.0" />
@@ -235,13 +235,13 @@
       <point x="444.21230158730157" y="467.0" />
       <point x="40.85714285714289" y="25.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationPlanification">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification">
       <point x="-27.0" y="-58.5" />
       <point x="1134.0357142857142" y="751.0" />
       <point x="404.82615995115987" y="751.0" />
       <point x="60.66666666666663" y="14.5" />
     </edge>
-    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.ActionRepetable">
+    <edge source="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache" target="fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.repetition.ActionRepetable">
       <point x="81.0" y="-58.5" />
       <point x="1242.0357142857142" y="771.0" />
       <point x="1886.145299145299" y="771.0" />
@@ -256,7 +256,7 @@
   </edges>
   <settings layout="Hierarchic Group" zoom="0.7994842037395229" x="928.7475806451613" y="347.24072580645156" />
   <SelectedNodes>
-    <node>fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuppressionTache</node>
+    <node>fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.SuppressionTache</node>
   </SelectedNodes>
   <Categories>
     <Category>Methods</Category>

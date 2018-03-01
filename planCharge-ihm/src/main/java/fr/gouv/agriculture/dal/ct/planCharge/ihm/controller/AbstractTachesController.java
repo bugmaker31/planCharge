@@ -6,8 +6,8 @@ import fr.gouv.agriculture.dal.ct.ihm.view.DatePickerTableCells;
 import fr.gouv.agriculture.dal.ct.ihm.view.TableViews;
 import fr.gouv.agriculture.dal.ct.kernel.KernelException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationNoTicketIdal;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ModificationTache;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationNoTicketIdal;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
@@ -23,8 +23,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.SousCategorieTacheDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 import fr.gouv.agriculture.dal.ct.planCharge.metier.service.ReferentielsService;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
-import fr.gouv.agriculture.dal.ct.planCharge.util.cloning.CopieException;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -51,6 +49,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+
+import fr.gouv.agriculture.dal.ct.planCharge.util.function.TriFunction;
 
 /**
  * Created by frederic.danna on 01/05/2017.
@@ -419,68 +419,25 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
 
         // Gestion des undo/redo :
         //
-        //noinspection ClassHasNoToStringMethod,LimitedScopeInnerClass,ClassWithOnlyPrivateConstructors,ClassWithoutLogger
-        class TacheTableCommitHandler<T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
-
-            @NotNull
-            private BiConsumer<TB, T> modifieurValeur;
-            @NotNull
-            private BiFunction<TB, TB, ModificationTache<TB>> actionModificationFct;
-
-            private TacheTableCommitHandler(@NotNull BiConsumer<TB, T> modifieurValeur, @NotNull BiFunction<TB, TB, ModificationTache<TB>> actionModificationFct) {
-                super();
-                this.modifieurValeur = modifieurValeur;
-                this.actionModificationFct = actionModificationFct;
-            }
-
-            @Override
-            public void handle(TableColumn.CellEditEvent<TB, T> event) {
-                if ((event.getOldValue() != null) && event.getOldValue().equals(event.getNewValue())) {
-                    return;
-                }
-
-                TB tacheBean = event.getRowValue();
-
-                TB tacheBeanAvant = null;
-                try {
-                    //noinspection unchecked
-                    tacheBeanAvant = (TB) tacheBean.copier();
-                } catch (CopieException e) {
-                    LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
-                }
-
-                modifieurValeur.accept(tacheBean, event.getNewValue());
-
-                if (tacheBeanAvant != null) {
-                    try {
-//                        ModificationTache actionModif = actionModification(tacheBeanAvant, tacheBean);
-                        ModificationTache<TB> actionModif = actionModificationFct.apply(tacheBeanAvant, tacheBean);
-                        getSuiviActionsUtilisateur().historiser(actionModif);
-                    } catch (SuiviActionsUtilisateurException e) {
-                        LOGGER.error("Impossible d'historiser la modification de la tâche.", e);
-                    }
-                }
-            }
-        }
-        noTicketIdalColumn.setOnEditCommit(new TacheTableCommitHandler<>(
-                (tache, nouvelleValeur) -> tache.noTicketIdalProperty().set(nouvelleValeur),
-                ModificationNoTicketIdal::new
-        ));
+        noTicketIdalColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
+                (TB tb, String apres) -> tb.setNoTicketIdal(apres),
+                (TB tb, String avant, String apres) -> new ModificationNoTicketIdal<TB>(tb, avant, apres))
+        );
         /*
         TODO FDA 2017/07 D'abord bien tester le undo/redo/repeat de la modif du n° de ticket IDAL (ci-dessus), puis faire pareil pour les autres attributs (adapter le code commenté ci-dessous).
-        descriptionColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        descriptionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.descriptionProperty().set(nouvelleValeur);
             }
         });
-        projetAppliColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        projetAppliColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.projetAppliProperty().set(nouvelleValeur);
             }
         });
-        debutColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        debutColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) throws IhmException {
                 try {
@@ -490,7 +447,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 }
             }
         });
-        echeanceColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        echeanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) throws IhmException {
                 try {
@@ -500,25 +457,25 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 }
             }
         });
-        importanceColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        importanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.importanceProperty().set(nouvelleValeur);
             }
         });
-        chargeColumn.setOnEditCommit(new TacheTableCommitHandler<Double>() {
+        chargeColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<Double>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull Double nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.chargeProperty().set(nouvelleValeur);
             }
         });
-        ressourceColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        ressourceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.ressourceProperty().set(nouvelleValeur);
             }
         });
-        profilColumn.setOnEditCommit(new TacheTableCommitHandler<String>() {
+        profilColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<String>() {
             @Override
             void modifierValeur(@NotNull TB tacheBean, @NotNull String nouvelleValeur, @Null TB tacheBeanAvant) {
                 tacheBean.profilProperty().set(nouvelleValeur);
@@ -561,6 +518,48 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             }
         });
     }
+
+    @SuppressWarnings({"ClassHasNoToStringMethod", "PackageVisibleInnerClass", "NonStaticInnerClassInSecureContext", "TypeParameterHidesVisibleType"})
+    class SuiviActionUtilisateurTableCommitHandler<TB extends TacheBean, T> implements EventHandler<TableColumn.CellEditEvent<TB, T>> {
+
+        @NotNull
+        private BiConsumer<TB, T> fctModifieur;
+        @NotNull
+        private TriFunction<TB, T, T, ModificationTache<TB, T>> fctActionModification;
+
+        SuiviActionUtilisateurTableCommitHandler(
+                @NotNull BiConsumer<TB, T> fctModifieur,
+                @NotNull TriFunction<TB, T, T, ModificationTache<TB, T>> fctActionModification
+        ) {
+            super();
+            this.fctModifieur = fctModifieur;
+            this.fctActionModification = fctActionModification;
+        }
+
+        @Override
+        public void handle(TableColumn.CellEditEvent<TB, T> event) {
+            assert event != null;
+            if (Objects.equals(event.getOldValue(), event.getNewValue())) {
+                return;
+            }
+
+            T valeurAvant = event.getOldValue();
+            TB tacheBean = event.getRowValue();
+            T valeurApres = event.getNewValue();
+
+            // Modification de la valeur :
+            fctModifieur.accept(tacheBean, valeurApres);
+
+            // Historisation de la modification de la valeur (par l'utiisateur) :
+            ModificationTache<TB, T> actionModif = fctActionModification.apply(tacheBean, valeurAvant, valeurApres);
+            try {
+                getSuiviActionsUtilisateur().historiser(actionModif);
+            } catch (SuiviActionsUtilisateurException e) {
+                LOGGER.error("Impossible d'historiser la modification de la tâche : " + actionModif.getTexte() + ".", e);
+            }
+        }
+    }
+
 
     public boolean isShowing() {
         return Objects.equals(ihm.getApplicationController().getModuleCourant(), this);
@@ -941,13 +940,13 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             return;
         }
 
-        RessourceBean ressourceBean = tacheBean.getRessource();
+        RessourceBean<?, ?> ressourceBean = tacheBean.getRessource();
         assert ressourceBean != null;
 
         filtrerSurRessource(ressourceBean);
     }
 
-    void filtrerSurRessource(@NotNull RessourceBean ressourceBean) {
+    void filtrerSurRessource(@NotNull RessourceBean<?, ?> ressourceBean) {
         TableViews.applyFilter(ressourceColumn, getTableFilter(), ressourceBean);
     }
 
@@ -1006,7 +1005,7 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             return;
         }
 
-        RessourceBean ressourceBean = tacheBean.getRessource();
+        RessourceBean<?, ?> ressourceBean = tacheBean.getRessource();
         if (ressourceBean == null) {
             //noinspection HardcodedLineSeparator
             ihm.afficherDialog(
@@ -1313,8 +1312,6 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
             );
         }
     }
-
-
 
 
 }

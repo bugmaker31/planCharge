@@ -1,5 +1,6 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge;
 
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
-public class ChargementPlanCharge extends ModificationEnMassePlanCharge implements ActionAnnulable {
+public class ChargementPlanCharge<T> extends ModificationEnMassePlanCharge<PlanChargeBean, T> implements ActionAnnulable {
 
     private PlanChargeBean planChargeBeanPrecedent;
 
@@ -25,7 +26,11 @@ public class ChargementPlanCharge extends ModificationEnMassePlanCharge implemen
     public ChargementPlanCharge(PlanChargeBean planChargeBeanPrecedent) throws SuiviActionsUtilisateurException {
         super();
         // TODO FDA 2017/05 Vraiment besoin de mémoriser tout le plan de charge ?
-        this.planChargeBeanPrecedent = planChargeBeanPrecedent;
+        try {
+            this.planChargeBeanPrecedent = PlanChargeBean.copier(planChargeBeanPrecedent);
+        } catch (CopieException e) {
+            throw new AnnulationActionException("Impossible de mémoriser le plan de charge (pour annuler l'action " + getTexte() + ", éventuellement).", e);
+        }
     }
 
 

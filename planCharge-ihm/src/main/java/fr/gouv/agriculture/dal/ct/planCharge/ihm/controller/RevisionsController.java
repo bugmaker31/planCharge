@@ -8,6 +8,7 @@ import fr.gouv.agriculture.dal.ct.ihm.view.NotEditableTextFieldTableCell;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleTaches;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationCommentaireRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.revision.ExportRevisions;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
@@ -18,7 +19,6 @@ import fr.gouv.agriculture.dal.ct.planCharge.metier.modele.revision.ValidateurRe
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,10 +32,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,10 +42,6 @@ import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Created by frederic.danna on 26/03/2017.
@@ -148,6 +142,13 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
 
                 initBeans();
                 initTables();
+
+                // Gestion des undo/redo :
+                //
+                commentaireRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
+                        TacheBean::setCommentaireRevision,
+                        ModificationCommentaireRevision::new
+                ));
 
                 // Ajouter ici du code spécifique à l'initialisation de ce Controller. Cf. TachesController et ChargesController.
             });
