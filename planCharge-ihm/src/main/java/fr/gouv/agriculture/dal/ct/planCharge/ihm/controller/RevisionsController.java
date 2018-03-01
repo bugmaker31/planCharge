@@ -9,7 +9,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleTaches;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationCommentaireRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationStatutRevision;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.ModificationValidateurRevision;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.revision.ExportRevisions;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.view.converter.Converters;
@@ -145,6 +148,14 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
 
                 // Gestion des undo/redo :
                 //
+                statutRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
+                        TacheBean::setStatutRevision,
+                        ModificationStatutRevision::new
+                ));
+                validateurRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
+                        TacheBean::setValidateurRevision,
+                        ModificationValidateurRevision::new
+                ));
                 commentaireRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>(
                         TacheBean::setCommentaireRevision,
                         ModificationCommentaireRevision::new
