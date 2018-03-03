@@ -3,10 +3,14 @@ package fr.gouv.agriculture.dal.ct.planCharge.ihm.view;
 import fr.gouv.agriculture.dal.ct.ihm.IhmException;
 import fr.gouv.agriculture.dal.ct.ihm.model.BeanException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.AbstractController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.ChargesController;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.DisponibilitesController;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursChargeParRessourceBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanification.ModificationPlanificationCharge;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursChargeParProfilBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.NbrsJoursChargeParRessourceBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.disponibilite.NbrsJoursDispoParRessourceBean;
@@ -23,6 +27,7 @@ import org.slf4j.Logger;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -61,11 +66,14 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
 
 
     private final int noPeriode;
+    @NotNull
+    private final AbstractController controller;
 
 
-    public PlanificationChargeCell(int noPeriode) {
+    public PlanificationChargeCell(int noPeriode, @NotNull AbstractController controller) {
         super(Converters.CHARGE_STRING_CONVERTER);
         this.noPeriode = noPeriode;
+        this.controller = controller;
 
         getStyleClass().add("planificationCharge-cell");
 
@@ -336,11 +344,12 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
         }
 
         Double chargePrecedente;
-        {
+        LocalDate debutPeriode;
+                {
             if (planChargeBean.getDateEtat() == null) {
                 return;
             }
-            LocalDate debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noPeriode - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
+            debutPeriode = planChargeBean.getDateEtat().plusDays(((long) noPeriode - 1L) * 7L); // TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
             LocalDate finPeriode = debutPeriode.plusDays(7L);// TODO FDA 2017/06 [issue#26:PeriodeHebdo/Trim]
 
             try {
@@ -351,7 +360,21 @@ public class PlanificationChargeCell extends TextFieldTableCell<PlanificationTac
             }
         }
 
+        // Modification de la valeur :
         super.commitEdit(newValue);
+
+        // Historisation de la modification de la valeur (par l'utilisateur), pour permettre les undo/redo/repeat :
+        ModificationPlanification actionModif = new ModificationPlanificationCharge<PlanificationTacheBean, Double>(
+                planifBean,
+                (tacheBean, chargeApres) -> tacheBean.majChargePlanifiee(debutPeriode, chargeApres),
+                chargePrecedente, newValue,
+                "de la charge planifiée pour la période " + DateTimeFormatter.ofPattern(PlanChargeIhm.PATRON_FORMAT_DATE).format(debutPeriode), Converters.CHARGE_STRING_CONVERTER::toString
+        );
+        try {
+            controller.getSuiviActionsUtilisateur().historiser(actionModif);
+        } catch (SuiviActionsUtilisateurException e) {
+            LOGGER.error("Impossible d'historiser la modification de la tâche : " + actionModif.getTexte() + ".", e);
+        }
 
         // Mathématiquement parlant, 'null' vaut zéro, donc pas toujours besoin de recalculer :
         if (!((Objects.value(chargePrecedente, 0.0) == 0.0) && (Objects.value(newValue, 0.0) == 0.0))) {

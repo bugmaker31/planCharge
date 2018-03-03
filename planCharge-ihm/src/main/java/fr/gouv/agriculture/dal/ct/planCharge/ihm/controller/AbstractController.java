@@ -52,7 +52,7 @@ public abstract class AbstractController implements Initializable {
     private SuiviActionsUtilisateur suiviActionsUtilisateur = SuiviActionsUtilisateur.instance();
 
     @NotNull
-    SuiviActionsUtilisateur getSuiviActionsUtilisateur() {
+    public SuiviActionsUtilisateur getSuiviActionsUtilisateur() {
         return suiviActionsUtilisateur;
     }
 }

@@ -1,11 +1,9 @@
 package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache;
 
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.ActionAnnulable;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.ActionRetablissable;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanChargeBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +15,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author frederic.danna
  */
+// TODO FDA 2018/03 Tester.
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class AjoutTache<TB extends TacheBean> extends ModificationPlanification {
 
@@ -27,12 +26,12 @@ public class AjoutTache<TB extends TacheBean> extends ModificationPlanification 
     private TB tacheBean;
 
     @NotNull
-    private final ObservableList<TB> tachesBeans;
+    private final ObservableList<TB> tachesBeans = FXCollections.observableArrayList();
 
 
     public AjoutTache(@NotNull TB tacheBean, @NotNull ObservableList<TB> tachesBeans) {
         this.tacheBean = tacheBean;
-        this.tachesBeans = tachesBeans;
+        this.tachesBeans.setAll(tachesBeans);
     }
 
 

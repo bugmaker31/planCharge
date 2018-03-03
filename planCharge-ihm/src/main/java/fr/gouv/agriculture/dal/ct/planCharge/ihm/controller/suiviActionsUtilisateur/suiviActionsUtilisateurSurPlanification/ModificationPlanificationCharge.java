@@ -1,9 +1,9 @@
-package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache;
+package fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanification;
 
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.annulation.AnnulationActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.retablissement.RetablissementActionException;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurPlanCharge.ModificationPlanification;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.tache.TacheBean;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.PlanificationTacheBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +18,9 @@ import java.util.function.Function;
  *
  * @author frederic.danna
  */
-public final class ModificationTache<TB extends TacheBean, T> extends ModificationPlanification {
+public final class ModificationPlanificationCharge<TB extends PlanificationTacheBean, T extends Double> extends ModificationPlanification {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModificationTache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModificationPlanificationCharge.class);
 
     @NotNull
     private TB tacheBean;
@@ -41,10 +41,10 @@ public final class ModificationTache<TB extends TacheBean, T> extends Modificati
     }
 
 
-    public ModificationTache(@NotNull TB tacheBean,
-                             @NotNull BiConsumer<TB, T> fctRestauration,
-                             @Null T valeurAvant, @Null T valeurApres,
-                             @NotNull String libelleAction, @NotNull Function<T, String> toLibelle
+    public ModificationPlanificationCharge(@NotNull TB tacheBean,
+                                           @NotNull BiConsumer<TB, T> fctRestauration,
+                                           @Null T valeurAvant, @Null T valeurApres,
+                                           @NotNull String libelleAction, @NotNull Function<T, String> toLibelle
     ) {
         super();
         this.tacheBean = tacheBean;
@@ -53,22 +53,6 @@ public final class ModificationTache<TB extends TacheBean, T> extends Modificati
         this.valeurApres = valeurApres;
         this.libelleAction = libelleAction;
         this.toLibelle = toLibelle;
-    }
-
-    public ModificationTache(@NotNull TB tacheBean,
-                             @NotNull BiConsumer<TB, T> fctRestauration,
-                             @Null String valeurAvant, @Null String valeurApres,
-                             @NotNull String libelleAction
-    ) {
-        super();
-        this.tacheBean = tacheBean;
-        this.fctRestauration = fctRestauration;
-        //noinspection unchecked
-        this.valeurAvant = (T) valeurAvant;
-        //noinspection unchecked
-        this.valeurApres = (T) valeurApres;
-        this.libelleAction = libelleAction;
-        this.toLibelle = s -> (String)s;
     }
 
 

@@ -15,8 +15,8 @@ import fr.gouv.agriculture.dal.ct.planCharge.ihm.PlanChargeIhm;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.calculateur.CalculateurCharges;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.ActionUtilisateur;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.AffichageModuleCharges;
-import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.SuiviActionsUtilisateurException;
+import fr.gouv.agriculture.dal.ct.planCharge.ihm.controller.suiviActionsUtilisateur.suiviActionsUtilisateurSurTache.AjoutTache;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.charge.*;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.ProfilBean;
 import fr.gouv.agriculture.dal.ct.planCharge.ihm.model.referentiels.RessourceBean;
@@ -32,7 +32,10 @@ import fr.gouv.agriculture.dal.ct.planCharge.util.Collections;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Dates;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Exceptions;
 import fr.gouv.agriculture.dal.ct.planCharge.util.Objects;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
@@ -760,6 +763,8 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
                 initBeans();
                 initTables();
 
+                // Gestion des undo/redo :
+                initSuiviActionsUtilisateur();
             });
         } catch (IhmException e) {
             throw new ControllerException("Impossible d'initialiser le contrôleur.", e);
@@ -1133,7 +1138,7 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         for (int cptColonne = 1; cptColonne <= planificationsTable.getCalendrierColumns().size(); cptColonne++) {
             TableColumn<PlanificationTacheBean, Double> colonne = planificationsTable.getCalendrierColumns().get(cptColonne - 1);
             int finalCptColonne = cptColonne;
-            colonne.setCellFactory(param -> new PlanificationChargeCell(finalCptColonne));
+            colonne.setCellFactory(param -> new PlanificationChargeCell(finalCptColonne, this));
         }
         //noinspection OverlyComplexAnonymousInnerClass
         chargePlanifieeTotaleColumn.setCellFactory(column -> new NotEditableTextFieldTableCell<PlanificationTacheBean, Double>(Converters.CHARGE_STRING_CONVERTER, () -> ihm.afficherInterdictionEditer("Cette colonne n'est pas saisissable, elle est calculée.")) {
@@ -1523,6 +1528,11 @@ public class ChargesController extends AbstractTachesController<PlanificationTac
         TableViews.disableReagencingColumns(totauxNbrsJoursDispoCTMaxRestanteProfilTable);
 
         TableViews.ensureDisplayingAllRows(totauxNbrsJoursDispoCTMaxRestanteProfilTable);
+    }
+
+
+    private void initSuiviActionsUtilisateur() {
+        // Le suivi des actions de l'utilisateur est fait dans la méthode 'commit' de la classe PlanificationChargeCell.
     }
 
 
