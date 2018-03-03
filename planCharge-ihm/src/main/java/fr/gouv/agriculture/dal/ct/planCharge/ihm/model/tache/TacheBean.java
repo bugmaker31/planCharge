@@ -175,8 +175,8 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return noTicketIdal;
     }
 
-    public void setNoTicketIdal(@NotNull String noTicketIdal) {
-        this.noTicketIdal.set(noTicketIdal);
+    public void setNoTicketIdal(@Null String noTicketIdal) {
+        this.noTicketIdal.setValue(noTicketIdal);
     }
 
     @Null
@@ -189,8 +189,8 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return description;
     }
 
-    public void setDescription(@NotNull String description) {
-        this.description.set(description);
+    public void setDescription(@Null String description) {
+        this.description.setValue(description);
     }
 
     @Null
@@ -203,6 +203,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return projetAppli;
     }
 
+    public void setProjetAppli(@Null ProjetAppliBean projetAppli) {
+        this.projetAppli.setValue(projetAppli);
+    }
+
     @Null
     public StatutBean getStatut() {
         return statut.get();
@@ -211,6 +215,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public ObjectProperty<StatutBean> statutProperty() {
         return statut;
+    }
+
+    public void setStatut(@Null StatutBean statut) {
+        this.statut.setValue(statut);
     }
 
     @Null
@@ -223,6 +231,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return debut;
     }
 
+    public void setDebut(@Null LocalDate debut) {
+        this.debut.setValue(debut);
+    }
+
     @Null
     public LocalDate getEcheance() {
         return echeance.get();
@@ -231,6 +243,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public ObjectProperty<LocalDate> echeanceProperty() {
         return echeance;
+    }
+
+    public void setEcheance(@Null LocalDate echeance) {
+        this.echeance.setValue(echeance);
     }
 
     @Null
@@ -243,6 +259,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return importance;
     }
 
+    public void setImportance(@Null ImportanceBean importance) {
+        this.importance.setValue(importance);
+    }
+
     @Null
     public Double getCharge() {
         return charge.get();
@@ -251,6 +271,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     @NotNull
     public DoubleProperty chargeProperty() {
         return charge;
+    }
+
+    public void setCharge(@Null Double charge) {
+        this.charge.setValue(charge);
     }
 
     @Null
@@ -263,6 +287,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return ressource;
     }
 
+    public void setRessource(@Null RessourceBean<?, ?> ressource) {
+        this.ressource.setValue(ressource);
+    }
+
     @Null
     public ProfilBean getProfil() {
         return profil.get();
@@ -273,13 +301,10 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
         return profil;
     }
 
-    public void setDebut(@NotNull LocalDate debut) {
-        this.debut.set(debut);
+    public void setProfil(@Null ProfilBean profil) {
+        this.profil.setValue(profil);
     }
 
-    public void setEcheance(@NotNull LocalDate echeance) {
-        this.echeance.set(echeance);
-    }
 
     @Null
     public TypeChangement getTypeChangement() {
@@ -292,7 +317,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
     }
 
     public void setTypeChangement(@Null TypeChangement typeChangement) {
-        this.typeChangement.set(typeChangement);
+        this.typeChangement.setValue(typeChangement);
     }
 
 
@@ -337,7 +362,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @Override
     public void setStatutRevision(@Null StatutRevision statutRevision) {
-        this.statutRevision.set(statutRevision);
+        this.statutRevision.setValue(statutRevision);
     }
 
     @NotNull
@@ -356,7 +381,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @Override
     public void setValidateurRevision(@Null ValidateurRevision validateurRevision) {
-        this.validateurRevision.set(validateurRevision);
+        this.validateurRevision.setValue(validateurRevision);
     }
 
     @NotNull
@@ -375,7 +400,7 @@ public class TacheBean extends AbstractBean<TacheDTO, TacheBean> implements Copi
 
     @Override
     public void setCommentaireRevision(@Null String commentaireRevision) {
-        this.commentaireRevision.set(commentaireRevision);
+        this.commentaireRevision.setValue(commentaireRevision);
     }
 
 

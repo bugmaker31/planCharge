@@ -147,15 +147,15 @@ public class RevisionsController extends AbstractTachesController<TacheBean> imp
                 //
                 statutRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TacheBean, StatutRevision>(
                         TacheBean::setStatutRevision,
-                        (TacheBean tb, StatutRevision valeurAvant, StatutRevision valeurApres) -> new ModificationTache<TacheBean, StatutRevision>(tb, TacheBean::setStatutRevision, valeurAvant, valeurApres,"statut de la révision")
+                        (TacheBean tb, StatutRevision valeurAvant, StatutRevision valeurApres) -> new ModificationTache<TacheBean, StatutRevision>(tb, TacheBean::setStatutRevision, valeurAvant, valeurApres,"du statut de la révision", StatutRevision::getCode)
                 ));
                 validateurRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TacheBean, ValidateurRevision>(
                         TacheBean::setValidateurRevision,
-                        (TacheBean tb, ValidateurRevision valeurAvant, ValidateurRevision valeurApres) -> new ModificationTache<TacheBean, ValidateurRevision>(tb, TacheBean::setValidateurRevision, valeurAvant, valeurApres,"validateur de la révision")
+                        (TacheBean tb, ValidateurRevision valeurAvant, ValidateurRevision valeurApres) -> new ModificationTache<TacheBean, ValidateurRevision>(tb, TacheBean::setValidateurRevision, valeurAvant, valeurApres,"du validateur de la révision", ValidateurRevision::getTrigramme)
                 ));
                 commentaireRevisionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TacheBean, String>(
                         TacheBean::setCommentaireRevision,
-                        (TacheBean tb, String valeurAvant, String valeurApres) -> new ModificationTache<TacheBean, String>(tb, TacheBean::setCommentaireRevision, valeurAvant, valeurApres,"commentaire de révision")
+                        (TacheBean tb, String valeurAvant, String valeurApres) -> new ModificationTache<TacheBean, String>(tb, TacheBean::setCommentaireRevision, valeurAvant, valeurApres,"du commentaire de révision")
                 ));
 
                 // Ajouter ici du code spécifique à l'initialisation de ce Controller. Cf. TachesController et ChargesController.

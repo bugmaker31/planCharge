@@ -1,7 +1,5 @@
 package fr.gouv.agriculture.dal.ct.planCharge.util;
 
-import javafx.collections.ObservableList;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.function.Consumer;
@@ -11,17 +9,17 @@ public class Objects {
 
     @NotNull
     public static <T, R> R value(@Null R value, @NotNull R defaultValue) {
-        return ((value == null) ? defaultValue : value);
+        return (value == null) ? defaultValue : value;
     }
 
     @NotNull
     public static <T, R> R value(@Null T object, @NotNull Function<T, R> fct, @NotNull R defaultValue) {
-        return ((object == null) ? defaultValue : fct.apply(object));
+        return (object == null) ? defaultValue : fct.apply(object);
     }
 
     @Null
     public static <T, R> R value(@Null T object, @NotNull Function<T, R> fct) {
-        return ((object == null) ? null : fct.apply(object));
+        return (object == null) ? null : fct.apply(object);
     }
 
     public static String idInstance(@Null Object object) {

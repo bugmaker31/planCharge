@@ -422,18 +422,41 @@ public abstract class AbstractTachesController<TB extends TacheBean> extends Abs
                 (TB tb, String valeurAvant, String valeurApres) -> new ModificationTache<TB, String>(tb, TB::setNoTicketIdal, valeurAvant, valeurApres,"n° de ticket IDAL")
         ));
         descriptionColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, String>(
-                TacheBean::setDescription,
-                (TB tb, String valeurAvant, String valeurApres) -> new ModificationTache<TB, String>(tb, TB::setDescription, valeurAvant, valeurApres,"description")
+                TB::setDescription,
+                (TB tb, String valeurAvant, String valeurApres) -> new ModificationTache<TB, String>(tb, TB::setDescription, valeurAvant, valeurApres,"de la description")
         ));
-/*
-        projetAppliColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-        debutColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-        echeanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-        importanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-        chargeColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-        ressourceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-        profilColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<>());
-*/
+        projetAppliColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, ProjetAppliBean>(
+                TB::setProjetAppli,
+                (TB tb, ProjetAppliBean valeurAvant, ProjetAppliBean valeurApres) -> new ModificationTache<TB, ProjetAppliBean>(tb, TB::setProjetAppli, valeurAvant, valeurApres,"du projet/appli", ProjetAppliBean::getCode)
+        ));
+        statutColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, StatutBean>(
+                TB::setStatut,
+                (TB tb, StatutBean valeurAvant, StatutBean valeurApres) -> new ModificationTache<TB, StatutBean>(tb, TB::setStatut, valeurAvant, valeurApres,"du statut", StatutBean::getCode)
+        ));
+        debutColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, LocalDate>(
+                TB::setDebut,
+                (TB tb, LocalDate valeurAvant, LocalDate valeurApres) -> new ModificationTache<TB, LocalDate>(tb, TB::setDebut, valeurAvant, valeurApres,"de la date de début", date -> DateTimeFormatter.ofPattern(PlanChargeIhm.PATRON_FORMAT_DATE).format(date))
+        ));
+        echeanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, LocalDate>(
+                TB::setEcheance,
+                (TB tb, LocalDate valeurAvant, LocalDate valeurApres) -> new ModificationTache<TB, LocalDate>(tb, TB::setEcheance, valeurAvant, valeurApres,"de la date d'échéance", date -> DateTimeFormatter.ofPattern(PlanChargeIhm.PATRON_FORMAT_DATE).format(date))
+        ));
+        importanceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, ImportanceBean>(
+                TB::setImportance,
+                (TB tb, ImportanceBean valeurAvant, ImportanceBean valeurApres) -> new ModificationTache<TB, ImportanceBean>(tb, TB::setImportance, valeurAvant, valeurApres,"de l'importance", ImportanceBean::getCode)
+        ));
+        chargeColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, Double>(
+                TB::setCharge,
+                (TB tb, Double valeurAvant, Double valeurApres) -> new ModificationTache<TB, Double>(tb, TB::setCharge, valeurAvant, valeurApres,"de la charge", Converters.CHARGE_STRING_CONVERTER::toString)
+        ));
+        ressourceColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, RessourceBean<?, ?>>(
+                TB::setRessource,
+                (TB tb, RessourceBean<?, ?> valeurAvant, RessourceBean<?, ?> valeurApres) -> new ModificationTache<TB, RessourceBean<?, ?>>(tb, TB::setRessource, valeurAvant, valeurApres,"de la ressource", RessourceBean::getCode)
+        ));
+        profilColumn.setOnEditCommit(new SuiviActionUtilisateurTableCommitHandler<TB, ProfilBean>(
+                TB::setProfil,
+                (TB tb, ProfilBean valeurAvant, ProfilBean valeurApres) -> new ModificationTache<TB, ProfilBean>(tb, TB::setProfil, valeurAvant, valeurApres,"du profil", ProfilBean::getCode)
+        ));
 
         definirRaccourcisClavier();
 

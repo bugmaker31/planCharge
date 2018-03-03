@@ -1,7 +1,6 @@
 package fr.gouv.agriculture.dal.ct.ihm.model;
 
 import fr.gouv.agriculture.dal.ct.metier.dto.AbstractDTO;
-import fr.gouv.agriculture.dal.ct.planCharge.metier.dto.StatutDTO;
 
 import javax.validation.constraints.NotNull;
 
